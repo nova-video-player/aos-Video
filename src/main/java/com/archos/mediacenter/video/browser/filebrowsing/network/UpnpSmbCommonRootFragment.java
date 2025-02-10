@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.browser.BrowserCategory;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser.BrowserBySmb;
@@ -43,7 +44,7 @@ public abstract class UpnpSmbCommonRootFragment extends NewRootFragment implemen
         Bundle args = new Bundle();
         args.putParcelable(BrowserByNetwork.CURRENT_DIRECTORY, uri);
         args.putString(BrowserByNetwork.TITLE, share.getName());
-        args.putString(BrowserByNetwork.SHARE_NAME, uri.getLastPathSegment());
+        args.putString(BrowserByNetwork.SHARE_NAME, FileUtils.getName(uri));
         Fragment f;
         if (uri.getScheme().equals("smb")) {
             f = new BrowserBySmb();

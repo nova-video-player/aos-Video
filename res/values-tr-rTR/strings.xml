@@ -16,7 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">Kütüphane</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
@@ -95,19 +95,36 @@
     <string name="all_animes_format">Animasyon filmleri - %d</string>
     <string name="all_collections">Tüm koleksiyonlar</string>
     <string name="all_collections_format">Tüm koleksiyonlar - %d</string>
+    <string name="all_collection_watched">Tüm koleksiyon izlendi</string>
+    <string name="all_collection_unwatched">Koleksiyon izlenmedi</string>
     <string name="not_watched_movies_format">İzlenmedi  -  %d</string>
+    <string name="not_watched_animes_format">İzlenmedi - %d</string>
+    <string name="no_movie_watched">Film izlenmedi</string>
+    <string name="all_movies_watched">İzlenen tüm filmler</string>
     <string name="movies_by_alpha">Alfabetik sırala</string>
     <string name="movies_by_genre">Türe göre filmler</string>
     <string name="movies_by_rating">Derecelendirmeye göre filmler</string>
+    <string name="movie_collections">Koleksiyonlar</string>
+    <string name="anime_collections">Anime koleksiyonları</string>
     <string name="movies_by_year">Yıllara göre filmler</string>
     <string name="all_tv_shows">TV programları</string>
     <string name="all_tvshows">Tüm TV şovları</string>
+    <string name="all_animes">Tüm animasyon filmleri</string>
+    <string name="all_animes_row">Tüm animasyonlar</string>
+    <string name="all_animeshows">Tüm animasyon TV programları</string>
+    <string name="animes_by_alpha">Animasyon filmleri alfabetik</string>
+    <string name="animes_by_genre">Türlerine göre animasyon filmleri</string>
+    <string name="animes_by_rating">Derecelendirmeye göre animasyon filmleri</string>
+    <string name="animes_by_year">Yıla göre animasyon filmleri</string>
     <string name="all_tvshows_format">Tüm TV şovları  - %d</string>
     <string name="not_watched_tvshows_format">İzlenmedi - %d</string>
+    <string name="all_animeshows_format">Animasyon TV şovları - %d</string>
+    <string name="not_watched_animeshows_format">İzlenmedi - %d</string>
     <string name="all_seasons">Tüm sezonlar</string>
     <string name="tvshows_by_alpha">TV alfabetik gösterir</string>
     <string name="tvshows_by_genre">Türe göre TV şovları</string>
     <string name="tvshows_by_rating">Derecelendirmeye göre TV şovları</string>
+    <string name="animation_shows_by_alpha">Animasyon alfabetik olarak gösterilir</string>
     <string name="episodes_by_date">Tarihe göre bölüm sayısı</string>
     <string name="date_view_week">Hafta</string>
     <string name="date_view_month">Ay</string>
@@ -146,7 +163,9 @@
     <string name="scrap_get_title">Bilgi alma</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Yönetmen</string>
+    <string name="scrap_writer">Yazar</string>
     <string name="scrap_director_format">Yönetmen: %s</string>
+    <string name="scrap_writer_format">Yazar: %s</string>
     <string name="scrap_rating">Değerlendirme</string>
     <string name="scrap_rating_format">Değerlendirme: %s</string>
     <string name="scrap_year">Yıl</string>
@@ -239,7 +258,11 @@ izlenen bölümler %d</item>
     <string name="you_have_no_video">Video yok</string>
     <string name="you_have_no_video_yet">Video aranıyor&#8230;</string>
     <string name="you_have_no_movies">Film yok</string>
+    <string name="you_have_no_animes">Animasyon filmi yok</string>
+    <string name="you_have_no_movie_collections">Koleksiyon yok</string>
+    <string name="you_have_no_anime_collections">Anime koleksiyonu yok</string>
     <string name="you_have_no_tv_shows">TV şovu yok</string>
+    <string name="you_have_no_anime_shows">Animasyon TV programı yok</string>
     <string name="you_have_no_non_scraped_videos">Alıntı yapılmayan video yok</string>
     <plurals name="Nmovies">
         <item quantity="one">1 filim
@@ -275,6 +298,7 @@ izlenen bölümler %d</item>
     <string name="player_subtitle_track_toast">Altyazı parçası:</string>
     <string name="player_bookmark_set">Yerimi ayarlandı</string>
     <string name="player_pref_subtitle_delay_title">Gecikme</string>
+    <string name="player_pref_audio_speed_title">Oynatma hızı</string>
     <string name="floating_player_restore">Geri yükle</string>
     <string name="floating_player_play">Oynat</string>
     <string name="floating_player_pause">Duraklat</string>
@@ -286,6 +310,7 @@ izlenen bölümler %d</item>
     <string name="pref_play_mode_entry_folder">Klasör</string>
     <string name="pref_play_mode_entry_repeat_folder">Klasörü tekrarla</string>
     <string name="pref_play_mode_entry_repeat_single">Parçayı tekrarla</string>
+    <string name="pref_play_mode_entry_binge">Art arda izleme</string>
     <string name="pref_audio_parameters_title">Ses</string>
     <string name="pref_audio_filt_title">Ses Yükseltme</string>
     <string name="pref_audio_filt_night_mode">Gece Modu</string>
@@ -307,42 +332,15 @@ izlenen bölümler %d</item>
     <string name="menu_change_folder">Klasörü değiştir</string>
     <string name="menu_change_folder_details">Başlamak için klasörü seçin</string>
     <string name="unlock_instructions">Kilidi açmak için simgeye uzun basın</string>
-    <string name="seek_to_percentage">\"%s%% için aranıyor</string>
+    <string name="seek_to_percentage">%s%% için aranıyor</string>
+    <string name="set_audio_speed_to">Ses hızı %s</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">Arabic</string>
-    <string name="s_bulgarian">Bulgarca</string>
-    <string name="Bosnian">Boşnakça</string>
-    <string name="s_czech">Çekce</string>
-    <string name="s_danish">Danimarkaca</string>
-    <string name="s_german">Almanca</string>
-    <string name="s_english">İngilizce</string>
-    <string name="s_greek">Yunanca</string>
-    <string name="s_spanish">İspanyolca</string>
-    <string name="s_finnish">Fince</string>
-    <string name="s_french">Fransızca</string>
-    <string name="s_hebrew">İbranice</string>
-    <string name="s_hungarian">Macarca</string>
-    <string name="s_italian">İtalyanca</string>
-    <string name="s_japanese">Japonca</string>
-    <string name="s_korean">Korece</string>
-    <string name="s_dutch">Felemenkçe</string>
-    <string name="s_norwegian">Norveççe</string>
-    <string name="s_polish">Lehçe</string>
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">İşitme engelliler</string>
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brezilya</string>
-    <string name="s_portuguese">Portekizce</string>
-    <string name="s_russian">Rusça</string>
-    <string name="Romanian">Romence</string>
-    <string name="Serbo_Croatian">Sırpça-Hırvatça</string>
-    <string name="Croatian">Hırvatça</string>
-    <string name="Serbian">Sırpça</string>
-    <string name="Slovenian">Slovakça</string>
-    <string name="s_swedish">İsveççe</string>
-    <string name="s_thai">Tayland</string>
-    <string name="s_turkish">Türkçe</string>
     <string name="s_chinese">Çince</string>
-    <string name="s_vietnamese">Vietnamca</string>
-    <string name="s_lithuanian">Litvanyalı</string>
-    <string name="s_indonesian">Indonesian</string>
     <string name="s_none">Boş</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video oynatılamıyor</string>
@@ -410,7 +408,7 @@ desteklenmiyor.</string>
     <string name="sub_force_all">Tüm videolarınızda zaten en az bir altyazı parçası var. Yeni altyazı parçalarının indirilmesini zorlamak ister misiniz?</string>
     <string name="dialog_subloader_nonetwork_title">İnternet bağlantısı yok</string>
     <string name="dialog_subloader_nonetwork_message">Altyazıları indirmek için internet bağlantısı gereklidir</string>
-    <string name="dialog_subloader_connecting">Www.opensubtitles.org sitesine bağlanıyor…</string>
+    <string name="dialog_subloader_connecting">Www.opensubtitles.com sitesine bağlanıyor…</string>
     <string name="dialog_subloader_credentials">Altyazı kimlik bilgilerini açar</string>
     <string name="dialog_subloader_credentials_empty">Geçerli bir kullanıcı adı ve şifre belirlemelisiniz!</string>
     <string name="toast_subloader_credentials_empty">Altyazıları indirebilmek için ayarlarda açılan altyazı kimlik bilgilerinizi sağlayın</string>
@@ -449,11 +447,6 @@ desteklenmiyor.</string>
     <string name="add_ssh_shortcut">Kısayol olarak ekle</string>
     <string name="ssh_prompt">FTP türü</string>
     <string name="ssh_empty_view"> \"Kendi ftp sunucunuza göz atabilir ve oynatabilirsiniz\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Kısayolu kaldır</string>
     <string name="shortcut_added">%s kısayol oluşturuldu</string>
     <string name="shortcut_removed">%s kısayol kaldırıldı</string>
@@ -495,8 +488,6 @@ desteklenmiyor.</string>
     <string name="preferences_force_software_decoding_summary">Bazı videolar düzgün oynatılmıyorsa bu seçeneği deneyebilirsiniz</string>
     <string name="preferences_force_audio_passthrough">Ses geçişi</string>
     <string name="preferences_force_audio_passthrough_disabled">Devre dışı (önerilir)</string>
-    <string name="preferences_force_audio_passthrough_enable">Mod 1 (kullanımdan kaldırıldı)</string>
-    <string name="preferences_force_audio_passthrough_enable2">Mod 2</string>
     <string name="preferences_disable_downmix_title">Ses stereo downmix\'i devre dışı bırak</string>
     <string name="preferences_disable_downmix_summary">Her zaman tüm kanalları çözmek ve ses çıkışı yeteneğine bağlı olarak Android downmix izin (ses kanalları kaybetme neden olabilir)</string>
     <string name="preferences_allow_3rd_party_player">Başka bir video oynatıcı kullanılmasına izin ver</string>
@@ -505,6 +496,9 @@ desteklenmiyor.</string>
     <string name="preference_tv_3d_automatic_switch_summary">Bu özelliği yalnızca 3D TV\'niz destekliyorsa kullanın</string>
     <string name="preference_tv_refreshrate_switch">Otomatik yenileme hızı anahtarını etkinleştirin</string>
     <string name="preference_tv_refreshrate_switch_summary">En iyi ekran yenileme hızını video kare hızına uyarlayarak titreme efektini kaldırın (cihaz desteği değişiklik gösterebilir)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">Devre dışı bırakıldı</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">Video fps ile eşleşen ekran modu seçimi</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Android 12+kare hızı eşleştirme özelliği</string>
     <string name="preference_cutout_short_edges">Ekran kesimli tam ekran video</string>
     <string name="preference_cutout_short_edges_summary">Kesikli yatay tam ekran videoya izin ver</string>
     <string name="category_languages">Altyazı</string>
@@ -516,6 +510,7 @@ desteklenmiyor.</string>
     <string name="summary_list_preference_primary">Altyazıları indirmek için dillerinizi seçin</string>
     <string name="favSubLang_title">Altyazı okuma dili</string>
     <string name="favSubLang_summary">Altyazı okumak için favori dilinizi seçin</string>
+    <string name="favAudioLang_title">Ses tercih edilen dil</string>
     <string name="ui_mode_title">Kullanıcı arayüzü modu</string>
     <string name="ui_mode_summary">TV ve Tablet/Telefon kullanıcı arayüzü arasında seçim yapın</string>
     <string name="preferences_video_about">Hakkında</string>
@@ -575,6 +570,7 @@ desteklenmiyor.</string>
     <string name="network_thumbnails_summary">Poster yokken uzak videolardan küçük resimler oluşturun</string>
     <string name="network_bookmarks_summary">Mümkün olduğunda ağdaki devam noktası ve konum yer işaretlerini kaydedin ve kontrol edin</string>
     <string name="share_folders_smbv2">SMBv2 desteğini etkinleştir</string>
+    <string name="share_folders_smb_disable_tcp_discovery">SMB TCP bulmayı devre dışı bırak</string>
     <string name="connection_abnormally_long">Bağlantı anormal derecede uzun görünüyor. Sıfırlamak ister misiniz?</string>
     <string name="connection_reset">Sıfırla</string>
     <!-- Info dialog, not indexed file -->
@@ -631,6 +627,7 @@ desteklenmiyor.</string>
     <string name="preferences_display_resume_box_summary">Ana ekranda en son videoyu yeniden gösteren düğmeyi görüntüle veya gizle</string>
     <string name="preferences_display_resume_box">Devam et box\'u görüntüle</string>
     <string name="preferences_leanback_user_interface">TV Kullanıcı Arayüzü</string>
+    <string name="preferences_separate_animation_from_movies">Animasyonları filmlerden ve televizyon dizilerinden ayır</string>
     <string name="preferences_show_watching_up_next_row_summary">Şu anda izlediğiniz ve sonraki videolarınızla bir satır göstermek için işaretleyin</string>
     <string name="preferences_show_watching_up_next_row">İzleyen/yukarı sonraki satırı göster</string>
     <string name="preferences_show_last_added_row_summary">Son eklenen medyanızla bir satır göstermek için işaretleyin</string>
@@ -732,10 +729,6 @@ desteklenmiyor.</string>
 -Son oynatılan\n
 -Trakt senkronizasyonu</string>
     <string name="dont_show_again">Tekrar gösterme</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Ağ ve Dosyalar</string>
     <string name="leanback_subtitles_integrated">Eklendi</string>
     <string name="leanback_subtitles_external">Harici</string>
@@ -839,8 +832,6 @@ desteklenmiyor.</string>
     <string name="list_title">Liste başlığı</string>
     <string name="loading">Yükleniyor…</string>
     <string name="connecting">Bağlanıyor…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">İstenen yenileme hızı ayarlanamadı</string>
     <string name="sponsor">Nova Sponsoru</string>
     <string name="enable_sponsor_title">Nova sponsor bağlantısını etkinleştir</string>

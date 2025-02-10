@@ -16,7 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">Mediateka</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
@@ -117,7 +117,7 @@
     <string name="all_animes">Visi animaciniai filmai</string>
     <string name="all_animeshows">Visi animaciniai serialai</string>
     <string name="animes_by_alpha">Animaciniai filmai pagal abėcėlę</string>
-    <string name="animes_by_genre">Animacinaii filmai pagal žanrą</string>
+    <string name="animes_by_genre">Animaciniai filmai pagal žanrą</string>
     <string name="animes_by_rating">Animaciniai filmai pagal reitingą</string>
     <string name="animes_by_year">Animaciniai filmai pagal metus</string>
     <string name="all_tvshows_format">Visi serialai - %d</string>
@@ -327,43 +327,13 @@
     <string name="menu_change_folder">Keisti aplanka</string>
     <string name="menu_change_folder_details">Pasirinkite pradinį aplanką</string>
     <string name="unlock_instructions">Atrakinimui ilgai palaikykite ant ikonos</string>
-    <string name="seek_to_percentage">\"Pereinama į %s%%</string>
+    <string name="seek_to_percentage">Pereinama į %s%%</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">Arabų</string>
-    <string name="s_bulgarian">Bulgarų</string>
-    <string name="Bosnian">Bosnių</string>
-    <string name="s_czech">Čekų</string>
-    <string name="s_danish">Danų</string>
-    <string name="s_german">Vokiečių</string>
-    <string name="s_english">Anglų</string>
-    <string name="s_greek">Graikų</string>
-    <string name="s_spanish">Ispanų</string>
-    <string name="s_finnish">Suomių</string>
-    <string name="s_french">Prancūzų</string>
-    <string name="s_hebrew">Hebrajų</string>
-    <string name="s_hungarian">Vengrų</string>
-    <string name="s_italian">Italų</string>
-    <string name="s_japanese">Japonų</string>
-    <string name="s_korean">Korėjiečių</string>
-    <string name="s_dutch">Olandų</string>
-    <string name="s_norwegian">Norvegų</string>
-    <string name="s_polish">Lenkų</string>
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazilų</string>
-    <string name="s_portuguese">Portugalų</string>
-    <string name="s_russian">Rusų</string>
-    <string name="Romanian">Rumunų</string>
-    <string name="Serbo_Croatian">Serbų-Kroatų</string>
-    <string name="Croatian">Kroatų</string>
-    <string name="Serbian">Serbų</string>
-    <string name="Slovenian">Slovėnų</string>
-    <string name="s_swedish">Švedų</string>
-    <string name="s_thai">Tajų</string>
-    <string name="s_turkish">Turkų</string>
     <string name="s_chinese">Kinų</string>
-    <string name="s_vietnamese">Vietnamiečių</string>
-    <string name="s_lithuanian">Lietuvių</string>
-    <string name="s_indonesian">Indoneziečių</string>
-    <string name="s_malay">Malajų</string>
     <string name="s_none">Nėra</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Negalima leisti video</string>
@@ -429,7 +399,7 @@
     <string name="sub_force_all">Visi jūsų video turi bent po vieną subtitrų failą. Ar norite atsiųsti daugiau naujų subtitrų?</string>
     <string name="dialog_subloader_nonetwork_title">Nėra interneto</string>
     <string name="dialog_subloader_nonetwork_message">Reikalingas interneto ryšys norint atsisiųsti subtitrus</string>
-    <string name="dialog_subloader_connecting">Prisijungiama prie www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">Prisijungiama prie www.opensubtitles.com…</string>
     <string name="dialog_subloader_credentials">Opensubtitles paskyra</string>
     <string name="dialog_subloader_credentials_empty">Turite nurodyti tinkamą naudotojo vardą ir slaptažodį!</string>
     <string name="toast_subloader_credentials_empty">Norėdami atsiųsti titrus, nustatymuose įveskite savo opensubtitles paskyrą</string>
@@ -468,11 +438,6 @@
     <string name="add_ssh_shortcut">Pridėti kaip nuorodą</string>
     <string name="ssh_prompt">FTP tipas</string>
     <string name="ssh_empty_view"> \"Galite naršyti ir žiūrėti iš savo ftp serverio\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Pašalinti nuorodą</string>
     <string name="shortcut_added">Nuoroda %s sukurta</string>
     <string name="shortcut_removed">Nuoroda %s pašalinta</string>
@@ -515,8 +480,6 @@
     <string name="preferences_force_software_decoding_summary">Galite išbandyti šį pasirinkimą jei kai kurie filmai atkuriami netinkamai</string>
     <string name="preferences_force_audio_passthrough">Tiesioginis audio perdavimas</string>
     <string name="preferences_force_audio_passthrough_disabled">Išjungta (rekomenduojama)</string>
-    <string name="preferences_force_audio_passthrough_enable">Režimas 1 (pasenęs)</string>
-    <string name="preferences_force_audio_passthrough_enable2">Režimas 2</string>
     <string name="preferences_disable_downmix_title">Išjungti garso konvertavimą į stereo</string>
     <string name="preferences_disable_downmix_summary">Visuomet iškoduoti visus garso kanalus ir leisti Android sistemai konvertuoti garsą priklausomai nuo išėjimo suderinamumo (gali būti prarasti balso kanalai)</string>
     <string name="preferences_allow_3rd_party_player">Leisti naudoti kitą video grotuvą</string>
@@ -758,10 +721,6 @@
         - Tęsti žiūrėjimą\n
         - Trakt sinchronizavimas</string>
     <string name="dont_show_again">Neberodyti</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Tinklas ir failai</string>
     <string name="leanback_subtitles_integrated">Vidinė</string>
     <string name="leanback_subtitles_external">Išorinė</string>
@@ -869,8 +828,6 @@
     <string name="list_title">Sąrašo pavadinimas</string>
     <string name="loading">Įkeliama…</string>
     <string name="connecting">Jungiamasi…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Nepavyko nustatyti reikiamo kadrų dažnio</string>
     <string name="sponsor">Nova rėmėjas</string>
     <string name="enable_sponsor_title">Įjungti Nova rėmėjo nuorodą</string>

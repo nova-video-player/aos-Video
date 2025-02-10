@@ -49,7 +49,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.archos.mediacenter.utils.AppState;
 import com.archos.mediacenter.utils.RepeatingImageButton;
 import com.archos.mediacenter.utils.seekbar.ArchosProgressSlider;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
@@ -60,7 +59,7 @@ import com.archos.medialib.Subtitle;
 /**
  * Created by alexandre on 27/08/15.
  */
-public class FloatingPlayerService extends Service implements AppState.OnForeGroundListener, PlayerService.PlayerFrontend {
+public class FloatingPlayerService extends Service implements PlayerService.PlayerFrontend {
 
     private static final int MIN_WIDTH = 200; //in dip
     private static final int STARTING_WIDTH = 300; //in dip
@@ -125,7 +124,6 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
         mSubtitleColorDefault = Color.parseColor(getResources().getString(R.string.subtitle_color_default));
         bindService(new Intent(this, PlayerService.class), mPlayerServiceConnection, BIND_AUTO_CREATE);
         mWindowManager = (WindowManager)getSystemService(WINDOW_SERVICE);
-        AppState.addOnForeGroundListener(this);
         IntentFilter filter = new IntentFilter();
         filter.addAction("DISPLAY_FLOATING_PLAYER");
         filter.addAction(PlayerService.PLAY_INTENT);
@@ -162,7 +160,11 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
                 }
             }
         }        ;
-        registerReceiver(mReceiver, filter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(mReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mReceiver, filter);
+        }
 
     }
     @Override
@@ -520,12 +522,6 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
         }
     }
 
-
-
-
-
-
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -562,9 +558,6 @@ public class FloatingPlayerService extends Service implements AppState.OnForeGro
         }
     };
 
-
-    @Override
-    public void onForeGroundState(Context applicationContext, boolean foreground) {}
 
     @Nullable
     @Override

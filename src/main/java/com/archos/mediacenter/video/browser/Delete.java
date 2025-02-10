@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.archos.filecorelibrary.AuthenticationException;
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.FileEditor;
 import com.archos.filecorelibrary.FileEditorFactory;
@@ -31,7 +32,6 @@ import com.archos.filecorelibrary.FileUtilsQ;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.RawLister;
 import com.archos.filecorelibrary.FileUtils;
-import com.archos.filecorelibrary.ftp.AuthenticationException;
 import com.archos.filecorelibrary.localstorage.ExternalSDFileWriter;
 import com.archos.filecorelibrary.localstorage.LocalStorageFileEditor;
 import com.archos.mediacenter.filecoreextension.UriUtils;
@@ -263,53 +263,56 @@ public class Delete {
     }
 
     public void deleteFileAndAssociatedFiles(Context context, Uri fileUri) {
-        log.debug("deleteFileAndAssociatedFiles: " + fileUri);
-        new Thread() {
-            public void run() {
-                Boolean isDeleteOK;
-                // TODO if directory do not get associate files....
-                // Get list of all files (video and associated)
-                List<Uri> associatedFiles = getAssociatedFiles(fileUri);
-                // Do not forget to add the video file!
-                List<Uri> allFiles = new ArrayList<>(associatedFiles.size() + 1);
-                allFiles.add(fileUri);
-                allFiles.addAll(associatedFiles);
-                log.debug("deleteFileAndAssociatedFiles: counter " + counter);
-                // Delete found associated files
-                for (Uri uri : allFiles) {
-                    FileEditor editor = FileEditorFactory.getFileEditorForUrl(uri, context);
-                    // delete feedback provided through boolean or exception handling
-                    Boolean isLocaleFile = editor instanceof LocalStorageFileEditor;
-                    try {
-                        if (isLocaleFile) //delete from database
-                            isDeleteOK = ((LocalStorageFileEditor) editor).deleteFileAndDatabase(context);
-                        else {
-                            NetworkScanner.removeVideos(context, uri);
-                            isDeleteOK = editor.delete();
-                            if (isDeleteOK == null) isDeleteOK = true; // smb and other editors are returning null otherwise throws exception
+        if (! ("upnp".equals(fileUri.getScheme()) || "http".equals(fileUri.getScheme())) ) { // no delete with upnp or http
+            log.debug("deleteFileAndAssociatedFiles: " + fileUri);
+            new Thread() {
+                public void run() {
+                    Boolean isDeleteOK;
+                    // TODO if directory do not get associate files....
+                    // Get list of all files (video and associated)
+                    List<Uri> associatedFiles = getAssociatedFiles(fileUri);
+                    // Do not forget to add the video file!
+                    List<Uri> allFiles = new ArrayList<>(associatedFiles.size() + 1);
+                    allFiles.add(fileUri);
+                    allFiles.addAll(associatedFiles);
+                    log.debug("deleteFileAndAssociatedFiles: counter " + counter);
+                    // Delete found associated files
+                    for (Uri uri : allFiles) {
+                        FileEditor editor = FileEditorFactory.getFileEditorForUrl(uri, context);
+                        // delete feedback provided through boolean or exception handling
+                        Boolean isLocaleFile = editor instanceof LocalStorageFileEditor;
+                        try {
+                            if (isLocaleFile) //delete from database
+                                isDeleteOK = ((LocalStorageFileEditor) editor).deleteFileAndDatabase(context);
+                            else {
+                                NetworkScanner.removeVideos(context, uri);
+                                isDeleteOK = editor.delete();
+                                if (isDeleteOK == null)
+                                    isDeleteOK = true; // smb and other editors are returning null otherwise throws exception
+                            }
+                            // ok only on main video file and if we have feedback already
+                            if (isDeleteOK != null && uri == fileUri) deleteOK(fileUri);
+                            log.debug("deleteFileAndAssociatedFiles: delete achieved " + uri + ", counter " + counter);
+                        } catch (Exception e) {
+                            log.error("deleteFileAndAssociatedFiles: failed to delete file " + uri + ", counter " + counter, e);
+                            if (uri == fileUri) { // if failure is on main file
+                                deleteNOK(fileUri);
+                                log.error("deleteFileAndAssociatedFiles: failed to delete main file " + uri + ", counter " + counter, e);
+                                return;
+                            }
                         }
-                        // ok only on main video file and if we have feedback already
-                        if (isDeleteOK != null && uri == fileUri) deleteOK(fileUri);
-                        log.debug("deleteFileAndAssociatedFiles: delete achieved " + uri + ", counter " + counter);
-                    } catch (Exception e) {
-                        log.error("deleteFileAndAssociatedFiles: failed to delete file " + uri + ", counter " + counter, e);
-                        if (uri == fileUri) { // if failure is on main file
-                            deleteNOK(fileUri);
-                            log.error("deleteFileAndAssociatedFiles: failed to delete main file " + uri + ", counter " + counter, e);
-                            return;
+                        if (!isLocaleFile) { // no deferred feedback
+                            log.debug("deleteFileAndAssociatedFiles: no localeFile counter " + counter);
                         }
                     }
-                    if (! isLocaleFile) { // no deferred feedback
-                        log.debug("deleteFileAndAssociatedFiles: no localeFile counter " + counter);
+                    //delete subs
+                    if (!FileUtils.isSlowRemote(fileUri)) {
+                        SubtitleManager.deleteAssociatedSubs(fileUri, context);
+                        XmlDb.deleteAssociatedResumeDatabase(fileUri);
                     }
                 }
-                //delete subs
-                if (!FileUtils.isSlowRemote(fileUri)) {
-                    SubtitleManager.deleteAssociatedSubs(fileUri, context);
-                    XmlDb.deleteAssociatedResumeDatabase(fileUri);
-                }
-            }
-        }.start();
+            }.start();
+        }
     }
 
     public void deleteLocalFilesAndAssociatedFiles(Context context, List<Uri> fileUris) {
@@ -457,7 +460,7 @@ public class Delete {
 
         for (String extension : extensionsToClean) {
             // relocate uri for local files to writeable location to comply with API30
-            Uri uri = FileUtils.relocateNfoJpgAppPublicDir(Uri.parse(parentUri.toString() + filenameWithoutExtension + extension));
+            Uri uri = FileUtils.relocateNfoAppPublicDirForNfoJpgFiles(Uri.parse(parentUri.toString() + filenameWithoutExtension + extension));
             if (uri!=null) { // is it possible?
                 result.add(uri);
             }

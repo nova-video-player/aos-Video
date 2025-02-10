@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.leanback.details;
 import android.content.Context;
 import androidx.leanback.widget.HeaderItem;
 
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 
@@ -35,7 +36,7 @@ public class FileDetailsRow extends FullWidthRow {
     }
 
     public boolean shouldHideLoadingAndMetadata(){//hide when torrent and no metadata
-        return mVideo!=null&&mVideo.getMetadata()==null&&mVideo.getFileUri().getLastPathSegment().endsWith("torrent");
+        return mVideo!=null&&mVideo.getMetadata()==null&&mVideo.getFileUri()!=null&& FileUtils.getName(mVideo.getFileUri()).endsWith("torrent");
     }
 
     public Video getVideo() {

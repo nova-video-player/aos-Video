@@ -14,6 +14,9 @@
 
 package com.archos.mediacenter.video.player;
 
+import static androidx.core.content.ContextCompat.getDrawable;
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.content.Context;
@@ -25,18 +28,23 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Outline;
+import android.graphics.Insets;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.ActionBar;
+
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -49,7 +57,9 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -66,6 +76,7 @@ import com.archos.mediacenter.video.player.tvmenu.TVCardDialog;
 import com.archos.mediacenter.video.player.tvmenu.TVCardView;
 import com.archos.mediacenter.video.player.tvmenu.TVMenuAdapter;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
+import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.squareup.picasso.Picasso;
 
@@ -76,6 +87,7 @@ import java.util.Formatter;
 import java.util.Locale;
 
 import static com.archos.environment.ArchosFeatures.isChromeOS;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +121,7 @@ import org.slf4j.LoggerFactory;
  * </ul>
  */
 
-public class PlayerController implements View.OnTouchListener, OnGenericMotionListener
+public class PlayerController implements View.OnTouchListener, OnGenericMotionListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener
 {
     private static final Logger log = LoggerFactory.getLogger(PlayerController.class);
     private static final boolean DBG_ALWAYS_SHOW = false;
@@ -155,7 +167,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private static final int STATUS_BAR_DISABLE_NOTIFICATION_ALERTS = 0x00040000;
     private static final int STATUS_BAR_DISABLE_NOTIFICATION_TICKER = 0x00080000;
 
-    
     final private Context       mContext;
     private IPlayerControl      mPlayer;
     private Window              mWindow;
@@ -186,6 +197,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private ImageButton         mBackwardButton2;
     private ImageButton         mForwardButton2;
     private ImageButton         mFormatButton2;
+    private TextView            mOsdLeftTextView;
+    private TextView            mOsdRightTextView;
+    private float               scrollGestureVertical = 0f;
+    private float               scrollGestureHorizontal = 0f;
+    private final float         BORDER_WIDTH = MiscUtils.dp2Px(24);
+    private final float         SCROLL_THRESHOLD = MiscUtils.dp2Px(16);
     private SeekBar             mProgress;
     private SeekBar             mProgress2;
     private TextView            mEndTime, mCurrentTime;
@@ -259,6 +276,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private boolean mMiddleZone = false;
     private boolean mLowerZone = false;
 
+    private GestureDetector gestureDetector;
+    private float currentBrightness;
+
     public interface Settings {
         void switchSubtitleTrack();
         void switchAudioTrack();
@@ -277,6 +297,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         splitView = false;
         mSettings = settings;
 
+        gestureDetector = new GestureDetector(mContext, this);
         UIMode	= VideoEffect.getDefaultMode();
         mWindow = window;
 
@@ -378,9 +399,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mTVMenuView = v.findViewById(R.id.my_recycler_view);
         if(mTVMenuView!=null){
             mTVMenuAdapter = new TVMenuAdapter((FrameLayout)mTVMenuView,mContext, mWindow );
-            
             mTVMenuAdapter.setOnFocusOutListener(new TVCardView.onFocusOutListener() {
-
                 @Override
                 public boolean onFocusOut(int keyCode) {
                     // TODO Auto-generated method stub
@@ -394,10 +413,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             });
            
         }
-
-        
         showTVMenu(false);
-
     }
 
     /*
@@ -710,11 +726,37 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         return navigationBarHeight;
     }
 
+    public boolean isGestureAreaDisplayed() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+            WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+            if (windowManager != null) {
+                WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+                Insets insets = windowMetrics.getWindowInsets().getInsetsIgnoringVisibility(WindowInsets.Type.systemGestures());
+                return insets.bottom > 0;
+            }
+        }
+        return false;
+    }
+
+    public int getGestureAreaHeight() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+            WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+            if (windowManager != null) {
+                WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+                Insets insets = windowMetrics.getWindowInsets().getInsetsIgnoringVisibility(WindowInsets.Type.systemGestures());
+                return insets.bottom;
+            }
+        }
+        return 0;
+    }
+
     private void attachWindow() {
 
         log.debug("CONFIG attachWindow getStatusBarHeight=" + getStatusBarHeight() +
                 ", getNavigationBarHeight=" + getNavigationBarHeight() +
                 ", getActionBarHeight=" + getActionBarHeight() +
+                ", getGestureAreaHeight=" + getGestureAreaHeight() +
+                ", isGestureAreaDisplayed=" + isGestureAreaDisplayed() +
                 ", ");
 
         if (mControllerView != null)
@@ -728,8 +770,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         // twice for sidebyside and topbottom view
         mControllerViewLeft= inflater.inflate(R.layout.player_controller_inside, null);
         if (mControllerViewLeft != null) {
+            mOsdLeftTextView = mControllerViewLeft.findViewById(R.id.osd_left);
+            mOsdRightTextView = mControllerViewLeft.findViewById(R.id.osd_right);
             mControllerViewLeft.setOnKeyListener(new View.OnKeyListener() {
-                
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     // TODO Auto-generated method stub
@@ -798,6 +841,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             RelativeLayout.LayoutParams relativeParams = ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams());
             int shiftUp = 0;
             int shiftLeft = 0;
+            log.debug("CONFIG updateOrientation, rotation is " + PlayerActivity.getHumanReadableRotation(rotation) + "(" + rotation + "), isSystemBarOnBottom " + isSystemBarOnBottom(mContext) + ", isChromeOS " + isChromeOS(mContext) + ", isGestureAreaDisplayed " + isGestureAreaDisplayed() + ", getGestureAreaHeight " + getGestureAreaHeight() + ", getNavigationBarHeight " + getNavigationBarHeight() + ", getStatusBarHeight " + getStatusBarHeight() + ", getActionBarHeight " + getActionBarHeight() + ", getSystemBarHeight getSystemBarHeight()");
             switch (rotation) {
                 case Surface.ROTATION_270:
                     log.debug("CONFIG updateOrientation, rotation is 270 shifting right from getNavigationBarHeight=" + getNavigationBarHeight());
@@ -806,42 +850,52 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         log.debug("CONFIG updateOrientation, SystemBarOnBottom shifting up by getNavigationBarHeight=" + getNavigationBarHeight());
                         shiftUp += getNavigationBarHeight();
                     } else {
-                        log.debug("CONFIG updateOrientation, ! SystemBarOnBottom shifting left/right by getNavigationBarHeight=" + getNavigationBarHeight());
+                        log.debug("CONFIG updateOrientation, ! SystemBarOnBottom shifting right by getNavigationBarHeight=" + getNavigationBarHeight());
                         shiftLeft += getNavigationBarHeight();
                     }
+                    log.debug("CONFIG updateOrientation, rotation is 270, shifting, margin (L,T,R,B)=(shiftLeft=" + shiftLeft + ",0,0,shiftUp=" + shiftUp + ")");
                     relativeParams.setMargins(shiftLeft, 0, 0, shiftUp);
                     break;
                 case Surface.ROTATION_90:
-                    log.debug("CONFIG updateOrientation, rotation is 90");
+                    log.debug("CONFIG updateOrientation: rotation is 90");
                     // FIXME: ALIGN_PARENT_RIGHT should have been simpler but results in shifted layout by safeInsetRight+safeInsetLeft+navigationBarHeight
+                    log.debug("CONFIG updateOrientation: ALIGN_PARENT_LEFT");
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
-                        log.debug("CONFIG updateOrientation, shifting right PlayerActivity.safeInsetLeft=" + PlayerActivity.safeInset.get(0));
+                        log.debug("CONFIG updateOrientation: cutout_mode_short_edges is enabled, shifting right, margin (L,T,R,B)=(PlayerActivity.safeInsetLeft=" + PlayerActivity.safeInset.get(0) + ",0,0,0)");
                         relativeParams.setMargins(PlayerActivity.safeInset.get(0), 0, 0, 0); // safeInset.get(0) is safeInsetLeft
                     }
                     break;
                 case Surface.ROTATION_0:
                     log.debug("CONFIG updateOrientation, rotation is 0 shifting up from getNavigationBarHeight=" + getNavigationBarHeight());
                     // FIXME: this is the only way found to get in portrait the seekbar on top of navigationBar
-                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true))
+                    if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
+                        log.debug("CONFIG updateOrientation: rotation is 0, cutout_mode_short_edges is enabled, ALIGN_PARENT_BOTTOM");
                         ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                    else
+                    } else {
+                        log.debug("CONFIG updateOrientation: rotation is 0, cutout_mode_short_edges is enabled, ALIGN_PARENT_TOP");
                         ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                    relativeParams.setMargins(0, 0, 0, getNavigationBarHeight());
+                    }
+                    log.debug("CONFIG updateOrientation, rotation is 0, shifting up, margin (L,T,R,B)=(0,0,0,getNavigationBarHeight()+getGestureAreaHeight()=" + (getNavigationBarHeight() + getGestureAreaHeight()) + ")");
+                    relativeParams.setMargins(0, 0, 0, getNavigationBarHeight() + getGestureAreaHeight());
                     break;
                 case Surface.ROTATION_180:
                     log.debug("CONFIG updateOrientation, rotation is 180");
                     ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                     if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
-                        log.debug("CONFIG updateOrientation, shifting right PlayerActivity.safeInsetTop=" + PlayerActivity.safeInset.get(1));
+                        log.debug("CONFIG updateOrientation: rotation is 180, cutout_mode_short_edges -> shiftUp=PlayerActivity.safeInsetTop=" + PlayerActivity.safeInset.get(1));
                         shiftUp += PlayerActivity.safeInset.get(1); // safeInset.get(1) is safeInsetTop
                     }
                     if (isSystemBarOnBottom(mContext)) {
-                        log.debug("CONFIG updateOrientation, SystemBarOnBottom shifting up by getNavigationBarHeight=" + getNavigationBarHeight());
-                        shiftUp += getNavigationBarHeight();
+                        log.debug("CONFIG updateOrientation: rotation is 180, SystemBarOnBottom -> shiftUp=getNavigationBarHeight()+getGestureAreaHeight()=" + (getNavigationBarHeight() + getGestureAreaHeight()));
+                        shiftUp += getNavigationBarHeight()+getGestureAreaHeight();
                     }
-                    if (shiftUp>0)
+                    if (shiftUp>0) {
+                        log.debug("CONFIG updateOrientation, rotation is 180, shiftUp>0, margin (L,T,R,B)=(0,0,0,shiftUp=" + shiftUp + ")");
                         relativeParams.setMargins(0, 0, 0, shiftUp);
+                    } else {
+                        log.debug("CONFIG updateOrientation, rotation is 180, shiftUp<=0 -> no setMargins update!");
+                    }
                     break;
             }
             mControllerView.setLayoutParams(relativeParams);
@@ -1379,6 +1433,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             position = 0;
         }
         int duration = Player.sPlayer.getDuration();
+        log.debug("setProgress player position/duration=" + position + "/" + duration);
         CharSequence endText = "";
         CharSequence currentText = "";
 
@@ -1390,6 +1445,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 if(mProgress2!=null)
                     mProgress2.setProgress((int) pos);
                 currentText = stringForTime(position);
+                log.debug("setProgress player currentText=" + currentText);
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
                 boolean makeTimeNegative = prefs.getBoolean(VideoPreferencesCommon.KEY_MAKE_TIME_NEGATIVE, VideoPreferencesCommon.MAKE_TIME_NEGATIVE_DEFAULT);
@@ -1539,6 +1595,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mIsStopped = true;
 
         mHandler.removeCallbacksAndMessages(null);
+        if (hideOsdHandler != null) hideOsdHandler.removeCallbacksAndMessages(hideOsdRunnable);
 
         mPlayer = null;
         cancelToast();
@@ -1617,6 +1674,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void setNextSeekPos(int way) {
+        log.debug("setNextSeekPos " + way);
         mSeekDir = way;
         if (mLastRelativePosition == -1) {
             if (mNextSeek == -1) {
@@ -1638,7 +1696,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void onSeek(int way, boolean longPress) {
-        log.debug("onSeek");
+        log.debug("onSeek " + way);
         cancelFadeOut();
         mHandler.removeMessages(MSG_SHOW_PROGRESS);
         mHandler.removeMessages(MSG_SEEK_RESUME);
@@ -1934,10 +1992,15 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
     /* View.OnTouchListener */
     public boolean onTouch(View v, MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent event) {
+        log.debug("onSingleTapConfirmed");
         if (isTVMenuDisplayed) mLastTouchEventTime = event.getEventTime();
         if(mControllerViewLeft!=null){
             View overlay = mControllerViewLeft.findViewById(R.id.help_overlay);
-
             if(event.getAction()==KeyEvent.ACTION_DOWN&&overlay!=null&&overlay.getVisibility()==View.VISIBLE){
                 sendOverlayFadeOut(0);
                 return true;
@@ -1946,6 +2009,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
         if (mControllerView == null)
             return false;
+        }
         if(isTVMenuDisplayed){
             showTVMenu(false);
             return false;
@@ -1961,10 +2025,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             return true;
         }
 
-        if ((event.getButtonState() & MotionEvent.BUTTON_SECONDARY)!=0) return false;
-
-        if (event.getAction() != MotionEvent.ACTION_UP) {
-            return true;
+        if ((event.getButtonState() & MotionEvent.BUTTON_SECONDARY)!=0) {
+            log.debug("onSingleTapConfirmed: BUTTON_SECONDARY");
+            return false;
         }
 
         int flags = FLAG_SIDE_ALL_EXCEPT_UNLOCK_INSTRUCTIONS;
@@ -1986,6 +2049,195 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
         switchMode(false);
         return true;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        scrollGestureVertical = 0f;
+        scrollGestureHorizontal = 0f;
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {}
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) { return false; }
+
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+
+        if(mIsLocked){
+            showUnlockInstructions(true);
+            return true;
+        }
+
+        float deltaY = e2.getY() - e1.getY();
+
+        WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        display.getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+        int screenHeight = displayMetrics.heightPixels;
+
+        if (scrollGestureHorizontal == 0 || scrollGestureVertical == 0) {
+            scrollGestureHorizontal = 0.0001f;
+            scrollGestureVertical = 0.0001f;
+            return false;
+        }
+
+        // Exclude border
+        if (e1.getY() < BORDER_WIDTH || e1.getX() < BORDER_WIDTH ||
+                e1.getY() > screenHeight - BORDER_WIDTH || e1.getX() > screenWidth - BORDER_WIDTH)
+            return false;
+
+        scrollGestureHorizontal += distanceX;
+        scrollGestureVertical += distanceY;
+
+        float halfWidth = screenWidth / 2f;
+
+        if (Math.abs(scrollGestureVertical) > SCROLL_THRESHOLD) {
+            if (e1.getX() < halfWidth) { // left screen part
+                log.debug("onScroll: left screen part, direction=" + (scrollGestureVertical > 0 ? "up" : "down"));
+                scrollIncrementalBrightnessUpdate(scrollGestureVertical > 0);
+            } else { // right screen part
+                log.debug("onScroll: left screen part, direction=" + (scrollGestureVertical > 0 ? "up" : "down"));
+                scrollIncrementalVolumeUpdate(scrollGestureVertical > 0);
+            }
+            scrollGestureVertical = 0.0001f;
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {}
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) { return false; }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
+
+        if(mIsLocked){
+            showUnlockInstructions(true);
+            return true;
+        }
+
+        if (e.getAction() == MotionEvent.ACTION_UP) {
+            log.debug("onDoubleTapEvent");
+            float x = e.getX();
+            if (mControllerView == null) return false;
+            float viewWidth = (float) mControllerView.getWidth();
+            if (x < viewWidth / 2) { // left region fast rewind
+                if (Player.sPlayer.canSeekBackward() && mSeekKeyDirection != -1) {
+                    if (mOsdLeftTextView != null) {
+                        mOsdLeftTextView.setText("");
+                        Drawable osdIcon = getDrawable(mContext, R.drawable.media_fast_rewind);
+                        mOsdLeftTextView.setCompoundDrawablesWithIntrinsicBounds(osdIcon, null, null, null);
+                        mOsdLeftTextView.setVisibility(View.VISIBLE);
+                        hideOsdHandler.removeCallbacks(hideOsdRunnable);
+                        hideOsdHandler.postDelayed(hideOsdRunnable, 300);
+                    }
+                    Player.sPlayer.seekTo(Player.sPlayer.getCurrentPosition() - 10000);
+                }
+            } else { // right region fast forward
+                if (Player.sPlayer.canSeekBackward() && mSeekKeyDirection != 1) {
+                    if (mOsdRightTextView != null) {
+                        mOsdRightTextView.setText("");
+                        Drawable osdIcon = getDrawable(mContext, R.drawable.media_fast_forward);
+                        mOsdRightTextView.setCompoundDrawablesWithIntrinsicBounds(osdIcon, null, null, null);
+                        mOsdRightTextView.setVisibility(View.VISIBLE);
+                        hideOsdHandler.removeCallbacks(hideOsdRunnable);
+                        hideOsdHandler.postDelayed(hideOsdRunnable, 300);
+                    }
+                    Player.sPlayer.seekTo(Player.sPlayer.getCurrentPosition() + 10000);
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onGenericMotion(View v, MotionEvent event) {
+        if(!isTVMenuDisplayed){
+            log.debug("onGenericMotion : event=" + event);
+            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M&&event.getActionButton()==MotionEvent.BUTTON_PRIMARY) //
+                return false;
+            int action = event.getAction();
+
+            if (action == MotionEvent.ACTION_HOVER_ENTER || action == MotionEvent.ACTION_HOVER_MOVE || action == MotionEvent.ACTION_HOVER_EXIT) {
+                // Ignore events sent by the remote control when it is in pointer mode
+                return false;
+            }
+
+            show(FLAG_SIDE_ALL_EXCEPT_UNLOCK_INSTRUCTIONS, 3000);
+
+            return true;
+        }
+        return false;
+    }
+
+    private Handler hideOsdHandler = new Handler();
+    private Runnable hideOsdRunnable = new Runnable() {
+        @Override
+        public void run() {
+            log.debug("hideOsdRunnable");
+            // Hide both the fast forward and fast backward icons
+            if (mOsdLeftTextView != null) mOsdLeftTextView.setVisibility(View.INVISIBLE);
+            if (mOsdRightTextView != null) mOsdRightTextView.setVisibility(View.INVISIBLE);
+        }
+    };
+
+    private void scrollIncrementalVolumeUpdate(boolean increase) {
+        int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        int newVolume;
+        Drawable volumeIcon;
+        if (currentVolume == 0) volumeIcon = getDrawable(mContext, R.drawable.ic_volume_off);
+        else volumeIcon = getDrawable(mContext, R.drawable.ic_volume);
+        if (mOsdLeftTextView != null) {
+            mOsdLeftTextView.setCompoundDrawablesWithIntrinsicBounds(volumeIcon, null, null, null);
+            mOsdLeftTextView.setText(String.valueOf(currentVolume));
+            mOsdLeftTextView.setVisibility(View.VISIBLE);
+        }
+        if (increase) newVolume = currentVolume + 1;
+        else newVolume = currentVolume - 1;
+        newVolume = Math.max(0, Math.min(newVolume, maxVolume)); // Constrain the value between 0 and maxVolume
+        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, newVolume, 0);
+        if (mOsdLeftTextView != null) mOsdLeftTextView.setText(String.valueOf(newVolume));
+        log.debug("scrollIncrementalVolumeUpdate: increase=" + increase + ", currentVolume=" + currentVolume + ", maxVolume=" + maxVolume + ", newVolume=" + newVolume);
+        if (newVolume == 0) volumeIcon = getDrawable(mContext, R.drawable.ic_volume_off);
+        else volumeIcon = getDrawable(mContext, R.drawable.ic_volume);
+        if (mOsdLeftTextView != null) mOsdLeftTextView.setCompoundDrawablesWithIntrinsicBounds(volumeIcon, null, null, null);
+        hideOsdHandler.removeCallbacks(hideOsdRunnable);
+        hideOsdHandler.postDelayed(hideOsdRunnable, 300);
+        updateVolumeBar();
+    }
+
+    private void scrollIncrementalBrightnessUpdate(boolean increase) {
+        float currentBrightness = PlayerBrightnessManager.getBrightness(mWindow);
+        int currentIntBrightness= PlayerBrightnessManager.getLinearBrightness(mWindow);
+        int newIntBrightness;
+        Drawable brightnessIcon = getDrawable(mContext, R.drawable.ic_brightness);
+        if (mOsdRightTextView != null) {
+            mOsdRightTextView.setCompoundDrawablesWithIntrinsicBounds(brightnessIcon, null, null, null);
+            mOsdRightTextView.setText(String.valueOf(currentIntBrightness));
+            mOsdRightTextView.setVisibility(View.VISIBLE);
+        }
+        if (increase) newIntBrightness = currentIntBrightness + 1;
+        else newIntBrightness = currentIntBrightness - 1;
+        newIntBrightness = Math.max(0, Math.min(newIntBrightness, 30)); // Constrain the brightness between 0 and maxBrightness
+        PlayerBrightnessManager.setLinearBrightness(newIntBrightness, increase, mWindow);
+        if (mOsdRightTextView != null) mOsdRightTextView.setCompoundDrawablesWithIntrinsicBounds(brightnessIcon, null, null, null);
+        log.debug("scrollIncrementalBrightnessUpdate: increase=" + increase + ", currentBrightness=" + currentBrightness + ", maxBrightness=" + 30 + ", newBrightness=" + newIntBrightness);
+        hideOsdHandler.removeCallbacks(hideOsdRunnable);
+        hideOsdHandler.postDelayed(hideOsdRunnable, 300);
     }
 
     public boolean hasFocus() {
@@ -2116,6 +2368,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                                 onSeek(-1, true);
                             }
                             return true;
+                        case KeyEvent.KEYCODE_MEDIA_NEXT:
+                        case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                            return true; // do nothing
                         case KeyEvent.KEYCODE_Z:
                             mSettings.setSubtitleDelay(-100);
                             return true;
@@ -2216,6 +2471,22 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         case KeyEvent.KEYCODE_A:
                         case KeyEvent.KEYCODE_PROG_BLUE:
                             mSettings.switchAudioTrack();
+                            return true;
+                        case KeyEvent.KEYCODE_CHANNEL_DOWN:
+                        case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED,false)) {
+                                PlayerService.sPlayerService.decrementAudioSpeed();
+                                Toast mAudioSpeedDown = Toast.makeText(mContext, mContext.getString(R.string.set_audio_speed_to, String.format("%.2f", PlayerService.sPlayerService.getAudioSpeed())), Toast.LENGTH_SHORT);
+                                mAudioSpeedDown.show();
+                            }
+                            return true;
+                        case KeyEvent.KEYCODE_CHANNEL_UP:
+                        case KeyEvent.KEYCODE_MEDIA_NEXT:
+                            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED,false)) {
+                                PlayerService.sPlayerService.incrementAudioSpeed();
+                                Toast mAudioSpeedUp = Toast.makeText(mContext, mContext.getString(R.string.set_audio_speed_to, String.format("%.2f", PlayerService.sPlayerService.getAudioSpeed())), Toast.LENGTH_SHORT);
+                                mAudioSpeedUp.show();
+                            }
                             return true;
                     }
                 }

@@ -59,8 +59,7 @@ public class AllMoviesIconBuilder {
         mContext = context;
         SELECTION = VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
                         VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL AND " +
-                        VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL AND " +
-                        VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'";
+                        VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL";
         mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_movies_icon_width);
         mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_movies_icon_height);
     }

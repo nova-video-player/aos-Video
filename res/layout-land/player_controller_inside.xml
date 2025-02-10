@@ -62,6 +62,7 @@
             />
     </LinearLayout>
 
+    <!-- Padding is programmatically for chromebook -->
     <LinearLayout
         android:id="@+id/control_bar"
         android:layout_width="fill_parent"

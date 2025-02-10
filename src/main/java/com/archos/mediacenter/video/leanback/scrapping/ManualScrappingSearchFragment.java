@@ -316,7 +316,7 @@ public abstract class ManualScrappingSearchFragment extends SearchSupportFragmen
             else
                 mResultsAdapter.add(values[0].mPosition, values[0].mDetails);
              */
-            if (values[0].mDetails.getDefaultPoster() != null) {
+            if (values[0].mDetails != null && values[0].mDetails.getDefaultPoster() != null) {
                 mResultsAdapter.add(mResultsAdapter.size(), values[0].mDetails);
             }
         }

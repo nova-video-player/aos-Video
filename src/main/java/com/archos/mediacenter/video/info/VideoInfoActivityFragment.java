@@ -29,6 +29,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -115,7 +116,7 @@ import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.StoreRatingDialogBuilder;
-import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
+import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.TrailerServiceIconFactory;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
@@ -127,6 +128,7 @@ import com.archos.mediascraper.MediaScraper;
 import com.archos.mediascraper.MovieTags;
 import com.archos.mediascraper.NfoWriter;
 import com.archos.mediascraper.ScraperImage;
+import com.archos.mediascraper.Scraper;
 import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
@@ -152,7 +154,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.archos.mediacenter.video.utils.VideoUtils.getFilePathFromContentUri;
+import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateTrackName;
+import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.replaceLanguageCodeInString;
+import static com.archos.mediacenter.video.utils.VideoUtils.getFileUriStringFromContentUri;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -454,8 +458,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mTitleBar = (Toolbar) mRoot.findViewById(R.id.titlebar);
         mTitleBarContent = mRoot.findViewById(R.id.titlebar_content);
 
-        mToolbarContainer = mRoot.findViewById(R.id.toolbar_container);
+        mSecondaryTitleBar = (ViewGroup) mRoot.findViewById(R.id.secondary_titlebar);
+        if(mSecondaryTitleBar!=null) {
+            mToolbarContainer = mRoot.findViewById(R.id.toolbar_container);
+            mTitleBarContent.setVisibility(View.GONE);
+            mSecondaryEpisodeTitleView = (TextView) mSecondaryTitleBar.findViewById(R.id.episode_title_view);
+            mSecondaryEpisodeSeasonView = (TextView) mSecondaryTitleBar.findViewById(R.id.s_e_text_view);
+            mSecondaryTitleTextView = (TextView) mSecondaryTitleBar.findViewById(R.id.title_view);
 
+        }
         mTitleBar.setOnMenuItemClickListener(this);
         mToolbarWidgetWrapper = new ToolbarWidgetWrapper(mTitleBar, false);
         mToolbarWidgetWrapper.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP);
@@ -635,7 +646,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 mVideoIdFromPlayer = bundle.getLong(EXTRA_VIDEO_ID, -1);
                 if (mVideoIdFromPlayer == -1) {
                     mPath = bundle.getString(EXTRA_VIDEO_PATH);
-                    String nPath = getFilePathFromContentUri(mContext, mPath);
+                    String nPath = getFileUriStringFromContentUri(mContext, mPath);
                     if (nPath != null) mPath = nPath;
                 }
 
@@ -1293,7 +1304,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         log.debug("requestIndexAndScrap");
         if (!PrivateMode.isActive()) {
 
-            if (mCurrentVideo.getId() == -1&&!mCurrentVideo.getFileUri().equals(mLastIndexed)) {
+            if (mCurrentVideo.getId() == -1&&mCurrentVideo.getFileUri()!=null&&!mCurrentVideo.getFileUri().equals(mLastIndexed)) {
                 mLastIndexed = mCurrentVideo.getFileUri();
                 if(UriUtils.isIndexable(mCurrentVideo.getFileUri())) {
                     final Uri uri = mCurrentVideo.getFileUri();
@@ -1332,119 +1343,128 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         addMenu(0, R.string.scrap_remove, DELETE_GROUP, R.string.scrap_remove);
     }
 
-    private void  setFileInfo(VideoMetadata videoMetadata){
+    private void setVisibilityFileError() {
+        mFileError.setVisibility(View.VISIBLE);
+        mFileInfoContainerLoading.setVisibility(View.GONE);
+        mFileInfoAudioVideoContainer.setVisibility(View.GONE);
+        mDuration.setVisibility(View.GONE);
+        mFileSize.setVisibility(View.GONE);
+    }
+
+    private void setFileInfo(VideoMetadata videoMetadata){
         log.debug("setFileInfo");
         // Special error case (99.9% of the time it happens when the specified file is not reachable)
-        if (videoMetadata.getFileSize()==0 && videoMetadata.getVideoTrack()==null && videoMetadata.getAudioTrackNb()==0) {
-            // sometimes metadata are set to zero but the file is there, can be due to libavosjni not loaded
-            mFileError.setVisibility(View.VISIBLE);
-            mFileInfoContainerLoading.setVisibility(View.GONE);
-            mFileInfoAudioVideoContainer.setVisibility(View.GONE);
-            mDuration.setVisibility(View.GONE);
-            mFileSize.setVisibility(View.GONE);
-        }
-        else {
-            mFileError.setVisibility(View.GONE);
-            if (videoMetadata.getVideoTrack() != null) {
-                mVideoTrackTextView.setText(VideoInfoCommonClass.getVideoTrackString(videoMetadata, getResources()));
-            }
-
-            // set video codec flags
-            if(videoMetadata.getVideoTrack() != null) {
-                String format = videoMetadata.getVideoTrack().format;
-                if (format != null) {
-                    mVideoCodec.setVisibility(View.VISIBLE);
-                    switch (format) {
-                        case "H.264":
-                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/h264.png"));
-                            break;
-                        case "HEVC/H.265":
-                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/hevc.png"));
-                            break;
-                        case "MPEG-2":
-                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg2.png"));
-                            break;
-                        case "MPEG-4":
-                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg4.png"));
-                            break;
-                        case "mpeg1video":
-                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg1video.png"));
-                            break;
-                        case "AV1":
-                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/av1.png"));
-                            break;
-                        case "wmv2":
-                            mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/wmv2.png"));
-                            break;
-                        default:
-                            mVideoCodec.setVisibility(View.GONE);
-                            break;
+        if (videoMetadata == null) {
+            setVisibilityFileError();
+        } else {
+            if (videoMetadata.getFileSize()==0 && videoMetadata.getVideoTrack()==null && videoMetadata.getAudioTrackNb()==0) {
+                // sometimes metadata are set to zero but the file is there, can be due to libavosjni not loaded
+                mFileError.setVisibility(View.VISIBLE);
+                mFileInfoContainerLoading.setVisibility(View.GONE);
+                mFileInfoAudioVideoContainer.setVisibility(View.GONE);
+                mDuration.setVisibility(View.GONE);
+                mFileSize.setVisibility(View.GONE);
+                setVisibilityFileError();
+            } else {
+                mFileError.setVisibility(View.GONE);
+                if (videoMetadata.getVideoTrack() != null) {
+                    mVideoTrackTextView.setText(VideoInfoCommonClass.getVideoTrackString(videoMetadata, getResources()));
+                }
+                // set video codec flags
+                if(videoMetadata.getVideoTrack() != null) {
+                    String format = videoMetadata.getVideoTrack().format;
+                    if (format != null) {
+                        mVideoCodec.setVisibility(View.VISIBLE);
+                        switch (format) {
+                            case "H.264":
+                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/h264.png"));
+                                break;
+                            case "HEVC/H.265":
+                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/hevc.png"));
+                                break;
+                            case "MPEG-2":
+                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg2.png"));
+                                break;
+                            case "MPEG-4":
+                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg4.png"));
+                                break;
+                            case "mpeg1video":
+                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg1video.png"));
+                                break;
+                            case "AV1":
+                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/av1.png"));
+                                break;
+                            case "wmv2":
+                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/wmv2.png"));
+                                break;
+                            default:
+                                mVideoCodec.setVisibility(View.GONE);
+                                break;
+                        }
                     }
                 }
-            }
 
-            // set audio codec flags
-            if (videoMetadata.getAudioTrackNb() != 0) {
-                mAudioCodec.setVisibility(View.VISIBLE);
-                mAudioChannels.setVisibility(View.VISIBLE);
-                String audioTrackFormat = "";
-                audioTrackFormat = videoMetadata.getAudioTrack(0).format;
-                if (audioTrackFormat.equalsIgnoreCase("Digital")) {
-                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/dts.png"));
-                }else if (audioTrackFormat.equalsIgnoreCase("AC3")) {
-                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/ac3.png"));
-                }else if (audioTrackFormat.equalsIgnoreCase("EAC3")) {
-                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/eac3.png"));
-                }else if (audioTrackFormat.equalsIgnoreCase("AAC")) {
-                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/aac.png"));
-                }else if (audioTrackFormat.equalsIgnoreCase("MP3")) {
-                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/mp3.png"));
-                }else if (audioTrackFormat.equalsIgnoreCase("FLAC")) {
-                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/flac.png"));
-                }else if (audioTrackFormat.equalsIgnoreCase("ALAC")) {
-                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/alac.png"));
-                }else if (audioTrackFormat.equalsIgnoreCase("MP2")) {
-                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/mp2.png"));
-                }else if (audioTrackFormat.contains("Vorbis")) {
-                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/vorbis.png"));
-                }else if (audioTrackFormat.equalsIgnoreCase("WMA")) {
-                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/wma.png"));
-                }else if (audioTrackFormat.equalsIgnoreCase("wmav1")) {
-                    mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/wma.png"));
-                }else{
-                    mAudioCodec.setVisibility(View.GONE);
+                // set audio codec flags
+                if (videoMetadata.getAudioTrackNb() != 0) {
+                    mAudioCodec.setVisibility(View.VISIBLE);
+                    mAudioChannels.setVisibility(View.VISIBLE);
+                    String audioTrackFormat = "";
+                    audioTrackFormat = videoMetadata.getAudioTrack(0).format;
+                    if (audioTrackFormat.equalsIgnoreCase("Digital")) {
+                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/dts.png"));
+                    }else if (audioTrackFormat.equalsIgnoreCase("AC3")) {
+                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/ac3.png"));
+                    }else if (audioTrackFormat.equalsIgnoreCase("EAC3")) {
+                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/eac3.png"));
+                    }else if (audioTrackFormat.equalsIgnoreCase("AAC")) {
+                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/aac.png"));
+                    }else if (audioTrackFormat.equalsIgnoreCase("MP3")) {
+                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/mp3.png"));
+                    }else if (audioTrackFormat.equalsIgnoreCase("FLAC")) {
+                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/flac.png"));
+                    }else if (audioTrackFormat.equalsIgnoreCase("ALAC")) {
+                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/alac.png"));
+                    }else if (audioTrackFormat.equalsIgnoreCase("MP2")) {
+                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/mp2.png"));
+                    }else if (audioTrackFormat.contains("Vorbis")) {
+                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/vorbis.png"));
+                    }else if (audioTrackFormat.equalsIgnoreCase("WMA")) {
+                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/wma.png"));
+                    }else if (audioTrackFormat.equalsIgnoreCase("wmav1")) {
+                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/wma.png"));
+                    }else{
+                        mAudioCodec.setVisibility(View.GONE);
+                    }
+
+                    String audioTrackChannels = "";
+                    audioTrackChannels = videoMetadata.getAudioTrack(0).channels;
+                    if (audioTrackChannels.equalsIgnoreCase("Mono")) {
+                        mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/1.png"));
+                    }else if (audioTrackChannels.equalsIgnoreCase("Stereo")) {
+                        mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/2.png"));
+                    }else if (audioTrackChannels.equalsIgnoreCase("5.1")) {
+                        mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/6.png"));
+                    }else if (audioTrackChannels.equalsIgnoreCase("7.1")) {
+                        mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/8.png"));
+                    }else{
+                        mAudioChannels.setVisibility(View.GONE);
+                    }
                 }
-
-                String audioTrackChannels = "";
-                audioTrackChannels = videoMetadata.getAudioTrack(0).channels;
-                if (audioTrackChannels.equalsIgnoreCase("Mono")) {
-                    mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/1.png"));
-                }else if (audioTrackChannels.equalsIgnoreCase("Stereo")) {
-                    mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/2.png"));
-                }else if (audioTrackChannels.equalsIgnoreCase("5.1")) {
-                    mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/6.png"));
-                }else if (audioTrackChannels.equalsIgnoreCase("7.1")) {
-                    mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/8.png"));
-                }else{
+                if (videoMetadata.getAudioTrackNb() == 0) {
+                    mAudioCodec.setVisibility(View.GONE);
                     mAudioChannels.setVisibility(View.GONE);
                 }
+                mFileInfoAudioVideoContainer.setVisibility(View.VISIBLE);
+                mFileInfoContainerLoading.setVisibility(View.GONE);
+                mDuration.setVisibility(View.VISIBLE);
+                mFileSize.setVisibility(View.VISIBLE);
+                mFileSize.setText(Formatter.formatFileSize(getActivity(), videoMetadata.getFileSize()));
+                mDuration.setText(MediaUtils.formatTime(videoMetadata.getDuration()));
+                String decoder = VideoInfoCommonClass.getDecoder(videoMetadata, getResources(), mPlayerType);
+                setTextOrHideContainer(mDecoderTextView, decoder, mDecoderTextView);
+                String audiotrack = VideoInfoCommonClass.getAudioTrackString(videoMetadata, getResources(), getActivity());
+                setTextOrHideContainer(mAudioTrackTextView, audiotrack, mRoot.findViewById(R.id.audio_row));
             }
-            if (videoMetadata.getAudioTrackNb() == 0) {
-                mAudioCodec.setVisibility(View.GONE);
-                mAudioChannels.setVisibility(View.GONE);
-            }
-
-
-            mFileInfoAudioVideoContainer.setVisibility(View.VISIBLE);
-            mFileInfoContainerLoading.setVisibility(View.GONE);
-            mDuration.setVisibility(View.VISIBLE);
-            mFileSize.setVisibility(View.VISIBLE);
-            mFileSize.setText(Formatter.formatFileSize(getActivity(), videoMetadata.getFileSize()));
-            mDuration.setText(MediaUtils.formatTime(videoMetadata.getDuration()));
-            String decoder = VideoInfoCommonClass.getDecoder(videoMetadata, getResources(), mPlayerType);
-            setTextOrHideContainer(mDecoderTextView, decoder, mDecoderTextView);
-            String audiotrack = VideoInfoCommonClass.getAudioTrackString(videoMetadata, getResources(), getActivity());
-            setTextOrHideContainer(mAudioTrackTextView, audiotrack, mRoot.findViewById(R.id.audio_row));
         }
     }
 
@@ -1471,14 +1491,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             if(videoMetadata!=null) {
                 for (int i = 0; i < subtitleTrackNb; ++i) {
                     if (!videoMetadata.getSubtitleTrack(i).isExternal) { //manage external subs with sub manager
-                        lines.add((totSubs + 1) + ": " + VideoUtils.getLanguageString(getActivity(), videoMetadata.getSubtitleTrack(i).name));
+                        lines.add((totSubs + 1) + ": " + generateTrackName(mContext, videoMetadata.getSubtitleTrack(i).name, videoMetadata.getSubtitleTrack(i).language));
                         totSubs++;
                     }
                 }
             }
             if(externalSubs!=null) {
                 for (SubtitleManager.SubtitleFile sub : externalSubs) {
-                    lines.add((totSubs + 1) + ": " + VideoUtils.getLanguageString(getActivity(), sub.mName));
+                    lines.add((totSubs + 1) + ": " + replaceLanguageCodeInString(mContext, sub.mName));
                     totSubs++;
                 }
             }
@@ -1549,17 +1569,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }else if(view == mSubtitleDownloadButton){
 
             Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.setClass(getActivity(), SubtitlesDownloaderActivity.class);
-            intent.putExtra(SubtitlesDownloaderActivity.FILE_URL, mCurrentVideo.getFilePath());
+            intent.setClass(getActivity(), SubtitlesDownloaderActivity2.class);
+            intent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, mCurrentVideo.getFilePath());
             startActivityForResult(intent, REQUEST_CODE_SUBTITLES_DOWNLOADER_ACTIVITY);
         }else if(view == mTMDBIcon){
             // Format TMDB URL with movie ID and preferred language
             final String language, tmdbUrl;
             if (mIsVideoMovie) {
-                language = MovieScraper3.getLanguage(getActivity());
+                language = Scraper.getLanguage(getActivity());
                 tmdbUrl = String.format(getResources().getString(R.string.tmdb_movie_title_url), Long.toString(mTMDBId), language);
             } else {
-                language = ShowScraper4.getLanguage(getActivity());
+                language = Scraper.getLanguage(getActivity());
                 tmdbUrl = String.format(getResources().getString(R.string.tmdb_tvshow_title_url), Long.toString(mOnlineId), language);
             }
             log.debug("onClick: mTMDBId=" + mTMDBId + ", tmdbUrl=" + tmdbUrl);
@@ -1570,7 +1590,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }else if(view == mTVDBIcon){
             final String language;
             // Format TVDB URL with movie ID and preferred language
-            language = ShowScraper4.getLanguage(getActivity());
+            language = Scraper.getLanguage(getActivity());
             final String tvdbUrl = String.format(getResources().getString(R.string.tvdb_title_url), Long.toString(mTVDBId), language);
             // Breaks AndroidTV acceptance
             Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(tvdbUrl));
@@ -1738,7 +1758,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public void startAsyncTasks() {
         log.debug("startAsyncTasks with " + mCurrentVideo.getFilePath());
         //do not execute file info task when torrent file
-        if((mCurrentVideo.getFileUri() != null && !mCurrentVideo.getFileUri().getLastPathSegment().endsWith("torrent")) || mIsLaunchFromPlayer) {
+        String getLastPathSegment = FileUtils.getName(mCurrentVideo.getFileUri());
+        if((mCurrentVideo.getFileUri() != null &&
+                getLastPathSegment != null &&
+                !getLastPathSegment.endsWith("torrent")) ||
+                mIsLaunchFromPlayer) {
             log.debug("startAsyncTasks not a torrent or mIsLaunchFromPlayer starting VideoInfoTask for " + mCurrentVideo.getFilePath());
             if (mVideoInfoTask != null)
                 mVideoInfoTask.cancel(true);
@@ -1909,6 +1933,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             if(mSubtitleListCache.containsKey(video.getFilePath()))
                 return mSubtitleListCache.get(video.getFilePath());
             SubtitleManager lister = new SubtitleManager(mActivity,null );
+            log.debug("SubtitleFilesListerTask:doInBackground listLocalAndRemotesSubtitles");
             List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(video.getFileUri(), true);
             mSubtitleListCache.put(video.getFilePath(), list);
             return list;
@@ -2977,6 +3002,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 else{
                     mScrapTrailersContainer.setVisibility(View.GONE);
                 }
+            } else { // tag is null
+                mScrapContentRating.setVisibility(View.GONE);
+                mScrapContentRatingContainer.setVisibility(View.GONE);
             }
         }
     }
@@ -3111,7 +3139,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         else log.debug("onResume: current mVideo is null");
 
         if ((playerVideoId != -42 && mCurrentVideo.getId() != playerVideoId) ||
-                (playerVideoUri != null && mCurrentVideo.getFileUri() != playerVideoUri)) {
+                (playerVideoUri != null && ! mCurrentVideo.getFileUri().equals(playerVideoUri))) {
             Video mNewVideo;
             mVideoPathFromPlayer = playerVideoUri.toString();
             mVideoIdFromPlayer = playerVideoId;

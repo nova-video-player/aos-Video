@@ -1,7 +1,7 @@
 Nova è un lettore multimediale open source pensato per tablet, telefoni e dispositivi Android TV disponibile su https://github.com/nova-video-player/aos-AVP
 
 Lettore universale:
-- Riproduci video dal tuo computer, server (FTP, SFTP), NAS (SMB, UPnP)
+- Riproduci video dal tuo computer, server (FTP, SFTP, WebDAV), NAS (SMB, UPnP)
 - Riproduci video dall'archivio USB esterno
 - Video di tutte le fonti integrati in una collezione multimediale unificata
 - Recupero automatico online delle descrizioni dei film e delle serie TV con poster e sfondi

@@ -26,8 +26,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Subtitle3DTextView extends LinearLayout {
-    private static final String TAG = "SubtitleTextView";
+    private static final Logger log = LoggerFactory.getLogger(Subtitle3DTextView.class);
     private final AttributeSet mAttrs;
     private final FrameLayout mPrimaryFrameLayout;
     private final FrameLayout mSecondaryFrameLayout;
@@ -54,14 +57,31 @@ public class Subtitle3DTextView extends LinearLayout {
         mSecondaryFrameLayout.getLayoutParams().height =  ViewGroup.LayoutParams.MATCH_PARENT;
         ((LayoutParams)mPrimaryFrameLayout.getLayoutParams()).weight = 1;
         ((LayoutParams)mSecondaryFrameLayout.getLayoutParams()).weight = 1;
-        ((FrameLayout.LayoutParams)mSecondaryTV.getLayoutParams()).gravity = Gravity.BOTTOM;
-        ((FrameLayout.LayoutParams)mPrimaryTV.getLayoutParams()).gravity = Gravity.BOTTOM;
+        ((FrameLayout.LayoutParams)mSecondaryTV.getLayoutParams()).gravity = Gravity.NO_GRAVITY;
+        ((FrameLayout.LayoutParams)mPrimaryTV.getLayoutParams()).gravity = Gravity.NO_GRAVITY;
         ((FrameLayout.LayoutParams)mSecondaryTV.getLayoutParams()).height = ViewGroup.LayoutParams.WRAP_CONTENT;
         ((FrameLayout.LayoutParams)mPrimaryTV.getLayoutParams()).height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        ((FrameLayout.LayoutParams)mSecondaryTV.getLayoutParams()).width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        ((FrameLayout.LayoutParams)mPrimaryTV.getLayoutParams()).width = ViewGroup.LayoutParams.WRAP_CONTENT;
+    }
+
+    public void setGravity3D(int gravity) {
+        log.debug("setGravity3D: gravity={}", gravity);
+        // Get FrameLayout.LayoutParams since the parent is a FrameLayout
+        FrameLayout.LayoutParams primaryParams = (FrameLayout.LayoutParams) mPrimaryTV.getLayoutParams();
+        FrameLayout.LayoutParams secondaryParams = (FrameLayout.LayoutParams) mSecondaryTV.getLayoutParams();
+        primaryParams.gravity = gravity;
+        secondaryParams.gravity = gravity;
+        mPrimaryTV.setLayoutParams(primaryParams);
+        mSecondaryTV.setLayoutParams(secondaryParams);
+        // Request layout updates
+        mPrimaryTV.requestLayout();
+        mSecondaryTV.requestLayout();
     }
     
     @Override
     public void setVisibility(int visibility) {
+        log.debug("setVisibility: visibility={}", visibility);
         super.setVisibility(visibility);
         if (mExternalSurface != null)  {
             try {
@@ -83,6 +103,7 @@ public class Subtitle3DTextView extends LinearLayout {
 
 
     public void setText(String s) {
+        log.debug("setText: text={}", s);
         mPrimaryTV.setText(s);
         if(mNeed3d)
             mSecondaryTV.setText(s);
@@ -110,6 +131,7 @@ public class Subtitle3DTextView extends LinearLayout {
     }
 
     public void setUIMode(int uiMode) {
+        log.debug("setUIMode: uiMode={}", uiMode);
         getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
         if(uiMode== VideoEffect.SBS_MODE||uiMode==VideoEffect.TB_MODE){
             mNeed3d = true;

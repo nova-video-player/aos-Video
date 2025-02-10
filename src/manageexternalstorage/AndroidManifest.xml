@@ -27,16 +27,17 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" android:minSdkVersion="34"/>
 
     <application
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/nova">
         <!-- ************** WIDGET ************** -->
 
         <activity
             android:name="com.archos.mediacenter.video.widget.VideoWidgetConfigure"
-            android:icon="@mipmap/ic_launcher"
             android:exported="false"
-            android:label="@string/nova"
             android:theme="@style/Theme.DialogMinWidth" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />

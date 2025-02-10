@@ -56,8 +56,7 @@ public class AllTvshowsIconBuilder {
         mContext = context;
         SELECTION = VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
                     VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL AND " +
-                    VideoStore.Video.VideoColumns.SCRAPER_S_COVER + " IS NOT NULL AND " +
-                    "( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%')" +
+                    VideoStore.Video.VideoColumns.SCRAPER_S_COVER + " IS NOT NULL" +
                     ") GROUP BY (" + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID ;
         mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_tvshows_icon_width);
         mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_tvshows_icon_height);

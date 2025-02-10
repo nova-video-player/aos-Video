@@ -18,6 +18,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import androidx.leanback.database.CursorMapper;
 
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.leanback.adapter.object.NetworkShortcut;
 
@@ -25,6 +26,7 @@ import com.archos.mediacenter.video.leanback.adapter.object.NetworkShortcut;
  * Created by vapillon on 10/04/15.
  */
 public class NetworkShortcutMapper extends CursorMapper {
+    // mapper intended for indexed folder shortcut (not network shortcut)
 
     private static final String TAG = "NetworkShortcutMapper";
 
@@ -47,7 +49,7 @@ public class NetworkShortcutMapper extends CursorMapper {
         String friendlyUri = c.getString(mFriendlyUriColumn);
         Uri uri = Uri.parse(path);
         if(name==null||name.isEmpty())
-            name = uri.getLastPathSegment();
-        return new NetworkShortcut(id, path, name,friendlyUri);
+            name = FileUtils.getName(uri);
+        return new NetworkShortcut(id, path, name, friendlyUri);
     }
 }

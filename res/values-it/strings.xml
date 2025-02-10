@@ -16,7 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">Libreria</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
@@ -273,6 +273,7 @@ Copertina (rotolo di copertina)</string>
     <string name="player_subtitle_track_toast">Traccia dei sottotitoli:</string>
     <string name="player_bookmark_set">Segnalibro impostato su</string>
     <string name="player_pref_subtitle_delay_title">Ritardo</string>
+    <string name="player_pref_audio_speed_title">Velocità di riproduzione</string>
     <string name="floating_player_restore">Ripristina</string>
     <string name="floating_player_play">Riproduci</string>
     <string name="floating_player_pause">Pausa</string>
@@ -305,43 +306,13 @@ Copertina (rotolo di copertina)</string>
     <string name="menu_change_folder">Cambia cartella</string>
     <string name="menu_change_folder_details">Scegli la cartella per iniziare da</string>
     <string name="unlock_instructions">Pressione prolungata sull\'icona per sbloccare</string>
-    <string name="seek_to_percentage">\"Ricerca al %s%%</string>
+    <string name="seek_to_percentage">Ricerca al %s%%</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">Arabo</string>
-    <string name="s_bulgarian">Bulgaro</string>
-    <string name="Bosnian">Bosniaco</string>
-    <string name="s_czech">Ceco</string>
-    <string name="s_danish">Danese</string>
-    <string name="s_german">Tedesco</string>
-    <string name="s_english">Inglese</string>
-    <string name="s_greek">Greco</string>
-    <string name="s_spanish">Spagnolo</string>
-    <string name="s_finnish">Finlandese</string>
-    <string name="s_french">Francese</string>
-    <string name="s_hebrew">Ebraico</string>
-    <string name="s_hungarian">Ungherese</string>
-    <string name="s_italian">Italiano</string>
-    <string name="s_japanese">Giapponese</string>
-    <string name="s_korean">Coreano</string>
-    <string name="s_dutch">Olandese</string>
-    <string name="s_norwegian">Norvegese</string>
-    <string name="s_polish">Polacco</string>
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brasiliano</string>
-    <string name="s_portuguese">Portoghese</string>
-    <string name="s_russian">Russo</string>
-    <string name="Romanian">Romeno</string>
-    <string name="Serbo_Croatian">Serbo-Croato</string>
-    <string name="Croatian">Croato</string>
-    <string name="Serbian">Serbo</string>
-    <string name="Slovenian">Sloveno</string>
-    <string name="s_swedish">Svedese</string>
-    <string name="s_thai">Thailandese</string>
-    <string name="s_turkish">Turco</string>
     <string name="s_chinese">Cinese</string>
-    <string name="s_vietnamese">Vietnamita</string>
-    <string name="s_lithuanian">Lituano</string>
-    <string name="s_indonesian">Indonesiano</string>
-    <string name="s_malay">Malese</string>
     <string name="s_none">Nessuna</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Impossibile riprodurre il video</string>
@@ -407,7 +378,7 @@ Copertina (rotolo di copertina)</string>
     <string name="sub_force_all">Tutti i tuoi video hanno già almeno una traccia per i sottotitoli. Vuoi forzare il download di nuovi sottotitoli?</string>
     <string name="dialog_subloader_nonetwork_title">Nessuna connessione a internet</string>
     <string name="dialog_subloader_nonetwork_message">È necessaria una connessione a internet per scaricare i sottotitoli</string>
-    <string name="dialog_subloader_connecting">Connessione a www.opensubtitles.org...</string>
+    <string name="dialog_subloader_connecting">Connessione a www.opensubtitles.com…</string>
     <string name="dialog_subloader_credentials">Credenziali dei sottotitoli</string>
     <string name="dialog_subloader_credentials_empty">Devi specificare un nome utente e una password validi!</string>
     <string name="toast_subloader_credentials_empty">Fornisci le tue credenziali opensubtitles nelle impostazioni per poter scaricare i sottotitoli</string>
@@ -447,11 +418,6 @@ Copertina (rotolo di copertina)</string>
     <string name="add_ssh_shortcut">Aggiungi un collegamento</string>
     <string name="ssh_prompt">Tipo FTP</string>
     <string name="ssh_empty_view"> \"Puoi caricare e riprodurre dal tuo server FTP\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Rimuovi il collegamento</string>
     <string name="shortcut_added">Collegamento %s aggiunto</string>
     <string name="shortcut_removed">Collegamento %s eliminato</string>
@@ -493,8 +459,6 @@ Copertina (rotolo di copertina)</string>
     <string name="preferences_force_software_decoding_summary">Potresti provare questa opzione nel caso in cui alcuni video non vengano riprodotti correttamente</string>
     <string name="preferences_force_audio_passthrough">Passthrough audio</string>
     <string name="preferences_force_audio_passthrough_disabled">Preferenze_forza_audio_passthrough_disabilitato</string>
-    <string name="preferences_force_audio_passthrough_enable">Preferenze_forza_audio_passthrough_abilitato</string>
-    <string name="preferences_force_audio_passthrough_enable2">Mode 2</string>
     <string name="preferences_disable_downmix_title">Disattiva il downmix audio stereo</string>
     <string name="preferences_disable_downmix_summary">Decodifica sempre tutti i canali e permetti il downmix di Android a seconda della capacità di uscita audio (si potrebbe avere interruzione dei canali vocali)</string>
     <string name="preferences_allow_3rd_party_player">Consenti l\'utilizzo di un altro lettore video</string>
@@ -732,10 +696,6 @@ Copertina (rotolo di copertina)</string>
         - Punti di ripristino\n
         - Sincronizzazione con Trakt</string>
     <string name="dont_show_again">Non mostrare più</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Rete &amp; File</string>
     <string name="leanback_subtitles_integrated">Sottotitoli integrati</string>
     <string name="leanback_subtitles_external">Sottotitoli esterni</string>
@@ -843,8 +803,6 @@ Copertina (rotolo di copertina)</string>
     <string name="list_title">Titolo della lista</string>
     <string name="loading">Caricamento…</string>
     <string name="connecting">Connessione in corso…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Impossibile impostare la frequenza di aggiornamento desiderata</string>
     <string name="sponsor">Supporta Nova</string>
     <string name="enable_sponsor_title">Abilita il sponsor link di Nova</string>

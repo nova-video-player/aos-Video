@@ -15,10 +15,15 @@
 
 package com.archos.mediacenter.video.player;
 
+import static com.archos.mediacenter.video.utils.CodecDiscovery.displaySupportsDoVi;
+import static com.archos.mediacenter.video.utils.CodecDiscovery.displaySupportsHdr10;
+import static com.archos.mediacenter.video.utils.CodecDiscovery.displaySupportsHdr10Plus;
+import static com.archos.mediacenter.video.utils.CodecDiscovery.displaySupportsHdrHLG;
+import static com.archos.mediacenter.video.utils.CodecDiscovery.getHdrScreenCapabilities;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
-import android.hardware.display.DisplayManager;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
@@ -26,6 +31,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import androidx.preference.PreferenceManager;
+
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -35,7 +41,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
+import com.archos.filecorelibrary.FileUtils;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.utils.CodecDiscovery;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.IMediaPlayer;
@@ -46,7 +55,10 @@ import com.archos.mediaprovider.ArchosMediaCommon;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import android.view.Display.Mode;
 import android.widget.Toast;
@@ -132,10 +144,12 @@ public class Player implements IPlayerControl,
     private static final float EPSILON = 0.00001f;
     private float       mRefreshRate;
     private int         wantedModeId;
-    private Window      mWindow;
+    private static Window      mWindow;
     private AudioManager mAudioManager;
     private AudioFocusRequest mAudioFocusRequest = null;
- 
+    private static float mCurrentRefreshRate = 0.0f;
+    private static float mCurrentFps = 0.0f;
+
     private VideoEffectRenderer mEffectRenderer;
 
     /*
@@ -163,7 +177,7 @@ public class Player implements IPlayerControl,
         }
     };
 
-    private Runnable mRefreshRateCheckerAsync =  new Runnable() {
+    private Runnable mRefreshRateCheckerAsync = new Runnable() {
         public void run() {
             log.debug("mRefreshRateCheckerAsync");
             if (mCurrentState == STATE_PREPARED) {
@@ -172,7 +186,6 @@ public class Player implements IPlayerControl,
                     Display d = v.getDisplay();
                     if (Build.VERSION.SDK_INT >= 23) {
                         int currentModeId = d.getMode().getModeId();
-                        numberRetries = NUMBER_RETRIES;
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
                             if (currentModeId != wantedModeId) {
                                 log.debug("CONFIG current modeId rate is " + currentModeId + " trying to switch to " + wantedModeId + ", number of retries=" + numberRetries);
@@ -181,13 +194,13 @@ public class Player implements IPlayerControl,
                                 return;
                             }
                             log.debug("CONFIG modeId before video start is " + currentModeId);
+                            mCurrentRefreshRate = d.getRefreshRate();
                         } else {
                             log.warn("CONFIG failed to set modeId to " + wantedModeId + " it is still " + currentModeId);
                             Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         float currentRefreshRate = d.getRefreshRate();
-                        numberRetries = NUMBER_RETRIES;
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
                             if (Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
                                 log.debug("CONFIG current refresh rate is " + currentRefreshRate + " trying to switch to " + mRefreshRate + ", number of retries=" + numberRetries);
@@ -195,6 +208,7 @@ public class Player implements IPlayerControl,
                                 mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
                                 return;
                             }
+                            mRefreshRate = currentRefreshRate;
                             log.debug("CONFIG refresh rate before video start is " + currentRefreshRate);
                         } else {
                             log.warn("CONFIG failed to set refreshRate to " + mRefreshRate + " it is still " + currentRefreshRate);
@@ -238,6 +252,7 @@ public class Player implements IPlayerControl,
         private int     mAudioFilter;
         private int     mNightModeOn;
         private int     mAvDelay;
+        private float   mAvSpeed;
 
         public ResumeCtx() {}
 
@@ -251,11 +266,13 @@ public class Player implements IPlayerControl,
             mAudioFilter = 0;
             mNightModeOn = 0;
             mAvDelay = 0;
+            mAvSpeed = 1.0f;
         }
         public void onPrepared() {
             if (mSeek != -1)
                 seekTo(mSeek);
-            if (mSubtitleTrack != -1) 
+            log.debug("onPrepared: subtitleTrack=" + mSubtitleTrack);
+            if (mSubtitleTrack != -1)
                 mMediaPlayer.setSubtitleTrack(mSubtitleTrack);
             if (mSubtitleDelay != 0)
                 mMediaPlayer.setSubtitleDelay(mSubtitleDelay);
@@ -265,6 +282,9 @@ public class Player implements IPlayerControl,
                 mMediaPlayer.setAudioFilter(mAudioFilter, mNightModeOn);
             if (mAvDelay != 0)
                 mMediaPlayer.setAvDelay(mAvDelay);
+            if (mAvSpeed != 1.0f)
+                mMediaPlayer.setAvSpeed(mAvSpeed);
+            log.trace("onPrepared: audioTrack=" + mAudioTrack);
             if (mAudioTrack != -1)
                 mMediaPlayer.setAudioTrack(mAudioTrack);
             reset();
@@ -276,12 +296,14 @@ public class Player implements IPlayerControl,
             return mSeek;
         }
         public void setSubtitleTrack(int subtitleTrack) {
+            log.debug("setSubtitleTrack: " + subtitleTrack);
             mSubtitleTrack = subtitleTrack;
         }
         public void setSubtitleDelay(int subtitleDelay) {
             mSubtitleDelay = subtitleDelay;
         }
         public void setAudioTrack(int audioTrack) {
+            log.debug("setAudioTrack: " + audioTrack);
             mAudioTrack = audioTrack;
         }
         public void setSubtitleRatio(int n, int d) {
@@ -294,6 +316,9 @@ public class Player implements IPlayerControl,
         }
         public void setAvDelay(int delay) {
             mAvDelay = delay;
+        }
+        public void setAvSpeed(float speed) {
+            mAvSpeed = speed;
         }
     }
 
@@ -315,7 +340,7 @@ public class Player implements IPlayerControl,
     }
 
     public Player(Context context, Window window, SurfaceController surfaceController, boolean forceSoftwareDecoding) { //force software decoding is specific for floating player
-        sPlayer =this;
+        sPlayer = this;
         log.debug("Player");
         reset();
         mSurfaceHolder = null;
@@ -396,7 +421,7 @@ public class Player implements IPlayerControl,
         } else {
             if (scheme.equals("content")) {
                 try {
-                    if (Integer.parseInt(mUri.getLastPathSegment()) <= ArchosMediaCommon.SCANNED_ID_OFFSET)
+                    if (Integer.parseInt(FileUtils.getName(mUri)) <= ArchosMediaCommon.SCANNED_ID_OFFSET)
                         mIsLocalVideo = true;
                 } catch (NumberFormatException e) {}
             }
@@ -471,6 +496,9 @@ public class Player implements IPlayerControl,
             return;
         }
 
+        boolean isDoViDisabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_DISABLE_DOLBY_VISION, false);
+        CodecDiscovery.disableDoVi(isDoViDisabled); // could be an autoswitch based on HDR DoVi screen capability
+
         // we shouldn't clear the target state, because somebody might have
         // called start() previously
         log.info("openVideo: " + mUri);
@@ -497,14 +525,17 @@ public class Player implements IPlayerControl,
                 else
                     mMediaPlayer.setDataSource(mContext, mUri);
                 if (mSurfaceHolder != null) {
+                    log.debug("openVideo: setDisplay based on SurfaceHolder");
                     mMediaPlayer.setDisplay(mSurfaceHolder);
                     hasBeenSet=true;
                 }
                 else if (mVideoTexture != null) {
+                    log.debug("openVideo: setSurface based on SurfaceTexture");
                     Surface surface = new Surface(mVideoTexture);
                     mMediaPlayer.setSurface(surface);
                     surface.release();
                 }
+
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mMediaPlayer.setScreenOnWhilePlaying(true);
                 if (mResumeCtx.getSeek() != -1 && !mSurfaceController.supportOpenGLVideoEffect()) {
@@ -515,13 +546,7 @@ public class Player implements IPlayerControl,
                 // we don't set the target state here either, but preserve the
                 // target state that was there before.
                 mCurrentState = STATE_PREPARING;
-            } catch (IOException ex) {
-                onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
-                return;
-            } catch (IllegalArgumentException ex) {
-                onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
-                return;
-            } catch (IllegalStateException ex) {
+            } catch (NullPointerException | IOException | IllegalArgumentException | IllegalStateException ex) {
                 onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
                 return;
             }
@@ -533,17 +558,20 @@ public class Player implements IPlayerControl,
      * stay awake during video opening and video playback, don't stay awake when local video is paused
      */
     public void stayAwake(boolean awake) {
-        if(mWindow==null)
-            return;
-        LayoutParams lp = mWindow.getAttributes();
-        if (awake) {
-            lp.flags |= SCREEN_ON_FLAGS;
-        } else {
-
-            lp.flags &= ~SCREEN_ON_FLAGS;
-
-        }
-        mWindow.setAttributes(lp);
+        if(mWindow == null) return;
+        mWindow.getDecorView().post(new Runnable() {
+            @Override
+            public void run() {
+                if (mWindow == null) return;
+                LayoutParams lp = mWindow.getAttributes();
+                if (awake) {
+                    lp.flags |= SCREEN_ON_FLAGS;
+                } else {
+                    lp.flags &= ~SCREEN_ON_FLAGS;
+                }
+                mWindow.setAttributes(lp);
+            }
+        });
     }
     public void setIsTorrent(boolean isTorrent){
         mIsTorrent = isTorrent;
@@ -567,7 +595,7 @@ public class Player implements IPlayerControl,
         mVideoTexture = null;
         stopPlayback();
         if(mContext instanceof PlayerActivity)
-        ((PlayerActivity) mContext).setUIExternalSurface(null);
+            ((PlayerActivity) mContext).setUIExternalSurface(null);
         if(mContext instanceof FloatingPlayerService)
             ((FloatingPlayerService) mContext).setUIExternalSurface(null);
         if(mEffectRenderer!=null){
@@ -586,7 +614,7 @@ public class Player implements IPlayerControl,
         mVideoTexture = mEffectRenderer.getVideoTexture();
         mUISurface = mEffectRenderer.getUISurface();
         if(mContext instanceof PlayerActivity)
-        ((PlayerActivity) mContext).setUIExternalSurface(mUISurface);
+            ((PlayerActivity) mContext).setUIExternalSurface(mUISurface);
         if(mContext instanceof FloatingPlayerService)
             ((FloatingPlayerService) mContext).setUIExternalSurface(mUISurface);
         mSurfaceWidth = width;
@@ -727,7 +755,9 @@ public class Player implements IPlayerControl,
 
     public int getCurrentPosition() {
         if (isInPlaybackState()) {
-            return mMediaPlayer.getCurrentPosition();
+            int currentPos = mMediaPlayer.getCurrentPosition();
+            log.debug("getCurrentPosition: " + currentPos);
+            return currentPos;
         } else if (mStopPosition != -1) {
             return mStopPosition;
         }
@@ -743,7 +773,7 @@ public class Player implements IPlayerControl,
     }
     
     public void seekTo(int msec) {
-        log.debug("seekTo");
+        log.debug("seekTo: " + msec + " ms");
         if (isInPlaybackState()) {
             if (mPlayerListener != null) {
                 mPlayerListener.onSeekStart(msec);
@@ -824,11 +854,11 @@ public class Player implements IPlayerControl,
 
     public void checkSubtitles() {
         if (isInPlaybackState())
-            mMediaPlayer.checkSubtitles();
+            mMediaPlayer.checkSubtitles(); // note that player checks also cache directory with avos
     }
 
     public boolean setSubtitleTrack(int stream) {
-
+        log.debug("setSubtitleTrack: select stream " + stream);
         if (isInPlaybackState()) {
             return mMediaPlayer.setSubtitleTrack(stream);
         } else {
@@ -902,7 +932,16 @@ public class Player implements IPlayerControl,
         }
     };
 
+    public void setAvSpeed(float speed) {
+        if (isInPlaybackState()) {
+            mMediaPlayer.setAvSpeed(speed);
+        } else {
+            mResumeCtx.setAvSpeed(speed);
+        }
+    };
+
     public boolean setAudioTrack(int stream) {
+        log.debug("setAudioTrack: select stream " + stream);
         if (isInPlaybackState()) {
             return mMediaPlayer.setAudioTrack(stream);
         } else {
@@ -942,12 +981,14 @@ public class Player implements IPlayerControl,
                     int currentAudio = -1;
                     if (data.has(IMediaPlayer.METADATA_KEY_CURRENT_AUDIO_TRACK))
                         currentAudio = data.getInt(IMediaPlayer.METADATA_KEY_CURRENT_AUDIO_TRACK);
+                    log.debug("handleMetadata: currentAudioTrack -1 -> " + currentAudio + ", calling onAudioMetadataUpdated");
                     mPlayerListener.onAudioMetadataUpdated(mVideoMetadata, currentAudio);
                 }
                 if (data.has(IMediaPlayer.METADATA_KEY_NB_SUBTITLE_TRACK)) {
                     int currentSubtitle = -1;
                     if (data.has(IMediaPlayer.METADATA_KEY_CURRENT_SUBTITLE_TRACK))
                         currentSubtitle = data.getInt(IMediaPlayer.METADATA_KEY_CURRENT_SUBTITLE_TRACK);
+                    log.debug("handleMetadata: currentSubtitleTrack -1 -> " + currentSubtitle + ", calling onSubtitleMetadataUpdated");
                     mPlayerListener.onSubtitleMetadataUpdated(mVideoMetadata, currentSubtitle);
                 }
             }
@@ -956,191 +997,195 @@ public class Player implements IPlayerControl,
 
     /* IMediaPlayer.Listener */
     public void onPrepared(IMediaPlayer mp) {
-        log.debug("onPrepared");
         mCurrentState = STATE_PREPARED;
         if (mSurfaceController != null)
             mSurfaceController.setMediaPlayer(mMediaPlayer);
 
         // Get the capabilities of the player for this stream
         mCanPause = mCanSeekForward = mCanSeekBack = true;
+        log.debug("onPrepared: mCanPause=" + mCanPause + ", mCanSeekForward=" + mCanSeekForward + ", mCanSeekBack=" + mCanSeekBack + " -> handleMetadata");
         handleMetadata(mMediaPlayer);
 
         mResumeCtx.onPrepared();
 
-        boolean refreshRateSwitchEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_ACTIVATE_REFRESHRATE_SWITCH, false);
-        if (mWindow != null && refreshRateSwitchEnabled) {
-            VideoMetadata.VideoTrack video = mVideoMetadata.getVideoTrack();
+        if (mWindow != null) {
 
             View v = mWindow.getDecorView();
             Display d = v.getDisplay();
-            LayoutParams lp = mWindow.getAttributes();
-            mWaitForNewRate = false;
-            if (lp != null && video != null && video.fpsRate > 0 && video.fpsScale > 0) {
-                log.debug("CONFIG video.fpsRate=" + video.fpsRate + ", video.fpsScale=" + video.fpsScale);
+
+            setHdrCapabilities();
+
+            int refreshRateSwitchMode = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString("enable_tv_refreshrate_switch_mode","0"));
+            boolean refreshRateSwitchEnabled = (refreshRateSwitchMode!= 0);
+
+            CustomApplication.setSupportedRefreshRates(getSupportedRefreshRates());
+
+            VideoMetadata.VideoTrack video = mVideoMetadata.getVideoTrack();
+            if (video != null) {
                 float wantedFps = (float) ((double) video.fpsRate / (double) video.fpsScale);
-                log.debug("CONFIG wantedFps=" + wantedFps);
-                if (Build.VERSION.SDK_INT >= 23) { // select display mode of highest refresh rate matching 0 modulo fps
-                    Display.Mode[] supportedModes = d.getSupportedModes();
-                    Display.Mode currentMode = d.getMode();
-                    int currentModeId = currentMode.getModeId();
-                    if (log.isDebugEnabled()) {
-                        log.debug("CONFIG current display mode is " + currentMode);
-                        for (Mode mode : supportedModes)
-                            log.debug("CONFIG display supported mode " + mode);
-                    }
-                    if (log.isDebugEnabled() && Build.VERSION.SDK_INT >= 24) {
-                        if (Build.VERSION.SDK_INT >= 26)
-                            if (d.isHdr()) log.debug("CONFIG HDR display detected");
-                        int[] hdrSupportedTypes = d.getHdrCapabilities().getSupportedHdrTypes();
-                        for (int i =0; i < hdrSupportedTypes.length; i++) {
-                            switch (hdrSupportedTypes[i]) {
-                                case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
-                                    log.debug("CONFIG HDR dolby vision supported");
-                                    break;
-                                case Display.HdrCapabilities.HDR_TYPE_HDR10:
-                                    log.debug("CONFIG HDR10 supported");
-                                    break;
-                                case Display.HdrCapabilities.HDR_TYPE_HLG:
-                                    log.debug("CONFIG HDR HLG supported");
-                                    break;
-                                case Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS:
-                                    log.debug("CONFIG HDR10+ supported");
-                                    break;
-                            }
-                        }
-                    }
-                    wantedModeId = 0;
-                    float wantedRefreshRate = 0;
-                    // find corresponding wantedModeId for wantedFps
-                    Mode sM;
-                    int metric = 0;
-                    boolean foundMatch = false;
-                    int fps = Math.round(1001 * wantedFps);
-                    int rhz = 0;
-                    int maxRhz = 0;
+                mCurrentFps = wantedFps;
 
-                    // minimize judder in 2 passes selecting:
-                    // highest rr matching rr%fr=0
-                    // else highest rr maximizing number of glitches per second
-                    log.debug("CONFIG min judder targeting " + wantedFps + " fps video");
-                    log.debug("CONFIG min judder: highest rr matching rr%fr=0 pass");
-                    for (int i = 0; i < supportedModes.length; i++) {
-                        sM = supportedModes[i];
-                        rhz = Math.round(1001 * sM.getRefreshRate());
-                        if (rhz >= fps) { // no frame drop
-                            metric = rhz % fps;
-                            log.debug("CONFIG evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) metric = " + metric);
-                            if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth() && sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
-                                    metric == 0 && rhz >= maxRhz) {
-                                foundMatch = true;
-                                maxRhz = rhz;
-                                wantedModeId = sM.getModeId();
-                                log.debug("CONFIG selecting modeId " + wantedModeId + " for " + rhz + " Hz and " + fps + " fps (metric = " + metric + ")");
-                            }
-                        }
-                    }
+                if (refreshRateSwitchEnabled) {
+                    LayoutParams lp = mWindow.getAttributes();
+                    mWaitForNewRate = false;
+                    if (lp != null && video != null && video.fpsRate > 0 && video.fpsScale > 0) {
+                        log.debug("CONFIG video.fpsRate=" + video.fpsRate + ", video.fpsScale=" + video.fpsScale + " -> wantedFps=" + wantedFps);
+                        if (refreshRateSwitchMode == 2 && Build.VERSION.SDK_INT >= 31 && mSurfaceHolder != null) {
+                            log.debug("CONFIG setting frame rate to " + wantedFps + " fps through setFrameRate Android 12+ API");
+                            Surface videoSurface = mSurfaceHolder.getSurface();
+                            // Surface.CHANGE_FRAME_RATE_ALWAYS is needed to get the refresh rate switch
+                            videoSurface.setFrameRate(wantedFps, Surface.FRAME_RATE_COMPATIBILITY_FIXED_SOURCE, Surface.CHANGE_FRAME_RATE_ALWAYS);
+                        } else {
+                            if (Build.VERSION.SDK_INT >= 23) { // select display mode of highest refresh rate matching 0 modulo fps
+                                Display.Mode[] supportedModes = d.getSupportedModes();
+                                Display.Mode currentMode = d.getMode();
+                                int currentModeId = currentMode.getModeId();
+                                if (log.isDebugEnabled()) {
+                                    log.debug("CONFIG current display mode is " + currentMode);
+                                    for (Mode mode : supportedModes)
+                                        log.debug("CONFIG display supported mode " + mode);
+                                }
 
-                    if (!foundMatch) {
-                        int a, b, div, n, k, kp, g;
-                        maxRhz = 0;
-                        int maxG = 0; // init with lowest number easy to beat
-                        log.debug("CONFIG min judder: highest rr maximizing number of glitches pass");
-                        for (int i = 0; i < supportedModes.length; i++) {
-                            sM = supportedModes[i];
-                            rhz = Math.round(1001 * sM.getRefreshRate());
-                            if (rhz >= fps) { // no frame drop
-                                k=rhz % fps;
-                                kp=fps-k;
-                                g = Math.min(k,kp); // number of glitches (uneven image duration) in 1001s
-                                log.debug("CONFIG evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) glitches = " + g);
-                                if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth() && sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
-                                        g >= maxG && rhz >= maxRhz) {
-                                    foundMatch = true;
-                                    maxRhz = rhz;
-                                    maxG = g;
-                                    wantedModeId = sM.getModeId();
-                                    log.debug( "CONFIG selecting modeId " + wantedModeId + " for " + rhz + " Hz and " + fps + " fps (glitches = " + g + ")");
+                                wantedModeId = 0;
+                                // find corresponding wantedModeId for wantedFps
+                                Mode sM;
+                                int metric = 0;
+                                boolean foundMatch = false;
+                                int fps = Math.round(1001 * wantedFps);
+                                int rhz = 0;
+                                int maxRhz = 0;
+
+                                // minimize judder in 2 passes selecting:
+                                // highest rr matching rr%fr=0
+                                // else highest rr maximizing number of glitches per second
+                                log.debug("CONFIG min judder targeting " + wantedFps + " fps video");
+                                log.debug("CONFIG min judder: highest rr matching rr%fr=0 pass");
+                                for (int i = 0; i < supportedModes.length; i++) {
+                                    sM = supportedModes[i];
+                                    rhz = Math.round(1001 * sM.getRefreshRate());
+                                    if (rhz >= fps) { // no frame drop
+                                        metric = rhz % fps;
+                                        log.debug("CONFIG evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) metric = " + metric);
+                                        // be more tolerant on metric == 0 check since on firestick roundings make it not null
+                                        if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth() && sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
+                                                metric < 10 && rhz >= maxRhz) {
+                                            foundMatch = true;
+                                            maxRhz = rhz;
+                                            wantedModeId = sM.getModeId();
+                                            log.debug("CONFIG selecting modeId " + wantedModeId + " for " + rhz + " Hz and " + fps + " fps (metric = " + metric + ")");
+                                        }
+                                    }
+                                }
+
+                                if (!foundMatch) {
+                                    int k, kp, g;
+                                    maxRhz = 0;
+                                    int maxG = 0; // init with lowest number easy to beat
+                                    log.debug("CONFIG min judder: highest rr maximizing number of glitches pass");
+                                    for (int i = 0; i < supportedModes.length; i++) {
+                                        sM = supportedModes[i];
+                                        rhz = Math.round(1001 * sM.getRefreshRate());
+                                        if (rhz >= fps) { // no frame drop
+                                            k = rhz % fps;
+                                            kp = fps - k;
+                                            g = Math.min(k, kp); // number of glitches (uneven image duration) in 1001s
+                                            log.debug("CONFIG evaluating " + sM.getPhysicalWidth() + "x" + sM.getPhysicalHeight() + "(" + sM.getRefreshRate() + "Hz) glitches = " + g);
+                                            if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth() && sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
+                                                    g >= maxG && rhz >= maxRhz) {
+                                                foundMatch = true;
+                                                maxRhz = rhz;
+                                                maxG = g;
+                                                wantedModeId = sM.getModeId();
+                                                log.debug("CONFIG selecting modeId " + wantedModeId + " for " + rhz + " Hz and " + fps + " fps (glitches = " + g + ")");
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (wantedModeId != 0 && wantedModeId != currentModeId) {
+                                    // apply new display mode
+                                    mWaitForNewRate = true;
+                                    numberRetries = NUMBER_RETRIES;
+                                    lp.preferredDisplayModeId = wantedModeId;
+                                    mWindow.setAttributes(lp);
+                                }
+                            } else { // select highest refresh rate matching 0 modulo fps
+                                float[] supportedRates = d.getSupportedRefreshRates();
+                                float currentRefreshRate = d.getRefreshRate();
+                                Arrays.sort(supportedRates);
+                                if (log.isDebugEnabled())
+                                    for (float r : supportedRates)
+                                        log.debug("CONFIG Display supported refresh rate " + r);
+
+                                mRefreshRate = 0f;
+
+                                int metric = 0;
+                                boolean foundMatch = false;
+                                int fps = Math.round(1001 * wantedFps);
+                                int rhz = 0;
+                                int maxRhz = 0;
+
+                                // minimize judder in 2 passes selecting:
+                                // highest rr matching rr%fr=0
+                                // else highest rr maximizing number of glitches per second
+                                log.debug("CONFIG min judder targeting " + wantedFps + " fps video");
+                                log.debug("CONFIG min judder: highest rr matching rr%fr=0 pass");
+                                for (float rate : supportedRates) {
+                                    rhz = Math.round(1001 * rate);
+                                    if (rhz >= fps) { // no frame drop
+                                        metric = rhz % fps;
+                                        log.debug("CONFIG evaluating " + rate + "Hz metric = " + metric);
+                                        // be more tolerant on metric == 0 check since on firestick roundings make it not null
+                                        if (metric < 10 && rhz >= maxRhz) {
+                                            foundMatch = true;
+                                            maxRhz = rhz;
+                                            mRefreshRate = rate;
+                                            log.debug("CONFIG selecting " + mRefreshRate + " Hz for " + wantedFps + " fps (metric = " + metric + ")");
+                                        }
+                                    }
+                                }
+
+                                if (!foundMatch) {
+                                    int k, kp, g;
+                                    maxRhz = 0;
+                                    int maxG = 0; // init with lowest number easy to beat
+                                    log.debug("CONFIG min judder: highest rr maximizing number of glitches pass");
+                                    for (float rate : supportedRates) {
+                                        rhz = Math.round(1001 * rate);
+                                        if (rhz >= fps) { // no frame drop
+                                            k = rhz % fps;
+                                            kp = fps - k;
+                                            g = Math.min(k, kp); // number of glitches (uneven image duration) in 1001s
+                                            log.debug("CONFIG evaluating " + rate + "Hz metric = " + g);
+                                            if (g >= maxG && rhz >= maxRhz) {
+                                                foundMatch = true;
+                                                maxRhz = rhz;
+                                                maxG = g;
+                                                mRefreshRate = rate;
+                                                log.debug("CONFIG selecting " + mRefreshRate + " Hz " + wantedFps + " fps (glitches = " + g + ")");
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (Math.abs(mRefreshRate) > 0 && Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
+                                    // apply new refresh rate only if really new
+                                    mWaitForNewRate = true;
+                                    numberRetries = NUMBER_RETRIES;
+                                    lp.preferredRefreshRate = mRefreshRate;
+                                    mWindow.setAttributes(lp);
                                 }
                             }
                         }
-                    }
-
-                    if (wantedModeId != 0 && wantedModeId != currentModeId) {
-                        // apply new display mode
-                        mWaitForNewRate = true;
-                        numberRetries = NUMBER_RETRIES;
-                        lp.preferredDisplayModeId = wantedModeId;
-                        mWindow.setAttributes(lp);
-                    }
-                } else { // select highest refresh rate matching 0 modulo fps
-                    float[] supportedRates = d.getSupportedRefreshRates();
-                    float currentRefreshRate = d.getRefreshRate();
-                    Arrays.sort(supportedRates);
-                    if (log.isDebugEnabled())
-                        for (float r : supportedRates)
-                            log.debug("CONFIG Display supported refresh rate " + r);
-
-                    mRefreshRate = 0f;
-
-                    int metric = 0;
-                    boolean foundMatch = false;
-                    int fps = Math.round(1001 * wantedFps);
-                    int rhz = 0;
-                    int maxRhz = 0;
-
-                    // minimize judder in 2 passes selecting:
-                    // highest rr matching rr%fr=0
-                    // else highest rr maximizing number of glitches per second
-                    log.debug("CONFIG min judder targeting " + wantedFps + " fps video");
-                    log.debug("CONFIG min judder: highest rr matching rr%fr=0 pass");
-                    for (float rate : supportedRates) {
-                        rhz = Math.round(1001 * rate);
-                        if (rhz >= fps) { // no frame drop
-                            metric = rhz % fps;
-                            log.debug("CONFIG evaluating " + rate + "Hz metric = " + metric);
-                            if (metric == 0 && rhz >= maxRhz) {
-                                foundMatch = true;
-                                maxRhz = rhz;
-                                mRefreshRate = rate;
-                                log.debug("CONFIG selecting " + mRefreshRate + " Hz for " + wantedFps + " fps (metric = " + metric + ")");
-                            }
-                        }
-                    }
-
-                    if (!foundMatch) {
-                        int a, b, div, n, k, kp, g;
-                        maxRhz = 0;
-                        int maxG = 0; // init with lowest number easy to beat
-                        log.debug("CONFIG min judder: highest rr maximizing number of glitches pass");
-                        for (float rate : supportedRates) {
-                            rhz = Math.round(1001 * rate);
-                            if (rhz >= fps) { // no frame drop
-                                k=rhz % fps;
-                                kp=fps-k;
-                                g = Math.min(k,kp); // number of glitches (uneven image duration) in 1001s
-                                log.debug("CONFIG evaluating " + rate + "Hz metric = " + g);
-                                if (g >= maxG && rhz >= maxRhz) {
-                                    foundMatch = true;
-                                    maxRhz = rhz;
-                                    maxG = g;
-                                    mRefreshRate = rate;
-                                    log.debug( "CONFIG selecting " + mRefreshRate + " Hz "  + wantedFps + " fps (glitches = " + g + ")");
-                                }
-                            }
-                        }
-                    }
-
-                    if (Math.abs(mRefreshRate) > 0 && Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
-                        // apply new refresh rate only if really new
-                        mWaitForNewRate = true;
-                        numberRetries = NUMBER_RETRIES;
-                        lp.preferredRefreshRate = mRefreshRate;
-                        mWindow.setAttributes(lp);
                     }
                 }
+            } else {
+                log.warn("onPrepared: videoTrack is null!");
             }
         }
         mHandler.post(mRefreshRateCheckerAsync);
+
+        log.debug("CONFIG technicalInfo: " + CodecDiscovery.getTechnicalInfo(mContext));
     }
 
     public void onCompletion(IMediaPlayer mp) {
@@ -1183,8 +1228,11 @@ public class Player implements IPlayerControl,
     public void onAllSeekComplete(IMediaPlayer mp) {
         mIsBusy = false;
         if (mUpdateMetadata) {
+            log.debug("onAllSeekComplete: mUpdateMetadata = true -> handleMetadata");
             handleMetadata(mp);
             mUpdateMetadata = false;
+        } else {
+            log.debug("onAllSeekComplete: mUpdateMetadata = false");
         }
         if (mPlayerListener != null) {
             mPlayerListener.onAllSeekComplete();
@@ -1196,12 +1244,14 @@ public class Player implements IPlayerControl,
     }
 
     public boolean onInfo(IMediaPlayer mp, int what, int extra) {
-        log.debug("MediaPlayer.onInfo: "+what+" "+extra);
+        log.debug("onInfo: "+what+" "+extra);
         switch(what) {
         case IMediaPlayer.MEDIA_INFO_METADATA_UPDATE:
             if (mIsBusy) {
+                log.debug("onInfo: mIsBusy set mUpdateMetadata = true");
                 mUpdateMetadata = true;
             } else {
+                log.debug("onInfo: handleMetadata");
                 handleMetadata(mp);
             }
             return true;
@@ -1211,11 +1261,12 @@ public class Player implements IPlayerControl,
     }
 
     public boolean onError(IMediaPlayer mp, int errorCode, int errorQualCode, String msg) {
-        log.warn("Error: " + errorCode + "," + errorQualCode);
+        log.warn("onError: Error: " + errorCode + "," + errorQualCode);
         mCurrentState = STATE_ERROR;
         mTargetState = STATE_ERROR;
 
         if (mp != null) {
+            log.debug("onError: handleMetadata");
             handleMetadata(mp);
         }
         //save "exist" state, may be useful later
@@ -1237,6 +1288,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onSubtitle(IMediaPlayer mp, Subtitle subtitle) {
+        log.debug("onSubtitle");
         if (mPlayerListener != null) {
             mPlayerListener.onSubtitle(subtitle);
         }
@@ -1266,4 +1318,136 @@ public class Player implements IPlayerControl,
     public void finishActivity() {
         if(mContext instanceof PlayerActivity) ((PlayerActivity)mContext).finish();
     }
+
+    public String getSupportedRefreshRates() {
+        StringBuilder refreshRates = new StringBuilder();
+        View view = mWindow.getDecorView();
+        Display display = view.getDisplay();
+
+        if (Build.VERSION.SDK_INT >= 23) { // For API 23 and above
+            Display.Mode[] supportedModes = display.getSupportedModes();
+            Display.Mode currentMode = display.getMode();
+            if (mCurrentRefreshRate < 1) mCurrentRefreshRate = currentMode.getRefreshRate();
+            int currentWidth = currentMode.getPhysicalWidth();
+            int currentHeight = currentMode.getPhysicalHeight();
+            // Use TreeSet to maintain sorted order
+            Set<Float> uniqueRefreshRates = new TreeSet<>();
+            for (Display.Mode mode : supportedModes) {
+                if (mode.getPhysicalWidth() == currentWidth && mode.getPhysicalHeight() == currentHeight) {
+                    // round refreshRate to 2 decimal places
+                    float refreshRate = Math.round(mode.getRefreshRate() * 100.0f) / 100.0f;
+                    uniqueRefreshRates.add(refreshRate);
+                }
+            }
+            // Build the refresh rates string
+            for (Float rate : uniqueRefreshRates) {
+                refreshRates.append(rate).append("Hz, ");
+            }
+        } else { // For API levels below 23
+            float[] supportedRates = display.getSupportedRefreshRates();
+            mCurrentRefreshRate = display.getRefreshRate();
+            // Use TreeSet to maintain sorted order
+            Set<Float> uniqueRefreshRates = new TreeSet<>();
+            for (float rate : supportedRates) {
+                float refreshRate = Math.round(rate * 100.0f) / 100.0f;
+                uniqueRefreshRates.add(refreshRate);
+            }
+            for (Float rate : uniqueRefreshRates) {
+                refreshRates.append(rate).append("Hz, ");
+            }
+        }
+        // Remove trailing ", " in refreshRates and put the result into parenthesis i.e. ( at start and ) at end
+        if (refreshRates.length() > 0) {
+            refreshRates.setLength(refreshRates.length() - 2);
+            refreshRates.insert(0, "(");
+            refreshRates.append(")");
+        }
+        return refreshRates.toString();
+    }
+
+
+    public static String getRefreshRate() {
+        return Math.round(mCurrentRefreshRate * 100.0f) / 100.0f + "Hz";
+    }
+
+    public static String getFps() {
+        return Math.round(mCurrentFps * 100.0f) / 100.0f + "fps";
+    }
+
+    private void setHdrCapabilities() {
+        if (mWindow != null) {
+
+            View v = mWindow.getDecorView();
+            Display d = v.getDisplay();
+
+            if (Build.VERSION.SDK_INT >= 24) { // HDR capability check
+
+                if (Build.VERSION.SDK_INT >= 26 && d.isHdr()) log.debug("CONFIG HDR display detected");
+
+                Display.HdrCapabilities hdrCapabilities = d.getHdrCapabilities();
+                if (hdrCapabilities != null) {
+                    int[] hdrSupportedTypes = hdrCapabilities.getSupportedHdrTypes();
+                    for (int hdrSupportedType : hdrSupportedTypes) {
+                        switch (hdrSupportedType) {
+                            case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
+                                log.debug("CONFIG HDR dolby vision supported");
+                                displaySupportsDoVi(true);
+                                break;
+                            case Display.HdrCapabilities.HDR_TYPE_HDR10:
+                                log.debug("CONFIG HDR10 supported");
+                                displaySupportsHdr10(true);
+                                break;
+                            case Display.HdrCapabilities.HDR_TYPE_HLG:
+                                log.debug("CONFIG HDR HLG supported");
+                                displaySupportsHdrHLG(true);
+                                break;
+                            case Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS:
+                                log.debug("CONFIG HDR10+ supported");
+                                displaySupportsHdr10Plus(true);
+                                break;
+                        }
+                    }
+                }
+            } else {
+                displaySupportsDoVi(false);
+                displaySupportsHdr10(false);
+                displaySupportsHdrHLG(false);
+                displaySupportsHdr10Plus(false);
+            }
+        } else {
+            displaySupportsDoVi(false);
+            displaySupportsHdr10(false);
+            displaySupportsHdrHLG(false);
+            displaySupportsHdr10Plus(false);
+        }
+    }
+
+    public static String getHdr(Context context) { // only works with API34...
+        if (mWindow == null || Build.VERSION.SDK_INT < 34) {
+            return "";
+        }
+        View v = mWindow.getDecorView();
+        Display d = v.getDisplay();
+        int hdrBitMask = 0;
+        Display.Mode currentMode = d.getMode();
+        int[] hdrSupportedTypes = currentMode.getSupportedHdrTypes();
+        for (int hdrSupportedType : hdrSupportedTypes) {
+            switch (hdrSupportedType) {
+                case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
+                    hdrBitMask |= 8;
+                    break;
+                case Display.HdrCapabilities.HDR_TYPE_HDR10:
+                    hdrBitMask |= 1;
+                    break;
+                case Display.HdrCapabilities.HDR_TYPE_HLG:
+                    hdrBitMask |= 2;
+                    break;
+                case Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS:
+                    hdrBitMask |= 4;
+                    break;
+            }
+        }
+        return getHdrScreenCapabilities(context, hdrBitMask);
+    }
+
 }

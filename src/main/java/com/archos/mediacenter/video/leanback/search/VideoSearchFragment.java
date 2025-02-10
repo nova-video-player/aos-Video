@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
@@ -49,6 +50,8 @@ import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import androidx.leanback.widget.ShadowLessRowPresenter;
 
 public class VideoSearchFragment extends SearchSupportFragment implements SearchSupportFragment.SearchResultProvider {
+
+    static final String TAG = "VideoSearchFragment";
     public static final int ROW_ID = 2000;
     private static final int SEARCH_DELAY_MS = 300;
 
@@ -81,7 +84,7 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
 
         setSearchResultProvider(this);
         setOnItemViewClickedListener(new VideoViewClickedListener(getActivity()));
-        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.video2_full));
+        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.nova));
         mDelayedLoad = new SearchRunnable();
 
         int searchMode = getArguments() != null ? getArguments().getInt(VideoSearchActivity.EXTRA_SEARCH_MODE, VideoSearchActivity.SEARCH_MODE_ALL) : VideoSearchActivity.SEARCH_MODE_ALL;
@@ -111,7 +114,9 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
         super.onActivityCreated(savedInstanceState);
         Resources r = getResources();
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
-        bgMngr.attach(getActivity().getWindow());
+        try {
+            bgMngr.attach(getActivity().getWindow());
+        } catch (IllegalStateException e) {}
         bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
     }
 
@@ -154,32 +159,37 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
 
             @Override
             protected ListRow doInBackground(String... params) {
-                ContentResolver cr = getActivity().getContentResolver();
-                if (mSearchLoader instanceof SearchMovieLoader) {
-                    ((SearchMovieLoader)mSearchLoader).setQuery(query);
-                } else if (mSearchLoader instanceof SearchEpisodeLoader) {
-                    ((SearchEpisodeLoader)mSearchLoader).setQuery(query);
-                } else if (mSearchLoader instanceof SearchNonScrapedVideoLoader) {
-                        ((SearchNonScrapedVideoLoader)mSearchLoader).setQuery(query);
+                if (getActivity() != null && ! getActivity().isFinishing()) {
+                    ContentResolver cr = getActivity().getContentResolver();
+                    if (mSearchLoader instanceof SearchMovieLoader) {
+                        ((SearchMovieLoader) mSearchLoader).setQuery(query);
+                    } else if (mSearchLoader instanceof SearchEpisodeLoader) {
+                        ((SearchEpisodeLoader) mSearchLoader).setQuery(query);
+                    } else if (mSearchLoader instanceof SearchNonScrapedVideoLoader) {
+                        ((SearchNonScrapedVideoLoader) mSearchLoader).setQuery(query);
+                    } else {
+                        ((SearchVideoLoader) mSearchLoader).setQuery(query);
+                    }
+                    Cursor cursor = cr.query(mSearchLoader.getUri(), mSearchLoader.getProjection(), mSearchLoader.getSelection(), mSearchLoader.getSelectionArgs(), mSearchLoader.getSortOrder());
+                    if (cursor.getCount() > 0) {
+                        CursorObjectAdapter listRowAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
+                        listRowAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+                        listRowAdapter.changeCursor(cursor);
+                        return new ListRow(ROW_ID, new HeaderItem(getString(R.string.search_results)), listRowAdapter);
+                    } else {
+                        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new EmptyViewPresenter());
+                        listRowAdapter.add(new EmptyView(getString(R.string.no_results_found)));
+                        return new ShadowLessListRow(new HeaderItem(getString(R.string.search_results)), listRowAdapter);
+                    }
                 } else {
-                    ((SearchVideoLoader)mSearchLoader).setQuery(query);
-                }
-                Cursor cursor = cr.query(mSearchLoader.getUri(), mSearchLoader.getProjection(), mSearchLoader.getSelection(), mSearchLoader.getSelectionArgs(), mSearchLoader.getSortOrder());
-                if (cursor.getCount() > 0) {
-                    CursorObjectAdapter listRowAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
-                    listRowAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
-                    listRowAdapter.changeCursor(cursor);
-                    return new ListRow(ROW_ID, new HeaderItem(getString(R.string.search_results)), listRowAdapter);
-                } else {
-                    ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new EmptyViewPresenter());
-                    listRowAdapter.add(new EmptyView(getString(R.string.no_results_found)));
-                    return new ShadowLessListRow(new HeaderItem(getString(R.string.search_results)), listRowAdapter);
+                    Log.e(TAG, "loadRows: no more activity, aborting search");
+                    return null;
                 }
             }
 
             @Override
             protected void onPostExecute(ListRow listRow) {
-                mRowsAdapter.add(listRow);
+                if (listRow != null) mRowsAdapter.add(listRow);
             }
         }.execute();
     }

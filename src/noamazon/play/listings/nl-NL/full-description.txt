@@ -1,7 +1,7 @@
 Nova is een opeN sOurce videospeler ontworpen voor tablets, telefoons en AndroidTV apparaten beschikbaar op https://github.com/nova-video-player/aos-AVP
 
 Universele speler:
-- Speelt video's vanaf uw computer, server (FTP, SFTP), NAS (SMB, UPnP)
+- Speelt video's vanaf uw computer, server (FTP, SFTP, WebDAV), NAS (SMB, UPnP)
 - Play video's van externe USB opslag
 - Video's uit alle bronnen geïntegreerd in een uniforme multimedia collectie
 - Automatische online ophalen van film en TV-show beschrijvingen met posters en achtergronden

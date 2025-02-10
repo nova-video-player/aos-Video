@@ -16,14 +16,15 @@ package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.content.Context;
 import androidx.loader.content.Loader;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.loader.TvshowsByRatingLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowsNoAnimeByRatingLoader;
 import com.archos.mediaprovider.video.VideoStore;
-
 
 public class TvshowsByRatingFragment extends TvshowsByFragment {
 
@@ -48,15 +49,14 @@ public class TvshowsByRatingFragment extends TvshowsByFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setTitle(getString(R.string.tvshows_by_rating));
-
         mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
     }
 
     @Override
     protected Loader<Cursor> getSubsetLoader(Context context) {
-        return new TvshowsNoAnimeByRatingLoader(context);
+        if (mSeparateAnimeFromShowMovie) return new TvshowsNoAnimeByRatingLoader(context);
+        else return new TvshowsByRatingLoader(context);
     }
 
     @Override

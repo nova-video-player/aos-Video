@@ -16,7 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">Knihovna</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
@@ -124,6 +124,7 @@
     <string name="tvshows_by_alpha">Seriály dle abecedy</string>
     <string name="tvshows_by_genre">Seriály dle žánrů</string>
     <string name="tvshows_by_rating">Seriály dle hodnocení</string>
+    <string name="animation_shows_by_alpha">Animované zobrazovat abecedně</string>
     <string name="episodes_by_date">Epizody dle data</string>
     <string name="date_view_week">Týden</string>
     <string name="date_view_month">Měsíc</string>
@@ -269,11 +270,13 @@
     <string name="switch_to_list">Seznam</string>
     <string name="switch_to_grid">Mřížka</string>
     <!-- VideoPlayer -->
+    <string name="player_track">Stopa</string>
     <string name="player_loading_video">Načítání videa\u2026</string>
     <string name="player_audio_track_toast">Zvuková stopa:</string>
     <string name="player_subtitle_track_toast">Stopa titulků:</string>
     <string name="player_bookmark_set">Záložka nastavena na</string>
     <string name="player_pref_subtitle_delay_title">Zpoždění</string>
+    <string name="player_pref_audio_speed_title">Rychlost přehrávání</string>
     <string name="floating_player_restore">Obnovit</string>
     <string name="floating_player_play">Přehrát</string>
     <string name="floating_player_pause">Pozastavit</string>
@@ -307,43 +310,29 @@
     <string name="menu_change_folder">Změnit složku</string>
     <string name="menu_change_folder_details">Vyberte složku, kterou chcete začít</string>
     <string name="unlock_instructions">Dlouze stiskněte ikonu pro odemknutí</string>
-    <string name="seek_to_percentage">\"Vyhledávám %s%%</string>
+    <string name="seek_to_percentage">Vyhledávám %s%%</string>
+    <string name="set_audio_speed_to">Rychlost zvuku %s</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">Arabština</string>
-    <string name="s_bulgarian">Bulharština</string>
-    <string name="Bosnian">Bosenština</string>
-    <string name="s_czech">Čeština</string>
-    <string name="s_danish">Dánština</string>
-    <string name="s_german">Němčina</string>
-    <string name="s_english">Angličtina</string>
-    <string name="s_greek">Řečtina</string>
-    <string name="s_spanish">Španělština</string>
-    <string name="s_finnish">Finština</string>
-    <string name="s_french">Francouzština</string>
-    <string name="s_hebrew">Hebrejština</string>
-    <string name="s_hungarian">Maďarština</string>
-    <string name="s_italian">Italština</string>
-    <string name="s_japanese">Japonština</string>
-    <string name="s_korean">Korejština</string>
-    <string name="s_dutch">Holandština</string>
-    <string name="s_norwegian">Norština</string>
-    <string name="s_polish">Polština</string>
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">Sluchově postižení</string>
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">Tituky pro špatně slyšící a neslyšící</string>
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazilská portugalština</string>
-    <string name="s_portuguese">Portugalština</string>
-    <string name="s_russian">Ruština</string>
-    <string name="Romanian">Rumunština</string>
-    <string name="Serbo_Croatian">Srbochorvatština</string>
-    <string name="Croatian">Chorvatština</string>
-    <string name="Serbian">Srbština</string>
-    <string name="Slovenian">Slovinština</string>
-    <string name="s_swedish">Švédština</string>
-    <string name="s_thai">Thajština</string>
-    <string name="s_turkish">Turečtina</string>
     <string name="s_chinese">Čínština</string>
-    <string name="s_vietnamese">Vietnamština</string>
-    <string name="s_lithuanian">Litevština</string>
-    <string name="s_indonesian">Indonéština</string>
-    <string name="s_malay">Malajština</string>
+    <string name="s_chinese_simplified">Zjednodušená čínština</string>
+    <string name="s_traditional_chinese">Tradiční čínština</string>
+    <string name="s_chinese_mainland">Čínština (Pevninská Čína)</string>
+    <string name="s_chinese_hk">Čínština (Hong Kong)</string>
+    <string name="s_chinese_tw">Čínština (Tchaj-wan)</string>
+    <string name="s_spanish_la">Španělština (LA)</string>
+    <string name="s_montenegrin">Černohorština</string>
+    <string name="s_manipuri">Manipurština</string>
+    <string name="s_dari">Dari</string>
+    <string name="s_portuguese_mz">Portugalština (MZ)</string>
+    <string name="s_spanish_eu">Španělština (EU)</string>
+    <string name="s_santali">Santálština</string>
+    <string name="s_syriac">Syrština</string>
     <string name="s_none">Žádný</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video nelze přehrát</string>
@@ -409,11 +398,14 @@
     <string name="sub_force_all">Všechna vaše videa mají alespoň jednu stopu s titulky. Chcete přesto zahájit vynucené stažení nových titulkových stop?</string>
     <string name="dialog_subloader_nonetwork_title">Připojení k internetu není k dispozici</string>
     <string name="dialog_subloader_nonetwork_message">Ke stažení titulků je vyžadováno připojení k internetu</string>
-    <string name="dialog_subloader_connecting">Připojování na www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">Připojování na www.opensubtitles.com…</string>
+    <string name="opensubtitles_quota_download_remaining">Kvóta stahování na OpenSubtitle: %d/%d zbývá</string>
     <string name="dialog_subloader_credentials">Přihlašovací údaje k OpenSubtitles</string>
     <string name="dialog_subloader_credentials_empty">Musíte zadat platné uživatelské jméno a heslo!</string>
     <string name="toast_subloader_credentials_empty">Zadejte vaše uživatelské jméno a heslo pro OpenSubtitles v nastavení pro možnost stahování titulků</string>
     <string name="toast_subloader_login_failed">Nesprávné uživatelské jméno a heslo k OpenSubtitles nebo služba není dostupná</string>
+    <string name="toast_subloader_quota_exceeded">Kvóta stahování na OpenSubtitles překročena</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Kvóta se resetuje za %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Nastavení titulků</string>
     <string name="subtitle_sample_text">\"příklad\"</string>
@@ -438,6 +430,7 @@
     <string name="exit">Ukončit</string>
     <!-- torrent -->
     <string name="error">Došlo k chybě</string>
+    <string name="error_protocol_not_supported">Chyba: protokol není podporován</string>
     <string name="error_loading_torrent">Chyba při načítání torrentu</string>
     <string name="error_downloading_not_enough_space">Chyba při načítání torrentu: nedostatečná volná kapacita</string>
     <string name="loading_torrent">Načítám torrent…</string>
@@ -446,16 +439,15 @@
     <string name="torrent_buy_premium_message">Streamování torrentů je dostupné pouze v placené verzi</string>
     <string name="torrent_buy_premium">Koupit prémiovou verzi</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">Procházet síťová sdílení</string>
+    <string name="add_smb_server">Procházet SMB server</string>
+    <string name="add_network_server">Přidat síťové sdílení</string>
     <string name="add_to_shortcuts">Vytvořit zástupce</string>
     <string name="add_ssh_server">Procházet FTP server</string>
     <string name="add_ssh_shortcut">Přidat jako zástupce</string>
     <string name="ssh_prompt">Typ FTP</string>
+    <string name="protocol_prompt">Typ protokolu</string>
     <string name="ssh_empty_view"> \"Můžete procházet a přehrávat z vašeho ftp serveru\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Odstranit zástupce</string>
     <string name="shortcut_added">Zástupce %s vytvořen</string>
     <string name="shortcut_removed">Zástupce %s odstraněn</string>
@@ -470,11 +462,16 @@
     <string name="add_to_indexed_folders">Indexovat složku</string>
     <string name="add_to_library">Přidat do knihovny</string>
     <string name="add_all_items_to_library">Přidat nyní všechny soubory do knihovny?</string>
+    <string name="invalid_host">Neplatný formát adresy hostitele</string>
+    <string name="invalid_port">Neplatný formát portu</string>
+    <string name="invalid_path">Neplatný formát cesty</string>
+    <string name="shortcut_folder_added">Složka %s byla přidána jako zástupce</string>
     <string name="indexed_folder_added">Složka %s byla přidána do knihovny</string>
     <string name="remove_from_indexed_folders">Odebrat z knihovny</string>
     <string name="indexed_folder_removed">Složka %s byla odebrána z knihovny</string>
     <string name="indexed_folders_list_empty">Zatím nejsou indexovány žádné síťové složky.\n\nObsah síťové složky můžete přidat do knihovny tak, že přejdete do této složky a vyberete položku \"%s\" na panelu akcí v horní části.</string>
     <string name="indexed_folders_list_empty_ftp">Zatím nejsou indexovány žádné ftp složky.</string>
+    <string name="indexed_folders_list_empty_network">Zatím nejsou indexovány žádné síťové složky.</string>
     <string name="open_indexed_folder">"Otevřít"</string>
     <string name="rescan_indexed_folders">Znova naskenovat všechny indexované složky</string>
     <string name="last_rescan_never">Nikdy</string>
@@ -499,17 +496,30 @@
     <string name="preferences_force_software_decoding_summary">Můžete vyzkoušet tuto možnost pokud nejsou některá videa správně přehrávána</string>
     <string name="preferences_force_audio_passthrough">Audio pass-through</string>
     <string name="preferences_force_audio_passthrough_disabled">Vypnuto (doporučeno)</string>
-    <string name="preferences_force_audio_passthrough_enable">Režim 1 (zastaralý)</string>
-    <string name="preferences_force_audio_passthrough_enable2">Režim 2</string>
     <string name="preferences_force_audio_passthrough_summary">Posílat komprimovaný zvuk přes HDMI nebo S/PDIF. ⚠ Experimentální funkce může mít za následek chybnou A/V synchronizaci</string>
+    <string name="preferences_parser_sync_mode_sample">na základě vzorku </string>
+    <string name="preferences_stream_buffer_size_title">Velikost vyrovnávací paměti streamu</string>
+    <string name="preferences_stream_max_iframe_size_title">Maximální velikost i-snímku</string>
+    <string name="preferences_stream_max_iframe_size_summary">Maximální velikost komprimovaného i-snímku v MB</string>
+    <string name="preferences_force_passthrough">Vynutit průchod audia</string>
+    <string name="preferences_force_passthrough_summary">Pokud je průchod zapnutý, vynutit jej i v případě, že audio kodek není podporován AV receiverem namísto kontroly možností AV receiveru</string>
+    <string name="preferences_playback_speed">Povolit rychlost přehrávání</string>
+    <string name="preferences_playback_speed_summary">Povolit možnost změnit rychlost přehrávání. ⚠ Experimentální může způsobit zasekávání videa</string>
     <string name="preferences_disable_downmix_title">Vypnout stereo down-mix</string>
     <string name="preferences_disable_downmix_summary">Vždy dekódovat všechny kanály a nechat Android provést down-mix v závislosti na schopnostech audio výstupu (může vyústit ve ztrátu hlasových kanálů)</string>
+    <string name="preferences_enable_downmix_androidtv_title">Vynutit stereo downmix</string>
+    <string name="preferences_enable_downmix_androidtv_summary">Vždy udělat downmix více audio kanálů do sterea (vyberte, pokud nejsou slyšet hlasové kanály)</string>
     <string name="preferences_allow_3rd_party_player">Umožnit používání jiného přehrávače</string>
     <string name="preferences_allow_3rd_party_player_summary">Pokud zvolíte přehrávání videa, budou vám systémem nabídnuty další kompatibilní aplikace pro přehrávání. Vezměte na vědomí, že některé funkce nebudou dostupné (obnovení přehrávání, záložky apod.)</string>
     <string name="preference_tv_3d_automatic_switch">Zapnout automatické přepínání TV do 3D\"</string>
     <string name="preference_tv_3d_automatic_switch_summary">Použijte tuto funkci pouze pokud vaše TV podporuje 3D\"</string>
     <string name="preference_tv_refreshrate_switch">Aktivovat automatické přepínání obnovovací frekvence</string>
     <string name="preference_tv_refreshrate_switch_summary">Odstranění efektu \"judder\" přizpůsobením obnovovací frekvence vůči snímkové frekvenci videa (podpora pro jednotlivá zařízení se může lišit)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">Vypnuto</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">Zobrazit režim výběru přizpůsobení fps</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Android 12+ funkce přizpůsobení snímkové frekvence</string>
+    <string name="preference_remove_dolby_vision">Zakázat dolby vision</string>
+    <string name="preference_remove_dolby_vision_summary">Použít standardní video kodeky místo dolby vision</string>
     <string name="preference_cutout_short_edges">Celá obrazovka s výřezy displeje</string>
     <string name="preference_cutout_short_edges_summary">Povolit horizontální video na plnou obrazovku na displeji s výřezy</string>
     <string name="category_languages">Titulky</string>
@@ -521,6 +531,11 @@
     <string name="summary_list_preference_primary">Vyberte jazyky pro stahování titulků</string>
     <string name="favSubLang_title">Jazyk pro zobrazované titulky</string>
     <string name="favSubLang_summary">Vyberte preferovaný jazyk pro zobrazované titulky</string>
+    <string name="favAudioLang_title">Preferovaný jazyk zvuku</string>
+    <string name="favAudioLang_summary">Zvote oblíbenou jazykovou audio stopu</string>
+    <string name="ui_language_title">Vyberte jazyk uživatelského rozhraní</string>
+    <string name="UiLang_title">Jazyk uživatelského rozhraní</string>
+    <string name="UiLang_summary">Nastavte jazyk uživatelského rozhraní pro NOVA, vyberte systém pro použití systémového jazyka</string>
     <string name="ui_mode_title">Režim uživatelského rozhraní</string>
     <string name="ui_mode_summary">Vyberte rozhraní pro TV nebo pro tablet/telefon</string>
     <string name="preferences_video_about">O aplikaci</string>
@@ -543,6 +558,8 @@
     <string name="enable_adult_scrap_title">Získávání informací pro videa pro dospělé</string>
     <string name="enable_adult_scrap_summary">Povolit načítání informací pro videa pro dospělé (ve výchozím nastavení vypnuto)</string>
     <string name="locale">Jazyk systému</string>
+    <string name="scraper_language_title">Jazyk popisu videa</string>
+    <string name="scraper_language_summary">Nastavte jazyk použitý při stažení popisu videa</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
     <string name="abort">Přerušit</string>
@@ -578,12 +595,17 @@
     <string name="help_overlay_network_indexing_text1_lb">Použijte tlačítko + pro zahrnutí obsahu této složky a jejích podsložek to knihovny videí.</string>
     <string name="help_overlay_network_indexing_text2">Tato funkce vám umožní získat plakáty a popisy k filmům a seriálům.</string>
     <string name="help_overlay_scraper_text">Zvolte tuto položku menu pro online vyhledání plakátů a informací k vašim videím. </string>
+    <string name="help_overlay_network_shortcut_text1_lb">Použijte tlačítko + pro přidání této síťové složky jako zástupce a máte možnost přidat její obsah včetně podsložek do Knihovny videí.</string>
     <string name="new_videos_count">Nová videa: %d</string>
     <string name="new_videos_scrape_message">Máte nová videa, ke kterým zatím nejsou k dispozici informace a plakáty.</string>
     <string name="network_bookmarks">Obnovení pozic a záložek na síťových připojeních</string>
     <string name="network_thumbnails">Vytvořit náhledy pro vzdálená videa</string>
     <string name="network_thumbnails_summary">Vytvořit náhledy pro vzdálená videa v případě, kdy není k dispozici plakát</string>
     <string name="network_bookmarks_summary">Uložit a zkontrolovat pozice obnovení a záložky na síťových připojeních pokud je to možné</string>
+    <string name="share_folders_smbj">Použít rychlejší implementaci SMB (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Povolí rychlejší a propustnější SMB, ale omezuje podporu protokolu na verzi 2 a vyšší.</string>
+    <string name="share_folders_sshj">Použít novější implementaci SFTP</string>
+    <string name="share_folders_sshj_summary">Povolit novou implementaci SFTP pro SFTP odkazy</string>
     <string name="share_folders_smbv2">Aktivovat podporu pro SMBv2</string>
     <string name="share_folders_smbv2_summary">Povolit podporu síťového protokolu SMB verze 2.</string>
     <string name="share_folders_smb_resolv">Pořadí resolvingu SMB</string>
@@ -624,6 +646,8 @@
     <string name="sort_by_date_premiered_asc">Řadit podle data premiéry (od nejstarších)</string>
     <string name="sort_by_date_aired_desc">Řadit dle data vysílání (od nejnovějších)</string>
     <string name="sort_by_recently_added_episode_desc">Nejdříve zobrazit nedávno přidané epizody</string>
+    <string name="sort_by_size_asc">Řadit podle velikosti (od nejmenších)</string>
+    <string name="sort_by_size_desc">Řadit podle velikosti (od největších)</string>
     <string name="dec_choice_title">Vyberte dekodér</string>
     <string name="dec_choice_summary">Rozšířené nastavení; může poškodit dekódování videa.</string>
     <string name="dec_hw_omx">Hardwarové dekódování (IOMX w/ swbuf)</string>
@@ -644,6 +668,8 @@
     <string name="preferences_display_resume_box_summary">Zobrazit nebo schovat tlačítko pro obnovení posledního videa na hlavní obrazovce</string>
     <string name="preferences_display_resume_box">Zobrazit panel pro obnovení</string>
     <string name="preferences_leanback_user_interface">Uživatelské rozhraní pro TV</string>
+    <string name="preferences_separate_animation_from_movies_summary">Zatrhněte pro oddělení animovaných videí od filmů a TV pořadů přidáním řádky animovaných</string>
+    <string name="preferences_separate_animation_from_movies">Oddělit animované od filmů a televizních pořadů</string>
     <string name="preferences_show_watching_up_next_row_summary">Zvolte pro zobrazení řádku s právě sledovanými/následujícími videi</string>
     <string name="preferences_show_watching_up_next_row">Zobrazit řádku se sledovanými/následujícími</string>
     <string name="preferences_show_last_added_row_summary">Zvolte pro zobrazení řádku s naposledy přidanými videi</string>
@@ -750,10 +776,6 @@
         - pozice obnovení přehrávání\n
         - synchronizace s Trakt</string>
     <string name="dont_show_again">Příště již nezobrazovat</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d - %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Síť &amp; soubory</string>
     <string name="leanback_subtitles_integrated">Integrované titulky</string>
     <string name="leanback_subtitles_external">Externí titulky</string>
@@ -785,6 +807,8 @@
     <string name="rescan_description">Znova naskenovat indexované složky pro přidání nového obsahu do knihovny</string>
     <string name="rescan_now">Znovu ihned naskenovat</string>
     <string name="rescan_now_description">Manuální opětovné skenování</string>
+    <string name="rescan_select_shares">Vybrat zástupce</string>
+    <string name="rescan_select_shares_description">Vyberte zástupce v síti, které mají být automaticky prohledávány</string>
     <string name="rescan_error_wifi_info_standby">Zdá se, že WiFi je vypnuto v režimu stand-by. Pro zajištění automatického opětovného skenování prosím aktivujte WiFi i v režimu stand-by.</string>
     <string name="rescan_error_wifi">Chyba: WiFi bylo vypnuté během skenování</string>
     <string name="rescan_error_wifi_click_for_more_info">klikněte pro více informací</string>
@@ -861,8 +885,6 @@
     <string name="list_title">Název</string>
     <string name="loading">Načítání…</string>
     <string name="connecting">Připojování…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Nepodařilo se nastavit požadovanou obnovovací frekvenci</string>
     <string name="sponsor">Podpořte aplikaci Nova</string>
     <string name="enable_sponsor_title">Aktivovat odkaz na sponzorské dary pro aplikaci Nova</string>

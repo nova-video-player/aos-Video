@@ -28,7 +28,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -55,11 +54,13 @@ import com.archos.mediacenter.video.autoscraper.AutoScraperActivity;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.AutoScrapeService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class NewVideosActionProvider extends ActionProvider implements
         LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
-    protected static final String TAG = NewVideosActionProvider.class.getSimpleName();
-    private static final boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(NewVideosActionProvider.class);
 
     private static final Uri URI = VideoStore.Video.Media.EXTERNAL_CONTENT_URI;
     private static final String[] PROJECTION = {
@@ -121,7 +122,7 @@ public class NewVideosActionProvider extends ActionProvider implements
 
     @Override
     public View onCreateActionView() {
-        if (DBG) Log.d(TAG, "onCreateActionView");
+        log.debug("onCreateActionView");
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.new_videos_action_item, null);
         view.setOnClickListener(this);
@@ -168,7 +169,7 @@ public class NewVideosActionProvider extends ActionProvider implements
 
     @Override
     public boolean onPerformDefaultAction() {
-        if (DBG) Log.d(TAG, "onPerformDefaultAction");
+        log.debug("onPerformDefaultAction");
         // Search all the videos in the database
         Intent as = new Intent(mContext, AutoScraperActivity.class);
         as.setAction(Intent.ACTION_MAIN);
@@ -178,24 +179,24 @@ public class NewVideosActionProvider extends ActionProvider implements
 
     @Override
     public void onPrepareSubMenu(SubMenu subMenu) {
-        if (DBG) Log.d(TAG, "onPrepareSubMenu");
+        log.debug("onPrepareSubMenu");
     }
 
     @Override
     public boolean hasSubMenu() {
-        if (DBG) Log.d(TAG, "hasSubMenu");
+        log.debug("hasSubMenu");
         return false;
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (DBG) Log.d(TAG, "onCreateLoader");
+        log.debug("onCreateLoader");
         return new CursorLoader(mContext, URI, PROJECTION, SELECTION, SELECTION_ARGS, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (DBG) Log.d(TAG, "onLoadFinished");
+        log.debug("onLoadFinished");
         if (cursor != null && cursor.moveToFirst()) {
             updateCount(cursor.getInt(0));
         }
@@ -203,7 +204,7 @@ public class NewVideosActionProvider extends ActionProvider implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> arg0) {
-        if (DBG) Log.d(TAG, "onLoaderReset");
+        log.debug("onLoaderReset");
         // nothing
     }
 
@@ -234,12 +235,12 @@ public class NewVideosActionProvider extends ActionProvider implements
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == MSG_START_HELP_OVERLAY && mItemView != null) {
-                if (DBG) Log.d(TAG, "handleMessage MSG_START_HELP_OVERLAY");
+                log.debug("handleMessage MSG_START_HELP_OVERLAY");
 
                 // Get the size of the action bar item
                 int itemWidth = mItemView.getWidth();
                 int itemHeight = mItemView.getHeight();
-                if (DBG) Log.d(TAG, "item size=" + itemWidth + "x" + itemHeight);
+                log.debug("item size=" + itemWidth + "x" + itemHeight);
 
                 // Make sure the item is currently displayed in the action bar 
                 // (the size is 0x0 if the item is in the options menu)
@@ -255,7 +256,7 @@ public class NewVideosActionProvider extends ActionProvider implements
                     int windowWidth = windowFrame.right - windowFrame.left;
                     int windowHeight = windowFrame.bottom - windowFrame.top;
                     int statusbarHeight = windowFrame.top;
-                    if (DBG) Log.d(TAG, "windowFrame=" + windowFrame);
+                    log.debug("windowFrame=" + windowFrame);
 
                     // Compute a target area a bit bigger than the item itself
                     int left = location[0] - mHelpOverlayHorizontalOffset;
@@ -276,7 +277,7 @@ public class NewVideosActionProvider extends ActionProvider implements
                     if (top < 0) {
                         top = 0;
                     }
-                    if (DBG) Log.d(TAG, "Selected target area=" + left + " " + top + " " + right + " " + bottom);
+                    log.debug("Selected target area=" + left + " " + top + " " + right + " " + bottom);
                     
                     // Start the help overlay activity with the selected target area
                     Intent hov = new Intent(Intent.ACTION_MAIN);

@@ -22,6 +22,9 @@ import android.app.PendingIntent;
 import android.content.ContentUris;
 import android.content.Context;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.loader.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
@@ -35,6 +38,7 @@ import android.os.IBinder;
 import android.provider.BaseColumns;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
+
 import android.util.Log;
 
 import com.archos.mediacenter.utils.trakt.Trakt;
@@ -48,8 +52,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class  UpdateRecommendationsService extends IntentService {
+public class  UpdateRecommendationsService extends IntentService implements DefaultLifecycleObserver {
 	private static final String TAG = "UpdateRecommendationsService";
 	public static class Columns {
 		public static final String ID = BaseColumns._ID;
@@ -90,8 +93,7 @@ public class  UpdateRecommendationsService extends IntentService {
 			VideoStore.Video.VideoColumns.SCRAPER_E_NAME,
 			VideoStore.Video.VideoColumns.SCRAPER_E_SEASON,
 			VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE,
-			COVER,  NAME,
-			null, null
+			COVER,  NAME
 	};
 	private int mNameColumn;
 	private NotificationManager mNotificationManager;
@@ -103,16 +105,19 @@ public class  UpdateRecommendationsService extends IntentService {
 	private static List<Integer> sLastCard = new ArrayList<>();
 	public UpdateRecommendationsService() {
 		super("RecommendationService");
-
 	}
-
-
 
 	public class RecommendationServiceBinder extends Binder{
 		public UpdateRecommendationsService getService(){
 			return UpdateRecommendationsService.this;
 		}
+	}
 
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		// Register as a lifecycle observer
+		ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 	}
 
 	@Override
@@ -157,6 +162,7 @@ public class  UpdateRecommendationsService extends IntentService {
 					}
 					int season = c.getInt(seasonColumns);
 					int episode = c.getInt(episodeColumns);
+					// TODO MARC format unification e%03?
 					if (season != 0 && episode != 0)
 						builder.setDescription(String.format("S%02dE%02d  -  %s", season, episode, c.getString(episodeNameColumns)));
 					Notification notification = builder.setTitle(c.getString(mNameColumn))
@@ -296,5 +302,33 @@ public class  UpdateRecommendationsService extends IntentService {
 				((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
 
 		return intent;
+	}
+
+	@Override
+	public void onStop(LifecycleOwner owner) {
+		// App in background
+		if (DBG) Log.d(TAG, "onStop: LifecycleOwner app in background, stopSelf");
+		cleanup();
+		stopSelf();
+	}
+
+	@Override
+	public void onStart(LifecycleOwner owner) {
+		// App in foreground
+		if (DBG) Log.d(TAG,"onStart: LifecycleOwner app in foreground");
+	}
+
+	@Override
+	public void onDestroy() {
+		if (DBG) Log.d(TAG, "onDestroy()");
+		cleanup(); // Call cleanup here
+		super.onDestroy();
+	}
+
+	private void cleanup() {
+		// Cancel all notifications
+		mNotificationManager.cancelAll();
+		// Clear the list of last cards
+		sLastCard.clear();
 	}
 }

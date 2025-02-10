@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.ServiceInfo;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -40,6 +41,7 @@ import android.os.Handler;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ServiceCompat;
 import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
 
@@ -49,7 +51,7 @@ import com.archos.environment.ArchosFeatures;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.StreamUriFinder;
-import com.archos.mediacenter.utils.AppState;
+import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
@@ -62,7 +64,6 @@ import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.utils.VideoMetadata;
-import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
@@ -72,9 +73,16 @@ import com.archos.environment.ArchosUtils;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
+import static com.archos.mediacenter.utils.ISO639codes.findLanguageInString;
+import static com.archos.mediacenter.utils.ISO639codes.isLanguageInString;
+import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateTrackName;
+import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.getSubLanguageFromSubPathAndVideoPath;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
+import static com.archos.mediascraper.StringUtils.stringContainsForced;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,6 +119,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     public static final String PLAYER_SERVICE_STARTED = "PLAYER_SERVICE_STARTED";
 
+    public static final boolean AUDIO_SPEED_ON_THE_FLY = true;
+    public static final boolean USE_NONETRACK_IF_SUB_LANG_NOT_FOUND = false;
+    public static boolean FOUND_PREFERRED_SUB_TRACK = false;
     public static final int RESUME_NO = 0;
     public static final int RESUME_FROM_LAST_POS = 1;
     public static final int RESUME_FROM_BOOKMARK = 2;
@@ -158,6 +169,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private static final String KEY_HIDE_SUBTITLES = "subtitles_hide_default";
     private static final String KEY_NETWORK_BOOKMARKS = "network_bookmarks";
     private static final String KEY_SUBTITLES_FAVORITE_LANGUAGE = "favSubLang";
+    private static final String KEY_AUDIO_TRACK_FAVORITE_LANGUAGE = "favAudioLang";
     private static final String VIDEO_PLAYER_DEMO_MODE_EXTRA = "demo_mode";
     private boolean mForceSingleRepeatMode;
 
@@ -165,13 +177,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private int mLastPosition = -1;
     private boolean mIsChangingSurface;
     private int mResume;
-    private boolean firstTimeCalled;
+    private boolean firstTimeSubCalled = true;
+    private boolean firstTimeAudioCalled = true;
+
     private boolean mHideSubtitles = false;
     private int mNewSubtitleTrack;
     private boolean mAudioSubtitleNeedUpdate;
     private Intent mIntent;
     public int mPlayMode=0;
     private int mAudioDelay;
+    private float mAudioSpeed = 1.0f;
     private int mNewAudioTrack;
     public int mAudioFilt;
     public boolean mNightModeOn;
@@ -180,9 +195,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private boolean mCallOnDataUriOKWhenVideoInfoIsSet;
     private boolean mIsPreparingSubs;
     private String mSubsFavoriteLanguage;
+    private String mAudioTrackFavoriteLanguage;
     private boolean mDestroyed;
     private Runnable mAutoSaveTask;
-    
+
     public enum PlayerState {
         INIT,
         PREPARING,
@@ -219,7 +235,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         @Override
         public void onServiceConnected(ComponentName arg0, IBinder binder) {
             mTorrent  =  ((TorrentObserverService.TorrentServiceBinder) binder).getService();
-            mTorrent. setParameters(mTorrentURL, mTorrentFilePosition);
+            mTorrent.setParameters(mTorrentURL, mTorrentFilePosition);
             mTorrent.setObserver(mTorrentThreadObserver);
             mTorrent.start();
             // start();
@@ -227,7 +243,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-           mTorrent = null;
+            mTorrent = null;
         }
     };
 
@@ -253,7 +269,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     onDataUriOK();
                 }
             });
-            ;
         }
 
         @Override
@@ -344,15 +359,19 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mNextVideoId = mVideoId;
         } else {
             mPlayer.setLooping(false);
-            if (PLAYMODE_SINGLE==newPlaymode) {
+            if (PLAYMODE_SINGLE == newPlaymode) {
+                log.debug("setPlaymode: PLAYMODE_SINGLE");
                 // clear next
                 mNextUri = null;
                 mNextVideoId = -1;
             } else if (PLAYMODE_FOLDER == newPlaymode) {
+                log.debug("setPlaymode: PLAYMODE_FOLDER");
                 updateNextVideo(false, false, wait);
             } else if (PLAYMODE_REPEAT_FOLDER == newPlaymode) {
+                log.debug("setPlaymode: PLAYMODE_REPEAT_FOLDER");
                 updateNextVideo(true, false, wait);
             } else if (PLAYMODE_BINGE == newPlaymode) {
+                log.debug("setPlaymode: PLAYMODE_BINGE");
                 updateNextVideo(false, true, wait);
             } else {
                 log.debug("unknown Playmode: " + newPlaymode);
@@ -390,7 +409,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
 
         log.debug("onCreate: register headsetPluggedReceiver");
-        registerReceiver(headsetPluggedReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+        if (Build.VERSION.SDK_INT >= 33) registerReceiver(headsetPluggedReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG), Context.RECEIVER_NOT_EXPORTED);
+        else registerReceiver(headsetPluggedReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
         setPlayer();
         Intent intent = new Intent(PLAYER_SERVICE_STARTED);
         intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
@@ -409,17 +429,19 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         super.onStartCommand(intent, flags, startId);
         return START_NOT_STICKY;
     }
-    
+
     public void onStart(Intent intent) {
         if (intent == null || intent.getData() == null)
             return;
-
+        firstTimeAudioCalled = true;
+        firstTimeSubCalled = true;
         log.debug("onStart() ");
         mCallOnDataUriOKWhenVideoInfoIsSet = true;
         mIntent = intent;
         boolean isDemoMode = (intent.getIntExtra(VIDEO_PLAYER_DEMO_MODE_EXTRA, 0) == 1);
         mNetworkBookmarksEnabled = mPreferences.getBoolean(KEY_NETWORK_BOOKMARKS, true);
         mSubsFavoriteLanguage = mPreferences.getString(KEY_SUBTITLES_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
+        mAudioTrackFavoriteLanguage = mPreferences.getString(KEY_AUDIO_TRACK_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
         mAudioFilt = mPreferences.getInt(KEY_AUDIO_FILT, 0);
         mNightModeOn = mPreferences.getBoolean(KEY_AUDIO_FILT_NIGHT, false);
         mForceSingleRepeatMode = isDemoMode;
@@ -438,6 +460,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if(mPlayerFrontend!=null)
             mPlayerFrontend.setUri(mUri, mStreamingUri);
         mVideoId = intent.getIntExtra("id", -1);
+        log.debug("onStart mVideoId=" + mVideoId);
         mTorrentFilePosition = mIntent.getIntExtra(PlayerActivity.KEY_TORRENT, -1);
 
         // when mVideoInfo uri is the same as intent uri -> info has already been retrieved !
@@ -449,6 +472,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mVideoInfo = null; //reset info
             mDatabaseInfoHasBeenRetrieved = false;
             mAudioDelay = mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0);
+            mAudioSpeed = getAudioSpeedFromPreferences();
+            log.debug("onStart: mAudioSpeed=" + mAudioSpeed);
         }
         if(mTorrentFilePosition>=0){
             mCallOnDataUriOKWhenVideoInfoIsSet = false;
@@ -469,20 +494,22 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         else if(mVideoId==-1){
             Uri correctedUri = FileUtils.getRealUriFromVideoURI(this,mUri);
             if(correctedUri!=null) {
-                log.debug("correctedUri " + correctedUri);
+                log.debug("onStart: correctedUri " + correctedUri);
                 mUri = correctedUri;
             }
         }
-        log.debug("mIndexHelper != null " + String.valueOf(mIndexHelper != null));
+        log.debug("onStart: mIndexHelper != null " + String.valueOf(mIndexHelper != null));
 
-        // store file that is playing
-        log.debug("onStart videoUri " + mUri + ", videoId " + mVideoId);
-        CustomApplication.setLastVideoPlayedId(mVideoId);
-        CustomApplication.setLastVideoPlayedUri(mUri);
+        // store file that is playing: this is too soon at this point because information is not available do it later in onStreamingUriOK
+        log.debug("onStart videoUri " + mUri + ", videoId " + mVideoId + ", mVideoInfo.id=" + (mVideoInfo != null ? mVideoInfo.id : "null") + ", mVideoInfo.uri=" + (mVideoInfo != null ? mVideoInfo.uri : "null"));
+        //CustomApplication.setLastVideoPlayedId(mVideoId);
+        //CustomApplication.setLastVideoPlayedUri(mUri);
 
-        if(mIndexHelper!=null&&mVideoInfo==null)
+        if(mIndexHelper!=null&&mVideoInfo==null) {
+            log.debug("onStart: mIndexHelper != null, call requestVideoDb()");
             requestVideoDb();
-        else if(mVideoInfo!=null){
+        } else if(mVideoInfo!=null){
+            log.debug("onStart: mVideoInfo != null, call mPlayerFrontend.onVideoDb");
             mPlayerFrontend.onVideoDb(mVideoInfo, null);
         }
         if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
@@ -511,7 +538,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 nm.createNotificationChannel(nc);
         }
         nb = new NotificationCompat.Builder(this, notifChannelId)
-                .setSmallIcon(R.drawable.video2)
+                .setSmallIcon(R.drawable.nova_notification)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setTicker(null).setOnlyAlertOnce(true).setOngoing(true).setAutoCancel(true);
 
@@ -545,8 +572,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         nb.setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(EXIT_INTENT),
                 ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT)));
         //notif.bigContentView = new RemoteViews(getPackageName(), R.layout.notification_controls);
-        startForeground(PLAYER_NOTIFICATION_ID, nb.build());
-
+        ServiceCompat.startForeground(this, PLAYER_NOTIFICATION_ID, nb.build(),
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK : 0
+        );
     }
 
 
@@ -593,6 +621,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void prepareSubs() {
+        log.debug("prepareSubs");
         if(!mIsPreparingSubs) {
             mIsPreparingSubs = true;
             com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager subtitleManager =
@@ -600,18 +629,22 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         @Override
                         public void onAbort() {
                             mIsPreparingSubs = false;
+                            log.debug("prepareSubs: onAbort");
                         }
 
                         @Override
                         public void onError(Uri uri, Exception e) {
                             mIsPreparingSubs = false;
+                            log.debug("prepareSubs: onError");
                         }
 
                         @Override
                         public void onSuccess(Uri uri) {
+                            log.debug("prepareSubs: onSuccess request player to check subs if " + mUri + " = " + uri);
                             mIsPreparingSubs = false;
-                            if(mUri.equals(uri))
-                                mPlayer.checkSubtitles();
+                            if(mUri.equals(uri)) {
+                                mPlayer.checkSubtitles(); // will trigger subs reload
+                            }
                         }
 
                         @Override
@@ -620,11 +653,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         }
                     });
             subtitleManager.preFetchHTTPSubtitlesAndPrepareUpnpSubs(mUri, mStreamingUri);
+        } else {
+            log.debug("prepareSubs: already preparing subs");
         }
     }
 
     private void onStreamingUriOK() {
-        log.debug("onStreamingUriOK " + mStreamingUri);
+        log.debug("onStreamingUriOK");
         if(mTorrentFilePosition==-1)
             prepareSubs();
         if(mPlayerFrontend!=null)
@@ -710,7 +745,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     if (duration > 0)
                         mVideoInfo.duration = duration;
                     mVideoInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
-                    log.info("saveVideoStateIfReady: save bookmark at " + mVideoInfo.lastTimePlayed);
+                    log.info("saveVideoStateIfReady: save bookmark at " + mVideoInfo.lastTimePlayed + " for videoId " + mVideoInfo.id);
                     mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
                     // disable periodic trakt save this should be done with pauseTrakt() anyway
                     //stopTrakt(); //this writes mVideoInfo.traktResume
@@ -819,7 +854,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mTraktError = false;
             mTraktLiveScrobblingEnabled = Trakt.isLiveScrobblingEnabled(mPreferences);
             if (mTraktLiveScrobblingEnabled) {
-                 int progress = getPlayerProgress();
+                int progress = getPlayerProgress();
                 mVideoInfo.traktResume = -progress;
                 mVideoInfo.duration = Player.sPlayer.getDuration();
                 log.debug("startTrakt: trakt watching progress=" + progress);
@@ -854,12 +889,19 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // We now use the DB flag ARCHOS_TRAKT_SEEN even if there is no sync with trakt
         else {
             log.debug("stopTrakt: mTraktClient == null, not sending watchStop");
-            if (mVideoId>=0 && Trakt.shouldMarkAsSeen(getPlayerProgress()) && !PrivateMode.isActive()) {
-                final ContentValues cv = new ContentValues(1);
-                cv.put(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN, Trakt.TRAKT_DB_MARKED);
-                String where = VideoStore.Video.VideoColumns._ID + " = ?";
-                String[] whereArgs = new String[] {Long.toString(mVideoId)};
-                getContentResolver().update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, cv, where, whereArgs);
+            if (mVideoInfo != null) {
+                if (mVideoInfo.id >= 0 && Trakt.shouldMarkAsSeen(getPlayerProgress()) && !PrivateMode.isActive()) {
+                    log.debug("stopTrakt: marking video " + mVideoInfo.id + " as seen in VideoStore");
+                    final ContentValues cv = new ContentValues(1);
+                    cv.put(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN, Trakt.TRAKT_DB_MARKED);
+                    String where = VideoStore.Video.VideoColumns._ID + " = ?";
+                    String[] whereArgs = new String[]{Long.toString(mVideoInfo.id)};
+                    getContentResolver().update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, cv, where, whereArgs);
+                } else {
+                    log.debug("stopTrakt: not marking video mVideoInfo.id=" + mVideoInfo.id + " any resume");
+                }
+            } else {
+                log.warn("stopTrakt: mVideoInfo is null");
             }
         }
     }
@@ -917,6 +959,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private void requestVideoDb() {
+        log.debug("requestVideoDb");
         mDatabaseInfoHasBeenRetrieved= true;
         mIndexHelper.requestVideoDb(mUri, mVideoId,
                 null,
@@ -925,15 +968,14 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     private class VideoObserver extends ContentObserver implements IndexHelper.ScraperTask.Listener {
 
-
         public VideoObserver(Handler handler) {
             super(handler);
-
         }
 
         @Override
         public void onChange(boolean selfChange) {
             if (mVideoInfo != null && (mVideoInfo.id==-1||mVideoInfo.scraperId <=0)&&!PrivateMode.isActive()){ // if we need to update
+                log.debug("VideoObserver onChange: update from db");
                 VideoDbInfo info = VideoDbInfo.fromUri(getContentResolver(), mVideoInfo.uri);
                 if (info != null) {
                     info.subtitleTrack = mVideoInfo.subtitleTrack;
@@ -948,9 +990,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     }
 
                     if (ArchosFeatures.isAndroidTV(PlayerService.this) && !PrivateMode.isActive())
-                    updateNowPlayingMetadata();
+                        updateNowPlayingMetadata();
                     // check if it has been scraped
                 }
+            } else {
+                log.debug("VideoObserver onChange: no need to update");
             }
         }
 
@@ -979,7 +1023,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      * @param videoInfo
      */
     public void setVideoInfo(VideoDbInfo videoInfo){
+        log.debug("setVideoInfo: videoInfo.id=" + (videoInfo != null ? videoInfo.id : "null") + ", videoInfo.uri=" + (videoInfo != null ? videoInfo.uri : "null"));
         mVideoInfo = videoInfo;
+        if (mVideoInfo != null) {
+            log.debug("setVideoInfo: setLastVideoPlayed");
+            CustomApplication.setLastVideoPlayedId(mVideoInfo.id);
+            CustomApplication.setLastVideoPlayedUri(mVideoInfo.uri);
+        }
         mLastPosition = getLastPosition(mVideoInfo, mResume);
         if (!PrivateMode.isActive()&&mIndexHelper!=null) {
             mVideoInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
@@ -998,6 +1048,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     @Override
     public void onDestroy(){
         super.onDestroy();
+        log.debug("onDestroy");
+        saveVideoStateIfReady();
         log.debug("onDestroy: release mediaSessionCompat");
         if (mSession != null) mSession.release();
         if(mIndexHelper!=null)
@@ -1011,7 +1063,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 unbindService(mTorrentObserverServiceConnection);
             }catch(java.lang.IllegalArgumentException e) {}
         log.debug("onDestroy");
-
     }
 
     /**
@@ -1024,6 +1075,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if(mDestroyed) //will perhaps fix some weird crashes on playstore console
             return;
         if(mPlayerFrontend!=null) {
+            log.debug("onVideoDb: mPlayerFrontend.onVideoDb");
             mPlayerFrontend.onVideoDb(info, remoteInfo);
         }
     }
@@ -1039,6 +1091,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             Player.sPlayer.seekTo(mLastPosition); //mLastPosition = mVideoInfo.resume when first start of service OR position on stop when switching player
             log.debug("seek to "+mLastPosition);
             setAudioDelay(mAudioDelay, true);
+            // no audio_speed if in passthrough
+            log.debug("postPreparedAndVideoDb: setAudioSpeed force " + mAudioSpeed);
+            setAudioSpeed(mAudioSpeed, true);
             if(mPlayOnResume) {
                 mPlayerFrontend.onFirstPlay();
                 log.debug("postPreparedAndVideoDb: player start PlayerController.STATE_NORMAL");
@@ -1046,10 +1101,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 PlayerService.sPlayerService.mPlayerState = PlayerService.PlayerState.PLAYING;
             }
             if(mAudioSubtitleNeedUpdate){ // when we have info about subs or audio track BEFORE mVideoInfo is set
+                log.debug("postPreparedAndVideoDb: subtitletrack onSubtitleMetadataUpdated " + mNewSubtitleTrack);
                 onSubtitleMetadataUpdated(mPlayer.getVideoMetadata(), mNewSubtitleTrack);
+                log.debug("postPreparedAndVideoDb: audiotrack onAudioMetadataUpdated " + mNewAudioTrack);
                 onAudioMetadataUpdated(mPlayer.getVideoMetadata(), mNewAudioTrack);
                 mAudioSubtitleNeedUpdate = false;
             }
+            log.debug("postPreparedAndVideoDb: mPlayerFrontend.onPrepared, setPlaMode " + mPlayMode);
             setPlayMode(mPlayMode, false); //look for next uri
             setAudioFilt();
             if (PERIODIC_BOOKMARK_SAVE)
@@ -1120,7 +1178,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mLastPosition = 0;
             onStart(mIntent);
         } else {
-            log.debug("onCompletion: we have no new video");
+            log.debug("onCompletion: we have no new video after " + mVideoId + " mVideoInfo.id " + mVideoInfo.id);
             if(mPlayerFrontend!=null) {
                 mPlayerFrontend.onEnd();
             }
@@ -1180,6 +1238,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     @Override
     public void onPause(int state) {
         log.debug("onPause");
+        saveVideoStateIfReady();
         if (state == PlayerController.STATE_NORMAL) {
             log.debug("onPause: normal state thus pauseTrakt()!");
             pauseTrakt();
@@ -1210,29 +1269,59 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onAudioMetadataUpdated(VideoMetadata vMetadata, int newAudioTrack) {
-         /*
+        /*
          * if current audio track is invalid or not supported, choose the first supported one
          */
+
         if (mVideoInfo == null) {
             mNewAudioTrack = newAudioTrack;
             mAudioSubtitleNeedUpdate = true;
+            log.debug("onAudioMetadataUpdated: mVideoInfo == null, mNewAudioTrack=" + mNewAudioTrack + " newAudioTrack=" + newAudioTrack + " mAudioSubtitleNeedUpdate=" + mAudioSubtitleNeedUpdate);
             return;
+        } else {
+            log.debug("onAudioMetadataUpdated: mVideoInfo != null, mVideoInfo.audioTrack=" + mVideoInfo.audioTrack + " newAudioTrack=" + newAudioTrack + " mAudioSubtitleNeedUpdate=" + mAudioSubtitleNeedUpdate);
         }
         int nbTrack = vMetadata.getAudioTrackNb();
         boolean supported = true;
-        if (mVideoInfo.audioTrack < 0 || mVideoInfo.audioTrack >= nbTrack 
-                || !vMetadata.getAudioTrack(mVideoInfo.audioTrack).supported) {
-            for (int i = 0; i < nbTrack; ++i) {
-                if (vMetadata.getAudioTrack(i).supported) {
-                    mVideoInfo.audioTrack = i;
+
+        Locale locale = new Locale(mAudioTrackFavoriteLanguage);
+        String trackName = "";
+        Integer firstSupportedTrack = null;
+        supported = false;
+
+        // VideoDbInfo sets audioTrack to -1 when file has not been played or restores playerParams
+        for (int i = 0; i < nbTrack; ++i) {
+            if (vMetadata.getAudioTrack(i).supported) {
+                trackName = generateTrackName(getApplicationContext(), vMetadata.getAudioTrack(i).name, vMetadata.getAudioTrack(i).language);
+                if (firstSupportedTrack == null) {
+                    log.debug("onAudioMetadataUpdated: identify firstSupportedTrack={}({})", i, trackName);
+                    firstSupportedTrack = i;
                     supported = true;
-                    break;
-                } else if (!vMetadata.getAudioTrack(i).supported)
-                    supported = false;
+                }
+                if ((mVideoInfo.audioTrack < 0 || mVideoInfo.audioTrack >= nbTrack || !vMetadata.getAudioTrack(mVideoInfo.audioTrack).supported) && firstTimeAudioCalled) { // track has not been selected yet and it is the first time video is played
+                    log.debug("onAudioMetadataUpdated: trying to find {} in {}", locale.getDisplayLanguage(), trackName);
+                    if (isLanguageInString(locale.getDisplayLanguage(), trackName)) {
+                        log.debug("onAudioMetadataUpdated: selected default track: #{} -> {} matching favorite audioTrack language {}", i, trackName, locale.getDisplayLanguage());
+                        mVideoInfo.audioTrack = i;
+                        break;
+                    } else {
+                        log.debug("onAudioMetadataUpdated: skip track: #{} -> {} not matching favorite audioTrack language {}", i, trackName, locale.getDisplayLanguage());
+                    }
+                } else {
+                    log.debug("onAudioMetadataUpdated: not trying to find {} in {} because mVideoInfo.audioTrack={} out of range or not supported or firstTimeAudioCalled={}", locale.getDisplayLanguage(), trackName, mVideoInfo.audioTrack, firstTimeAudioCalled);
+                }
             }
         }
+        // if no valid audioTrack selected revert to firstSupportedTrack if it exists
+        if ((mVideoInfo.audioTrack < 0 || mVideoInfo.audioTrack >= nbTrack) && firstTimeAudioCalled && firstSupportedTrack != null)
+            mVideoInfo.audioTrack = firstSupportedTrack;
+
+        firstTimeAudioCalled = false;
+
         if (mVideoInfo.audioTrack == -1)
             mVideoInfo.audioTrack = newAudioTrack;
+
+        mNewAudioTrack = mVideoInfo.audioTrack; // this trigs the change in player
 
         if (mVideoInfo.audioTrack != newAudioTrack && !mPlayer.setAudioTrack(mVideoInfo.audioTrack))
             supported = false;
@@ -1243,61 +1332,135 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if(mPlayerFrontend!=null) {
                 mPlayerFrontend.onAudioError(true, at != null ? at.format : "unknown");
             }
-
         }
 
         if(mPlayerFrontend!=null) {
+            log.debug("onAudioMetadataUpdated: mPlayerFrontend.onAudioMetadataUpdated");
             mPlayerFrontend.onAudioMetadataUpdated(vMetadata, newAudioTrack);
         }
     }
 
     @Override
     public void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int newSubtitleTrack) {
+        // note: if mIsPreparingSubs = true, onSubtitleMetadataUpdated can be called even if in not final state
+        // subs could be still being copied in cache directory
+        // however in a replay context cache is not  updated since all the subs have already been copied
+        // in this case prepareSubs() will call mediaPlayer.checkSubtitles() but avos will not notify handleMetadata()
+        // and onSubtitleMetadataUpdated will not been called a second time resulting in only internal subs being displayed
+
         if (mVideoInfo == null) {
             mNewSubtitleTrack = newSubtitleTrack;
             mAudioSubtitleNeedUpdate = true;
             return;
         }
-        int nbTrack = vMetadata.getSubtitleTrackNb();
+
+        // /!\ IMPORTANT: this is only for the player part, setting the UI subtitle track is done in PlayerActivity thus the two must be in sync
+
+        int nbTrack = vMetadata.getSubtitleTrackNb(); // this contains the number of subtitlesTracks not including the none track
+        Integer srtTrack = null; // track for video.srt with no language provided
+        log.debug("onSubtitleMetadataUpdated: nbTrack={} newSubtitleTrack={} mVideoInfo.subtitleTrack={} mHideSubtitles={} mSubsFavoriteLanguage={} mVideoInfo.subtitleTrack={} FOUND_PREFERRED_SUB_TRACK={} firstTimeSubCalled={} mIsPreparingSubs={}", nbTrack, newSubtitleTrack, mVideoInfo.subtitleTrack, mHideSubtitles, mSubsFavoriteLanguage, mVideoInfo.subtitleTrack, FOUND_PREFERRED_SUB_TRACK, firstTimeSubCalled, mIsPreparingSubs);
+        // selection logic
         if (nbTrack != 0) {
-            // none track
-            int noneTrack = nbTrack;
-    
-            if (mVideoInfo.subtitleTrack == -1) {
-                if (mHideSubtitles)
+            int noneTrack = nbTrack; // here it tracks mVideoInfo.subtitleTrack that are the tracks of the video (not the none from menu)
+            // do the scan for preferred lang at second call since onSubtitleMetadataUpdated is called twice and the first time it does not get all subtracks when there are a Subs/ dir with a lot of subs
+            if ((mVideoInfo.subtitleTrack == -1 || ! FOUND_PREFERRED_SUB_TRACK) && (firstTimeSubCalled || ! mIsPreparingSubs)) { // means no track has been selected before or preferred sub track found
+                if (mHideSubtitles) {
+                    log.debug("onSubtitleMetadataUpdated: hide subs -> selected none track");
                     mVideoInfo.subtitleTrack = noneTrack;
-                else {
+                } else {
                     Locale locale = new Locale(mSubsFavoriteLanguage);
-                    for (int i = 0; i < nbTrack; ++i) {
-                        if (VideoUtils.getLanguageString(this,vMetadata.getSubtitleTrack(i).name).toString().equalsIgnoreCase(locale.getDisplayLanguage())){
-                                mVideoInfo.subtitleTrack = i;
-                            break;
+                    log.debug("onSubtitleMetadataUpdated: favorite locale {}, current locale {}", locale.getDisplayLanguage(), Locale.getDefault().getDisplayLanguage());
+                    String trackName = "";
+                    String lang = null;
+                    for (int i = 0; i < nbTrack; ++i) { // select default track
+                        trackName = vMetadata.getSubtitleTrack(i).name;
+                        // select default locale and avoid forced subs
+                        if (vMetadata.getSubtitleTrack(i).isExternal) {
+                            // this returns lang = "SRT" if subFileName is video.srt and videoFileName is video.mkv
+                            lang = getSubLanguageFromSubPathAndVideoPath(getApplicationContext(), vMetadata.getSubtitleTrack(i).path, vMetadata.getFile().getPath());
+                            log.debug("onSubtitleMetadataUpdated: subtrack {}, ext sub found lang={} ({})", i, lang, vMetadata.getSubtitleTrack(i).path);
+                        } else {
+                            lang = ISO639codes.getLanguageNameForLetterCode(vMetadata.getSubtitleTrack(i).language);
+                            log.debug("onSubtitleMetadataUpdated: subtrack {}, int sub found lang={} ({})", i, lang, trackName);
+                        }
+                        if (lang == null || lang.isEmpty()) {
+                            log.debug("onSubtitleMetadataUpdated: no language found in track/file name -> set it to unknown");
+                            lang = getText(R.string.unknown_track_name).toString();
+                        } else {
+                            if (stringContainsForced(trackName)) {
+                                log.debug("onSubtitleMetadataUpdated: skip track: " + trackName + " with identified lang: " + lang + " because it contains forced sub");
+                            } else {
+                                if (lang.toLowerCase().contains(locale.getDisplayLanguage().toLowerCase())) {
+                                    log.debug("onSubtitleMetadataUpdated: selected default track: {} identified lang: {} matching locale language {}", trackName, lang, locale.getDisplayLanguage());
+                                    FOUND_PREFERRED_SUB_TRACK = true;
+                                    mVideoInfo.subtitleTrack = i;
+                                    break;
+                                } else {
+                                    log.debug("onSubtitleMetadataUpdated: skip track: {} identified lang: {} != locale language {}", trackName, lang, locale.getDisplayLanguage());
+                                }
+                            }
+                        }
+                        if (vMetadata.getSubtitleTrack(i).isExternal && lang.equalsIgnoreCase("srt")) {
+                            log.debug("onSubtitleMetadataUpdated: found srt track {} -> setting srtTrack={}", i, i);
+                            srtTrack = i;
                         }
                     }
-                    if (mVideoInfo.subtitleTrack == -1)
-                        mVideoInfo.subtitleTrack = newSubtitleTrack;
-
+                    if (!mHideSubtitles && mVideoInfo.subtitleTrack == -1) { // selects newSubtitleTrack (could be noneTrack) if language not found
+                        int newTrack = 0;
+                        String revertTrackName = "";
+                        if (USE_NONETRACK_IF_SUB_LANG_NOT_FOUND) {
+                            newTrack = Objects.requireNonNullElse(srtTrack, noneTrack); // strategy to put no subs if lang not found
+                            revertTrackName = "noneTrack";
+                        } else {
+                            newTrack = Objects.requireNonNullElse(srtTrack, newSubtitleTrack); // strategy to revert to newSubtitleTrack if lang not found (legacy)
+                            revertTrackName = "newSubtitleTrack";
+                        }
+                        log.debug("onSubtitleMetadataUpdated: no default sub found mVideoInfo.subtitleTrack: {} -> setting {} or external srt ({}) track if exists -> videoInfo.subtitleTrack={}", mVideoInfo.subtitleTrack, revertTrackName, srtTrack, newTrack);
+                        mVideoInfo.subtitleTrack = newTrack;
+                    }
+                    if (mHideSubtitles || mVideoInfo.subtitleTrack == noneTrack) { // if none track selected, player gets -1 track
+                        // nonTrack is nbTracks
+                        log.debug("onSubtitleMetadataUpdated: hideSubs or noneTrack -> player.setSubtitleTrack(-1) and  videoInfo.subtitleTrack={}", noneTrack);
+                        mVideoInfo.subtitleTrack = noneTrack;
+                        mPlayer.setSubtitleTrack(-1);
+                    }
+                    // at this stage mVideoInfo.subtitleTrack is the track number without the none track 0<=mVideoInfo.subtitleTrack<nbTrack but belt and suspenders spirit set it to none track
+                    if (mVideoInfo.subtitleTrack < 0 || mVideoInfo.subtitleTrack > nbTrack) {
+                        log.error("onSubtitleMetadataUpdated: invalid subtitle track number {} -> setting none track", mVideoInfo.subtitleTrack);
+                        mVideoInfo.subtitleTrack = noneTrack;
+                    }
                 }
             }
+            // application logic
+            // mVideoInfo.subtitleTrack is the track number without the none track 0<=mVideoInfo.subtitleTrack<=nbTrack, nbTrack is the noneTrack position
+            if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack <= nbTrack) {
+                log.debug("onSubtitleMetadataUpdated: newSubtitleTrack={}, mVideoInfo.subtitleTrack={}", newSubtitleTrack, mVideoInfo.subtitleTrack);
 
-            if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack < nbTrack+1) {
-                if (newSubtitleTrack != mVideoInfo.subtitleTrack &&
-                        !mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack))
+                if (!mPlayer.setSubtitleTrack(mVideoInfo.subtitleTrack)) {
+                    log.debug("onSubtitleMetadataUpdated: setSubtitleTrack failed, setting none track");
                     mVideoInfo.subtitleTrack = noneTrack;
-                log.debug("SubtitleDelay = "+String.valueOf(mVideoInfo.subtitleDelay));
-                    mPlayer.setSubtitleDelay(mVideoInfo.subtitleDelay);
-                    if (mVideoInfo.subtitleRatio >= 0) {
-                        mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
-
+                } else {
+                    log.debug("onSubtitleMetadataUpdated: setSubtitleTrack done to track " + mVideoInfo.subtitleTrack);
                 }
+                log.debug("onSubtitleMetadataUpdated: subtitleDelay = {}", mVideoInfo.subtitleDelay);
+                mPlayer.setSubtitleDelay(mVideoInfo.subtitleDelay);
+                if (mVideoInfo.subtitleRatio >= 0) {
+                    mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
+                }
+            } else {
+                log.error("onSubtitleMetadataUpdated: invalid subtitle track number={}, this cannot be!", mVideoInfo.subtitleTrack);
             }
-
-            firstTimeCalled=false;
+            firstTimeSubCalled = false;
+        } else {
+            firstTimeSubCalled = true;
+            log.debug("onSubtitleMetadataUpdated: no subtitle track found");
         }
-        else
-            firstTimeCalled = true;
-        
+
+        // the way to set a new track in the player is to redefine mNewSubtitleTrack: this is the one taken into account
+        mNewSubtitleTrack = mVideoInfo.subtitleTrack;
+
         if(mPlayerFrontend!=null) {
+            log.debug("onSubtitleMetadataUpdated: subtitletrack onSubtitleMetadataUpdated {} -> {}", newSubtitleTrack, mVideoInfo.subtitleTrack);
             mPlayerFrontend.onSubtitleMetadataUpdated(vMetadata, newSubtitleTrack);
         }
     }
@@ -1447,10 +1610,67 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
     }
 
+    protected float mAudioSpeedStep = 0.05f;
+    protected float mAudioSpeedMin = 0.25f;
+    protected float mAudioSpeedMax = 2.0f;
+    private final float epsilon = 1e-5f;
+
+    public void incrementAudioSpeed() {
+        float modulo = (mAudioSpeed + mAudioSpeedStep) % mAudioSpeedStep;
+        if (Math.abs(Math.abs(modulo) - mAudioSpeedStep) < epsilon)
+            modulo = 0;
+        float speed = (float)(mAudioSpeed + mAudioSpeedStep - modulo);
+        setAudioSpeed(speed > mAudioSpeedMax ? mAudioSpeedMax : speed, false);
+    }
+
+    public void decrementAudioSpeed() {
+        float modulo = (mAudioSpeed - mAudioSpeedStep) % mAudioSpeedStep;
+        if (Math.abs(Math.abs(modulo) - mAudioSpeedStep) < epsilon)
+            modulo = 0;
+        float speed = (float)(mAudioSpeed - mAudioSpeedStep - modulo);
+        setAudioSpeed(speed < mAudioSpeedMin ? mAudioSpeedMin : speed, false);
+    }
+
+    public void setAudioSpeed(float speed, boolean force) {
+        boolean speedChanged = speed != mAudioSpeed || force;
+        if (speedChanged &&
+                (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) &&
+                speed > 0.20f && speed < 2.05f) { // min granularity is 0.05
+            log.debug("setAudioSpeed: audio speed changed from " + mAudioSpeed + " to " + speed);
+            mAudioSpeed = speed;
+            if ((AUDIO_SPEED_ON_THE_FLY && mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false)) || force) {
+                mPlayer.setAvSpeed(mAudioSpeed);
+            }
+        }
+        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) != 0) {
+            log.debug("setAudioSpeed does nothing coz passthrough");
+            mAudioSpeed = 1.0f;
+        }
+    }
+
     public int getAudioDelay() {
         return mAudioDelay;
     }
 
+    public float getAudioSpeed() { // no audio_speed if in passthrough
+        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+            log.debug("getAudioSpeed: " + mAudioSpeed);
+            return mAudioSpeed;
+        } else {
+            log.debug("getAudioSpeed: " + 1.0f);
+            return 1.0f;
+        }
+    }
+
+    public float getAudioSpeedFromPreferences() { // no audio_speed if in passthrough
+        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+            log.debug("getAudioSpeedFromPreferences: " + mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f));
+            return mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f);
+        } else {
+            log.debug("getAudioSpeedFromPreferences: " + 1.0f);
+            return 1.0f;
+        }
+    }
 
     public void setAudioFilt(int which) {
         int newAudioFilt = which; // Caution here, audiofilt values must be [0,n[

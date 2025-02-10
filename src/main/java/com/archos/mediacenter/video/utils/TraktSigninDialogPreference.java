@@ -15,6 +15,7 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -66,6 +67,14 @@ public class TraktSigninDialogPreference extends Preference {
 
     @Override
     public void onClick() {
+        Context context = getContext();
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (activity.isFinishing() || activity.isDestroyed()) {
+                // Activity is not in a state to show dialogs, so return early
+                return;
+            }
+        }
         try {
             OAuthClientRequest t = Trakt.getAuthorizationRequest(getSharedPreferences());
             final OAuthData oa = new OAuthData();
@@ -78,6 +87,14 @@ public class TraktSigninDialogPreference extends Preference {
                         @Override
                         protected void onPreExecute() {
                             if (DBG) Log.d(TAG,"OAuthCallback.onPreExecute: show dialog");
+                            // Check again before showing the dialog
+                            if (context instanceof Activity) {
+                                Activity activity = (Activity) context;
+                                if (activity.isFinishing() || activity.isDestroyed()) {
+                                    cancel(true);
+                                    return;
+                                }
+                            }
                             mProgress.show();
                         }
 
@@ -91,7 +108,9 @@ public class TraktSigninDialogPreference extends Preference {
                         @Override
                         protected void onPostExecute(Object result) {
                             if (DBG) Log.d(TAG,"OAuthCallback.onPostExecute: store trakt accessToken and notify change");
-                            mProgress.dismiss();
+                            if (mProgress.isShowing()) {
+                                mProgress.dismiss();
+                            }
                             if (result != null && result instanceof Trakt.accessToken) {
                                 Trakt.accessToken res = (Trakt.accessToken) result;
                                 if (res.access_token != null) {
@@ -105,6 +124,9 @@ public class TraktSigninDialogPreference extends Preference {
                     t1.execute();
                 } else {
                     if (DBG) Log.d(TAG,"onClick: data.code null!");
+                    if (!(context instanceof Activity) || ((Activity) context).isFinishing() || ((Activity) context).isDestroyed()) {
+                        return;
+                    }
                     new AlertDialog.Builder(getContext())
                             .setNegativeButton(android.R.string.ok, null)
                             .setMessage(R.string.dialog_subloader_nonetwork_title)

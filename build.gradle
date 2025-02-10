@@ -2,15 +2,35 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'com.android.tools.build:gradle:8.7.2'
+        //classpath 'app.brant:amazonappstorepublisher:0.1.0'
+        //classpath 'com.github.BrantApps.gradle-amazon-app-store-publisher:amazonappstorepublisher:master-SNAPSHOT'
     }
 }
 
 plugins {
-    id "com.github.triplet.play" version "2.8.0"
-    id "app.brant.amazonappstorepublisher" version "0.1.0"
+    id "com.github.triplet.play" version "3.12.1"
+    id "io.sentry.android.gradle" version "4.14.1" apply false
+    //id "app.brant.amazonappstorepublisher" version "0.1.0"
+}
+
+apply {
+    plugin("com.android.application")
+}
+
+import io.sentry.android.gradle.extensions.InstrumentationFeature
+
+if (hasProperty('bugReport')) {
+    apply plugin: 'io.sentry.android.gradle'
+    sentry {
+        tracingInstrumentation {
+            enabled = true
+            features = EnumSet.allOf(InstrumentationFeature) - InstrumentationFeature.OKHTTP
+        }
+    }
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties");
@@ -26,38 +46,23 @@ allprojects {
         google()
         mavenCentral()
         mavenLocal()
+        maven { url 'https://jitpack.io' }
     }
     gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        tasks.withType(JavaCompile).tap {
+            configureEach {
+                options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+            }
         }
         // check tasks to add via ./gradlew tasks --all | grep DuplicateClasses
-        checkNoamazonReleaseDuplicateClasses.dependsOn(preBuild)
-        checkNoamazonDebugDuplicateClasses.dependsOn(preBuild)
-        checkAmazonDebugDuplicateClasses.dependsOn(preBuild)
-        checkAmazonReleaseDuplicateClasses.dependsOn(preBuild)
-        checkAmazonDebugAndroidTestDuplicateClasses.dependsOn(preBuild)
-        checkNoamazonDebugAndroidTestDuplicateClasses.dependsOn(preBuild)
-        checkManageexternalstorageReleaseDuplicateClasses.dependsOn(preBuild)
-        checkManageexternalstorageDebugDuplicateClasses.dependsOn(preBuild)
-
-        desugarNoamazonDebugFileDependencies.dependsOn(preBuild)
-        compileNoamazonDebugJavaWithJavac.dependsOn(preBuild)
-        desugarAmazonDebugFileDependencies.dependsOn(preBuild)
-        compileAmazonDebugJavaWithJavac.dependsOn(preBuild)
-        desugarManageexternalstorageDebugFileDependencies.dependsOn(preBuild)
-        compileManageexternalstorageDebugJavaWithJavac.dependsOn(preBuild)
-
-        collectNoamazonReleaseDependencies.dependsOn(preBuild)
-        collectAmazonReleaseDependencies.dependsOn(preBuild)
-        collectManageexternalstorageReleaseDependencies.dependsOn(preBuild)
     }
 }
 
 static def getDate() {
     // we increment version number every 1000 seconds,
     // we started on 31/08/2016, and introduced splits on 06/02/2020
-    def date = new Date().getTime() / 1000L - 1472637600L - 108380000L
+    // update 2022/11/25 to reset getDate offset (- 88364898L)
+    def date = new Date().getTime() / 1000L - 1472637600L - 108380000L - 88364898L;
     return (int) (date / 1000L)
 }
 
@@ -67,28 +72,26 @@ static def getFormattedDate() {
     return formattedDate
 }
 
-apply {
-    plugin("com.android.application")
-    plugin("com.github.triplet.play")
-}
+import com.github.triplet.gradle.androidpublisher.ReleaseStatus
 
 play {
-    serviceAccountCredentials = file("nova.json")
-    track = 'internal' // rollout, beta, alpha, release, internal
-    userFraction = 1.0 // rollout rate in %/100
-    releaseStatus = "completed"
+    serviceAccountCredentials.set(file("nova.json"))
+    track.set("internal")  // rollout, beta, alpha, release, internal
+    //userFraction.set(0.1) // rollout rate in %/100
+    //releaseStatus.set(ReleaseStatus.IN_PROGRESS)
+    releaseStatus.set(ReleaseStatus.COMPLETED)
 }
 
-amazon {
-    securityProfile = file("nova-amazon.json")
-    applicationId = "amzn1.devportal.mobileapp.c59461247b6a4806b4f30cd80076133e"
-    pathToApks = [ file("build/outputs/apk/amazon/release/Video-amazon-universal-API_21+-release.apk") ]
-    replaceEdit = true
-}
-
-ext.abiCodes = ['universal': 0, 'armeabi-v7a': 1, 'arm64-v8a': 2, 'x86': 3, 'x86_64': 4]
+//amazon {
+//    securityProfile = file("nova-amazon.json")
+//    applicationId = "amzn1.devportal.mobileapp.c59461247b6a4806b4f30cd80076133e"
+//    pathToApks = [ file("build/outputs/apk/amazon/release/Video-amazon-universal-API_21+-release.apk") ]
+//    replaceEdit = true
+//    replaceApks = true
+//}
 
 android {
+    namespace 'com.archos.mediacenter.video'
     signingConfigs {
         release {
             if (keystorePropertiesFile.exists()) {
@@ -97,6 +100,8 @@ android {
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
             }
+            enableV3Signing = true
+            enableV4Signing = true
         }
         debug {
             if (keystorePropertiesFile.exists()) {
@@ -105,13 +110,27 @@ android {
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
             }
+            enableV3Signing = true
+            enableV4Signing = true
+        }
+    }
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        // needed for old Android versions when using java 17
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
-    compileSdkVersion 33
+    buildFeatures {
+        renderScript true
+        aidl true
+        buildConfig true
+    }
+    compileSdk 34
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -123,17 +142,28 @@ android {
         }
     }
     defaultConfig {
+        applicationId = "org.courville.nova"
         generatedDensities = []
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         multiDexEnabled true
         // below version tracks the one from F-Droid or universal package when generated with ./gradlew -Puniversal
         // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
         // amazon apk is generated with ./gradlew -Poneapk
-        versionName = '6.0.58'
-        versionCode = 600058
+        versionCode = 6030028
+        versionName = '6.3.28'
+        def novaVersionName = versionName
+        if (! project.hasProperty("universal")) {
+            // override versionName and versionCode to get it dependent on the date
+            versionName = versionName + "-" + getFormattedDate()
+            // 2549909 is 20221124 last Google play release to reset counter
+            versionCode = 2549909 + getDate()
+        }
+        archivesBaseName = "" + applicationId + "-" + versionCode + "-" + versionName
+        println("defaultConfig archivesBaseName : " + archivesBaseName)
+        println("defaultConfig versionName : " + versionName)
+        println("defaultConfig versionCode : " + versionCode)
         if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
-        applicationId "org.courville.nova"
         if (project.hasProperty("sponsor")) {
             buildConfigField "boolean", "ENABLE_SPONSOR", "true"
         } else {
@@ -159,9 +189,24 @@ android {
         resValue "string", "VERSION_NAME", versionName
         resValue "string", "APPLICATION_ID", applicationId
         resValue "string", "APP_INFO", "Nova v" + versionName + " (" + applicationId + ")"
+        resValue "string", "APP_VERSION", novaVersionName
+    }
+    bundle {
+        language {
+            enableSplit = true
+        }
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit = true
+        }
     }
     splits {
         abi {
+            enable true
+            reset()
+            include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             if (project.hasProperty("universal")) {
                 // universal if for fdroid now with specific version(Name|Code) and oneapk for amazon
                 enable false
@@ -170,13 +215,13 @@ android {
                 // universal if for fdroid now with specific version(Name|Code) and oneapk for amazon
                 enable true
                 universalApk true
-            }else {
+            } else {
                 enable true
                 universalApk false
             }
         }
     }
-    flavorDimensions "amazon"
+    flavorDimensions = ['amazon']
     productFlavors {
         amazon {
             dimension "amazon"
@@ -188,69 +233,67 @@ android {
             dimension "amazon"
         }
     }
+    aaptOptions {
+        additionalParameters '--no-version-vectors'
+    }
     buildTypes {
+        println("buildTypes archivesBaseName : " + archivesBaseName)
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt'
         }
     }
-    lintOptions {
-        disable 'MissingTranslation'
-        checkReleaseBuilds false
-        abortOnError false
-    }
     packagingOptions {
-        exclude 'META-INF/*.kotlin_module'
-        exclude 'META-INF/*.version'
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/beans.xml'
-        exclude 'META-INF/maven'
-        exclude 'META-INF/services/**'
-        exclude 'README'
-        exclude 'com/**'
-        exclude 'jcifs2/**'
-        exclude 'kotlin/**'
-        exclude 'okhttp3/**'
-        exclude 'org/**'
-        exclude '**/*.txt'
-        exclude '**/*.xml'
-        pickFirst 'lib/x86/libnvpnativehelper.so'
-        pickFirst 'lib/x86_64/libnvpnativehelper.so'
-        pickFirst 'lib/armeabi-v7a/libnvpnativehelper.so'
-        pickFirst 'lib/arm64-v8a/libnvpnativehelper.so'
-        pickFirst 'lib/x86/libc++_shared.so'
-        pickFirst 'lib/x86_64/libc++_shared.so'
-        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
-        pickFirst 'lib/arm64-v8a/libc++_shared.so'
-    }
-    androidResources {
-        additionalParameters '--no-version-vectors'
-    }
-
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def baseAbiVersionCode =
-                    project.ext.abiCodes.get(output.getFilter(com.android.build.OutputFile.ABI))
-            if (!project.hasProperty("universal")) {
-                // override versionName and versionCode to get it dependent on the date
-                output.versionNameOverride = variant.versionName + '-' + getFormattedDate()
-                // getDate() was original versionCode
-                output.versionCodeOverride = 2108380 + 5 * getDate()
-                if (baseAbiVersionCode != null) {
-                    // 2000000 is there because before there was a distinction between noleanback 1000000 and leanback 2000000 with different API levels
-                    // 2108380 was the value at apk splits introduction
-                    output.versionCodeOverride = output.versionCodeOverride + baseAbiVersionCode
-                }
-            }
+        jniLibs {
+            excludes += ['META-INF/services/**',
+                         'com/**',
+                         'jcifs2/**',
+                         'kotlin/**',
+                         'okhttp3/**',
+                         'org/**']
+            pickFirsts += ['lib/x86/libnvpnativehelper.so',
+                           'lib/x86_64/libnvpnativehelper.so',
+                           'lib/armeabi-v7a/libnvpnativehelper.so',
+                           'lib/arm64-v8a/libnvpnativehelper.so',
+                           'lib/x86/libc++_shared.so',
+                           'lib/x86_64/libc++_shared.so',
+                           'lib/armeabi-v7a/libc++_shared.so',
+                           'lib/arm64-v8a/libc++_shared.so']
+        }
+        resources {
+            excludes += ['META-INF/*.kotlin_module',
+                         'META-INF/*.version',
+                         'META-INF/DEPENDENCIES',
+                         'META-INF/LICENSE',
+                         'META-INF/NOTICE',
+                         'META-INF/LICENSE.txt',
+                         'META-INF/LICENSE.md',
+                         'META-INF/NOTICE.txt',
+                         'META-INF/NOTICE.md',
+                         'META-INF/beans.xml',
+                         'META-INF/maven',
+                         'META-INF/services/**',
+                         'README',
+                         'com/**',
+                         'jcifs2/**',
+                         'kotlin/**',
+                         'okhttp3/**',
+                         'org/**',
+                         '**/*.txt',
+                         '**/*.xml',
+                         'META-INF/versions/9/OSGI-INF/MANIFEST.MF',
+                         'META-INF/versions/15/OSGI-INF/MANIFEST.MF',
+                         'META-INF/versions/11/OSGI-INF/MANIFEST.MF']
         }
     }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'MissingTranslation'
+    }
 
-    applicationVariants.all { variant ->
+    applicationVariants.configureEach { variant ->
         variant.outputs.all { output ->
             def api = defaultConfig.minSdkVersion.apiLevel
             if (project.hasProperty("universal")) { // only one apk
@@ -258,37 +301,62 @@ android {
             }
             outputFileName = outputFileName.replace("-noamazon-", "-")
                     .replace("-manageexternalstorage-", "-")
-                    .replace("-release.apk", "-API_${api}+-release.apk")
-                    .replace("-debug.apk", "-API_${api}+-debug.apk")
             variant.getAssembleProvider().configure() {
                 it.doLast {
-                    println("generated: " + outputFileName + " (" + output.versionNameOverride + ", " + output.versionCodeOverride + ")");
+                    println("generated: " + outputFileName + " (" + versionName + ", " + versionCode + ")");
                 }
             }
         }
     }
+
+    dependenciesInfo {
+        if (project.hasProperty("universal")) {
+            // universal if for fdroid now with specific version(Name|Code) and oneapk for amazon
+            includeInApk = false
+            includeInBundle = false
+        }
+    }
+
 }
 
 dependencies {
     implementation project(':FileCoreLibrary')
     implementation project(':MediaLib')
+    implementation 'androidx.lifecycle:lifecycle-process:2.8.7'
+    // needed for old Android versions when using java 17
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.8'
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
-    implementation 'androidx.media:media:1.5.0'
-    implementation 'androidx.core:core:1.7.0'
+    implementation 'androidx.media:media:1.7.0'
+    // last sdk34 core release is 1.13.1
+    implementation 'androidx.core:core:1.13.1'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
-    implementation 'androidx.fragment:fragment:1.4.1'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.fragment:fragment:1.8.5'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.preference:preference:1.2.1'
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.leanback:leanback:1.2.0-alpha02'
-    implementation 'androidx.leanback:leanback-preference:1.2.0-alpha02'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.leanback:leanback:1.2.0-alpha04'
+    implementation 'androidx.leanback:leanback-preference:1.2.0-alpha04'
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
-    implementation 'fr.turri:aXMLRPC:1.12.0'
-    implementation 'io.sentry:sentry-android:5.7.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation 'com.github.tony19:logback-android:3.0.0'
+    implementation 'io.sentry:sentry-android:7.19.1'
+    implementation 'io.sentry:sentry:7.19.1'
+}
+
+configurations { // try to exclude device specific libraries interfering
+    configureEach {
+        exclude group: 'jcifs', module: 'jcifs' // try to avoid conflict with jcifs-ng on Konka Android TV 2861
+    }
+}
+
+// to avoid duplicate classes
+configurations.implementation {
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
 }

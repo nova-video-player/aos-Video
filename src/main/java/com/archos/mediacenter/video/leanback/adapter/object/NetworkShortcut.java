@@ -26,7 +26,7 @@ import java.io.Serializable;
 public class NetworkShortcut extends Shortcut implements Serializable {
 
     public NetworkShortcut(long id, String fullPath, String name, String friendlyUri) {
-        super(id,fullPath, friendlyUri,name);
+        super(id,fullPath, friendlyUri, name);
     }
     @Override
     public Uri getUri() {

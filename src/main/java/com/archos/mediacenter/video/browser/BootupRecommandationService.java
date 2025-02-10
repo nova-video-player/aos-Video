@@ -16,26 +16,25 @@ package com.archos.mediacenter.video.browser;
 
 
 import com.archos.environment.ArchosFeatures;
-import com.archos.mediacenter.utils.AppState;
 
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 
-public class BootupRecommandationService extends BroadcastReceiver {
+public class BootupRecommandationService extends BroadcastReceiver implements DefaultLifecycleObserver {
 	private static final String TAG = "BootupActivity";
 	private static final boolean DBG = false;
 
-	private static final AppState.OnForeGroundListener sForegroundListener = new AppState.OnForeGroundListener() {
-		@Override
-		public void onForeGroundState(Context applicationContext, boolean foreground) {
-			if(!foreground)
-				scheduleRecommendationUpdate(applicationContext);
-		}
-	};
+	private static volatile boolean isForeground = true;
+	private static Application mApplication;
+
 	public static final String UPDATE_ACTION = "com.archos.mediacenter.video.browser.BootupRecommandationService.UPDATE_ACTION";
 
 	@Override
@@ -47,13 +46,28 @@ public class BootupRecommandationService extends BroadcastReceiver {
 	}
 
 	private static void scheduleRecommendationUpdate(Context context) {
-		if(ArchosFeatures.isAndroidTV(context) && Build.VERSION.SDK_INT < Build.VERSION_CODES.O && AppState.isForeGround()){
+		if(ArchosFeatures.isAndroidTV(context) && Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
 			Intent recommendationIntent = new Intent(context, UpdateRecommendationsService.class);
 			context.startService(recommendationIntent);
 		}
 	}
 
-	public static void init() {
-		AppState.addOnForeGroundListener(sForegroundListener);
+	public static void init(Application application) {
+		mApplication = application;
+		scheduleRecommendationUpdate(application);
+	}
+
+	@Override
+	public void onStart(@NonNull LifecycleOwner owner) {
+		if (DBG) Log.d(TAG, "onStop: lifecycle foreground");
+		isForeground = true;
+	}
+
+	@Override
+	public void onStop(@NonNull LifecycleOwner owner) {
+		if (DBG) Log.d(TAG, "onStop: lifecycle background");
+		isForeground = false;
+		// TODO MARC will cause IllegalStateException
+		//scheduleRecommendationUpdate(mApplication);
 	}
 }

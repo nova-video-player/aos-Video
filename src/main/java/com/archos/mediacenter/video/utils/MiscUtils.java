@@ -16,21 +16,20 @@ package com.archos.mediacenter.video.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.app.UiModeManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.DisplayCutout;
 
 import static android.content.Context.UI_MODE_SERVICE;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -58,10 +57,16 @@ public class MiscUtils {
     }
 
     public static boolean isAndroidTV(Context context) {
-        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(UI_MODE_SERVICE);
-        return (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION);
+        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+        // Check if the UiModeManager object is null
+        if (uiModeManager != null) {
+            return (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION);
+        } else {
+            // UiModeManager is not available on this device
+            return false;
+        }
     }
-
+    
     public static boolean isEmulator() {
         return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
                 || Build.FINGERPRINT.startsWith("generic")
@@ -94,5 +99,24 @@ public class MiscUtils {
                 log.info(TAG + " bundle dump stop");
             }
         }
+    }
+
+    public static int dp2Px(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static float px2Dp(float px) {
+        return px / Resources.getSystem().getDisplayMetrics().density;
+    }
+
+    // retrieve activity from context
+    public static Activity getActivityFromContext(Context context) {
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
     }
 }

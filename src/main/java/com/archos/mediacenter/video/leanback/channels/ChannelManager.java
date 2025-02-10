@@ -1,5 +1,7 @@
 package com.archos.mediacenter.video.leanback.channels;
 
+import static com.archos.mediacenter.utils.MediaUtils.getExternalCacheDir;
+
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,6 +26,7 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import com.archos.environment.ArchosFeatures;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.AnimesLoader;
@@ -172,7 +175,7 @@ public class ChannelManager {
 
         @Override
         protected Void doInBackground(Void... params) {
-            String path = new File(mContext.getExternalCacheDir(), "empty_poster.png").getAbsolutePath();
+            String path = new File(getExternalCacheDir(mContext), "empty_poster.png").getAbsolutePath();
 
             createEmptyPosterFile(path);
             createEmptyPosterRow(path);
@@ -198,7 +201,7 @@ public class ChannelManager {
                     catch (FileNotFoundException e) {
                         Log.e(TAG, "createEmptyPosterFile", e);
                     } finally {
-                        stream.close();
+                        if (stream != null) stream.close();
                     }
                 }
                 catch (IOException e) {
@@ -208,18 +211,20 @@ public class ChannelManager {
         }
 
         private void createEmptyPosterRow(String path) {
-            Cursor cursor = mContext.getContentResolver().query(Uri.parse(VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI.toString() + "/0"), new String[] { VideoStore.Video.Thumbnails._ID }, null, null, null);
-            
-            if (cursor == null || cursor.getCount() == 0) {
-                ContentValues values = new ContentValues(2);
-                values.put(VideoStore.Video.Thumbnails._ID, "0");
-                values.put(VideoStore.Video.Thumbnails.DATA, path);
-
-                mContext.getContentResolver().insert(VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI, values);
+            Cursor cursor = null;
+            try {
+                cursor = mContext.getContentResolver().query(Uri.parse(VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI.toString() + "/0"), new String[]{VideoStore.Video.Thumbnails._ID}, null, null, null);
+                if (cursor == null || cursor.getCount() == 0) {
+                    ContentValues values = new ContentValues(2);
+                    values.put(VideoStore.Video.Thumbnails._ID, "0");
+                    values.put(VideoStore.Video.Thumbnails.DATA, path);
+                    mContext.getContentResolver().insert(VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI, values);
+                }
+            } catch (Exception e) { // seen on sentry IllegalStateException Unable to create new file: /storage/emulated/0/Android/data/org.courville.nova/cache/empty_poster.png
+                Log.e(TAG, "createEmptyPosterRow: caught Exception ", e);
+            } finally {
+                if (cursor != null) cursor.close();
             }
-
-            if (cursor != null)
-                cursor.close();
         }
     }
 
@@ -320,9 +325,11 @@ public class ChannelManager {
             if (MainFragment.FEATURE_WATCH_UP_NEXT) mChannels.get(mWatchingUpNext).setLoader(new WatchingUpNextLoader(mContext));
             mChannels.get(mRecentlyAdded).setLoader(new LastAddedLoader(mContext));
             mChannels.get(mRecentlyPlayed).setLoader(new LastPlayedLoader(mContext));
-            mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true));
-            mChannels.get(mAllTvShows).setLoader(new AllTvshowsLoader(mContext, allTvShowsSortOrder, true));
-            mChannels.get(mAllAnimes).setLoader(new AnimesNShowsLoader(mContext, allAnimesSortOrder, true));
+            mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+            mChannels.get(mAllTvShows).setLoader(new AllTvshowsLoader(mContext, allTvShowsSortOrder, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+            if  (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT))
+                mChannels.get(mAllAnimes).setLoader(new AnimesNShowsLoader(mContext, allAnimesSortOrder, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+            else mChannels.get(mAllAnimes).setLoader(new AnimesLoader(mContext, allAnimesSortOrder, true, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
 
             for(ChannelData channel : mChannels.values()) {
                 if (channel.getListVideoIds() != null)
@@ -387,7 +394,7 @@ public class ChannelManager {
                 Uri uri = mContext.getContentResolver().insert(TvContractCompat.Channels.CONTENT_URI, buildChannel(channel).toContentValues());
                 long id = ContentUris.parseId(uri);
 
-                ChannelLogoUtils.storeChannelLogo(mContext, id, BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.video2_full));
+                ChannelLogoUtils.storeChannelLogo(mContext, id, BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.nova));
 
                 return id;
             } catch (Exception e) {
@@ -703,7 +710,7 @@ public class ChannelManager {
                         if (program.getChannelId() == channel.getId()) {
                             Uri posterUri = program.getPosterArtUri();
 
-                            posterIds.add(Long.parseLong(posterUri.getLastPathSegment()));
+                            posterIds.add(Long.parseLong(FileUtils.getName(posterUri)));
 
                             count++;
                         }

@@ -29,6 +29,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.archos.filecorelibrary.FileUtils;
+import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.NetworkScanner;
@@ -79,9 +80,13 @@ public class CreateShareDialog extends DialogFragment implements DialogInterface
         }
         if (!path.endsWith("/"))
             path = path+"/";
-        createShortcut(path);
-        if(mOnShortcutCreatedListener!=null)
-            mOnShortcutCreatedListener.onShortcutCreated(path);
+        if (UriUtils.isValidStringUri(path)) {
+            createShortcut(path);
+            if (mOnShortcutCreatedListener != null)
+                mOnShortcutCreatedListener.onShortcutCreated(path);
+        } else {
+            Toast.makeText(getActivity(), R.string.ssh_remote_address_error, Toast.LENGTH_SHORT).show();
+        }
         dismiss();
     }
 

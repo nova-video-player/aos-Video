@@ -17,7 +17,6 @@ package com.archos.mediacenter.video.browser.filebrowsing.network;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,26 +28,30 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.ActionItem;
 import com.archos.mediacenter.utils.QuickAction;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserCategory;
+import com.archos.mediacenter.video.browser.ShortcutDb;
 import com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser.BrowserBySFTP;
 import com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser.BrowserBySmb;
 import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser.BrowserByUpnp;
 import com.archos.mediaprovider.NetworkScanner;
 import com.archos.mediaprovider.video.NetworkScannerServiceVideo;
 
-public abstract class NewRootFragment extends Fragment implements  WorkgroupShortcutAndServerAdapter.OnShortcutTapListener,  WorkgroupShortcutAndServerAdapter.OnRefreshClickListener, NetworkScannerServiceVideo.ScannerListener {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    private static final String TAG = "NewRootFragment";
-    private static final boolean DBG = false;
+public abstract class NewRootFragment extends Fragment implements WorkgroupShortcutAndServerAdapter.OnShortcutTapListener,  WorkgroupShortcutAndServerAdapter.OnRefreshClickListener, NetworkScannerServiceVideo.ScannerListener {
+
+    private static final Logger log = LoggerFactory.getLogger(NewRootFragment.class);
 
     private RecyclerView mDiscoveryList;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -56,7 +59,6 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
     private Toast mToast;
     protected QuickAction mQuickAction;
     private ShortcutDbAdapter.Shortcut mSelectedShortcut;
-
 
     @Override
     public void onShortcutTap(Uri uri) {
@@ -67,18 +69,18 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
         }
         rootUriString += "/";// important to end with "/"
         Uri rootUri = Uri.parse(rootUriString);
+        String lastPathSegment = FileUtils.getName(uri);
         Bundle args = new Bundle();
         args.putParcelable(BrowserByNetwork.CURRENT_DIRECTORY, uri);
         args.putString(BrowserByNetwork.TITLE
-                , uri.getLastPathSegment());
-        args.putString(BrowserByNetwork.SHARE_NAME, uri.getLastPathSegment());
+                , lastPathSegment);
+        args.putString(BrowserByNetwork.SHARE_NAME, lastPathSegment);
 
         Fragment f;
-        if (uri.getScheme().equals("smb")) {
+        if ("smb".equals(uri.getScheme())) {
             f = new BrowserBySmb();
             f.setArguments(args);
-
-        } else if (uri.getScheme().equals("upnp")) {
+        } else if ("upnp".equals(uri.getScheme())) {
             f = new BrowserByUpnp();
             f.setArguments(args);
         } else {
@@ -111,9 +113,12 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
             public void onClick(View v) {
                 // Rescan the contents of the folder
                 NetworkScanner.scanVideos(getActivity(), uri);
+                log.debug("onRefreshClickListener: scanVideos " + uri);
                 if(ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), uri.toString())<0){
-                    //if not a shortcut, add as shortcut
-                    ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(uri.getLastPathSegment(), uri.toString()));
+                    //if not a shortcut = indexed folder, add as indexed folder and remove static shortcut
+                    if(ShortcutDb.STATIC.isShortcut(getContext(), uri.toString()) != -1)
+                        ShortcutDb.STATIC.removeShortcut(getActivity(), uri);
+                    ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(FileUtils.getName(uri), uri.toString()));
                     loadIndexedShortcuts();
                 }
                 // Close the popup
@@ -133,7 +138,7 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
     }
 
     public NewRootFragment() {
-        if (DBG) Log.d(TAG, "SambaDiscoveryFragment() constructor " + this);
+        log.debug("SambaDiscoveryFragment() constructor " + this);
         setRetainInstance(false);
 
     }
@@ -150,15 +155,12 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
         NetworkScannerServiceVideo.addListener(this);
     }
 
-
     @Override
     public void onScannerStateChanged() {
         mAdapter.notifyDataSetChanged();
     }
 
-
     protected abstract RootFragmentAdapter getAdapter();
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
@@ -231,20 +233,20 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (DBG) Log.d(TAG, "onCreate");
+        log.debug("onCreate");
         setHasOptionsMenu(true);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (DBG) Log.d(TAG, "onDestroy");
+        log.debug("onDestroy");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        if (DBG) Log.d(TAG, "onDetach");
+        log.debug("onDetach");
         NetworkScannerServiceVideo.removeListener(this);
 
     }
@@ -258,7 +260,7 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (DBG) Log.d(TAG, "onCreateView");
+        log.debug("onCreateView");
         View v = inflater.inflate(R.layout.samba_discovery_fragment, container, false);
 
         mDiscoveryList = (RecyclerView)v.findViewById(R.id.discovery_list);
@@ -279,13 +281,13 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (DBG) Log.d(TAG, "onDestroyView");
+        log.debug("onDestroyView");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (DBG) Log.d(TAG, "onResume");
+        log.debug("onResume");
         loadIndexedShortcuts();
     }
 
@@ -294,7 +296,7 @@ public abstract class NewRootFragment extends Fragment implements  WorkgroupShor
     @Override
     public void onPause() {
         super.onPause();
-        if (DBG) Log.d(TAG, "onPause");
+        log.debug("onPause");
     }
 
 }

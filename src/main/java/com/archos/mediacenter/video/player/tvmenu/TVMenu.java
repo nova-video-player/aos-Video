@@ -89,19 +89,44 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
         init();
 
     }
+
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        
-    
-        return false;
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+            int nextIndex = current + 1;
+            while (nextIndex < ti.size() && (!ti.get(nextIndex).isEnabled() || isSeparator(ti.get(nextIndex)))) {
+                nextIndex++;
+            }
+            if (nextIndex < ti.size()) {
+                ti.get(nextIndex).requestFocus();
+                current = nextIndex;
+                return true;
+            }
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+            int prevIndex = current - 1;
+            while (prevIndex >= 0 && (!ti.get(prevIndex).isEnabled() || isSeparator(ti.get(prevIndex)))) {
+                prevIndex--;
+            }
+            if (prevIndex >= 0) {
+                ti.get(prevIndex).requestFocus();
+                current = prevIndex;
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
+
+    private boolean isSeparator(View view) {
+        return "separator".equals(view.getTag());
+    }
+
     public void clean(){
-        
         ti.clear();
         this.removeAllViews();
         if(slaveView!=null)
             slaveView.clean();
     }
+
     public void unCheckAll(){
         for (View v : ti){
             if(v instanceof Checkable){
@@ -180,20 +205,14 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
         return tvmi;
         
     }
-    public View createAndAddSeparator(){
-        View v;
-        View v2;
-        
-        v = (View)LayoutInflater.from(mContext)
-                    .inflate(R.layout.menu_separator_layout, null);
-            
-       
-
+    
+    public View createAndAddSeparator() {
+        View v = LayoutInflater.from(mContext).inflate(R.layout.menu_separator_layout, null);
+        v.setTag("separator"); // Set a tag to identify separator views
         addTVMenuItem(v);
-        
         return v;
-        
     }
+
     public void addTVMenuItem(View tmi){
         this.ti.add(tmi);
         this.addView(tmi);

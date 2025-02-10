@@ -16,7 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">مكتبة</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
@@ -92,6 +92,9 @@
     <string name="animes">رسوم متحركة</string>
     <string name="all_movies">كل الأفلام</string>
     <string name="all_movies_format">كل الأفلام</string>
+    <string name="all_animes_format">أفلام الرسوم المتحركة  -  %d</string>
+    <string name="all_collections">كافة المجموعات</string>
+    <string name="all_collections_format">كافة المجموعات  -  %d</string>
     <string name="not_watched_movies_format">الأفلام التي لم يتم مشاهدتها</string>
     <string name="movies_by_alpha">الأفلام بالترتيب الأبجدي</string>
     <string name="movies_by_genre">الأفلام بالنوع</string>
@@ -235,40 +238,13 @@
     <string name="menu_change_folder">تغيير المجلدات</string>
     <string name="menu_change_folder_details">تغيير المجلدات</string>
     <string name="unlock_instructions">اضغط مطولا لفتح الشاشة</string>
-    <string name="seek_to_percentage">إنتقل إلى</string>
+    <string name="seek_to_percentage">إنتقل إلى %s%%</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">العربية</string>
-    <string name="s_bulgarian">البلغارية</string>
-    <string name="Bosnian">البوسنية</string>
-    <string name="s_czech">التشيكية</string>
-    <string name="s_danish">الدانماركية</string>
-    <string name="s_german">الالمانية</string>
-    <string name="s_english">الانجليزية</string>
-    <string name="s_greek">اليونانية</string>
-    <string name="s_spanish">الاسبانية</string>
-    <string name="s_finnish"> الفنلندية</string>
-    <string name="s_french">الفرنسية</string>
-    <string name="s_hebrew">العبرية</string>
-    <string name="s_hungarian">الهنغارية</string>
-    <string name="s_italian">الإيطالية</string>
-    <string name="s_japanese">اليابانية</string>
-    <string name="s_korean">الكورية</string>
-    <string name="s_dutch">الهولندية</string>
-    <string name="s_norwegian">النرويجية</string>
-    <string name="s_polish">البولندية</string>
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">البرازيلية</string>
-    <string name="s_portuguese">البرتغالية</string>
-    <string name="s_russian">الروسية</string>
-    <string name="Romanian">رومانيا</string>
-    <string name="Serbo_Croatian">الصرببة -الكرواتية</string>
-    <string name="Croatian">الكرواتية</string>
-    <string name="Serbian">الصربية</string>
-    <string name="Slovenian">السلوفينية</string>
-    <string name="s_swedish">السويدية</string>
-    <string name="s_thai">التايلاندية</string>
-    <string name="s_turkish">التركية</string>
     <string name="s_chinese">الصينية</string>
-    <string name="s_vietnamese">الفيتنامية</string>
     <string name="s_none">لا شيء</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">لا يمكن عرض الفيديو</string>
@@ -334,7 +310,7 @@
     <string name="sub_force_all">كل الفيديوهات الموجوده لديك يوجد لها ملف ترجمة واحد على الأقل. هل تريد تحميل ترجمات أخرى؟</string>
     <string name="dialog_subloader_nonetwork_title">لا يوجد اتصال بالإنترنت</string>
     <string name="dialog_subloader_nonetwork_message">مطلوب اتصال بالإنترنت لتحميل الترجمة</string>
-    <string name="dialog_subloader_connecting">الاتصال بموقع www.opensubtitels.org</string>
+    <string name="dialog_subloader_connecting">الاتصال بموقع.opensubtitles…</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">إعدادات الترجمة</string>
     <string name="subtitle_sample_text">\"نموذج\"</string>
@@ -369,11 +345,6 @@
     <string name="add_ssh_shortcut">إضافة اختصار</string>
     <string name="ssh_prompt">نوع FTP</string>
     <string name="ssh_empty_view">يمكنك العرض و المشاهدة من مخزن ال FTP الخاص بك</string>
-    <string-array name="ssh_types">
-        <item>بروتوكول نقل الملفات FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">مسح الاختصار</string>
     <string name="shortcut_added">%s تم إنشاء إختصار</string>
     <string name="shortcut_removed">%s تم مسح إختصار</string>

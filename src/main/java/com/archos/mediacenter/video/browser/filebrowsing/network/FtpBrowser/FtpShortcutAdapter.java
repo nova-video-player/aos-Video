@@ -105,7 +105,7 @@ public class FtpShortcutAdapter extends RootFragmentAdapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if(viewType == TYPE_SHORTCUT){
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.browser_smb_shortcut_item, viewGroup, false);
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.browser_indexed_item, viewGroup, false);
             return new FtpShortcutViewHolder(v);
         }
         else if (viewType == TYPE_BROWSE) {

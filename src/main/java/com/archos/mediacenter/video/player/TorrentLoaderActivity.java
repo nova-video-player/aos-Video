@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,6 +46,9 @@ import com.archos.mediacenter.video.browser.TorrentObserverService.TorrentThread
 import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediacenter.video.utils.TorrentPathDialogPreference;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -58,6 +62,9 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 
 public class TorrentLoaderActivity extends AppCompatActivity implements TorrentThreadObserver{
+
+    private static final Logger log = LoggerFactory.getLogger(TorrentLoaderActivity.class);
+
     private static int LOADING_FINISHED =0;
     private static int ERROR_DIALOG =1;
     private static int TORRENT_DAEMON_PORT = 19992;
@@ -69,9 +76,6 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
     private HashMap<String, Integer> mFiles = null;
     private boolean isClosingService;
     private ServiceConnection mTorrentObserverServiceConnection = new ServiceConnection() {
-
-
-
         @Override
         public void onServiceConnected(ComponentName arg0, IBinder binder) {
             mTorrent  =  ((TorrentServiceBinder) binder).getService();
@@ -79,24 +83,20 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
             mTorrent.setObserver(TorrentLoaderActivity.this);
             mTorrent.start();
         }
-
-
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             mTorrent = null;
-
         }
-
-
-
-
     };
+
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {                    
             if(msg.what == LOADING_FINISHED){
                 if(mFiles!=null&& !mFiles.isEmpty()&&!isDialogDisplayed)   {
-                    mProgress.dismiss();
+                    if (!isFinishing() && mProgress != null && mProgress.isShowing()) {
+                        mProgress.dismiss();
+                    }
                     if(mFiles.size()>1){
                         isDialogDisplayed = true;
                         new AlertDialog.Builder(TorrentLoaderActivity.this).setTitle(R.string.torrent_file_to_play)
@@ -129,18 +129,21 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
                         startPlayerActivity(mFiles.keySet().toArray(new String[mFiles.size()])[0]);
                     }
                 }
-                else if(mFiles!=null&&mFiles.isEmpty()){
+                else if(!isFinishing() && mFiles!=null&&mFiles.isEmpty()){
                     mProgress.dismiss();
                     showErrorDialog(getString(R.string.error_no_video_file));
                 }
             }
             else if(msg.what == ERROR_DIALOG){
-                mProgress.dismiss();
+                if (!isFinishing() && mProgress != null && mProgress.isShowing()) {
+                    mProgress.dismiss();
+                }
                 if(!isClosingService)
                     showErrorDialog(getString(R.string.error_loading_torrent));
             }
         }
     };
+
     private String mOriginalTorrentUri;
 
     private void startPlayerActivity(String name){
@@ -148,7 +151,6 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
         mTorrent.selectFile(toLaunch);
         Uri toPlay = Uri.parse("http://localhost:"+mPort+"/"+name);
         Intent intent = new Intent();
-
         String mimeType = "video/*";
         String extension = getExtension(name);
         if (extension!=null) {
@@ -163,11 +165,10 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
         intent.putExtra(PlayerService.KEY_ORIGINAL_TORRENT_URL, mOriginalTorrentUri);
         intent.setClass(TorrentLoaderActivity.this, PlayerActivity.class);
         startActivity(intent);
-
         hasLaunchedPlayer = true;
-
         this.finish();
     }
+
     protected String getExtension(String filename) {
         if (filename == null)
             return null;
@@ -193,19 +194,17 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
         mProgress = NovaProgressDialog.show(this, "", getString(R.string.loading_torrent), true, true, dialog -> TorrentLoaderActivity.this.finish());
         preloadTorrent();
     }
-    private void preloadTorrent(){
 
+    private void preloadTorrent(){
         if(!FileUtils.isLocal(Uri.parse(mTorrentURL))&& UriUtils.isImplementedByFileCore(Uri.parse(mTorrentURL))){
             //first we download the torrent file
-
             Uri mTorrentUri = Uri.parse(mTorrentURL);
             ArrayList<Uri> source = new ArrayList<Uri>();
             source.add(mTorrentUri);
             File targetFile = TorrentPathDialogPreference.getDefaultDirectory(PreferenceManager.getDefaultSharedPreferences(this));
             Uri target = Uri.parse("file://" + targetFile.getAbsolutePath());
-
             //mtorrenttolaunch shouldn't have "file://"
-            mTorrentToLaunch = Uri.withAppendedPath( Uri.parse(targetFile.getAbsolutePath()), mTorrentUri.getLastPathSegment());
+            mTorrentToLaunch = Uri.withAppendedPath( Uri.parse(targetFile.getAbsolutePath()), FileUtils.getName(mTorrentUri));
             CopyCutEngine engine = new CopyCutEngine(getBaseContext());
             engine.setListener(new OperationEngineListener() {
                 @Override
@@ -233,26 +232,26 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
             });
             engine.copyUri(source, target, true);
             mProgress.show();
-
         }
         else {
             loadTorrent();
         }
-
     }
+
     private void loadTorrent() {
         if(mTorrentURL.toLowerCase().startsWith("/")){
+            InputStream is = null;
+            FileOutputStream output = null;
             // mTorrentURL =  mTorrentURL.substring("file://".length());
             try  {
-                InputStream is = new GZIPInputStream(new FileInputStream(mTorrentURL)); 
-                FileOutputStream output = new FileOutputStream(mTorrentURL+"tmp"); 
+                is = new GZIPInputStream(new FileInputStream(mTorrentURL));
+                output = new FileOutputStream(mTorrentURL+"tmp");
                 int bufferSize = 1024;
                 byte[] buffer = new byte[bufferSize];
                 int len = 0;
                 while ((len = is.read(buffer)) != -1) {
                     output.write(buffer, 0, len);
                 }
-
                 try{
                     output.close();
                     is.close();
@@ -266,28 +265,40 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
                     output.close();
                     is.close();
                 }catch(IOException i){
-
+                    log.error("caught IOException");
                 }
             } catch (ZipException z) {
+                log.error("caught ZipException: reverting to filestream");
+                this.finish();
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                log.error("caught FileNotFoundException", e);
+                Toast.makeText(this,  getString(R.string.blocklist_file_not_found) + " " + mTorrentURL, Toast.LENGTH_SHORT).show();
+                this.finish();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("IoException", e);
+                Toast.makeText(this, "IOException error", Toast.LENGTH_SHORT).show();
+                this.finish();
+            }
+            try {
+                if (is != null) is.close();
+                if (output != null) output.close();
+            } catch(IOException e) {
+                log.error("caught IoException", e);
             }
         }
-        
-        
-        
         mFiles = new HashMap<String, Integer>();
         //bind to our service by first creating a new connectionIntent
         Intent connectionIntent = new Intent(this, TorrentObserverService.class);
         bindService(connectionIntent, mTorrentObserverServiceConnection,
                 Context.BIND_AUTO_CREATE);
-
     }
+
     @Override
     public void onStop(){
         super.onStop();
+        if (mProgress != null && mProgress.isShowing()) {
+            mProgress.dismiss();
+        }
         if(isChangingConfigurations())
             return;
         isClosingService=true;
@@ -325,25 +336,28 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
             mHandler.sendEmptyMessage(LOADING_FINISHED);
         }
     }
+
     private void showErrorDialog(String message){
-        new AlertDialog.Builder(TorrentLoaderActivity.this)
-        .setTitle(R.string.error_listing)
-        .setMessage(message)
-        .setOnCancelListener(new OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                TorrentLoaderActivity.this.finish();
-            }
-        })
-        .create().show();
+        if (!isFinishing()) {
+            new AlertDialog.Builder(TorrentLoaderActivity.this)
+                .setTitle(R.string.error_listing)
+                .setMessage(message)
+                .setOnCancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        TorrentLoaderActivity.this.finish();
+                    }
+                })
+                .create().show();
+        }
     }
+
     @Override
     public void setPort(int port) {
         mPort = port;
     }
     @Override
     public void notifyDaemonStreaming() {
-
     }
     @Override
     public void onEndOfTorrentProcess() {
@@ -353,12 +367,17 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
     @Override
     public void notifyObserver(String daemonString) {
         // TODO Auto-generated method stub
-
+    }
+    @Override
+    public void warnOnNotEnoughSpace() {
     }
 
     @Override
-    public void warnOnNotEnoughSpace() {
-
+    protected void onDestroy() {
+        if (mProgress != null && mProgress.isShowing()) {
+            mProgress.dismiss();
+        }
+        super.onDestroy();
     }
 
 }

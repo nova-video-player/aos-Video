@@ -26,7 +26,7 @@ import java.io.Serializable;
 public class FtpShortcut extends Shortcut implements Serializable {
 
     public FtpShortcut(long id, String fullPath, String name) {
-       super(id,fullPath, fullPath,name);
+       super(id, fullPath, fullPath, name);
     }
 
     public Uri getUri() {

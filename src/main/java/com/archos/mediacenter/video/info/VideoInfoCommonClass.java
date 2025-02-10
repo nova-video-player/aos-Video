@@ -14,12 +14,15 @@
 
 package com.archos.mediacenter.video.info;
 
+import static com.archos.mediacenter.utils.ISO639codes.generateTrackName;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 
 import com.archos.filecorelibrary.FileEditor;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.FileEditorFactoryWithUpnp;
 import com.archos.mediacenter.filecoreextension.upnp2.StreamUriFinder;
 import com.archos.mediacenter.filecoreextension.upnp2.UpnpServiceManager;
@@ -78,7 +81,7 @@ public class VideoInfoCommonClass {
             if(device!=null) {
                 String friendlyName = UpnpServiceManager.getDeviceFriendlyName(device);
                 if(friendlyName!=null){
-                    video.setFriendlyPath("upnp://" + friendlyName + "/" + video.getFileUri().getLastPathSegment());
+                    video.setFriendlyPath("upnp://" + friendlyName + "/" + FileUtils.getName(video.getFileUri()));
                 }
             }
             if(uri != null){
@@ -161,11 +164,14 @@ public class VideoInfoCommonClass {
                     sb.append("\n");
                 }
                 VideoMetadata.AudioTrack audio = videoMetadata.getAudioTrack(i);
-
+                if (audioTrackNb == 1) {  // name of the track only if there is only one
+                    String language = generateTrackName(audio.name, audio.language);
+                    if (!language.isEmpty()) sb.append(language).append(SEP); // avoid adding space if language is unknown
+                }
                 if (audioTrackNb > 1) {  // number and name of the track only if there are more than one track
-                    sb.append(Integer.toString(i + 1)).append('.').append(SEP).append(VideoUtils.getLanguageString(c, audio.name)).append(SEP);
-                }else{
-                    sb.append(VideoUtils.getLanguageString(c, audio.name)).append(SEP);
+                    sb.append(Integer.toString(i + 1)).append('.').append(SEP);
+                    String language = generateTrackName(audio.name, audio.language);
+                    if (!language.isEmpty()) sb.append(language).append(SEP); // avoid adding space if language is unknown
                 }
                 sb.append(audio.format).append(SEP);
                 sb.append(audio.channels).append(SEP);

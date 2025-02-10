@@ -37,7 +37,7 @@ import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserNeverP
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserPlaylists;
 import com.archos.mediacenter.video.browser.filebrowsing.BrowserByExtStorage;
 import com.archos.mediacenter.video.browser.filebrowsing.BrowserByVideoFolder;
-import com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser.FtpRootFragment;
+import com.archos.mediacenter.video.browser.filebrowsing.network.ShortcutRootFragment;
 import com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser.SmbRootFragment;
 import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser.UpnpRootFragment;
 
@@ -62,7 +62,6 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
             BrowserMoviesByGenre2.class,
     };
 
-
     /**
      * Used to disable the action bar navigation listener when initializing the action bar navigation while the fragment is already created
      */
@@ -74,8 +73,6 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
     public static final int ITEM_ID_RECENTLY_ADDED = ITEM_ID_OFFSET + 4;
     private static final int ITEM_ID_RECENTLY_PLAYED = ITEM_ID_OFFSET +5;
     private static final int ITEM_ID_LISTS = ITEM_ID_OFFSET +6;
-
-
 
     public void setNavigationMode(int navigationMode){
         ((MainActivity)getActivity()).setNavigationMode(navigationMode);
@@ -234,7 +231,6 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
         return true;
     }
 
-
     @Override
     public FragmentTitleStruc getContentFragmentAndTitle(int id) {
         FragmentTitleStruc struc = new FragmentTitleStruc();
@@ -248,9 +244,9 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
                 fragmentClass = SmbRootFragment.class;
                 struc.title = R.string.network_shared_folders;
                 break;
-            case ITEM_ID_FTP:
-                fragmentClass = FtpRootFragment.class;
-                struc.title = R.string.sftp_folders;
+            case ITEM_ID_NETWORK:
+                fragmentClass = ShortcutRootFragment.class;
+                struc.title = R.string.network_shortcuts;
                 break;
             case ITEM_ID_UPNP:
                 fragmentClass = UpnpRootFragment.class;

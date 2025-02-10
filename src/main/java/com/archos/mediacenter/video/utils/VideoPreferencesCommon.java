@@ -52,6 +52,7 @@ import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.ExtStorageManager;
 import com.archos.filecorelibrary.jcifs.JcifsUtils;
+import com.archos.filecorelibrary.samba.SambaDiscovery;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.BuildConfig;
@@ -81,21 +82,63 @@ import com.archos.mediascraper.settings.ScraperPreferences;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.TreeMap;
 
 import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener {
-    private static final String TAG = VideoPreferencesCommon.class.getSimpleName();
-    private static final boolean DBG = false;
+
+    private static final Logger log = LoggerFactory.getLogger(VideoPreferencesCommon.class);
+
+    // update with: `curl --request GET --url https://api.opensubtitles.com/api/v1/infos/languages | jq -r '.data[].language_code' | sort -u | gpaste -sd "|"`
+    // list exceptions via `| grep -E '.{3,}' | gpaste -sd "|"` "zh-cn|pt-pt|pt-br|zh-tw"
+    private static final String OPENSUBTITLES_LANGUAGES = "ab|af|an|ar|as|at|az|be|bg|bn|br|bs|ca|cs|cy|da|de|ea|el|en|eo|es|et|eu|ex|fa|fi|fr|ga|gd|gl|he|hi|hr|hu|hy|ia|id|ig|is|it|ja|ka|kk|km|kn|ko|ku|lb|lt|lv|ma|me|mk|ml|mn|mr|ms|my|ne|nl|no|nv|oc|or|pl|pm|pr|ps|pt-br|pt-pt|ro|ru|sd|se|si|sk|sl|so|sp|sq|sr|sv|sw|sx|sy|ta|te|th|tk|tl|tp|tr|tt|uk|ur|uz|vi|ze|zh-cn|zh-tw|zh-ca";
+
+    // see https://developer.themoviedb.org/docs/languages
+    // curl --request GET --url 'https://api.themoviedb.org/3/configuration/languages?api_key=APIKEY' | jq '.[] | .iso_639_1' | sed 's/"\([^"]*\)"/\1/g' | grep -v mo | grep -v xx | sort -u | paste -sd "|" -
+    // to do after: add manually pt-br and substitute cn=zh-tw and zh=zh-cn
+    // zh = Mandarin -> Chinese Simplified (zh-cn) or Chinese
+    // cn = Cantonese -> Chinese Traditional (zh-tw)
+    public final static String TMDB_LANGUAGES = "aa|ab|ae|af|ak|am|an|ar|as|av|ay|az|ba|be|bg|bi|bm|bn|bo|br|bs|ca|ce|ch|zh-tw|co|cr|cs|cu|cv|cy|da|de|dv|dz|ee|el|en|eo|es|et|eu|fa|ff|fi|fj|fo|fr|fy|ga|gd|gl|gn|gu|gv|ha|he|hi|ho|hr|ht|hu|hy|hz|ia|id|ie|ig|ii|ik|io|is|it|iu|ja|jv|ka|kg|ki|kj|kk|kl|km|kn|ko|kr|ks|ku|kv|kw|ky|la|lb|lg|li|ln|lo|lt|lu|lv|mg|mh|mi|mk|ml|mn|mr|ms|mt|my|na|nb|nd|ne|ng|nl|nn|no|nr|nv|ny|oc|oj|om|or|os|pa|pi|pl|ps|pt|pt-br|qu|rm|rn|ro|ru|rw|sa|sc|sd|se|sg|sh|si|sk|sl|sm|sn|so|sq|sr|ss|st|su|sv|sw|ta|te|tg|th|ti|tk|tl|tn|to|tr|ts|tt|tw|ty|ug|uk|ur|uz|ve|vi|vo|wa|wo|xh|yi|yo|za|zh-cn|zh-hk|zu";
+
+    // basic Chinese howto
+    // zh-cn Chinese (Mainland China): Mandarin (mostly in Simplified charset)
+    // zh-tw Chinese (Taiwan): Min (mostly in Traditional charset)
+    // zh-hk Chinese (Hong Kong): Cantonese
+    // Character set = Simplified or Traditional
+    // opensubtitles
+    // zh-ca = Chinese (Cantonese) -> zh-hk Chinese (Hong Kong),
+    // zh-cn = Chinese (simplified) -> zh-cn Chinese (Mainland China),
+    // zh-tw = Chinese (traditional) -> zh-tw Chinese (Taiwan)
+    // ze = Chinese bilingual -> Chinese Cantonese + English
+    // tmdb (proposed by Yu)
+    // do not use zh Mandarin = zh-cn, Chinese (Mainland China)
+    // do not use cn Cantonese = zh-hk, Chinese (Hong Kong)
+    // add zh-tw, Chinese (Taiwan)
+
+    // crowdin nova translation languages
+    // cd Video/res; (ls -d values-* | grep -Ev '(-w|-sw).*dp' | grep -Ev '(notouch|land)' | sed -E 's/values-//; s/-r/-/' | sort && echo "en") | sort | gpaste -sd "|"
+    public final static String UI_LANGUAGES = "ar|cs-CZ|de|el-GR|en|es|fa-IR|fr|hu-HU|it|iw|kaa|kmr-TR|ko|lt-LT|nl|or-IN|pl|pt-BR|pt-PT|ru|sk-SK|sv-SE|ta-IN|tr-TR|uk-UA|vi-VN|zh-CN|zh-TW";
 
     // should we provide adaptive refresh rate for all (not only on TV)
     private static final boolean REFRESHRATE_FORALL = true;
 
+    // default stream buffer size in MB before parser
+    public static final int DEFAULT_STREAM_BUFFER_SIZE = 24;
+    // default max iframe compressed frame size in MB
+    public static final int DEFAULT_MAX_IFRAME_SIZE = 6;
+
     public static final String KEY_ADVANCED_VIDEO_ENABLED = "preferences_advanced_video_enabled";
     public static final String KEY_ADVANCED_VIDEO_CATEGORY = "preferences_category_advanced_video";
     public static final String KEY_ABOUT_CATEGORY = "about_category";
+    public static final String KEY_NETSHARE_CATEGORY = "netshare_category";
     public static final String KEY_ADVANCED_3D_TV_SWITCH_SUPPORTED = "preferences_tv_switch_supported";
     public static final String KEY_ADVANCED_VIDEO_QUIT = "preferences_video_advanced_quit";
     public static final String KEY_TORRENT_BLOCKLIST = "preferences_torrent_blocklist";
@@ -103,11 +146,17 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_SHARED_FOLDERS= "share_folders";
     public static final String KEY_SUBTITILES_CREDENTIALS= "subtitles_credentials";
     public static final String KEY_FORCE_SW = "force_software_decoding";
-    public static final String KEY_FORCE_AUDIO_PASSTHROUGH = "force_audio_passthrough";
-    public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch";
+    public static final String KEY_FORCE_AUDIO_PASSTHROUGH = "force_passthrough";
+    public static final String KEY_PARSER_SYNC_MODE = "parser_sync_mode";
+    public static final String KEY_DISABLE_DOLBY_VISION = "disable_dolby_vision";
+    public static final String KEY_STREAM_BUFFER_SIZE = "stream_buffer_size";
+    public static final String KEY_STREAM_MAX_IFRAME_SIZE = "stream_max_iframe_size";
+    public static final String KEY_PLAYBACK_SPEED = "playback_speed";
+    public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch_mode";
     public static final String KEY_ACTIVATE_3D_SWITCH = "activate_tv_switch";
     public static final String KEY_ADULT_SCRAPE = "enable_adult_scrap_key";
-    
+
+    public static final String KEY_SEPARATE_ANIME_MOVIE_SHOW = "separate_anime_movie_show";
     public static final String KEY_SHOW_WATCHING_UP_NEXT_ROW = "show_watching_up_next_row";
     public static final String KEY_SHOW_LAST_ADDED_ROW = "show_last_added_row";
     public static final String KEY_SHOW_LAST_PLAYED_ROW = "show_last_played_row";
@@ -123,15 +172,19 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_SHOW_BY_RATING = "show_by_rating";
 
     public static final String KEY_VIDEO_OS = "preferences_video_os";
-    public static final String KEY_TMDB="preferences_video_tmdb";
-    public static final String KEY_TRAKT="preferences_video_trakt";
-    public static final String KEY_TRAKT_SYNC_PROGRESS ="trakt_sync_resume";
-    public static final String KEY_LICENCES="preferences_video_licences";
+    public static final String KEY_TMDB = "preferences_video_tmdb";
+    public static final String KEY_TRAKT = "preferences_video_trakt";
+    public static final String KEY_TRAKT_SYNC_PROGRESS = "trakt_sync_resume";
+    public static final String KEY_LICENCES = "preferences_video_licences";
 
+    public static final String KEY_UI_LANG = "ui_lang";
+    public static final String KEY_UI_LANG_SYSTEM = "syst";
     public static final String KEY_DEC_CHOICE = "dec_choice";
     public static final String KEY_AUDIO_INTERFACE_CHOICE = "audio_interface_choice";
     public static final String KEY_SUBTITLES_HIDE = "subtitles_hide_default";
     public static final String KEY_SUBTITLES_FAV_LANG = "favSubLang";
+    public static final String KEY_AUDIO_TRACK_FAV_LANG = "favAudioLang";
+    public static final String KEY_SCRAPER_FAV_LANG = "favScraperLang";
     public static final String KEY_TRAKT_CATEGORY = "trakt_category";
     public static final String KEY_TRAKT_GETFULL = "trakt_getfull";
     public static final String KEY_TRAKT_SIGNIN = "trakt_signin";
@@ -145,7 +198,12 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public static final String KEY_SMB2 = "pref_smbv2";
     public static final String KEY_SMB_RESOLV = "pref_smb_resolv";
+    public static final String KEY_SMB_DISABLE_TCP_DISCOVERY = "pref_smb_disable_tcp_discovery";
+    public static final String KEY_SMB_DISABLE_UDP_DISCOVERY = "pref_smb_disable_udp_discovery";
+    public static final String KEY_SMB_DISABLE_MDNS_DISCOVERY = "pref_smb_disable_mdns_discovery";
+    public static final String KEY_SMBJ = "pref_smbj";
 
+    public static final boolean SEPARATE_ANIME_MOVIE_SHOW_DEFAULT = true;
     // TODO: disabled until issue #186 is fixed
     public static final boolean SHOW_WATCHING_UP_NEXT_ROW_DEFAULT = true;
     public static final boolean SHOW_LAST_ADDED_ROW_DEFAULT = true;
@@ -178,11 +236,14 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private long mMoreLeanbackPrefsClickLastTime = 0;
     private ListPreference mDecChoicePreferences = null;
     private ListPreference mEpisodeScrollViewPreferences = null;
+    private ListPreference mParserSyncMode = null;
     private ListPreference mAudioInterfaceChoicePreferences = null;
     private CheckBoxPreference mForceSwDecPreferences = null;
     private CheckBoxPreference mForceAudioPassthrough = null;
+    private CheckBoxPreference mPlaybackSpeed = null;
     private CheckBoxPreference mDisableDownmix = null;
-    private CheckBoxPreference mActivateRefreshrateTVSwitch = null;
+    private CheckBoxPreference mEnableDownmixATV = null;
+    private ListPreference mActivateRefreshrateTVSwitch = null;
     private CheckBoxPreference mEnableCutoutModeShortEdge = null;
     private CheckBoxPreference mEnablePlayPauseOnTouch = null;
     private CheckBoxPreference mDisplayPosterInPlayer = null;
@@ -194,12 +255,16 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private PreferenceCategory mAdvancedPreferences = null;
     private PreferenceCategory mScraperCategory = null;
     private ListPreference mSubtitlesFavLangPreferences = null;
+    private ListPreference mUiLang = null;
     private MultiSelectListPreference mSubtitlesDownloadLanguagePreferences = null;
+    private ListPreference mTMDbScraperLanguagePreferences = null;
+    private ListPreference mAudioTrackFavoriteLanguage = null;
     private CheckBoxPreference mEnableSponsor = null;
     private CheckBoxPreference mWatchingUpNext = null;
     private PreferenceCategory mAboutPreferences = null;
     private CheckBoxPreference mAdultScrape = null;
-
+    private EditTextPreference mStreamBufferSize = null;
+    private EditTextPreference mStreamMaxIFrameSize = null;
     private String mLastTraktUser = null;
     private Trakt.Status mTraktStatus = Trakt.Status.SUCCESS;
     private TraktSigninDialogPreference mTraktSigninPreference = null;
@@ -208,12 +273,22 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mTraktSyncCollectionPreference = null;
     private CheckBoxPreference mTraktSyncProgressPreference = null;
     private CheckBoxPreference mAutoScrapPreference = null;
+
+    private CheckBoxPreference mSeparateAnimeMoviePreference = null;
+    private CheckBoxPreference mShowAllAnimesRowPreference = null;
+    private ListPreference mAnimesSortOrderPreference = null;
+    private ListPreference mDefaultVideoSortOrderPreference = null;
+
     private Handler mHanlder = null;
 
     private Preference mTraktFull;
 
     private CheckBoxPreference mSmb2 = null;
     private CheckBoxPreference mSmbResolver = null;
+    private CheckBoxPreference mSmbDisableTcpDiscovery = null;
+    private CheckBoxPreference mSmbDisableUdpDiscovery = null;
+    private CheckBoxPreference mSmbDisableMdnsDiscovery = null;
+    private CheckBoxPreference mSmbj = null;
 
     final public static int ACTIVITY_RESULT_UI_MODE_CHANGED = 665;
     final public static int ACTIVITY_RESULT_UI_ZOOM_CHANGED = 667;
@@ -221,6 +296,18 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private Preference mDbExportManualPreference = null;
 
     private PreferenceFragmentCompat mPreferencesFragment;
+
+    List<String> OpensubtitlesLanguageListEntries = new ArrayList<>();
+    List<String> OpensubtitlesLanguageListEntryValues = new ArrayList<>();
+    int OpensubtitlesSystemLanguageIndex = -1;
+    int systemAudioLanguageIndex = -1;
+    List<String> TMDbLanguageListEntries = new ArrayList<>();
+    List<String> TMDbLanguageListEntryValues = new ArrayList<>();
+    int TMDbSystemLanguageIndex = -1;
+
+    int UiSystemLanguageIndex =  -1;
+    List<String> UiLanguageListEntries = new ArrayList<>();
+    List<String> UiLanguageListEntryValues = new ArrayList<>();
 
     public VideoPreferencesCommon(PreferenceFragmentCompat preferencesFragment) {
         mPreferencesFragment = preferencesFragment;
@@ -273,8 +360,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private void switchAdvancedPreferences() {
         PreferenceCategory prefCategory = (PreferenceCategory) findPreference("preferences_category_video");
         PreferenceCategory aboutCategory = (PreferenceCategory) findPreference(KEY_ABOUT_CATEGORY);
+        PreferenceCategory netShareCategory = (PreferenceCategory) findPreference(KEY_NETSHARE_CATEGORY);
         if (!ArchosFeatures.isAndroidTV(getActivity())) { // not a TV
             prefCategory.removePreference(mActivate3DTVSwitch);
+            prefCategory.removePreference(mEnableDownmixATV); // on TV downmix is disabled: show the option to enable it for harmonyOS
             if (REFRESHRATE_FORALL) prefCategory.addPreference(mActivateRefreshrateTVSwitch);
             else prefCategory.removePreference(mActivateRefreshrateTVSwitch);
             prefCategory.addPreference(mActivateRefreshrateTVSwitch);
@@ -291,7 +380,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             prefCategory.addPreference(mEnablePlayPauseOnTouch);
 
         } else {
-            prefCategory.removePreference(mDisableDownmix); // on TV downmix is disabled: do not show the option
+            // note enable_downmix_androidtv and disable_downmix are the opposite same settings but only one applies to androidTV
+            // this is done on purpose to respect logic of presentation and default value
+            // on huawei harmonyOS seems that you need downmix otherwise you loose front channels
+            prefCategory.removePreference(mDisableDownmix); // on TV downmix for phone/tablet is disabled: do not show the option
+            prefCategory.addPreference(mEnableDownmixATV); // on TV downmix is disabled: show the option to enable it for harmonyOS
             prefCategory.addPreference(mActivate3DTVSwitch);
             prefCategory.addPreference(mActivateRefreshrateTVSwitch);
             prefCategory.removePreference(mEnableCutoutModeShortEdge);
@@ -311,9 +404,15 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 else aboutCategory.removePreference(mEnableSponsor);
             }
             prefCategory.removePreference(mForceSwDecPreferences);
+            prefCategory.addPreference(mStreamBufferSize);
+            prefCategory.addPreference(mStreamMaxIFrameSize);
             prefCategory.addPreference(mDecChoicePreferences);
             prefCategory.addPreference(mAudioInterfaceChoicePreferences);
+            prefCategory.addPreference(mParserSyncMode);
             prefScraperCategory.addPreference(mDbExportManualPreference);
+            // more smb discovery disabling options in advanced mode
+            netShareCategory.addPreference(mSmbDisableTcpDiscovery);
+            netShareCategory.addPreference(mSmbDisableMdnsDiscovery);
             getPreferenceScreen().addPreference(mAdvancedPreferences);
             if (BuildConfig.ADULT_SCRAPE) prefScraperCategory.addPreference(mAdultScrape);
         } else {
@@ -326,21 +425,33 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             aboutCategory.removePreference(mEnableSponsor);
             prefCategory.removePreference(mDecChoicePreferences);
             prefCategory.removePreference(mAudioInterfaceChoicePreferences);
+            prefCategory.removePreference(mParserSyncMode);
             prefCategory.addPreference(mForceSwDecPreferences);
             prefScraperCategory.removePreference(mDbExportManualPreference);
             getPreferenceScreen().removePreference(mAdvancedPreferences);
             prefScraperCategory.removePreference(mAdultScrape);
+            prefCategory.removePreference(mStreamBufferSize);
+            prefCategory.removePreference(mStreamMaxIFrameSize);
+            // not needed since for fire10hd only UDP discovery is upsetting wifi drivers
+            netShareCategory.removePreference(mSmbDisableTcpDiscovery);
+            netShareCategory.removePreference(mSmbDisableMdnsDiscovery);
         }
     }
 
     public static void resetPassthroughPref(SharedPreferences preferences){
-        if(Integer.valueOf(preferences.getString("force_audio_passthrough_multiple","-1"))==-1&&preferences.getBoolean("force_audio_passthrough",false)){ //has never been set
+        if(Integer.parseInt(preferences.getString("force_audio_passthrough_multiple","-1"))==-1&&preferences.getBoolean("force_audio_passthrough",false)){ //has never been set
             //has never been set with new mode but was set with old mode
             preferences.edit().putString("force_audio_passthrough_multiple","1").apply(); //set pref
+        }
+        if(Integer.parseInt(preferences.getString("force_audio_passthrough_multiple","-1"))>0){ // passthrough is set, reset audio_speed
+            // if passthrough is set audio_speed is reset to 1.0f
+            log.debug("resetPassthroughPref: audio_speed to 1.0f since passthrough is " + Integer.parseInt(preferences.getString("force_audio_passthrough_multiple","-1")));
+            preferences.edit().putFloat("save_audio_speed_setting_pref_key", 1.0f).apply();
         }
     }
 
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        CustomApplication.loadLocale(getResources());
         mSharedPreferences = getPreferenceManager().getSharedPreferences();
         // Load the preferences from an XML resource
         resetPassthroughPref(mSharedPreferences);
@@ -377,11 +488,21 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mDarkMode = (CheckBoxPreference) findPreference("dark_mode");
         mEnableDisplayTvOverView = (CheckBoxPreference) findPreference("display_TvOverview");
         mAudioInterfaceChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_INTERFACE_CHOICE);
+        mParserSyncMode = (ListPreference) findPreference(KEY_PARSER_SYNC_MODE);
         mForceSwDecPreferences = (CheckBoxPreference) findPreference(KEY_FORCE_SW);
         mEnableSponsor = (CheckBoxPreference) findPreference(KEY_ENABLE_SPONSOR);
         mWatchingUpNext = (CheckBoxPreference) findPreference(KEY_SHOW_WATCHING_UP_NEXT_ROW);
         mForceAudioPassthrough = (CheckBoxPreference) findPreference(KEY_FORCE_AUDIO_PASSTHROUGH);
+        ListPreference mForceAudioPassthroughMultiple = (ListPreference) findPreference("force_audio_passthrough_multiple");
+        if (!CustomApplication.isPassthroughSupported()) {
+            mForceAudioPassthrough.setEnabled(false);
+            mForceAudioPassthroughMultiple.setEnabled(false);
+        }
+        mStreamBufferSize = (EditTextPreference) findPreference(KEY_STREAM_BUFFER_SIZE);
+        mStreamMaxIFrameSize = (EditTextPreference) findPreference(KEY_STREAM_MAX_IFRAME_SIZE);
+        mPlaybackSpeed = (CheckBoxPreference) findPreference(KEY_PLAYBACK_SPEED);
         mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");
+        mEnableDownmixATV = (CheckBoxPreference) findPreference("enable_downmix_androidtv");
         mActivate3DTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_3D_SWITCH);
         mEnableCutoutModeShortEdge = (CheckBoxPreference) findPreference("enable_cutout_mode_short_edges");
         mEnablePlayPauseOnTouch = (CheckBoxPreference) findPreference("enable_PlayPause_onTouch");
@@ -389,22 +510,44 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mHideGridViewInfo = (CheckBoxPreference) findPreference("hide_gridview_info");
         mDisplayActorPhotoToast = (CheckBoxPreference) findPreference("display_actorPhoto_toast");
         mActivateRefreshrateTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
+
+        mActivateRefreshrateTVSwitch = (ListPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
+        // last option "match frame rate" is only available for android 12+, remove it on old android versions
+        if (Build.VERSION.SDK_INT < 31) {
+            CharSequence[] entries = mActivateRefreshrateTVSwitch.getEntries();
+            CharSequence[] entryValues = mActivateRefreshrateTVSwitch.getEntryValues();
+            CharSequence[] newEntries = new CharSequence[entries.length - 1];
+            CharSequence[] newEntryValues = new CharSequence[entryValues.length - 1];
+            for (int i = 0; i < entries.length - 1; i++) {
+                newEntries[i] = entries[i];
+                newEntryValues[i] = entryValues[i];
+            }
+            mActivateRefreshrateTVSwitch.setEntries(newEntries);
+            mActivateRefreshrateTVSwitch.setEntryValues(newEntryValues);
+        }
+
         mAdultScrape = (CheckBoxPreference) findPreference(KEY_ADULT_SCRAPE);
         mTraktSyncProgressPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_SYNC_PROGRESS);
         mAdvancedPreferences = (PreferenceCategory) findPreference(KEY_ADVANCED_VIDEO_CATEGORY);
-
+        mSeparateAnimeMoviePreference = (CheckBoxPreference) findPreference(KEY_SEPARATE_ANIME_MOVIE_SHOW);
+        mShowAllAnimesRowPreference = (CheckBoxPreference) findPreference(KEY_SHOW_ALL_ANIMES_ROW);
+        mAnimesSortOrderPreference = (ListPreference) findPreference(KEY_ANIMES_SORT_ORDER);
         mAboutPreferences = (PreferenceCategory) findPreference(KEY_ABOUT_PREFERENCES);
         Preference novaVersion = (Preference) findPreference("preferences_version");
         novaVersion.setTitle(mSharedPreferences.getString("nova_version", "@string/APP_INFO"));
 
         mSmb2 = (CheckBoxPreference) findPreference(KEY_SMB2);
         mSmbResolver = (CheckBoxPreference) findPreference(KEY_SMB_RESOLV);
+        mSmbDisableTcpDiscovery = (CheckBoxPreference) findPreference(KEY_SMB_DISABLE_TCP_DISCOVERY);
+        mSmbDisableUdpDiscovery = (CheckBoxPreference) findPreference(KEY_SMB_DISABLE_UDP_DISCOVERY);
+        mSmbDisableMdnsDiscovery = (CheckBoxPreference) findPreference(KEY_SMB_DISABLE_MDNS_DISCOVERY);
+        mSmbj = (CheckBoxPreference) findPreference(KEY_SMBJ);
 
         mScraperCategory = (PreferenceCategory) findPreference(KEY_SCRAPER_CATEGORY);
         mExportManualPreference = findPreference(getString(R.string.nfo_export_manual_prefkey));
         mExportManualPreference.setOnPreferenceClickListener(preference -> {
             Intent intent = new Intent(AutoScrapeService.EXPORT_EVERYTHING, null, getActivity(), AutoScrapeService.class);
-            ContextCompat.startForegroundService(getActivity(), intent);
+            getContext().startService(intent);
             Toast.makeText(getActivity(), R.string.nfo_export_in_progress, Toast.LENGTH_SHORT).show();
             return true;
         });
@@ -413,7 +556,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             Intent intent = new Intent(AutoScrapeService.RESCAN_EVERYTHING, null, getActivity(), AutoScrapeService.class);
             intent.putExtra(AutoScrapeService.RESCAN_EVERYTHING, true);
             intent.putExtra(AutoScrapeService.RESCAN_ONLY_DESC_NOT_FOUND, false);
-            ContextCompat.startForegroundService(getActivity(), intent);
+            getContext().startService(intent);
             Toast.makeText(getActivity(), R.string.rescrap_in_progress, Toast.LENGTH_SHORT).show();
             return true;
         });
@@ -421,14 +564,14 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         findPreference(getString(R.string.rescrap_all_movies_prefkey)).setOnPreferenceClickListener(preference -> {
             Intent intent = new Intent(AutoScrapeService.RESCAN_MOVIES, null, getActivity(), AutoScrapeService.class);
             intent.putExtra(AutoScrapeService.RESCAN_ONLY_DESC_NOT_FOUND, false);
-            ContextCompat.startForegroundService(getActivity(), intent);
+            getContext().startService(intent);
             Toast.makeText(getActivity(), R.string.rescrap_movies_in_progress, Toast.LENGTH_SHORT).show();
             return true;
         });
 
         findPreference(getString(R.string.rescrap_all_collections_prefkey)).setOnPreferenceClickListener(preference -> {
             Intent intent = new Intent(AllCollectionScrapeService.INTENT_RESCRAPE_ALL_COLLECTIONS, null, getActivity(), AllCollectionScrapeService.class);
-            ContextCompat.startForegroundService(getActivity(), intent);
+            getContext().startService(intent);
             Toast.makeText(getActivity(), R.string.rescrap_collections_in_progress, Toast.LENGTH_SHORT).show();
             return true;
         });
@@ -443,6 +586,36 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mSmbResolver.setOnPreferenceChangeListener((preference, newValue) -> {
             Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
             JcifsUtils.notifyPrefChange();
+            return true;
+        });
+
+        mSmbDisableTcpDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
+            Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
+            SambaDiscovery sambaDiscovery = CustomApplication.getSambaDiscovery();
+            if (sambaDiscovery != null) sambaDiscovery.notifyPrefChange();
+            return true;
+        });
+
+        mSmbDisableUdpDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
+            Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
+            SambaDiscovery sambaDiscovery = CustomApplication.getSambaDiscovery();
+            if (sambaDiscovery != null) sambaDiscovery.notifyPrefChange();
+            return true;
+        });
+
+        mSmbDisableMdnsDiscovery.setOnPreferenceChangeListener((preference, newValue) -> {
+            Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
+            SambaDiscovery sambaDiscovery = CustomApplication.getSambaDiscovery();
+            if (sambaDiscovery != null) sambaDiscovery.notifyPrefChange();
+            return true;
+        });
+
+        // disable jcifs-ng options if smbj SMB implementation is selected
+        mSmbj.setOnPreferenceChangeListener((preference, newValue) -> {
+            if ((boolean)newValue) mSmb2.setChecked(true);
+            mSmb2.setEnabled(!(boolean)newValue);
+            // do not disable SMB resolver since jcifs-ng is used for address resolution even with smbj
+            //mSmbResolver.setEnabled(!(boolean)newValue);
             return true;
         });
 
@@ -540,6 +713,23 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             return false;
         });
 
+        mSeparateAnimeMoviePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean oldValue = getPreferenceManager().getSharedPreferences().getBoolean(KEY_SEPARATE_ANIME_MOVIE_SHOW, SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+            // !oldValue is the new value...
+            mSeparateAnimeMoviePreference.setChecked(!oldValue);
+            PreferenceCategory prefCategory = (PreferenceCategory) findPreference("category_leanback_user_interface");
+            if (!oldValue) {
+                // set visible
+                prefCategory.addPreference(mShowAllAnimesRowPreference);
+                prefCategory.addPreference(mAnimesSortOrderPreference);
+            } else {
+                // set not visible
+                prefCategory.removePreference(mShowAllAnimesRowPreference);
+                prefCategory.removePreference(mAnimesSortOrderPreference);
+            }
+            return false;
+        });
+
         Preference p = findPreference(KEY_ADVANCED_VIDEO_QUIT);
         p.setOnPreferenceClickListener(preference -> {
             Editor editor = mSharedPreferences.edit();
@@ -578,39 +768,74 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         List<String> entries = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.entries_list_preference)));
         List<String> entryValues = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.entryvalues_list_preference)));
 
-        entries.set(0, defaultLocale.getDisplayLanguage()) ;
-        Locale currentLocale;
-        for (int i = 1; i < entryValues.size(); ++i){
-            currentLocale = new Locale(entryValues.get(i));
-            //entries.set(i, currentLocale.getDisplayLanguage()); // better use our translations, Android ones are not very consistant
-            if (entryValues.get(i).equalsIgnoreCase(locale)){
-                entries.remove(0);
-                entryValues.remove(0);
-            }
-        }
-
-        final CharSequence[] newEntries = new CharSequence[entries.size()];
-        final CharSequence[] newEntryValues = new CharSequence[entryValues.size()];
-
-        entries.toArray(newEntries);
-        entryValues.toArray(newEntryValues);
-        int systemLanguageIndex = -1;
-        final String currentFavoriteLang = getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getISO3Language());
-        int i = 0;
-        for(CharSequence value : newEntryValues){
-            if(value.toString().equalsIgnoreCase(currentFavoriteLang)) {
-                systemLanguageIndex = i;
-            }
-            i++;
-        }
-
-
+        buildLanguageList(OPENSUBTITLES_LANGUAGES, OpensubtitlesLanguageListEntries, OpensubtitlesLanguageListEntryValues);
+        OpensubtitlesSystemLanguageIndex = findLanguageIndex(OpensubtitlesLanguageListEntryValues, getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getLanguage()));
         mSubtitlesDownloadLanguagePreferences = (MultiSelectListPreference) findPreference("languages_list");
-        mSubtitlesDownloadLanguagePreferences.setEntries(newEntries);
-        mSubtitlesDownloadLanguagePreferences.setEntryValues(newEntryValues);
-        mSubtitlesFavLangPreferences.setEntries(newEntries);
-        mSubtitlesFavLangPreferences.setEntryValues(newEntryValues);
-        if(systemLanguageIndex>=0) mSubtitlesFavLangPreferences.setValueIndex(systemLanguageIndex);
+        CharSequence[] listEntries = OpensubtitlesLanguageListEntries.toArray(new CharSequence[0]);
+        CharSequence[] listEntriesValues = OpensubtitlesLanguageListEntryValues.toArray(new CharSequence[0]);
+        mSubtitlesDownloadLanguagePreferences.setEntries(listEntries);
+        mSubtitlesDownloadLanguagePreferences.setEntryValues(listEntriesValues);
+        mSubtitlesDownloadLanguagePreferences.setDefaultValue(new HashSet<>(List.of(Locale.getDefault().getLanguage())));
+        Set<String> currentValues = mSubtitlesDownloadLanguagePreferences.getValues();
+        if (currentValues.isEmpty()) { // enforce at least locale on subtitles download
+            Set<String> newValues = new HashSet<>(currentValues);
+            newValues.add(Locale.getDefault().getLanguage());
+            mSubtitlesDownloadLanguagePreferences.setValues(newValues);
+            log.debug("onCreatePreferences: getValues " + mSubtitlesDownloadLanguagePreferences.getValues());
+        }
+        mSubtitlesFavLangPreferences.setEntries(listEntries);
+        mSubtitlesFavLangPreferences.setEntryValues(listEntriesValues);
+        if (OpensubtitlesSystemLanguageIndex>=0) mSubtitlesFavLangPreferences.setValueIndex(OpensubtitlesSystemLanguageIndex);
+
+        buildLanguageList(TMDB_LANGUAGES, TMDbLanguageListEntries, TMDbLanguageListEntryValues);
+        mTMDbScraperLanguagePreferences = (ListPreference) findPreference(KEY_SCRAPER_FAV_LANG);
+        listEntries = TMDbLanguageListEntries.toArray(new CharSequence[0]);
+        listEntriesValues = TMDbLanguageListEntryValues.toArray(new CharSequence[0]);
+        mTMDbScraperLanguagePreferences.setEntries(listEntries);
+        mTMDbScraperLanguagePreferences.setEntryValues(listEntriesValues);
+        TMDbSystemLanguageIndex = findLanguageIndex(TMDbLanguageListEntryValues, getPreferenceManager().getSharedPreferences().getString(KEY_SCRAPER_FAV_LANG, Locale.getDefault().getLanguage()));
+        if (TMDbSystemLanguageIndex>=0) mTMDbScraperLanguagePreferences.setValueIndex(TMDbSystemLanguageIndex);
+
+        // TOFIX: reuse the OpensubtitlesLanguageList for mAudioTrackFavoriteLanguage
+        mAudioTrackFavoriteLanguage = (ListPreference) findPreference(KEY_AUDIO_TRACK_FAV_LANG);
+        listEntries = OpensubtitlesLanguageListEntries.toArray(new CharSequence[0]);
+        listEntriesValues = OpensubtitlesLanguageListEntryValues.toArray(new CharSequence[0]);
+        mAudioTrackFavoriteLanguage.setEntries(listEntries);
+        mAudioTrackFavoriteLanguage.setEntryValues(listEntriesValues);
+        systemAudioLanguageIndex = findLanguageIndex(OpensubtitlesLanguageListEntryValues, getPreferenceManager().getSharedPreferences().getString(KEY_AUDIO_TRACK_FAV_LANG, Locale.getDefault().getLanguage()));
+        if (systemAudioLanguageIndex>=0) mAudioTrackFavoriteLanguage.setValueIndex(systemAudioLanguageIndex);
+
+        mUiLang = (ListPreference) findPreference(KEY_UI_LANG);
+        buildUILanguageList(UI_LANGUAGES, UiLanguageListEntries, UiLanguageListEntryValues);
+        // Set entries and entry values for the ListPreference
+        mUiLang.setEntries(UiLanguageListEntries.toArray(new CharSequence[0]));
+        mUiLang.setEntryValues(UiLanguageListEntryValues.toArray(new CharSequence[0]));
+
+        // set default value of the ListPreference to the System first entry
+        UiSystemLanguageIndex = findLanguageIndex(UiLanguageListEntryValues, getPreferenceManager().getSharedPreferences().getString(KEY_UI_LANG, KEY_UI_LANG_SYSTEM));
+        if (UiSystemLanguageIndex>=0) mUiLang.setValueIndex(UiSystemLanguageIndex);
+        log.debug("onCreatePreferences: mUiLang UiSystemLanguageIndex " + UiSystemLanguageIndex);
+
+        // Update summary to reflect the current setting
+        String selectedLocale = getPreferenceManager().getSharedPreferences().getString(KEY_UI_LANG, KEY_UI_LANG_SYSTEM);
+        log.debug("onCreatePreferences: mUiLang selectedLocale " + selectedLocale);
+        mUiLang.setSummary(getLocaleDisplayName(selectedLocale));
+        mUiLang.setOnPreferenceChangeListener((preference, newValue) -> {
+            String newLocale = (String) newValue;
+            // modify mUiLang summary to concatenate getLocaleDisplayName(newLocale)
+            mUiLang.setSummary(getLocaleDisplayName(newLocale));
+            log.debug("onCreatePreferences: mUiLang newLocale " + newLocale);
+            CustomApplication.setLocale(newLocale, getResources());
+            // commit all the settings changes before restarting the activity
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+            editor.putString(KEY_UI_LANG, newLocale);
+            editor.commit();
+            // TODO MARC BUG: does not change the title string.preferences of preferences_video.xml but all the rest is ok
+            restartActivity(); // not enough to clear all the cached fragments
+            //restartApplication(); // not enough when returning to settings
+            //getActivity().recreate();
+            return true;
+        });
 
         ListPreference lp = (ListPreference) findPreference("codepage");
         int cp = MediaFactory.getCodepage();
@@ -624,7 +849,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mHanlder = new Handler();
         mTraktSigninPreference = (TraktSigninDialogPreference) findPreference(KEY_TRAKT_SIGNIN);
         if(mTraktSigninPreference!= null && savedInstanceState!=null) {
-            if (DBG) Log.d(TAG, "onCreatePreferences: closing mTraktSigninPreference dialog to prevent leaked window");
+            log.debug("onCreatePreferences: closing mTraktSigninPreference dialog to prevent leaked window");
             // close dialog to prevent leaked window
             mTraktSigninPreference.showDialog(savedInstanceState.getBoolean(LOGIN_DIALOG, false));
         }
@@ -797,9 +1022,113 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                     });
                 }
             });
-
         }
     }
+
+    private int findLanguageIndex(List<String> languageEntryValues, String language) {
+        for (int i = 0; i < languageEntryValues.size(); i++) {
+            if (languageEntryValues.get(i).equalsIgnoreCase(language)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void buildLanguageList(String languages, List<String> languageEntries, List<String> languageEntryValues) {
+        String[] languageCodeArray = languages.split("\\|"); // contains 2 letters language code
+
+        Locale defaultLocale = Locale.getDefault();
+        String defaultLocaleLanguage = defaultLocale.getDisplayLanguage();
+        Locale englishLocale = new Locale("en");
+        String englishLocaleLanguage = englishLocale.getDisplayLanguage();
+
+        // Add default system language first
+        languageEntries.add(defaultLocaleLanguage);
+        languageEntryValues.add(defaultLocale.getLanguage());
+
+        // If default system language is not English, add English second
+        if (!defaultLocaleLanguage.equalsIgnoreCase(englishLocaleLanguage)) {
+            languageEntries.add(englishLocaleLanguage);
+            languageEntryValues.add(englishLocale.getLanguage());
+        }
+
+        // Use a TreeMap to keep the languages sorted as they are added
+        TreeMap<String, String> sortedLanguages = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+        for (String s : languageCodeArray) {
+            String currentLocaleLanguage = com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.getLanguageNameFor2LetterCode(getActivity(), s);
+            if (currentLocaleLanguage.equalsIgnoreCase(defaultLocaleLanguage) || currentLocaleLanguage.equalsIgnoreCase(englishLocaleLanguage))
+                continue;
+            sortedLanguages.put(currentLocaleLanguage, s);
+        }
+
+        // Add the sorted languages to the listEntries and listEntryValues
+        languageEntries.addAll(sortedLanguages.keySet());
+        languageEntryValues.addAll(sortedLanguages.values());
+    }
+
+    private void buildUILanguageList(String languages, List<String> languageEntries, List<String> languageEntryValues) {
+        String[] languageCodeArray = languages.split("\\|");
+
+        // Add "System" entry first
+        languageEntries.add(getResources().getString(R.string.system));
+        languageEntryValues.add(KEY_UI_LANG_SYSTEM);
+
+        // Use a TreeMap to keep the languages sorted as they are added
+        TreeMap<String, String> sortedLanguages = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+        for (String s : languageCodeArray) {
+            Locale locale = getLocaleFromCode(s);
+            String currentLocaleLanguage = locale.getDisplayName(locale);
+            sortedLanguages.put(currentLocaleLanguage, s);
+        }
+
+        // Add the sorted languages to the listEntries and listEntryValues
+        languageEntries.addAll(sortedLanguages.keySet());
+        languageEntryValues.addAll(sortedLanguages.values());
+    }
+
+    public static Locale getLocaleFromCode(String code) {
+        //log.trace("getLocaleFromCode: code " + code);
+        String[] parts = code.split("[-_]");
+        if (parts.length == 1) {
+            //log.trace("getLocaleFromCode: parts[0] " + parts[0]);
+            return new Locale(parts[0]);
+        } else if (parts.length == 2) {
+            //log.trace("getLocaleFromCode: parts[0] " + parts[0] + " parts[1] " + parts[1]);
+            return new Locale(parts[0], parts[1]);
+        } else {
+            //log.trace("getLocaleFromCode: returning default locale");
+            return Locale.getDefault();
+        }
+    }
+
+    private String getLocaleDisplayName(String localeCode) {
+        if (localeCode.equalsIgnoreCase(KEY_UI_LANG_SYSTEM)) {
+            return getResources().getString(R.string.system);
+        }
+        Locale locale = getLocaleFromCode(localeCode);
+        return locale.getDisplayName(locale);
+    }
+
+    // TODO MARC remove unused
+
+    private void restartActivity() {
+        //Intent intent = getActivity().getIntent();
+        //getActivity().finish();
+        //startActivity(intent);
+        getActivity().recreate(); // other way
+    }
+
+    private void restartApplication() {
+        Intent intent = new Intent(getActivity(), getActivity().getClass());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        getActivity().startActivity(intent);
+        getActivity().finishAffinity(); // Use finishAffinity to finish this and all activities below it in the stack.
+        System.exit(0); // Optionally use this to ensure the app process is fully restarted.
+    }
+
+    private static boolean DBG = true;
 
     private void rescanPath(String s) {
         isMediaScannerScanning(getActivity().getContentResolver());
@@ -927,14 +1256,15 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     }
 
     /*
-
         preference helper
      */
 
     public static class PreferenceHelper{
 
         public static boolean shouldDisplayAllFiles(Context context){
-            return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(KEY_DISPLAY_ALL_FILE, false);
+            if (context != null)
+                return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(KEY_DISPLAY_ALL_FILE, false);
+            else return false;
         }
     }
 

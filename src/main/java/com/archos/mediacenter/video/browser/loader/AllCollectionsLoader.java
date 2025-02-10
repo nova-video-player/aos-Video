@@ -59,7 +59,7 @@ public class AllCollectionsLoader extends VideoLoader {
             Log.d(TAG, "getSelection " + getSelection());
             Log.d(TAG, "getSortOrder " + getSortOrder());
         }
-        setUpdateThrottle(5000);
+        if (VideoLoader.ALLVIDEO_THROTTLE) setUpdateThrottle(VideoLoader.ALLVIDEO_THROTTLE_DELAY);
         init();
     }
 
@@ -92,9 +92,6 @@ public class AllCollectionsLoader extends VideoLoader {
 
         if (sb.length()>0) { sb.append(" AND "); }
         sb.append( VideoStore.Video.VideoColumns.SCRAPER_C_ID + " > '0' AND " + VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE + " IS NOT NULL");
-        sb.append(" AND ");
-        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " IS NULL OR " +
-                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%' )");
         if (!mCollectionWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);

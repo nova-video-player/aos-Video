@@ -21,14 +21,20 @@ import android.view.View;
 
 import com.archos.mediacenter.video.browser.ServerCredentialsDialog;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SMBServerCredentialsDialog extends ServerCredentialsDialog {
+
+    private static final Logger log = LoggerFactory.getLogger(SMBServerCredentialsDialog.class);
+
     private Dialog mDialog;
     final private static String SMB_LATEST_USERNAME = "SMB_LATEST_USERNAME";
-
 
     public SMBServerCredentialsDialog(){ }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        log.debug("onCreateDialog");
         mDialog = super.onCreateDialog(savedInstanceState);
         mTypeSp.setVisibility(View.GONE);
         mAddressEt.setVisibility(View.GONE);
@@ -39,7 +45,6 @@ public class SMBServerCredentialsDialog extends ServerCredentialsDialog {
             mUsernameEt.setText(mPreferences.getString(SMB_LATEST_USERNAME,""));
         }
         return mDialog;
-
     }
 
     @Override
@@ -54,6 +59,5 @@ public class SMBServerCredentialsDialog extends ServerCredentialsDialog {
     public String createUri() {
         return mUri.toString();
     }
-
 
 }

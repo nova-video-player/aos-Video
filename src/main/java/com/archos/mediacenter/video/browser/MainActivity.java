@@ -19,8 +19,6 @@ import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermi
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -48,9 +46,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
-import android.provider.MediaStore.MediaColumns;
-import android.util.Log;
 import android.view.DisplayCutout;
 import android.view.InputDevice;
 import android.view.InputEvent;
@@ -67,9 +62,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.IntentSenderRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -77,13 +69,12 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.text.HtmlCompat;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.preference.PreferenceManager;
 
-import com.archos.filecorelibrary.FileUtilsQ;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.GlobalResumeView;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.CustomApplication;
@@ -155,6 +146,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     private int mGlobalResumeId = -1;
     private GlobalResumeContentObserver mGlobalResumeContentObserver = null;
+
+    private SearchManager mSearchManager;
 
     private final static String SCRAPER_SELECTION = ScraperStore.AllVideos.SCRAPER_TYPE + "=? AND "
             + ScraperStore.AllVideos.SCRAPER_ID + "=?";
@@ -241,9 +234,24 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        ((CustomApplication) getApplication()).loadLocale();
+        //CustomApplication.loadLocale(getResources());
         requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         super.onCreate(savedInstanceState);
+
+        try {
+            mSearchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            if (mSearchManager == null) {
+                log.error("onCreate: searchManager is null");
+            } else {
+                mSearchView = new SearchView(this);
+                mSearchView.setSearchableInfo(mSearchManager.getSearchableInfo(getComponentName()));
+            }
+        } catch (IllegalStateException e) {
+            log.error("onCreate: searchManager is null");
+        }
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
@@ -392,7 +400,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             try {
                 // Open a show
                 if (data.getScheme().equals("show")) {
-                    int showId = Integer.parseInt(data.getLastPathSegment());
+                    int showId = Integer.parseInt(FileUtils.getName(data));
                     Bundle args = new Bundle(2);
                     args.putLong(VideoColumns.SCRAPER_SHOW_ID, showId);
                     args.putString(CursorBrowserByVideo.SUBCATEGORY_NAME, ""); // should better have the show title, but...
@@ -404,7 +412,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 }
                 // Open a file
                 else {
-                    int videoId = Integer.parseInt(data.getLastPathSegment());
+                    int videoId = Integer.parseInt(FileUtils.getName(data));
                     Uri uri = ContentUris.withAppendedId(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, videoId);
                     Intent intent2 = new Intent(Intent.ACTION_VIEW, uri);
                     if (!mPreferences.getBoolean(VideoPreferencesActivity.ALLOW_3RD_PARTY_PLAYER, VideoPreferencesActivity.ALLOW_3RD_PARTY_PLAYER_DEFAULT)) {
@@ -485,9 +493,15 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     @Override
     public void onResume() {
         super.onResume();
+        ((CustomApplication) getApplication()).loadLocale();
+
         mPermissionChecker.checkAndRequestPermission(this);
 
-        registerReceiver(mTraktRelogBroadcastReceiver,new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN));
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(mTraktRelogBroadcastReceiver,new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN), Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mTraktRelogBroadcastReceiver,new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN));
+        }
         getContentResolver().registerContentObserver(VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
                 false, mGlobalResumeContentObserver);
         LoaderManager.getInstance(this).restartLoader(0, null, mNewVideosActionProvider);
@@ -518,9 +532,16 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             else{
                 mDrawerLayout.openDrawer(GravityCompat.START);
             }
-        }
-        else
+        } else {
+            // Get the fragment that is currently at the top of the back stack
+            String fragmentTag = getSupportFragmentManager().getBackStackEntryAt(backStackCount - 1).getName();
+            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(fragmentTag);
+            // Check if the fragment is added before trying to remove it
+            if (currentFragment != null && currentFragment.isAdded()) {
+                getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
+            }
             getSupportFragmentManager().popBackStackImmediate();
+        }
         updateHomeIcon(getSupportFragmentManager().getBackStackEntryCount() > 1);
     }
 
@@ -581,15 +602,16 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean ret = super.onCreateOptionsMenu(menu);
         /// /setHomeButtonsetHomeButton();
-        MenuItem item = menu.add(MENU_SEARCH_GROUP, MENU_SEARCH_ITEM, Menu.NONE, R.string.search_title);
-        item.setIcon(R.drawable.android29_ic_menu_search_mtrl_alpha);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        mSearchView = new SearchView(this);
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        item.setActionView(mSearchView);
-        mSearchItem = item;
+        if (mSearchManager == null) {
+            log.error("onCreateOptionsMenu: searchManager is null");
+        } else {
+            MenuItem item = menu.add(MENU_SEARCH_GROUP, MENU_SEARCH_ITEM, Menu.NONE, R.string.search_title);
+            item.setIcon(R.drawable.android29_ic_menu_search_mtrl_alpha);
+            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            item.setActionView(mSearchView);
+            mSearchItem = item;
+        }
         MenuItem menuItem = menu.add(MENU_SCRAPER_GROUP, MENU_START_AUTO_SCRAPER_ACTIVITY, Menu.NONE,
                 R.string.start_auto_scraper_activity);
         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -754,7 +776,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
         @Override
         public void onChange(boolean selfChange) {
-            // A change occured in the medialib concerning one or several videos
+            // A change occurred in the medialib concerning one or several videos
             // => update the global resume view in case the video to resume has
             // been deleted
             updateGlobalResume();
@@ -792,8 +814,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
                 if (scraperId > 0) {
                     int scraperType = c
-                            .getInt(c
-                                    .getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE));
+                            .getInt(c.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE));
                     String[] selectionArgs = new String[] {
                             String.valueOf(scraperType), String.valueOf(scraperId)
                     };

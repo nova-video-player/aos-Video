@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.info;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -388,7 +389,8 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                 initVisibilities();
                 // ...Be sure to reset the message
                 mMessage.setText(R.string.scrap_no_info);
-                getActivity().finish();
+                Activity activity = getActivity();
+                if (activity != null) getActivity().finish();
                 break;
         }
         return true;

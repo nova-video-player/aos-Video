@@ -16,7 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">Bibliotheek</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
@@ -89,16 +89,31 @@
     <string name="not_played_yet_videos">Nog niet afgespeeld</string>
     <string name="video_folder">Mappen</string>
     <string name="movies">Films</string>
+    <string name="animes">Animaties</string>
     <string name="all_movies">Alle films</string>
     <string name="all_movies_format">Alle films -  %d</string>
+    <string name="all_animes_format">Animatie films -  %d</string>
+    <string name="all_collections">Alle collecties</string>
+    <string name="all_collections_format">Alle collecties -  %d</string>
+    <string name="all_collection_watched">Alle collecties bekeken</string>
+    <string name="all_collection_unwatched">Collectie niet bekeken</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d film bekeken</item>
+        <item quantity="other">%d films bekeken</item>
+    </plurals>
     <string name="not_watched_movies_format">Niet bekeken -  %d</string>
+    <string name="not_watched_animes_format">Niet bekeken -  %d</string>
+    <string name="no_movie_watched">Geen film bekeken</string>
+    <string name="all_movies_watched">Alle films bekeken</string>
     <string name="movies_by_alpha">Films alfabetisch</string>
     <string name="movies_by_genre">Films op genre</string>
     <string name="movies_by_rating">Films per rating</string>
+    <string name="movie_collections">Collecties</string>
     <string name="anime_collections">Anime collecties</string>
     <string name="movies_by_year">Films per jaar</string>
     <string name="all_tv_shows">Tv-series</string>
     <string name="all_tvshows">Alle TV-series</string>
+    <string name="all_animes">Alle animatiefilms</string>
     <string name="all_tvshows_format">Alle TV-series  -  %d</string>
     <string name="not_watched_tvshows_format">Niet bekeken -  %d</string>
     <string name="all_seasons">Alle seizoenen</string>
@@ -294,40 +309,13 @@
     <string name="menu_change_folder">Map wijzigen</string>
     <string name="menu_change_folder_details">Kies de map waaruit u wilt starten</string>
     <string name="unlock_instructions">Druk lang op icoon om te ontgrendelen</string>
-    <string name="seek_to_percentage">\"Zoeken tot %s%%</string>
+    <string name="seek_to_percentage">Zoeken tot %s%%</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">Arabisch</string>
-    <string name="s_bulgarian">Bulgaars</string>
-    <string name="Bosnian">Bosnisch</string>
-    <string name="s_czech">Tsjechisch</string>
-    <string name="s_danish">Deens</string>
-    <string name="s_german">Duits</string>
-    <string name="s_english">Engels</string>
-    <string name="s_greek">Grieks</string>
-    <string name="s_spanish">Spaans</string>
-    <string name="s_finnish">Fins</string>
-    <string name="s_french">Frans</string>
-    <string name="s_hebrew">Hebreeuws</string>
-    <string name="s_hungarian">Hongaars</string>
-    <string name="s_italian">Italiaans</string>
-    <string name="s_japanese">Japans</string>
-    <string name="s_korean">Koreaans</string>
-    <string name="s_dutch">Nederlands</string>
-    <string name="s_norwegian">Noors</string>
-    <string name="s_polish">Pools</string>
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Braziliaans</string>
-    <string name="s_portuguese">Portugees</string>
-    <string name="s_russian">Russisch</string>
-    <string name="Romanian">Roemeens</string>
-    <string name="Serbo_Croatian">Servo-Kroatisch</string>
-    <string name="Croatian">Kroatisch</string>
-    <string name="Serbian">Servisch</string>
-    <string name="Slovenian">Sloveens</string>
-    <string name="s_swedish">Zweeds</string>
-    <string name="s_thai">Thais</string>
-    <string name="s_turkish">Turks</string>
     <string name="s_chinese">Chinees</string>
-    <string name="s_vietnamese">Vietnamese</string>
     <string name="s_none">Geen</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Kan de video niet afspelen</string>
@@ -428,11 +416,6 @@
     <string name="add_ssh_shortcut">Voeg toe als snelkoppeling</string>
     <string name="ssh_prompt">FTP-type</string>
     <string name="ssh_empty_view"> \"Je kunt bladeren en spelen vanaf je eigen ftp server\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Verwijder de snelkoppeling</string>
     <string name="shortcut_added">Snelkoppeling %s aangemaakt</string>
     <string name="shortcut_removed">Snelkoppeling %s verwijderd</string>
@@ -474,7 +457,6 @@
     <string name="preferences_force_software_decoding">Forceer software decodering</string>
     <string name="preferences_force_software_decoding_summary">U kunt deze optie proberen als sommige video\'s niet correct afspelen</string>
     <string name="preferences_force_audio_passthrough">Audio-passthrough</string>
-    <string name="preferences_force_audio_passthrough_enable2">Modus 2</string>
     <string name="preferences_disable_downmix_title">Audio stereo downmix uitschakelen</string>
     <string name="preferences_disable_downmix_summary">Altijd alle audiokanalen decoderen en Android downmix laten afhangen van de audio output capaciteit (kan leiden tot het verliezen van audiokanalen)</string>
     <string name="preferences_allow_3rd_party_player">Sta het gebruik van een andere videospeler toe</string>
@@ -601,10 +583,6 @@
         - Hervat punt\n
         - Trakt synchronisatie</string>
     <string name="dont_show_again">Niet meer weergeven</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  - S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Netwerk &amp; bestanden</string>
     <string name="leanback_subtitles_integrated">Geïntegreerd</string>
     <string name="leanback_subtitles_external">Extern</string>

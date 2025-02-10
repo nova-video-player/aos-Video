@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 
 import com.archos.filecorelibrary.FileEditorFactory;
@@ -47,7 +48,11 @@ public class UnavailablePosterBroadcastReceiver extends BroadcastReceiver{
             sReceiver = new UnavailablePosterBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_CHECK_POSTER);
-        context.registerReceiver(sReceiver,filter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            context.registerReceiver(sReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            context.registerReceiver(sReceiver, filter);
+        }
     }
     public static void unregisterReceiver(Context context){
         if(sReceiver != null) {

@@ -27,7 +27,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -66,7 +65,6 @@ import androidx.loader.content.CursorLoader;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
-import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -74,12 +72,11 @@ import com.archos.mediacenter.video.browser.loader.AllTvshowsLoader;
 import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
 import com.archos.mediacenter.video.browser.loader.SeasonsLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowLoader;
+import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
-import com.archos.mediacenter.video.leanback.collections.CollectionActionAdapter;
-import com.archos.mediacenter.video.leanback.collections.CollectionFragment;
 import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
@@ -94,7 +91,6 @@ import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.nio.channels.AsynchronousChannel;
 
 public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -473,7 +469,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getActivity().finish();
+                Activity activity = getActivity();
+                if (activity != null) activity.finish(); // better safe than sorry
             }
         }, 200);
     }
@@ -678,7 +675,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 String sortOrder = prefs.getString(AllTvshowsGridFragment.SORT_PARAM_KEY, TvshowSortOrderEntries.DEFAULT_SORT);
                 boolean showWatched = prefs.getBoolean(AllTvshowsGridFragment.SHOW_WATCHED_KEY, true);
-                loader = new AllTvshowsLoader(getActivity(), sortOrder, showWatched);
+                loader = new AllTvshowsLoader(getActivity(), sortOrder, showWatched, VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY);
             }
             if (loader != null) {
                 // Using a CursorLoader but outside of the LoaderManager : need to make sure the Looper is ready

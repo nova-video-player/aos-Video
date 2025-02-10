@@ -32,11 +32,8 @@ import com.archos.mediacenter.video.R;
  */
 public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
     private boolean isChecked;
-
     private String text;
-
-
-
+    private boolean isDisabled; // Add this field
     private OnClickListener ocl;
     private TVMenuItem slaveView;
 
@@ -82,15 +79,18 @@ public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
         else
             this.setBackground(null);
     }
-    
 
     @Override
-    public void setOnClickListener(OnClickListener ocl){
+    public void setOnClickListener(OnClickListener ocl) {
         this.ocl = ocl;
-        (findViewById(R.id.info_text)).setOnClickListener(ocl);
+        if (!isDisabled) {
+            findViewById(R.id.info_text).setOnClickListener(ocl);
+        }
     }
+
     @Override
     public void setChecked(boolean checked) {
+        if (isDisabled) return;
         if(slaveView!=null)
             slaveView.setChecked(checked);
         if(findViewById(R.id.info_text)!=null && findViewById(R.id.info_text) instanceof Checkable)
@@ -120,6 +120,22 @@ public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
     }
     public String getText() { return text;}
 
+    // send key events to TVMenu in order to skip disabled items and separators in menu navigation
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (event.getKeyCode()!= KeyEvent.KEYCODE_BACK) { // Exclude back button
+                ViewParent parent = getParent();
+                while (parent!= null &&!(parent instanceof TVMenu)) {
+                    parent = parent.getParent();
+                }
+                if (parent instanceof TVMenu) {
+                    return ((TVMenu) parent).onKeyDown(event.getKeyCode(), event);
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
 
 
     @Override
@@ -210,4 +226,25 @@ public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
         // TODO Auto-generated method stub
         slaveView=null;
     }
+
+    public void setDisabled(boolean disabled) {
+        isDisabled = disabled;
+        setFocusable(!disabled);
+        setEnabled(!disabled);
+        setFocusableInTouchMode(!disabled);
+        if (disabled) {
+            setAlpha(0.5f); // Visually indicate the item is disabled
+        } else {
+            setAlpha(1.0f); // Restore the original appearance
+        }
+    }
+
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public boolean isEnabled() {
+        return !isDisabled;
+    }
+
 }

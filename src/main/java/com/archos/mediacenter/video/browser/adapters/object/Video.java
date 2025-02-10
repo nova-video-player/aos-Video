@@ -298,7 +298,8 @@ public class Video extends Base implements Serializable {
     }
 
     public void setStreamingUri(Uri uri) {
-        mStreamingUri = uri.toString();
+        if (uri != null) mStreamingUri = uri.toString();
+        else mStreamingUri = null;
     }
 
     public void setFriendlyPath(String friendlyUri){

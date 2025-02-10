@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.video.NetworkScannerServiceVideo;
@@ -112,7 +113,7 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
                 Uri uri = Uri.parse(mShortcutsCursor.getString(uriColumnIndex));
                 String friendlyUri = mShortcutsCursor.getString(friendlyUriColumnIndex);
                 if(name==null||name.isEmpty()) {
-                    name = uri.getLastPathSegment();
+                    name = FileUtils.getName(uri);
                 }
                 mIndexedShortcuts.add(new ShortcutDbAdapter.Shortcut(name, uri.toString(),friendlyUri));
             }while(mShortcutsCursor.moveToNext());
@@ -275,7 +276,7 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
             return new SeparatorViewHolder(v);
         }
         else if(viewType == TYPE_INDEXED_SHORTCUT){
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.browser_smb_shortcut_item, viewGroup, false);
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.browser_indexed_item, viewGroup, false);
             return new ShortcutViewHolder(v);
         }
         else if(viewType == TYPE_TEXT){

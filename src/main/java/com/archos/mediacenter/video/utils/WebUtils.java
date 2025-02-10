@@ -21,6 +21,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
@@ -28,7 +31,10 @@ import java.util.List;
  */
 public class WebUtils {
 
+    private static final Logger log = LoggerFactory.getLogger(WebUtils.class);
+
     public static void openWebLink(Context context, String url) {
+        log.debug("openWebLink: " + url);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -48,21 +54,21 @@ public class WebUtils {
 
         for (ResolveInfo ri : activities) {
             ResolveInfo info = activities.get(0);
-            if (info!=null) { // better safe than sorry
-                ActivityInfo activityInfo =info.activityInfo;
-                if (activityInfo!=null) { // better safe than sorry
-
+            if (info != null) { // better safe than sorry
+                ActivityInfo activityInfo = info.activityInfo;
+                if (activityInfo != null) { // better safe than sorry
                     // Do not take the stupid Android TV Stubs$BrowserStub into account...
                     if ("com.google.android.tv.frameworkpackagestubs.Stubs$BrowserStub".equals(activityInfo.name)) {
                         continue; // This Stub activity does nothing! don't count it as valid!
                     }
-
                     // Do not take mx player integrated web browser into account because it is not exported!
                     else if ("com.mxtech.videoplayer.ActivityWebBrowser".equals(activityInfo.name)) {
                         continue;
                     }
-                    else
+                    else {
+                        log.debug("isThereAnActivityToOpenWebLinks: identified " + activityInfo.name);
                         return true;
+                    }
                 }
             }
         }

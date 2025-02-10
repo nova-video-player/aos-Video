@@ -16,11 +16,13 @@ package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.content.Context;
 import androidx.loader.content.Loader;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.loader.TvshowsByAlphaLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowsNoAnimeByAlphaLoader;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -44,15 +46,14 @@ public class TvshowsByAlphaFragment extends TvshowsByFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setTitle(getString(R.string.tvshows_by_alpha));
-
         mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
     }
 
     @Override
     protected Loader<Cursor> getSubsetLoader(Context context) {
-        return new TvshowsNoAnimeByAlphaLoader(context);
+        if (mSeparateAnimeFromShowMovie) return new TvshowsNoAnimeByAlphaLoader(context);
+        else return new TvshowsByAlphaLoader(context);
     }
 
     @Override

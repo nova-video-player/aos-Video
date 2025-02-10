@@ -129,10 +129,16 @@
     <dimen name="player_button_padding_half">8dip</dimen>
     <dimen name="player_button_padding_small">2dip</dimen>
 
+    <dimen name="player_button_margin_small">0dip</dimen>
+    <dimen name="player_button_margin_half">2dip</dimen>
+    <dimen name="player_button_margin_full">4dip</dimen>
+
+    <dimen name="player_subtitles_popup_width">300dip</dimen>
+
     <dimen name="control_bar_margin_left">100dip</dimen>
     <dimen name="control_bar_margin_right">50dip</dimen>
     <dimen name="control_bar_margin_bottom">0dip</dimen>
-    
+
     <!-- based on base/core/res/res/layout/popup_menu_item_layout.xml -->
     
     <dimen name="track_menu_minWidth">196dip</dimen>

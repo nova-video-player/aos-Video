@@ -129,6 +129,11 @@
 <dimen name="player_button_padding_half">6dip</dimen>
 <dimen name="player_button_padding_small">1dip</dimen>
 
+<dimen name="player_button_margin_small">0dip</dimen>
+<dimen name="player_button_margin_half">2dip</dimen>
+<dimen name="player_button_margin_full">4dip</dimen>
+<dimen name="player_subtitles_popup_width">225dip</dimen>
+
 <dimen name="control_bar_margin_left">75dip</dimen>
 <dimen name="control_bar_margin_right">37dip</dimen>
 <dimen name="control_bar_margin_bottom">0dip</dimen>

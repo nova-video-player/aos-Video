@@ -60,6 +60,7 @@ import androidx.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
 import androidx.leanback.widget.HeaderItem;
 import androidx.leanback.widget.ListRow;
 import androidx.leanback.widget.ListRowPresenter;
+import androidx.leanback.widget.ObjectAdapter;
 import androidx.leanback.widget.OnActionClickedListener;
 import androidx.leanback.widget.OnItemViewClickedListener;
 import androidx.leanback.widget.Presenter;
@@ -96,6 +97,7 @@ import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
 import com.archos.mediacenter.video.browser.loader.NextEpisodeLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowLoader;
+import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.info.MultipleVideoLoader;
 import com.archos.mediacenter.video.info.SortByFavoriteSources;
@@ -103,20 +105,17 @@ import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
-import com.archos.mediacenter.video.leanback.adapter.object.Icon;
 import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
 import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.movies.AllMoviesGridFragment;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
-import com.archos.mediacenter.video.leanback.presenter.IconItemPresenter;
 import com.archos.mediacenter.video.leanback.presenter.PresenterUtils;
 import com.archos.mediacenter.video.leanback.presenter.ScraperImageBackdropPresenter;
 import com.archos.mediacenter.video.leanback.presenter.ScraperImagePosterPresenter;
 import com.archos.mediacenter.video.leanback.presenter.TrailerPresenter;
 import com.archos.mediacenter.video.leanback.presenter.VideoBadgePresenter;
 import com.archos.mediacenter.video.leanback.presenter.WebLinkPresenter;
-import com.archos.mediacenter.video.leanback.presenter.WebPageLinkPresenter;
 import com.archos.mediacenter.video.leanback.scrapping.ManualVideoScrappingActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
@@ -130,7 +129,7 @@ import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.StoreRatingDialogBuilder;
-import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
+import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.WebUtils;
@@ -140,12 +139,11 @@ import com.archos.mediaprovider.video.VideoStoreInternal;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
 import com.archos.mediascraper.MovieTags;
+import com.archos.mediascraper.Scraper;
 import com.archos.mediascraper.ScraperImage;
 import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
-import com.archos.mediascraper.xml.MovieScraper3;
-import com.archos.mediascraper.xml.ShowScraper4;
 import com.squareup.picasso.Picasso;
 
 import org.slf4j.Logger;
@@ -202,6 +200,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     /** given by PlayerActivity when we are launched by it */
     private boolean mLaunchedFromPlayer;
+
+    private boolean mRepeatModeDetected = false;
 
     /** given by PlayerActivity when we are launched by it */
     private VideoMetadata mVideoMetadataFromPlayer;
@@ -408,13 +408,16 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     // Breaks AndroidTV acceptance but needed to launch scraper in Youtube app instead of browser
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, ((ScraperTrailer)item).getUrl());
                     ActivityInfo activityInfo = browserIntent.resolveActivityInfo(getActivity().getPackageManager(), browserIntent.getFlags());
-                    
-                    if (activityInfo != null && !activityInfo.processName.equals("com.google.android.tv.frameworkpackagestubs")) {
+                    if (activityInfo == null) log.debug("onCreate.onItemClicked: activity identified null");
+                    else log.debug("onCreate.onItemClicked: activity identified " + activityInfo.processName);
+                    if (activityInfo != null) {
+                        // not used to exclude !activityInfo.processName.equals("com.google.android.tv.frameworkpackagestubs") but was preventing opening youtube on ADTV
+                        log.debug("onCreate.onItemClicked: browserintent on " + ((ScraperTrailer)item).getUrl() + " with activityInfo " + activityInfo.processName);
                         startActivity(browserIntent);
                     }
                     else {
                         String url = ((ScraperTrailer)item).getUrl().toString().replace("https://www.youtube.com/watch", "https://www.youtube.com/tv#/watch");
-
+                        log.debug("onCreate.onItemClicked: open url " + url);
                         WebUtils.openWebLink(getActivity(), url);
                     }
                 }
@@ -554,7 +557,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 ", mVideoFromPlayer " + mVideoPathFromPlayer + "(" + mVideoIdFromPlayer + ")");
         else log.debug("onResume: current mVideo is null");
         if ((playerVideoId != -42 && mVideo.getId() != playerVideoId) ||
-            (playerVideoUri != null && mVideo.getFileUri() != playerVideoUri)) {
+            (playerVideoUri != null && ! mVideo.getFileUri().equals(playerVideoUri))) {
+            log.debug("onResume: different playerVideo and mVideo detected!");
             mVideoPathFromPlayer = playerVideoUri.toString();
             mVideoIdFromPlayer = playerVideoId;
             log.debug("onResume: not the same video than before (repeat mode?) target is " + mVideoPathFromPlayer);
@@ -565,6 +569,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 c.moveToFirst();
                 mVideo = (Video) new CompatibleCursorMapperConverter(new VideoCursorMapper()).convert(c);
                 log.debug("onResume: yay we get a new video " + mVideo.getFilePath());
+                mRepeatModeDetected = true; // to signal smoothUpdateVideo that it should all details since video is different from initial one
             } else {
                 log.debug("onResume: oops no video found");
             }
@@ -574,17 +579,17 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         // Launch the first details task
         if (mFirstOnResume) {
+            log.debug("onResume: mFirstOnResume");
             if (mVideo!=null) {
                 if(mThumbnailAsyncTask!=null)
                     mThumbnailAsyncTask.cancel(true);
-                // We have enough data to display details right now
-                mDetailRowBuilderTask = new DetailRowBuilderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mVideo);
             }
-            // We start the loader in all cases to get DB updates
+            // We start the loader in all cases to get DB updates that will trigger details update if need be
             LoaderManager.getInstance(this).restartLoader(1, null, this);
         }
         // Update the details when back from player (we may have miss some DB updates while in background)
         else if (mResumeFromPlayer) {
+            log.debug("onResume: mResumeFromPlayer");
             LoaderManager.getInstance(this).restartLoader(1, null, this);
 
             if (mSubtitleFilesListerTask !=null) {
@@ -672,8 +677,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     // Delay the finish the "old" activity, else it breaks the animation
                     mHandler.postDelayed(new Runnable() {
                         public void run() {
-                            if (getActivity()!=null) // better safe than sorry
-                                getActivity().finish();
+                            Activity activity = getActivity();
+                            if (activity != null) activity.finish(); // better safe than sorry
                         }
                     }, 1000);
                  }
@@ -823,7 +828,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     mVideo.setRemoteResumeMs(videoInfo.resume);
                     // Update the action adapter if there is a network resume
                     if (mDetailsOverviewRow!=null) {
-                        ((VideoActionAdapter) mDetailsOverviewRow.getActionsAdapter()).updateRemoteResume(getActivity(), mVideo);
+                        ObjectAdapter mAdapter = mDetailsOverviewRow.getActionsAdapter();
+                        if (mAdapter instanceof VideoActionAdapter) {
+                            ((VideoActionAdapter) mAdapter).updateRemoteResume(getActivity(), mVideo);
+                        } else {
+                            log.warn("onParseOk: mAdapter is not a VideoActionAdapter it is a " + mAdapter.getClass().getName());
+                        }
                     }
                 }
             }
@@ -841,6 +851,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         // Getting an empty cursor here means that the video is not indexed
         if (cursor.getCount()<1) {
+            log.debug("onLoadFinished: cursor is empty, video is not indexed");
             // we're changing from indexed case to non-indexed case (user probably unindexed file some milliseconds ago)
             if (oldVideoObject!=null) {
                 // building a new unindexed video object using the Uri and name we had in the previous video object
@@ -960,35 +971,48 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         boolean smoothUpdate = false;
         // Check if we really need to update the fragment
         boolean needToUpdateDetailsOverview;
-        if (mDetailsOverviewRow==null && mDetailRowBuilderTask==null) { // if no row yet and no async task building it yet
-            needToUpdateDetailsOverview = true; // first time
+        if ((mDetailsOverviewRow==null && mDetailRowBuilderTask==null) || mRepeatModeDetected) { // if no row yet and no async task building it yet
+            needToUpdateDetailsOverview = true; // first time or repeat mode detected requiring full update
+            mRepeatModeDetected = false;
         } else {
             needToUpdateDetailsOverview = foundDifferencesRequiringDetailsUpdate(oldVideoObject, currentVideo); // update
+            log.debug("smoothUpdateVideo: needToUpdateDetailsOverview " + needToUpdateDetailsOverview);
         }
 
         // Update if needed
         if (needToUpdateDetailsOverview) {
             requestIndexAndScrap();
+            // mDetailsOverviewRow can be null and need to be initialized but perhaps should call fullyReloadVideo instead
+            if (mDetailsOverviewRow == null) mDetailsOverviewRow = new DetailsOverviewRow(currentVideo);
             // First check if we can do a smooth/smart update (when unscrapping and/or unindexing)
-
             // smooth update when unscrapping
             if (oldVideoObject!=null && oldVideoObject.hasScraperData() && !currentVideo.hasScraperData()) {
-                // remove scraper related rows
-                if(mAdapter.indexOf(mFileListRow)>=0) {
-                    mAdapter.remove(mFileListRow);
-                    INDEX_SUBTITLES--;
-                    INDEX_FILEDETAILS--;
+                if (mAdapter != null) { // mAdapter can be null (seen on sentry)
+                    // remove scraper related rows
+                    if (mAdapter.indexOf(mFileListRow) >= 0) {
+                        mAdapter.remove(mFileListRow);
+                        INDEX_SUBTITLES--;
+                        INDEX_FILEDETAILS--;
+                    }
+                    mAdapter.remove(mPlotAndGenresRow);
+                    mAdapter.remove(mCastRow);
+                    mAdapter.remove(mTrailersRow);
+                    mAdapter.remove(mPostersRow);
+                    mAdapter.remove(mBackdropsRow);
                 }
-                mAdapter.remove(mPlotAndGenresRow);
-                mAdapter.remove(mCastRow);
-                mAdapter.remove(mTrailersRow);
-                mAdapter.remove(mPostersRow);
-                mAdapter.remove(mBackdropsRow);
                 // update details presenter and actions
                 mDescriptionPresenter.update(currentVideo);
                 if(mDetailsOverviewRow.getActionsAdapter()==null)
                     mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode));
-                else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
+                else {
+                    if (mDetailsOverviewRow.getActionsAdapter() instanceof VideoActionAdapter) {
+                        ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
+                    } else {
+                        // seen on sentry
+                        log.error("smoothUpdateVideo: cannot cast ArrayObjectAdapter to VideoActionAdapter!");
+                    }
+                }
+
                 // update poster
                 mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
                 mDetailsOverviewRow.setImageScaleUpAllowed(false);
@@ -1000,7 +1024,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mDescriptionPresenter.update(currentVideo);
                 if(mDetailsOverviewRow.getActionsAdapter()==null)
                     mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode));
-                else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
+                else {
+                    if (mDetailsOverviewRow.getActionsAdapter() instanceof VideoActionAdapter) {
+                        ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(currentVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
+                    } else {
+                        log.error("smoothUpdateVideo: cannot cast ArrayObjectAdapter to VideoActionAdapter!");
+                    }
+                }
 
                 // update poster
                 mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
@@ -1014,10 +1044,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
                 mOverviewRowPresenter.updateBackgroundColor(mColor);
                 mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
-
-                for (Presenter pres : mAdapter.getPresenterSelector().getPresenters()){
-                    if (pres instanceof BackgroundColorPresenter)
-                        ((BackgroundColorPresenter) pres).setBackgroundColor(mColor);
+                if (mAdapter != null) {
+                    for (Presenter pres : mAdapter.getPresenterSelector().getPresenters()) {
+                        if (pres instanceof BackgroundColorPresenter)
+                            ((BackgroundColorPresenter) pres).setBackgroundColor(mColor);
+                    }
                 }
                 // this is required to remove backdrop after removal of description
                 if (needToUpdateDetailsOverview) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(currentVideo);
@@ -1071,9 +1102,15 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if(mDetailsOverviewRow.getActionsAdapter()==null)
+                            if(mDetailsOverviewRow.getActionsAdapter()==null) {
                                 mDetailsOverviewRow.setActionsAdapter(new VideoActionAdapter(getActivity(), mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode));
-                            else ((VideoActionAdapter)mDetailsOverviewRow.getActionsAdapter()).update(mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
+                            } else {
+                                if (mDetailsOverviewRow.getActionsAdapter() instanceof VideoActionAdapter) {
+                                    ((VideoActionAdapter) mDetailsOverviewRow.getActionsAdapter()).update(mVideo, mLaunchedFromPlayer, mShouldDisplayRemoveFromList, mShouldDisplayConfirmDelete, mNextEpisode, mIsTvEpisode);
+                                } else {
+                                    log.error("onResumeChange: cannot cast ArrayObjectAdapter to VideoActionAdapter!");
+                                }
+                            }
                         }
                     });
 
@@ -1084,7 +1121,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     @Override
     public void startActivityWithResultListener(Intent intent) {
-        startActivityForResult(intent, PLAY_ACTIVITY_REQUEST_CODE);
+        if (isAdded()) {
+            startActivityForResult(intent, PLAY_ACTIVITY_REQUEST_CODE);
+        } else {
+            log.error("startActivityWithResultListener: fragment not added");
+        }
     }
 
     //putting in thread to avoid async tasks to be locked
@@ -1259,7 +1300,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         //do not execute file info task when torrent file
         if(video.getFileUri() == null || mLaunchedFromPlayer) // avoid NPE on .getLastPathSegment()
             mVideoInfoTask = new VideoInfoTask().execute(video);
-        else if(!video.getFileUri().getLastPathSegment().endsWith("torrent"))
+        else if(!FileUtils.getName(video.getFileUri()).endsWith("torrent"))
             mVideoInfoTask = new VideoInfoTask().execute(video);
 
         if (poster == null) {
@@ -1546,6 +1587,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         protected List<SubtitleManager.SubtitleFile> doInBackground(Video... videos) {
             Video video = videos[0];
             SubtitleManager lister = new SubtitleManager(getActivity(),null );
+            log.debug("SubtitleFilesListerTask:doInBackground listLocalAndRemotesSubtitles");
             List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(video.getFileUri(), true);
             mSubtitleListCache.put(video.getFileUri(), list);
             return list;
@@ -1555,8 +1597,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         protected void onPostExecute(List<SubtitleManager.SubtitleFile> subtitleFiles) {
             if(isCancelled())
                 return;
+            log.debug("SubtitleFilesListerTask: onPostExecute update subtitle row when ready");
             mExternalSubtitles = subtitleFiles;
-
             updateSubtitleRowWhenReady();
         }
     }
@@ -1566,23 +1608,21 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
      */
     private void updateSubtitleRowWhenReady() {
         if ((mVideo.getMetadata()!=null) && (mSubtitleListCache.get(mVideo.getFileUri())!=null)) {
+            log.debug("updateSubtitleRowWhenReady: updating row");
             mSubtitlesDetailsRow = new SubtitlesDetailsRow(getActivity(), mVideo, mSubtitleListCache.get(mVideo.getFileUri()));
             mAdapter.replace(INDEX_SUBTITLES, mSubtitlesDetailsRow);
+        } else {
+            log.debug("updateSubtitleRowWhenReady: not updating row");
         }
     }
 
     /** Implements SubtitleInterface */
     @Override
     public void performSubtitleDownload() {
-            HashMap<String, Long> videoSizes = new HashMap<>();
-            if (mVideo.getMetadata()!=null)
-                videoSizes.put(mVideo.getFilePath(), mVideo.getMetadata().getFileSize());
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.setClass(getActivity(), SubtitlesDownloaderActivity.class);
-            intent.putExtra(SubtitlesDownloaderActivity.FILE_URL, mVideo.getFilePath());
-            intent.putExtra(SubtitlesDownloaderActivity.FILE_SIZES, videoSizes);
-            startActivityForResult(intent, REQUEST_CODE_SUBTITLES_ACTIVITY);
-
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setClass(getActivity(), SubtitlesDownloaderActivity2.class);
+        intent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, mVideo.getFilePath());
+        startActivityForResult(intent, REQUEST_CODE_SUBTITLES_ACTIVITY);
     }
 
     /** Implements SubtitleInterface */
@@ -1828,34 +1868,37 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onVideoFileRemoved(final Uri videoFile,boolean askForFolderRemoval, final Uri folder) {
         log.debug("onVideoFileRemoved: " + videoFile);
-        Toast.makeText(getActivity(),R.string.delete_done, Toast.LENGTH_SHORT).show();
-        if(askForFolderRemoval) {
-            AlertDialog.Builder b = new AlertDialog.Builder(getActivity()).setTitle("");
-            b.setIcon(R.drawable.filetype_new_folder);
-            b.setMessage(R.string.confirm_delete_parent_folder);
-            b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    sendDeleteResult(videoFile);
-                }
-            })
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            delete = new Delete(VideoDetailsFragment.this, getActivity());
-                            deleteUrisList = Collections.singletonList(folder);
-                            delete.deleteFolder(folder);
-                        }
-                    });
-            b.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    sendDeleteResult(videoFile);
-                }
-            });
-            b.create().show();
-        }
-        else {
+        if (getActivity() != null) {
+            Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
+            if (askForFolderRemoval) {
+                AlertDialog.Builder b = new AlertDialog.Builder(getActivity()).setTitle("");
+                b.setIcon(R.drawable.filetype_new_folder);
+                b.setMessage(R.string.confirm_delete_parent_folder);
+                b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                sendDeleteResult(videoFile);
+                            }
+                        })
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                delete = new Delete(VideoDetailsFragment.this, getActivity());
+                                deleteUrisList = Collections.singletonList(folder);
+                                delete.deleteFolder(folder);
+                            }
+                        });
+                b.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        sendDeleteResult(videoFile);
+                    }
+                });
+                b.create().show();
+            } else {
+                sendDeleteResult(videoFile);
+            }
+        } else {
             sendDeleteResult(videoFile);
         }
 
@@ -1865,7 +1908,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         log.debug("sendDeleteResult: " + file);
         Intent intent = new Intent();
         intent.setData(file);
-        getActivity().setResult(ListingActivity.RESULT_FILE_DELETED, intent);
+        if (getActivity() != null) getActivity().setResult(ListingActivity.RESULT_FILE_DELETED, intent);
         // TODO: do not finish if there are multiple videos under same name check counter
         // TODO: do the same for phoneUI
         slightlyDelayedFinish();
@@ -1874,7 +1917,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onDeleteVideoFailed(Uri videoFile) {
         log.debug("onDeleteVideoFailed: " + videoFile);
-        Toast.makeText(getActivity(),R.string.delete_error, Toast.LENGTH_SHORT).show();
+        if (getActivity() != null) Toast.makeText(getActivity(),R.string.delete_error, Toast.LENGTH_SHORT).show();
 
         // close the fragment anyway because the un-indexing may work even if the actual delete fails
         slightlyDelayedFinish();
@@ -1883,7 +1926,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onFolderRemoved(Uri folder) {
         log.debug("onFolderRemoved: " + folder);
-        Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
+        if (getActivity() != null) Toast.makeText(getActivity(), R.string.delete_done, Toast.LENGTH_SHORT).show();
         sendDeleteResult(folder);
     }
 
@@ -1931,7 +1974,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             } else
                 ChannelManager.refreshChannels(getContext());
         if (numberDeleted!=1) {
-            Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+            if (getActivity() != null) Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1943,12 +1986,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             final long onlineId = tags.getOnlineId();
             //log.debug("tags.getOnlineId() = " + onlineId);
             if (onlineId > 0) {
-                final String language = MovieScraper3.getLanguage(getActivity());
+                final String language = Scraper.getLanguage(getActivity());
                 list.add(String.format(getResources().getString(R.string.tmdb_movie_title_url), onlineId, language));
             }
         } else if (tags instanceof EpisodeTags) {
             if (mOnlineId >0) {
-                final String language = ShowScraper4.getLanguage(getActivity());
+                final String language = Scraper.getLanguage(getActivity());
                 list.add(String.format(getResources().getString(R.string.tmdb_tvshow_title_url), mOnlineId, language));
             }
         }
@@ -1966,12 +2009,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     private void slightlyDelayedFinish() {
         log.debug("slightlyDelayedFinish");
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getActivity().finish();
-            }
-        }, 200);
+        if (getActivity() != null)
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().finish();
+                }
+            }, 200);
     }
 
     public void onKeyDown(int keyCode) {
@@ -2014,7 +2058,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 String sortOrder = prefs.getString(AllMoviesGridFragment.SORT_PARAM_KEY, MoviesLoader.DEFAULT_SORT);
                 boolean showWatched = prefs.getBoolean(AllMoviesGridFragment.SHOW_WATCHED_KEY, true);
-                loader = new MoviesLoader(getActivity(), sortOrder, showWatched, true);
+                loader = new MoviesLoader(getActivity(), sortOrder, showWatched, true, VideoLoader.GRIDVIDEO_THROTTLE, VideoLoader.GRIDVIDEO_THROTTLE_DELAY);
             }
             else if (mVideo instanceof Episode) {
                 EpisodeTags tags = (EpisodeTags)mVideo.getFullScraperTags(getActivity());

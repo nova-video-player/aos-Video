@@ -31,15 +31,16 @@ import com.archos.mediacenter.video.leanback.network.NetworkListingFragment;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
-
 public class SmbListingFragment extends NetworkListingFragment {
 
-    private static final String TAG = "SmbListingFragment";
+    private static final Logger log = LoggerFactory.getLogger(SmbListingFragment.class);
 
     @Override
     protected  ListingFragment instantiateNewFragment() {
@@ -49,7 +50,6 @@ public class SmbListingFragment extends NetworkListingFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         // First orb is for credentials
         getTitleView().setOrb1IconResId(R.drawable.orb_cred);
         getTitleView().setOnOrb1ClickedListener(new View.OnClickListener() {
@@ -63,6 +63,7 @@ public class SmbListingFragment extends NetworkListingFragment {
 
     @Override
     public void onCredentialRequired(Exception e) {
+        log.debug("onCredentialRequired: ask for credentials");
         askForCredentials();
     }
 
@@ -71,9 +72,7 @@ public class SmbListingFragment extends NetworkListingFragment {
         listingEngine.setKeepHiddenFiles(true);
         if(!VideoPreferencesCommon.PreferenceHelper.shouldDisplayAllFiles(getActivity()))
             listingEngine.setFilter(VideoUtils.getVideoFilterMimeTypes(), new String[]{XmlDb.FILE_EXTENSION}); // display video files only but retrieve xml DB
-
     }
-
 
     @Override
     protected void updateVideosMapAndFileList(List<? extends MetaFile2> mListedFiles, HashMap<String, Video> indexedVideosMap) {
@@ -88,7 +87,6 @@ public class SmbListingFragment extends NetworkListingFragment {
                     VideoDbInfo info = XmlDb.extractBasicVideoInfoFromXmlFileName(item.getUri());
                     if (info!=null && info.resume > 0 ) {
                         resumes.put(info.uri, info);
-
                     }
                 }
             }
@@ -115,7 +113,6 @@ public class SmbListingFragment extends NetworkListingFragment {
         mListedFiles.clear();
         ((ArrayList<MetaFile2>) mListedFiles).addAll(newList);
     }
-
 
     private void askForCredentials() {
         if (getParentFragmentManager().findFragmentByTag(SmbServerCredentialsDialog.class.getCanonicalName()) == null) {

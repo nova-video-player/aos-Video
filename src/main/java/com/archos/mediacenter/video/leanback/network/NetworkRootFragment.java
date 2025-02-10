@@ -36,9 +36,9 @@ import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
 import androidx.core.app.ActivityOptionsCompat;
-import android.util.Log;
 import android.view.View;
 
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.samba.SambaDiscovery;
 import com.archos.filecorelibrary.samba.Share;
 import com.archos.filecorelibrary.samba.Workgroup;
@@ -46,19 +46,17 @@ import com.archos.mediacenter.filecoreextension.upnp2.UpnpServiceManager;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.ShortcutDb;
-import com.archos.mediacenter.video.leanback.adapter.FtpShortcutMapper;
+import com.archos.mediacenter.video.leanback.adapter.GenericNetworkShortcutMapper;
 import com.archos.mediacenter.video.leanback.adapter.NetworkShortcutMapper;
 import com.archos.mediacenter.video.leanback.adapter.object.Box;
-import com.archos.mediacenter.video.leanback.adapter.object.FtpBrowse;
-import com.archos.mediacenter.video.leanback.adapter.object.FtpShortcut;
+import com.archos.mediacenter.video.leanback.adapter.object.GenericNetworkShortcut;
+import com.archos.mediacenter.video.leanback.adapter.object.NetworkBrowse;
 import com.archos.mediacenter.video.leanback.adapter.object.NetworkShortcut;
 import com.archos.mediacenter.video.leanback.adapter.object.NetworkSource;
 import com.archos.mediacenter.video.leanback.adapter.object.SmbShare;
 import com.archos.mediacenter.video.leanback.adapter.object.UpnpServer;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
-import com.archos.mediacenter.video.leanback.network.ftp.FtpServerCredentialsDialog;
-import com.archos.mediacenter.video.leanback.network.ftp.FtpShortcutDetailsActivity;
-import com.archos.mediacenter.video.leanback.network.ftp.FtpShortcutDetailsFragment;
+import com.archos.mediacenter.video.leanback.network.NetworkShortcutDetailsActivity;
 import com.archos.mediacenter.video.leanback.network.rescan.RescanActivity;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.presenter.NetworkShortcutPresenter;
@@ -68,6 +66,8 @@ import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
 
 import org.fourthline.cling.model.meta.Device;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -79,10 +79,7 @@ import java.util.List;
  */
 public class NetworkRootFragment extends BrowseSupportFragment {
 
-    private static final String TAG = "NetworkRootFragment";
-    public static final boolean DBG = false;
-    public static final boolean DBG_SMB = DBG && true;
-    public static final boolean DBG_UPNP = DBG && true;
+    private static final Logger log = LoggerFactory.getLogger(NetworkRootFragment.class);
 
     public static final int DISCOVERY_REPEAT_DELAY_MS = 2000;
 
@@ -104,8 +101,8 @@ public class NetworkRootFragment extends BrowseSupportFragment {
     private Handler mDiscoveryRepeatHandler = new Handler();
 
     private Overlay mOverlay;
-    private ArrayObjectAdapter mFtpShortcutsAdapter;
-    private FtpShortcutsLoaderTask mFtpShortcutsLoaderTask;
+    private ArrayObjectAdapter mNetworkShortcutsAdapter;
+    private NetworkShortcutsLoaderTask mNetworkShortcutsLoaderTask;
 
     // temp debug flag (to remove once re-scan feature is published)
     static boolean sDisplayRescanItem = false;
@@ -134,8 +131,20 @@ public class NetworkRootFragment extends BrowseSupportFragment {
     @Override
     public void onResume() {
         super.onResume();
+        log.debug("onResume");
         mOverlay.resume();
         updateBackground();
+        setTitle(getString(R.string.network_storage));
+        setHeadersState(HEADERS_DISABLED);
+        setHeadersTransitionOnBackEnabled(false);
+
+        loadRows();
+
+        // Launch the shortcuts loading async task
+        mShortcutsLoaderTask = new ShortcutsLoaderTask();
+        mShortcutsLoaderTask.execute();
+        mNetworkShortcutsLoaderTask = new NetworkShortcutsLoaderTask(); //not in the same task because this isn't using the same cursor
+        mNetworkShortcutsLoaderTask.execute();
     }
 
     @Override
@@ -147,7 +156,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        log.debug("onCreate");
         updateBackground();
 
         setTitle(getString(R.string.network_storage));
@@ -159,8 +168,8 @@ public class NetworkRootFragment extends BrowseSupportFragment {
         // Launch the shortcuts loading async task
         mShortcutsLoaderTask = new ShortcutsLoaderTask();
         mShortcutsLoaderTask.execute();
-        mFtpShortcutsLoaderTask = new FtpShortcutsLoaderTask(); //not in the same task because this isn't using the same cursor
-        mFtpShortcutsLoaderTask.execute();
+        mNetworkShortcutsLoaderTask = new NetworkShortcutsLoaderTask(); //not in the same task because this isn't using the same cursor
+        mNetworkShortcutsLoaderTask.execute();
     }
 
     @Override
@@ -220,10 +229,10 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 mUpnpDiscoveryAdapter));
             mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
 
-        mFtpShortcutsAdapter = new ArrayObjectAdapter(new NetworkShortcutPresenter());
+        mNetworkShortcutsAdapter = new ArrayObjectAdapter(new NetworkShortcutPresenter());
         mRowsAdapter.add(new ListRow(
-                new HeaderItem(getString(R.string.ftp_shortcuts)),
-                mFtpShortcutsAdapter));
+                new HeaderItem(getString(R.string.network_shortcuts)),
+                mNetworkShortcutsAdapter));
         mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());
 
         setOnItemViewClickedListener(mClickListener);
@@ -235,8 +244,8 @@ public class NetworkRootFragment extends BrowseSupportFragment {
         if (requestCode==REQUEST_CODE_DETAILS && resultCode==RESULT_CODE_SHORTCUTS_MODIFIED) {
             mShortcutsLoaderTask = new ShortcutsLoaderTask();
             mShortcutsLoaderTask.execute();
-            mFtpShortcutsLoaderTask = new FtpShortcutsLoaderTask();
-            mFtpShortcutsLoaderTask.execute();
+            mNetworkShortcutsLoaderTask = new NetworkShortcutsLoaderTask();
+            mNetworkShortcutsLoaderTask.execute();
         }
         else if (requestCode==REQUEST_CODE_BROWSING && resultCode==RESULT_CODE_SHORTCUTS_MODIFIED) {
             mShortcutsLoaderTask = new ShortcutsLoaderTask();
@@ -247,20 +256,22 @@ public class NetworkRootFragment extends BrowseSupportFragment {
     OnItemViewClickedListener mClickListener = new OnItemViewClickedListener() {
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof FtpShortcut) {
-                Intent intent = new Intent(getActivity(), FtpShortcutDetailsActivity.class);
-                intent.putExtra(FtpShortcutDetailsFragment.EXTRA_SHORTCUT, (Serializable) item);
+            if (item instanceof GenericNetworkShortcut) { // network shortcuts are for now only *ftp*
+                log.debug("onItemClicked: GenericNetworkShortcut");
+                Intent intent = new Intent(getActivity(), NetworkShortcutDetailsActivity.class);
+                intent.putExtra(NetworkShortcutDetailsFragment.EXTRA_SHORTCUT, (Serializable) item);
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                         ((NetworkShortcutPresenter.NetworkShortcutViewHolder) itemViewHolder).getImageView(),
-                        FtpShortcutDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
+                        NetworkShortcutDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
                 startActivityForResult(intent, REQUEST_CODE_DETAILS, bundle);
             }
-            else if (item instanceof FtpBrowse) {
-                if (getParentFragmentManager().findFragmentByTag(FtpServerCredentialsDialog.class.getCanonicalName()) == null) {
-                    FtpServerCredentialsDialog dialog = new FtpServerCredentialsDialog();
-                    dialog.setOnConnectClickListener(new FtpServerCredentialsDialog.onConnectClickListener() {
+            else if (item instanceof NetworkBrowse) { // browse network
+                log.debug("onItemClicked: NetworkBrowse");
+                if (getParentFragmentManager().findFragmentByTag(NetworkServerCredentialsDialog.class.getCanonicalName()) == null) {
+                    NetworkServerCredentialsDialog dialog = new NetworkServerCredentialsDialog();
+                    dialog.setOnConnectClickListener(new NetworkServerCredentialsDialog.onConnectClickListener() {
                         @Override
-                        public void onConnectClick(String username, String path, String password, int port, int type, String remote) {
+                        public void onConnectClick(String username, String path, String password, int port, int type, String remote, String domain) {
                             String uriToBuild = "";
                             switch (type) {
                                 case 0:
@@ -272,8 +283,23 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                                 case 2:
                                     uriToBuild = "ftps";
                                     break;
+                                case 3:
+                                    uriToBuild = "sshj";
+                                    break;
+                                case 4:
+                                    uriToBuild = "smb";
+                                    break;
+                                case 5:
+                                    uriToBuild = "smbj";
+                                    break;
+                                case 6:
+                                    uriToBuild = "webdav";
+                                    break;
+                                case 7:
+                                    uriToBuild = "webdavs";
+                                    break;
                                 default:
-                                    throw new IllegalArgumentException("Invalid FTP type " + type);
+                                    throw new IllegalArgumentException("Invalid network protocol type " + type);
                             }
                             //path needs to start with "/"
                             if (path.isEmpty() || !path.startsWith("/"))
@@ -282,9 +308,11 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                             final Uri uri = Uri.parse(uriToBuild);
 
                             Intent intent = new Intent(getActivity(), ListingActivity.getActivityForUri(uri));
+                            log.debug("onItemClicked: NetworkBrowse ListingActivity root uri=" + uri + ", root name=" + uri.getHost());
                             intent.putExtra(ListingActivity.EXTRA_ROOT_URI, uri);
-                            intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, uri.getHost());
-                            startActivityForResult(intent, NetworkRootFragment.REQUEST_CODE_BROWSING);
+                            String shareName = FileUtils.getName(uri);
+                            intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, (shareName==null || shareName.isEmpty())?uri.getHost():shareName);
+                            startActivityForResult(intent, REQUEST_CODE_BROWSING);
                         }
                     });
                     dialog.setOnCancelClickListener(new View.OnClickListener() {
@@ -292,10 +320,11 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                         public void onClick(View view) {
                         }
                     });
-                    dialog.show(getParentFragmentManager(), FtpServerCredentialsDialog.class.getCanonicalName());
+                    dialog.show(getParentFragmentManager(), NetworkServerCredentialsDialog.class.getCanonicalName());
                 }
             }
-            else if (item instanceof NetworkShortcut) {
+            else if (item instanceof NetworkShortcut) { // indexed folders
+                log.debug("onItemClicked: NetworkShortcut");
                 Intent intent = new Intent(getActivity(), NetworkShortcutDetailsActivity.class);
                 intent.putExtra(NetworkShortcutDetailsFragment.EXTRA_SHORTCUT, (Serializable)item);
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
@@ -304,26 +333,31 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 startActivityForResult(intent, REQUEST_CODE_DETAILS, bundle);
             }
             else if (item instanceof Box) {
+                log.debug("onItemClicked: Box");
                 Box box = (Box)item;
                 if (box.getBoxId()==Box.ID.INDEXED_FOLDERS_REFRESH) {
                     startActivity(new Intent(getActivity(), RescanActivity.class));
                 }
             }
             else if (item instanceof SmbShare) {
+                log.debug("onItemClicked: SmbShare");
                 SmbShare share = (SmbShare)item;
                 final Uri uri = share.getFileCoreShare().toUri();
 
+                log.debug("onItemClicked: SmbShare ListingActivity root uri=" + uri + ", root name=" + uri.getHost());
                 Intent intent = new Intent(getActivity(), ListingActivity.getActivityForUri(uri));
                 intent.putExtra(ListingActivity.EXTRA_ROOT_URI, uri);
                 intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, share.getName());
                 startActivityForResult(intent, REQUEST_CODE_BROWSING);
             }
             else if (item instanceof UpnpServer) {
+                log.debug("onItemClicked: UpnpServer");
                 UpnpServer server = (UpnpServer)item;
 
                 // Build our own special Upnp Uri
                 final Uri uri = UpnpServiceManager.getDeviceUri(server.getClingDevice());
 
+                log.debug("onItemClicked: UpnpServer ListingActivity root uri=" + uri + ", root name=" + uri.getHost());
                 Intent intent = new Intent(getActivity(), ListingActivity.getActivityForUri(uri));
                 intent.putExtra(ListingActivity.EXTRA_ROOT_URI, uri);
                 intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, server.getName());
@@ -333,64 +367,91 @@ public class NetworkRootFragment extends BrowseSupportFragment {
     };
 
     private class ShortcutsLoaderTask extends AsyncTask<Void, Void, Cursor> {
+        private ShortcutDbAdapter shortcutDbAdapter;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Open the database connection here
+            shortcutDbAdapter = ShortcutDbAdapter.VIDEO;
+        }
+
         @Override
         protected Cursor doInBackground(Void... args) {
-            return ShortcutDbAdapter.VIDEO.queryAllShortcuts(getActivity());
+            if (getActivity() != null && !getActivity().isFinishing()) {
+                return shortcutDbAdapter.queryAllShortcuts(getActivity());
+            }
+            return null;
         }
+
         @Override
         protected void onPostExecute(Cursor cursor) {
-            if (cursor.getCount()==0) {
-                // remove shortcuts row if empty
-                mRowsAdapter.remove(mIndexedFoldersListRow);
-                cursor.close();
+            if (getActivity() != null && ! getActivity().isFinishing()) {
+                if (isAdded() && cursor != null) {
+                    if (shortcutDbAdapter != null && shortcutDbAdapter.isDbOpen() && !cursor.isClosed()) {
+                        if (cursor.getCount() == 0) {
+                            // remove shortcuts row if empty
+                            mRowsAdapter.remove(mIndexedFoldersListRow);
+                        } else {
+                            // Add it back in first row if it is not
+                            if (mRowsAdapter.indexOf(mIndexedFoldersListRow) == -1) {
+                                mRowsAdapter.add(0, mIndexedFoldersListRow);
+                            }
+
+                            // update content
+                            mIndexedFoldersAdapter.clear();
+                            // First item is not an actual shortcut, it opens the re-scan settings
+                            if (cursor.getCount() > 0) {
+                                Box rescanBox = new Box(Box.ID.INDEXED_FOLDERS_REFRESH, getString(R.string.rescan), R.drawable.filetype_new_rescan);
+                                log.debug("ShortcutsLoaderTask NetworkScannerReceiver.isScannerWorking()=" + NetworkScannerReceiver.isScannerWorking());
+                                mIndexedFoldersAdapter.add(rescanBox);
+                            }
+
+                            // Convert from cursor to array (only because we need to add the "refresh" Box in the list)
+                            cursor.moveToFirst();
+                            NetworkShortcutMapper mapper = new NetworkShortcutMapper();
+                            mapper.bind(cursor);
+                            while (!cursor.isAfterLast()) {
+                                mIndexedFoldersAdapter.add(mapper.convert(cursor));
+                                cursor.moveToNext();
+                            }
+                        }
+                    } else {
+                        // database seems to have been closed
+                        log.error("onPostExecute: database is closed");
+                    }
+                }
+                if (cursor != null) cursor.close();
             }
-            else {
-                // Add it back in first row if it is not
-                if (mRowsAdapter.indexOf(mIndexedFoldersListRow) == -1) {
-                    mRowsAdapter.add(0, mIndexedFoldersListRow);
-                }
-
-                // update content
-                mIndexedFoldersAdapter.clear();
-                // First item is not an actual shortcut, it opens the re-scan settings
-                if (cursor.getCount()>0) {
-                    Box rescanBox = new Box(Box.ID.INDEXED_FOLDERS_REFRESH, getString(R.string.rescan), R.drawable.filetype_new_rescan);
-                    if (DBG) Log.d(TAG, "ShortcutsLoaderTask NetworkScannerReceiver.isScannerWorking()="+NetworkScannerReceiver.isScannerWorking());
-                    mIndexedFoldersAdapter.add(rescanBox);
-                }
-
-                // Convert from cursor to array (only because we need to add the "refresh" Box in the list)
-                cursor.moveToFirst();
-                NetworkShortcutMapper mapper = new NetworkShortcutMapper();
-                mapper.bind(cursor);
-                while (!cursor.isAfterLast()) {
-                    mIndexedFoldersAdapter.add(mapper.convert(cursor));
-                    cursor.moveToNext();
-                }
-                cursor.close();
+            if (cursor != null) cursor.close();
+            if (shortcutDbAdapter != null && shortcutDbAdapter.isDbOpen()) {
+                shortcutDbAdapter.close();
             }
         }
     }
 
     // need a second task because they are not using the same cursor
-    private class FtpShortcutsLoaderTask extends AsyncTask<Void, Void, Cursor> {
+    private class NetworkShortcutsLoaderTask extends AsyncTask<Void, Void, Cursor> {
         @Override
         protected Cursor doInBackground(Void... args) {
             return ShortcutDb.STATIC.getCursorAllShortcuts(getActivity());
         }
         @Override
         protected void onPostExecute(Cursor cursor) {
-            if (isAdded()) {
-                mFtpShortcutsAdapter.clear();
-                mFtpShortcutsAdapter.add(new FtpBrowse(getString(R.string.add_ssh_server)));
-                if (cursor.getCount() > 0) {
-                    cursor.moveToFirst();
-                    do {
-                        FtpShortcutMapper shortcutMapper = new FtpShortcutMapper();
-                        shortcutMapper.bindColumns(cursor);
-                        mFtpShortcutsAdapter.add(shortcutMapper.bind(cursor));
-                    } while (cursor.moveToNext());
+            if (getActivity() != null && !getActivity().isFinishing()) {
+                if (isAdded() && cursor != null && !cursor.isClosed()) {
+                    mNetworkShortcutsAdapter.clear();
+                    mNetworkShortcutsAdapter.add(new NetworkBrowse(getString(R.string.browse_net_server)));
+                    if (cursor.getCount() > 0) {
+                        cursor.moveToFirst();
+                        do {
+                            GenericNetworkShortcutMapper shortcutMapper = new GenericNetworkShortcutMapper();
+                            shortcutMapper.bindColumns(cursor);
+                            mNetworkShortcutsAdapter.add(shortcutMapper.bind(cursor));
+                        } while (cursor.moveToNext());
+                    }
                 }
+                if (cursor != null) cursor.close();
             }
         }
     }
@@ -420,7 +481,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
             }
         }
         for (NetworkSource source : toRemove) {
-            if(DBG) Log.d(TAG, "Removing "+source.getName()+" ("+source.getClass()+")");
+            log.debug("Removing "+source.getName()+" ("+source.getClass()+")");
             adapter.remove(source);
         }
     }
@@ -433,13 +494,13 @@ public class NetworkRootFragment extends BrowseSupportFragment {
 
         @Override
         public void onDiscoveryStart() {
-            if(DBG_SMB) Log.d(TAG, "SambaDiscovery onDiscoveryStart");
+            log.trace("SambaDiscovery onDiscoveryStart");
             flagObjectsAsOld(mSmbDiscoveryAdapter);
         }
 
         @Override
         public void onDiscoveryEnd() {
-            if(DBG_SMB) Log.d(TAG, "SambaDiscovery onDiscoveryEnd");
+            log.trace("SambaDiscovery onDiscoveryEnd");
             removeOldObjects(mSmbDiscoveryAdapter);
 
             // Schedule a discovery refresh
@@ -449,7 +510,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
 
         @Override
         public void onDiscoveryUpdate(List<Workgroup> workgroups) {
-            if(DBG_SMB) Log.d(TAG, "SambaDiscovery onDiscoveryUpdate");
+            log.trace("SambaDiscovery onDiscoveryUpdate");
 
             for (Workgroup workgroup : workgroups) {
                 for (Share share : workgroup.getShares()) {
@@ -465,11 +526,11 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                     }
                     int index = mSmbDiscoveryAdapter.indexOf(newInstance);
                     if (index==-1) {
-                        if(DBG) Log.d(TAG, "smb Adding "+newInstance.getName());
+                        log.debug("smb Adding "+newInstance.getName());
                         addInAdapterInAlphabeticalOrder(newInstance, mSmbDiscoveryAdapter);
                     }
                     else {
-                        if(DBG) Log.d(TAG, "smb "+newInstance.getName() + " already present");
+                        log.debug("smb "+newInstance.getName() + " already present");
                         SmbShare existingItem = (SmbShare) mSmbDiscoveryAdapter.get(index);
                         // seen again, flag as not old
                         existingItem.setOld(false);
@@ -496,7 +557,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
 
         @Override
         public void onDeviceListUpdate(List<Device> devices) {
-            if(DBG_UPNP) Log.d(TAG, "UpnpDiscovery onDiscoveryUpdate");
+            log.trace("UpnpDiscovery onDiscoveryUpdate");
 
             // NOTE: for UPnP, onDiscoveryUpdate() is called each time a server is added or removed
 
@@ -507,11 +568,11 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 // Check if this server is already in the adapter (even if it is not the same instance it is OK due to the equals() implementation)
                 int index = mUpnpDiscoveryAdapter.indexOf(newInstance);
                 if (index==-1) {
-                    if(DBG_UPNP) Log.d(TAG, "upnp Adding "+newInstance.getName());
+                    log.trace("upnp Adding "+newInstance.getName());
                     addInAdapterInAlphabeticalOrder(newInstance, mUpnpDiscoveryAdapter);
                 }
                 else {
-                    if(DBG_UPNP) Log.d(TAG, "upnp "+newInstance.getName() + " already present, flag as not old");
+                    log.trace("upnp "+newInstance.getName() + " already present, flag as not old");
                     ((NetworkSource)mUpnpDiscoveryAdapter.get(index)).setOld(false);
                 }
             }

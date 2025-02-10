@@ -1,7 +1,7 @@
 Nova ist ein opeN sOurce Video plAyer für Tablets, Telefone und AndroidTV-Geräte, verfügbar unter https://github.com/nova-video-player/aos-AVP
 
 Universal-Abspieler:
-- Videos von Ihrem Computer, Server (FTP, SFTP), NAS (SMB, UPnP) abspielen
+- Videos von Ihrem Computer, Server (FTP, SFTP, WebDAV), NAS (SMB, UPnP) abspielen
 - Videos von einem externen USB-Speicher abspielen
 - Videos aus allen Quellen in eine einheitlichen Multimedia-Sammlung integrieren
 - Automatischer Online-Abruf von Meta-Daten wie Beschreibungen von Filmen und Fernsehsendungen mit Postern und Hintergründen

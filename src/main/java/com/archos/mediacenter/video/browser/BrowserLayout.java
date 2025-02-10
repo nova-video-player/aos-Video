@@ -100,10 +100,10 @@ public class BrowserLayout extends DrawerLayout {
         // This listener is used to check the keypresses when the categories or global resume have the focus
         public boolean onKey(View v, int keyCode, KeyEvent event) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT && event.getAction() == KeyEvent.ACTION_DOWN) {
-               mCallback.onGoHome();
+                if (mCallback == null) return false;
+                mCallback.onGoHome();
                 return true;
             }
-
             return false;
         }
     };

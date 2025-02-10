@@ -41,6 +41,46 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
 
     private static final String TAG = "VideoLoader";
 
+    // custom executor to release strain
+    public static final boolean VIDEO_CUSTOM_EXECUTOR = true;
+    public static final boolean VIDEOSELECTION_CUSTOM_EXECUTOR = true;
+    // default VideoLoader throttle: TO KEEP false otherwise it makes *ByFragment not visible at start (why?)
+    public static final boolean VIDEO_THROTTLE = false;
+    public static final int VIDEO_THROTTLE_DELAY = 2000; // 2s
+    // categories by *ByFragment
+    public static final boolean VIDEOSELECTION_THROTTLE = false;
+    public static final int VIDEOSELECTION_THROTTLE_DELAY = 600000; // 10m
+    // for *ByLoader used by *ByFragment (EpisodesByDate/MoviesBy(Year|Genre)) used for categories
+    // note cannot be true for now otherwise *ByFragment are empty
+    public static final boolean VIDEOBY_THROTTLE = false;
+    public static final int VIDEOBY_THROTTLE_DELAY = 600000; // 10m
+    // for all All*GridFragment and BrowserAll* and *Fragment
+    public static final boolean GRIDVIDEO_THROTTLE = true;
+    public static final int GRIDVIDEO_THROTTLE_DELAY = 60000; // 1m
+    // for MainFragment line
+    public static final boolean ALLVIDEO_THROTTLE = false;
+    public static final int ALLVIDEO_THROTTLE_DELAY = 5000; // 5s
+    // for channels
+    public static final boolean CHANNEL_THROTTLE = false;
+    public static final int CHANNEL_THROTTLE_DELAY = 60000; // 1m
+
+    // cf. https://github.com/nova-video-player/aos-AVP/issues/141
+    // For ref sake currently ModernAsyncTask default cursorLoader executor is ThreadPoolExecutor(5, 128, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), tocheck)
+    // In the past used to be ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5200));
+
+    // history of changes
+    //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5200));
+    //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(5, 128, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5200));
+    //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(5, 128, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+    //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(5, 128, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10));
+    //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5200));
+    //private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 100, 20, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(256));
+
+    // 4 threads (not to overload SQLExecutor) but to speed things up
+    private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(4, 4, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(256));
+    // 1 thread to linearly display each line per category in VideoBy
+    protected final static Executor videoSelectionLoaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5200));
+
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_COUNT = "count";
     public static final String COLUMN_COVER_PATH = "cover";
@@ -159,24 +199,21 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
                 + "THEN 1 ELSE 0 END AS " + traktType;
     }
 
-    // cf. https://github.com/nova-video-player/aos-AVP/issues/141
-    // limit to 1 thread for less epileptic visual effect and a queue of 5200 = 100 years of 52 weeks
-    // Note that now it is handled by androidx and should be "bug free" --> remove this hack for now
-    // For ref sake currently cursorLoader executor by default is ThreadPoolExecutor(5, 128, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), tocheck)
-    private final static Executor videoLoaderExecutor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS,
-            new LinkedBlockingQueue<Runnable>(5200));
     public VideoLoader(Context context) {
         super(context);
-        // self introspection to use another Executor than AsyncTaskLoader which has 128 threads but a total queue of 10... cf. https://github.com/nova-video-player/aos-AVP/issues/141
-        try {
-            Field f = AsyncTaskLoader.class.getDeclaredField("mExecutor");
-            f.setAccessible(true);
-            f.set(this, videoLoaderExecutor);
-        }  catch (NoSuchFieldException e) {
-            Log.w(TAG, "VideoLoader caught NoSuchFieldException ", e);
-        } catch (IllegalAccessException e) {
-            Log.w(TAG, "VideoLoader caught IllegalAccessException ", e);
+        // self introspection to use another Executor than AsyncTaskLoader/ModernAsyncTaskLoader cf. https://github.com/nova-video-player/aos-AVP/issues/141
+        if (VIDEO_CUSTOM_EXECUTOR) {
+            try {
+                Field f = AsyncTaskLoader.class.getDeclaredField("mExecutor");
+                f.setAccessible(true);
+                f.set(this, videoLoaderExecutor);
+            } catch (NoSuchFieldException e) {
+                Log.w(TAG, "VideoLoader caught NoSuchFieldException ", e);
+            } catch (IllegalAccessException e) {
+                Log.w(TAG, "VideoLoader caught IllegalAccessException ", e);
+            }
         }
+        if (VideoLoader.VIDEO_THROTTLE) setUpdateThrottle(VideoLoader.VIDEO_THROTTLE_DELAY);
     }
 
     @Override

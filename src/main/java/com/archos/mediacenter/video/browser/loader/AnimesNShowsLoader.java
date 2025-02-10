@@ -19,6 +19,7 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -74,16 +75,22 @@ ORDER BY uName ASC
     private static Context mContext;
 
     public AnimesNShowsLoader(Context context) {
-        this(context, DEFAULT_SORT, true);
+        this(context, DEFAULT_SORT, true, false, 0);
     }
 
-    public AnimesNShowsLoader(Context context, String SortOrder, boolean showWatched) {
+    public AnimesNShowsLoader(Context context, boolean applyThrottleDelay, int throttleDelay) {
+        this(context, DEFAULT_SORT, true, applyThrottleDelay, throttleDelay);
+    }
+
+    public AnimesNShowsLoader(Context context, String SortOrder, boolean showWatched, boolean applyThrottleDelay, int throttleDelay) {
         super(context);
         mContext = context;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
         init();
+        if (applyThrottleDelay) setUpdateThrottle(throttleDelay);
     }
+
     @Override
     protected void init() {
         super.init();

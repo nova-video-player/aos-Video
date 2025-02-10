@@ -15,7 +15,7 @@
         app:iconSpaceReserved="false">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://curl.haxx.se/docs/copyright.html" />
+            android:data="https://curl.haxx.se/docs/copyright.html" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="LGPL v2.1"
@@ -39,7 +39,7 @@
         app:iconSpaceReserved="false">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://www.boost.org/users/license.html" />
+            android:data="https://www.boost.org/users/license.html" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="BSD"
@@ -47,7 +47,7 @@
         app:iconSpaceReserved="false">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://www.libtorrent.org/" />
+            android:data="https://www.libtorrent.org/" />
     </PreferenceScreen>
     <PreferenceScreen
         android:summary="LGPL v2.1"
@@ -72,5 +72,37 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:data="https://github.com/UweTrottmann/tmdb-java" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="GNU LGPL and BSD-style license"
+        android:title="jsch"
+        app:iconSpaceReserved="false">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/mwiede/jsch" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="Apache License, Version 2.0"
+        android:title="smbj"
+        app:iconSpaceReserved="false">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/hierynomus/smbj" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="Apache License, Version 2.0"
+        android:title="sshj"
+        app:iconSpaceReserved="false">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/hierynomus/sshj" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:summary="Apache License, Version 2.0"
+        android:title="sardine-android"
+        app:iconSpaceReserved="false">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/thegrizzlylabs/sardine-android" />
     </PreferenceScreen>
 </PreferenceScreen>

@@ -19,6 +19,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
@@ -34,12 +35,16 @@ import android.os.IBinder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.StatFs;
+
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.preference.PreferenceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TorrentObserverService extends Service{
+public class TorrentObserverService extends Service implements DefaultLifecycleObserver {
 
     private static final Logger log = LoggerFactory.getLogger(TorrentObserverService.class);
 
@@ -49,7 +54,7 @@ public class TorrentObserverService extends Service{
     private  String mTorrent;
     ArrayList<String> files ;
     TorrentThreadObserver mObserver;
-    private boolean isDaemonRunning;
+    private static boolean isDaemonRunning;
     private static Process sProcess;
     private IBinder binder ;
     private Thread mTorrentThread;
@@ -111,6 +116,13 @@ public class TorrentObserverService extends Service{
     public final static String intentResumed = "activity.resumed";
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        // Register as a lifecycle observer
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+    }
+
+    @Override
     public int onStartCommand(Intent i, int flags, int id) {
         if(i==null)
             return START_STICKY;
@@ -156,7 +168,7 @@ public class TorrentObserverService extends Service{
                     mObserver.notifyDaemonStreaming();
                 //observeStdout();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("selectFile: caught IOException, error writing", e);
             }
         }
     }
@@ -199,27 +211,25 @@ public class TorrentObserverService extends Service{
                                 mObserver.setPort(mPort);
                             }
                         }
-                        final BufferedReader readererror = new BufferedReader (new InputStreamReader(sProcess.getErrorStream()));
+                        final BufferedReader readerError = new BufferedReader (new InputStreamReader(sProcess.getErrorStream()));
                         new Thread(){
                             public void run(){
                                 String line = "";
                                 try {
-                                    while (readererror!=null&&(line = readererror.readLine ()) != null&&!hasToStop) {
+                                    while (readerError!=null&&(line = readerError.readLine ()) != null&&!hasToStop && !Thread.currentThread().isInterrupted()) {
                                         log.debug("Stderr: " + line);
                                     }
                                 } catch (IOException e) {
-                                    e.printStackTrace();
+                                    log.error("Error reading stderr", e);
                                 }
                                 log.debug("end of error lines");
                             }
                         }.start();
-                        
-                        
+
                         observeStdout();
-                        
-                       
+
                         if(sProcess!=null)
-                        sProcess.waitFor();
+                            sProcess.waitFor();
 
                         log.debug("daemon has finished");
                         isDaemonRunning=false;
@@ -228,12 +238,10 @@ public class TorrentObserverService extends Service{
                         log.warn("IOException ", io);
                         isDaemonRunning=false;
                         mHasSetFiles  =false;
-
                     } catch(InterruptedException io){
                         log.warn("InterruptedException", io);
                         isDaemonRunning = false;
                         mHasSetFiles = false;
-
                     }
                     if(mObserver!=null)
                         mObserver.onEndOfTorrentProcess();
@@ -247,11 +255,8 @@ public class TorrentObserverService extends Service{
 
         };
         mTorrentThread.start();
-
-
-
-
     }
+
     private void observeStdout() {
         String line;
 
@@ -291,15 +296,25 @@ public class TorrentObserverService extends Service{
                     mObserver.notifyObserver(line);
                 log.debug("Stdout: " + line+String.valueOf(mHasSetFiles));
             }
-
+        } catch (InterruptedIOException e) {
+            log.warn("observeStdout: read interrupted by close() on another thread", e);
+            Thread.currentThread().interrupt(); // Restore the interrupted status
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("Error reading stdout", e);
+        } finally {
+            if (mReader != null) {
+                try {
+                    mReader.close();
+                } catch (IOException e) {
+                    log.error("Error closing reader", e);
+                }
+            }
         }
     }
 
     public void exitProcess(){
-        log.debug("calling exit");
+        log.debug("exitProcess");
         hasToStop=true;
         try {
             Runtime.getRuntime().exec("killall -2 libtorrentd.so").waitFor();
@@ -322,11 +337,10 @@ public class TorrentObserverService extends Service{
         isDaemonRunning = false;
     }
 
-
     public static void staticExitProcess(){
-        log.debug("calling exit");
+        log.debug("staticExitProcess");
         try {
-            Runtime.getRuntime().exec("killall -2 libtorrentd.so").waitFor();
+            if (isDaemonRunning) Runtime.getRuntime().exec("killall -2 libtorrentd.so").waitFor();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             if(sProcess != null)
@@ -344,13 +358,13 @@ public class TorrentObserverService extends Service{
     }
 
     public static void killProcess(){
-        log.debug("calling kill");
+        log.debug("killProcess");
 
         try {
-            Runtime.getRuntime().exec("killall -9 libtorrentd.so").waitFor();
+            if (isDaemonRunning) Runtime.getRuntime().exec("killall -9 libtorrentd.so").waitFor();
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("killProcess: caught Exception", e);
         }
        
     }
@@ -363,7 +377,6 @@ public class TorrentObserverService extends Service{
         // TODO Auto-generated method stub
         if(mObserver == observer)
             mObserver=null;
-        
     }
 
     private android.os.Looper newLooper() {
@@ -415,4 +428,40 @@ public class TorrentObserverService extends Service{
             mHandler.removeMessages(MSG_QUIT);
         }
     }
+
+    @Override
+    public void onStop(LifecycleOwner owner) {
+        // App in background
+        log.debug("onStop: LifecycleOwner app in background, stopSelf");
+        cleanup();
+        stopSelf();
+    }
+
+    @Override
+    public void onStart(LifecycleOwner owner) {
+        // App in foreground
+        log.debug("onStart: LifecycleOwner app in foreground");
+    }
+
+    @Override
+    public void onDestroy() {
+        log.debug("onDestroy()");
+        cleanup(); // Call cleanup here
+        super.onDestroy();
+    }
+
+    private void cleanup() {
+        log.debug("cleanup");
+        // Stop the torrent thread if it's running
+        if (mTorrentThread != null) {
+            mTorrentThread.interrupt();
+            mTorrentThread = null;
+        }
+        // Exit and kill the torrent process
+        exitProcess();
+        killProcess();
+        // Remove any pending messages from the handler
+        mHandler.removeCallbacksAndMessages(null);
+    }
+
 }

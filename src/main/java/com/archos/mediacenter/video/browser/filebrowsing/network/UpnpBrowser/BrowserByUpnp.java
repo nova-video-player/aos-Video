@@ -23,39 +23,23 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.filebrowsing.network.BrowserByNetwork;
 import com.archos.mediaprovider.NetworkScanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by alexandre on 29/10/15.
  */
 public class BrowserByUpnp extends BrowserByNetwork {
-    @Override
-    protected boolean isIndexable(Uri folder) {
-        // allows only indexing for shares as in upnp://[user:pass@]server/share/
-        String path = folder != null ? folder.toString() : null;
-        if (path == null || !path.startsWith("upnp://"))
-            return false;
-        // valid paths contain at least 4x'/' e.g. "upnp://server/share/"
-        int len = path.length();
-        int slashCount = 0;
-        for (int i = 0; i < len; i++) {
-            if (path.charAt(i) == '/') {
-                slashCount++;
-            }
-        }
-        return slashCount >= 4;
-    }
+
+    private static final Logger log = LoggerFactory.getLogger(BrowserByUpnp.class);
+
     @Override
     protected void createShortcut(String shortcutPath, String shortcutName) {
-        String friendlyUri="upnp://";
-        String friendlyName = UpnpServiceManager.getSingleton(getActivity()).getDeviceFriendlyName(Uri.parse(shortcutPath).getHost());
-        if(friendlyName!=null){
-            friendlyUri+=friendlyName;
-        }
-        else{
-            friendlyUri+=Uri.parse(shortcutPath).getHost();
-        }
-        friendlyUri+="/"+shortcutName;
-        boolean result = ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(shortcutName, shortcutPath,friendlyUri));
-
+        mShortcutPath = shortcutPath;
+        mShortcutName = shortcutName;
+        String friendlyUri = getFriendlyUri();
+        log.debug("createShortcut: adding shortcutName=" + shortcutName + ", shortcutPath=" + shortcutPath + ", friendlyUri=" + friendlyUri);
+        boolean result = ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(shortcutName, shortcutPath, friendlyUri));
         if (result) {
             Toast.makeText(getActivity(), getString(R.string.indexed_folder_added, shortcutName), Toast.LENGTH_SHORT).show();
             // Send a scan request to MediaScanner
@@ -66,6 +50,16 @@ public class BrowserByUpnp extends BrowserByNetwork {
         }
         // Update the menu items
         getActivity().invalidateOptionsMenu();
+    }
+
+    protected String getFriendlyUri() {
+        String friendlyUri = "upnp://";
+        String friendlyName = UpnpServiceManager.getSingleton(getActivity()).getDeviceFriendlyName(Uri.parse(mShortcutPath).getHost());
+        if(friendlyName != null) friendlyUri += friendlyName;
+        else friendlyUri += Uri.parse(mShortcutPath).getHost();
+        friendlyUri += "/" + mShortcutName;
+        log.debug("getFriendlyUri: mShortcutPath=" + mShortcutPath + ", mShortcutName=" + mShortcutName + " -> friendlyName=" + friendlyName + ", friendlyUri=" + friendlyUri);
+        return friendlyUri;
     }
 
 }

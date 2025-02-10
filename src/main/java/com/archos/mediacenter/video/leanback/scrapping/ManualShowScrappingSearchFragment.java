@@ -132,11 +132,11 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
 
         // In theory we should get a ShowTags here but in practice we did a search for Episodes.
         // Hence we need to get the ShowTags from the EpisodeTags
-        if (tags instanceof  EpisodeTags) {
+        if (tags instanceof EpisodeTags) {
             // replace episodeTags by showTags
             tags = ((EpisodeTags)tags).getShowTags();
             // but keep title of the result which is a show
-            tags.setTitle(result.getTitle());
+            if (tags != null) tags.setTitle(result.getTitle());
         }
 
         if (tags == null) {

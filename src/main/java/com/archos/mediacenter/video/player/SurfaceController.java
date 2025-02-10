@@ -27,9 +27,12 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SurfaceController {
-    private static String TAG = "SurfaceController";
-    private static boolean DBG = false;
+
+    private static final Logger log = LoggerFactory.getLogger(SurfaceController.class);
 
     private boolean mEffectEnable = false;
 
@@ -118,7 +121,7 @@ public class SurfaceController {
     }
   
     public void setGLSupportEnabled(boolean enable){
-        if (DBG) Log.d(TAG, "setGLSupportEnabled: " + enable);
+        log.debug("setGLSupportEnabled: " + enable);
         if (mEffectEnable == enable) return;
         mView.setVisibility(View.GONE);
         if (enable) {
@@ -143,7 +146,7 @@ public class SurfaceController {
     }
     
     public boolean supportOpenGLVideoEffect() {
-        if (DBG) Log.d(TAG, "supportOpenGLVideoEffect: " + ((mEffectView == mView) && (VideoEffect.openGLRequested(mEffectType))));
+        log.debug("supportOpenGLVideoEffect: " + ((mEffectView == mView) && (VideoEffect.openGLRequested(mEffectType))));
         return (mEffectView == mView) && (VideoEffect.openGLRequested(mEffectType));
     }
 
@@ -153,7 +156,7 @@ public class SurfaceController {
     }
 
     public void setHdmiPlugged(boolean plugged, int hdmiWidth, int hdmiHeight) {
-        if (DBG) Log.d(TAG, "setHdmiPlugged: plugged=" + plugged + ", hdmiWidth=" + hdmiWidth + ", hdmiHeight=" + hdmiHeight);
+        log.debug("setHdmiPlugged: plugged=" + plugged + ", hdmiWidth=" + hdmiWidth + ", hdmiHeight=" + hdmiHeight);
         if (plugged != mHdmiPlugged) {
             mHdmiPlugged = plugged;
             mHdmiWidth = hdmiWidth;
@@ -184,22 +187,22 @@ public class SurfaceController {
         return getVideoFormat().getMax();
     }
     public int getCurrentFormat(){
-        if (DBG) Log.d(TAG, "getCurrentFormat: " + getVideoFormat().getFmt());
+        log.debug("getCurrentFormat: " + getVideoFormat().getFmt());
         return getVideoFormat().getFmt();
     }
     private VideoFormat getVideoFormat() {
         if (!mHdmiPlugged && ((mVideoWidth / (double) mVideoHeight) - (mLcdWidth / (double) mLcdHeight) > VideoFormat.VIDEO_FORMAT_AUTO_THRES)) {
             // on special screen sizes that are closer to 4:3 then enable the "optimized" aspect ratio
-            if (DBG) Log.d(TAG, "getVideoFormat: return mAutoVideoFormat");
+            log.debug("getVideoFormat: return mAutoVideoFormat");
             return mAutoVideoFormat;
         } else {
-            if (DBG) Log.d(TAG, "getVideoFormat: return mVideoFormat");
+            log.debug("getVideoFormat: return mVideoFormat");
             return mVideoFormat;
         }
     }
 
     public void switchVideoFormat() {
-        if (DBG) Log.d(TAG, "switchVideoFormat");
+        log.debug("switchVideoFormat");
         getVideoFormat().switchFmt();
         updateSurface();
         if (mSurfaceListener != null) {
@@ -207,7 +210,7 @@ public class SurfaceController {
         }
     }
     public void setVideoFormat(int fmt) {
-        if (DBG) Log.d(TAG, "setVideoFormat fmt=" + fmt);
+        log.debug("setVideoFormat fmt=" + fmt);
         getVideoFormat().setFmt(fmt);
         updateSurface();
         if (mSurfaceListener != null) {
@@ -215,7 +218,7 @@ public class SurfaceController {
         }
     }
     public void setVideoFormat(int fmt, int autoFmt) {
-        if (DBG) Log.d(TAG, "setVideoFormat fmt=" + fmt + ", autoFmt=" + autoFmt);
+        log.debug("setVideoFormat fmt=" + fmt + ", autoFmt=" + autoFmt);
         mVideoFormat.setFmt(fmt);
         mAutoVideoFormat.setFmt(autoFmt);
         updateSurface();
@@ -236,7 +239,7 @@ public class SurfaceController {
     }
     
     synchronized private void updateSurface() {
-        if (DBG) Log.d(TAG, "updateSurface");
+        log.debug("updateSurface");
         // get screen size
         int dw, dh, vw, vh, fmt;
         float cropW = 1.0f;
@@ -246,17 +249,18 @@ public class SurfaceController {
         if (mHdmiPlugged) {
             dw = mHdmiWidth;
             dh = mHdmiHeight;
-            if (DBG) Log.d(TAG, "updateSurface: hdmi plugged dw=" + dw + ", dh=" + dh);
+            log.debug("updateSurface: hdmi plugged dw=" + dw + ", dh=" + dh);
         } else {
             dw = mLcdWidth;
             dh = mLcdHeight;
-            if (DBG) Log.d(TAG, "updateSurface: lcd plugged dw=" + dw + ", dh=" + dh);
+            log.debug("updateSurface: lcd plugged dw=" + dw + ", dh=" + dh);
         }
 
         vw = mVideoWidth;
         vh = mVideoHeight;
-        if (DBG) Log.d(TAG, "updateSurface: vw=" + vw + ", vh=" + vh);
+        log.debug("updateSurface: vw=" + vw + ", vh=" + vh);
 
+        if (mMediaPlayer == null) log.warn("updateSurface: mMediaPlayer is null!");
         if (vw <= 0 || vh <= 0 || dw <= 0 || dh <= 0 || mMediaPlayer == null)
             return;
         fmt = getVideoFormat().getFmt();
@@ -271,7 +275,7 @@ public class SurfaceController {
         // calculate display aspect ratio
         double dar = (double) dw / (double) dh;
 
-        if (DBG) Log.d(TAG, "updateSurface: sar=" + sar + ", ar=" + ar + ", dar=" + dar);
+        log.debug("updateSurface: sar=" + sar + ", ar=" + ar + ", dar=" + dar);
 
         cropW = cropH = 1.0f;
         switch (fmt) {
@@ -279,11 +283,11 @@ public class SurfaceController {
                 if (dar < ar) {
                     //4:3 movie on 16:9 screen
                     dh = (int) (dw/ (ar));
-                    if (DBG) Log.d(TAG, "updateSurface: VideoFormat.ORIGINAL dar<ar dh=" + dh);
+                    log.debug("updateSurface: VideoFormat.ORIGINAL dar<ar dh=" + dh);
                 } else {
                     //16:9 movie on 4:3 screen
                     dw = (int) (dh * ar);
-                    if (DBG) Log.d(TAG, "updateSurface: VideoFormat.ORIGINAL dar>=ar dw=" + dw);
+                    log.debug("updateSurface: VideoFormat.ORIGINAL dar>=ar dw=" + dw);
                 }
                 break;
             case VideoFormat.FULLSCREEN:
@@ -291,12 +295,12 @@ public class SurfaceController {
                     //4:3 movie on 16:9 screen
                     cropW = (float)dar / (float)ar;
                     cropH = 1.0f;
-                    if (DBG) Log.d(TAG, "updateSurface: VideoFormat.FULLSCREEN dar<ar 4:3 movie on 16:9 screen dw=" + dw + ", dh=" + dh + ", cropW=" + cropW + ", cropH=" + cropH);
+                    log.debug("updateSurface: VideoFormat.FULLSCREEN dar<ar 4:3 movie on 16:9 screen dw=" + dw + ", dh=" + dh + ", cropW=" + cropW + ", cropH=" + cropH);
                 } else {
                     //16:9 movie on 4:3 screen
                     cropH = (float)ar / (float)dar;
                     cropW = 1.0f;
-                    if (DBG) Log.d(TAG, "updateSurface: VideoFormat.FULLSCREEN dar>=ar 16:9 movie on 4:3 screen dw=" + dw + ", dh=" + dh + ", cropW=" + cropW + ", cropH=" + cropH);
+                    log.debug("updateSurface: VideoFormat.FULLSCREEN dar>=ar 16:9 movie on 4:3 screen dw=" + dw + ", dh=" + dh + ", cropW=" + cropW + ", cropH=" + cropH);
                 }
                 break;
             case VideoFormat.AUTO: {
@@ -305,13 +309,11 @@ public class SurfaceController {
                 if (dar > ar) {
                     dw = dw + (((int) (dh * ar)) - dw) / 2;
                     cropH = (float) dh / (float) (dw / ar);
-                    if (DBG)
-                        Log.d(TAG, "updateSurface: VideoFormat.AUTO dar>ar dw=" + dw + ", dh=" + dh);
+                    log.debug("updateSurface: VideoFormat.AUTO dar>ar dw=" + dw + ", dh=" + dh);
                 } else {
                     dh = dh + (((int) (dw / ar)) - dh) / 2;
                     cropW = (float) dw / (float) (dh * ar);
-                    if (DBG)
-                        Log.d(TAG, "updateSurface: VideoFormat.AUTO dar<=ar dw=" + dw + ", dh=" + dh);
+                    log.debug("updateSurface: VideoFormat.AUTO dar<=ar dw=" + dw + ", dh=" + dh);
                 }
                 break;
             }
@@ -321,8 +323,7 @@ public class SurfaceController {
                 // this is the original size no zoom/stretch
                 //dw = vw;
                 //dh = vh;
-                if (DBG)
-                    Log.d(TAG, "updateSurface: VideoFormat.STRETCHED dw=" + dw + ", dh=" + dh + ", cropW=" + cropW + ", cropH=" + cropH);
+                log.debug("updateSurface: VideoFormat.STRETCHED dw=" + dw + ", dh=" + dh + ", cropW=" + cropW + ", cropH=" + cropH);
                 break;
             }
         }
@@ -334,7 +335,7 @@ public class SurfaceController {
             dh *= 2;
         }
 
-        if (DBG) Log.d(TAG, "updateSurface: setFixedSize(" + vw + "," + vh + ")");
+        log.debug("updateSurface: setFixedSize(" + vw + "," + vh + ")");
 
         if (mSurfaceView != null)
             mSurfaceView.getHolder().setFixedSize(vw, vh);
@@ -345,12 +346,12 @@ public class SurfaceController {
         lp.width = dw;
         lp.height = dh;
 
-        if (DBG) Log.d(TAG, "updateSurface: setLayoutParams(" + dw + "," + dh + ")");
+        log.debug("updateSurface: setLayoutParams(" + dw + "," + dh + ")");
 
         mView.setLayoutParams(lp);
 
         mView.invalidate();
 
-        if (DBG) Log.d(TAG, "updateSurface: " + vw + "x" + vh + " -> " + dw + "x" + dh + " / formatCrop: " + cropW + "x" + cropH + " / mEffectMode: "+mEffectMode);
+        log.debug("updateSurface: " + vw + "x" + vh + " -> " + dw + "x" + dh + " / formatCrop: " + cropW + "x" + cropH + " / mEffectMode: "+mEffectMode);
     }
 }

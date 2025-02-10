@@ -20,6 +20,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
 
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
 
@@ -141,6 +142,7 @@ public class VideoUtils {
      * @return path
      */
     public static String getMediaLibCompatibleFilepathFromUri(Uri uri) {
+        if (uri == null) return null;
         String filePath;
         if ("content".equals(uri.getScheme())) {
             filePath = uri.toString();
@@ -179,30 +181,85 @@ public class VideoUtils {
     }
 
     // provide path for file like content://com.archos.media/external/video/media/51
-    public static String getFilePathFromContentUri(Context context, String path) {
+    public static String getFileUriStringFromContentUri(Context context, String path) {
         if (path == null) return null;
         Uri mPath = Uri.parse(path);
         if (mPath.getScheme() != null && mPath.getScheme().equals("content")) {
             int id = 0;
             try {
-                id = Integer.parseInt(mPath.getLastPathSegment());
+                id = Integer.parseInt(FileUtils.getName(mPath));
                 ContentResolver cr = context.getContentResolver();
                 VideoDbInfo videoDbInfo = VideoDbInfo.fromId(cr, id);
-                if (DBG) Log.d(TAG, "getFilePathFromContentUri content translated from " + mPath + " to " + ((videoDbInfo != null) ? videoDbInfo.uri : null));
-                if (videoDbInfo != null)
-                    return videoDbInfo.uri.getPath();
+                if (DBG) Log.d(TAG, "getFileUriFromContentUri content translated from " + mPath + " to " + ((videoDbInfo != null) ? videoDbInfo.uri : null));
+                if (videoDbInfo !=null && videoDbInfo.uri != null)
+                    return videoDbInfo.uri.toString();
                 else {
-                    Log.w(TAG, "getFilePathFromContentUri: videoDbInfo is null for " + path);
+                    Log.w(TAG, "getFileUriFromContentUri: videoDbInfo is null for " + path);
                     return null;
                 }
-            } catch (NumberFormatException e)
-            {
+            } catch (NumberFormatException e) {
                 id = -1;
                 return null;
             }
         } else {
             return null;
         }
+    }
+
+    public static int getShortcutImage(Uri uri) {
+        if (uri == null) return R.drawable.folder_shortcut_folder;
+        if ("smb".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_smb;
+        } else if ("upnp".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_upnp;
+        } else if ("ftp".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_ftp;
+        } else if ("ftps".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_ftps;
+        } else if ("sftp".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_sftp;
+        } else if ("webdav".equalsIgnoreCase(uri.getScheme()) || "webdavs".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_webdav;
+        } else if ("smbj".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_smbj;
+        } else if ("sshj".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_sshj;
+        } else if ("zip".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_folder;
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.folder_shortcut_folder;
+        } else if (FileUtils.isLocal(uri)) {
+            return R.drawable.folder_shortcut_folder;
+        } else
+            return R.drawable.folder_shortcut_folder;
+    }
+
+    public static int getShortcutImageLeanback(Uri uri) {
+        if (uri == null) return R.drawable.filetype_new_folder;
+        if ("smb".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_smb;
+        } else if ("upnp".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_upnp;
+        } else if ("ftp".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_ftp;
+        } else if ("ftps".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_ftps;
+        } else if ("sftp".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_sftp;
+        } else if ("webdav".equalsIgnoreCase(uri.getScheme()) || "webdavs".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_webdav;
+        } else if ("smbj".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_smbj;
+        } else if ("sshj".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder_sshj;
+        } else if ("zip".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder;
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return R.drawable.filetype_new_folder;
+        } else if (FileUtils.isLocal(uri)) {
+            return R.drawable.filetype_new_folder;
+        } else
+            return R.drawable.filetype_new_folder;
     }
 
 }

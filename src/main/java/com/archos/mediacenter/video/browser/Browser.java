@@ -78,6 +78,7 @@ import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.utils.ThumbnailRequest;
 import com.archos.mediacenter.utils.ThumbnailRequester;
 import com.archos.mediacenter.utils.trakt.Trakt;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.autoscraper.AutoScraperActivity;
 import com.archos.mediacenter.video.browser.dialogs.DeleteDialog;
@@ -89,7 +90,6 @@ import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
-import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
 import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
@@ -124,8 +124,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     protected static final int MENU_VIEW_MODE_DETAILS = 13;
     protected static final int MENU_VIEW_MODE = 14;
     protected static final int MENU_VIEW_HIDE_SEEN = 15;
-
-    protected final static int MENU_SUBLOADER_ALL_FOLDER = 21;
 
     private final static int SUBMENU_ITEM_LIST_INDEX = 0;
     private final static int SUBMENU_ITEM_GRID_INDEX = 1;
@@ -165,7 +163,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     protected Context mContext;
     private static AlertDialog mDialogDelete;
     private static DeleteDialog mDialogDeleting;
-    private DialogForceDlSubtitles mDialogForceDlSubtitles;
     protected DialogRetrieveSubtitles mDialogRetrieveSubtitles;
     protected SharedPreferences mPreferences;
     protected ThumbnailEngineVideo mThumbnailEngine;
@@ -210,6 +207,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
      */
     @Override
     public void onCreate(Bundle bundle) {
+        CustomApplication.loadLocale(getResources());
         super.onCreate(bundle);
         log.debug("onCreate");
         // pass the right deleteLauncher linked to activity
@@ -242,6 +240,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     @Override
     public void onResume() {
         log.debug("onResume");
+        CustomApplication.loadLocale(getResources());
         FileUtilsQ.setDeleteLauncher(deleteLauncher);
         mThumbnailEngine.setListener(this, mHandler);
         // Check if we need some thumbnails
@@ -272,9 +271,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
         if (mDialogDeleting != null)
             mDialogDeleting.dismiss();
-
-        if (mDialogForceDlSubtitles != null)
-            mDialogForceDlSubtitles.dismiss();
 
         if (mDialogRetrieveSubtitles != null)
             mDialogRetrieveSubtitles.dismiss();
@@ -322,8 +318,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         state.putString(COPY_NAME, mCopyName);
         state.putLong(COPY_LENGTH, mCopyLength);
         state.putInt(COPY_DIALOG, mCopyDialogID);
-        if (mDialogForceDlSubtitles != null)
-            mDialogForceDlSubtitles.dismiss();
     }
 
     /**
@@ -1213,31 +1207,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         }
     }
 
-    /*
-        missingSubVideoPaths : all videos with no subs
-        allVideoPaths : all videos
-     */
-    public void getMissingSubtitles(boolean force,ArrayList<String> allVideoPaths, ArrayList<String> missingSubVideoPaths){
-        ArrayList<String> videoPaths;
-        if(!force)
-            videoPaths = missingSubVideoPaths;
-        else
-            videoPaths = allVideoPaths;
-        if (videoPaths.isEmpty()&&!force){
-            mDialogForceDlSubtitles = new DialogForceDlSubtitles();
-            Bundle args = new Bundle();
-            args.putSerializable(SubtitlesDownloaderActivity.FILE_URLS, allVideoPaths);
-            mDialogForceDlSubtitles.setArguments(args);
-            mDialogForceDlSubtitles.setTargetFragment(this, 0);
-            mDialogForceDlSubtitles.show(getParentFragmentManager(), "dialog_force_dl_subtitles");
-        }else {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.setClass(mContext, SubtitlesDownloaderActivity.class);
-            intent.putExtra(SubtitlesDownloaderActivity.FILE_URLS, videoPaths);
-            startActivity(intent);
-        }
-    }
-
     protected void setPosition() {
         mSelectedPosition = mArchosGridView.getSelectedItemPosition()>=0?mArchosGridView.getSelectedItemPosition():mArchosGridView.getFirstVisiblePosition();
         mFirstVisiblePosition = mArchosGridView.getFirstVisiblePosition();
@@ -1292,6 +1261,10 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         }
     }
     public void startDeletingDialog(List<Uri> uriToDelete){
+        if (uriToDelete == null || uriToDelete.isEmpty()) {
+            log.error("startDeletingDialog: uriToDelete list is empty or null");
+            return;
+        }
         mArchosGridView.getCheckedItemPosition();
         mDialogDeleting = new DeleteDialog();
         mDialogDeleting.show(getParentFragmentManager(), null);
@@ -1309,24 +1282,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
      * refresh list
      */
     protected abstract void refresh();
-
-    @SuppressLint("ValidFragment") // XXX
-    public static class DialogForceDlSubtitles extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            String title = getString(R.string.sub_force_all_title);
-            int icon = R.drawable.ic_menu_subtitles;
-            return new AlertDialog.Builder(getActivity()).setTitle(title).setIcon(icon)
-                    .setMessage(R.string.sub_force_all)
-                    .setNegativeButton(android.R.string.no, null)
-                    .setPositiveButton(android.R.string.yes, new OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            ((Browser)getTargetFragment()).getMissingSubtitles(true, getArguments().getStringArrayList(SubtitlesDownloaderActivity.FILE_URLS), getArguments().getStringArrayList(SubtitlesDownloaderActivity.FILE_URLS));
-                        }
-                    }).create();
-        }
-    }
-
 
     //download with metafile2
     public void startDownloadingVideo(List<Uri> uris) {
@@ -1350,7 +1305,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             FileManagerService.fileManagerService.copyUri(uris, Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)));
         }
     }
-
 
     protected void showPasteDialog(){
         mPasteDialog = new Paste(getActivity());

@@ -16,7 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">Библиотека</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
@@ -130,6 +130,7 @@
     <string name="tvshows_by_alpha">Сериалы по алфавиту</string>
     <string name="tvshows_by_genre">Сериалы по жанру</string>
     <string name="tvshows_by_rating">Сериалы по рейтингу</string>
+    <string name="animation_shows_by_alpha">Мультсериалы по алфавитному порядку</string>
     <string name="episodes_by_date">Серии по дате</string>
     <string name="date_view_week">Неделя</string>
     <string name="date_view_month">Месяц</string>
@@ -263,7 +264,7 @@
     <string name="you_have_no_animes">Нет мультфильмов</string>
     <string name="you_have_no_movie_collections">Нет коллекций</string>
     <string name="you_have_no_anime_collections">Нет коллекций аниме</string>
-    <string name="you_have_no_tv_shows">Нет ТВ-программ</string>
+    <string name="you_have_no_tv_shows">Нет сериалов</string>
     <string name="you_have_no_anime_shows">Нет мультсериалов</string>
     <string name="you_have_no_non_scraped_videos">Нет нераспознанных видео</string>
     <plurals name="Nmovies">
@@ -295,11 +296,13 @@
     <string name="switch_to_list">Список</string>
     <string name="switch_to_grid">Сетка</string>
     <!-- VideoPlayer -->
+    <string name="player_track">Трек</string>
     <string name="player_loading_video">Загрузка видео \u2026</string>
     <string name="player_audio_track_toast">Аудио дорожка:</string>
     <string name="player_subtitle_track_toast">Дорожка субтитров:</string>
     <string name="player_bookmark_set">Установка закладки в</string>
     <string name="player_pref_subtitle_delay_title">Задержка</string>
+    <string name="player_pref_audio_speed_title">Скорость воспроизведения</string>
     <string name="floating_player_restore">Восстановить</string>
     <string name="floating_player_play">Воспроизвести</string>
     <string name="floating_player_pause">Пауза</string>
@@ -334,42 +337,31 @@
     <string name="menu_change_folder_details">Выберите папку для начала</string>
     <string name="unlock_instructions">Долгое нажатие на иконку для разблокировки</string>
     <string name="seek_to_percentage">Поиск %s%%</string>
+    <string name="set_audio_speed_to">\"Скорость аудио %s</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">Арабский</string>
-    <string name="s_bulgarian">Болгарский</string>
-    <string name="Bosnian">Боснийский</string>
-    <string name="s_czech">Чешский</string>
-    <string name="s_danish">Датский</string>
-    <string name="s_german">Немецкий</string>
-    <string name="s_english">Английский</string>
-    <string name="s_greek">Греческий</string>
-    <string name="s_spanish">Испанский</string>
-    <string name="s_finnish">Финский</string>
-    <string name="s_french">Французский</string>
-    <string name="s_hebrew">Еврейский</string>
-    <string name="s_hungarian">Венгерский</string>
-    <string name="s_italian">Итальянский</string>
-    <string name="s_japanese">Японский</string>
-    <string name="s_korean">Корейский</string>
-    <string name="s_dutch">Голландский</string>
-    <string name="s_norwegian">Норвежский</string>
-    <string name="s_polish">Польский</string>
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">Для глухих и слабослышащих</string>
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">Субтитры для глухих и слабослышащих</string>
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Бразильский</string>
-    <string name="s_portuguese">Португальский</string>
-    <string name="s_russian">Русский</string>
-    <string name="Romanian">Румынский</string>
-    <string name="Serbo_Croatian">Сербохорватский</string>
-    <string name="Croatian">Хорватский</string>
-    <string name="Serbian">Сербский</string>
-    <string name="Slovenian">Словенский</string>
-    <string name="s_swedish">Шведский</string>
-    <string name="s_thai">Тайский</string>
-    <string name="s_turkish">Турецкий</string>
     <string name="s_chinese">Китайский</string>
-    <string name="s_vietnamese">Вьетнамский</string>
-    <string name="s_lithuanian">Литовский</string>
-    <string name="s_indonesian">Индонезийский</string>
-    <string name="s_malay">Малайский</string>
+    <string name="s_chinese_simplified">Упрощенный китайский</string>
+    <string name="s_traditional_chinese">Китайский традиционный</string>
+    <string name="s_chinese_bilingual">Китайский двуязычный</string>
+    <string name="s_chinese_mainland">Китайский (Китай)</string>
+    <string name="s_chinese_hk">Китайский (Гонконг)</string>
+    <string name="s_chinese_tw">Китайский (Тайвань)</string>
+    <string name="s_spanish_la">Испанский (LA)</string>
+    <string name="s_extremaduran">Эстремадурский</string>
+    <string name="s_montenegrin">Черногорский</string>
+    <string name="s_manipuri">Манипурский</string>
+    <string name="s_dari">Дари</string>
+    <string name="s_portuguese_mz">Португальский (MZ)</string>
+    <string name="s_spanish_eu">Испанский (ЕС)</string>
+    <string name="s_santali">Сантали</string>
+    <string name="s_syriac">Сирийский</string>
+    <string name="s_toki_pona">Токи Пона</string>
     <string name="s_none">Нет</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Воспроизведение видео невозможно</string>
@@ -406,7 +398,7 @@
     <string name="player_plugin_purchase_archos_msg">Вы можете приобрести дополнительные плагины на www.archos.com.</string>
     <string name="player_plugin_purchase_google_play_msg">Вы можете приобрести дополнительные плагины в Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Перейти в Google Play</string>
-    <string name="plugin_update_required_title">Требуется обновленеи кодека</string>
+    <string name="plugin_update_required_title">Требуется обновление кодека</string>
     <string name="plugin_update_required_message">Похоже, что у вас установлены дополнительные кодеки для Nova Video Player.\n\nНовая версия Nova Video Player требует обновления этих кодеков.\n\nПожалуйста, перейдите в Google Play для обновления и повторной установки кодеков.</string>
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">Выберите субтитры на накопителе</string>
@@ -424,7 +416,7 @@
     <string name="get_subtitles_online">Получить субтитры онлайн</string>
     <string name="toast_subloader_sub_found">Найдены субтитры для этого языка</string>
     <string name="toast_subloader_sub_not_found">Субтитры не найдены</string>
-    <string name="toast_subloader_service_unreachable">сервер с субтитрами недоступен</string>
+    <string name="toast_subloader_service_unreachable">Сервер с субтитрами недоступен</string>
     <string name="menu_subloader_allfolder">Получить недостающие субтитры</string>
     <string name="dialog_subloader_copying">Копирование субтитров…</string>
     <string name="dialog_subloader_downloading">Загрузка субтитров…</string>
@@ -435,11 +427,14 @@
     <string name="sub_force_all">Все ваши видео уже имеют хотя бы один набор субтитров. Вы все равно желаете загрузить новые?</string>
     <string name="dialog_subloader_nonetwork_title">Нет подключения к Интернету</string>
     <string name="dialog_subloader_nonetwork_message">Для загрузки субтитров требуется подключение к Интернету</string>
-    <string name="dialog_subloader_connecting">Подключение к www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">Подключение к www.opensubtitles.com…</string>
+    <string name="opensubtitles_quota_download_remaining">Ограничение на скачивание OpenSubtitles: %d/%d осталось</string>
     <string name="dialog_subloader_credentials">Учётные данные Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Вы должны указать правильное имя пользователя и пароль!</string>
     <string name="toast_subloader_credentials_empty">Предоставьте учетные данные Opensubtitles в настройках, чтобы иметь возможность загружать субтитры</string>
     <string name="toast_subloader_login_failed">Неверные учетные данные Opensubtitles или служба недоступна</string>
+    <string name="toast_subloader_quota_exceeded">Превышена квота загрузок OpenSubtitles</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Квота сбросится через %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Параметры субтитры</string>
     <string name="subtitle_sample_text">«образец»</string>
@@ -464,6 +459,7 @@
     <string name="exit">Выйти</string>
     <!-- torrent -->
     <string name="error">Произошла ошибка</string>
+    <string name="error_protocol_not_supported">Ошибка: протокол не поддерживается</string>
     <string name="error_loading_torrent">Ошибка при загрузке торрента</string>
     <string name="error_downloading_not_enough_space">Ошибка при загрузке торрента: недостаточно места</string>
     <string name="loading_torrent">Загрузка торрента…</string>
@@ -472,16 +468,15 @@
     <string name="torrent_buy_premium_message">Торрент-стриминг доступен только в платной версии</string>
     <string name="torrent_buy_premium">Купить премиум-версию</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">Просмотр сетевого ресурса</string>
+    <string name="add_smb_server">Просмотр SMB сервера</string>
+    <string name="add_network_server">Добавить сетевой ресурс</string>
     <string name="add_to_shortcuts">Сделать выборку</string>
     <string name="add_ssh_server">Просмотр FTP-сервера</string>
     <string name="add_ssh_shortcut">Добавить как ярлык</string>
     <string name="ssh_prompt">Тип FTP</string>
+    <string name="protocol_prompt">Тип протокола</string>
     <string name="ssh_empty_view"> \"Вы можете просматривать с собственного ftp сервера\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Удалить выборку</string>
     <string name="shortcut_added">Ярлык %s создан</string>
     <string name="shortcut_removed">Ярлык %s удален</string>
@@ -496,11 +491,16 @@
     <string name="add_to_indexed_folders">Индексировать папку</string>
     <string name="add_to_library">Добавить в библиотеку</string>
     <string name="add_all_items_to_library">Добавить все видео в библиотеку сейчас?</string>
+    <string name="invalid_host">Неверный формат адреса хоста</string>
+    <string name="invalid_port">Неверный формат порта</string>
+    <string name="invalid_path">Неверный формат пути</string>
+    <string name="shortcut_folder_added">Папка %s добавлена как ярлык</string>
     <string name="indexed_folder_added">Папка %s добавлена в библиотеку</string>
     <string name="remove_from_indexed_folders">Удалить из библиотеки</string>
     <string name="indexed_folder_removed">Папка %s удалена из библиотеки</string>
     <string name="indexed_folders_list_empty">Нет индексированных сетевых папок.\n\nВы можете добавить содержимое сетевой папки в библиотеку, просматривая эту папку и выбрав \"%s\" в верхней панели действий.</string>
     <string name="indexed_folders_list_empty_ftp">Нет индексированных папок ftp.</string>
+    <string name="indexed_folders_list_empty_network">Нет индексированных сетевых папок.</string>
     <string name="open_indexed_folder">"Открыть"</string>
     <string name="rescan_indexed_folders">Пересканировать все индексированные папки</string>
     <string name="last_rescan_never">Никогда</string>
@@ -525,17 +525,38 @@
     <string name="preferences_force_software_decoding_summary">Вы можете попробовать эту опцию, если некоторые видео проигрываются не правильно</string>
     <string name="preferences_force_audio_passthrough">Прямой проброс звука</string>
     <string name="preferences_force_audio_passthrough_disabled">Отключено (рекомендуется)</string>
-    <string name="preferences_force_audio_passthrough_enable">Режим 1 (устаревший)</string>
-    <string name="preferences_force_audio_passthrough_enable2">Режим 2</string>
+    <string name="preferences_force_audio_passthrough_enable">Инкапсуляция Nova (экспериментальная)</string>
+    <string name="preferences_force_audio_passthrough_enable2">Системная инкапсуляция</string>
     <string name="preferences_force_audio_passthrough_summary">Передача сжатого аудио через HDMI или S/PDIF. ⚠ Может привести к рассинхронизации звука и видео</string>
+    <string name="preferences_parser_sync_mode">Режим синхронизации анализатора</string>
+    <string name="preferences_parser_sync_mode_cdata">PTS (рекомендуется)</string>
+    <string name="preferences_parser_sync_mode_sample">Образец</string>
+    <string name="preferences_parser_sync_mode_summary">Режим синхронизации анализатора lavc. ⚠ Экспериментальная настройка, может приводить к задержке вывода</string>
+    <string name="preferences_stream_buffer_size_title">Размер буфера потока</string>
+    <string name="preferences_stream_buffer_size_summary">Размер кэша в Мб, используемого парсером</string>
+    <string name="preferences_stream_max_iframe_size_title">Макс. размер i-кадра</string>
+    <string name="preferences_stream_max_iframe_size_summary">Максимальный размер сжатого i-кадра в Мб</string>
+    <string name="preferences_force_passthrough">Принудительная сквозная передача звука</string>
+    <string name="preferences_force_passthrough_summary">Если включена, переопределяет настройки AV ресивера для текущего аудиокодека</string>
+    <string name="preferences_playback_speed">Включить изменение скорости</string>
+    <string name="preferences_playback_speed_summary">Включить возможность изменения скорости воспроизведения. Экспериментальная настройка, может привести к рывкам</string>
     <string name="preferences_disable_downmix_title">Запретить даунмикс звука в стерео</string>
     <string name="preferences_disable_downmix_summary">Всегда декодировать все каналы, микширование производится средствами ОС в зависимости от характеристик аудиовыхода (может привести к потери голосовых каналов)</string>
+    <string name="preferences_enable_downmix_androidtv_title">Принудительный вывод в стерео</string>
+    <string name="preferences_enable_downmix_androidtv_summary">Всегда выводить многоканальный звук в стерео (выбрать, если не слышны некоторые каналы)</string>
     <string name="preferences_allow_3rd_party_player">Разрешить использование другого видеоплеера</string>
     <string name="preferences_allow_3rd_party_player_summary">При запуске воспроизведения будет предложен выбор других проигрывателей. Некоторые функции при этом могут не работать (продолжить воспроизведение, закладки и др.)</string>
     <string name="preference_tv_3d_automatic_switch">Автоматическое переключение 3D TV</string>
     <string name="preference_tv_3d_automatic_switch_summary">Используйте эту функцию только если ваш 3D TV поддерживает ее</string>
+    <string name="enable_android_frame_timing">Включить синхронизацию кадров Android</string>
+    <string name="enable_android_frame_timing_summary">Использовать синхронизацию кадров Android для более плавного воспроизведения (экспериментально)</string>
     <string name="preference_tv_refreshrate_switch">Включить автоматическое переключение частоты обновления</string>
     <string name="preference_tv_refreshrate_switch_summary">Устранение подергивания изображения путём синхронизации частоты кадров экрана и файла (зависит от поддержки устройством)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">Отключено</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">Выбор режима переключения частоты кадров</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Функция переключения частоты кадров на Android 12+</string>
+    <string name="preference_remove_dolby_vision">Отключить Dolby Vision</string>
+    <string name="preference_remove_dolby_vision_summary">Использовать стандартные видеокодеки поверх кодеков Dolby Vision</string>
     <string name="preference_cutout_short_edges">Полноэкранное видео на дисплее с вырезами</string>
     <string name="preference_cutout_short_edges_summary">Разрешить полноэкранное видео на дисплее с вырезами</string>
     <string name="category_languages">Субтитры</string>
@@ -547,6 +568,11 @@
     <string name="summary_list_preference_primary">Выберите язык для загружаемых субтитров</string>
     <string name="favSubLang_title">Язык субтитров по-умолчанию</string>
     <string name="favSubLang_summary">Выберите предпочтительный язык субтитров</string>
+    <string name="favAudioLang_title">Предпочитаемый язык</string>
+    <string name="favAudioLang_summary">Выберите предпочитаемый язык звуковой дорожки</string>
+    <string name="ui_language_title">Выберите язык интерфейса</string>
+    <string name="UiLang_title">Язык интерфейса</string>
+    <string name="UiLang_summary">Установите язык интерфейса, или выберите использование по умолчанию для системы</string>
     <string name="ui_mode_title">Режим пользовательского интерфейса</string>
     <string name="ui_mode_summary">Интерфейс ТВ или Планшета/Телефона</string>
     <string name="preferences_video_about">О программе</string>
@@ -569,6 +595,8 @@
     <string name="enable_adult_scrap_title">Распознавание видео для взрослых</string>
     <string name="enable_adult_scrap_summary">Включить поиск информации о фильмах для взрослых (по умолчанию: выкл)</string>
     <string name="locale">Язык системы</string>
+    <string name="scraper_language_title">Язык описания видео</string>
+    <string name="scraper_language_summary">Установить язык используемый для скачивания описаний видео</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="abort">Прервать</string>
@@ -604,16 +632,29 @@
     <string name="help_overlay_network_indexing_text1_lb">Используйте кнопку +, чтобы добавить содержимое этой папки и всех вложенных подпапок в библиотеку.</string>
     <string name="help_overlay_network_indexing_text2">Это позволит вам получить постеры и описания для фильмов и сериалов.</string>
     <string name="help_overlay_scraper_text">Нажмите на этот пункт для онлайн-поиска постеров и описания видео. </string>
+    <string name="help_overlay_network_shortcut_text1_lb">Используйте кнопку +, чтобы добавить эту папку в качестве сетевого ярлыка и иметь возможность добавить ее содержимое и содержимое ее вложенных папок в библиотеку видео.</string>
     <string name="new_videos_count">Новые видео: %d</string>
     <string name="new_videos_scrape_message">У вас есть новые видео, которые пока не имеют описания и постеров.</string>
     <string name="network_bookmarks">Возобновление воспроизведения и закладки по сети</string>
     <string name="network_thumbnails">Эскизы видео на сетевых источниках</string>
     <string name="network_thumbnails_summary">Cоздавать эскизы для видео на сетевых источниках, когда недоступен постер</string>
     <string name="network_bookmarks_summary">Сохранять точки возобновления просмотра и позиции закладок по сети, когда доступно</string>
+    <string name="share_folders_smbj">Использовать ускоренную реализацию SMB (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Включает более быструю пропускную способность SMB, но поддерживает только протокол выше 2 версии.</string>
+    <string name="share_folders_sshj">Использовать новую реализацию SFTP</string>
+    <string name="share_folders_sshj_summary">Включает новую реализацию SFTP для SFTP ссылок</string>
     <string name="share_folders_smbv2">Включить поддержку SMBv2</string>
     <string name="share_folders_smbv2_summary">Включить поддержку протокола SMB версии 2.</string>
     <string name="share_folders_smb_resolv">Порядок использования сервисов имен</string>
     <string name="share_folders_smb_resolv_summary">Включить BCAST, DNS (по умолчанию: DNS, BCAST). Измените, если не удается разрешить имена в сети, или SMB работает медленно.</string>
+    <string name="share_folders_smb_disable_tcp_discovery">Отключить обнаружение SMB TCP</string>
+    <string name="share_folders_smb_disable_tcp_discovery_summary">Отключите обнаружение TCP в случае нестабильной работы Wi-Fi на некоторых устройствах.</string>
+    <string name="share_folders_smb_disable_udp_discovery">Отключить обнаружение SMB UDP</string>
+    <string name="share_folders_smb_disable_udp_discovery_summary">Отключите обнаружение UDP в случае нестабильной работы Wi-Fi на некоторых устройствах (например, Fire 10 HD).</string>
+    <string name="share_folders_smb_disable_mdns_discovery">Отключить обнаружение SMB mDNS</string>
+    <string name="share_folders_smb_disable_mdns_discovery_summary">Отключите обнаружение mDNS в случае нестабильной работы Wi-Fi на некоторых устройствах.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">Ограничить обнаружение SMB в mDNS</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Отключите обнаружение UDP/TCP, если Wi-Fi работает нестабильно на некоторых устройствах (например, Fire 10 HD). ⚠️ Предотвратит правильное обнаружение на ChromeOS.</string>
     <string name="connection_abnormally_long">Соединение слишком долгое. Хотите прервать его?</string>
     <string name="connection_reset">Сброс</string>
     <!-- Info dialog, not indexed file -->
@@ -650,6 +691,8 @@
     <string name="sort_by_date_premiered_asc">Сортировать по дате премьеры (сначала старые)</string>
     <string name="sort_by_date_aired_desc">Сортировать по дате показа (сначала новые)</string>
     <string name="sort_by_recently_added_episode_desc">Сначала недавно добавленные эпизоды</string>
+    <string name="sort_by_size_asc">Сортировать по размеру (сначала наименьшие)</string>
+    <string name="sort_by_size_desc">Сортировать по размеру (сначала наибольшие)</string>
     <string name="dec_choice_title">Выбор декодера</string>
     <string name="dec_choice_summary">Расширенные настройки могут нарушить декодирование видео.</string>
     <string name="dec_hw_omx">Аппаратное декодирование (IOMX w/ swbuf)</string>
@@ -665,11 +708,13 @@
     <string name="audio_interface_choice_summary">Расширенные настройки, могут нарушить декодирование аудио.</string>
     <string name="audio_interface_opensles">Принудительный OpenSL ES</string>
     <string name="audio_interface_audiotrack">Принудительная аудиодорожка</string>
-    <string name="audio_interface_any">По-умолчанию</string>
+    <string name="audio_interface_any">По умолчанию</string>
     <string name="preferences_user_interface">Пользовательский интерфейс</string>
     <string name="preferences_display_resume_box_summary">Показать/скрыть кнопку возобновления просмотра последнего видео на главном экране</string>
     <string name="preferences_display_resume_box">Отображать окно \"Возобновить\"</string>
     <string name="preferences_leanback_user_interface">Пользовательский интерфейс ТВ</string>
+    <string name="preferences_separate_animation_from_movies_summary">Отметьте, чтобы добавить ряд с мультфильмами и выделить их от фильмов и сериалов</string>
+    <string name="preferences_separate_animation_from_movies">Отделять мультфильмы от фильмов и сериалов</string>
     <string name="preferences_show_watching_up_next_row_summary">Отметьте, чтобы показать ряд с видео, которое Вы смотрите</string>
     <string name="preferences_show_watching_up_next_row">Показывать ряд «Смотрю/Следующее»</string>
     <string name="preferences_show_last_added_row_summary">Отметьте, чтобы показать ряд с недавно добавленным видео</string>
@@ -776,10 +821,6 @@
         - Воспроизведение с момента остановки\n
         - Синхронизация с Trakt</string>
     <string name="dont_show_again">Не показывать снова</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Сеть и файлы</string>
     <string name="leanback_subtitles_integrated">Встроенные</string>
     <string name="leanback_subtitles_external">Внешние</string>
@@ -811,6 +852,8 @@
     <string name="rescan_description">Пересканировать индексированные папки для добавления нового содержимого в библиотеку</string>
     <string name="rescan_now">Пересканировать сейчас</string>
     <string name="rescan_now_description">Сканирование вручную</string>
+    <string name="rescan_select_shares">Выбор ярлыков</string>
+    <string name="rescan_select_shares_description">Выбор ярлыков сетевого размещения для автоматического сканирования</string>
     <string name="rescan_error_wifi_info_standby">WiFi в спящем режиме отключен. Для корректного автосканирования необходимо включить WiFi в спящем режиме.</string>
     <string name="rescan_error_wifi">Ошибка: Wi-Fi был выключен во время сканирования</string>
     <string name="rescan_error_wifi_click_for_more_info">Дополнительная информация</string>
@@ -887,8 +930,6 @@
     <string name="list_title">Заголовок списка</string>
     <string name="loading">Загрузка…</string>
     <string name="connecting">Подключение…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Не удалось задать желаемую частоту обновления</string>
     <string name="sponsor">Поддержать Nova</string>
     <string name="enable_sponsor_title">Ссылка для поддержки Nova</string>

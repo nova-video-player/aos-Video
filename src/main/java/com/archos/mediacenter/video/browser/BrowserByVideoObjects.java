@@ -20,18 +20,13 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-
-import androidx.core.view.MenuItemCompat;
 
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosSettings;
@@ -61,10 +56,13 @@ import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
-import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
+import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +71,7 @@ import httpimage.HttpImageManager;
 
 public abstract class BrowserByVideoObjects extends Browser implements CommonPresenter.ExtendedClickListener, ExternalPlayerWithResultStarter {
 
-    private static final boolean DBG = false;
-    protected static final String TAG = "BrowserByVideoObjects";
+    private static final Logger log = LoggerFactory.getLogger(BrowserByVideoObjects.class);
 
     private static final int PLAY_ACTIVITY_REQUEST_CODE = 780;
     protected AdapterByVideoObjectsInterface mAdapterByVideoObjects;
@@ -94,8 +91,6 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
     public String getFilePath(int pos){
         return mAdapterByVideoObjects.getVideoItem(pos).getFilePath();
     }
-
-
 
     public void displayInfo(int position){
         Video video = mAdapterByVideoObjects.getVideoItem(position);
@@ -131,12 +126,12 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         try {
             info = (AdapterContextMenuInfo) menuInfo;
         } catch (ClassCastException e) {
-            Log.e(TAG, "bad menuInfo", e);
+            log.error("onCreateContextMenu: bad menuInfo", e);
             return;
         }
         // This can be null sometimes, don't crash...
         if (info == null) {
-            Log.e(TAG, "bad menuInfo");
+            log.error("onCreateContextMenu: bad menuInfo");
             return;
         }
 
@@ -265,44 +260,6 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
                 true, -1, this, -1);
     }
 
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-
-        super.onCreateOptionsMenu(menu, inflater);
-        if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
-            // Add the "load subtitles" item
-            menu.add(MENU_SUBLOADER_GROUP, MENU_SUBLOADER_ALL_FOLDER, Menu.NONE, R.string.menu_subloader_allfolder).setIcon(R.drawable.ic_menu_subtitles).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // NOTE: ignore the MENU_VIEW_MODE item which is
-        // already handled internally in ActionBarSubmenu
-
-        if (item.getItemId() == MENU_SUBLOADER_ALL_FOLDER) {
-            ArrayList<String> videoNoSubs = new ArrayList<>();
-            ArrayList<String> videoPaths = new ArrayList<>();
-
-            Video video;
-            List<Video> videos = new ArrayList<>();
-            for (int i = 0; i<mBrowserAdapter.getCount(); i++){
-                video = mAdapterByVideoObjects.getVideoItem(i);
-                if(video!=null) {
-                    videos.add(video);
-                    if(video.hasSubs())
-                        videoNoSubs.add(video.getFilePath());
-                    videoPaths.add(video.getFilePath());
-                }
-            }
-
-            getMissingSubtitles(false, videoNoSubs, videoPaths);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         boolean ret = true;
@@ -361,8 +318,9 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
 
             case R.string.get_subtitles_online:
                 Intent subIntent = new Intent(Intent.ACTION_MAIN);
-                subIntent.setClass(mContext, SubtitlesDownloaderActivity.class);
-                subIntent.putExtra(SubtitlesDownloaderActivity.FILE_URL,video.getFilePath());
+                log.debug("onContextItemSelected: get_subtitles_online for " + getRealPathUriFromPosition(info.position));
+                subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
+                subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, getRealPathUriFromPosition(info.position).toString());
                 getActivity().startActivity(subIntent);
                 break;
 
@@ -386,7 +344,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
                 break;
             default:
                 ret = super.onContextItemSelected(item);
-                Log.e(TAG, "Unexpected default case! " + index);
+                log.error("onContextItemSelected: unexpected default case! " + index);
         }
 
         return ret;

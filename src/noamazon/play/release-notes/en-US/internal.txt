@@ -1,13 +1,11 @@
-- Attempt to fix fdroid build
-- Fix tvshow rescrape having same name
-- Fix widget not launching video
-- STOP remote button stops player
-- Make rescan storage setting work
-- Scrobbler threshold raised to 90%
-- Fix crash changing info on tvshow
-- Add adult scrape hidden option NOT on google play
-- Blacklist nova scrape files for initial video import
-- Swedish translations
-- Fix NFO processing not working on SMB share
-- Fix scrape in loop
-- Display content rating
+- add pgs subtitles support
+- support subtitle position SSA tags
+- true passthrough support of TrueHD & DTS:X on FireStick4kMax 2023 (requires nova encapsulation mode 1)
+- select proper dolby vision codec based on profile
+- add locale setting in nova for devices with restricted language support
+- experimental smoother video playback
+- 2025 banners
+- apply ITU-R BS.775-3 coefficients for stereo downmix
+- fix nova use as external player with kodi
+- fix 7.1 stereo downmix
+- target SDK 34

@@ -30,12 +30,12 @@ import java.util.ArrayList;
  */
 public class TvshowActionAdapter extends SparseArrayObjectAdapter {
 
-    public static final int ACTION_PLAY = 4;
-    public static final int ACTION_MORE_DETAILS = 0;
-    public static final int ACTION_MARK_SHOW_AS_WATCHED = 1;
-    public static final int ACTION_MARK_SHOW_AS_NOT_WATCHED = 2;
-    public static final int ACTION_UNINDEX = 5;
-    public static final int ACTION_CHANGE_INFO = 3;
+    public static final int ACTION_PLAY = 0;
+    public static final int ACTION_MORE_DETAILS = 1;
+    public static final int ACTION_MARK_SHOW_AS_WATCHED = 2;
+    public static final int ACTION_MARK_SHOW_AS_NOT_WATCHED = 3;
+    public static final int ACTION_UNINDEX = 4;
+    public static final int ACTION_CHANGE_INFO = 5;
     public static final int ACTION_DELETE = 6;
 
     final Context mContext;

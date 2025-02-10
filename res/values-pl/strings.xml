@@ -16,7 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">Biblioteka</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
@@ -28,7 +28,7 @@
     <!-- Library screen, menu item -->
     <string name="search_title">Szukaj</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
-    <string name="unknown_track_name">Niezn.</string>
+    <string name="unknown_track_name">Nieznany</string>
     <!-- Toast after turning shuffle on -->
     <!-- Toast after turning shuffle off -->
     <!-- Toast after turning single repeat on -->
@@ -42,21 +42,21 @@
     <string name="play_from_beginning">Odtwórz od początku</string>
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
-    <string name="fast_scroll_alphabet"> AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ</string>
+    <string name="fast_scroll_alphabet">\u0020AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ</string>
     <!-- The string used in file/folder infos dialog. -->
     <string name="info_duration">Czas trwania:</string>
     <string name="video_sources">Źródła</string>
     <!-- Infos dialog tabs -->
     <string name="info_tab_movie">Film</string>
-    <string name="info_tab_show">Serie Tv</string>
+    <string name="info_tab_show">Seriale</string>
     <string name="info_tab_episode">Odcinek</string>
     <string name="info_tab_video">Wideo</string>
     <string name="info_tab_file">Informacje o pliku</string>
-    <string name="info_tab_backdrop_chooser">Wybór tapet</string>
+    <string name="info_tab_backdrop_chooser">Wybór tła</string>
     <string name="info_tab_poster_chooser">Wybór plakatu</string>
     <string name="info_tab_share">Udostępnij</string>
-    <string name="info_menu_backdrop_select">Tapeta</string>
-    <string name="info_menu_series_backdrop_select">Zwiastun serialu</string>
+    <string name="info_menu_backdrop_select">Tło</string>
+    <string name="info_menu_series_backdrop_select">Tło serialu</string>
     <string name="info_menu_poster_select">Wybierz inny plakat</string>
     <string name="info_menu_series_poster_select">Wybierz inny plakat</string>
     <!-- COVER ROLL -->
@@ -67,17 +67,17 @@
     <string name="recently_played_videos">Ostatnio odtwarzane</string>
     <string name="video_lists">Listy odtwarzania</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Zewnętrzna</string>
+    <string name="external_storage">Pamięć zewnętrzna</string>
     <string name="internal_storage">Pamięć wewnętrzna</string>
     <string name="network_storage">Sieć</string>
     <string name="sd_card_storage">Karta SD</string>
     <string name="usb_host_storage">Dysk zewnętrzny</string>
     <string name="other_storage">Dysk</string>
     <string name="network_media_servers">Serwery mediów (UPnP)</string>
-    <string name="network_shared_folders">Foldery współużytkowane (SMB)</string>
+    <string name="network_shared_folders">Udostępnione foldery (SMB)</string>
     <string name="network_connected_as">Połączono jako %s</string>
     <string name="network_guest">gość</string>
-    <string name="sftp_folders">FTP</string>
+    <string name="sftp_folders">SFTP</string>
     <string name="network_jcifs">Samba (eksperymentalne)</string>
     <string name="network_cling">UPNP (eksperymentalne)</string>
     <string name="recordings_storage">Nagrania</string>
@@ -92,13 +92,21 @@
     <string name="animes">Animacje</string>
     <string name="all_movies">Wszystkie filmy</string>
     <string name="all_movies_format">Wszystkie filmy - %d</string>
-    <string name="all_animes_format">Filmy animowane  -  %d</string>
+    <string name="all_animes_format">Animacje  -  %d</string>
     <string name="all_collections">Wszystkie kolekcje</string>
     <string name="all_collections_format">Wszystkie kolekcje -  %d</string>
     <string name="all_collection_watched">Obejrzano cały zbiór</string>
     <string name="all_collection_unwatched">Zbiór nie obejrzany</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d obejrzanych filmów</item>
+        <item quantity="few">%d obejrzanych filmów</item>
+        <item quantity="many">%d obejrzanych filmów</item>
+        <item quantity="other">%d obejrzanych filmów</item>
+    </plurals>
     <string name="not_watched_movies_format">Nieobejrzane - %d</string>
+    <string name="not_watched_animes_format">Nieobejrzane - %d</string>
     <string name="no_movie_watched">Żaden film nie został obejrzany</string>
+    <string name="all_movies_watched">Wszystkie filmy obejrzane</string>
     <string name="movies_by_alpha">Filmy alfabetycznie</string>
     <string name="movies_by_genre">Filmy według gatunku</string>
     <string name="movies_by_rating">Filmy według ocen</string>
@@ -122,6 +130,7 @@
     <string name="tvshows_by_alpha">Seriale alfabetycznie</string>
     <string name="tvshows_by_genre">Seriale wg gatunków</string>
     <string name="tvshows_by_rating">Seriale według ocen</string>
+    <string name="animation_shows_by_alpha">Filmy animowane alfabetycznie</string>
     <string name="episodes_by_date">Odcinki po dacie</string>
     <string name="date_view_week">Tydzień</string>
     <string name="date_view_month">Miesiąc</string>
@@ -145,7 +154,7 @@
     <string name="delete_bookmark">Usuń zakładkę</string>
     <string name="mark_as_watched">Oznacz jako obejrzany</string>
     <string name="mark_as_not_watched">Oznacz jako nie obejrzany</string>
-    <string name="upnp_not_allowed">Brak zezwolenia na dostęp do serwera UPnP. Należy zmienić konfigurację dostępu. </string>
+    <string name="upnp_not_allowed">Brak zezwolenia na dostęp do serwera UPnP. Należy zmienić konfigurację dostępu.</string>
     <string name="scrap_no_info">Nie masz opisu dla tego filmu lub programu telewizyjnego.</string>
     <string name="scrap_remove">Usuń opis</string>
     <string name="scrap_remove_short">Usuń</string>
@@ -159,7 +168,9 @@
     <string name="scrap_get_title">Pobieranie informacji</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Reżyseria</string>
+    <string name="scrap_writer">Scenarzysta</string>
     <string name="scrap_director_format">Reżyseria: %s</string>
+    <string name="scrap_writer_format">Scenarzysta: %s</string>
     <string name="scrap_rating">Ocena</string>
     <string name="scrap_rating_format">Ocena: %s</string>
     <string name="scrap_year">Rok</string>
@@ -186,16 +197,22 @@
     <string name="next_episode">Następny odcinek</string>
     <string name="list_episodes">Lista odcinków</string>
     <string name="how_to_mark_season_watched">Kliknij na sezon, aby zaznaczyć wszystkie odcinki jako obejrzane lub nieobejrzane</string>
-    <string name="how_to_unindex_season">Naciśnij na sezon aby usunąć wszystkie jego odcinki z biblioteki</string>
-    <string name="how_to_delete_season">Naciśnij na sezon aby usunąć wszystkie jego odcinki</string>
+    <string name="how_to_unindex_season">Naciśnij na sezon, aby usunąć wszystkie jego odcinki z biblioteki</string>
+    <string name="how_to_delete_season">Naciśnij na sezon, aby usunąć wszystkie jego odcinki</string>
     <string name="mark_show_watched">Oznacz wszystkie odcinki jako obejrzane lub nieobejrzane</string>
     <string name="unindex_show">Usuń wszystkie odcinki z biblioteki</string>
     <string name="delete_show">Usuń wszystkie odcinki</string>
     <string name="no_episode_watched">Brak obejrzanych odcinków</string>
     <string name="all_episodes_watched">Wszystkie odcinki obejrzane</string>
+    <plurals name="n_episodes_watched">
+        <item quantity="one">%d obejrzanych odcinków</item>
+        <item quantity="few">%d obejrzanych odcinków</item>
+        <item quantity="many">%d obejrzanych odcinków</item>
+        <item quantity="other">%d obejrzanych odcinków</item>
+    </plurals>
     <string name="scrap_processing">Pobieranie metadanych…</string>
     <string name="scrap_no_network">Brak połączenia z siecią.</string>
-    <string name="scrap_enable_network_first">"\"Aby umożliwić uruchomienie aplikacji należy najpierw aktywować połączenie z siecią\"."</string>
+    <string name="scrap_enable_network_first">"Aby umożliwić uruchomienie aplikacji należy najpierw aktywować połączenie z siecią."</string>
     <string name="scrap_failed">Nie znaleziono filmu w bazie danych.</string>
     <string name="start_auto_scraper_activity">Wyszukaj informacje w Internecie</string>
     <string name="scraper_settigns">Plakat &amp; opis</string>
@@ -237,7 +254,7 @@
     <string name="info_resume">Wznów od pozycji</string>
     <string name="info_bookmark">Pozycja zakładki</string>
     <string name="info_file">Informacje o pliku</string>
-    <string name="use_remote_resume">Używaj wznawiania z sieci</string>
+    <string name="use_remote_resume">Używać wznawiania z sieci?</string>
     <!-- VIDEO COVER ROLL -->
     <string name="you_have_no_recently_added_video">Nie znaleziono ostatnio dodanych plików wideo</string>
     <string name="you_have_no_recently_played_video">Nie znaleziono ostatnio odtwarzanych plików wideo</string>
@@ -250,6 +267,26 @@
     <string name="you_have_no_tv_shows">Brak seriali</string>
     <string name="you_have_no_anime_shows">Nie ma seriali animowanych</string>
     <string name="you_have_no_non_scraped_videos">Brak nierozpoznanych multimediów</string>
+    <plurals name="Nmovies">
+        <item quantity="one">film</item>
+        <item quantity="few"><xliff:g id="count">%d</xliff:g> Filmy</item>
+        <item quantity="many"><xliff:g id="count">%d</xliff:g> Filmów</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> Filmów</item>
+    </plurals>
+    <plurals name="Nepisodes">
+        <!-- number of episodes is one -->
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> Odcinek</item>
+        <item quantity="few"><xliff:g id="count">%d</xliff:g> Odcinki</item>
+        <item quantity="many"><xliff:g id="count">%d</xliff:g> Odcinki</item>
+        <!-- number of episodes is not equal to one -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> Odcinków</item>
+    </plurals>
+    <plurals name="Nseasons">
+        <item quantity="one">1 sezon</item>
+        <item quantity="few">1 sezon</item>
+        <item quantity="many">1 sezon</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> sezonów</item>
+    </plurals>
     <!-- Media Center -->
     <string name="mediacenterlabel">Centrum multimediów</string>
     <string name="view_mode">Tryb wyświetlania</string>
@@ -259,11 +296,13 @@
     <string name="switch_to_list">Lista</string>
     <string name="switch_to_grid">Siatka</string>
     <!-- VideoPlayer -->
+    <string name="player_track">Ścieżka</string>
     <string name="player_loading_video">Ładowanie filmu wideo\u2026</string>
     <string name="player_audio_track_toast">Ścieżka audio:</string>
     <string name="player_subtitle_track_toast">Ścieżka napisów:</string>
     <string name="player_bookmark_set">Zakładka na</string>
     <string name="player_pref_subtitle_delay_title">Opóźnienie</string>
+    <string name="player_pref_audio_speed_title">Szybkość odtwarzania</string>
     <string name="floating_player_restore">Przywróć</string>
     <string name="floating_player_play">Odtwórz</string>
     <string name="floating_player_pause">Wstrzymaj</string>
@@ -296,44 +335,33 @@
     <string name="menu_player_settings">Ustawienia</string>
     <string name="menu_change_folder">Zmień folder</string>
     <string name="menu_change_folder_details">Wybierz folder startowy</string>
-    <string name="unlock_instructions">Przytrzymaj na ikonie aby odblokować</string>
-    <string name="seek_to_percentage">\"Przeskakiwanie do %s%%</string>
+    <string name="unlock_instructions">Przytrzymaj na ikonie, aby odblokować</string>
+    <string name="seek_to_percentage">Przeskakiwanie do %s%%</string>
+    <string name="set_audio_speed_to">Prędkość odtwarzania %s</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">arabski</string>
-    <string name="s_bulgarian">bułgarski</string>
-    <string name="Bosnian">bośniacki</string>
-    <string name="s_czech">czeski</string>
-    <string name="s_danish">duński</string>
-    <string name="s_german">niemiecki:</string>
-    <string name="s_english">angielski</string>
-    <string name="s_greek">grecki</string>
-    <string name="s_spanish">hiszpański</string>
-    <string name="s_finnish">fiński</string>
-    <string name="s_french">francuski</string>
-    <string name="s_hebrew">hebrajski</string>
-    <string name="s_hungarian">węgierski</string>
-    <string name="s_italian">włoski</string>
-    <string name="s_japanese">japoński</string>
-    <string name="s_korean">koreański</string>
-    <string name="s_dutch">holenderski</string>
-    <string name="s_norwegian">norweski</string>
-    <string name="s_polish">polski</string>
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">Niedosłyszący</string>
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">Napisy dla osób głuchych i niedosłyszących</string>
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazylijski</string>
-    <string name="s_portuguese">portugalski</string>
-    <string name="s_russian">rosyjski</string>
-    <string name="Romanian">rumuński</string>
-    <string name="Serbo_Croatian">serbochorwacki</string>
-    <string name="Croatian">Chorwacki</string>
-    <string name="Serbian">serbski</string>
-    <string name="Slovenian">Słoweński</string>
-    <string name="s_swedish">szwedzki</string>
-    <string name="s_thai">Tajski</string>
-    <string name="s_turkish">turecki</string>
     <string name="s_chinese">chiński</string>
-    <string name="s_vietnamese">Wietnamski</string>
-    <string name="s_lithuanian">litewski</string>
-    <string name="s_indonesian">indonezyjski</string>
-    <string name="s_malay">malajski</string>
+    <string name="s_chinese_simplified">Uproszczony chiński</string>
+    <string name="s_traditional_chinese">Chiński (tradycyjny)</string>
+    <string name="s_chinese_bilingual">Chiński dwujęzyczny</string>
+    <string name="s_chinese_mainland">Chiński (Mainland China)</string>
+    <string name="s_chinese_hk">Chiński (Hongkong)</string>
+    <string name="s_chinese_tw">Chiński (Tajwan)</string>
+    <string name="s_spanish_la">Hiszpański (LA)</string>
+    <string name="s_extremaduran">Estremadurski</string>
+    <string name="s_montenegrin">Czarnogórski</string>
+    <string name="s_manipuri">Manipuri</string>
+    <string name="s_dari">Dari</string>
+    <string name="s_portuguese_mz">Portugalski (MZ)</string>
+    <string name="s_spanish_eu">Hiszpański (UE)</string>
+    <string name="s_santali">Santali</string>
+    <string name="s_syriac">Syriac</string>
+    <string name="s_toki_pona">Toki Pona</string>
     <string name="s_none">Brak</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Nie można odtworzyć filmu</string>
@@ -344,7 +372,7 @@
     <string name="player_err_sizetoobig">Rozmiar obrazu jest zbyt duży</string>
     <string name="player_err_unknown">Nieznany błąd.</string>
     <string name="player_err_critical">Błąd serwera mediów.</string>
-    <string name="player_err_forcodec">dla kodeku</string>
+    <string name="player_err_forcodec">dla kodeka</string>
     <string name="player_err_notinterleaved">Strumieniowanie wideo i audio nie przeplata się.</string>
     <string name="player_err_codec">Kodek</string>
     <string name="player_err_isnotsupported">nie jest obsługiwany.</string>
@@ -375,8 +403,8 @@
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">Wybierz napisy z dysku</string>
     <string name="subtitles_wizard_no_files">Nie znaleziono napisów</string>
-    <string name="subtitles_wizard_current_files">Aktualne pliki napisów:</string>
-    <string name="subtitles_wizard_available_files">Dostępne pliki napisów:</string>
+    <string name="subtitles_wizard_current_files">Aktualne pliki napisów</string>
+    <string name="subtitles_wizard_available_files">Dostępne pliki napisów</string>
     <string name="subtitles_wizard_associate">Powiąż ten plik z wideo</string>
     <string name="subtitles_wizard_delete">Usuń ten plik</string>
     <string name="subtitles_wizard_empty_list">Nie znaleziono pliku</string>
@@ -399,11 +427,14 @@
     <string name="sub_force_all">Wszystkie filmy mają już co najmniej jedną ścieżkę napisów. Czy chcesz wymusić pobranie nowych napisów?</string>
     <string name="dialog_subloader_nonetwork_title">Brak połączenia z Internetem</string>
     <string name="dialog_subloader_nonetwork_message">Do pobrania napisów wymagane jest połączenie z internetem</string>
-    <string name="dialog_subloader_connecting">Łączenie z www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">Łączenie z www.opensubtitles.com…</string>
+    <string name="opensubtitles_quota_download_remaining">Limit pobierania OpenSubtitles: %d/%d pozostało</string>
     <string name="dialog_subloader_credentials">Dane logowania do Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Podaj poprawne nazwę uzytkownika i hasło!</string>
     <string name="toast_subloader_credentials_empty">Podaj w ustawieniach dane logowania do OpenSubtitles, aby pobierać napisy</string>
     <string name="toast_subloader_login_failed">Błędne dane logowania lub niedostępna usługa OpenSubtitles</string>
+    <string name="toast_subloader_quota_exceeded">Przekroczono limit pobierania OpenSubtitles</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Zresetowano limit w %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Ustawienia napisów</string>
     <string name="subtitle_sample_text">\"próbka\"</string>
@@ -414,6 +445,8 @@
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Regulacja prędkości</string>
     <string name="subtitle_delay_radio_none">brak</string>
+    <string name="subtitle_delay_radio_ntsc2pal">Napisy zbyt szybko</string>
+    <string name="subtitle_delay_radio_pal2ntsc">Napisy zbyt wolne</string>
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
     because the right part of the quote is
@@ -421,10 +454,12 @@
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
     <string name="error_permission">Brak wymaganych uprawnień</string>
     <string name="error_permission_storage">Nova Video Player wymaga uprawnień do odczytu z pamięci lokalnej plików wideo, proszę, udzielić tego uprawnienia.</string>
+    <string name="error_permission_all_file_access">Nova Video Player potrzebuje wszystkich uprawnień do zarządzania zewnętrznym magazynem. Aby prawidłowo zarządzać lokalnymi plikami wideo/NFO prosimy o przyznanie tych uprawnień.</string>
     <string name="allow">Zezwól</string>
     <string name="exit">Zakończ</string>
     <!-- torrent -->
     <string name="error">Wystąpił błąd</string>
+    <string name="error_protocol_not_supported">Błąd: protokół nie jest obsługiwany</string>
     <string name="error_loading_torrent">Wystąpił błąd podczas ładowania torrenta</string>
     <string name="error_downloading_not_enough_space">Wystąpił błąd podczas pobierania torrenta: brak miejsca na dysku</string>
     <string name="loading_torrent">Ładowanie torrenta…</string>
@@ -433,16 +468,15 @@
     <string name="torrent_buy_premium_message">Streamingowanie torrenta dostępne tylko w płatnej wersji</string>
     <string name="torrent_buy_premium">Kup wersję Premium</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">Przeglądaj udziały sieciowe</string>
+    <string name="add_smb_server">Przeglądaj serwer SMB</string>
+    <string name="add_network_server">Dodaj zasób sieciowy</string>
     <string name="add_to_shortcuts">Utwórz skrót</string>
     <string name="add_ssh_server">Przeglądaj serwer FTP</string>
     <string name="add_ssh_shortcut">Dodaj jako skrót</string>
     <string name="ssh_prompt">Typ FTP</string>
-    <string name="ssh_empty_view"> \"Możesz przeglądać i odtwarzać ze swojego serwera ftp\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
+    <string name="protocol_prompt">Typ protokołu</string>
+    <string name="ssh_empty_view"> \"Możesz przeglądać i odtwarzać ze swojego serwera FTP\"</string>
     <string name="remove_from_shortcuts">Usuń skrót</string>
     <string name="shortcut_added">Utworzono skrót %s</string>
     <string name="shortcut_removed">Skrót %s usunięty</string>
@@ -457,11 +491,16 @@
     <string name="add_to_indexed_folders">Indeks folderu</string>
     <string name="add_to_library">Dodaj do biblioteki</string>
     <string name="add_all_items_to_library">Dodać natychmiast wszystkie filmy do biblioteki?</string>
+    <string name="invalid_host">Nieprawidłowy format adresu hosta</string>
+    <string name="invalid_port">Nieprawidłowy format portu</string>
+    <string name="invalid_path">Nieprawidłowy format ścieżki</string>
+    <string name="shortcut_folder_added">Folder %s dodany jako skrót</string>
     <string name="indexed_folder_added">Folder %s dodany do biblioteki</string>
     <string name="remove_from_indexed_folders">Usuń z biblioteki</string>
     <string name="indexed_folder_removed">Folder %s usunięty z biblioteki</string>
     <string name="indexed_folders_list_empty">Brak obecnie indeksowanych folderów sieciowych.\n\nMożesz dodać zawartość folderu sieciowego do biblioteki przeglądając ten folder i wybierając \"%s\" na górnym pasku akcji.</string>
-    <string name="indexed_folders_list_empty_ftp">Brak aktualnie zindeksowanych folderów ftp.</string>
+    <string name="indexed_folders_list_empty_ftp">Brak aktualnie zindeksowanych folderów FTP.</string>
+    <string name="indexed_folders_list_empty_network">Brak folderów sieciowych obecnie indeksowanych.</string>
     <string name="open_indexed_folder">"Otwórz"</string>
     <string name="rescan_indexed_folders">Ponowne skanowanie wszystkich indeksowanych folderów</string>
     <string name="last_rescan_never">Nigdy</string>
@@ -486,17 +525,38 @@
     <string name="preferences_force_software_decoding_summary">Jeśli niektóre filmy nie są odtwarzane poprawnie, może spróbować tej opcji</string>
     <string name="preferences_force_audio_passthrough">Przekazywanie audio</string>
     <string name="preferences_force_audio_passthrough_disabled">Wyłączone (zalecane)</string>
-    <string name="preferences_force_audio_passthrough_enable">Tryb 1 (przestarzały)</string>
-    <string name="preferences_force_audio_passthrough_enable2">Tryb 2</string>
+    <string name="preferences_force_audio_passthrough_enable">Hermetyzacja Nova audio (eksperymentalna)</string>
+    <string name="preferences_force_audio_passthrough_enable2">Hermetyzacja systemu audio</string>
     <string name="preferences_force_audio_passthrough_summary">Wysyłaj skompresowany dźwięk przez HDMI lub S/PDIF. ⚠ Opcja eksperymentalna, może powodować utratę synchronizacji dźwięku z obrazem</string>
+    <string name="preferences_parser_sync_mode">Tryb synchronizacji parsera</string>
+    <string name="preferences_parser_sync_mode_cdata">Oparte na PTS (zalecane)</string>
+    <string name="preferences_parser_sync_mode_sample">oparte na próbce</string>
+    <string name="preferences_parser_sync_mode_summary">Tryb synchronizacji w parserze lavc. ⚠️ Eksperymentalne może skutkować skumulowanym opóźnieniem A/V</string>
+    <string name="preferences_stream_buffer_size_title">Rozmiar buforu strumienia</string>
+    <string name="preferences_stream_buffer_size_summary">Ilość pamięci podręcznej przed analizatorem do rozwiązywania problemów buforowania w MB</string>
+    <string name="preferences_stream_max_iframe_size_title">Maksymalny rozmiar i-frame</string>
+    <string name="preferences_stream_max_iframe_size_summary">Maksymalny rozmiar kompresji i-frame w MB</string>
+    <string name="preferences_force_passthrough">Wymuś przekazywanie dźwięku wprost</string>
+    <string name="preferences_force_passthrough_summary">Jeśli włączona jest funkcja przekazywania dźwięku, wymuś ją, nawet jeśli kodek audio nie jest obsługiwany przez odbiornik AV</string>
+    <string name="preferences_playback_speed">Prędkość odtwarzania</string>
+    <string name="preferences_playback_speed_summary">Włącz możliwość zmiany prędkości odtwarzania. ⚠️ Eksperymentalne może powodować choppy wideo</string>
     <string name="preferences_disable_downmix_title">Wyłącz downmix dźwięku</string>
     <string name="preferences_disable_downmix_summary">Zawsze dekoduj wszystkie kanały i niech Android decyduje o sposobie miksowania (możliwa utrata kanałów dialogowych)</string>
+    <string name="preferences_enable_downmix_androidtv_title">Wymuś downmix dźwięku</string>
+    <string name="preferences_enable_downmix_androidtv_summary">Zawsze miksuj ścieżkę dźwiękową wielu kanałów do stereo (wybierz, jeśli kanały głosowe nie są słyszalne)</string>
     <string name="preferences_allow_3rd_party_player">Zezwól na używanie innego odtwarzacza wideo</string>
     <string name="preferences_allow_3rd_party_player_summary">Inne kompatybilne aplikacje będą proponowane przez system Android podczas uruchamiania odtwarzania wideo. Pamiętaj, że niektóre funkcje nie będą działać (wznawianie, zakładki, itp.)</string>
-    <string name="preference_tv_3d_automatic_switch">Włącz automatyczne przełączanie TV 3D\"</string>
+    <string name="preference_tv_3d_automatic_switch">Włącz automatyczne przełączanie TV 3D</string>
     <string name="preference_tv_3d_automatic_switch_summary">Użyj tej funkcji tylko wtedy, gdy telewizor obsługuje 3D</string>
+    <string name="enable_android_frame_timing">Włącz synchronizację ramek systemu Android</string>
+    <string name="enable_android_frame_timing_summary">Delegowanie do Androida synchronizacji klatek w celu płynniejszego odtwarzania (eksperymentalne)</string>
     <string name="preference_tv_refreshrate_switch">Włącz automatyczne dostowanie częstotliwości odświeżania</string>
     <string name="preference_tv_refreshrate_switch_summary">Dostosowanie częstotliwości odświeżania ekranu do liczby ramek, aby wyelimować efekt szarpania obrazu (skuteczność zależy od telewizora)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">Wyłączone</string>
+    <string name="preferences_tv_refreshrate_switch_mode_selection">Wybór trybu wyświetlania dopasowany do liczby klatek na sekundę wideo</string>
+    <string name="preferences_tv_refreshrate_switch_match_frame_rate">Funkcja dopasowywania szybkości klatek w systemie Android 12</string>
+    <string name="preference_remove_dolby_vision">Wyłącz Dolby Vision</string>
+    <string name="preference_remove_dolby_vision_summary">Użyj standardowych kodeków wideo zamiast Dolby Vision</string>
     <string name="preference_cutout_short_edges">Pełny ekran na wyświetlaczu z wycięciami</string>
     <string name="preference_cutout_short_edges_summary">Zezwalaj na pełny ekran na wyświetlaczu z wycięciami</string>
     <string name="category_languages">Napisy</string>
@@ -508,6 +568,11 @@
     <string name="summary_list_preference_primary">Pobieraj napisy w swoim języku</string>
     <string name="favSubLang_title">Język napisów</string>
     <string name="favSubLang_summary">Wybierz preferowany język napisów</string>
+    <string name="favAudioLang_title">Preferowany język dźwięku</string>
+    <string name="favAudioLang_summary">Wybierz swój ulubiony język ścieżki audio</string>
+    <string name="ui_language_title">Wybierz język interfejsu użytkownika</string>
+    <string name="UiLang_title">Język interfejsu użytkownika</string>
+    <string name="UiLang_summary">Ustaw język interfejsu Nova, taki sam jak język systemowy</string>
     <string name="ui_mode_title">Tryb interfejsu użytkownika</string>
     <string name="ui_mode_summary">Wybierz interfejs: telewizor lub tablet/telefon</string>
     <string name="preferences_video_about">O aplikacji</string>
@@ -527,18 +592,24 @@
     <string name="tv_scraper">Seriale</string>
     <string name="movie_scraper">Filmy</string>
     <string name="enable_auto_scrap">Automatycznie pobierz opis dla nowych plików wideo</string>
+    <string name="enable_adult_scrap_title">Film wideo dla dorosłych</string>
+    <string name="enable_adult_scrap_summary">Włącz pobieranie informacji o filmach dla dorosłych (domyślnie wyłączone)</string>
     <string name="locale">Język systemu</string>
+    <string name="scraper_language_title">Język opisu wideo</string>
+    <string name="scraper_language_summary">Ustaw język używany do pobierania opisów wideo</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
     <string name="abort">Przerwij</string>
     <!--  Title of the video picker activity. -->
     <string name="video_picker_title">Wybierz film wideo</string>
     <!-- Archos File Info -->
+    <string name="video_info_custom_search_file_hint">"\"\"Nazwa filmu\" lub \"Nazwa serialu S01E01\""</string>
     <string name="video_info_custom_search_show_hint">Nazwa serialu</string>
     <string name="scrap_show_no_result">Nie odnaleziono pasujących seriali.</string>
     <string name="video_info_backdrop_select">Wybierz inny obraz</string>
     <string name="video_info_backdrop_remove">Usuń</string>
     <string name="video_info_backdrop_set_as">Ustaw zdjęcie jako</string>
+    <string name="video_info_share_message">"Oglądałem film \"%1$s\" na mojej Nova %2$s"</string>
     <string name="notification_mode">Powiadomienia</string>
     <string name="notifications_all">Wszystkie powiadomienia</string>
     <string name="notifications_alerts">Tylko powiadomienia</string>
@@ -547,25 +618,60 @@
     <string name="format_fullscreen">Pełny ekran</string>
     <string name="format_optimized">Zoptymalizowany</string>
     <string name="format_original">Oryginalny</string>
+    <string name="format_stretched">Rozciągnięty</string>
+    <string name="stereo_dive_enable">Efekt nurkowania stereo</string>
+    <string name="stereo_dive_disable">Wyłącz efekt stereo dive</string>
     <string name="rotation_unlock">Automatyczna orientacja ekranu</string>
     <string name="rotation_locked">Automatyczna rotacja ekranu wyłączona</string>
     <string name="rotation_unlocked">Automatyczna rotacja ekranu włączona</string>
     <string name="network_reindex">Ponowne skanowanie zawartości</string>
     <!-- Help overlay -->
+    <string name="help_overlay_menu">Naciśnij klawisz strzałki w górę,\naby wyświetlić menu telewizora</string>
+    <string name="help_overlay_ssh_indexing_text">Wybierz opcję \"Dodaj jako skrót\", aby szybko wrócić do swojego serwera.</string>
+    <string name="help_overlay_network_indexing_text1">Naciśnij ten element menu, aby zintegrować zawartość tego folderu i jego podfolderów z biblioteką wideo.</string>
+    <string name="help_overlay_network_indexing_text1_lb">Naciśnij ten element menu, aby zintegrować zawartość tego folderu i jego podfolderów z biblioteką wideo.</string>
+    <string name="help_overlay_network_indexing_text2">Pozwala na pobieranie plakatów i opisów dla filmów i seriali.</string>
+    <string name="help_overlay_scraper_text">Naciśnij ten element menu, aby wyszukać plakaty i opisy online dla filmów. </string>
+    <string name="help_overlay_network_shortcut_text1_lb">Użyj przycisku +, aby dodać ten folder jako skrót sieciowy i mieć możliwość dodawania jego zawartości i podfolderów do biblioteki wideo.</string>
     <string name="new_videos_count">Nowe Filmy: %d</string>
+    <string name="new_videos_scrape_message">Masz nowe materiały, które nie mają jeszcze informacji i plakatów.</string>
+    <string name="network_bookmarks">Wznów punkty i zakładki pozycji w sieci</string>
     <string name="network_thumbnails">Utwórz zdalne miniaturki</string>
+    <string name="network_thumbnails_summary">Utwórz miniaturki ze zdalnych filmów gdy nie ma dostępnego plakatu</string>
+    <string name="network_bookmarks_summary">Zapisz i sprawdź ponownie punkt i umiejscowienie zakładek w sieci jeśli to możliwe</string>
+    <string name="share_folders_smbj">Użyj szybszej implementacji SMB (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Włącz szybszą przepustowość SMB, ale ogranicza obsługę protokołu powyżej wersji 2</string>
+    <string name="share_folders_sshj">Użyj nowszej implementacji SFTP</string>
+    <string name="share_folders_sshj_summary">Włącz nową implementację SFTP dla linków SFTP</string>
+    <string name="share_folders_smbv2">Włącz obsługę SMB v2</string>
+    <string name="share_folders_smbv2_summary">Włącz obsługę protokołu udostępniania sieci SMB w wersji 2.</string>
     <string name="share_folders_smb_resolv">Porządek wyszukiwania SMB</string>
     <string name="share_folders_smb_resolv_summary">Włącz BCAST, DNS (domyślnie: DNS, BCAST). Zmień, jeśli serwer nie odpowiada lub SMB działa wolno.</string>
+    <string name="share_folders_smb_disable_tcp_discovery">Wyłącz wyszukiwanie SMB TCP</string>
+    <string name="share_folders_smb_disable_tcp_discovery_summary">Wyłącz wykrywanie TCP, jeśli na niektórych urządzeniach występują niestabilne WiFi.</string>
+    <string name="share_folders_smb_disable_udp_discovery">Wyłącz wyszukiwanie SMB UTP</string>
+    <string name="share_folders_smb_disable_udp_discovery_summary">Wyłącz wyszukiwanie UDP, jeśli na niektórych urządzeniach występują niestabilne Wi-Fi (np. Amazon Fire 10 HD).</string>
+    <string name="share_folders_smb_disable_mdns_discovery">Wyłącz wyszukiwanie SMB TCP</string>
+    <string name="share_folders_smb_disable_mdns_discovery_summary">Wyłącz odkrywanie mDNS, jeśli na niektórych urządzeniach występują niestabilne WiFi.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">Ogranicz odkrycie SMB do mDNS</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Wyłącz odkrywanie UDP/TCP, jeśli na niektórych urządzeniach występują niestabilne Wi-Fi (np. Amazon Fire 10 HD). ⚠️ Zapobiegnie prawidłowemu odkrywaniu w ChromeOS.</string>
     <string name="connection_abnormally_long">Nawiązywanie połączenia trwa zbyt długo. Zresetować?</string>
     <string name="connection_reset">Resetowanie</string>
     <!-- Info dialog, not indexed file -->
+    <string name="video_info_unindexed_message">Ten plik nie jest obecnie indeksowany w bibliotece wideo.\nWyszukiwanie plakatów i informacji jest dostępne tylko dla zindeksowanych plików.\nCzy chcesz zaindeksować je teraz?</string>
+    <string name="video_info_unindexed_message2">Plik jest przetwarzany. To może chwilę potrwać.</string>
     <string name="video_browser_index_file">Dodaj do biblioteki</string>
     <string name="video_browser_unindex_file">Usuń z biblioteki</string>
     <!-- Brightness -->
+    <string name="auto_brightness_message">Jasność nie może zostać zmieniona, ponieważ tryb automatycznej jasności jest obecnie włączony.</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">Przetwórz pliki \'nfo\'</string>
+    <string name="network_nfo_parse_summary">Czytaj pliki Kodi \'.nfo\' podczas (ponownego) skanowania w celu zebrania informacji o mediach i plakatów.</string>
+    <string name="ask_to_mail_media_DB">Czy chcesz wysłać swoją bazę danych wideo do zespołu programistów Nova, aby pomóc im sprawdzić błąd?\n\nPliki wideo nie są (kurs) obsługiwane, ale pełna lista nazw plików.</string>
     <string name="no_email_installed">Nie odnaleziono klienta poczty e-mail</string>
+    <string name="zipping_library_before_mailing">Zainicjowanie kopii biblioteki przed wysłaniem jej…</string>
     <string name="zipped_library_mail_subject">Zrzut bazy danych video Nova</string>
+    <string name="zipped_library_mail_text">Proszę opisać problem, którego doświadczasz\n\n</string>
     <string name="sort_mode">Tryb sortowania</string>
     <string name="sort_by_name_asc">Sortuj po nazwie (a &gt; z)</string>
     <string name="sort_by_name_desc">Sortuj po nazwie (a &gt; z)</string>
@@ -580,19 +686,55 @@
     <string name="sort_by_rating_asc">Sortuj po ocenach (najpierw najwyższe)</string>
     <string name="sort_by_date_added_desc">Sortuj po dacie dodania (najpierw nowsze)</string>
     <string name="sort_by_date_added_asc">Sortuj po dacie dodania (najpierw starsze)</string>
+    <string name="sort_by_date_played_desc">Sortuj po dacie dodania (najpierw nowsze)</string>
     <string name="sort_by_date_premiered_desc">Sortuj po dacie premiery (najpierw nowsze)</string>
     <string name="sort_by_date_premiered_asc">Sortuj po dacie premiery (najpierw starsze)</string>
+    <string name="sort_by_date_aired_desc">Sortuj po dacie dodania (najpierw nowsze)</string>
     <string name="sort_by_recently_added_episode_desc">Najpierw ostatnio dodane odcinki</string>
+    <string name="sort_by_size_asc">Sortuj po dacie (najpierw najstarsze)</string>
+    <string name="sort_by_size_desc">Sortuj po dacie (najpierw najstarsze)</string>
     <string name="dec_choice_title">Wybierz dekoder</string>
+    <string name="dec_choice_summary">Zaawansowane ustawienia, mogą uszkodzić dekodowanie wideo.</string>
     <string name="dec_hw_omx">Dekoder sprzętowy (IOMX w/ swbuf)</string>
     <string name="dec_hw_omxplus">Dekoder sprzętowy (IOMX w/ hwbuf)</string>
     <string name="dec_hw_omxcodec">Dekoder sprzętowy (OMXCodec)</string>
     <string name="dec_hw_mediacodec">Dekoder sprzętowy (MediaCodec)</string>
     <string name="dec_sw">Dekoder programowy</string>
+    <string name="dec_hw">Dekodowanie sprzętowe</string>
+    <string name="dec_unknown">Nieznane dekodowanie</string>
     <string name="dec_any">Domyślne</string>
     <string name="dec_android">Android MediaPlayer</string>
+    <string name="audio_interface_choice_title">Wybierz interfejs audio</string>
+    <string name="audio_interface_choice_summary">Zaawansowane ustawienia, mogą uszkodzić dekodowanie wideo.</string>
+    <string name="audio_interface_opensles">Wymuś OpenSL ES</string>
+    <string name="audio_interface_audiotrack">Wymuś odtwarzanie dźwięku</string>
+    <string name="audio_interface_any">Domyślna logika</string>
     <string name="preferences_user_interface">Interfejs użytkownika</string>
+    <string name="preferences_display_resume_box_summary">Wyświetl lub ukryj przycisk wznawiający najnowsze wideo na ekranie głównym</string>
+    <string name="preferences_display_resume_box">Wyświetl pole wznowienia</string>
+    <string name="preferences_leanback_user_interface">Interfejs użytkownika</string>
+    <string name="preferences_separate_animation_from_movies_summary">Zaznacz, aby oddzielić animacje od filmów i seriali telewizyjnych dodając wiersz animacji</string>
+    <string name="preferences_separate_animation_from_movies">Oddziel animacje od filmów i seriali</string>
+    <string name="preferences_show_watching_up_next_row_summary">Zaznacz, aby wyświetlić wiersz z aktualnie oglądanymi i kolejnymi filmami</string>
+    <string name="preferences_show_watching_up_next_row">Pokaż obserwację/górę następnego wiersza</string>
+    <string name="preferences_show_last_added_row_summary">Zaznacz, aby wyświetlić wiersz z ostatnio dodanymi multimediami</string>
+    <string name="preferences_show_last_added_row">Pokaż ostatnio dodany wiersz</string>
+    <string name="preferences_show_last_played_row_summary">Zaznacz, aby wyświetlić wiersz z ostatnio odtwarzanymi multimediami</string>
+    <string name="preferences_show_last_played_row">Pokaż ostatnio dodany wiersz</string>
+    <string name="preferences_reset_last_played_row">Pokaż ostatnio dodany wiersz</string>
+    <string name="reset_last_played_row_in_progress">Pokaż ostatnio dodany wiersz</string>
+    <string name="preferences_show_all_movies_row_summary">Zaznacz, aby pokazać wiersz ze wszystkimi filmami zamiast wiersza kategorii filmów</string>
+    <string name="preferences_show_all_movies_row">Pokaż cały wiersz filmu</string>
+    <string name="preferences_movie_sort_order_summary">Wybierz kolejność sortowania wszystkich filmów</string>
+    <string name="preferences_movie_sort_order_title">Porządek sortowania wszystkich filmów</string>
+    <string name="preferences_show_all_tv_shows_row_summary">Zaznacz, aby pokazać wiersz ze wszystkimi filmami zamiast wiersza kategorii filmów</string>
+    <string name="preferences_show_all_tv_shows_row">Pokaż cały wiersz serialu</string>
+    <string name="preferences_tv_show_sort_order_summary">Wybierz kolejność sortowania wszystkich filmów</string>
     <string name="preferences_tv_show_sort_order_title">Porządek sortowania seriali</string>
+    <string name="preferences_show_all_animes_row_summary">Zaznacz, aby pokazać wiersz ze wszystkimi filmami zamiast wiersza kategorii filmów</string>
+    <string name="preferences_show_all_animes_row">Pokaż wiersz wszystkich animacji</string>
+    <string name="preferences_anime_sort_order_summary">Wybierz kolejność sortowania wszystkich filmów</string>
+    <string name="preferences_anime_sort_order_title">Porządek sortowania wszystkich filmów</string>
     <string name="codepage_title">Kodowanie napisów</string>
     <string name="codepage_summary">Ustaw kodowanie używane w napisach tekstowych</string>
     <string name="codepage_default">Język urządzenia %s</string>
@@ -604,6 +746,7 @@
     <string name="codepage_1250">Europa wschodnia (CP1250)</string>
     <string name="codepage_1251">Cyrylica (CP1251)</string>
     <string name="codepage_1252">Zachodnia Europa (CP1252)</string>
+    <string name="codepage_28606">Europa wschodnia (CP1250)</string>
     <string name="codepage_1253">Grecki(CP1253)</string>
     <string name="codepage_1254">Turecki (CP1254)</string>
     <string name="codepage_1255">Hebrajski(CP1255)</string>
@@ -631,9 +774,13 @@
     <string name="blocklist_invalid">Nieprawidłowa blocklista</string>
     <string name="blocklist_downloading">Pobieranie blocklisty</string>
     <string name="blocklist_file_not_found">Nie znaleziono pliku</string>
+    <string name="blocklist_success">Blocklist został odświeżony</string>
     <string name="blocklist_unknown_error">Nieznany</string>
     <string name="blocklist_not_loaded">Nie załadowany</string>
     <string name="torrent_blocklist_url">Adres Url bloklisty</string>
+    <string name="sdk_not_supported">Android 4.3 nie jest jeszcze obsługiwany.\nCiężko pracujemy, aby go naprawić i mamy nadzieję, że nowa wersja pojawi się wkrótce!</string>
+    <string name="manually_create_share">Dodaj zindeksowany folder przez URI</string>
+    <string name="share_infos_incomplete">Musisz wypełnić ścieżkę</string>
     <string name="share_path">Ścieżka</string>
     <string name="category_trakt">Trakt</string>
     <string name="trakt_user">Nazwa użytkownika</string>
@@ -649,28 +796,38 @@
     <string name="trakt_signin_title">Zaloguj się</string>
     <string name="trakt_wipe_dialog_title">Wylogować z Trakt.tv\?</string>
     <string name="trakt_wipe_title">Wylogowano z Trakt.tv</string>
+    <string name="trakt_live_scrobbling_title">Funkcjonujący scrobbler</string>
+    <string name="trakt_live_scrobbling_summary">Udostępnij materiały oglądane na Trakt</string>
     <string name="trakt_getfull_summary">Trakt scrobbler jest dostępny tylko w płatnej wersji</string>
     <string name="trakt_sync_collection_title">Synchronizuj seriale i kolekcje filmowe</string>
+    <string name="trakt_sync_trakt_resume_title">Synchronizuj pozycję wznowienia trakt</string>
+    <string name="trakt_sync_trakt_resume">Użyj pozycji wznawiania trakt gdy jest bardziej zaawansowana niż lokalna</string>
+    <string name="trakt_sync_collection_summary">Automatycznie dodaj wszystkie materiały z biblioteki Nova do swojej kolekcji Trakt</string>
     <string name="trakt_toast_syncing">Synchronizowanie z Trakt&#8230;</string>
     <string name="show_all">Wszystkie wideo</string>
     <string name="hide_seen">Nie obejrzane</string>
     <string name="search_results">Wynik wyszukiwania</string>
     <string name="no_results_found">Nie znaleziono wyników.</string>
+    <string name="no_results_found_show_helper">Dla serialu określ sezon i odcinek, na przykład \"S01E01\"</string>
+    <string name="leanback_video_info_custom_search_file_hint">"Nazwa filmu lub Nazwa serialu S01E01"</string>
     <string name="activate_private_mode">Aktywuj tryb prywatny</string>
     <string name="deactivate_private_mode">Deaktywuj tryb prywatny</string>
     <string name="private_mode_is_on">Tryb prywatny włączony</string>
     <string name="private_mode_is_off">Tryb prywatny wyłączony</string>
     <string name="private_mode">Tryb prywatny</string>
+    <string name="private_mode_description">W trybie prywatnym, następujące funkcje są wyłączone:\n
+        - Automatyczne indeksowanie i automatyczne usuwanie odtwarzanych filmów\n
+        - Ostatnio odtwarzane\n
+        - Wznów punkt\n
+        - Synchronizacja Trakt</string>
     <string name="dont_show_again">Nie pokazuj ponownie</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Sieć i Pliki</string>
     <string name="leanback_subtitles_integrated">Zintegrowane napisy</string>
     <string name="leanback_subtitles_external">Napisy zewnętrzne</string>
     <string name="leanback_posters_header">Plakaty</string>
+    <string name="leanback_season_posters_header">Plakaty sezonu</string>
     <string name="leanback_backdrops_header">Tapety</string>
+    <string name="leanback_tvshow_backdrops_header">Tła serialu</string>
     <string name="leanback_poster_changed">Plakat został zmieniony</string>
     <string name="leanback_backdrop_changed">Tapeta została zmieniona</string>
     <string name="leanback_weblinks_header">Linki</string>
@@ -682,30 +839,59 @@
     <string name="leanback_scrap_searching_tvshow_hint">Nazwa serialu</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Starszy interfejs</string>
+    <string name="leanback_hint_long_press_on_back">Wskazówka: długie naciśnięcie przycisku powrotu zamyka przeglądarkę plików</string>
     <string name="leanback_archos_video_webview">Nova Video Basic WebView</string>
+    <string name="file_access_error">Nie udało się uzyskać dostępu do pliku</string>
     <string name="interface_size">Wielkość interfejsu</string>
+    <string name="interface_size_summary">Zmień to w przypadku, gdy interfejs użytkownika jest zbyt mały lub zbyt duży</string>
     <string name="interface_size_very_small">Bardzo mały (mdpi)</string>
     <string name="interface_size_small">Mały (hdpi)</string>
     <string name="interface_size_standard">Standard (xhdpi)</string>
     <string name="interface_size_large">Duży (xxhdpi)</string>
     <string name="rescan">Przeskanuj</string>
+    <string name="rescan_description">Przeskanuj ponownie zindeksowane foldery, aby dodać nową zawartość do biblioteki</string>
     <string name="rescan_now">Przeskanuj teraz</string>
     <string name="rescan_now_description">Przeskanuj ręcznie</string>
+    <string name="rescan_select_shares">Wybierz skróty</string>
+    <string name="rescan_select_shares_description">Wybierz skróty sieciowe do ponownego skanowania automatycznie</string>
+    <string name="rescan_error_wifi_info_standby">WiFi wydaje się być wyłączone w trybie czuwania. Aby zapewnić powodzenie automatycznego skanowania, włącz WiFi w trybie czuwania.</string>
+    <string name="rescan_error_wifi">Błąd: Wi-Fi zostało wyłączone podczas ponownego skanowania</string>
+    <string name="rescan_error_wifi_click_for_more_info">kliknij po więcej informacji</string>
+    <string name="rescan_error_server">Błąd: nie można połączyć się z serwerem</string>
+    <string name="scan_running">Skanowanie uruchomione</string>
+    <string name="scheduled_rescan">Zaplanowane skanowanie</string>
+    <string name="scheduled_rescan_period">Czas skanowania</string>
+    <string name="scheduled_rescan_period_no">Brak</string>
     <string name="scheduled_rescan_period_once_a_day">Raz dziennie</string>
     <string name="scheduled_rescan_period_twice_a_day">Dwa razy dziennie</string>
     <string name="scheduled_rescan_period_every_six_hours">Co 6 godzin</string>
     <string name="scheduled_rescan_period_every_two_hours">Co 2 godziny</string>
     <string name="scheduled_rescan_period_every_hour">Co godzinę</string>
+    <string name="scheduled_rescan_time">Czas ponownego skanowania</string>
+    <string name="rescan_when_opening_application">Przeskanuj ponownie po otwarciu aplikacji</string>
+    <string name="last_rescan_occured">Ostatni skan:</string>
+    <string name="error_permission_display_over_apps">Tryb okna wymaga specjalnych uprawnień do wyświetlania nad innymi aplikacjami. Proszę przyznać Nova Video Player uprawnienia do wyświetlania nad innymi aplikacjami, aby przełączyć się na tryb okna.</string>
     <string name="intro_overlay_text">Dotknij, aby przesyłać do telewizora</string>
+    <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Zobacz więcej</string>
     <string name="nfo_export_in_progress">Trwa eksportowanie NFO</string>
+    <string name="rescrap_in_progress">Aktualizowanie całej biblioteki</string>
+    <string name="rescrap_movies_in_progress">Zaktualizuj wszystkie filmy</string>
+    <string name="rescrap_collections_in_progress">Zaktualizuj wszystkie zbiory</string>
+    <string name="acquire_external_usb_permission">Nova Video wymaga specjalnego pozwolenia na dostęp do pamięci zewnętrznej. Wybierz swoją pamięć na następnym ekranie</string>
     <string name="rescrap_not_found">Aktualizuj pliki bez opisu</string>
     <string name="rescrap_all_title">Aktualizuj wszystko</string>
     <string name="rescrap_all_movies_title">Zaktualizuj wszystkie filmy</string>
     <string name="rescrap_all_collections_title">Zaktualizuj wszystkie zbiory</string>
+    <string name="nfo_export_manual_title">Eksportuj zaktualizowane wideo</string>
+    <string name="nfo_export_manual_summary">Eksportuj pliki .nfo wszystkich zaktualizowanych plików video</string>
+    <string name="db_export_manual_title">Eksportuj bazę multimediów</string>
+    <string name="db_export_manual_summary">Eksportuj plik media.db do /sdcard dla celów debugowania</string>
+    <string name="db_export_in_progress">Eksport bazy danych w toku</string>
     <string name="system">System</string>
     <string name="keep_setting">Zapamiętaj to ustawienie</string>
+    <string name="select_sub_file"><![CDATA[Nie znaleziono dokładnych napisów dla pliku <font color=#29b6f6><i>%s</i></font><br />Spróbuj skorzystać z tej listy:]]></string>
     <string name="switch_remote_empty_message">Przełączenie w tryb zdalnego ekranu może udostępnić więcej opcji śledzenia</string>
     <string name="cast_stream_mode">Tryb przesyłania strumieniowego</string>
     <string name="cast_remote_display_mode">Zdalny ekran</string>
@@ -722,7 +908,9 @@
         \nW zależności od urządzenia i połączenia sieciowego, może wystąpić obniżenie jakości i problem z wydajnością. </string>
     <string name="picture_in_picture">Obraz w obrazie</string>
     <string name="cast">Przesyłaj</string>
+    <string name="cast_warning">Obsługa przesyłania strumieniowego jest ograniczona ze względu na ograniczenia kodeka Chromecast. Aby złagodzić te ograniczenia, wdrożono 2 tryby przesyłania strumieniowego: Chromecast i Screencast (z automatycznym powrotem). Należy pamiętać, że problemy z wydajnością i jakością mogą również wynikać z ograniczeń sieci lub urządzenia.</string>
     <string name="cast_warning_title">Funkcje eksperymentalne</string>
+    <string name="cast_fallback_message">Błąd: powrót do przesyłania ekranu</string>
     <string name="cast_introduction">Nowa funkcja eksperymentalna: \nGoogle cast</string>
     <string name="cast_select_for_full_control">Dotknij, aby rozwinąć panel pilota</string>
     <string name="cast_audio_background">Gdy odtwarzacz Nova działa w tle, nie ma dźwięku</string>
@@ -735,6 +923,8 @@
     <string name="create_new_list">Utwórz nową listę</string>
     <string name="add_to_list">Dodaj do listy</string>
     <string name="no_resume_available">Brak punktów wznowienia odtwarzania</string>
+    <string name="no_list_detected">Obecnie nie wykryto żadnej listy. Lista może zostać utworzona przez dodanie nowych elementów bezpośrednio z informacji wideo lub może być zsynchronizowana z Twoim kontem trakt.</string>
+    <string name="premium_already_purchased">Premium został już zakupiony</string>
     <string name="remove_from_list">Usuń z listy</string>
     <string name="warning_swdec">Ostrzeżenie: dekodowanie sprzętowe wyłączone!</string>
     <string name="list_title">Tytuł listy</string>
@@ -745,4 +935,8 @@
     <string name="enable_sponsor_title">Włącz link sponsora Nova</string>
     <string name="enable_sponsor_summary">Włącz link sponsora dla darowizn: każda pomoc jest ważna.</string>
     <string name="upgrade_info">Informacje o aktualizacji</string>
+    <string name="v5_v6_upgrade_info">OSTRZEŻENIE: ta główna aktualizacja oprogramowania Nova wymaga ponownego przeskanowania całej kolekcji wideo w celu ponownego uzyskania informacji multimedialnych.
+         Aby uniknąć problemów, zdecydowanie zaleca się ponowne uruchomienie systemu od czystej instalacji. Aby poznać szczegóły, sprawdź FAQ.</string>
+    <string name="networks">Sieć:</string>
+    <string name="premiered">Premiera:</string>
 </resources>

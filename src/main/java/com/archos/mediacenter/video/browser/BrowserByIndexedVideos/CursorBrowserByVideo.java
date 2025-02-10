@@ -60,7 +60,9 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
 	protected static final int MENU_ITEM_RATING = 0x40;
 	protected static final int MENU_ITEM_ADDED = 0x50;
 	protected static final int MENU_ITEM_GENRE = 0x60;
-	protected static final int MENU_ITEM_SORT_TYPE_MASK = 0xF0;
+    protected static final int MENU_ITEM_DATE = 0x70;
+    protected static final int MENU_ITEM_SIZE = 0x80;
+    protected static final int MENU_ITEM_SORT_TYPE_MASK = 0xF0;
 
 	protected static final int MENU_ITEM_ASC = 0x00;
 	protected static final int MENU_ITEM_DESC = 0x01;

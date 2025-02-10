@@ -19,7 +19,6 @@ import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;

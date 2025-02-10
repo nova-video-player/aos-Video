@@ -14,8 +14,10 @@
 
 package com.archos.mediacenter.video.leanback.network;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -34,17 +36,21 @@ import android.widget.Toast;
 
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.browser.ShortcutDb;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
 import com.archos.mediacenter.video.leanback.adapter.object.Shortcut;
 import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
 import com.archos.mediacenter.video.leanback.presenter.ShortcutDetailsPresenter;
+import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.NetworkScanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NetworkShortcutDetailsFragment extends DetailsSupportFragment implements OnActionClickedListener {
 
-    private static final String TAG = "NetworkShortcutDetailsFragment";
+    private static final Logger log = LoggerFactory.getLogger(NetworkShortcutDetailsFragment.class);
 
     public static final String SHARED_ELEMENT_NAME = "hero";
 
@@ -53,8 +59,21 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
     private static final int ACTION_REINDEX = 0;
     protected static final int ACTION_OPEN = 1;
     protected static final int ACTION_REMOVE = 2;
+    private static final int ACTION_ADD_INDEX = 4;
 
     protected Shortcut mShortcut;
+
+    public boolean isHimselfIndexedFolder = false;
+    public boolean isCurrentDirectoryShortcut = false;
+    public boolean isCurrentDirectoryIndexed = false;
+
+    public void checkIfIsShortcut(Uri uri) {
+        String uriStringWithoutCred = uri.toString();
+        isCurrentDirectoryIndexed = ShortcutDbAdapter.VIDEO.isHimselfOrAncestorShortcut(getActivity(), uriStringWithoutCred);
+        isHimselfIndexedFolder = ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), uriStringWithoutCred) > 0;
+        isCurrentDirectoryShortcut = (ShortcutDb.STATIC.isShortcut(getContext(), uriStringWithoutCred) != -1);
+        log.debug("checkIfIsShortcut: isCurrentDirectoryIndexed=" + isCurrentDirectoryIndexed + ", isHimselfIndexedFolder=" + isHimselfIndexedFolder + ", isCurrentDirectoryShortcut=" + isCurrentDirectoryShortcut);
+    }
 
     private ArchosDetailsOverviewRowPresenter mDetailsRowPresenter;
 
@@ -75,6 +94,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
 
         DetailsOverviewRow detailRow = new DetailsOverviewRow(mShortcut);
         detailRow.setImageScaleUpAllowed(false);
+        checkIfIsShortcut(mShortcut.getUri());
         addActions(detailRow);
         mHandler = new Handler();
         mDetailsRowPresenter = new ArchosDetailsOverviewRowPresenter(new ShortcutDetailsPresenter());
@@ -124,6 +144,13 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
     }
 
     public void addActions(DetailsOverviewRow detailRow){
+        // here either shortcut or indexed folder opened
+        // if shortcut
+        // -> if ancestor or himself indexed
+        //   -> if himself indexed (open/rescan folder/remove indexed)
+        //   -> else (open/rescan folder/remove shortcut)
+        // -> else (open/index folder/remove shortcut)
+        // else (implicitly indexed) (open/rescan/remove indexed)
         detailRow.setActionsAdapter(new SparseArrayObjectAdapter() {
             @Override
             public int size() { return 3; }
@@ -131,14 +158,39 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
             public Object get(int position) {
                 switch(position) {
                     case 0: return new Action(ACTION_OPEN, getResources().getString(R.string.open_indexed_folder));
-                    case 1: return new Action(ACTION_REINDEX, getResources().getString(R.string.network_reindex));
-                    case 2: return new Action(ACTION_REMOVE, getResources().getString(R.string.remove_from_indexed_folders));
+                    case 1: // add or rescan
+                        if (isCurrentDirectoryShortcut) {
+                            if (isCurrentDirectoryIndexed) { // ancestor or current indexed -> rescan folder
+                                return new Action(ACTION_REINDEX, getResources().getString(R.string.network_reindex));
+                            } else { // ancestor or current not indexed -> index folder
+                                return new Action(ACTION_ADD_INDEX, getResources().getString(R.string.add_to_indexed_folders));
+                            }
+                        } else { // implicitly indexed -> rescan
+                            return new Action(ACTION_REINDEX, getResources().getString(R.string.network_reindex));
+                        }
+                    case 2: // remove
+                        if (isCurrentDirectoryShortcut) {
+                            if (isCurrentDirectoryIndexed) { // ancestor or current indexed
+                                if (isHimselfIndexedFolder) // indexed folder -> remove from library
+                                    return new Action(ACTION_REMOVE, getResources().getString(R.string.remove_from_indexed_folders));
+                                else // shortcut and not indexed folder -> remove shortcut
+                                    return new Action(ACTION_REMOVE, getResources().getString(R.string.remove_from_shortcuts));
+                            } else { // ancestor or current not indexed -> remove shortcut
+                                return new Action(ACTION_REMOVE, getResources().getString(R.string.remove_from_shortcuts));
+                            }
+                        } else { // implicitly indexed -> remove from library
+                            return new Action(ACTION_REMOVE, getResources().getString(R.string.remove_from_indexed_folders));
+                        }
                     default: return null;
                 }
             }
         });
-        detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_folder_indexed));
+        detailRow.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                (isHimselfIndexedFolder) ?
+                        R.drawable.filetype_new_folder_indexed :
+                        VideoUtils.getShortcutImageLeanback(mShortcut.getUri())));
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -177,14 +229,14 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
         getView().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getActivity().finish();
+                Activity activity = getActivity();
+                if (activity != null) activity.finish(); // better safe than sorry
             }
         }, 200);
     }
 
     @Override
     public void onActionClicked(Action action) {
-
         if (action.getId() == ACTION_OPEN) {
             Intent intent = new Intent(getActivity(), ListingActivity.getActivityForUri(mShortcut.getUri()));
             intent.putExtra(ListingActivity.EXTRA_ROOT_URI, mShortcut.getUri());
@@ -195,19 +247,46 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
             NetworkScanner.scanVideos(getActivity(), mShortcut.getUri());
             slightlyDelayedFinish();
         }
+        else if (action.getId() == ACTION_ADD_INDEX) { // can be indexed or shortcut
+            // if ! ancestor or himself indexed
+            // -> if shortcut: remove shortcut and index folder
+            // -> else index folder
+            // else: do nothing
+            boolean updateShortcuts = false;
+            if (! isCurrentDirectoryIndexed) { // ancestor folder not indexed
+                if (isCurrentDirectoryShortcut) { // remove shortcut since it gets indexed
+                    ShortcutDb.STATIC.removeShortcut(getContext(), mShortcut.getUri());
+                    updateShortcuts = true;
+                }
+                if (ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(mShortcut.getName(), mShortcut.getUri().toString()))) {
+                    Toast.makeText(getActivity(), getString(R.string.indexed_folder_added, mShortcut.getName()), Toast.LENGTH_SHORT).show();
+                    NetworkScanner.scanVideos(getActivity(), mShortcut.getUri());
+                    updateShortcuts = true;
+                }
+            }
+            if (updateShortcuts) getActivity().setResult(NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED);
+            slightlyDelayedFinish();
+        }
         else if (action.getId() == ACTION_REMOVE) {
-            boolean result = ShortcutDbAdapter.VIDEO.deleteShortcut(getActivity(), mShortcut.getId());
+            // if shortcut: remove shortcut
+            // if indexed: unindex
+            boolean result = false;
+            if (isCurrentDirectoryShortcut)
+                result = ShortcutDb.STATIC.removeShortcut(getContext(), mShortcut.getUri())>0;
+            if (isHimselfIndexedFolder)
+                result = ShortcutDbAdapter.VIDEO.deleteShortcut(getActivity(), mShortcut.getId());
             if (result) {
-                Toast.makeText(getActivity(), getString(R.string.indexed_folder_removed, mShortcut.getName()), Toast.LENGTH_SHORT).show();
+                if (isCurrentDirectoryShortcut) Toast.makeText(getActivity(), getString(R.string.shortcut_removed, mShortcut.getName()), Toast.LENGTH_SHORT).show();
+                if (isHimselfIndexedFolder) Toast.makeText(getActivity(), getString(R.string.indexed_folder_removed, mShortcut.getName()), Toast.LENGTH_SHORT).show();
                 // Send a delete request to MediaScanner
-                NetworkScanner.removeVideos(getActivity(), mShortcut.getUri());
+                if (isHimselfIndexedFolder) // only if indexed
+                    NetworkScanner.removeVideos(getActivity(), mShortcut.getUri());
                 // set caller result
                 getActivity().setResult(NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED);
             }
             else {
                 Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
             }
-
             slightlyDelayedFinish();
         }
 

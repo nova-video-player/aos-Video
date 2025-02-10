@@ -29,27 +29,31 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 
-import androidx.core.content.ContextCompat;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.archos.filecorelibrary.CopyCutEngine;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.OperationEngineListener;
 import com.archos.mediacenter.video.R;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
-public class FileManagerService extends Service implements OperationEngineListener{
+public class FileManagerService extends Service implements OperationEngineListener, DefaultLifecycleObserver {
 
-    private static final String TAG = "FileManagerService";
-    private static final boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(FileManagerService.class);
 
     private ArrayList<MetaFile2> mProcessedFiles = null;
     private IBinder localBinder;
@@ -80,6 +84,7 @@ public class FileManagerService extends Service implements OperationEngineListen
     private Uri mTarget;
     private PowerManager.WakeLock mWakeLock;
 
+    private boolean isReceiverRegistered = false;
 
     public enum FileActionEnum {
         NONE, COPY, CUT, DELETE, COMPRESSION, EXTRACTION
@@ -100,30 +105,28 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     public FileManagerService() {
         super();
-        if (DBG) Log.d(TAG, "FileManagerService: setting fileManagerService not to null");
+        log.debug("FileManagerService: setting fileManagerService not to null");
         fileManagerService = this;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        if (DBG) Log.d(TAG, "onCreate: creating notification channel first");
+        log.debug("onCreate: creating notification channel first");
 
         // need to do that early to avoid ANR on Android 26+
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel nc = new NotificationChannel(notifChannelId, notifChannelName,
-                    nm.IMPORTANCE_LOW);
+                    NotificationManager.IMPORTANCE_LOW);
             nc.setDescription(notifChannelDescr);
             if (nm != null)
                 nm.createNotificationChannel(nc);
         }
         nb = new NotificationCompat.Builder(this, notifChannelId)
-                .setSmallIcon(R.drawable.video2)
+                .setSmallIcon(R.drawable.nova_notification)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setTicker(null).setOnlyAlertOnce(true).setOngoing(true).setAutoCancel(true);
-        startForeground(PASTE_NOTIFICATION_ID, nb.build());
-
         mLastStatus = ActionStatusEnum.NONE;
         localBinder = new FileManagerServiceBinder();
         mOpenAtTheEnd = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(OPEN_AT_THE_END_KEY, true);
@@ -146,13 +149,16 @@ public class FileManagerService extends Service implements OperationEngineListen
         IntentFilter filter = new IntentFilter();
         filter.addAction("CANCEL");
         filter.addAction("OPEN");
-        registerReceiver(receiver, filter);
+        if (Build.VERSION.SDK_INT >= 33) registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        else registerReceiver(receiver, filter);
+        isReceiverRegistered = true;
+        // Register as a lifecycle observer
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        if (DBG) Log.d(TAG, "onStartCommand");
-        startForeground(PASTE_NOTIFICATION_ID, nb.build());
+        log.debug("onStartCommand");
         return START_NOT_STICKY;
     }
 
@@ -162,8 +168,9 @@ public class FileManagerService extends Service implements OperationEngineListen
             nm.cancel(OPEN_NOTIFICATION_ID);
             Uri uri = Uri.withAppendedPath(mTarget, mProcessedFiles.get(0).getName());
             String extension = "*";
-            if(uri.getLastPathSegment().contains(".")&&!uri.getLastPathSegment().endsWith(".")){
-                extension = uri.getLastPathSegment().substring(uri.getLastPathSegment().lastIndexOf(".")+1);
+            String getLastPathSegment = FileUtils.getName(uri);
+            if(getLastPathSegment.contains(".")&&!getLastPathSegment.endsWith(".")){
+                extension = getLastPathSegment.substring(getLastPathSegment.lastIndexOf(".")+1);
             }
 
             String mimeType = mProcessedFiles.get(0).getMimeType() !=null && !mProcessedFiles.get(0).getMimeType().isEmpty() ? mProcessedFiles.get(0).getMimeType() : "*/" + extension;
@@ -236,11 +243,9 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     @Override
     public void onDestroy() {
-        if (DBG) Log.d(TAG, "onDestroy: removing Foreground notif and stopping self");
-        setCanceledStatus();
-    	super.onDestroy();
-    	unregisterReceiver(receiver);
-        stopService();
+        log.debug("onDestroy: removing Foreground notif and stopping self");
+        cleanup();
+        super.onDestroy();
     }
 
 
@@ -277,8 +282,6 @@ public class FileManagerService extends Service implements OperationEngineListen
             startStatusbarNotification();
         }
     }
-
-
 
     /*
      * is currently pasting files
@@ -333,20 +336,17 @@ public class FileManagerService extends Service implements OperationEngineListen
     }
 
     public void stopPasting() {
-        if (DBG) Log.d(TAG, "stopPasting");
-        if(mIsActionRunning){
-             if(mCopyCutEngine!=null)
-                  mCopyCutEngine.stop();
+        log.debug("stopPasting");
+        if (mIsActionRunning) {
+            if (mCopyCutEngine != null) {
+                mCopyCutEngine.stop();
+            }
+            mIsActionRunning = false; // Reset the flag
         }
     }
 
-    public void stopService() {
-        if (DBG) Log.d(TAG, "stopService");
-        stopForeground(true);
-    }
-
     public static void startService(Context context) {
-        ContextCompat.startForegroundService(context, new Intent(context, FileManagerService.class));
+        context.startService(new Intent(context, FileManagerService.class));
     }
 
     public void deleteObserver(ServiceListener listener) {
@@ -371,19 +371,19 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     private void acquireWakeLock() {
         releaseWakeLock();
-        if (DBG) Log.d(TAG, "acquireWakeLock");
+        log.debug("acquireWakeLock");
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Nova:FileManagerWakeLock");
         mWakeLock.acquire();
     }
     private void releaseWakeLock(){
-        if (DBG) Log.d(TAG, "releaseWakeLock");
+        log.debug("releaseWakeLock");
         if(mWakeLock!=null&&mWakeLock.isHeld())
             mWakeLock.release();
     }
     @Override
     public void onEnd() {
-        if (DBG) Log.d(TAG, "onEnd: releasing wakelock, removing Foreground notif and stopping self");
+        log.debug("onEnd: releasing wakelock, removing Foreground notif and stopping self");
         releaseWakeLock();
         mLastStatus = ActionStatusEnum.STOP;
         mIsActionRunning = false;
@@ -395,26 +395,25 @@ public class FileManagerService extends Service implements OperationEngineListen
                 displayOpenFileNotification();
             }
         }
-            // Copy => don't reset the paste mode when done so that the current
-            // selection can be pasted again somewhere else if needed
-            String message;
-            // Copy successful
-            if (mProcessedFiles.size() == 1 && mProcessedFiles.get(0).isDirectory())
-                message = getResources().getString(R.string.copy_directory_success_one);
-            else
-                message = getResources().getString(R.string.copy_file_success_one);
+        // Copy => don't reset the paste mode when done so that the current
+        // selection can be pasted again somewhere else if needed
+        String message;
+        // Copy successful
+        if (mProcessedFiles.size() == 1 && mProcessedFiles.get(0).isDirectory())
+            message = getResources().getString(R.string.copy_directory_success_one);
+        else
+            message = getResources().getString(R.string.copy_file_success_one);
 
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
         for(ServiceListener fl :mListeners){
             fl.onActionStop();
         }
-        stopService();
     }
 
     @Override
     public void onFatalError(Exception e) {
-        if (DBG) Log.d(TAG, "onFatalError: releasing wakelock, removing Foreground notif and stopping self");
+        log.debug("onFatalError: releasing wakelock, removing Foreground notif and stopping self");
         releaseWakeLock();
         Toast.makeText(this, com.archos.filecorelibrary.R.string.copy_file_failed_one, Toast.LENGTH_LONG).show();
         mLastStatus = ActionStatusEnum.ERROR;
@@ -423,7 +422,6 @@ public class FileManagerService extends Service implements OperationEngineListen
         for (ServiceListener lis : mListeners){
             lis.onActionError();
         }
-        stopService();
     }
 
 
@@ -453,7 +451,7 @@ public class FileManagerService extends Service implements OperationEngineListen
 
     @Override
     public void onFilesListUpdate(List<MetaFile2> copyingMetaFiles,List<MetaFile2> rootFiles) {
-        if (DBG) Log.d(TAG, "onFilesListUpdate");
+        log.debug("onFilesListUpdate");
         mProcessedFiles.clear();
         mProcessedFiles.addAll(copyingMetaFiles);
         mProgress.clear();
@@ -473,7 +471,7 @@ public class FileManagerService extends Service implements OperationEngineListen
     /* Notification */
 
     public void startStatusbarNotification() {
-        if (DBG) Log.d(TAG, "startStatusbarNotification: stopping OPEN_NOTIFICATION_ID notif and doing PASTE_NOTIFICATION_ID");
+        log.debug("startStatusbarNotification: stopping OPEN_NOTIFICATION_ID notif and doing PASTE_NOTIFICATION_ID");
         nm.cancel(OPEN_NOTIFICATION_ID);
 
         // Build the intent to send when the user clicks on the notification in the notification panel
@@ -491,17 +489,15 @@ public class FileManagerService extends Service implements OperationEngineListen
     }
 
     private void displayOpenFileNotification() {
-        if (DBG) Log.d(TAG, "displayOpenFileNotification");
+        log.debug("displayOpenFileNotification");
         nb.setContentTitle(getText(R.string.open_file))
                 .setContentText(mProcessedFiles.get(0).getName())
-                .setWhen(System.currentTimeMillis())
-                .setContentIntent(PendingIntent.getBroadcast(this, 0, getOpenIntent(),
-                        ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT)));
+                .setWhen(System.currentTimeMillis());
         nm.notify(OPEN_NOTIFICATION_ID, nb.build());
     }
 
     private void updateStatusbarNotification(long currentSize, long totalSize, int currentFiles, int totalFiles) {
-        if (DBG) Log.d(TAG, "updateStatusbarNotification");
+        log.debug("updateStatusbarNotification");
         if (nb != null) {
             String formattedCurrentSize = Formatter.formatShortFileSize(this, currentSize);
             String formattedTotalSize = Formatter.formatShortFileSize(this, totalSize);
@@ -523,7 +519,7 @@ public class FileManagerService extends Service implements OperationEngineListen
         }
     }
     private void setCanceledStatus(){
-        if (DBG) Log.d(TAG, "setCanceledStatus");
+        log.debug("setCanceledStatus");
         mLastStatus = ActionStatusEnum.CANCELED;
         mIsActionRunning = false;
         removeStatusbarNotification();
@@ -535,15 +531,53 @@ public class FileManagerService extends Service implements OperationEngineListen
     }
     @Override
     public void onCanceled() {
-        if (DBG) Log.d(TAG, "onCanceled");
+        log.debug("onCanceled");
         releaseWakeLock();
         Toast.makeText(this, com.archos.filecorelibrary.R.string.copy_file_failed_one, Toast.LENGTH_LONG).show();
         setCanceledStatus();
-        stopService();
     }
 
     @Override
     public void onSuccess(Uri target) {}
 
+    @Override
+    public void onStop(LifecycleOwner owner) {
+        // App in background
+        log.debug("onStop: LifecycleOwner app in background, stopSelf");
+        cleanup();
+        stopSelf();
+    }
 
+    @Override
+    public void onStart(LifecycleOwner owner) {
+        log.debug("onStart: app in foreground");
+    }
+
+    public void cleanup() {
+        log.debug("cleanup");
+        stopPasting();
+        setCanceledStatus();
+        // Stop the CopyCutEngine
+        if (mCopyCutEngine != null) {
+            mCopyCutEngine.stop();
+        }
+        // Clear the list of processed files
+        if (mProcessedFiles != null) {
+            mProcessedFiles.clear();
+        }
+        // Clear the progress map
+        if (mProgress != null) {
+            mProgress.clear();
+        }
+        // Clear the list of listeners
+        if (mListeners != null) {
+            mListeners.clear();
+        }
+        // Release the WakeLock
+        releaseWakeLock();
+        if (isReceiverRegistered) {
+            unregisterReceiver(receiver);
+            isReceiverRegistered = false; // Reset the flag after unregistering the receiver
+        }
+    }
 }

@@ -77,9 +77,11 @@ import com.archos.environment.ArchosFeatures;
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosUtils;
 import com.archos.environment.NetworkState;
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.UiChoiceDialog;
 import com.archos.mediacenter.video.browser.MainActivity;
@@ -91,6 +93,7 @@ import com.archos.mediacenter.video.leanback.settings.VideoSettingsActivity;
 import com.archos.mediacenter.video.leanback.wizard.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.player.TrackInfoController.TrackInfoListener;
 import com.archos.mediacenter.video.player.tvmenu.AudioDelayTVPicker;
+import com.archos.mediacenter.video.player.tvmenu.AudioSpeedTVPicker;
 import com.archos.mediacenter.video.player.tvmenu.SubtitleDelayTVPicker;
 import com.archos.mediacenter.video.player.tvmenu.TVCardDialog;
 import com.archos.mediacenter.video.player.tvmenu.TVCardView;
@@ -99,7 +102,8 @@ import com.archos.mediacenter.video.player.tvmenu.TVMenuAdapter;
 import com.archos.mediacenter.video.player.tvmenu.TVMenuItem;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediacenter.video.player.tvmenu.TimerDelayTVPicker;
-import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity;
+import com.archos.mediacenter.video.utils.CodecDiscovery;
+import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoMetadata.AudioTrack;
 import com.archos.mediacenter.video.utils.VideoMetadata.SubtitleTrack;
@@ -128,16 +132,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.archos.environment.ArchosFeatures.isChromeOS;
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
+import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateTrackName;
+import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.getSubLanguageFromSubPathAndVideoPath;
+import static com.archos.mediacenter.video.utils.CodecDiscovery.getHdrScreenCapabilities;
 import static com.archos.mediacenter.video.utils.MiscUtils.isEmulator;
-
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_MAX_IFRAME_SIZE;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_STREAM_BUFFER_SIZE;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PARSER_SYNC_MODE;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_STREAM_BUFFER_SIZE;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_STREAM_MAX_IFRAME_SIZE;
 
 public class PlayerActivity extends AppCompatActivity implements PlayerController.Settings,
-SubtitleDelayPickerDialog.OnDelayChangeListener, AudioDelayPickerDialog.OnAudioDelayChangeListener,
-DialogInterface.OnDismissListener, TrackInfoListener,
-IndexHelper.Listener, PermissionChecker.PermissionListener {
+        SubtitleDelayPickerDialog.OnDelayChangeListener, AudioDelayPickerDialog.OnAudioDelayChangeListener,
+        AudioSpeedPickerDialog.OnAudioSpeedChangeListener,
+        DialogInterface.OnDismissListener, TrackInfoListener,
+        IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     private static final Logger log = LoggerFactory.getLogger(PlayerActivity.class);
 
@@ -162,6 +176,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private static final int DIALOG_WRONG_DEVICE_KINDLE = 7;
     private static final int DIALOG_AUDIO_DELAY = 8;
     private static final int DIALOG_NOT_ENOUGHT_SPACE = 9;
+    private static final int DIALOG_AUDIO_SPEED = 10;
 
     // accessed from SubtitleSettingsDialog
     /* package */ public static final String KEY_SUBTITLE_SIZE = "pref_play_subtitle_size_key";
@@ -178,6 +193,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private static final String KEY_LOCK_ROTATION = "pref_lock_rotation";
     private static final String KEY_HIDE_SUBTITLES = "subtitles_hide_default";
     public static final String KEY_ADVANCED_VIDEO_ENABLED = "preferences_advanced_video_enabled";
+    public static final String KEY_ENABLE_ANDROID_FRAME_TIMING = "enable_android_frame_timing";
 
     public static final String INDEXED_URI = "indexed_uri";
     public static final String KEY_TORRENT="torrent";
@@ -210,6 +226,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private static final int MENU_WINDOW_MODE = 304;
     private static final int MENU_PREFERENCES = 305;
     private static final int MENU_AUDIO_DELAY_ID = 306;
+    private static final int MENU_AUDIO_SPEED_ID = 307;
 
     // Notification types (keep in sync with res/values/arrays.xml:pref_notification_mode_entries)
     private static final int NOTIFICATION_MODE_ALL = 0;
@@ -372,6 +389,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private boolean             mPoster;
     private String              mPosterPath;
 
+    private boolean             fileHasAlreadyPlayed = false;
     private int                 mResume;
     private long                mVideoId;
     private int                 mErrorCode = 0;
@@ -424,6 +442,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     private boolean mCling = false;
 
     private TVMenu mSubtitleTVMenu;
+    private TVMenuItem mSubtitleSettingsMenuItem;
+    private TVMenuItem mSubtitleDelayMenuItem;
     private TVCardView mSubtitleTVCardView;
     private TVCardView mAudioTracksTVCardView;
     private TVMenu mAudioTracksTVMenu;
@@ -465,9 +485,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             if (action.equals(Intent.ACTION_SHUTDOWN)) {
                 finish();
             } else if (action.equals(ACTION_HDMI_PLUGGED)) {
+                log.debug("intent received hdmi");
                 boolean plugged = intent.getBooleanExtra(EXTRA_HDMI_PLUGGED_STATE, false);
                 int w = 0, h = 0;
                 mHdmiPlugged = plugged;
+                log.debug("intent received hdmi plugged=" + plugged);
                 mLudoHmdiPlugged = false;
                 if (plugged) {
                     int size[] = readHdmiSize();
@@ -592,8 +614,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     protected void onCreate(Bundle icicle) {
         log.debug("onCreate");
 
+        mContext = this;
+
         super.onCreate(icicle);
-        mIndexHelper = new IndexHelper(this, LoaderManager.getInstance(this), LOADER_INDEX);
+        mIndexHelper = new IndexHelper(mContext, LoaderManager.getInstance(this), LOADER_INDEX);
 
         mPermissionChecker = new PermissionChecker(hasManageExternalStoragePermission(getApplicationContext()));
         mPermissionChecker.setListener(this);
@@ -608,7 +632,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         WindowManager.LayoutParams attributes = getWindow().getAttributes();
 
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         // cutout mode: display below cutout
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if(mPreferences.getBoolean("enable_cutout_mode_short_edges", true)) {
@@ -629,7 +653,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
          * (hide black bars on TVOUT)
          */
         // needed on Bravia for HDR content to avoid grey bars cf. issue #270
-        if (isEmulator()) // avoid emulator UI glitch
+        if (isEmulator() || isChromeOS(mContext)) // avoid emulator UI glitch
             getWindow().setBackgroundDrawable(new ColorDrawable(0xFF000000));
         else getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setContentView(R.layout.player);
@@ -646,7 +670,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
                     // needed on Bravia for HDR content to avoid grey bars cf. issue #270
                     // avoid emulator UI glitch
-                    if (!isEmulator()) getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    if (!(isEmulator() || isChromeOS(mContext))) getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     return view.onApplyWindowInsets(insets);
                 }
             });
@@ -655,6 +679,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mRootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, final int top, int right, final int bottom, int oldLeft, final int oldTop, int oldRight, final int oldBottom) {
+                log.debug("CONFIG addOnLayoutChangeListener: left=" + left + ", top=" + top + ", right=" + right + ", bottom=" + bottom + ", oldLeft=" + oldLeft + ", oldTop=" + oldTop + ", oldRight=" + oldRight + ", oldBottom=" + oldBottom);
                 if(oldBottom!=bottom||oldTop!=top) {
                     runOnUiThread(new Runnable() {
                         @Override
@@ -694,23 +719,19 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mProgressView = mRootView.findViewById(R.id.progress_indicator);
         mBufferView = (TextView) mRootView.findViewById(R.id.buffer_percentage);
 
-        mPlayerController = new PlayerController(this, getWindow(), (ViewGroup)mRootView, mSurfaceController, this, actionBar);
+        mPlayerController = new PlayerController(mContext, getWindow(), (ViewGroup)mRootView, mSurfaceController, this, actionBar);
         mPlayerController.setVideoTitleEnabled(true);
         mPlayerController.setOnShowHideListener(mOnShowHideListener);
 
-        mAudioInfoController = new TrackInfoController(this, getLayoutInflater(), menuAnchor, actionBar);
+        mAudioInfoController = new TrackInfoController(mContext, getLayoutInflater(), menuAnchor, actionBar);
         mAudioInfoController.setListener(this);
-        mSubtitleManager = new SubtitleManager(this, (ViewGroup)mRootView, getWindow().getWindowManager(),false);
-        mSubtitleInfoController = new TrackInfoController(this, getLayoutInflater(), menuAnchor, actionBar);
+        mSubtitleManager = new SubtitleManager(mContext, (ViewGroup)mRootView, getWindow().getWindowManager(),false);
+        mSubtitleInfoController = new TrackInfoController(mContext, getLayoutInflater(), menuAnchor, actionBar);
         mSubtitleInfoController.setListener(this);
         mSubtitleInfoController.setAlwayDisplay(true);
         mResumeFromLast = false;
 
-        // Set the specific player behaviour if playing the demo video
-        Intent intent = getIntent();
-        mContext = this;
-
-        mPlayer = new Player(this, getWindow(), mSurfaceController, false);
+        mPlayer = new Player(mContext, getWindow(), mSurfaceController, false);
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1){ //detect any kind of rotation, even from 270 to 90°
             DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
@@ -840,7 +861,11 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
         intentFilter.addAction(PlayerService.PLAYER_SERVICE_STARTED);
         intentFilter.addAction(ACTION_HDMI_PLUGGED);
-        registerReceiver(mReceiver, intentFilter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(mReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mReceiver, intentFilter);
+        }
         isTVMode = TVUtils.isTV(mContext);
         mLockRotation = mPreferences.getBoolean(KEY_LOCK_ROTATION, false);
         mHideSubtitles = mPreferences.getBoolean(KEY_HIDE_SUBTITLES, false);
@@ -852,16 +877,56 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSurfaceController.setVideoFormat(Integer.parseInt(mPreferences.getString(KEY_PLAYER_FORMAT, "-1")),
                 Integer.parseInt(mPreferences.getString(KEY_PLAYER_AUTO_FORMAT, "-1")));
         if (LibAvos.isAvailable()) {
-            VideoPreferencesCommon.resetPassthroughPref(mPreferences);
-            LibAvos.setPassthrough(Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")));
+            VideoPreferencesCommon.resetPassthroughPref(mPreferences); // note this resets the audio_speed if in passthrough to 1.0f in prefs
+            // enable passthrough only if HDMI is connected and enabled in options
+            LibAvos.setPassthrough(CustomApplication.isPassthroughSupported() ? Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0") ) : 0);
+            if (mPreferences.getBoolean(VideoPreferencesCommon.KEY_FORCE_AUDIO_PASSTHROUGH, true)) {
+                LibAvos.setHdmiSupportedAudioCodecs(CustomApplication.allHdmiAudioCodecs);
+            } else {
+                LibAvos.setHdmiSupportedAudioCodecs(CustomApplication.getHdmiAudioCodecsFlag());
+            }
             mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mPreferences.getBoolean("disable_downmix", false)) // Android is recent enough not to require downmix on phones/tablets
-                LibAvos.setDownmix(0);
-            else
-                if(ArchosFeatures.isAndroidTV(this))  // no downmix on AndroidTV
+            // note enable_downmix_androidtv and disable_downmix are the opposite same settings but only one applies to androidTV
+            // this is done on purpose to respect logic of presentation and default value
+            float audioSpeed;
+            if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+                audioSpeed = mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f);
+                log.debug("onStart: " + audioSpeed);
+            } else {
+                log.debug("onStart: " + 1.0f);
+                audioSpeed = 1.0f;
+            }
+            String size = mPreferences.getString(KEY_STREAM_BUFFER_SIZE, String.valueOf(DEFAULT_STREAM_BUFFER_SIZE));
+            int finalSize;
+            try {
+                finalSize = Integer.parseInt(size);
+            } catch(NumberFormatException | NullPointerException e) {
+                finalSize = DEFAULT_STREAM_BUFFER_SIZE;
+            }
+            LibAvos.setStreamBufferSize(finalSize);
+            size = mPreferences.getString(KEY_STREAM_MAX_IFRAME_SIZE, String.valueOf(DEFAULT_MAX_IFRAME_SIZE));
+            try {
+                finalSize = Integer.parseInt(size);
+            } catch(NumberFormatException | NullPointerException e) {
+                finalSize = DEFAULT_MAX_IFRAME_SIZE;
+            }
+            LibAvos.setStreamMaxIframeSize(finalSize);
+            LibAvos.enableAudioSpeed(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false));
+            LibAvos.setAndroidFrameTiming(mPreferences.getBoolean(KEY_ENABLE_ANDROID_FRAME_TIMING,false));
+            LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback (does nothing if audio speed not enabled)
+            LibAvos.parserSyncMode(Integer.parseInt(mPreferences.getString(KEY_PARSER_SYNC_MODE,"0"))); // set lavc parser sync mode (0: PTS, 1 samples)
+            if (ArchosFeatures.isAndroidTV(this)) {
+                if (mPreferences.getBoolean("enable_downmix_androidtv", false))
+                    LibAvos.setDownmix(1);
+                else
+                    LibAvos.setDownmix(0);
+            } else {
+                // Android is recent enough not to require downmix on phones/tablets if enabled
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mPreferences.getBoolean("disable_downmix", false))
                     LibAvos.setDownmix(0);
                 else
                     LibAvos.setDownmix(1);
+            }
         }
 
         //if not started from floating player, we have to stop our video
@@ -904,7 +969,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         Player.sPlayer = mPlayer;
         PlayerService.sPlayerService.setPlayer();
         if(mPermissionChecker.hasExternalPermission(this)) {
-            log.debug("hasExternalPermission ");
+            log.debug("postOnPlayerServiceBind: hasExternalPermission");
             PlayerService.sPlayerService.onStart(intent);
             PlayerService.sPlayerService.setIndexHelper(mIndexHelper);
             start();
@@ -929,12 +994,13 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         PlayerBrightnessManager.getInstance().restoreBrightness(this);
         if(!mWasInPictureInPicture){
             mPermissionChecker.checkAndRequestPermission(this);
-            // TODO MARC API 23 required!
-            if(mHasAskedFloatingPermission&&Settings.canDrawOverlays(this)){ //permission has been granted
-                startService(new Intent(this, FloatingPlayerService.class));
+            if (!isFinishing() && !isDestroyed()) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mHasAskedFloatingPermission&&Settings.canDrawOverlays(this)){ //permission has been granted
+                    startService(new Intent(this, FloatingPlayerService.class));
+                }
+                mHasAskedFloatingPermission = false;
+                TorrentObserverService.resumed(PlayerActivity.this);
             }
-            mHasAskedFloatingPermission = false;
-            TorrentObserverService.resumed(PlayerActivity.this);
             addNetworkListener();
             if (mPaused) {
                 mPaused = false;
@@ -1087,7 +1153,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             height = layoutHeight;
         }
 
-        log.debug("updateSizes: trueFullscreen size WxH=" + width+"x"+height);
+        log.debug("CONFIG updateSizes: trueFullscreen size WxH=" + width+"x"+height);
         if(!isChromeOS(mContext)) { //keeping things as it was on other devices
             ViewGroup.LayoutParams lp = mRootView.getLayoutParams();
             lp.width = width;
@@ -1097,7 +1163,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         mSurfaceController.setScreenSize(width, height);
         mSubtitleManager.setScreenSize(width, height);
         if(!isInPictureInPictureMode) {
-            log.debug("CONFIG updateSizes: mPlayerController.setSizes layout WxH=" + layoutWidth + "x" + layoutHeight + ", display WxH=" + displayWidth + "x" + displayHeight );
+            log.debug("CONFIG updateSizes: mPlayerController.setSizes layout WxH=" + layoutWidth + "x" + layoutHeight + ", display WxH=" + displayWidth + "x" + displayHeight);
             mPlayerController.setSizes(displayWidth, displayHeight, layoutWidth, layoutHeight);
             // Close the menus if needed
             mAudioInfoController.resetPopup();
@@ -1111,7 +1177,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             vpos = (int) ((layoutHeight / (float)(displayHeight<displayWidth?displayHeight:displayWidth)) * vpos);
         }
         mSubtitleManager.setSize(size);
-        mSubtitleManager.setVerticalPosition(vpos);
+        setSubtitleVpos(vpos, "updateSizes");
     }
 
     @Override
@@ -1247,7 +1313,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             // Send key event to PlayerController if it (its place-holder actually) has the focus
             // Only keep keys used for focus navigation (because this is not handled by PlayerController)
             if (!handled && mPlayerControllerPlaceholder.hasFocus() && !isKeyUsedForFocusNavigation(keyCode)) {
-
                 handled = mPlayerController.onKey(keyCode, event);
             }
             // Send key event to PlayerController even if it doesn't have the focus, in order to handled special media keys (play, pause, seek, volume, etc.)
@@ -1530,8 +1595,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 if (r != null)
                     tvPicker2.removeCallbacks(r);
                 mSubtitleManager.fadeSubtitlePositionHint(true);
-
-                mSubtitleManager.setVerticalPosition(delay/100);
+                setSubtitleVpos(delay/100, "onDelayChanged");
                 r = new Runnable() {
                     @Override
                     public void run() {
@@ -1558,8 +1622,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {     
             @Override
             public void onResult(int code) {
-               	mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_SIZE, mSubtitleManager.getSize()).apply();
-            	mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleManager.getVerticalPosition()).apply();
+                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_SIZE, mSubtitleManager.getSize()).apply();
+                mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleManager.getVerticalPosition()).apply();
                 mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_COLOR, mSubtitleManager.getColor()).apply();
                 mPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mSubtitleManager.getOutlineState()).apply();
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
@@ -1604,8 +1668,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             @Override
             public void onAudioDelayChanged(AudioDelayPickerAbstract view, int delay) {
                 PlayerActivity.this.onAudioDelayChange(null, delay);
-
-
             }
         });
         ((TVCardDialog)dialogView).addOtherView(tvmenu);
@@ -1615,10 +1677,58 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
                 if(saveSettingCB.isChecked()){
                     mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), PlayerService.sPlayerService.getAudioDelay()).apply();
-                    ;
                 }
                 else {
                     mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), 0).apply();
+                }
+            }
+        });
+
+        mPlayerController.getTVMenuAdapter().setDiscrete(true);
+        mPlayerController.addToMenuContainer(dialogContainer);
+        tvPicker.requestFocus();
+    }
+
+    private void createTVAudioSpeedDialog() {
+        View dialogContainer = (View)LayoutInflater.from(mContext).inflate(R.layout.card_dialog_layout, null);
+        View dialogView = dialogContainer.findViewById(R.id.card_view);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) dialogView.getLayoutParams();
+        params.gravity = Gravity.CENTER_HORIZONTAL;
+        dialogView.setLayoutParams(params);
+        ((TVCardDialog) dialogView).setText((String) getText(R.string.player_pref_audio_speed_title));
+
+        mPlayerController.getTVMenuAdapter().setDiscrete(true);
+        final TVMenu tvmenu = mPlayerController.getTVMenuAdapter().createTVMenu();
+
+        // adding tv picker
+        AudioSpeedTVPicker tvPicker = (AudioSpeedTVPicker)LayoutInflater.from(mContext)
+                .inflate(R.layout.audio_speed_tv_picker, null);
+        tvmenu.addTVMenuItem(tvPicker);
+        final TVMenuItem saveSettingCB = tvmenu.createAndAddTVSwitchableMenuItem(getString(R.string.keep_setting), PlayerService.sPlayerService.getAudioSpeedFromPreferences() != 1.0f);
+        saveSettingCB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveSettingCB.toggle();
+            }
+        });
+        tvPicker.init(PlayerService.sPlayerService.getAudioSpeed(), new AudioSpeedPickerAbstract.OnAudioSpeedChangedListener() {
+            @Override
+            public void onAudioSpeedChanged(AudioSpeedPickerAbstract view, float speed) {
+                PlayerActivity.this.onAudioSpeedChange(null, speed);
+            }
+        });
+        ((TVCardDialog)dialogView).addOtherView(tvmenu);
+        ((TVCardDialog)dialogView).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {
+            @Override
+            public void onResult(int code) {
+                mPlayerController.getTVMenuAdapter().setDiscrete(false);
+                if(saveSettingCB.isChecked()){
+                    log.debug("createTVAudioSpeedDialog:onResult save audio speed=" + PlayerService.sPlayerService.getAudioSpeed() + " in prefs");
+                    mPreferences.edit().putFloat(getString(R.string.save_audio_speed_setting_pref_key), PlayerService.sPlayerService.getAudioSpeed()).apply();
+                }
+                else {
+                    log.debug("createTVAudioSpeedDialog:onResult do not save audio speed and carve 1.0f in prefs");
+                    mPreferences.edit().putFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f).apply();
                 }
             }
         });
@@ -1641,6 +1751,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (mSubtitleTVMenu != null) {
             mSubtitleTVMenu.clean();
 
+            log.debug("refreshSubtitleTVMenu: mSubtitleInfoController.getTrackCount()=" + mSubtitleInfoController.getTrackCount());
+
             mPlayerController.getTVMenuAdapter().setCardViewVisibility(View.VISIBLE, mSubtitleTVCardView);
 
             if(mSubtitleInfoController.getTrackCount()>0) {
@@ -1648,19 +1760,28 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     mSubtitleTVMenu.createAndAddTVMenuItem(mSubtitleInfoController.getTrackNameAt(i).toString(), true, mSubtitleInfoController.getTrack() == i);
                 }
                 mSubtitleTVMenu.createAndAddSeparator();
-                mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_subtitle_delay_title).toString(), false, false).setOnClickListener(new View.OnClickListener() {
+                mSubtitleDelayMenuItem = mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_subtitle_delay_title).toString(), false, false);
+                mSubtitleDelayMenuItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
                         createTVSubtitleDialog();
                     }
                 });
-                mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.menu_player_settings).toString(), false, false).setOnClickListener(new View.OnClickListener() {
+
+                log.debug("refreshSubtitleTVMenu: isCurrentSubtrackNone=" + isCurrentSubtrackNone());
+                disableSubtitleDelayTVMenuItem(isCurrentSubtrackNone());
+
+                mSubtitleSettingsMenuItem = mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.menu_player_settings).toString(), false, false);
+                mSubtitleSettingsMenuItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         createTVSubtitleSettingsDialog();
                     }
                 });
+
+                log.debug("refreshSubtitleTVMenu: isCurrentSubtrackGfx=" + isCurrentSubtrackGfx());
+                disableSubtitleSettingsMenuItem(isCurrentSubtrackGfx() || isCurrentSubtrackNone());
             }
             mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.get_subtitles_online).toString(), false, false).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1671,7 +1792,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
             Uri uri = VideoUtils.getFileUriFromMediaLibPath(mUri.toString());
 
-            if (uri.getScheme().equals("file") || uri.getScheme().equals("smb")) {
+            if (uri.getScheme().equals("file") || uri.getScheme().startsWith("smb") || uri.getScheme().equals("sshj") || uri.getScheme().equals("sftp")) {
                 mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.get_subtitles_on_drive).toString(), false, false).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1723,6 +1844,17 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                         createTVAudioDelayDialog();
                     }
                 });
+
+                // disable playback speed if passthrough is enabled and Android M (API23+)
+                if(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0) {
+                    final TVMenuItem tvmi4 = mAudioTracksTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_audio_speed_title).toString(), false, false);
+                    tvmi4.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            createTVAudioSpeedDialog();
+                        }
+                    });
+                }
             } else {
                 mPlayerController.getTVMenuAdapter().setCardViewVisibility(View.GONE, mAudioTracksTVCardView);
             }
@@ -1805,10 +1937,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             TVCardView tcv = tma.createAndAddView(null, ResourcesCompat.getDrawable(getResources(),R.drawable.tv_info, null),
                     getResources().getString(R.string.menu_info));
             String decoder = VideoInfoCommonClass.getShortDecoder(mPlayer.getVideoMetadata(), getResources(), mPlayer.getType());
-            
-            if (decoder != null)
-                tcv.setText2(decoder);
-            
+
+            tcv.setText(decoder);
+            tcv.setText2(CodecDiscovery.getTechnicalInfo(mContext));
+
             tcv.setOnSwitchClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -2052,6 +2184,13 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 menuItem.setIcon(R.drawable.ic_menu_delay);
                 menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
+            menuItem = menu.add(MENU_OTHER_GROUP, MENU_AUDIO_SPEED_ID, Menu.NONE, R.string.player_pref_audio_speed_title);
+            if (menuItem != null) {
+                menuItem.setIcon(R.drawable.ic_baseline_speed_24);
+                menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
+            }
+            // disable playback speed if passthrough is enabled and Android M+ (API23+)
+            menuItem.setVisible(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_S3D_ID, Menu.NONE, R.string.pref_s3d_mode_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_3d);
@@ -2215,6 +2354,10 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             }
             case MENU_AUDIO_DELAY_ID: {
                 myShowDialog(DIALOG_AUDIO_DELAY);
+                return true;
+            }
+            case MENU_AUDIO_SPEED_ID: {
+                myShowDialog(DIALOG_AUDIO_SPEED);
                 return true;
             }
             case MENU_S3D_ID: {
@@ -2441,6 +2584,18 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                     audioPickerDialog.updateDelay(mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0));
                 mPlayerController.hide();
                 break;
+            case DIALOG_AUDIO_SPEED:
+                if(PlayerService.sPlayerService!=null)
+                    mDialog = new AudioSpeedPickerDialog(this, this, PlayerService.sPlayerService.getAudioSpeed());
+                else
+                    mDialog = new AudioSpeedPickerDialog(this, this, mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f));
+                AudioSpeedPickerDialog audioSpeedPickerDialog = (AudioSpeedPickerDialog) mDialog;
+                if(PlayerService.sPlayerService!=null)
+                    audioSpeedPickerDialog.updateSpeed(PlayerService.sPlayerService.getAudioSpeed());
+                else
+                    audioSpeedPickerDialog.updateSpeed(mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f));
+                mPlayerController.hide();
+                break;
             case DIALOG_NOT_ENOUGHT_SPACE:
                 mDialog = new AlertDialog.Builder(this)
                         .setTitle(R.string.player_err_cantplayvideo)
@@ -2620,6 +2775,9 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         int viewMode = VideoEffect.getDefaultMode();
         int viewType = VideoEffect.getDefaultType();
         if (mVideoInfo != null) {
+
+            log.debug("setVideoInfo: mVideoInfo.subtitleTrack " + mVideoInfo.subtitleTrack);
+
             // one of them is already known, don't care and overwrite both
 
             mVideoId = mVideoInfo.id;
@@ -2730,10 +2888,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
      * set start state = removing progress + enabling controllers
      */
     private void  postVideoInfoAndPrepared() {
-        log.debug("postVideoInfoAndPrepared "+String.valueOf((PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PREPARED||PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PLAYING) && mVideoInfo != null));
-        log.debug("postVideoInfoAndPrepared "+String.valueOf((PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PREPARED||PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PLAYING)));
-        log.debug("postVideoInfoAndPrepared "+String.valueOf( mVideoInfo != null));
-
+        log.debug("postVideoInfoAndPrepared mVideoInfo!= null && (PlayerState PREPARED || PLAYING)="+String.valueOf((PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PREPARED||PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PLAYING) && mVideoInfo != null));
         // ex onStreamingUriOK
         if ((PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PREPARED||PlayerService.sPlayerService.mPlayerState == PlayerService.PlayerState.PLAYING) && mVideoInfo != null) {
             log.debug("postVideoInfoAndPrepared");
@@ -2768,7 +2923,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     }
 
     public void showTraktResumeDialog(final int localTraktPosition, VideoDbInfo localVideoInfo) {
-    	mVideoInfo = localVideoInfo;
+        mVideoInfo = localVideoInfo;
         if(PlayerService.sPlayerService!=null){
             PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
             PlayerService.sPlayerService.requestIndexAndScrap();
@@ -2797,6 +2952,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             alert.show();
         }
     	else */
+        log.debug("showTraktResumeDialog: call setVideoInfo");
         setVideoInfo(mVideoInfo);
     }
 
@@ -2903,7 +3059,6 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         Resources r = mResources;
         StringBuilder msgBuilder = new StringBuilder();
         final VideoMetadata vMetadata = mPlayer.getVideoMetadata();
-
         if (mUri == null) {
             /* File doesn't exist */
             msgBuilder.append(r.getText(R.string.player_err_file));
@@ -3093,6 +3248,16 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
        PlayerService.sPlayerService.setAudioDelay(delay,false);
     }
 
+    /* AudioSpeedPickerDialog.OnAudioSpeedChangeListener */
+    public void onAudioSpeedChange(AudioSpeedPickerAbstract speedPicker, float speed) {
+        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+            log.debug("onAudioSpeedChange: setAudioSpeed " + speed);
+             PlayerService.sPlayerService.setAudioSpeed(speed, false);
+        } else {
+            log.debug("onAudioSpeedChange: DO NOT setAudioSpeed coz passthrough");
+        }
+    }
+
     private void sendVideoStateChanged() {
 
         // mThumbnailDone is the state of the thread: 0: not started yet, 1: started, 2: done
@@ -3170,17 +3335,67 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
     }
 
+    int positionToSubtitleTrack(int position, int nbTracks) { // nbTracks does not count none track
+        // subtitleTracks are between 0<=track<=nbTrack and none track is nbTrack
+        if (position == 0) return nbTracks; // position 0 is none track thus return nbTracks
+        else return (position - 1) % (nbTracks + 1);
+    }
+
+    int positionToPlayerSubtitleTrack(int position, int nbTracks) { // nbTracks does not count none track
+        if (position == 0) return -1; // position 0 is none track thus return -1 for the player
+        else return (position - 1) % nbTracks;
+    }
+
+    int subtitleTrackToPosition(int subtitleTrack, int nbTracks) { // nbTracks does not count none track
+        // position is between 0<=position<=nbTrack with 0 is none track
+        if (nbTracks >= 0) return (subtitleTrack + 1) % (nbTracks + 1);
+        else return 0;
+    }
+
+    int nextSubtitleTrack(int subtitleTrack, int nbTracks) { // nbTracks does not count none track
+        // subtitleTracks are between 0<=track<=nbTrack-1 and none track is -1
+        // none track is covered in nextSubtitleTrack
+        if (subtitleTrack == nbTracks) return -1; // none track
+        else return (subtitleTrack + 1) % nbTracks;
+    }
+
+    int nextVideoInfoSubtitleTrack(int subtitleTrack, int nbTracks) { // nbTracks does not count none track
+        // subtitleTracks are between 0<=track<=nbTrack and none track is nbTrack
+        // none track is covered in nextSubtitleTrack
+        return (subtitleTrack == nbTracks - 1) ? nbTracks : (subtitleTrack + 1) % (nbTracks + 1);
+    }
+
+    int nextPosition(int subtitleTrack, int nbTracks) { // nbTracks does not count none track
+        // position is between 0<=position<=nbTrack with 0 is none track
+        return ((subtitleTrack + 1) % (nbTracks + 1));
+    }
+
+    // 0<=subtitleTrack<=nbTracks and noneTrack=nbTracks for mVideoInfo with nvTracks out of reach
+    // 0<=subtitlepostion<=nbTracks and noneTrack=0 for mSubtitleInfoController
+    // warning: when addressing mPlayer.setSubtitleTrack none track is -1
+
     /* PlayerController.Settings */
-    public void switchSubtitleTrack() {
+    public void switchSubtitleTrack() { // switch to next subtitle track avoiding none
         if (mSubtitleInfoController.getTrackCount() > 1) {
-            int newSubtitleTrack = (mVideoInfo.subtitleTrack + 1) % mSubtitleInfoController.getTrackCount();
-            if (mPlayer.setSubtitleTrack(newSubtitleTrack)) {
+            int newSubtitleTrack = nextVideoInfoSubtitleTrack(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles);
+            int newSubtitlePosition = subtitleTrackToPosition(newSubtitleTrack, mVideoInfo.nbSubtitles);
+            int playerPosition = positionToPlayerSubtitleTrack(newSubtitlePosition, mVideoInfo.nbSubtitles);
+            log.debug("switchSubtitleTrack: {}/{} -> (track,position)=({},{}), playerPosition={}", mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles,
+                    newSubtitleTrack, newSubtitlePosition, playerPosition);
+            if (mPlayer.setSubtitleTrack(playerPosition)) {
                 mVideoInfo.subtitleTrack = newSubtitleTrack;
                 mSubtitleManager.clear();
-                mSubtitleInfoController.setTrack(mVideoInfo.subtitleTrack);
-
-                mPlayerController.updateToast(getResources().getText(R.string.player_subtitle_track_toast) + " " +
-                        mSubtitleInfoController.getTrackNameAt(mVideoInfo.subtitleTrack));
+                mSubtitleInfoController.setTrack(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)); // +1 since none track is at position 0, for UI only
+                if (mSubtitleInfoController.getTrack() == 0) { // 0 is nonePosition
+                    log.debug("switchSubtitleTrack: disableSubtitleDelayTVMenuItem(true) because nonePosition");
+                    disableSubtitleDelayTVMenuItem(true);
+                    disableSubtitleSettingsMenuItem(true);
+                }
+                refreshSubtitleTVMenu();
+                CharSequence subTrackName = mSubtitleInfoController.getTrackNameAt(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles));
+                log.debug("switchSubtitleTrack: changed track={} -> {}", mVideoInfo.subtitleTrack, subTrackName);
+                setSubtitleVpos("switchSubtitleTrack");
+                mPlayerController.updateToast(getResources().getText(R.string.player_subtitle_track_toast) + " " + subTrackName);
             }
         }
         log.info("switchSubtitleTrack: " + mVideoInfo.subtitleTrack);
@@ -3189,6 +3404,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     public void switchAudioTrack() {
         if (mAudioInfoController.getTrackCount() > 1) {
             int newAudioTrack = (mVideoInfo.audioTrack + 1) % mAudioInfoController.getTrackCount();
+            log.debug("switchAudioTrack: circular increment from " + mVideoInfo.audioTrack + " to  " + newAudioTrack);
             if (setPlayerAudioTrack(newAudioTrack)) {
                 mVideoInfo.audioTrack = newAudioTrack;
                 mAudioInfoController.setTrack(mVideoInfo.audioTrack);
@@ -3206,6 +3422,56 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         }
     }
 
+    public boolean isCurrentSubtrackGfx() {
+        if (mPlayer == null || mPlayer.getVideoMetadata() == null || mVideoInfo == null ||
+                mVideoInfo.subtitleTrack == -1 || mVideoInfo.subtitleTrack >= mVideoInfo.nbSubtitles) {
+            return false;
+        }
+        return mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack).isGfx;
+    }
+
+    public boolean isCurrentSubtrackNone() {
+        if (mPlayer == null || mPlayer.getVideoMetadata() == null || mVideoInfo == null ||
+                mVideoInfo.subtitleTrack == -1) {
+            return false;
+        }
+        return mVideoInfo.subtitleTrack >= mVideoInfo.nbSubtitles;
+    }
+
+    private void setSubtitleVpos(String caller) {
+        setSubtitleVpos(PreferenceManager.getDefaultSharedPreferences(PlayerActivity.this).getInt(KEY_SUBTITLE_VPOS, mSubtitleVPosDefault), caller);
+    }
+
+    private void setSubtitleVpos(int vpos, String caller) {
+        if (mVideoInfo == null || mVideoInfo.subtitleTrack == -1 || mVideoInfo.subtitleTrack >= mVideoInfo.nbSubtitles) return;
+        VideoMetadata.SubtitleTrack subtitleTrack = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
+        if (subtitleTrack != null && subtitleTrack.isGfx) {
+            log.debug(caller + ": set vpos to 0, mVideoInfo=" + ((mVideoInfo == null) ? "null" : "noNull" + ", subtitleTrack=" + ((mVideoInfo == null) ? "null" : mVideoInfo.subtitleTrack)));
+            mSubtitleManager.setVerticalPosition(0);
+            disableSubtitleSettingsMenuItem(true);
+        } else {
+            log.debug(caller + ": set vpos to " + vpos + ", subtitleTrack=" + mVideoInfo.subtitleTrack);
+            mSubtitleManager.setVerticalPosition(vpos);
+            disableSubtitleSettingsMenuItem(false);
+        }
+    }
+
+    private void disableSubtitleDelayTVMenuItem(boolean disable) {
+        log.debug("disableSubtitleDelayTVMenuItem: " + disable);
+        mSubtitleInfoController.enableSettings(SUBTITLE_MENU_DELAY, !disable, disable);
+        if (mSubtitleDelayMenuItem != null) {
+            mSubtitleDelayMenuItem.setDisabled(disable);
+        }
+    }
+
+    private void disableSubtitleSettingsMenuItem(boolean disable) {
+        log.debug("disableSubtitleSettingsMenuItem: " + disable);
+        mSubtitleInfoController.enableSettings(SUBTITLE_MENU_SETTINGS, !disable, disable);
+        if (mSubtitleSettingsMenuItem != null) {
+            mSubtitleSettingsMenuItem.setDisabled(disable);
+        }
+    }
+
     /* TrackInfoAdapter.OnTrackInfoListener */
     public boolean onTrackSelected(TrackInfoController trackInfoController, int position, CharSequence name,
             CharSequence summary) {
@@ -3213,26 +3479,37 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         if (mPlayer.isBusy())
             return false;
         log.info("onTrackSelected(" + position + "): " + name);
-        if (trackInfoController == mAudioInfoController) {
+        if (Objects.equals(trackInfoController, mAudioInfoController)) {
+            log.debug("onTrackSelected: position={}, mVideoInfo.audioTrack={}", position, mVideoInfo.audioTrack);
             AudioTrack at = mPlayer.getVideoMetadata().getAudioTrack(position);
-            if (at.supported) {
+            if (at != null && at.supported) {
                 ret = setPlayerAudioTrack(position);
                 if (ret)
                     mVideoInfo.audioTrack = position;
-            } else if (!at.supported){
+            } else if (at == null || !at.supported){
                 mErrorMsg = at.format;
                 myShowDialog(DIALOG_CODEC_NOT_SUPPORTED);
             }
-        } else if (trackInfoController == mSubtitleInfoController) {
-            if (position != mVideoInfo.subtitleTrack) {
-                ret = mPlayer.setSubtitleTrack(position);
+        } else if (Objects.equals(trackInfoController, mSubtitleInfoController)) {
+            log.debug("onTrackSelected: position={}, mVideoInfo.subtitleTrack={}, mVideoInfo.nbSubtitles={}, subtitleTrackToPosition={}", position, mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles, subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles));
+            if (position != subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)) {
+                log.debug("onTrackSelected: position={}, old mVideoInfo.subtitleTrack={}", position, mVideoInfo.subtitleTrack);
+                ret = mPlayer.setSubtitleTrack(positionToPlayerSubtitleTrack(position, mVideoInfo.nbSubtitles));
                 if (ret) {
                     mSubtitleManager.clear();
-                    mVideoInfo.subtitleTrack = position;
+                    mVideoInfo.subtitleTrack = positionToSubtitleTrack(position, mVideoInfo.nbSubtitles);
+                    log.debug("onTrackSelected: -> mVideoInfo.subtitleTrack={}", mVideoInfo.subtitleTrack);
+                    setSubtitleVpos("onTrackSelected");
+                } else {
+                    log.debug("onTrackSelected: player failed to get to subtitletrack {}", positionToSubtitleTrack(position, mVideoInfo.nbSubtitles));
                 }
                 if (mVideoInfo.subtitleTrack >= 0) {
-                    String trackName = mSubtitleInfoController.getTrackNameAt(mVideoInfo.subtitleTrack).toString();
-                    mSubtitleInfoController.enableSettings(SUBTITLE_MENU_DELAY, !trackName.equals(getText(R.string.s_none)), true);
+                    String trackName = mSubtitleInfoController.getTrackNameAt(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)).toString();
+                    disableSubtitleDelayTVMenuItem(position == 0);
+                    disableSubtitleSettingsMenuItem(position == 0 || isCurrentSubtrackGfx());
+                    log.debug("onTrackSelected: position={}, mSubtitleInfoController.getTrackNameAt({}) mVideoInfo.subtitleTrack={}", position, trackName, mVideoInfo.subtitleTrack);
+                } else {
+                    log.debug("onTrackSelected: position={}, None mVideoInfo.subtitleTrack={}", position, mVideoInfo.subtitleTrack);
                 }
             }
         }
@@ -3261,8 +3538,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     private void downloadSubtitles() {
         Intent subIntent = new Intent(Intent.ACTION_MAIN);
-        subIntent.setClass(mContext, SubtitlesDownloaderActivity.class);
-        subIntent.putExtra(SubtitlesDownloaderActivity.FILE_URL, PlayerService.sPlayerService.getStreamingUri().toString());
+        subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
+        subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, PlayerService.sPlayerService.getStreamingUri().toString());
         startActivityForResult(subIntent, SUBTITLE_REQUEST);
     }
 
@@ -3300,6 +3577,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
     };
 
     private boolean setPlayerAudioTrack(int audioTrack) {
+        log.debug("setPlayerAudioTrack: " + audioTrack);
         if (mPlayer.getType() == IMediaPlayer.TYPE_ANDROID) {
             /*
              * On android, AudioTrack can only be changed on Prepared State
@@ -3324,7 +3602,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
         public void onPrepared() {
             log.debug("onPrepared");
             mNetworkFailed = false;
-
+            log.debug("onPrepared: call postVideoInfoAndPrepared");
             postVideoInfoAndPrepared();
         }
 
@@ -3429,24 +3707,31 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 return;
             }
 
+            // /!\ IMPORTANT: this is only for the UI part, setting the audio track is done in PlayerService thus the two must be in sync
+            // thus DO NOT modify mVideoInfo.audioTrack here, only in PlayerService
+
             boolean firstTimeUpdated = mAudioInfoController.getTrackCount() == 0;
             int nbTrack = vMetadata.getAudioTrackNb();
 
-            log.info("onAudioMetadataUpdated: newAudio: " + newAudioTrack
+            log.debug("onAudioMetadataUpdated: newAudio: " + newAudioTrack
                     + "  mVideoInfo.audioTrack: " + mVideoInfo.audioTrack
                     + "  firstTimeUpdated: " + firstTimeUpdated
                     + "  nbTrack: " + nbTrack);
 
             mAudioInfoController.clear();
+            String trackName = null;
             for (int i = 0; i < nbTrack; ++i) {
-            	VideoMetadata.AudioTrack audio = vMetadata.getAudioTrack(i);
-            	CharSequence name = VideoUtils.getLanguageString(PlayerActivity.this, audio.name);
-            	CharSequence summary = VideoUtils.getLanguageString(PlayerActivity.this, audio.format);
-            	mAudioInfoController.addTrack(name, summary);
+                VideoMetadata.AudioTrack audio = vMetadata.getAudioTrack(i);
+                log.debug("onAudioMetadataUpdated: name={}, format={}", audio.name, audio.format);
+                trackName = generateTrackName(mContext, audio.name, audio.language);
+                CharSequence name = trackName;
+                // when no name use track number instead of R.string.unknown_track_name th
+                if (trackName.isEmpty())
+                    name = getText(R.string.player_track) + " " + (i + 1);
+                CharSequence summary = audio.format;
+                mAudioInfoController.addTrack(name, summary, false);
             }
-
             mAudioInfoController.setTrack(mVideoInfo.audioTrack);
-
         }
 
         public void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int newSubtitleTrack) {
@@ -3455,27 +3740,46 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 mAudioSubtitleNeedUpdate = true;
                 return;
             }
-            int nbTrack = vMetadata.getSubtitleTrackNb();
+
+            // /!\ IMPORTANT: this is only for the UI part, setting the subtitle track is done in PlayerService thus the two must be in sync
+            // thus DO NOT modify mVideoInfo.subtitleTrack here, only in PlayerService
+
+            int nbTrack = vMetadata.getSubtitleTrackNb(); // it does not include none track
 
             final boolean firstTimeCalled = mSubtitleInfoController.getTrackCount() == 0;
 
-            log.debug("onSubtitleMetadataUpdated: newSubtitle: " + newSubtitleTrack + ", mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + ", firstTimeCalled: " + firstTimeCalled);
+            log.debug("onSubtitleMetadataUpdated: newSubtitle: " + newSubtitleTrack + ", mVideoInfo.subtitleTrack: " + mVideoInfo.subtitleTrack + ", firstTimeCalled: " + firstTimeCalled + ", nbTrack: " + nbTrack);
 
             mSubtitleInfoController.clear();
-            int noneTrack = nbTrack+1;
+
+            int noneTrack = nbTrack; // none track is at position nbTrack even if displayed in menu as track 0
+            int nonePosition = 0;
+
             if (nbTrack != 0) {
-                mVideoInfo.nbSubtitles = nbTrack;
-
+                mSubtitleInfoController.addTrack(getText(R.string.s_none), false); // first track displayed is none
+                mVideoInfo.nbSubtitles = nbTrack; // nbSubtitles does not capture none track
+                String lang = null;
                 for (int i = 0; i < nbTrack; ++i) {
-                    mSubtitleInfoController.addTrack(VideoUtils.getLanguageString(PlayerActivity.this, vMetadata.getSubtitleTrack(i).name));
+                    // name comes from IMediaPlayer (avos) and if not internal it says SRT thus if name="SRT" infer the name from path
+                    // infer language from path if path is provided
+                    if (vMetadata.getSubtitleTrack(i).isExternal) {
+                        // external subtitle get name from file
+                        lang = getSubLanguageFromSubPathAndVideoPath(mContext, vMetadata.getSubtitleTrack(i).path, vMetadata.getFile().getPath());
+                        log.debug("onSubtitleMetadataUpdated: extsub name={}, path={}, videoPath={}, isExternal={}, langFromPath={}", vMetadata.getSubtitleTrack(i).name, vMetadata.getSubtitleTrack(i).path, vMetadata.getFile().getPath(), vMetadata.getSubtitleTrack(i).isExternal, lang);
+                        if (lang != null) {
+                            log.debug("onSubtitleMetadataUpdated: extsub name might not be null add track name with lang=" + lang);
+                            mSubtitleInfoController.addTrack(lang, true);
+                        } else { // this should never happen
+                            log.warn("onSubtitleMetadataUpdated: extsub name and lang are null, add track name to unknown");
+                            mSubtitleInfoController.addTrack(getText(R.string.unknown_track_name), true);
+                        }
+                    } else {
+                        // internal subtitle get name from name
+                        log.debug("onSubtitleMetadataUpdated: intsub add track name with name=" + vMetadata.getSubtitleTrack(i).name + " replacing language code in " + vMetadata.getSubtitleTrack(i).language);
+                        mSubtitleInfoController.addTrack(generateTrackName(mContext, vMetadata.getSubtitleTrack(i).name, vMetadata.getSubtitleTrack(i).language), false);
+                    }
                 }
-
-                // none track
-
-                mSubtitleInfoController.addTrack(getText(R.string.s_none));
-                nbTrack++;
                 mSubtitleInfoController.addSeparator();
-
                 mSubtitleInfoController.addSettings(getText(R.string.player_pref_subtitle_delay_title), R.drawable.ic_menu_delay, SUBTITLE_MENU_DELAY);
                 mSubtitleInfoController.addSettings(getText(R.string.menu_player_settings), R.drawable.ic_menu_settings, SUBTITLE_MENU_SETTINGS);
             }
@@ -3490,27 +3794,17 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 boolean outline = preferences.getBoolean(KEY_SUBTITLE_OUTLINE, mSubtitleOutlineDefault);
                 mSubtitleManager.setSize(size);
                 mSubtitleManager.setColor(color);
-                mSubtitleManager.setVerticalPosition(vpos);
+                setSubtitleVpos(vpos, "onSubtitleMetadataUpdated");
                 mSubtitleManager.setOutlineState(outline);
-
-                // If no language set for subs, set the user favorite. Or system language if none.
-                if (!mHideSubtitles && mVideoInfo.subtitleTrack == -1) {
-                    Locale locale = new Locale(mSubsFavoriteLanguage);
-                    for (int i = 0; i < nbTrack; ++i) {
-                        if (mSubtitleInfoController.getTrackNameAt(i).toString().equalsIgnoreCase(locale.getDisplayLanguage())){
-                            mVideoInfo.subtitleTrack = i;
-                            break;
-                        }
-                    }
-                }
-
-                if (mVideoInfo.subtitleTrack >= 0 && mVideoInfo.subtitleTrack < nbTrack) {
-                    //mVideoInfo.subtitleTrack has been changed by playerservice
-                    mSubtitleInfoController.setTrack(mVideoInfo.subtitleTrack);
-                }
-
-                if (mSubtitleInfoController.getTrack() == noneTrack) {
-                    mSubtitleInfoController.enableSettings(SUBTITLE_MENU_DELAY, false, false);
+                // mVideoInfo.subtitleTrack is the track number with the none track 0<=mVideoInfo.subtitleTrack<=nbTrack, nbTrack for none track
+                // but mSubtitleInfoController is the track number with the none track (i.e. nbTrack + 1) at position 0
+                // at this point mVideoInfo.subtitleTrack is the track number to be used
+                log.debug("onSubtitleMetadataUpdated: set mSubtitleInfoController.setTrack: " + subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles));
+                mSubtitleInfoController.setTrack(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)); // +1 since none track is at position 0, for UI only
+                if (mSubtitleInfoController.getTrack() == nonePosition) {
+                    log.debug("onSubtitleMetadataUpdated: disableSubtitleDelayTVMenuItem(true) because nonePosition");
+                    disableSubtitleDelayTVMenuItem(true);
+                    disableSubtitleSettingsMenuItem(true);
                 }
             }
 
@@ -3540,8 +3834,22 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
 
         @Override
         public void onVideoDb(final VideoDbInfo localVideoInfo, final VideoDbInfo remoteVideoInfo) {
-            log.debug("onVideoDb: videoInfo: " + localVideoInfo);
+            log.debug("onVideoDb: localVideoInfo.subtitleTrack={}, remoteVideoInfo.subtitleTrack={}", ((localVideoInfo != null) ? localVideoInfo.subtitleTrack : "none"), ((remoteVideoInfo != null) ? remoteVideoInfo.subtitleTrack : "none"));
             log.debug("onVideoDb: trakt: " + localVideoInfo.traktResume+ " local "+ localVideoInfo.resume);
+            log.debug("onVideoDb: localVideoInfo.lastTimePlayed: {}, remoteVideoInfo.lastTimePlayed: {}", ((localVideoInfo != null) ? localVideoInfo.lastTimePlayed : "none"), ((remoteVideoInfo != null) ? remoteVideoInfo.lastTimePlayed : "none"));
+            if (localVideoInfo != null) {
+                if (remoteVideoInfo != null) {
+                    if (localVideoInfo.lastTimePlayed == 0 && remoteVideoInfo.audioTrack == -1) {
+                        log.debug("onVideoDb: first play");
+                        fileHasAlreadyPlayed = false;
+                    } else fileHasAlreadyPlayed = true;
+                } else {
+                    if (localVideoInfo.lastTimePlayed == 0) {
+                        log.debug("onVideoDb: first play");
+                        fileHasAlreadyPlayed = false;
+                    } else fileHasAlreadyPlayed = true;
+                }
+            } else fileHasAlreadyPlayed = false;
             if (localVideoInfo != null) {
                 final int localTraktPosition = Math.abs(localVideoInfo.duration>0 ? (int)(localVideoInfo.traktResume * (double) localVideoInfo.duration / 100) : 0);
                 log.info("onVideoDb: trakt calc: "+ localTraktPosition+ " local "+ localVideoInfo.resume);
@@ -3564,6 +3872,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                                     PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
                                     PlayerService.sPlayerService.requestIndexAndScrap();
                                 }
+                                log.debug("onVideoDb: call setVideoInfo");
                                 setVideoInfo(mVideoInfo);
                             }
                             else {
@@ -3577,6 +3886,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                                                     PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
                                                     PlayerService.sPlayerService.requestIndexAndScrap();
                                                 }
+                                                log.debug("onVideoDb: call setVideoInfo");
                                                 setVideoInfo(mVideoInfo);
                                             }
                                         })
@@ -3596,6 +3906,8 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
                 //return ;
             }
 
+            // this provides the video info to the player based on localVideoInfo (keeping subtrack etc...)
+            log.debug("onVideoDb: call setVideoInfo for playerActivity and playerService");
             mVideoInfo = localVideoInfo;
             if(PlayerService.sPlayerService!=null){
                 PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
@@ -3612,7 +3924,7 @@ IndexHelper.Listener, PermissionChecker.PermissionListener {
             if (getIntent().getStringExtra("title") != null)
                 mTitle = getIntent().getStringExtra("title");
             else if (scheme == null || !scheme.equals("content"))
-                mTitle = mUri.getLastPathSegment();
+                mTitle = FileUtils.getName(mUri);
             invalidateOptionsMenu();
         }
 

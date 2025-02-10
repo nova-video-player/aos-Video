@@ -26,22 +26,26 @@ public class MoviesLoader extends VideoLoader {
 
     static public String DEFAULT_SORT = "name COLLATE LOCALIZED ASC";
     private final boolean mGroupByOnlineId;
-
     private String mSortOrder;
-
     private boolean mShowWatched;
 
     public MoviesLoader(Context context, boolean groupbyOnlineId) {
-        this(context, DEFAULT_SORT, true, groupbyOnlineId);
+        this(context, DEFAULT_SORT, true, groupbyOnlineId, false, 0);
     }
 
-    public MoviesLoader(Context context, String SortOrder, boolean showWatched, boolean groupByOnlineId) {
+    public MoviesLoader(Context context, boolean groupbyOnlineId, boolean applyThrottleDelay, int throttleDelay) {
+        this(context, DEFAULT_SORT, true, groupbyOnlineId, applyThrottleDelay, throttleDelay);
+    }
+
+    public MoviesLoader(Context context, String SortOrder, boolean showWatched, boolean groupByOnlineId, boolean applyThrottleDelay, int throttleDelay) {
         super(context);
         mGroupByOnlineId = groupByOnlineId;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
         init();
+        if (applyThrottleDelay) setUpdateThrottle(throttleDelay);
     }
+
     @Override
     protected void init() {
         super.init();
@@ -56,6 +60,7 @@ public class MoviesLoader extends VideoLoader {
             ).build());
         }
     }
+
     @Override
     public String[] getProjection() {
         if(mGroupByOnlineId)

@@ -19,6 +19,7 @@ import android.graphics.drawable.Drawable;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -63,11 +64,7 @@ public class TVMenuAdapter {
 
         if(cards.size()>0)
             ((TVCardView)cards.get(0).findViewById(R.id.card_view)).requestFocus();
-
-
     }
-
-
 
     public TVMenu createTVMenu(){
         TVMenu tvm = (TVMenu)LayoutInflater.from(mActivity)
@@ -89,7 +86,6 @@ public class TVMenuAdapter {
         TVCardView tvcv = (TVCardView) v2;
         if(((TVCardView) v2).hasFocus()) {
 
-
             ((TVCardView) v2).focus(true);
             DisplayMetrics displaymetrics = new DisplayMetrics();
             mWindow.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -102,15 +98,11 @@ public class TVMenuAdapter {
 
     }
 
-
-
-
     // Create a new view (invoked by the layout manager) and its slave
     public TVCardView createAndAddView(Drawable on, Drawable off, String text){
         View v = createView(on, off, text);
         addView(v, cards.size());
         return (TVCardView)v.findViewById(R.id.card_view);
-
     }
 
     public View createView(Drawable on, Drawable off, String text){
@@ -208,13 +200,9 @@ public class TVMenuAdapter {
                 mcv.createSlaveView();
             //then we add it on slave view
             mViewSlave.addView(mcv.getSlaveView().getParentView());
-
-
         }
         cards.add(v);
-
         last = mcv;
-
     }
 
 
@@ -222,7 +210,6 @@ public class TVMenuAdapter {
     public void goToNext(){
         if(pos<cards.size()-1) {
             int oldPos = pos;
-
 
             pos++;
             while((cards.get(pos).findViewById(R.id.card_view)==null || !cards.get(pos).findViewById(R.id.card_view).isFocusable())&&pos<cards.size()-1)
@@ -250,8 +237,6 @@ public class TVMenuAdapter {
             else
                 pos=oldPos;
 
-
-
         }
     }
 
@@ -274,8 +259,8 @@ public class TVMenuAdapter {
         a.setDuration(500);
         mView.startAnimation(a);
 
-
     }
+
     public void focusStart() {
         // TODO Auto-generated method stub
         //will make tv menu appears from bottom to the middle of the screen
@@ -318,8 +303,6 @@ public class TVMenuAdapter {
                     mViewSlave.setX(-((TVCardView) v2).getPositionX() + width / 2);
             }
             cards.get(pos).requestFocus();
-            
-            
         }
     }
     public void initializeSlaveView(FrameLayout v){
@@ -400,6 +383,5 @@ public class TVMenuAdapter {
         // TODO Auto-generated method stub
         mView.setFocusable(b);
     }
-
 
 }

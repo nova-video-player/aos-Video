@@ -58,12 +58,12 @@
                 android:fontFamily="sans-serif"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="1dp"
                 android:background="@null"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:textColor="#ffffff"
-                android:textSize="@dimen/tv_menu_font_size"
+                android:textSize="@dimen/tv_menu_small_font_size"
                 android:focusable="false"
                 android:visibility="gone" />
 

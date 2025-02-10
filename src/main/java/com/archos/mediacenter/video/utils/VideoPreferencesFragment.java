@@ -28,6 +28,8 @@ import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.archos.mediacenter.video.CustomApplication;
+
 public class VideoPreferencesFragment extends PreferenceFragmentCompat {
 
     private VideoPreferencesCommon mPreferencesCommon = new VideoPreferencesCommon(this);

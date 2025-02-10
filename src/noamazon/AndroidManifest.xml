@@ -26,13 +26,15 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" android:minSdkVersion="34"/>
+
     <application
         android:icon="@mipmap/ic_launcher">
         <!-- ************** WIDGET ************** -->
 
         <activity
             android:name="com.archos.mediacenter.video.widget.VideoWidgetConfigure"
-            android:icon="@mipmap/ic_launcher"
             android:exported="false"
             android:label="@string/nova"
             android:theme="@style/Theme.DialogMinWidth" >

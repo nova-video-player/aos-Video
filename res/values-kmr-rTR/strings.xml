@@ -16,7 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">Pirtûkxane</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
@@ -234,6 +234,9 @@
     <string name="player_subtitle_track_toast">Parçeya jêrnav:</string>
     <string name="player_bookmark_set">Bijmer vî awayî miheng bû</string>
     <!-- Subtitles/Audio languages -->
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <!-- Player errors -->
     <!-- Player plug-in -->
     <!-- Subtitles wizard -->

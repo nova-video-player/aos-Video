@@ -19,7 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_to_library"
-        android:id="@+id/checkBox" />
+        android:id="@+id/checkBox"
+        android:checked="true" />
 
 
 </LinearLayout>

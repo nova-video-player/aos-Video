@@ -24,6 +24,7 @@ import com.archos.mediascraper.MovieTags;
 import com.archos.mediascraper.SearchResult;
 import com.archos.mediascraper.ShowTags;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
@@ -140,17 +141,16 @@ public class ScraperResultsAdapter extends BaseAdapter {
 
         ItemData itemData = mItems.get(position);
 
-        mImgSetter.set(holder.poster, mFileLoader, itemData.posterPath);
-
+        // itemData can be null according to sentry
+        if (itemData != null) {
+            mImgSetter.set(holder.poster, mFileLoader, itemData.posterPath);
+            holder.name.setText(itemData.name);
+            holder.date.setText(itemData.date);
+            holder.directors.setText(itemData.directors);
+        }
         holder.spinbar.setVisibility((mItemsUpdated == position) ? View.VISIBLE : View.GONE);
-
-        holder.name.setText(itemData.name);
-
-        holder.date.setText(itemData.date);
-        holder.date.setVisibility((itemData.date.length() > 0) ? View.VISIBLE : View.INVISIBLE);
-
-        holder.directors.setText(itemData.directors);
-        holder.directors.setVisibility((itemData.directors.length() > 0) ? View.VISIBLE : View.INVISIBLE);
+        holder.date.setVisibility((itemData != null && itemData.date.length() > 0) ? View.VISIBLE : View.INVISIBLE);
+        holder.directors.setVisibility((itemData != null && itemData.directors.length() > 0) ? View.VISIBLE : View.INVISIBLE);
 
         return convertView;
     }
@@ -180,122 +180,152 @@ public class ScraperResultsAdapter extends BaseAdapter {
         // Replace the data of the item at the provided position
         if (position >= mItems.size())
             return;
-        ItemData itemData = mItems.get(position);
+        ((Activity) mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ItemData itemData = mItems.get(position);
 
-        File posterFile = movieTags.getCover();
-        if (posterFile != null) {
-            itemData.posterPath = posterFile.getPath();
-        }
+                File posterFile = movieTags.getCover();
+                if (posterFile != null) {
+                    itemData.posterPath = posterFile.getPath();
+                }
 
-        if (movieTags.getYear() != 0) {
-            itemData.date = String.valueOf(movieTags.getYear());
-        }
+                if (movieTags.getYear() != 0) {
+                    itemData.date = String.valueOf(movieTags.getYear());
+                }
 
-        if (movieTags.getDirectors().size() > 0) {
-            // Append all the directors as a single string
-            itemData.directors = TextUtils.join(", ", movieTags.getDirectors());
-        }
+                if (movieTags.getDirectors().size() > 0) {
+                    // Append all the directors as a single string
+                    itemData.directors = TextUtils.join(", ", movieTags.getDirectors());
+                }
 
-        mItems.set(position, itemData);
+                mItems.set(position, itemData);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public void addItemData(MovieTags movieTags) {
-        ItemData itemData = new ItemData(movieTags.getTitle());
+        ((Activity) mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ItemData itemData = new ItemData(movieTags.getTitle());
 
-        File posterFile = movieTags.getCover();
-        if (posterFile != null) {
-            itemData.posterPath = posterFile.getPath();
-        }
+                File posterFile = movieTags.getCover();
+                if (posterFile != null) {
+                    itemData.posterPath = posterFile.getPath();
+                }
 
-        if (movieTags.getYear() != 0) {
-            itemData.date = String.valueOf(movieTags.getYear());
-        }
+                if (movieTags.getYear() != 0) {
+                    itemData.date = String.valueOf(movieTags.getYear());
+                }
 
-        if (movieTags.getDirectors().size() > 0) {
-            // Append all the directors as a single string
-            itemData.directors = TextUtils.join(", ", movieTags.getDirectors());
-        }
+                if (movieTags.getDirectors().size() > 0) {
+                    // Append all the directors as a single string
+                    itemData.directors = TextUtils.join(", ", movieTags.getDirectors());
+                }
 
-        mItems.add(itemData);
+                mItems.add(itemData);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public void updateItemData(int position, EpisodeTags episodeTags) {
-        // Replace the data of the item at the provided position
-        ShowTags showTags = episodeTags.getShowTags();
-        ItemData itemData = mItems.get(position);
+        if (position >= mItems.size())
+            return;
+        ((Activity) mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // Replace the data of the item at the provided position
+                ShowTags showTags = episodeTags.getShowTags();
+                ItemData itemData = mItems.get(position);
 
-        // returns show cover if no ep cover exists
-        File episodeCover = episodeTags.getCover();
-        if (episodeCover != null) {
-            itemData.posterPath = episodeCover.getPath();
-        }
+                // returns show cover if no ep cover exists
+                File episodeCover = episodeTags.getCover();
+                if (episodeCover != null) {
+                    itemData.posterPath = episodeCover.getPath();
+                }
 
-        String date = "";
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
-        if (episodeTags.getAired() != null && episodeTags.getAired().getTime() > 0) {
-            // Display the aired date of the current episode
-            date = df.format(episodeTags.getAired());
-        }
-        else if (showTags != null && showTags.getPremiered() != null && showTags.getPremiered().getTime() > 0) {
-            // Aired date not available => try at least the premiered date
-            date = df.format(showTags.getPremiered());
-        }
-        itemData.date = date;
+                String date = "";
+                DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+                if (episodeTags.getAired() != null && episodeTags.getAired().getTime() > 0) {
+                    // Display the aired date of the current episode
+                    date = df.format(episodeTags.getAired());
+                } else if (showTags != null && showTags.getPremiered() != null && showTags.getPremiered().getTime() > 0) {
+                    // Aired date not available => try at least the premiered date
+                    date = df.format(showTags.getPremiered());
+                }
+                itemData.date = date;
 
-        if (episodeTags.getDirectors().size() > 0) {
-            // Append all the directors as a single string
-            itemData.directors = TextUtils.join(", ", episodeTags.getDirectors());
-        }
+                if (episodeTags.getDirectors().size() > 0) {
+                    // Append all the directors as a single string
+                    itemData.directors = TextUtils.join(", ", episodeTags.getDirectors());
+                }
 
-        mItems.set(position, itemData);
+                mItems.set(position, itemData);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public void addItemData(EpisodeTags episodeTags) {
-        // Replace the data of the item at the provided position
-        ShowTags showTags = episodeTags.getShowTags();
-        ItemData itemData = new ItemData(episodeTags.getTitle());
+        ((Activity) mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // Replace the data of the item at the provided position
+                ShowTags showTags = episodeTags.getShowTags();
+                ItemData itemData = new ItemData(episodeTags.getTitle());
 
-        // returns show cover if no ep cover exists
-        File episodeCover = episodeTags.getCover();
-        if (episodeCover != null) {
-            itemData.posterPath = episodeCover.getPath();
-        }
+                // returns show cover if no ep cover exists
+                File episodeCover = episodeTags.getCover();
+                if (episodeCover != null) {
+                    itemData.posterPath = episodeCover.getPath();
+                }
 
-        String date = "";
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
-        if (episodeTags.getAired() != null && episodeTags.getAired().getTime() > 0) {
-            // Display the aired date of the current episode
-            date = df.format(episodeTags.getAired());
-        }
-        else if (showTags != null && showTags.getPremiered() != null && showTags.getPremiered().getTime() > 0) {
-            // Aired date not available => try at least the premiered date
-            date = df.format(showTags.getPremiered());
-        }
-        itemData.date = date;
+                String date = "";
+                DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+                if (episodeTags.getAired() != null && episodeTags.getAired().getTime() > 0) {
+                    // Display the aired date of the current episode
+                    date = df.format(episodeTags.getAired());
+                }
+                else if (showTags != null && showTags.getPremiered() != null && showTags.getPremiered().getTime() > 0) {
+                    // Aired date not available => try at least the premiered date
+                    date = df.format(showTags.getPremiered());
+                }
+                itemData.date = date;
 
-        if (episodeTags.getDirectors().size() > 0) {
-            // Append all the directors as a single string
-            itemData.directors = TextUtils.join(", ", episodeTags.getDirectors());
-        }
-
-        mItems.add(itemData);
+                if (episodeTags.getDirectors().size() > 0) {
+                    // Append all the directors as a single string
+                    itemData.directors = TextUtils.join(", ", episodeTags.getDirectors());
+                }
+                mItems.add(itemData);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public void updateAvailableItemsData(List<BaseTags> tagsList) {
-        int position;
-        int size = tagsList.size();
-        for (position = 0; position < size; position++) {
-            BaseTags tags = tagsList.get(position);
+        ((Activity) mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int position;
+                int size = tagsList.size();
+                for (position = 0; position < size; position++) {
+                    BaseTags tags = tagsList.get(position);
 
-            if (tags instanceof MovieTags) {
-                updateItemData(position, (MovieTags)tags);
-            }
-            else if (tags instanceof EpisodeTags) {
-                updateItemData(position, (EpisodeTags)tags);
-            }
-        }
+                    if (tags instanceof MovieTags) {
+                        updateItemData(position, (MovieTags)tags);
+                    }
+                    else if (tags instanceof EpisodeTags) {
+                        updateItemData(position, (EpisodeTags)tags);
+                    }
+                }
 
-        mItemsUpdated = tagsList.size();
+                mItemsUpdated = tagsList.size();
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public void setItemsUpdated(int items) {

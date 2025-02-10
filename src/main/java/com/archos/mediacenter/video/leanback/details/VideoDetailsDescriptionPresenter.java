@@ -17,7 +17,6 @@ package com.archos.mediacenter.video.leanback.details;
 import android.animation.LayoutTransition;
 import android.graphics.Paint;
 import androidx.leanback.widget.Presenter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,12 +34,15 @@ import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediaprovider.video.VideoStore;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Started from AbstractDetailsDescriptionPresenter and modified
  */
 public class VideoDetailsDescriptionPresenter extends Presenter {
 
-    private static final String TAG = "VideoDetailsDescription";
+    private static final Logger log = LoggerFactory.getLogger(VideoDetailsDescriptionPresenter.class);
     /**
      * I should not do that in theory, but it is so much simple to update the SINGLE object created by this class!
      */
@@ -185,6 +187,12 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
             vh.mDate.setVisibility(View.GONE);
             vh.mDuration.setVisibility(View.INVISIBLE);
             vh.mRating.setVisibility(View.GONE);
+            vh.mContentRating.setVisibility(View.GONE);
+            vh.mContentRatingContainer.setVisibility(View.GONE);
+            //vh.mResolutionBadge.setVisibility(View.GONE);
+            //vh.mResolutionBadgeContainer.setVisibility(View.GONE);
+            //vh.mAudioBadge.setVisibility(View.GONE);
+            //vh.mAudioBadgeContainer.setVisibility(View.GONE);
         }
 
         setTextOrSetInvisibleIfEmpty(vh.mDuration, MediaUtils.formatTime(video.getDurationMs()));
@@ -299,17 +307,18 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
                 break;
         }
 
+        log.debug("displayGuessesVideoBadges: " + resolutionBadgeRes + " visible " + visible);
+
         if (visible) {
             setTextOrSetGoneIfEmpty(vh.mResolutionBadge, resolutionBadgeRes);
             vh.mResolutionBadge.setTextColor(VideoDetailsFragment.getDominantColor());
             vh.mResolutionBadgeContainer.setVisibility(View.VISIBLE);
         }
         else {
+            vh.mResolutionBadge.setVisibility(View.GONE);
             vh.mResolutionBadgeContainer.setVisibility(View.GONE);
         }
     }
-
-    // TODO MARC color of the text is not black!!!
 
     /**
      * Display Video and Audio badges based on the actual VideoMetadata from the file.
@@ -320,7 +329,7 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
         if (mSingleViewHolder!=null) {
             VideoMetadata metadata = video.getMetadata();
             if (metadata==null) {
-                Log.e(TAG, "updateVideoBadges should be called only once the metadata are known!");
+                log.error("updateVideoBadges should be called only once the metadata are known!");
                 return;
             }
 
@@ -333,6 +342,7 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
             // Resolution badge
             final int w = metadata.getVideoWidth();
             final int h = metadata.getVideoHeight();
+            log.debug("displayActualVideoBadges: " + w + "x" + h);
             String resolutionBadgeRes = "";
             boolean visible = false;
             if (w>=3840 || h>=2160) {
@@ -354,11 +364,14 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
                 visible = true;
             }
 
+            log.debug("displayActualVideoBadges: " + resolutionBadgeRes + " visible " + visible);
+
             if (visible) {
                 setTextOrSetGoneIfEmpty(mSingleViewHolder.mResolutionBadge, resolutionBadgeRes);
                 mSingleViewHolder.mResolutionBadge.setTextColor(VideoDetailsFragment.getDominantColor());
                 mSingleViewHolder.mResolutionBadgeContainer.setVisibility(View.VISIBLE);
             } else {
+                mSingleViewHolder.mResolutionBadge.setVisibility(View.GONE);
                 mSingleViewHolder.mResolutionBadgeContainer.setVisibility(View.GONE);
             }
 
@@ -391,11 +404,15 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
                 } else if (audioChannels == 2) {
                     audioBadgeRes = mSingleViewHolder.view.getContext().getString(R.string.audio_2_0);
                 }
+
+                log.debug("displayActualVideoBadges " + audioBadgeRes + " visible true");
+
                 setTextOrSetGoneIfEmpty(mSingleViewHolder.mAudioBadge, audioBadgeRes);
                 mSingleViewHolder.mAudioBadge.setTextColor(VideoDetailsFragment.getDominantColor());
                 mSingleViewHolder.mAudioBadgeContainer.setVisibility(View.VISIBLE);
             }
             else {
+                mSingleViewHolder.mAudioBadge.setVisibility(View.GONE);
                 mSingleViewHolder.mAudioBadgeContainer.setVisibility(View.GONE);
             }
 

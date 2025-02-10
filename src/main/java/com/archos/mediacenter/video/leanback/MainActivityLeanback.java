@@ -16,21 +16,18 @@ package com.archos.mediacenter.video.leanback;
 
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
 
-import android.app.Activity;
 import android.content.Intent;
 
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.IntentSenderRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.PreferenceManager;
 import androidx.annotation.NonNull;
-import android.view.KeyEvent;
-import android.widget.Toast;
 
-import com.archos.filecorelibrary.FileUtilsQ;
+import android.util.Log;
+import android.view.KeyEvent;
+
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.DensityTweak;
 import com.archos.mediacenter.video.EntryActivity;
@@ -46,7 +43,14 @@ import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediascraper.AutoScrapeService;
 import com.archos.environment.ArchosUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Locale;
+
 public class MainActivityLeanback extends LeanbackActivity {
+
+    private static final Logger log = LoggerFactory.getLogger(MainActivityLeanback.class);
 
     public static final int ACTIVITY_REQUEST_CODE_PREFERENCES = 101;
 
@@ -60,7 +64,10 @@ public class MainActivityLeanback extends LeanbackActivity {
     }
     @Override
     public void onResumeFragments(){
+        log.debug("onResumeFragments");
         super.onResumeFragments();
+        CustomApplication.loadLocale(getResources());
+
         new DensityTweak(this)
                 .applyUserDensity();
         mPermissionChecker.checkAndRequestPermission(this);
@@ -68,7 +75,9 @@ public class MainActivityLeanback extends LeanbackActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((CustomApplication) getApplication()).loadLocale();
         super.onCreate(savedInstanceState);
+
         UnavailablePosterBroadcastReceiver.registerReceiver(this);
         mPermissionChecker = new PermissionChecker(hasManageExternalStoragePermission(getApplicationContext()));
         new DensityTweak(this)

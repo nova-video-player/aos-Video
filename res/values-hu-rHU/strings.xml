@@ -16,7 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
     <string name="goto_start">Könyvtár</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
@@ -63,8 +63,8 @@
     <string name="watching_up_next">Most nézett/Következő</string>
     <string name="recently_added">Mostanában hozzáadva</string>
     <string name="recently_added_videos">Mostanában hozzáadva</string>
-    <string name="recently_played">Mostanában lejátzott</string>
-    <string name="recently_played_videos">Mostanában lejátzott</string>
+    <string name="recently_played">Mostanában lejátszott</string>
+    <string name="recently_played_videos">Mostanában lejátszott</string>
     <string name="video_lists">Lejátszólisták</string>
     <!-- The string used in main storage list -->
     <string name="external_storage">Külső</string>
@@ -128,6 +128,7 @@
     <string name="tvshows_by_alpha">Sorozatok ABC sorrendben</string>
     <string name="tvshows_by_genre">Sorozatok műfaj szerint</string>
     <string name="tvshows_by_rating">Sorozatok értékelés szerint</string>
+    <string name="animation_shows_by_alpha">Animációs sorozatok betűrendben</string>
     <string name="episodes_by_date">Epizódok értékelés szerint</string>
     <string name="date_view_week">Hét</string>
     <string name="date_view_month">Hónap</string>
@@ -258,7 +259,7 @@
     <string name="you_have_no_movies">Nincsenek filmek</string>
     <string name="you_have_no_animes">Nincs animációs film</string>
     <string name="you_have_no_movie_collections">Nincsenek gyűjtemények</string>
-    <string name="you_have_no_anime_collections">Nem anime gyűjtemény</string>
+    <string name="you_have_no_anime_collections">Nincs anime gyűjtemény</string>
     <string name="you_have_no_tv_shows">Nincsenek sorozatok</string>
     <string name="you_have_no_anime_shows">Nincs animációs sorozat</string>
     <string name="you_have_no_non_scraped_videos">Feldolgozatlan videók kivételével</string>
@@ -285,11 +286,13 @@
     <string name="switch_to_list">Lista</string>
     <string name="switch_to_grid">Rács</string>
     <!-- VideoPlayer -->
+    <string name="player_track">Sáv</string>
     <string name="player_loading_video">Videó betöltése\u2026</string>
     <string name="player_audio_track_toast">Hangsáv:</string>
     <string name="player_subtitle_track_toast">Feliratsáv:</string>
     <string name="player_bookmark_set">Könyvjelző beállítva itt:</string>
     <string name="player_pref_subtitle_delay_title">Késleltetés</string>
+    <string name="player_pref_audio_speed_title">Lejátszási sebesség</string>
     <string name="floating_player_restore">Visszaállítás</string>
     <string name="floating_player_play">Lejátszás</string>
     <string name="floating_player_pause">Szünet</string>
@@ -323,43 +326,32 @@
     <string name="menu_change_folder">Mappaváltás</string>
     <string name="menu_change_folder_details">Válassza ki az induló mappát</string>
     <string name="unlock_instructions">Nyomja hosszan az ikont a feloldáshoz</string>
-    <string name="seek_to_percentage">\"Keresés alatt %s%%</string>
+    <string name="seek_to_percentage">Keresés alatt %s%%</string>
+    <string name="set_audio_speed_to">Hangsebesség %s</string>
     <!-- Subtitles/Audio languages -->
-    <string name="s_arabic">Arab</string>
-    <string name="s_bulgarian">Bolgár</string>
-    <string name="Bosnian">Bosnyák</string>
-    <string name="s_czech">Cseh</string>
-    <string name="s_danish">Dán</string>
-    <string name="s_german">Német</string>
-    <string name="s_english">Angol</string>
-    <string name="s_greek">Görög</string>
-    <string name="s_spanish">Spanyol</string>
-    <string name="s_finnish">Finn</string>
-    <string name="s_french">Francia</string>
-    <string name="s_hebrew">Héber</string>
-    <string name="s_hungarian">Magyar</string>
-    <string name="s_italian">Olasz</string>
-    <string name="s_japanese">Japán</string>
-    <string name="s_korean">Koreai</string>
-    <string name="s_dutch">Holland</string>
-    <string name="s_norwegian">Norvég</string>
-    <string name="s_polish">Lengyel</string>
+    <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">Hallássérült</string>
+    <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
+    <string name="subs_SDH">Feliratok süketek és hallássérültek számára</string>
+    <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brazil</string>
-    <string name="s_portuguese">Portugál</string>
-    <string name="s_russian">Orosz</string>
-    <string name="Romanian">Román</string>
-    <string name="Serbo_Croatian">Szerbhorvát</string>
-    <string name="Croatian">Horvát</string>
-    <string name="Serbian">Szerb</string>
-    <string name="Slovenian">Szlovén</string>
-    <string name="s_swedish">Svéd</string>
-    <string name="s_thai">Thai</string>
-    <string name="s_turkish">Török</string>
     <string name="s_chinese">Kínai</string>
-    <string name="s_vietnamese">Vietnámi</string>
-    <string name="s_lithuanian">Litván</string>
-    <string name="s_indonesian">Indonéz</string>
-    <string name="s_malay">Maláj</string>
+    <string name="s_chinese_simplified">Egyszerűsített kínai</string>
+    <string name="s_traditional_chinese">Hagyományos kínai</string>
+    <string name="s_chinese_bilingual">Kínai, kétnyelvű</string>
+    <string name="s_chinese_mainland">Kínai (kontinentális)</string>
+    <string name="s_chinese_hk">Kínai (Hong Kong)</string>
+    <string name="s_chinese_tw">Kínai (Tajvan)</string>
+    <string name="s_spanish_la">Spanyol (LA)</string>
+    <string name="s_extremaduran">Extremadurai</string>
+    <string name="s_montenegrin">Montenegrói</string>
+    <string name="s_manipuri">Manipuri</string>
+    <string name="s_dari">Dari</string>
+    <string name="s_portuguese_mz">Portugál (MZ)</string>
+    <string name="s_spanish_eu">Spanyol (EU)</string>
+    <string name="s_santali">Szantáli</string>
+    <string name="s_syriac">Szír</string>
+    <string name="s_toki_pona">Toki Pona</string>
     <string name="s_none">Egyik sem</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Nem lehet lejátszani a videót</string>
@@ -397,7 +389,7 @@
     <string name="player_plugin_purchase_google_play_msg">További codec bővítményeket vásárolhat a Google Play-en.</string>
     <string name="player_plugin_purchase_google_play_button">Ugrás a Google Play-re</string>
     <string name="plugin_update_required_title">Kodek frissítése szükséges</string>
-    <string name="plugin_update_required_message">Úgy tűnik, hogy a kiegészítő codec-ek már telepítve vannak a Nova Video Player-hez.\n\nA Nova Video Player ezen új verziójához frissíteni kell ezeket a codec-eket.\n\nKérjük, nyissa meg a Google Play-t a codec-ek frissítéséhez és újratelepítéséhez.</string>
+    <string name="plugin_update_required_message">Úgy tűnik, hogy a kiegészítő kodekek már telepítve vannak a Nova Video Player-hez.\n\nA Nova Video Player ezen új verziójához frissíteni kell ezeket a codec-eket.\n\nKérjük, nyissa meg a Google Play-t a codec-ek frissítéséhez és újratelepítéséhez.</string>
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">Válassza ki a feliratokat a tárhelyen</string>
     <string name="subtitles_wizard_no_files">Nem található felirat fájl</string>
@@ -425,11 +417,14 @@
     <string name="sub_force_all">Az összes videójához már van legalább egy feliratsáv. Mindenképp letölti az új feliratsávokat?</string>
     <string name="dialog_subloader_nonetwork_title">Nincs internetkapcsolat</string>
     <string name="dialog_subloader_nonetwork_message">Internetkapcsolat szükséges a feliratok letöltéséhez</string>
-    <string name="dialog_subloader_connecting">Csatlakozás a www.opensubtitles.org-hoz…</string>
+    <string name="dialog_subloader_connecting">Csatlakozás a www.opensubtitles.com…</string>
+    <string name="opensubtitles_quota_download_remaining">OpenSubtitle letöltési kvóta: %d%d maradt</string>
     <string name="dialog_subloader_credentials">Opensubtitles belépési adatok</string>
     <string name="dialog_subloader_credentials_empty">Érvényes felhasználónév és jelszó megadása szükséges!</string>
     <string name="toast_subloader_credentials_empty">Adja meg az opensubtitles belépési adatait a beállításokban, feliratok letöltéséhez</string>
     <string name="toast_subloader_login_failed">Helytelen opensubtitles belépési adatok, vagy szolgáltatás kiesés</string>
+    <string name="toast_subloader_quota_exceeded">Túllépte az OpenSubtitles felirat-letöltési kvótát</string>
+    <string name="opensubtitles_quota_reset_time_remaining">Kvóta visszaállítása %s múlva</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Feliratok Beállításai</string>
     <string name="subtitle_sample_text">\"minta\"</string>
@@ -448,11 +443,13 @@
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
     <string name="error_permission">Nincsenek megfelelő engedélyek</string>
-    <string name="error_permission_storage">Engedélyezni kell a tárhely elérését a Nova Video Player számára, a helyi videók olvasásához. Kérjük, ezt engedélyezze.</string>
+    <string name="error_permission_storage">A Nova Video Player-nek fájl hozzáféréshez van szüksége a helyi videók olvasásához. Kérjük, ezt engedélyezze.</string>
+    <string name="error_permission_all_file_access">A Nova Video Player-nek hozzáférésre van szüksége minden fájlhoz ahhoz, hogy kezelni tudja a helyi video/NFO fájlokat. Kéjük, ezt engedélyezze.</string>
     <string name="allow">Engedélyezés</string>
     <string name="exit">Kilépés</string>
     <!-- torrent -->
     <string name="error">Hiba történt</string>
+    <string name="error_protocol_not_supported">Hiba: nem támogatott protokoll</string>
     <string name="error_loading_torrent">Hiba a torrent betöltésekor</string>
     <string name="error_downloading_not_enough_space">Hiba a torrent letöltése során : nincs elég tárhely</string>
     <string name="loading_torrent">Torrent betöltése…</string>
@@ -461,16 +458,15 @@
     <string name="torrent_buy_premium_message">Torrent-lejátszás csak a fizetett verzíóban elérhető</string>
     <string name="torrent_buy_premium">Prémium verzió megvásárlása</string>
     <!-- Shortcuts -->
+    <string name="browse_net_server">Hálózati megosztás tallózása</string>
+    <string name="add_smb_server">SMB szerver tallózása</string>
+    <string name="add_network_server">Hálózati megosztás hozzáadása</string>
     <string name="add_to_shortcuts">Parancsikon létrehozása</string>
     <string name="add_ssh_server">FTP szerver tallózása</string>
     <string name="add_ssh_shortcut">Parancsikon hozzáadása</string>
     <string name="ssh_prompt">FTP típusa</string>
+    <string name="protocol_prompt">Protokoll típus</string>
     <string name="ssh_empty_view"> \"Tallózhat és lejátszhat tartalmat saját FTP szerverről\"</string>
-    <string-array name="ssh_types">
-        <item>FTP</item>
-        <item>SFTP</item>
-        <item>FTPS</item>
-    </string-array>
     <string name="remove_from_shortcuts">Parancsikon eltávolítása</string>
     <string name="shortcut_added">%s parancsikon létrehozva</string>
     <string name="shortcut_removed">%s parancsikon eltávolítva</string>
@@ -480,16 +476,21 @@
     <string name="media_servers">Médiakiszolgálók</string>
     <string name="shortcut_list_empty">Nincs hálózati parancsikon.\n\nParancsikon létrehozásához tartsa lenyomva a célmappa nevét és válassza ki a(z) \"%s\" opciót a fenti sávon.</string>
     <string name="ftp_shortcut_list_empty">Könyvjelző létrehozásához a kedvenc távoli mappáihoz, válassza ki a(z) \"%s\" lehetőséget a fenti sávon böngészés közben.</string>
-    <string name="indexed_folders">Indexált mappák</string>
+    <string name="indexed_folders">Indexelt mappák</string>
     <string name="ftp_shortcuts">FPT parancsikonok</string>
-    <string name="add_to_indexed_folders">Mappa indexálása</string>
+    <string name="add_to_indexed_folders">Mappa indexelése</string>
     <string name="add_to_library">Hozzáadás a könyvtárhoz</string>
     <string name="add_all_items_to_library">Az összes videó azonnali hozzáadása a könyvtárhoz?</string>
+    <string name="invalid_host">Érvénytelen cím formátum</string>
+    <string name="invalid_port">Érvénytelen port formátum</string>
+    <string name="invalid_path">Érvénytelen útvonal formátum</string>
+    <string name="shortcut_folder_added">%s mappa hozzáadva parancsikonként</string>
     <string name="indexed_folder_added">%s mappa hozzáadva a könyvtárhoz</string>
     <string name="remove_from_indexed_folders">Eltávólítás a könyvtárból</string>
     <string name="indexed_folder_removed">%s mappa eltávolítva a könyvtárból</string>
     <string name="indexed_folders_list_empty">Jelenleg nincs indexelt hálózati mappa.\n\nEgy hálózati mappa tartalmát úgy adhatja hozzá a könyvtárhoz, hogy megnyitja ezt, és rákattint a \"%s\" gombra a legfelső sávon.</string>
     <string name="indexed_folders_list_empty_ftp">Jelenleg nincs indexelt FTP mappa.</string>
+    <string name="indexed_folders_list_empty_network">Jelenleg nincs indexelt hálózati mappa.</string>
     <string name="open_indexed_folder">"Megnyit"</string>
     <string name="rescan_indexed_folders">Az összes indexelt mappa újravizsgálása</string>
     <string name="last_rescan_never">Soha</string>
@@ -514,17 +515,32 @@
     <string name="preferences_force_software_decoding_summary">Kipróbálhatja ezt a beállítást, ha néhány videó hibásan jelenik meg</string>
     <string name="preferences_force_audio_passthrough">Hangtovábbítás</string>
     <string name="preferences_force_audio_passthrough_disabled">Letiltva (ajánlott)</string>
-    <string name="preferences_force_audio_passthrough_enable">Mód 1 (elavult)</string>
-    <string name="preferences_force_audio_passthrough_enable2">Mód 2</string>
     <string name="preferences_force_audio_passthrough_summary">Tömörített hang továbbítása HDMI vagy S/PDIF csatlakozókra. ⚠ Kísérleti, A/V szinkronizációs hiba lehetséges</string>
+    <string name="preferences_parser_sync_mode">Szinkronizálási mód</string>
+    <string name="preferences_parser_sync_mode_cdata">PTS alapú (ajánlott)</string>
+    <string name="preferences_parser_sync_mode_sample">mintavétel alapú </string>
+    <string name="preferences_parser_sync_mode_summary">A lavc elemző szinkronizálási módja. ⚠ Kísérleti! Felhalmozódott A/V késleltetést okozhat</string>
+    <string name="preferences_stream_buffer_size_title">Videó stream pufferméret</string>
+    <string name="preferences_stream_buffer_size_summary">Az elemző elött használandó gyorsítótár mérete MB-ban, a pufferelesi problémák kezelésére</string>
+    <string name="preferences_stream_max_iframe_size_title">I-frame maximális mérete</string>
+    <string name="preferences_stream_max_iframe_size_summary">Az i-frame maximális tömörített mérete MB-ban</string>
+    <string name="preferences_force_passthrough">Hangtovábbítás kényszerítése</string>
+    <string name="preferences_force_passthrough_summary">Ha a hangtovábbítás be van kapcsolva, ennek kényszerítése akkor is, ha az audiokodek támogatását az AV vevő nem erősítette meg, a készülék képességeinek ellenőrzése nélkül</string>
+    <string name="preferences_playback_speed">Lejátszási sebesség be</string>
+    <string name="preferences_playback_speed_summary">A lejátszási sebesség módosításának engedélyezése. ⚠ Kísérleti! Szaggatott lejátszást okozhat.</string>
     <string name="preferences_disable_downmix_title">Hang sztereólekeverés kikapcsolása</string>
     <string name="preferences_disable_downmix_summary">Mindig dekódolja az összes csatornát, és az Android kezelje a lekeverést az audio kimenettől függően (a beszéd-hangsáv elvesztését eredményezheti)</string>
+    <string name="preferences_enable_downmix_androidtv_title">Sztereólekeverés kényszerítése</string>
+    <string name="preferences_enable_downmix_androidtv_summary">A többcsatornás audiosávokat lekeverése sztereóba (ezt kapcsolja be, ha a beszédsávokat nem lehet hallani)</string>
     <string name="preferences_allow_3rd_party_player">Másik videó lejátszó használatának engedélyezése</string>
     <string name="preferences_allow_3rd_party_player_summary">Más kompatibilis videolejátszó alkalmazásokat fog javasolni az Android a video elindításakor. Ne feledje, hogy egyes funkciók nem fognak működni (folytatás, könyvjelzők, stb.)</string>
     <string name="preference_tv_3d_automatic_switch">Automatikus 3D TV átkapcsolás engedélyezése</string>
     <string name="preference_tv_3d_automatic_switch_summary">Csak akkor használja ezt a funkciót, ha a 3D TV-je támogatja</string>
     <string name="preference_tv_refreshrate_switch">Frissítési ráta automatikus kapcsolásának engedélyezése</string>
     <string name="preference_tv_refreshrate_switch_summary">Képvibrálás megszüntetése azáltal, hogy a kijelző legjobb frissítési rátája a videó képkocka sebességéhez lesz igazítva (változó eszköztámogatás)</string>
+    <string name="preferences_tv_refreshrate_switch_disabled">Kikapcsolva</string>
+    <string name="preference_remove_dolby_vision">Dolby vision kikapcsolása</string>
+    <string name="preference_remove_dolby_vision_summary">Szabványos videókodekek használata a dolby vision helyett</string>
     <string name="preference_cutout_short_edges">Teljes képernyős videó képkivágásokkal</string>
     <string name="preference_cutout_short_edges_summary">Engedélyezze a teljes képernyős tájkép videók levágását</string>
     <string name="category_languages">Feliratok</string>
@@ -536,6 +552,11 @@
     <string name="summary_list_preference_primary">Válassza ki a letöltendő feliratok nyelveit</string>
     <string name="favSubLang_title">Feliratok nyelve</string>
     <string name="favSubLang_summary">Válassza ki a megjelenítendő feliratok nyelvét</string>
+    <string name="favAudioLang_title">Alapértelmezett hangsáv</string>
+    <string name="favAudioLang_summary">Válassza ki az előnyben részesített hangsávot</string>
+    <string name="ui_language_title">Felhasználói felület nyelvének kiválasztása</string>
+    <string name="UiLang_title">Felhasználói felület nyelve</string>
+    <string name="UiLang_summary">A NOVA felhasználói felület nyelvének beállítása. Válassza a Rendszer opciót a rendszer nyelvének használatához</string>
     <string name="ui_mode_title">Felhasználói felület módja</string>
     <string name="ui_mode_summary">Válasszon TV vagy Tablet/Telefon felület között</string>
     <string name="preferences_video_about">Névjegy</string>
@@ -558,6 +579,7 @@
     <string name="enable_adult_scrap_title">Felnőtt filmek feldolgozása</string>
     <string name="enable_adult_scrap_summary">Felnőtt filmek leírásának lekérése (alapértelmezetten kikapcsolva)</string>
     <string name="locale">Rendszernyelv</string>
+    <string name="scraper_language_title">Videóleírás nyelve</string>
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
     <string name="abort">Megszakítás</string>
@@ -593,16 +615,29 @@
     <string name="help_overlay_network_indexing_text1_lb">Használja a + gombot a jelenlegi mappa és ennek almappáinak a Videó Könyvtárhoz való hozzáadáshoz.</string>
     <string name="help_overlay_network_indexing_text2">Ez lehetővé teszi a poszterek és leírások lekérését a filmekhez és a sorozatokhoz.</string>
     <string name="help_overlay_scraper_text">Nyomja meg ezt a menüelemet poszterek és leírások kereséséhez a videóihoz. </string>
+    <string name="help_overlay_network_shortcut_text1_lb">Használja a + gombot a mappa hozzáadásához hálózati parancsikonként azzal a lehetőséggel, hogy a tartalmát hozzáadhassa a videokönyvtárhoz.</string>
     <string name="new_videos_count">Új videó: %d</string>
     <string name="new_videos_scrape_message">Vannak olyan új videói, melyekhez még nincs leírás és poszter.</string>
     <string name="network_bookmarks">Folytatási pontok és helyzetjelzők a hálózaton</string>
     <string name="network_thumbnails">Távoli miniatűrök létrehozása</string>
     <string name="network_thumbnails_summary">Hozzon létre miniatűröket távoli videókból, ha nincs elérhető plakát</string>
     <string name="network_bookmarks_summary">Mentse és ellenőrizze a folytatási pontokat és a helyzetjelzőket a hálózaton, amennyiben lehetséges</string>
+    <string name="share_folders_smbj">Gyorsabb SMB alkalmazás használata (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Gyorsabb SMB átvitelt engedélyez, viszont a legrégebbi használható protokolverzíót 2-re korlátozza</string>
+    <string name="share_folders_sshj">Újabb SFTP alkalmazások használata</string>
+    <string name="share_folders_sshj_summary">Az új SFTP alkalmazások használata SFTP hivatkozásoknál</string>
     <string name="share_folders_smbv2">SMBv2 támogatás engedélyezése</string>
     <string name="share_folders_smbv2_summary">Az SMB hálózati megosztás 2. verziójának engedélyezése.</string>
     <string name="share_folders_smb_resolv">SMB feloldási sorrend</string>
     <string name="share_folders_smb_resolv_summary">BCAST, DNS bekpcsolása (alapértelmezett: DNS, BCAST). Ezt kapcsolja be, ha a szerver nem található, vagy lassú az SMB.</string>
+    <string name="share_folders_smb_disable_tcp_discovery">Az SMB TCP felderítés kikapcsolása</string>
+    <string name="share_folders_smb_disable_tcp_discovery_summary">Kapcsolja ki a TCP felderítést, ha egyes készülékeken ingatag Wi-Fi-t tapasztal.</string>
+    <string name="share_folders_smb_disable_udp_discovery">Az SMB UDP felderítés kikapcsolása</string>
+    <string name="share_folders_smb_disable_udp_discovery_summary">Kapcsolja ki az UDP felderítést, ha egyes készülékeken ingatag Wi-Fi-t tapasztal (pl. Fire 10 HD).</string>
+    <string name="share_folders_smb_disable_mdns_discovery">Az SMB mDNS felderítés kikapcsolása</string>
+    <string name="share_folders_smb_disable_mdns_discovery_summary">Kapcsolja ki az mDNS felderítést, ha egyes készülékeken ingatag Wi-Fi-t tapasztal.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">SMB felderítés korlátozása mDNS-re</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Kapcsolja ki az UDP/TCP felderítést, ha bizonyos eszközökön ingatag Wi-Fi kapcsolatot tapasztal (pl. Fire 10 HD). ⚠ Meggátolja a megfelelő felderítást ChromeOS alatt.</string>
     <string name="connection_abnormally_long">A kapcsolódás szokatlanul hosszúnak tűnik. Szeretnéd visszaállítani?</string>
     <string name="connection_reset">Visszaállítás</string>
     <!-- Info dialog, not indexed file -->
@@ -639,6 +674,8 @@
     <string name="sort_by_date_premiered_asc">Rendezés premier dátuma szerint (legrégebbi előbb)</string>
     <string name="sort_by_date_aired_desc">Rendezés sugárzási dátum szerint (legújabb előbb)</string>
     <string name="sort_by_recently_added_episode_desc">Mostanában hozzáadott epizódok előbb</string>
+    <string name="sort_by_size_asc">Méret szerint (kisebb előbb)</string>
+    <string name="sort_by_size_desc">Méret szerint (nagyobb előbb)</string>
     <string name="dec_choice_title">Dekóder választása</string>
     <string name="dec_choice_summary">Speciális beállítás, megszakíthatja a videó dekódolását.</string>
     <string name="dec_hw_omx">Hardveres dekódolás (IOMX w/ swbuf)</string>
@@ -659,6 +696,8 @@
     <string name="preferences_display_resume_box_summary">Megjeleníti vagy elrejti a gombot a legújabb videó lejátszásának folytatásához a főképernyőn</string>
     <string name="preferences_display_resume_box">Folytatás gomb megjelenítése</string>
     <string name="preferences_leanback_user_interface">TV felhasználói felület</string>
+    <string name="preferences_separate_animation_from_movies_summary">Jelölje ki az animációk elkülönítéséhez a filmektől és sorozatoktól, valamint egy animációk sor létrehozásához</string>
+    <string name="preferences_separate_animation_from_movies">Animációk elkülönítése a filmektől és sorozatoktól</string>
     <string name="preferences_show_watching_up_next_row_summary">Egy polc megjelenítése a jelenleg nézett, és a következő videókkal</string>
     <string name="preferences_show_watching_up_next_row">Épp nézett/Következő polc megjelenítése</string>
     <string name="preferences_show_last_added_row_summary">Egy polc megjelenítése az utoljára hozzáadott médiával</string>
@@ -765,10 +804,6 @@
         - Folytatási pontok\n
         - Trakt szinkronizálás</string>
     <string name="dont_show_again">Ne mutasd többet</string>
-    <string name="leanback_episode_SXEX_code">"S%1$02dE%2$02d"</string>
-    <string name="leanback_episode_details_for_general_list" comment="S01E05 - The Pager">"S%1$02dE%2$02d  -  %3$s"</string>
-    <string name="leanback_episode_name_for_season_list" comment="5. The Pager">"%1$d. %2$s"</string>
-    <string name="leanback_episode_name_for_browser_list" comment="The Wire - S01E05 - The Pager">"%1$s  -  S%2$02dE%3$02d  -  %4$s"</string>
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Hálózat &amp; Fájlok</string>
     <string name="leanback_subtitles_integrated">Beépített</string>
     <string name="leanback_subtitles_external">Külső</string>
@@ -800,6 +835,8 @@
     <string name="rescan_description">Az indexelt mappák újrafeldolgozása új tartalom hozzáadásához</string>
     <string name="rescan_now">Újrafeldolgozás most</string>
     <string name="rescan_now_description">Kézi újrafeldolgozás</string>
+    <string name="rescan_select_shares">Parancsikonok kiválasztása</string>
+    <string name="rescan_select_shares_description">Válassza ki az automatikusan újravizsgálandó hálózati parancsikonokat</string>
     <string name="rescan_error_wifi_info_standby">Úgy tűnik, hogy a WiFi készenléti állapotban le van tiltva. Az automatikus újrakeresés sikerességének biztosítása érdekében állítsa be készenléti állapotban is a WiFi engedélyezését.</string>
     <string name="rescan_error_wifi">Hiba: a WiFi ki volt kapcsolva az újrafeldolgozás során</string>
     <string name="rescan_error_wifi_click_for_more_info">kattintson ide a részletekért</string>
@@ -876,8 +913,6 @@
     <string name="list_title">Lista címe</string>
     <string name="loading">Betöltés…</string>
     <string name="connecting">Csatlakozás…</string>
-    <string name="app_id">08FEA4DD</string>
-    <string name="app_id_surface">C44FB232</string>
     <string name="refreshrate_failed">Hiba a kívánt frissítési érték beállítása közben</string>
     <string name="sponsor">A Nova támogatása</string>
     <string name="enable_sponsor_title">Nova támogatói link bekapcsolása</string>

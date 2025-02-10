@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.preference.PreferenceManager;
 import androidx.fragment.app.Fragment;
@@ -62,7 +63,7 @@ abstract public class BrowserCategory extends ListFragment {
     private static final boolean DBG_LISTENER = false;
 
     private static final int[] mExternalIDs = {
-            R.string.sd_card_storage, R.string.usb_host_storage, R.string.other_storage, R.string.network_shared_folders,R.string.sftp_folders,
+            R.string.sd_card_storage, R.string.usb_host_storage, R.string.other_storage, R.string.network_shared_folders,R.string.network_shortcuts,
             R.string.network_media_servers, R.string.network_jcifs, R.string.network_cling,R.string.preferences
     };
     private static final String PREFERENCE_LAST_FRAGMENT = "preference_last_selected_fragment";
@@ -73,6 +74,7 @@ abstract public class BrowserCategory extends ListFragment {
     protected static final int ITEM_ID_UPNP = 3;
     protected static final int ITEM_ID_FTP = 4;
     protected static final int ITEM_ID_PROVIDER = 6;
+    protected static final int ITEM_ID_NETWORK = 5;
     protected static final int FILE_CHOOSER_ACTIVITY_REQUEST_CODE = 788;
 
 
@@ -263,7 +265,11 @@ abstract public class BrowserCategory extends ListFragment {
         intentFilter.addAction(ExtStorageReceiver.ACTION_MEDIA_CHANGED);
         intentFilter.addDataScheme(ExtStorageReceiver.ARCHOS_FILE_SCHEME);//new android nougat send UriExposureException when scheme = file
         intentFilter.addDataScheme("file");
-        getActivity().registerReceiver(mExternalStorageReceiver, intentFilter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            getActivity().registerReceiver(mExternalStorageReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            getActivity().registerReceiver(mExternalStorageReceiver, intentFilter);
+        }
         addNetworkListener();
         // Remove non constant category items.
         for (int index = mCategoryList.size() - 1; index >= mLibrarySize; index--)
@@ -485,8 +491,8 @@ abstract public class BrowserCategory extends ListFragment {
             if ( NetworkState.isNetworkConnected(getActivity())){
                 ItemData itemData = new ItemData();
                 itemData.icon = R.drawable.category_common_network;
-                itemData.text = R.string.sftp_folders;
-                itemData.id = ITEM_ID_FTP;
+                itemData.text = R.string.network_shortcuts;
+                itemData.id = ITEM_ID_NETWORK;
                 mCategoryList.add(itemData);
             }
         }

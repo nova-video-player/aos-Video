@@ -21,9 +21,9 @@ import android.os.Bundle;
 import androidx.leanback.app.SearchSupportFragment;
 import androidx.fragment.app.FragmentActivity;
 
-import android.util.Log;
 import android.view.KeyEvent;
 
+import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -31,15 +31,19 @@ import com.archos.mediacenter.video.leanback.details.VideoDetailsActivity;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsFragment;
 import com.archos.mediacenter.video.info.SingleVideoLoader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class VideoSearchActivity extends FragmentActivity {
+
+    private static final Logger log = LoggerFactory.getLogger(VideoSearchActivity.class);
 
     public static final String EXTRA_SEARCH_MODE = "searchMode";
     public static final int SEARCH_MODE_ALL = 0;
     public static final int SEARCH_MODE_MOVIE = 1;
     public static final int SEARCH_MODE_EPISODE = 3;
     public static final int SEARCH_MODE_NON_SCRAPED = 2;
-    private final static String TAG = "VideoSearchActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,7 @@ public class VideoSearchActivity extends FragmentActivity {
             // this is something we got from the global search bar
             Cursor cursor = null;
             try {
-                int videoId = Integer.parseInt(intent.getData().getLastPathSegment());
+                int videoId = Integer.parseInt(FileUtils.getName(intent.getData()));
                 SingleVideoLoader loader = new SingleVideoLoader(this, videoId);
                 cursor = getContentResolver().query(loader.getUri(), loader.getProjection(), loader.getSelection(), loader.getSelectionArgs(), loader.getSortOrder());
                 if (cursor.getCount() > 0) {
@@ -109,7 +113,7 @@ public class VideoSearchActivity extends FragmentActivity {
         try {
             super.onPause();
         } catch (IllegalArgumentException e) {
-            Log.e(TAG, "onPause caught IllegalArgumentException", e);
+            log.error("onPause caught IllegalArgumentException", e);
         }
     }
 }

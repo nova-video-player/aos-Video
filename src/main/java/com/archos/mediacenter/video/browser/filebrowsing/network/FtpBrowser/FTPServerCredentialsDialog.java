@@ -14,18 +14,24 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser;
 
+import static com.archos.mediacenter.filecoreextension.UriUtils.getTypeUri;
+
 import android.net.Uri;
 
 import com.archos.mediacenter.video.browser.ServerCredentialsDialog;
+import com.archos.filecorelibrary.MetaFile2Factory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
 
+    private static final Logger log = LoggerFactory.getLogger(FTPServerCredentialsDialog.class);
 
     final private static String FTP_LATEST_USERNAME = "FTP_LATEST_USERNAME";
     final private static String FTP_LATEST_URI = "FTP_LATEST_URI";
     final public static String USERNAME = "username";
     final public static String PASSWORD = "password";
-
 
     public FTPServerCredentialsDialog(){ }
 
@@ -38,7 +44,6 @@ public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
                 .apply();
     }
 
-
     @Override
     public String createUri() {
         final int type = mTypeSp.getSelectedItemPosition();
@@ -49,31 +54,26 @@ public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
             port = Integer.parseInt(mPortEt.getText().toString());
         } catch(NumberFormatException e){ }
 
-        // get default port if it's wrong
-        switch(type){
-            case 0: if (port == -1)  port=21; break;
-            case 1: if (port == -1)  port=22; break;
-            case 2: if (port == -1)  port=21; break;
-            default:
-                throw new IllegalArgumentException("Invalid FTP type "+type);
-        }
-        String uriToBuild = "";
-        switch(type){
-            case 0: uriToBuild = "ftp"; break;
-            case 1: uriToBuild = "sftp"; break;
-            case 2: uriToBuild = "ftps"; break;
-            default:
-                throw new IllegalArgumentException("Invalid FTP type "+type);
-        }
-        //path needs to start by a "/"
-        if(path.isEmpty()||!path.startsWith("/"))
-            path = "/"+path;
-        uriToBuild +="://"+(!address.isEmpty()?address+(port!=-1?":"+port:""):"")+path;
+        var uriB = new Uri.Builder();
 
-        return uriToBuild;
+        String scheme = "";
+        scheme = getTypeUri(type);
+        uriB.scheme(scheme);
 
+        //TODO: Do we need a default port or not...? URI could not have a port included
+        if(port == -1) {
+            port = MetaFile2Factory.defaultPortForProtocol(scheme);
+        }
+
+        if (!address.isEmpty()) {
+            if(port == -1)
+                uriB.authority(address);
+            else
+                uriB.authority(address + ":" + port);
+        }
+
+        uriB.path(path);
+        log.debug("createUri: -> " + uriB);
+        return uriB.toString();
     }
-
-
-
 }

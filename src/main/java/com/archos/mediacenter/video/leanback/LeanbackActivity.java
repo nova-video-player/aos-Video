@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
@@ -65,7 +66,11 @@ public abstract class LeanbackActivity extends FragmentActivity {
 
     public void onResume(){
         super.onResume();
-        registerReceiver(mTraktRelogBroadcastReceiver, new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN));
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(mTraktRelogBroadcastReceiver, new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN), Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mTraktRelogBroadcastReceiver, new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN));
+        }
     }
 
     public void onPause(){
