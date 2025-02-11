@@ -2368,9 +2368,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                                 onSeek(-1, true);
                             }
                             return true;
-                        case KeyEvent.KEYCODE_MEDIA_NEXT:
-                        case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                            return true; // do nothing
                         case KeyEvent.KEYCODE_Z:
                             mSettings.setSubtitleDelay(-100);
                             return true;
@@ -2473,21 +2470,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             mSettings.switchAudioTrack();
                             return true;
                         case KeyEvent.KEYCODE_CHANNEL_DOWN:
-                        case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED,false)) {
-                                PlayerService.sPlayerService.decrementAudioSpeed();
-                                Toast mAudioSpeedDown = Toast.makeText(mContext, mContext.getString(R.string.set_audio_speed_to, String.format("%.2f", PlayerService.sPlayerService.getAudioSpeed())), Toast.LENGTH_SHORT);
-                                mAudioSpeedDown.show();
-                            }
-                            return true;
                         case KeyEvent.KEYCODE_CHANNEL_UP:
-                        case KeyEvent.KEYCODE_MEDIA_NEXT:
-                            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED,false)) {
-                                PlayerService.sPlayerService.incrementAudioSpeed();
-                                Toast mAudioSpeedUp = Toast.makeText(mContext, mContext.getString(R.string.set_audio_speed_to, String.format("%.2f", PlayerService.sPlayerService.getAudioSpeed())), Toast.LENGTH_SHORT);
-                                mAudioSpeedUp.show();
-                            }
-                            return true;
                     }
                 }
             }
