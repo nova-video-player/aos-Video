@@ -2552,25 +2552,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
     }
 
-    public boolean onGenericMotion(View v, MotionEvent event) {
-        if(!isTVMenuDisplayed){
-            log.debug("onGenericMotion : event=" + event);
-            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M&&event.getActionButton()==MotionEvent.BUTTON_PRIMARY) //
-                return false;
-            int action = event.getAction();
-
-            if (action == MotionEvent.ACTION_HOVER_ENTER || action == MotionEvent.ACTION_HOVER_MOVE || action == MotionEvent.ACTION_HOVER_EXIT) {
-                // Ignore events sent by the remote control when it is in pointer mode
-                return false;
-            }
-
-            show(FLAG_SIDE_ALL_EXCEPT_UNLOCK_INSTRUCTIONS, 3000);
-
-            return true;
-        }
-        return false;
-    }
-
     public void handleJoystickEvent(int joystickZone) {
         if (mControllerView == null)
             return;
