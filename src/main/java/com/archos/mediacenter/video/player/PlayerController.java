@@ -2009,7 +2009,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
         if (mControllerView == null)
             return false;
-        }
+
         if(isTVMenuDisplayed){
             showTVMenu(false);
             return false;
