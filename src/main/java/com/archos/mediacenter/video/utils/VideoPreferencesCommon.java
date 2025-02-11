@@ -77,7 +77,6 @@ import com.archos.medialib.MediaFactory;
 import com.archos.mediaprovider.video.VideoProvider;
 import com.archos.mediascraper.AllCollectionScrapeService;
 import com.archos.mediascraper.AutoScrapeService;
-import com.archos.mediascraper.settings.ScraperPreferences;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -509,7 +508,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mDisplayPosterInPlayer = (CheckBoxPreference) findPreference("display_poster_player");
         mHideGridViewInfo = (CheckBoxPreference) findPreference("hide_gridview_info");
         mDisplayActorPhotoToast = (CheckBoxPreference) findPreference("display_actorPhoto_toast");
-        mActivateRefreshrateTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
+        mActivateRefreshrateTVSwitch = (ListPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
 
         mActivateRefreshrateTVSwitch = (ListPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
         // last option "match frame rate" is only available for android 12+, remove it on old android versions
@@ -680,18 +679,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mTraktFull = findPreference(KEY_TRAKT_GETFULL);
         findPreference(KEY_SHARED_FOLDERS).setOnPreferenceClickListener(preference -> {
             startActivity(new Intent(getActivity(), CredentialsManagerPreferenceActivity.class));
-            return false;
-        });
-        findPreference("tv_shows").setOnPreferenceClickListener(preference -> {
-            Intent intent = new Intent(getActivity(), ScraperPreferences.class);
-            intent.putExtra("media",12);
-            startActivity(intent);
-            return false;
-        });
-        findPreference("movies").setOnPreferenceClickListener(preference -> {
-            Intent intent = new Intent(getActivity(), ScraperPreferences.class);
-            intent.putExtra("media",11);
-            startActivity(intent);
             return false;
         });
         mForceSwDecPreferences.setOnPreferenceClickListener(preference -> {

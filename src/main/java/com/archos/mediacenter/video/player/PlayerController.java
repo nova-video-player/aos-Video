@@ -2009,7 +2009,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
         if (mControllerView == null)
             return false;
-        }
+
         if(isTVMenuDisplayed){
             showTVMenu(false);
             return false;
@@ -2351,24 +2351,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
                         case KeyEvent.KEYCODE_DPAD_RIGHT:
                         case KeyEvent.KEYCODE_MEDIA_NEXT:
-                            log.debug("onKey: next");
-                            if (Player.sPlayer.canSeekForward() && mSeekKeyDirection != 1) {
-                                show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, 0);
-                                mSeekKeyDirection = 1;
-                                onSeek(1, true);
-                            }
-                            return true;
                         case KeyEvent.KEYCODE_MEDIA_REWIND:
                         case KeyEvent.KEYCODE_DPAD_LEFT:
-                        case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                            log.debug("onKey: previous");
-                            if (Player.sPlayer.canSeekBackward() && mSeekKeyDirection != -1) {
-                                show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, 0);
-                                mSeekKeyDirection = -1;
-                                onSeek(-1, true);
-                            }
-                            return true;
-                        case KeyEvent.KEYCODE_MEDIA_NEXT:
                         case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
                             return true; // do nothing
                         case KeyEvent.KEYCODE_Z:
@@ -2444,13 +2428,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             return true;
                         case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
                         case KeyEvent.KEYCODE_DPAD_RIGHT:
-                        case KeyEvent.KEYCODE_MEDIA_NEXT:
                         case KeyEvent.KEYCODE_MEDIA_REWIND:
                         case KeyEvent.KEYCODE_DPAD_LEFT:
-                        case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                            mSeekKeyDirection = 0;
-                            log.debug("onKey, button up");
-                            return true;
                         case KeyEvent.KEYCODE_O:
                         case KeyEvent.KEYCODE_PROG_RED:
                             if (isShowing())
@@ -2550,25 +2529,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         } else {
             mVolumeBar.setAlpha(1.0f);
         }
-    }
-
-    public boolean onGenericMotion(View v, MotionEvent event) {
-        if(!isTVMenuDisplayed){
-            log.debug("onGenericMotion : event=" + event);
-            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M&&event.getActionButton()==MotionEvent.BUTTON_PRIMARY) //
-                return false;
-            int action = event.getAction();
-
-            if (action == MotionEvent.ACTION_HOVER_ENTER || action == MotionEvent.ACTION_HOVER_MOVE || action == MotionEvent.ACTION_HOVER_EXIT) {
-                // Ignore events sent by the remote control when it is in pointer mode
-                return false;
-            }
-
-            show(FLAG_SIDE_ALL_EXCEPT_UNLOCK_INSTRUCTIONS, 3000);
-
-            return true;
-        }
-        return false;
     }
 
     public void handleJoystickEvent(int joystickZone) {
