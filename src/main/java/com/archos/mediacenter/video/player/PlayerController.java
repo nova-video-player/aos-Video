@@ -2351,23 +2351,10 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
                         case KeyEvent.KEYCODE_DPAD_RIGHT:
                         case KeyEvent.KEYCODE_MEDIA_NEXT:
-                            log.debug("onKey: next");
-                            if (Player.sPlayer.canSeekForward() && mSeekKeyDirection != 1) {
-                                show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, 0);
-                                mSeekKeyDirection = 1;
-                                onSeek(1, true);
-                            }
-                            return true;
                         case KeyEvent.KEYCODE_MEDIA_REWIND:
                         case KeyEvent.KEYCODE_DPAD_LEFT:
                         case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                            log.debug("onKey: previous");
-                            if (Player.sPlayer.canSeekBackward() && mSeekKeyDirection != -1) {
-                                show(FLAG_SIDE_CONTROL_BAR|FLAG_SIDE_ACTION_BAR|FLAG_SIDE_SYSTEM_BAR, 0);
-                                mSeekKeyDirection = -1;
-                                onSeek(-1, true);
-                            }
-                            return true;
+                            return true; // do nothing
                         case KeyEvent.KEYCODE_Z:
                             mSettings.setSubtitleDelay(-100);
                             return true;
@@ -2441,13 +2428,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             return true;
                         case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
                         case KeyEvent.KEYCODE_DPAD_RIGHT:
-                        case KeyEvent.KEYCODE_MEDIA_NEXT:
                         case KeyEvent.KEYCODE_MEDIA_REWIND:
                         case KeyEvent.KEYCODE_DPAD_LEFT:
-                        case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                            mSeekKeyDirection = 0;
-                            log.debug("onKey, button up");
-                            return true;
                         case KeyEvent.KEYCODE_O:
                         case KeyEvent.KEYCODE_PROG_RED:
                             if (isShowing())
@@ -2470,7 +2452,21 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                             mSettings.switchAudioTrack();
                             return true;
                         case KeyEvent.KEYCODE_CHANNEL_DOWN:
+                        case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED,false)) {
+                                PlayerService.sPlayerService.decrementAudioSpeed();
+                                Toast mAudioSpeedDown = Toast.makeText(mContext, mContext.getString(R.string.set_audio_speed_to, String.format("%.2f", PlayerService.sPlayerService.getAudioSpeed())), Toast.LENGTH_SHORT);
+                                mAudioSpeedDown.show();
+                            }
+                            return true;
                         case KeyEvent.KEYCODE_CHANNEL_UP:
+                        case KeyEvent.KEYCODE_MEDIA_NEXT:
+                            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED,false)) {
+                                PlayerService.sPlayerService.incrementAudioSpeed();
+                                Toast mAudioSpeedUp = Toast.makeText(mContext, mContext.getString(R.string.set_audio_speed_to, String.format("%.2f", PlayerService.sPlayerService.getAudioSpeed())), Toast.LENGTH_SHORT);
+                                mAudioSpeedUp.show();
+                            }
+                            return true;
                     }
                 }
             }
