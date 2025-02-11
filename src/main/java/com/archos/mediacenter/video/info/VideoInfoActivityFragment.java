@@ -458,15 +458,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mTitleBar = (Toolbar) mRoot.findViewById(R.id.titlebar);
         mTitleBarContent = mRoot.findViewById(R.id.titlebar_content);
 
-        mSecondaryTitleBar = (ViewGroup) mRoot.findViewById(R.id.secondary_titlebar);
-        if(mSecondaryTitleBar!=null) {
-            mToolbarContainer = mRoot.findViewById(R.id.toolbar_container);
-            mTitleBarContent.setVisibility(View.GONE);
-            mSecondaryEpisodeTitleView = (TextView) mSecondaryTitleBar.findViewById(R.id.episode_title_view);
-            mSecondaryEpisodeSeasonView = (TextView) mSecondaryTitleBar.findViewById(R.id.s_e_text_view);
-            mSecondaryTitleTextView = (TextView) mSecondaryTitleBar.findViewById(R.id.title_view);
 
-        }
         mTitleBar.setOnMenuItemClickListener(this);
         mToolbarWidgetWrapper = new ToolbarWidgetWrapper(mTitleBar, false);
         mToolbarWidgetWrapper.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP);
