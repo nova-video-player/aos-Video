@@ -15,10 +15,15 @@
 package com.archos.mediacenter.video.browser.presenter;
 
 import android.content.Context;
+
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
+
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -30,6 +35,8 @@ import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.filebrowsing.ListingAdapter;
+
+import eightbitlab.com.blurview.BlurView;
 
 /**
  * Created by alexandre on 26/10/15.
@@ -121,6 +128,24 @@ public class CommonPresenter implements Presenter {
         holder.EmptyProgress =(View) view.findViewById(R.id.empty_progress);
 
         view.setTag(holder);
+
+        // Find the BlurView inside your current view (e.g., in the item layout)
+        BlurView blurView = view.findViewById(R.id.blur_view);
+        Drawable roundedDrawable = ContextCompat.getDrawable(mContext, R.drawable.rounded_corners_drawable);
+
+        // Apply the blur effect if we have a valid rootView and BlurView
+        if (blurView != null && parent != null) {
+            // Apply blur with the rootView
+            blurView.setupWith(parent) // Ensure it's a ViewGroup here
+                  //.setOverlayColor(Color.BLUE) // This will clip the corners to match the shape
+                  //.setFrameClearDrawable(view.getBackground())
+                  //.setOverlayColor(ContextCompat.getColor(mContext, R.color.transparent_black_50))
+                    .setBlurRadius(60f); // Adjust the blur radius as needed
+            blurView.setOutlineProvider(ViewOutlineProvider.BACKGROUND);
+            blurView.setClipToOutline(true);
+            blurView.setBackground(roundedDrawable);
+        }
+
         return view;
     }
 
