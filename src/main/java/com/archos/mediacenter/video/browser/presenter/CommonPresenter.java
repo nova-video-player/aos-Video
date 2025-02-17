@@ -131,19 +131,12 @@ public class CommonPresenter implements Presenter {
 
         // Find the BlurView inside your current view (e.g., in the item layout)
         BlurView blurView = view.findViewById(R.id.blur_view);
-        Drawable roundedDrawable = ContextCompat.getDrawable(mContext, R.drawable.rounded_corners_drawable);
 
         // Apply the blur effect if we have a valid rootView and BlurView
         if (blurView != null && parent != null) {
             // Apply blur with the rootView
             blurView.setupWith(parent) // Ensure it's a ViewGroup here
-                  //.setOverlayColor(Color.BLUE) // This will clip the corners to match the shape
-                  //.setFrameClearDrawable(view.getBackground())
-                  //.setOverlayColor(ContextCompat.getColor(mContext, R.color.transparent_black_50))
                     .setBlurRadius(60f); // Adjust the blur radius as needed
-            blurView.setOutlineProvider(ViewOutlineProvider.BACKGROUND);
-            blurView.setClipToOutline(true);
-            blurView.setBackground(roundedDrawable);
         }
 
         return view;
