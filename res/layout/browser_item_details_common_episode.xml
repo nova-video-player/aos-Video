@@ -24,7 +24,7 @@
 	<androidx.cardview.widget.CardView
 		android:id="@+id/episode_picture_cardview"
 		xmlns:card_view="http://schemas.android.com/apk/res-auto"
-		card_view:cardCornerRadius="4dp"
+		card_view:cardCornerRadius="6dp"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content">
 		<ImageView
