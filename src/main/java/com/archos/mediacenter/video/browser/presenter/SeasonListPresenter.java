@@ -15,9 +15,12 @@
 package com.archos.mediacenter.video.browser.presenter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.R;
@@ -27,6 +30,9 @@ import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesListSea
 import com.archos.mediacenter.video.browser.adapters.SeasonsData;
 import com.archos.mediacenter.video.browser.adapters.object.Season;
 import com.archos.mediaprovider.video.VideoStore;
+import com.google.android.material.shape.CornerFamily;
+import com.google.android.material.shape.MaterialShapeDrawable;
+import com.google.android.material.shape.ShapeAppearanceModel;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -98,6 +104,34 @@ public class SeasonListPresenter extends SeasonPresenter{
                 }
             }
         }
+        // Get the RelativeLayout view for applying the background
+        RelativeLayout relativeLayout = view.findViewById(R.id.relative_layout_season);
+
+
+        //setting a corner radius programmatically
+        float density = mContext.getResources().getDisplayMetrics().density;
+        float cornerRadius = 6 * density; // equivalent to 6dp
+        // Create a MaterialShapeDrawable for rounded corners and transparent background
+        MaterialShapeDrawable materialShapeDrawable = new MaterialShapeDrawable();
+        materialShapeDrawable.setShapeAppearanceModel(
+                new ShapeAppearanceModel()
+                        .toBuilder()
+                        .setAllCorners(CornerFamily.ROUNDED, cornerRadius) // Set the corner radius to 6dp
+                        .build()
+        );
+
+        // Set the transparent background
+        materialShapeDrawable.setFillColor(ColorStateList.valueOf(Color.argb(80, 0, 0, 0))); // semi-transparent black
+
+
+        // Optionally, set a stroke (border)
+        //materialShapeDrawable.setStroke(2f, Color.BLACK); // Black border with 2px width
+
+        // Apply the MaterialShapeDrawable to the RelativeLayout
+        relativeLayout.setBackground(materialShapeDrawable);
+
+        // Clip the content to the outline
+        relativeLayout.setClipToOutline(true);
         return view;
     }
 
