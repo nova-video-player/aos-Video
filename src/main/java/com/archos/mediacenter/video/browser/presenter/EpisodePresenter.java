@@ -114,7 +114,8 @@ public class EpisodePresenter extends VideoPresenter implements Presenter {
         );
 
         // Set the transparent background
-        materialShapeDrawable.setFillColor(ColorStateList.valueOf(Color.TRANSPARENT)); // Transparent fill
+        materialShapeDrawable.setFillColor(ColorStateList.valueOf(Color.argb(80, 0, 0, 0))); // semi-transparent black
+
 
         // Optionally, set a stroke (border)
         //materialShapeDrawable.setStroke(2f, Color.BLACK); // Black border with 2px width
