@@ -69,6 +69,8 @@
 	<TextView
 		android:id="@+id/detail_line_three"
 		style="@style/BrowserText.Details"
+		android:layout_marginStart="4dp"
+		android:layout_marginEnd="4dp"
 		android:layout_below="@id/info"
 		android:layout_marginTop="18dip"
 		android:ellipsize="end" />
@@ -81,6 +83,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
+		android:layout_marginStart="4dp"
 		android:layout_marginBottom="2dip"
 		android:orientation="horizontal">
 
