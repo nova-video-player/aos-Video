@@ -2806,32 +2806,31 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (!TextUtils.isEmpty(mVideoInfo.scraperCover)) {
                     mPosterPath = mVideoInfo.scraperCover;
                 }
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                if(mPosterPath!=null) {
+                    prefs.edit().putString("mPosterPath", mPosterPath).apply();
+                }else{
+                    prefs.edit().putString("mPosterPath", "").apply();
+                }
+                int definition = getNormalizedDefinition();
+                String mContentRating = mVideoInfo.mContentRating;
+                String mMovieYear = mVideoInfo.mMovieYear;
+                String mEpisodeAirDate = mVideoInfo.mEpisodeAirDate;
+                DateFormat mDateFormat = DateFormat.getDateInstance(DateFormat.LONG);
+                long EpisodeAirDate = 0;
+                if(mEpisodeAirDate != null){
+                    EpisodeAirDate = Long.parseLong(mEpisodeAirDate);
+                }
+                String FinalEpisodeAirDate = mDateFormat.format(new Date(EpisodeAirDate));
+                String rating = mVideoInfo.mRating;
+                String FinalRating = String.format("%.1f", Double.valueOf(rating));
+                prefs.edit().putString("mTitle", mTitle).apply();
+                prefs.edit().putInt("mVideoDefinition", definition).apply();
+                prefs.edit().putString("mContentRating", mContentRating).apply();
+                prefs.edit().putString("mMovieYear", mMovieYear).apply();
+                prefs.edit().putString("FinalEpisodeAirDate", FinalEpisodeAirDate).apply();
+                prefs.edit().putString("mRating", FinalRating).apply();
             }
-
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            if(mPosterPath!=null) {
-                prefs.edit().putString("mPosterPath", mPosterPath).apply();
-            }else{
-                prefs.edit().putString("mPosterPath", "").apply();
-            }
-            int definition = getNormalizedDefinition();
-            String mContentRating = mVideoInfo.mContentRating;
-            String mMovieYear = mVideoInfo.mMovieYear;
-            String mEpisodeAirDate = mVideoInfo.mEpisodeAirDate;
-            DateFormat mDateFormat = DateFormat.getDateInstance(DateFormat.LONG);
-            long EpisodeAirDate = 0;
-            if(mEpisodeAirDate != null){
-                EpisodeAirDate = Long.parseLong(mEpisodeAirDate);
-            }
-            String FinalEpisodeAirDate = mDateFormat.format(new Date(EpisodeAirDate));
-            String rating = mVideoInfo.mRating;
-            String FinalRating = String.format("%.1f", Double.valueOf(rating));
-            prefs.edit().putString("mTitle", mTitle).apply();
-            prefs.edit().putInt("mVideoDefinition", definition).apply();
-            prefs.edit().putString("mContentRating", mContentRating).apply();
-            prefs.edit().putString("mMovieYear", mMovieYear).apply();
-            prefs.edit().putString("FinalEpisodeAirDate", FinalEpisodeAirDate).apply();
-            prefs.edit().putString("mRating", FinalRating).apply();
 
             switch (mVideoInfo.videoStereo) {
                 case 4: // Anaglyph mode
