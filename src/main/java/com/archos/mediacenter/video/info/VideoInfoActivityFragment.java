@@ -694,60 +694,59 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             //mActionButtonsContainer.setVisibility(View.GONE);
 
 
-
-
         episodesRecyclerView = mRoot.findViewById(R.id.episode_selector);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         episodesRecyclerView.setLayoutManager(layoutManager);
 
-        Episode episodeVideo = (Episode) mCurrentVideo;
-        long onlineId = episodeVideo.getOnlineId();
-        int season = episodeVideo.getSeasonNumber();
+        if (mCurrentVideo instanceof Episode){
+            Episode episodeVideo = (Episode) mCurrentVideo;
+            long onlineId = episodeVideo.getOnlineId();
+            int season = episodeVideo.getSeasonNumber();
 
-        episodeModels = new ArrayList<>();
-        Cursor cursor = getShowEpisodesListForSeason(onlineId, season, mContext);
-        if (cursor != null) {
-            int mEpisodeIdColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns._ID);
-            int mOnlineIdColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID);
-            int mSeasonNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
-            int mEpisodeNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
-            int mEpisodeName  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_NAME);
-            int mEpisodeDate  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_AIRED);
-            int mEpisodeRating  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_RATING);
-            int mEpisodeContentRating  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_CONTENT_RATING);
-            int mEpisodePlot  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PLOT);
-
-
-            //int mEpisodeFilePath  = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
-            int mEpisodePictureColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
-            int mEpisodePicture  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
-            while (cursor.moveToNext()) {
-                EpisodeModel episodeModel = new EpisodeModel();
-                episodeModel.setId(cursor.getLong(mEpisodeIdColumn)); // Set ID
-                episodeModel.setOnlineId(cursor.getLong(mOnlineIdColumn));
-                episodeModel.setSeasonNumber(cursor.getInt(mSeasonNumberColumn));
-                episodeModel.setEpisodeNumber(cursor.getInt(mEpisodeNumberColumn));
-                episodeModel.setEpisodeName(cursor.getString(mEpisodeName));
-                episodeModel.setEpisodeDate(cursor.getLong(mEpisodeDate));
-                episodeModel.setEpisodeRating(cursor.getFloat(mEpisodeRating));
-                episodeModel.setEpisodeContentRating(cursor.getString(mEpisodeContentRating));
-                episodeModel.setEpisodePlot(cursor.getString(mEpisodePlot));
-
-                // episodeModel.setEpisodeFilePath(cursor.getString(mEpisodeFilePath));
-
-                episodeModel.setEpisodePath(cursor.getString(mEpisodePictureColumn));
-
-                String imagePath = cursor.getString(mEpisodePicture);
-                File file = new File(imagePath);
-                Uri fileUri = Uri.fromFile(file);
-                episodeModel.setPictureUri(fileUri);
+            episodeModels = new ArrayList<>();
+            Cursor cursor = getShowEpisodesListForSeason(onlineId, season, mContext);
+            if (cursor != null) {
+                int mEpisodeIdColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns._ID);
+                int mOnlineIdColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID);
+                int mSeasonNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
+                int mEpisodeNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
+                int mEpisodeName  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_NAME);
+                int mEpisodeDate  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_AIRED);
+                int mEpisodeRating  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_RATING);
+                int mEpisodeContentRating  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_CONTENT_RATING);
+                int mEpisodePlot  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PLOT);
 
 
-                episodeModels.add(episodeModel);
+                //int mEpisodeFilePath  = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
+                int mEpisodePictureColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
+                int mEpisodePicture  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
+                while (cursor.moveToNext()) {
+                    EpisodeModel episodeModel = new EpisodeModel();
+                    episodeModel.setId(cursor.getLong(mEpisodeIdColumn)); // Set ID
+                    episodeModel.setOnlineId(cursor.getLong(mOnlineIdColumn));
+                    episodeModel.setSeasonNumber(cursor.getInt(mSeasonNumberColumn));
+                    episodeModel.setEpisodeNumber(cursor.getInt(mEpisodeNumberColumn));
+                    episodeModel.setEpisodeName(cursor.getString(mEpisodeName));
+                    episodeModel.setEpisodeDate(cursor.getLong(mEpisodeDate));
+                    episodeModel.setEpisodeRating(cursor.getFloat(mEpisodeRating));
+                    episodeModel.setEpisodeContentRating(cursor.getString(mEpisodeContentRating));
+                    episodeModel.setEpisodePlot(cursor.getString(mEpisodePlot));
+
+                    // episodeModel.setEpisodeFilePath(cursor.getString(mEpisodeFilePath));
+
+                    episodeModel.setEpisodePath(cursor.getString(mEpisodePictureColumn));
+
+                    String imagePath = cursor.getString(mEpisodePicture);
+                    File file = new File(imagePath);
+                    Uri fileUri = Uri.fromFile(file);
+                    episodeModel.setPictureUri(fileUri);
+
+
+                    episodeModels.add(episodeModel);
+                }
+                cursor.close();
             }
-            cursor.close();
         }
-
 
         mCurrentPosition = getActivity().getIntent().getIntExtra(EXTRA_CURRENT_POSITION, 0);
 
