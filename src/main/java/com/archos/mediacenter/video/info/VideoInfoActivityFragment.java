@@ -28,6 +28,7 @@ import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.BitmapFactory;
@@ -40,6 +41,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -68,7 +70,10 @@ import androidx.appcompat.widget.ToolbarWidgetWrapper;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.ViewCompat;
+import androidx.dynamicanimation.animation.SpringAnimation;
+import androidx.dynamicanimation.animation.SpringForce;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
@@ -120,6 +125,8 @@ import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.TrailerServiceIconFactory;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
+import com.archos.mediaprovider.VideoDb;
+import com.archos.mediaprovider.video.VideoOpenHelper;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
 import com.archos.mediascraper.BaseTags;
@@ -156,6 +163,7 @@ import java.util.regex.Pattern;
 
 import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateTrackName;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.replaceLanguageCodeInString;
+import static com.archos.mediacenter.video.info.VideoInfoActivity.EXTRA_CURRENT_POSITION;
 import static com.archos.mediacenter.video.utils.VideoUtils.getFileUriStringFromContentUri;
 
 import org.slf4j.Logger;
@@ -405,9 +413,16 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private VideoMetadata mVideoMetadataFromPlayer;
     private TextView mFileError;
     private ToolbarWidgetWrapper mToolbarWidgetWrapper;
-
     private boolean isFilePlayable = true;
-
+    private Episode currentEpisode;
+    private List<EpisodeModel> episodeModels;
+    private EpisodesAdapter episodesAdapter;
+    private int mCurrentPosition;
+    private RecyclerView episodesRecyclerView;
+    public interface OnEpisodeSwitchListener {
+        void onEpisodeSwiped(int direction);  // direction = 1 for next, -1 for previous
+    }
+    private OnEpisodeSwitchListener episodeSwitchListener;
     public static VideoInfoActivityFragment getInstance(Video video, Uri path, long id, boolean forceVideoSelection){
         log.debug("VideoInfoActivityFragment for uri=" + path);
         Bundle arguments = new Bundle();
@@ -677,7 +692,318 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         //if(mIsLaunchFromPlayer) //hide play button
             //mActionButtonsContainer.setVisibility(View.GONE);
+
+
+
+
+        episodesRecyclerView = mRoot.findViewById(R.id.episode_selector);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        episodesRecyclerView.setLayoutManager(layoutManager);
+
+        Episode episodeVideo = (Episode) mCurrentVideo;
+        long onlineId = episodeVideo.getOnlineId();
+        int season = episodeVideo.getSeasonNumber();
+
+        episodeModels = new ArrayList<>();
+        Cursor cursor = getShowEpisodesListForSeason(onlineId, season, mContext);
+        if (cursor != null) {
+            int mEpisodeIdColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns._ID);
+            int mOnlineIdColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID);
+            int mSeasonNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
+            int mEpisodeNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
+            int mEpisodeName  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_NAME);
+            int mEpisodeDate  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_AIRED);
+            int mEpisodeRating  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_RATING);
+            int mEpisodeContentRating  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_CONTENT_RATING);
+            int mEpisodePlot  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PLOT);
+
+
+            //int mEpisodeFilePath  = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
+            int mEpisodePictureColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
+            int mEpisodePicture  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
+            while (cursor.moveToNext()) {
+                EpisodeModel episodeModel = new EpisodeModel();
+                episodeModel.setId(cursor.getLong(mEpisodeIdColumn)); // Set ID
+                episodeModel.setOnlineId(cursor.getLong(mOnlineIdColumn));
+                episodeModel.setSeasonNumber(cursor.getInt(mSeasonNumberColumn));
+                episodeModel.setEpisodeNumber(cursor.getInt(mEpisodeNumberColumn));
+                episodeModel.setEpisodeName(cursor.getString(mEpisodeName));
+                episodeModel.setEpisodeDate(cursor.getLong(mEpisodeDate));
+                episodeModel.setEpisodeRating(cursor.getFloat(mEpisodeRating));
+                episodeModel.setEpisodeContentRating(cursor.getString(mEpisodeContentRating));
+                episodeModel.setEpisodePlot(cursor.getString(mEpisodePlot));
+
+                // episodeModel.setEpisodeFilePath(cursor.getString(mEpisodeFilePath));
+
+                episodeModel.setEpisodePath(cursor.getString(mEpisodePictureColumn));
+
+                String imagePath = cursor.getString(mEpisodePicture);
+                File file = new File(imagePath);
+                Uri fileUri = Uri.fromFile(file);
+                episodeModel.setPictureUri(fileUri);
+
+
+                episodeModels.add(episodeModel);
+            }
+            cursor.close();
+        }
+
+
+        mCurrentPosition = getActivity().getIntent().getIntExtra(EXTRA_CURRENT_POSITION, 0);
+
+        // Set adapter
+        episodesAdapter = new EpisodesAdapter(episodeModels, new EpisodesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                EpisodeModel selectedEpisode = episodeModels.get(position);
+                updateFragment(selectedEpisode);
+                //mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
+                //mFullScraperTagsTask.execute(currentEpisode);
+                updateEpisodeUI(episodeModels.get(position));
+                mCurrentPosition = position;
+                episodesAdapter.setSelectedIndex(position);
+                episodesAdapter.notifyDataSetChanged();
+                episodesRecyclerView.smoothScrollToPosition(position);
+                updateUI();
+            }
+        });
+        episodesRecyclerView.setAdapter(episodesAdapter);
+        episodesAdapter.setSelectedIndex(mCurrentPosition);
+        episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
+        episodesAdapter.notifyDataSetChanged();
+
         return mRoot;
+    }
+
+    private void updateEpisodeUI(EpisodeModel episodeModel) {
+        long date = episodeModel.getEpisodeDate();
+        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+        String Airdate = df.format(date);
+
+        setTextOrHideContainer(mScrapRating, String.valueOf(episodeModel.getEpisodeRating()), mScrapRating);
+        setTextOrHideContainer(mScrapYear, Airdate, mScrapYear);
+
+        // Remove old click listener before updating text
+        mPlotTextView.setOnClickListener(null);
+        mPlotTextView.setEllipsize(null);
+        mPlotTextView.setMaxLines(Integer.MAX_VALUE);  // Temporarily unbound
+
+        // Set new plot
+        setTextOrHideContainer(mPlotTextView, episodeModel.getEpisodePlot(), mPlotTextView);
+
+        // Post a runnable to ensure measurements are updated after layout pass
+        mPlotTextView.post(() -> {
+            int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
+            mPlotTextView.measure(
+                    View.MeasureSpec.makeMeasureSpec(expectedWidthOfTextView, View.MeasureSpec.AT_MOST),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            );
+
+            int lineHeight = mPlotTextView.getLineHeight();
+            int measuredLineCount = mPlotTextView.getLineCount();
+            int measuredTargetHeight = mPlotTextView.getMeasuredHeight();
+
+            if (measuredLineCount <= 4) {
+                // If 4 or fewer lines, allow normal wrapping without extra space
+                mPlotTextView.setMaxLines(Integer.MAX_VALUE);
+                mPlotTextView.setEllipsize(null);  // Remove ellipsize
+                mPlotTextView.setOnClickListener(null);  // Disable expansion
+
+                // Directly set the height to fit content
+                ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
+                layoutParams.height = measuredTargetHeight;  // Use the exact height of content
+                mPlotTextView.setLayoutParams(layoutParams);
+            } else {
+                // If more than 4 lines, collapse with ellipsize and allow expansion
+                mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
+                mPlotTextView.setMaxLines(4);
+                mPlotTextView.setTag(true);  // Collapsed by default
+
+                mPlotTextView.setOnClickListener(v -> {
+                    if ((Boolean) mPlotTextView.getTag()) {
+                        // Expand
+                        expandTextView(measuredTargetHeight, lineHeight);
+                        mPlotTextView.setTag(false);
+                    } else {
+                        // Collapse
+                        collapseTextView(4, lineHeight);  // Collapse to 4 lines, fixed height
+                        mPlotTextView.setTag(true);
+                    }
+                });
+            }
+        });
+    }
+
+    private void expandTextView(int targetHeight, int lineHeight) {
+        ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
+        mPlotTextView.setEllipsize(null);  // Remove ellipsize
+        mPlotTextView.setMaxLines(Integer.MAX_VALUE);
+
+        ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), targetHeight);
+        animation.addUpdateListener(valueAnimator -> {
+            layoutParams.height = (int) valueAnimator.getAnimatedValue();
+            mPlotTextView.requestLayout();
+        });
+        animation.setDuration(300);
+        animation.start();
+    }
+
+    private void collapseTextView(int maxLines, int lineHeight) {
+        ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
+        // Collapse only to the number of lines visible
+        mPlotTextView.setMaxLines(maxLines);
+
+        // Calculate the target height based on the lines we want to display
+        int targetHeight = Math.min(mPlotTextView.getLineCount(), maxLines) * lineHeight + 10;
+
+        // Ensure the height matches the collapsed version, no extra space
+        ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), targetHeight);
+        animation.addUpdateListener(valueAnimator -> {
+            layoutParams.height = (int) valueAnimator.getAnimatedValue();
+            mPlotTextView.requestLayout();
+        });
+        animation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
+                mPlotTextView.setMaxLines(maxLines);  // Ensure we only show 4 lines when collapsed
+            }
+        });
+        animation.setDuration(300);
+        animation.start();
+    }
+
+    void SwitchEpisode(int direction) {
+        // Ensure we don't go out of bounds
+        if (direction == 1 && mCurrentPosition < episodeModels.size() - 1) {
+            mCurrentPosition++;
+        } else if (direction == -1 && mCurrentPosition > 0) {
+            mCurrentPosition--;
+        } else {
+            return; // Exit if we are at the first or last episode
+        }
+
+        // Update adapter selection
+        episodesAdapter.setSelectedIndex(mCurrentPosition);
+        episodesAdapter.notifyDataSetChanged();
+        episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
+
+        // Update UI
+        updateEpisodeUI(direction);
+
+        Log.d("GESTURE", "Switched to episode at index: " + mCurrentPosition);
+    }
+
+    private void updateEpisodeUI(int direction) {
+        // Get the new episode
+        EpisodeModel episode = episodeModels.get(mCurrentPosition);
+        long date = episode.getEpisodeDate();
+        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+        String Airdate = df.format(date);
+
+        // Determine slide direction
+        float slideOutTo = direction == 1 ? -mRoot.getWidth() : mRoot.getWidth(); // Slide left (-) or right (+)
+        float slideInFrom = direction == 1 ? mRoot.getWidth() : -mRoot.getWidth(); // Opposite direction
+
+        // Slide out with SpringAnimation
+        SpringAnimation slideOut = new SpringAnimation(mRoot, SpringAnimation.TRANSLATION_X, slideOutTo);
+        slideOut.getSpring().setStiffness(SpringForce.STIFFNESS_MEDIUM);
+        slideOut.getSpring().setDampingRatio(SpringForce.DAMPING_RATIO_LOW_BOUNCY);
+
+        // Slide in with SpringAnimation
+        SpringAnimation slideIn = new SpringAnimation(mRoot, SpringAnimation.TRANSLATION_X, 0);
+        slideIn.getSpring().setStiffness(SpringForce.STIFFNESS_MEDIUM);
+        slideIn.getSpring().setDampingRatio(SpringForce.DAMPING_RATIO_LOW_BOUNCY);
+
+        slideOut.addEndListener((animation, canceled, value, velocity) -> {
+            // Update UI content after old episode slides out
+            setTextOrHideContainer(mScrapRating, String.valueOf(episode.getEpisodeRating()), mScrapRating);
+            setTextOrHideContainer(mScrapYear, Airdate, mScrapYear);
+
+            // Move view to starting position for slide-in effect
+            mRoot.setTranslationX(slideInFrom);
+
+            // Start slide-in animation
+            slideIn.start();
+        });
+
+        // Start slide-out animation
+        slideOut.start();
+    }
+
+    public void updateFragment(EpisodeModel episodeModel) {
+        if (getActivity() == null) return;
+
+        Log.d("VideoInfoFragment", "Updating fragment with Episode: " + episodeModel.getEpisodeNumber());
+
+        if (!(mCurrentVideo instanceof Episode)) {
+            Log.e("VideoInfoFragment", "Error: Current video is not an Episode!");
+            return;
+        }
+
+        currentEpisode = (Episode) mCurrentVideo;
+
+        // Update the episode's data
+        currentEpisode = new Episode(
+                episodeModel.getId(),
+                episodeModel.getOnlineId(),
+                episodeModel.getSeasonNumber(),
+                episodeModel.getEpisodeNumber(), // Updated episode number
+                episodeModel.getEpisodeName(),
+                episodeModel.getEpisodeDate(),
+                episodeModel.getEpisodeRating(),
+                episodeModel.getEpisodeContentRating(),
+                episodeModel.getEpisodePlot(),
+                currentEpisode.getShowName(),
+                currentEpisode.getFilePath(), // Updated path
+                episodeModel.getPictureUri(),
+                currentEpisode.getPosterUri(),
+                currentEpisode.getDurationMs(), // Now using the existing method from Video
+                currentEpisode.getResumeMs(),
+                currentEpisode.getEpisodeNumber(), // for test only
+                currentEpisode.getGuessedDefinition(),
+                currentEpisode.isWatched(), // Updated method (from Video)
+                currentEpisode.isTraktLibrary(),
+                currentEpisode.hasSubs(),
+                currentEpisode.isUserHidden(),
+                currentEpisode.getLastPlayed(), // Updated method name
+                currentEpisode.getId(), // for test only
+                currentEpisode.getEpisodeNumber(), // for test only
+                currentEpisode.getCalculatedBestAudiotrack(),// for test only
+                currentEpisode.getVideoFormat(),
+                currentEpisode.getGuessedAudioFormat(),
+                currentEpisode.getGuessedVideoFormat(),
+                currentEpisode.getCalculatedVideoFormat(), // for test only
+                currentEpisode.getOccurencies(),
+                currentEpisode.getEpisodeNumber(), // for test only
+                currentEpisode.getSize() // for test only
+        );
+
+        // Use setCurrentVideo() to update the fragment
+        setCurrentVideo(currentEpisode);
+
+        Log.d("VideoInfoFragment", "Successfully updated to episode: " + currentEpisode.getEpisodeNumber());
+    }
+
+    private Cursor getShowEpisodesListForSeason(Long onlineId, int season, Context context) {
+        SQLiteDatabase db = VideoDb.get(context);
+        return db.rawQuery( "SELECT " + VideoStore.Video.VideoColumns._ID +
+                        ", " + VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID +
+                        ", " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON +
+                        ", " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE +
+                        ", " + VideoStore.Video.VideoColumns.SCRAPER_E_NAME +
+                        ", " + VideoStore.Video.VideoColumns.SCRAPER_E_AIRED +
+                        ", " + VideoStore.Video.VideoColumns.SCRAPER_E_RATING +
+                        ", " + VideoStore.Video.VideoColumns.SCRAPER_S_CONTENT_RATING +
+                        ", " + VideoStore.Video.VideoColumns.SCRAPER_E_PLOT +
+                        //    ", " + MediaStore.Files.FileColumns.DATA +
+                        ", " + VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE +
+                        " FROM " + VideoOpenHelper.VIDEO_VIEW_NAME +
+                        " WHERE (" + VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID + " = " + onlineId +
+                        " AND " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " = " + season + ")" +
+                        " GROUP BY " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE +
+                        " ORDER BY " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE
+                , null);
     }
 
     private void updateGenericButtonAction() {
@@ -775,6 +1101,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     updateUI();
                 }
             };
+        if (context instanceof OnEpisodeSwitchListener) {
+            episodeSwitchListener = (OnEpisodeSwitchListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnEpisodeSwitchListener");
+        }
         updateUI(); // be sure to be on right state
     }
 
@@ -1952,6 +2283,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public void onDetach(){
         log.debug("onDetach");
         super.onDetach();
+        episodeSwitchListener = null;
         if(mVideoInfoTask!=null)
             mVideoInfoTask.cancel(true);
         if(mThumbnailTask!=null)

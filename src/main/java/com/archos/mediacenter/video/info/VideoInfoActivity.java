@@ -25,8 +25,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
@@ -51,7 +54,7 @@ import com.archos.mediascraper.EpisodeTags;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VideoInfoActivity extends AppCompatActivity {
+public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoActivityFragment.OnEpisodeSwitchListener {
 
     private static final String TAG = "VideoInfoActivity";
     private static final boolean DBG = false;
@@ -86,6 +89,11 @@ public class VideoInfoActivity extends AppCompatActivity {
 
     private boolean BrowserListOfEpisodes;
 
+    private GestureDetector gestureDetector;
+    private static final int SWIPE_THRESHOLD = 100;
+    private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+    private VideoInfoActivityFragment videoInfoActivityFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (DBG) Log.d(TAG,"onCreate");
@@ -101,9 +109,14 @@ public class VideoInfoActivity extends AppCompatActivity {
         }
         mId = getIntent().getLongExtra(EXTRA_VIDEO_ID, -1);
         mCurrentPosition = getIntent().getIntExtra(EXTRA_CURRENT_POSITION, 0);
+        mForceCurrentPosition = getIntent().getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false);
         if(getIntent().hasExtra(EXTRA_VIDEO))
             mCurrentVideo = (Video) getIntent().getSerializableExtra(EXTRA_VIDEO);
 
+        // Load the fragment dynamically
+        if (savedInstanceState == null) {
+            loadFragment(VideoInfoActivityFragment.getInstance(mCurrentVideo, null, mId, mForceCurrentPosition));
+        }
         setContentView(R.layout.activity_video_info);
         mViewPager = (ViewPager)findViewById(R.id.pager);
 
@@ -114,126 +127,31 @@ public class VideoInfoActivity extends AppCompatActivity {
         prefs.edit().putBoolean("BrowserListOfEpisodes", BrowserListOfEpisodes).apply();
 
         if(mCurrentVideo instanceof Episode) {
-            Episode episodeVideo = (Episode) mCurrentVideo;
-            long onlineId = episodeVideo.getOnlineId();
-            int season = episodeVideo.getSeasonNumber();
-
-            List<EpisodeModel> episodes = new ArrayList<>();
-            Cursor cursor = getShowEpisodesListForSeason(onlineId, season, getApplicationContext());
-            if (cursor != null) {
-                int mEpisodePictureColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
-                int mEpisodeNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
-                while (cursor.moveToNext()) {
-                    EpisodeModel episodeModel = new EpisodeModel();
-                    episodeModel.setEpisodeNumber(cursor.getInt(mEpisodeNumberColumn));
-                    episodeModel.setEpisodePath(cursor.getString(mEpisodePictureColumn));
-                    episodes.add(episodeModel);
+            mViewPager.setVisibility(View.GONE);
+            // Initialize GestureDetector and pass the listener
+            gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                    if (Math.abs(e1.getX() - e2.getX()) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (e1.getX() > e2.getX()) {
+                            Log.d("GestureTest", "Swipe LEFT detected");
+                            onEpisodeSwiped(1);  // Next episode
+                        } else {
+                            Log.d("GestureTest", "Swipe RIGHT detected");
+                            onEpisodeSwiped(-1); // Previous episode
+                        }
+                        return true;
+                    }
+                    return false;
                 }
-                cursor.close();
-            }
+            });
 
-            // Set Episode RecyclerView
-            RecyclerView mEpisodes = (RecyclerView)findViewById(R.id.episode_selector);
-            LinearLayoutManager layoutManager
-                    = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-            mEpisodes.setLayoutManager(layoutManager);
-
-            boolean oneEpisode;
-            if(episodes.size() == 1){
-                oneEpisode = true;
-            }else{
-                oneEpisode = false;
-            }
-            prefs.edit().putBoolean("oneEpisode", oneEpisode).apply();
-
-            String mode = prefs.getString("episode_scrollView", null);
-            int selectedMode;
-            if(mode == null){
-                selectedMode = 1;
-            }else{
-                selectedMode = Integer.parseInt(mode);
-            }
-            if (selectedMode == 0){
-                LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(mEpisodes.getContext()) {
-                    @Override
-                    protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
-                        return MILLISECONDS_PER_INCH_PIC / displayMetrics.densityDpi;
-                    }
-                };
-                // Setting Episode pictures & numbers RecyclerView Adapter
-                EpisodesAdapter.OnItemClickListener onItemClickListener = new EpisodesAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        mViewPager.setCurrentItem(position, false);
-                    }
-                };
-                final EpisodesAdapter episodesAdapter = new EpisodesAdapter(episodes, onItemClickListener);
-                mEpisodes.setAdapter(episodesAdapter);
-                episodesAdapter.setSelectedIndex(mCurrentPosition);
-                mEpisodes.smoothScrollToPosition(mCurrentPosition);
-
-                mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        episodesAdapter.setSelectedIndex(position);
-                        episodesAdapter.notifyDataSetChanged();
-                        linearSmoothScroller.setTargetPosition(position);
-                        layoutManager.startSmoothScroll(linearSmoothScroller);
-                    }
-                });
-            }
-            if (selectedMode == 1){
-                LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(mEpisodes.getContext()) {
-                    @Override
-                    protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
-                        return MILLISECONDS_PER_INCH_NUM / displayMetrics.densityDpi;
-                    }
-                };
-                // Setting Episode numbers RecyclerView Adapter
-                EpisodeNumbersAdapter.OnItemClickListener onItemClickListener = new EpisodeNumbersAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        mViewPager.setCurrentItem(position, false);
-                    }
-                };
-                final EpisodeNumbersAdapter episodesAdapter = new EpisodeNumbersAdapter(episodes, onItemClickListener);
-                mEpisodes.setAdapter(episodesAdapter);
-                episodesAdapter.setSelectedIndex(mCurrentPosition);
-                mEpisodes.smoothScrollToPosition(mCurrentPosition);
-
-                mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        episodesAdapter.setSelectedIndex(position);
-                        episodesAdapter.notifyDataSetChanged();
-                        linearSmoothScroller.setTargetPosition(position);
-                        layoutManager.startSmoothScroll(linearSmoothScroller);
-                    }
-                });
-            }
-            if (selectedMode == 2 || oneEpisode || !BrowserListOfEpisodes){
-                // Hide Episode RecyclerView
-                mEpisodes.setVisibility(View.GONE);
-            }
         }
-
-        mForceCurrentPosition = getIntent().getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false);
         mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, null);
         mViewPager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
         if(mCurrentPosition>0)
             mViewPager.setCurrentItem(mCurrentPosition);
         globalLayout.addView(mGlobalBackdrop, 0);
-    }
-
-    private Cursor getShowEpisodesListForSeason(Long onlineId, int season, Context context) {
-        SQLiteDatabase db = VideoDb.get(context);
-        return db.rawQuery( "SELECT " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE + ", " + VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE +
-                        " FROM " + VideoOpenHelper.VIDEO_VIEW_NAME +
-                        " WHERE (" + VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID + " = " + onlineId +
-                        " AND " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " = " + season + ")" +
-                        " GROUP BY " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE +
-                        " ORDER BY " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE
-                , null);
     }
 
     protected void onStop(){
@@ -307,6 +225,12 @@ public class VideoInfoActivity extends AppCompatActivity {
         if (DBG) Log.d(TAG, "startInstance: " + path);
         ArrayList<Uri> paths = new ArrayList<>();
         paths.add(path);
+
+        Intent intent = new Intent(context, VideoInfoActivity.class);
+        intent.putExtra(EXTRA_VIDEO, video);
+        intent.putExtra(EXTRA_VIDEO_ID, id);
+
+
         startInstance(context,null,video, 0,paths,id, false, -1);
     }
 
@@ -342,5 +266,34 @@ public class VideoInfoActivity extends AppCompatActivity {
         public int getCount() {
             return mPaths.size()>0?mPaths.size():1;
         }
+    }
+
+    // This method should not have the @Override annotation
+    public void onEpisodeSwiped(int direction) {
+        videoInfoActivityFragment = (VideoInfoActivityFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (videoInfoActivityFragment != null) {
+            Log.d("GESTURE", "Swipe detected, direction: " + direction);
+            videoInfoActivityFragment.SwitchEpisode(direction);
+        } else {
+            Log.e("GESTURE", "Fragment is null, cannot switch episode.");
+        }
+    }
+    /** Loads a new fragment into the activity */
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.commit();
+        mCurrentFragment = fragment;
+    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        // Check if gestureDetector handles the touch event
+        if (gestureDetector.onTouchEvent(event)) {
+            return true; // Consume the event if gesture is detected
+        }
+
+        // Pass the event to the super method (Activity's default touch handling)
+        return super.dispatchTouchEvent(event);
     }
 }

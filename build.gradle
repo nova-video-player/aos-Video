@@ -348,6 +348,7 @@ dependencies {
     implementation 'com.github.tony19:logback-android:3.0.0'
     implementation 'io.sentry:sentry-android:7.19.1'
     implementation 'io.sentry:sentry:7.19.1'
+    implementation "androidx.dynamicanimation:dynamicanimation:1.0.0"
 }
 
 configurations { // try to exclude device specific libraries interfering
