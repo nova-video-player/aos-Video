@@ -288,12 +288,9 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
     }
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        // Check if gestureDetector handles the touch event
-        if (gestureDetector.onTouchEvent(event)) {
-            return true; // Consume the event if gesture is detected
+        if (gestureDetector != null && gestureDetector.onTouchEvent(event)) {
+            return true;
         }
-
-        // Pass the event to the super method (Activity's default touch handling)
         return super.dispatchTouchEvent(event);
     }
 }
