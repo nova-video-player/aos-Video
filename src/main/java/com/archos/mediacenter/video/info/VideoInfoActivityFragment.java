@@ -746,30 +746,30 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 }
                 cursor.close();
             }
+
+            mCurrentPosition = getActivity().getIntent().getIntExtra(EXTRA_CURRENT_POSITION, 0);
+
+            // Set adapter
+            episodesAdapter = new EpisodesAdapter(episodeModels, new EpisodesAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    EpisodeModel selectedEpisode = episodeModels.get(position);
+                    updateFragment(selectedEpisode);
+                    //mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
+                    //mFullScraperTagsTask.execute(currentEpisode);
+                    updateEpisodeUI(episodeModels.get(position));
+                    mCurrentPosition = position;
+                    episodesAdapter.setSelectedIndex(position);
+                    episodesAdapter.notifyDataSetChanged();
+                    episodesRecyclerView.smoothScrollToPosition(position);
+                    updateUI();
+                }
+            });
+            episodesRecyclerView.setAdapter(episodesAdapter);
+            episodesAdapter.setSelectedIndex(mCurrentPosition);
+            episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
+            episodesAdapter.notifyDataSetChanged();
         }
-
-        mCurrentPosition = getActivity().getIntent().getIntExtra(EXTRA_CURRENT_POSITION, 0);
-
-        // Set adapter
-        episodesAdapter = new EpisodesAdapter(episodeModels, new EpisodesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                EpisodeModel selectedEpisode = episodeModels.get(position);
-                updateFragment(selectedEpisode);
-                //mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
-                //mFullScraperTagsTask.execute(currentEpisode);
-                updateEpisodeUI(episodeModels.get(position));
-                mCurrentPosition = position;
-                episodesAdapter.setSelectedIndex(position);
-                episodesAdapter.notifyDataSetChanged();
-                episodesRecyclerView.smoothScrollToPosition(position);
-                updateUI();
-            }
-        });
-        episodesRecyclerView.setAdapter(episodesAdapter);
-        episodesAdapter.setSelectedIndex(mCurrentPosition);
-        episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
-        episodesAdapter.notifyDataSetChanged();
 
         return mRoot;
     }
