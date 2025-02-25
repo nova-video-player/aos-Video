@@ -933,8 +933,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }
 
         // Update adapter selection
-        episodesAdapter.setSelectedIndex(mCurrentPosition);
-        episodesAdapter.notifyDataSetChanged();
+        if (episodesAdapter != null) {
+            episodesAdapter.setSelectedIndex(mCurrentPosition);
+            episodesAdapter.notifyDataSetChanged();
+        }else if (episodeNumbersAdapter!= null) {
+            episodeNumbersAdapter.setSelectedIndex(mCurrentPosition);
+            episodeNumbersAdapter.notifyDataSetChanged();
+        }
         episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
 
         // Update UI
