@@ -1289,28 +1289,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     setTextOrHideContainer(mSecondaryEpisodeSeasonView, getContext().getString(R.string.leanback_episode_SXEX_code, episode.getSeasonNumber(), episode.getEpisodeNumber()), mSecondaryEpisodeSeasonView);
                 //set episode still image
                 Picasso.get().load(episode.getPictureUri()).into(mPictureBackdrop);
-
-                // set coordinator layout bottom margin
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mCoordinatorLayout.getLayoutParams();
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-                String mode = prefs.getString("episode_scrollView", null);
-                boolean BrowserListOfEpisodes = prefs.getBoolean("BrowserListOfEpisodes", true);
-                boolean oneEpisode = prefs.getBoolean("oneEpisode", true);
-                int selectedMode;
-                if(mode == null){
-                    selectedMode = 1;
-                }else{
-                    selectedMode = Integer.parseInt(mode);
-                }
-                if (selectedMode == 0){
-                    params.bottomMargin = getResources().getDimensionPixelSize(R.dimen.episode_picture_scrollview_bottom_margin);
-                }
-                if (selectedMode == 1){
-                    params.bottomMargin = getResources().getDimensionPixelSize(R.dimen.episode_number_scrollview_bottom_margin);
-                }
-                if (selectedMode == 2 || !BrowserListOfEpisodes || oneEpisode || mIsLaunchFromPlayer){
-                    params.bottomMargin = 0;
-                }
             }
             else{
                 log.debug("setCurrentVideo: new video and it is NOT an episode");
