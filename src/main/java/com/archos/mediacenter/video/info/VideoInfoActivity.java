@@ -93,6 +93,7 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
     private static final int SWIPE_THRESHOLD = 100;
     private static final int SWIPE_VELOCITY_THRESHOLD = 100;
     private VideoInfoActivityFragment videoInfoActivityFragment;
+    private boolean gestureEnabled = true; // Default to true
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -286,8 +287,16 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
         transaction.commit();
         mCurrentFragment = fragment;
     }
+
+    public void setGestureEnabled(boolean enabled) {
+        gestureEnabled = enabled;
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
+        if (!gestureEnabled) {
+            return super.dispatchTouchEvent(event); // Ignore gesture detection
+        }
         if (gestureDetector != null && gestureDetector.onTouchEvent(event)) {
             return true;
         }
