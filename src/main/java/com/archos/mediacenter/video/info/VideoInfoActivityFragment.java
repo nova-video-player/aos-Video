@@ -2893,6 +2893,25 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mCastTextViewTitle.setVisibility(View.GONE);
                         actors.setVisibility(View.GONE);
                     }
+                    // Disable gestureDetector swiping on actors recyclerview
+                    actors.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+                        @Override
+                        public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                            // Consume the event to prevent GestureDetector from processing it
+                            if (e.getAction() == MotionEvent.ACTION_DOWN || e.getAction() == MotionEvent.ACTION_MOVE) {
+                                ((VideoInfoActivity) requireActivity()).setGestureEnabled(false);
+                            } else if (e.getAction() == MotionEvent.ACTION_UP || e.getAction() == MotionEvent.ACTION_CANCEL) {
+                                ((VideoInfoActivity) requireActivity()).setGestureEnabled(true);
+                            }
+                            return false; // Allow RecyclerView to process its own touches
+                        }
+
+                        @Override
+                        public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {}
+
+                        @Override
+                        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
+                    });
                     // set series genres
                     genres = showTags.getGenresFormatted();
                     if (genres == null || genres.isEmpty()){
