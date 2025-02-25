@@ -41,6 +41,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -81,7 +82,9 @@ import androidx.loader.content.Loader;
 import androidx.palette.graphics.Palette;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.FileUtils;
@@ -417,12 +420,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private Episode currentEpisode;
     private List<EpisodeModel> episodeModels;
     private EpisodesAdapter episodesAdapter;
+    private EpisodeNumbersAdapter episodeNumbersAdapter;
     private int mCurrentPosition;
     private RecyclerView episodesRecyclerView;
     public interface OnEpisodeSwitchListener {
         void onEpisodeSwiped(int direction);  // direction = 1 for next, -1 for previous
     }
     private OnEpisodeSwitchListener episodeSwitchListener;
+    private static final float MILLISECONDS_PER_INCH_PIC = 45f; //default is 25f (bigger = slower)
+    private static final float MILLISECONDS_PER_INCH_NUM = 85f;
     public static VideoInfoActivityFragment getInstance(Video video, Uri path, long id, boolean forceVideoSelection){
         log.debug("VideoInfoActivityFragment for uri=" + path);
         Bundle arguments = new Bundle();
@@ -694,14 +700,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             //mActionButtonsContainer.setVisibility(View.GONE);
 
 
-        episodesRecyclerView = mRoot.findViewById(R.id.episode_selector);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        episodesRecyclerView.setLayoutManager(layoutManager);
 
         if (mCurrentVideo instanceof Episode){
             Episode episodeVideo = (Episode) mCurrentVideo;
             long onlineId = episodeVideo.getOnlineId();
             int season = episodeVideo.getSeasonNumber();
+            episodesRecyclerView = mRoot.findViewById(R.id.episode_selector);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            episodesRecyclerView.setLayoutManager(layoutManager);
 
             episodeModels = new ArrayList<>();
             Cursor cursor = getShowEpisodesListForSeason(onlineId, season, mContext);
@@ -746,29 +752,78 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 }
                 cursor.close();
             }
-
             mCurrentPosition = getActivity().getIntent().getIntExtra(EXTRA_CURRENT_POSITION, 0);
+            String name = "";
+            boolean BrowserListOfEpisodes = false;
+            if (name!=null) {
+                BrowserListOfEpisodes = name.equalsIgnoreCase("BrowserListOfEpisodes");
+            }
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            prefs.edit().putBoolean("BrowserListOfEpisodes", BrowserListOfEpisodes).apply();
+            boolean oneEpisode;
+            if(episodeModels.size() == 1){
+                oneEpisode = true;
+            }else{
+                oneEpisode = false;
+            }
+            prefs.edit().putBoolean("oneEpisode", oneEpisode).apply();
 
-            // Set adapter
-            episodesAdapter = new EpisodesAdapter(episodeModels, new EpisodesAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    EpisodeModel selectedEpisode = episodeModels.get(position);
-                    updateFragment(selectedEpisode);
-                    //mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
-                    //mFullScraperTagsTask.execute(currentEpisode);
-                    updateEpisodeUI(episodeModels.get(position));
-                    mCurrentPosition = position;
-                    episodesAdapter.setSelectedIndex(position);
-                    episodesAdapter.notifyDataSetChanged();
-                    episodesRecyclerView.smoothScrollToPosition(position);
-                    updateUI();
-                }
-            });
-            episodesRecyclerView.setAdapter(episodesAdapter);
-            episodesAdapter.setSelectedIndex(mCurrentPosition);
-            episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
-            episodesAdapter.notifyDataSetChanged();
+            String mode = prefs.getString("episode_scrollView", null);
+            int selectedMode;
+            if(mode == null){
+                selectedMode = 1;
+            }else{
+                selectedMode = Integer.parseInt(mode);
+            }
+            //Option 1 Episode scroll mode is Episode numbers with Episode pictures
+            if (selectedMode == 0){
+                // Setting Episode pictures & numbers RecyclerView Adapter
+                episodesAdapter = new EpisodesAdapter(episodeModels, new EpisodesAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        EpisodeModel selectedEpisode = episodeModels.get(position);
+                        updateFragment(selectedEpisode);
+                        //mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
+                        //mFullScraperTagsTask.execute(currentEpisode);
+                        updateEpisodeUI(episodeModels.get(position));
+                        mCurrentPosition = position;
+                        episodesAdapter.setSelectedIndex(position);
+                        episodesAdapter.notifyDataSetChanged();
+                        episodesRecyclerView.smoothScrollToPosition(position);
+                        updateUI();
+                    }
+                });
+                episodesRecyclerView.setAdapter(episodesAdapter);
+                episodesAdapter.setSelectedIndex(mCurrentPosition);
+                episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
+                episodesAdapter.notifyDataSetChanged();
+            }
+            if (selectedMode == 1){
+                // Setting Episode numbers RecyclerView Adapter
+                episodeNumbersAdapter = new EpisodeNumbersAdapter(episodeModels, new EpisodeNumbersAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        EpisodeModel selectedEpisode = episodeModels.get(position);
+                        updateFragment(selectedEpisode);
+                        //mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
+                        //mFullScraperTagsTask.execute(currentEpisode);
+                        updateEpisodeUI(episodeModels.get(position));
+                        mCurrentPosition = position;
+                        episodeNumbersAdapter.setSelectedIndex(position);
+                        episodeNumbersAdapter.notifyDataSetChanged();
+                        episodesRecyclerView.smoothScrollToPosition(position);
+                        updateUI();
+                    }
+                });
+                episodesRecyclerView.setAdapter(episodeNumbersAdapter);
+                episodeNumbersAdapter.setSelectedIndex(mCurrentPosition);
+                episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
+                episodeNumbersAdapter.notifyDataSetChanged();
+            }
+            if (selectedMode == 2 || oneEpisode || !BrowserListOfEpisodes){
+                // Hide Episode RecyclerView
+                // episodesRecyclerView.setVisibility(View.GONE);
+            }
         }
 
         return mRoot;
