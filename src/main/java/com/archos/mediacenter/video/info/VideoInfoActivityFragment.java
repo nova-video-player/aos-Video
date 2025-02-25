@@ -427,8 +427,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         void onEpisodeSwiped(int direction);  // direction = 1 for next, -1 for previous
     }
     private OnEpisodeSwitchListener episodeSwitchListener;
-    private static final float MILLISECONDS_PER_INCH_PIC = 45f; //default is 25f (bigger = slower)
-    private static final float MILLISECONDS_PER_INCH_NUM = 85f;
     public static VideoInfoActivityFragment getInstance(Video video, Uri path, long id, boolean forceVideoSelection){
         log.debug("VideoInfoActivityFragment for uri=" + path);
         Bundle arguments = new Bundle();
@@ -753,13 +751,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 cursor.close();
             }
             mCurrentPosition = getActivity().getIntent().getIntExtra(EXTRA_CURRENT_POSITION, 0);
-            String name = "";
-            boolean BrowserListOfEpisodes = false;
-            if (name!=null) {
-                BrowserListOfEpisodes = name.equalsIgnoreCase("BrowserListOfEpisodes");
-            }
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            prefs.edit().putBoolean("BrowserListOfEpisodes", BrowserListOfEpisodes).apply();
+            boolean BrowserListOfEpisodes = prefs.getBoolean("BrowserListOfEpisodes", true);
             boolean oneEpisode;
             if(episodeModels.size() == 1){
                 oneEpisode = true;
@@ -797,7 +790,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 episodesAdapter.setSelectedIndex(mCurrentPosition);
                 episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
                 episodesAdapter.notifyDataSetChanged();
-            }
+            } else
+            //Option 2 Episode scroll mode is Episode numbers
             if (selectedMode == 1){
                 // Setting Episode numbers RecyclerView Adapter
                 episodeNumbersAdapter = new EpisodeNumbersAdapter(episodeModels, new EpisodeNumbersAdapter.OnItemClickListener() {
@@ -819,10 +813,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 episodeNumbersAdapter.setSelectedIndex(mCurrentPosition);
                 episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
                 episodeNumbersAdapter.notifyDataSetChanged();
-            }
+            } else
+            //Option 1 Episode scroll mode is Episode RecyclerView
             if (selectedMode == 2 || oneEpisode || !BrowserListOfEpisodes){
                 // Hide Episode RecyclerView
-                // episodesRecyclerView.setVisibility(View.GONE);
+                episodesRecyclerView.setVisibility(View.GONE);
             }
         }
 
