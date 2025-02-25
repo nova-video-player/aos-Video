@@ -821,6 +821,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 // Hide Episode RecyclerView
                 episodesRecyclerView.setVisibility(View.GONE);
             }
+            // Disable gestureDetector swiping on episodes recyclerview
             episodesRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
                 @Override
                 public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
