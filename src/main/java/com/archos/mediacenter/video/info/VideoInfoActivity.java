@@ -133,8 +133,13 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
             gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                    if (Math.abs(e1.getX() - e2.getX()) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (e1.getX() > e2.getX()) {
+                    float deltaX = e1.getX() - e2.getX();
+                    float deltaY = e1.getY() - e2.getY();
+
+                    if (Math.abs(deltaX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD
+                            && Math.abs(deltaX) > Math.abs(deltaY) * 2) { // Ensure horizontal movement is dominant
+
+                        if (deltaX > 0) {
                             Log.d("GestureTest", "Swipe LEFT detected");
                             onEpisodeSwiped(1);  // Next episode
                         } else {
@@ -146,7 +151,6 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
                     return false;
                 }
             });
-
         }
         mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, null);
         mViewPager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
