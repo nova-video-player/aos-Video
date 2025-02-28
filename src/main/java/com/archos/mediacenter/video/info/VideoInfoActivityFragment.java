@@ -893,13 +893,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     }
 
     private void updateEpisodeUI(EpisodeModel episodeModel) {
-        long date = episodeModel.getEpisodeDate();
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
-        String Airdate = df.format(date);
-
-        setTextOrHideContainer(mScrapRating, String.valueOf(episodeModel.getEpisodeRating()), mScrapRating);
-        setTextOrHideContainer(mScrapYear, Airdate, mScrapYear);
-
         // Remove old click listener before updating text
         mPlotTextView.setOnClickListener(null);
         mPlotTextView.setEllipsize(null);
