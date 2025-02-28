@@ -1012,9 +1012,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private void updateEpisodeUI(int direction) {
         // Get the new episode
         EpisodeModel episode = episodeModels.get(mCurrentPosition);
-        long date = episode.getEpisodeDate();
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
-        String Airdate = df.format(date);
 
         // Determine slide direction
         float slideOutTo = direction == 1 ? -mRoot.getWidth() : mRoot.getWidth(); // Slide left (-) or right (+)
@@ -1032,8 +1029,55 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         slideOut.addEndListener((animation, canceled, value, velocity) -> {
             // Update UI content after old episode slides out
-            setTextOrHideContainer(mScrapRating, String.valueOf(episode.getEpisodeRating()), mScrapRating);
-            setTextOrHideContainer(mScrapYear, Airdate, mScrapYear);
+            // Remove old click listener before updating text
+            mPlotTextView.setOnClickListener(null);
+            mPlotTextView.setEllipsize(null);
+            mPlotTextView.setMaxLines(Integer.MAX_VALUE);  // Temporarily unbound
+
+            // Set new plot
+            setTextOrHideContainer(mPlotTextView, episode.getEpisodePlot(), mPlotTextView);
+
+            // Post a runnable to ensure measurements are updated after layout pass
+            mPlotTextView.post(() -> {
+                int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
+                mPlotTextView.measure(
+                        View.MeasureSpec.makeMeasureSpec(expectedWidthOfTextView, View.MeasureSpec.AT_MOST),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                );
+
+                int lineHeight = mPlotTextView.getLineHeight();
+                int measuredLineCount = mPlotTextView.getLineCount();
+                int measuredTargetHeight = mPlotTextView.getMeasuredHeight();
+
+                if (measuredLineCount <= 4) {
+                    // If 4 or fewer lines, allow normal wrapping without extra space
+                    mPlotTextView.setMaxLines(Integer.MAX_VALUE);
+                    mPlotTextView.setEllipsize(null);  // Remove ellipsize
+                    mPlotTextView.setOnClickListener(null);  // Disable expansion
+
+                    // Directly set the height to fit content
+                    ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
+                    layoutParams.height = measuredTargetHeight;  // Use the exact height of content
+                    mPlotTextView.setLayoutParams(layoutParams);
+                } else {
+                    // If more than 4 lines, collapse with ellipsize and allow expansion
+                    mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
+                    mPlotTextView.setMaxLines(4);
+                    mPlotTextView.setTag(true);  // Collapsed by default
+
+                    mPlotTextView.setOnClickListener(v -> {
+                        if ((Boolean) mPlotTextView.getTag()) {
+                            // Expand
+                            expandTextView(measuredTargetHeight, lineHeight);
+                            mPlotTextView.setTag(false);
+                        } else {
+                            // Collapse
+                            collapseTextView(4, lineHeight);  // Collapse to 4 lines, fixed height
+                            mPlotTextView.setTag(true);
+                        }
+                    });
+                }
+            });
 
             // Move view to starting position for slide-in effect
             mRoot.setTranslationX(slideInFrom);
