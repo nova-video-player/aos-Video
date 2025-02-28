@@ -1121,7 +1121,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         // Use setCurrentVideo() to update the fragment
         setCurrentVideo(currentEpisode);
-
+        LoaderManager.getInstance(this).restartLoader(1, null, this);
         Log.d("VideoInfoFragment", "Successfully updated to episode: " + currentEpisode.getEpisodeNumber());
     }
 
