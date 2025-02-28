@@ -730,7 +730,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 int mPosterUri  = cursor.getColumnIndex(VideoLoader.COLUMN_COVER_PATH);
                 int mDuration  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.DURATION);
                 int mResume  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.BOOKMARK);
-
                 int mVideo3dMode   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_VIDEO_STEREO);
                 int mGuessedDefinition   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_VIDEO_DEFINITION);
                 int mTraktSeen   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN);
@@ -755,12 +754,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     File PictureFile = new File(Picture);
                     Uri PictureUri = Uri.fromFile(PictureFile);
 
-
                     String Poster = cursor.getString(mPosterUri);
                     File PosterFile = new File(Poster);
                     Uri PosterUri = Uri.fromFile(PosterFile);
 
-                    episodeModel.setId(cursor.getLong(mId)); // Set ID
+                    episodeModel.setId(cursor.getLong(mId));
                     episodeModel.setEpisodeId(cursor.getLong(mEpisodeId));
                     episodeModel.setSeasonNumber(cursor.getInt(mSeasonNumberColumn));
                     episodeModel.setEpisodeNumber(cursor.getInt(mEpisodeNumberColumn));
@@ -773,44 +771,33 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     episodeModel.setEpisodeFilePath(cursor.getString(mFilePath));
                     episodeModel.setPictureUri(PictureUri);
                     episodeModel.setPosterUri(PosterUri);
-
                     episodeModel.setDuration(cursor.getInt(mDuration));
                     episodeModel.setResume(cursor.getInt(mResume));
                     episodeModel.setVideo3dMode(cursor.getInt(mVideo3dMode));
                     episodeModel.setGuessedDefinition(cursor.getInt(mGuessedDefinition));
 
-                    boolean traktSeen = cursor.getInt(mTraktSeen) != 0; // Convert int to boolean
+                    boolean traktSeen = cursor.getInt(mTraktSeen) != 0;
                     episodeModel.setTraktSeen(traktSeen);
-                    boolean isTraktLibrary = cursor.getInt(mIsTraktLibrary) != 0; // Convert int to boolean
+                    boolean isTraktLibrary = cursor.getInt(mIsTraktLibrary) != 0;
                     episodeModel.setTraktLibrary(isTraktLibrary);
-                    boolean hasSubs = cursor.getInt(mHasSubs) != 0; // Convert int to boolean
+                    boolean hasSubs = cursor.getInt(mHasSubs) != 0;
                     episodeModel.setHasSubs(hasSubs);
-                    boolean isUserHidden = cursor.getInt(mIsUserHidden) != 0; // Convert int to boolean
+                    boolean isUserHidden = cursor.getInt(mIsUserHidden) != 0;
                     episodeModel.setUserHidden(isUserHidden);
 
                     episodeModel.setOnlineId(cursor.getLong(mOnlineId));
                     episodeModel.setLastTimePlayed(cursor.getLong(mLastTimePlayed));
-
                     episodeModel.setCalculatedWidth(cursor.getInt(mCalculatedWidth));
                     episodeModel.setCalculatedHeight(cursor.getInt(mCalculatedHeight));
-
                     episodeModel.setBestAudioFormat(cursor.getString(mBestAudioFormat));
                     episodeModel.setVideoFormat(cursor.getString(mVideoFormat));
                     episodeModel.setGuessedAudioFormat(cursor.getString(mGuessedAudioFormat));
                     episodeModel.setGuessedVideoFormat(cursor.getString(mGuessedVideoFormat));
 
-
                     episodeModel.setCalculatedBestAudioTrack(-1);
 
-
                     episodeModel.setOccurrences(cursor.getInt(mOccurencies));
-
                     episodeModel.setSize(cursor.getLong(mSize));
-
-
-
-
-                    episodeModel.setEpisodePath(cursor.getString(mPictureUri));
 
                     episodeModels.add(episodeModel);
                 }

@@ -53,8 +53,8 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
         textView.setText(Integer.toString(episodeModel.getEpisodeNumber()));
         textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
-        if (episodeModel.getEpisodePath()!=null) {
-            Picasso.get().load(new File(episodeModel.getEpisodePath())).fit().centerCrop().into(imageView);
+        if (episodeModel.getPictureUri()!=null) {
+            Picasso.get().load(episodeModel.getPictureUri()).fit().centerCrop().into(imageView);
         } else {
             Picasso.get().load(R.drawable.default_image).fit().centerCrop().into(imageView);
         }

@@ -35,7 +35,6 @@ public class EpisodeModel {
     private int mCalculatedBestAudioTrack;
     private int mOccurrences;
     private long mSize;
-    private String mPath;
 
     public EpisodeModel() {}
 
@@ -135,7 +134,4 @@ public class EpisodeModel {
 
     public long getSize() { return mSize; }
     public void setSize(long size) { this.mSize = size; }
-
-    public String getEpisodePath() { return mPath; }
-    public void setEpisodePath(String episodePath) { this.mPath = episodePath; }
 }
