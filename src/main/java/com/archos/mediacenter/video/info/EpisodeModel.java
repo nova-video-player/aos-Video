@@ -3,116 +3,139 @@ package com.archos.mediacenter.video.info;
 import android.net.Uri;
 
 public class EpisodeModel {
-    private int mNumber;
-    private String mPath;
-    private Uri mEpisodePicture;
-    private String mEpisodeName;
-    private String mEpisodeFilePath;
-    private String mEpisodeContentRating;
-    private String mEpisodePlot;
-    private long mId; // Add an ID field
-    private long mOnlineId;
+    private long mId;
+    private long mEpisodeId;
     private int mSeasonNumber;
+    private int mNumber;
+    private String mEpisodeName;
     private long mEpisodeDate;
     private float mEpisodeRating;
+    private String mEpisodeContentRating;
+    private String mEpisodePlot;
+    private String mShowName;
+    private String mEpisodeFilePath;
+    private Uri mEpisodePicture;
+    private Uri mPosterUri;
+    private int mDuration;
+    private int mResume;
+    private int mVideo3dMode;
+    private int mGuessedDefinition;
+    private boolean mTraktSeen;
+    private boolean mIsTraktLibrary;
+    private boolean mHasSubs;
+    private boolean mIsUserHidden;
+    private long mOnlineId;
+    private long mLastTimePlayed;
+    private int mCalculatedWidth;
+    private int mCalculatedHeight;
+    private String mBestAudioFormat;
+    private String mVideoFormat;
+    private String mGuessedAudioFormat;
+    private String mGuessedVideoFormat;
+    private int mCalculatedBestAudioTrack;
+    private int mOccurrences;
+    private long mSize;
+    private String mPath;
 
     public EpisodeModel() {}
 
-    public int getEpisodeNumber() {
-        return mNumber;
-    }
+    // Getters and Setters
+    public long getId() { return mId; }
+    public void setId(long id) { this.mId = id; }
 
-    public void setEpisodeNumber(int episodeNumber) {
-        this.mNumber = episodeNumber;
-    }
+    public long getEpisodeId() { return mEpisodeId; }
+    public void setEpisodeId(long episodeId) { this.mEpisodeId = episodeId; }
 
-    public String getEpisodePath() {
-        return mPath;
-    }
+    public int getSeasonNumber() { return mSeasonNumber; }
+    public void setSeasonNumber(int seasonNumber) { this.mSeasonNumber = seasonNumber; }
 
-    public void setEpisodePath(String episodePath) {
-        this.mPath = episodePath;
-    }
+    public int getEpisodeNumber() { return mNumber; }
+    public void setEpisodeNumber(int number) { this.mNumber = number; }
 
-    public long getId() {  // Getter for ID
-        return mId;
-    }
+    public String getEpisodeName() { return mEpisodeName; }
+    public void setEpisodeName(String episodeName) { this.mEpisodeName = episodeName; }
 
-    public void setId(long id) {  // Setter for ID
-        this.mId = id;
-    }
+    public long getEpisodeDate() { return mEpisodeDate; }
+    public void setEpisodeDate(long episodeDate) { this.mEpisodeDate = episodeDate; }
 
-    public String getEpisodeFilePath() {  // Getter for ID
-        return mEpisodeFilePath;
-    }
+    public float getEpisodeRating() { return mEpisodeRating; }
+    public void setEpisodeRating(float episodeRating) { this.mEpisodeRating = episodeRating; }
 
-    public void setEpisodeFilePath(String mepisodeeilepath) {  // Setter for ID
-        this.mEpisodeFilePath = mepisodeeilepath;
-    }
+    public String getEpisodeContentRating() { return mEpisodeContentRating; }
+    public void setEpisodeContentRating(String episodeContentRating) { this.mEpisodeContentRating = episodeContentRating; }
 
-    public long getOnlineId() {  // Getter for ID
-        return mOnlineId;
-    }
+    public String getEpisodePlot() { return mEpisodePlot; }
+    public void setEpisodePlot(String episodePlot) { this.mEpisodePlot = episodePlot; }
 
-    public void setOnlineId(long onlineid) {  // Setter for ID
-        this.mOnlineId = onlineid;
-    }
+    public String getShowName() { return mShowName; }
+    public void setShowName(String showName) { this.mShowName = showName; }
 
-    public int getSeasonNumber() {
-        return mSeasonNumber;
-    }
+    public String getEpisodeFilePath() { return mEpisodeFilePath; }
+    public void setEpisodeFilePath(String episodeFilePath) { this.mEpisodeFilePath = episodeFilePath; }
 
-    public void setSeasonNumber(int seasonNumber) {
-        this.mSeasonNumber = seasonNumber;
-    }
+    public Uri getPictureUri() { return mEpisodePicture; }
+    public void setPictureUri(Uri pictureUri) { this.mEpisodePicture = pictureUri; }
 
+    public Uri getPosterUri() { return mPosterUri; }
+    public void setPosterUri(Uri posterUri) { this.mPosterUri = posterUri; }
 
-    public Uri getPictureUri() {
-        return mEpisodePicture;
-    }
+    public int getDuration() { return mDuration; }
+    public void setDuration(int duration) { this.mDuration = duration; }
 
-    public void setPictureUri(Uri pictureUri) {
-        this.mEpisodePicture = pictureUri;
-    }
+    public int getResume() { return mResume; }
+    public void setResume(int resume) { this.mResume = resume; }
 
-    public String getEpisodeName() {
-        return mEpisodeName;
-    }
+    public int getVideo3dMode() { return mVideo3dMode; }
+    public void setVideo3dMode(int video3dMode) { this.mVideo3dMode = video3dMode; }
 
-    public void setEpisodeName(String episodeName) {
-        this.mEpisodeName = episodeName;
-    }
+    public int getGuessedDefinition() { return mGuessedDefinition; }
+    public void setGuessedDefinition(int guessedDefinition) { this.mGuessedDefinition = guessedDefinition; }
 
-    public long getEpisodeDate() {  // Getter for ID
-        return mEpisodeDate;
-    }
+    public boolean isTraktSeen() { return mTraktSeen; }
+    public void setTraktSeen(boolean traktSeen) { this.mTraktSeen = traktSeen; }
 
-    public void setEpisodeDate(long episodeDate) {  // Setter for ID
-        this.mEpisodeDate = episodeDate;
-    }
+    public boolean isTraktLibrary() { return mIsTraktLibrary; }
+    public void setTraktLibrary(boolean isTraktLibrary) { this.mIsTraktLibrary = isTraktLibrary; }
 
-    public Float getEpisodeRating() {  // Getter for ID
-        return mEpisodeRating;
-    }
+    public boolean hasSubs() { return mHasSubs; }
+    public void setHasSubs(boolean hasSubs) { this.mHasSubs = hasSubs; }
 
-    public void setEpisodeRating(float episodeRating) {  // Setter for ID
-        this.mEpisodeRating = episodeRating;
-    }
+    public boolean isUserHidden() { return mIsUserHidden; }
+    public void setUserHidden(boolean isUserHidden) { this.mIsUserHidden = isUserHidden; }
 
-    public String getEpisodeContentRating() {
-        return mEpisodeContentRating;
-    }
+    public long getOnlineId() { return mOnlineId; }
+    public void setOnlineId(long onlineId) { this.mOnlineId = onlineId; }
 
-    public void setEpisodeContentRating(String episodeContentRating) {
-        this.mEpisodeContentRating = episodeContentRating;
-    }
+    public long getLastTimePlayed() { return mLastTimePlayed; }
+    public void setLastTimePlayed(long lastTimePlayed) { this.mLastTimePlayed = lastTimePlayed; }
 
-    public String getEpisodePlot() {
-        return mEpisodePlot;
-    }
+    public int getCalculatedWidth() { return mCalculatedWidth; }
+    public void setCalculatedWidth(int calculatedWidth) { this.mCalculatedWidth = calculatedWidth; }
 
-    public void setEpisodePlot(String episodePlot) {
-        this.mEpisodePlot = episodePlot;
-    }
+    public int getCalculatedHeight() { return mCalculatedHeight; }
+    public void setCalculatedHeight(int calculatedHeight) { this.mCalculatedHeight = calculatedHeight; }
 
+    public String getBestAudioFormat() { return mBestAudioFormat; }
+    public void setBestAudioFormat(String bestAudioFormat) { this.mBestAudioFormat = bestAudioFormat; }
+
+    public String getVideoFormat() { return mVideoFormat; }
+    public void setVideoFormat(String videoFormat) { this.mVideoFormat = videoFormat; }
+
+    public String getGuessedAudioFormat() { return mGuessedAudioFormat; }
+    public void setGuessedAudioFormat(String guessedAudioFormat) { this.mGuessedAudioFormat = guessedAudioFormat; }
+
+    public String getGuessedVideoFormat() { return mGuessedVideoFormat; }
+    public void setGuessedVideoFormat(String guessedVideoFormat) { this.mGuessedVideoFormat = guessedVideoFormat; }
+
+    public int getCalculatedBestAudioTrack() { return mCalculatedBestAudioTrack; }
+    public void setCalculatedBestAudioTrack(int calculatedBestAudioTrack) { this.mCalculatedBestAudioTrack = calculatedBestAudioTrack; }
+
+    public int getOccurrences() { return mOccurrences; }
+    public void setOccurrences(int occurrences) { this.mOccurrences = occurrences; }
+
+    public long getSize() { return mSize; }
+    public void setSize(long size) { this.mSize = size; }
+
+    public String getEpisodePath() { return mPath; }
+    public void setEpisodePath(String episodePath) { this.mPath = episodePath; }
 }

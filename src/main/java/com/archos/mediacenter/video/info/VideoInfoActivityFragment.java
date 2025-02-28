@@ -39,6 +39,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
@@ -115,6 +116,7 @@ import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.dialogs.DialogRetrieveSubtitles;
 import com.archos.mediacenter.video.browser.dialogs.Paste;
 import com.archos.mediacenter.video.browser.filebrowsing.BrowserByFolder;
+import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
@@ -170,6 +172,7 @@ import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.
 import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.replaceLanguageCodeInString;
 import static com.archos.mediacenter.video.info.VideoInfoActivity.EXTRA_CURRENT_POSITION;
 import static com.archos.mediacenter.video.utils.VideoUtils.getFileUriStringFromContentUri;
+import static com.archos.mediaprovider.video.ScraperStore.Episode.COVER;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -712,8 +715,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             episodeModels = new ArrayList<>();
             Cursor cursor = getShowEpisodesListForSeason(onlineId, season, mContext);
             if (cursor != null) {
-                int mEpisodeIdColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns._ID);
-                int mOnlineIdColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID);
+                int mId  = cursor.getColumnIndex(VideoStore.Video.VideoColumns._ID);
+                int mEpisodeId  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_EPISODE_ID);
                 int mSeasonNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
                 int mEpisodeNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
                 int mEpisodeName  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_NAME);
@@ -721,15 +724,44 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 int mEpisodeRating  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_RATING);
                 int mEpisodeContentRating  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_CONTENT_RATING);
                 int mEpisodePlot  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PLOT);
+                int mShowName  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_NAME);
+                int mFilePath  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.DATA);
+                int mPictureUri  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
+                int mPosterUri  = cursor.getColumnIndex(VideoLoader.COLUMN_COVER_PATH);
+                int mDuration  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.DURATION);
+                int mResume  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.BOOKMARK);
 
+                int mVideo3dMode   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_VIDEO_STEREO);
+                int mGuessedDefinition   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_VIDEO_DEFINITION);
+                int mTraktSeen   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN);
+                int mIsTraktLibrary   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY);
+                int mHasSubs  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SUBTITLE_COUNT_EXTERNAL);
+                int mIsUserHidden  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER);
+                int mOnlineId  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID);
+                int mLastTimePlayed  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED);
+                int mCalculatedWidth  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.WIDTH);
+                int mCalculatedHeight  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.HEIGHT);
+                int mBestAudioFormat  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_BEST_AUDIOTRACK_FORMAT);
+                int mVideoFormat  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_VIDEO_FORMAT);
+                int mGuessedAudioFormat  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_GUESSED_AUDIO_FORMAT);
+                int mGuessedVideoFormat   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_GUESSED_VIDEO_FORMAT);
+                //int mCalculatedBestAudiotrack   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_BEST_AUDIOTRACK_CHANNELS);
+                int mOccurencies  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_NUMBER_OF_CHANNELS);
+                int mSize  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SIZE);
 
-                //int mEpisodeFilePath  = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
-                int mEpisodePictureColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
-                int mEpisodePicture  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
                 while (cursor.moveToNext()) {
                     EpisodeModel episodeModel = new EpisodeModel();
-                    episodeModel.setId(cursor.getLong(mEpisodeIdColumn)); // Set ID
-                    episodeModel.setOnlineId(cursor.getLong(mOnlineIdColumn));
+                    String Picture = cursor.getString(mPictureUri);
+                    File PictureFile = new File(Picture);
+                    Uri PictureUri = Uri.fromFile(PictureFile);
+
+
+                    String Poster = cursor.getString(mPosterUri);
+                    File PosterFile = new File(Poster);
+                    Uri PosterUri = Uri.fromFile(PosterFile);
+
+                    episodeModel.setId(cursor.getLong(mId)); // Set ID
+                    episodeModel.setEpisodeId(cursor.getLong(mEpisodeId));
                     episodeModel.setSeasonNumber(cursor.getInt(mSeasonNumberColumn));
                     episodeModel.setEpisodeNumber(cursor.getInt(mEpisodeNumberColumn));
                     episodeModel.setEpisodeName(cursor.getString(mEpisodeName));
@@ -737,16 +769,48 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     episodeModel.setEpisodeRating(cursor.getFloat(mEpisodeRating));
                     episodeModel.setEpisodeContentRating(cursor.getString(mEpisodeContentRating));
                     episodeModel.setEpisodePlot(cursor.getString(mEpisodePlot));
+                    episodeModel.setShowName(cursor.getString(mShowName));
+                    episodeModel.setEpisodeFilePath(cursor.getString(mFilePath));
+                    episodeModel.setPictureUri(PictureUri);
+                    episodeModel.setPosterUri(PosterUri);
 
-                    // episodeModel.setEpisodeFilePath(cursor.getString(mEpisodeFilePath));
+                    episodeModel.setDuration(cursor.getInt(mDuration));
+                    episodeModel.setResume(cursor.getInt(mResume));
+                    episodeModel.setVideo3dMode(cursor.getInt(mVideo3dMode));
+                    episodeModel.setGuessedDefinition(cursor.getInt(mGuessedDefinition));
 
-                    episodeModel.setEpisodePath(cursor.getString(mEpisodePictureColumn));
+                    boolean traktSeen = cursor.getInt(mTraktSeen) != 0; // Convert int to boolean
+                    episodeModel.setTraktSeen(traktSeen);
+                    boolean isTraktLibrary = cursor.getInt(mIsTraktLibrary) != 0; // Convert int to boolean
+                    episodeModel.setTraktLibrary(isTraktLibrary);
+                    boolean hasSubs = cursor.getInt(mHasSubs) != 0; // Convert int to boolean
+                    episodeModel.setHasSubs(hasSubs);
+                    boolean isUserHidden = cursor.getInt(mIsUserHidden) != 0; // Convert int to boolean
+                    episodeModel.setUserHidden(isUserHidden);
 
-                    String imagePath = cursor.getString(mEpisodePicture);
-                    File file = new File(imagePath);
-                    Uri fileUri = Uri.fromFile(file);
-                    episodeModel.setPictureUri(fileUri);
+                    episodeModel.setOnlineId(cursor.getLong(mOnlineId));
+                    episodeModel.setLastTimePlayed(cursor.getLong(mLastTimePlayed));
 
+                    episodeModel.setCalculatedWidth(cursor.getInt(mCalculatedWidth));
+                    episodeModel.setCalculatedHeight(cursor.getInt(mCalculatedHeight));
+
+                    episodeModel.setBestAudioFormat(cursor.getString(mBestAudioFormat));
+                    episodeModel.setVideoFormat(cursor.getString(mVideoFormat));
+                    episodeModel.setGuessedAudioFormat(cursor.getString(mGuessedAudioFormat));
+                    episodeModel.setGuessedVideoFormat(cursor.getString(mGuessedVideoFormat));
+
+
+                    episodeModel.setCalculatedBestAudioTrack(-1);
+
+
+                    episodeModel.setOccurrences(cursor.getInt(mOccurencies));
+
+                    episodeModel.setSize(cursor.getLong(mSize));
+
+
+
+
+                    episodeModel.setEpisodePath(cursor.getString(mPictureUri));
 
                     episodeModels.add(episodeModel);
                 }
@@ -778,20 +842,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     public void onItemClick(int position) {
                         EpisodeModel selectedEpisode = episodeModels.get(position);
                         updateFragment(selectedEpisode);
-                        //mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
-                        //mFullScraperTagsTask.execute(currentEpisode);
                         updateEpisodeUI(episodeModels.get(position));
                         mCurrentPosition = position;
                         episodesAdapter.setSelectedIndex(position);
-                        episodesAdapter.notifyDataSetChanged();
+                        episodesAdapter.notifyItemChanged(position);
                         episodesRecyclerView.smoothScrollToPosition(position);
+                        mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
+                        mFullScraperTagsTask.execute(currentEpisode);
                         updateUI();
                     }
                 });
                 episodesRecyclerView.setAdapter(episodesAdapter);
                 episodesAdapter.setSelectedIndex(mCurrentPosition);
                 episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
-                episodesAdapter.notifyDataSetChanged();
+                episodesAdapter.notifyItemChanged(mCurrentPosition);
             } else
             //Option 2 Episode scroll mode is Episode numbers
             if (selectedMode == 1){
@@ -1021,7 +1085,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         // Update the episode's data
         currentEpisode = new Episode(
                 episodeModel.getId(),
-                episodeModel.getOnlineId(),
+                episodeModel.getEpisodeId(),
                 episodeModel.getSeasonNumber(),
                 episodeModel.getEpisodeNumber(), // Updated episode number
                 episodeModel.getEpisodeName(),
@@ -1029,29 +1093,30 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 episodeModel.getEpisodeRating(),
                 episodeModel.getEpisodeContentRating(),
                 episodeModel.getEpisodePlot(),
-                currentEpisode.getShowName(),
-                currentEpisode.getFilePath(), // Updated path
+                episodeModel.getShowName(),
+                episodeModel.getEpisodeFilePath(), // Updated path
                 episodeModel.getPictureUri(),
-                currentEpisode.getPosterUri(),
-                currentEpisode.getDurationMs(), // Now using the existing method from Video
-                currentEpisode.getResumeMs(),
-                currentEpisode.getEpisodeNumber(), // for test only
-                currentEpisode.getGuessedDefinition(),
-                currentEpisode.isWatched(), // Updated method (from Video)
-                currentEpisode.isTraktLibrary(),
-                currentEpisode.hasSubs(),
-                currentEpisode.isUserHidden(),
-                currentEpisode.getLastPlayed(), // Updated method name
-                currentEpisode.getId(), // for test only
-                currentEpisode.getEpisodeNumber(), // for test only
-                currentEpisode.getCalculatedBestAudiotrack(),// for test only
-                currentEpisode.getVideoFormat(),
-                currentEpisode.getGuessedAudioFormat(),
-                currentEpisode.getGuessedVideoFormat(),
-                currentEpisode.getCalculatedVideoFormat(), // for test only
-                currentEpisode.getOccurencies(),
-                currentEpisode.getEpisodeNumber(), // for test only
-                currentEpisode.getSize() // for test only
+                episodeModel.getPosterUri(),
+                episodeModel.getDuration(), // Now using the existing method from Video
+                episodeModel.getResume(),
+
+                episodeModel.getVideo3dMode(), // for test only
+                episodeModel.getGuessedDefinition(),
+                episodeModel.isTraktSeen(), // Updated method (from Video)
+                episodeModel.isTraktLibrary(),
+                episodeModel.hasSubs(),
+                episodeModel.isUserHidden(),
+                episodeModel.getOnlineId(), // Updated method name
+                episodeModel.getLastTimePlayed(), // for test only
+                episodeModel.getCalculatedWidth(), // for test only
+                episodeModel.getCalculatedHeight(),// for test only
+                episodeModel.getBestAudioFormat(),
+                episodeModel.getVideoFormat(),
+                episodeModel.getGuessedAudioFormat(),
+                episodeModel.getGuessedVideoFormat(), // for test only
+                episodeModel.getCalculatedBestAudioTrack(),
+                episodeModel.getOccurrences(), // for test only
+                episodeModel.getSize() // for test only
         );
 
         // Use setCurrentVideo() to update the fragment
@@ -1063,7 +1128,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private Cursor getShowEpisodesListForSeason(Long onlineId, int season, Context context) {
         SQLiteDatabase db = VideoDb.get(context);
         return db.rawQuery( "SELECT " + VideoStore.Video.VideoColumns._ID +
-                        ", " + VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID +
+                        ", " + VideoStore.Video.VideoColumns.SCRAPER_EPISODE_ID +
                         ", " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON +
                         ", " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE +
                         ", " + VideoStore.Video.VideoColumns.SCRAPER_E_NAME +
@@ -1071,8 +1136,32 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         ", " + VideoStore.Video.VideoColumns.SCRAPER_E_RATING +
                         ", " + VideoStore.Video.VideoColumns.SCRAPER_S_CONTENT_RATING +
                         ", " + VideoStore.Video.VideoColumns.SCRAPER_E_PLOT +
-                        //    ", " + MediaStore.Files.FileColumns.DATA +
+                        ", " + VideoStore.Video.VideoColumns.SCRAPER_S_NAME +
+                        ", " + VideoStore.Video.VideoColumns.DATA +
                         ", " + VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE +
+                        ", " + VideoLoader.COLUMN_COVER_PATH +
+                        ", " + VideoStore.Video.VideoColumns.DURATION +
+                        ", " + VideoStore.Video.VideoColumns.BOOKMARK +
+
+                        ", " + VideoStore.Video.VideoColumns.ARCHOS_VIDEO_STEREO +
+                        ", " + VideoStore.Video.VideoColumns.ARCHOS_VIDEO_DEFINITION +
+                        ", " + VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN +
+                        ", " + VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY +
+                        ", " + VideoStore.Video.VideoColumns.SUBTITLE_COUNT_EXTERNAL +
+                        ", " + VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER +
+                        ", " + VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID +
+                        ", " + VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED +
+                        ", " + VideoStore.Video.VideoColumns.WIDTH +
+                        ", " + VideoStore.Video.VideoColumns.HEIGHT +
+                        ", " + VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_BEST_AUDIOTRACK_FORMAT +
+                        ", " + VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_VIDEO_FORMAT +
+                        ", " + VideoStore.Video.VideoColumns.ARCHOS_GUESSED_AUDIO_FORMAT +
+                        ", " + VideoStore.Video.VideoColumns.ARCHOS_GUESSED_VIDEO_FORMAT +
+                        //", " + VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_BEST_AUDIOTRACK_CHANNELS +
+                        ", " + VideoStore.Video.VideoColumns.ARCHOS_NUMBER_OF_CHANNELS +
+                        ", " + VideoStore.Video.VideoColumns.SIZE +
+
+
                         " FROM " + VideoOpenHelper.VIDEO_VIEW_NAME +
                         " WHERE (" + VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID + " = " + onlineId +
                         " AND " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " = " + season + ")" +
