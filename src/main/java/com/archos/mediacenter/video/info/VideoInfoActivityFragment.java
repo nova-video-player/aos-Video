@@ -841,14 +841,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     @Override
                     public void onItemClick(int position) {
                         EpisodeModel selectedEpisode = episodeModels.get(position);
-                        updateFragment(selectedEpisode);
                         updateEpisodeUI(episodeModels.get(position));
                         mCurrentPosition = position;
                         episodesAdapter.setSelectedIndex(position);
                         episodesAdapter.notifyItemChanged(position);
                         episodesRecyclerView.smoothScrollToPosition(position);
-                        mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
-                        mFullScraperTagsTask.execute(currentEpisode);
+                        updateFragment(selectedEpisode);
                         updateUI();
                     }
                 });
@@ -864,21 +862,19 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     @Override
                     public void onItemClick(int position) {
                         EpisodeModel selectedEpisode = episodeModels.get(position);
-                        updateFragment(selectedEpisode);
-                        //mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
-                        //mFullScraperTagsTask.execute(currentEpisode);
                         updateEpisodeUI(episodeModels.get(position));
                         mCurrentPosition = position;
                         episodeNumbersAdapter.setSelectedIndex(position);
-                        episodeNumbersAdapter.notifyDataSetChanged();
+                        episodeNumbersAdapter.notifyItemChanged(position);
                         episodesRecyclerView.smoothScrollToPosition(position);
+                        updateFragment(selectedEpisode);
                         updateUI();
                     }
                 });
                 episodesRecyclerView.setAdapter(episodeNumbersAdapter);
                 episodeNumbersAdapter.setSelectedIndex(mCurrentPosition);
                 episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
-                episodeNumbersAdapter.notifyDataSetChanged();
+                episodeNumbersAdapter.notifyItemChanged(mCurrentPosition);
             } else
             //Option 1 Episode scroll mode is Episode RecyclerView
             if (selectedMode == 2 || oneEpisode || !BrowserListOfEpisodes){
@@ -1029,7 +1025,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         // Update UI
         updateEpisodeUI(direction);
-
         Log.d("GESTURE", "Switched to episode at index: " + mCurrentPosition);
     }
 
@@ -1072,53 +1067,47 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     public void updateFragment(EpisodeModel episodeModel) {
         if (getActivity() == null) return;
-
         Log.d("VideoInfoFragment", "Updating fragment with Episode: " + episodeModel.getEpisodeNumber());
-
         if (!(mCurrentVideo instanceof Episode)) {
             Log.e("VideoInfoFragment", "Error: Current video is not an Episode!");
             return;
         }
-
         currentEpisode = (Episode) mCurrentVideo;
-
         // Update the episode's data
         currentEpisode = new Episode(
                 episodeModel.getId(),
                 episodeModel.getEpisodeId(),
                 episodeModel.getSeasonNumber(),
-                episodeModel.getEpisodeNumber(), // Updated episode number
+                episodeModel.getEpisodeNumber(),
                 episodeModel.getEpisodeName(),
                 episodeModel.getEpisodeDate(),
                 episodeModel.getEpisodeRating(),
                 episodeModel.getEpisodeContentRating(),
                 episodeModel.getEpisodePlot(),
                 episodeModel.getShowName(),
-                episodeModel.getEpisodeFilePath(), // Updated path
+                episodeModel.getEpisodeFilePath(),
                 episodeModel.getPictureUri(),
                 episodeModel.getPosterUri(),
-                episodeModel.getDuration(), // Now using the existing method from Video
+                episodeModel.getDuration(),
                 episodeModel.getResume(),
-
-                episodeModel.getVideo3dMode(), // for test only
+                episodeModel.getVideo3dMode(),
                 episodeModel.getGuessedDefinition(),
-                episodeModel.isTraktSeen(), // Updated method (from Video)
+                episodeModel.isTraktSeen(),
                 episodeModel.isTraktLibrary(),
                 episodeModel.hasSubs(),
                 episodeModel.isUserHidden(),
-                episodeModel.getOnlineId(), // Updated method name
-                episodeModel.getLastTimePlayed(), // for test only
-                episodeModel.getCalculatedWidth(), // for test only
-                episodeModel.getCalculatedHeight(),// for test only
+                episodeModel.getOnlineId(),
+                episodeModel.getLastTimePlayed(),
+                episodeModel.getCalculatedWidth(),
+                episodeModel.getCalculatedHeight(),
                 episodeModel.getBestAudioFormat(),
                 episodeModel.getVideoFormat(),
                 episodeModel.getGuessedAudioFormat(),
-                episodeModel.getGuessedVideoFormat(), // for test only
+                episodeModel.getGuessedVideoFormat(),
                 episodeModel.getCalculatedBestAudioTrack(),
-                episodeModel.getOccurrences(), // for test only
-                episodeModel.getSize() // for test only
+                episodeModel.getOccurrences(),
+                episodeModel.getSize()
         );
-
         // Use setCurrentVideo() to update the fragment
         setCurrentVideo(currentEpisode);
         LoaderManager.getInstance(this).restartLoader(1, null, this);
@@ -1142,7 +1131,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         ", " + VideoLoader.COLUMN_COVER_PATH +
                         ", " + VideoStore.Video.VideoColumns.DURATION +
                         ", " + VideoStore.Video.VideoColumns.BOOKMARK +
-
                         ", " + VideoStore.Video.VideoColumns.ARCHOS_VIDEO_STEREO +
                         ", " + VideoStore.Video.VideoColumns.ARCHOS_VIDEO_DEFINITION +
                         ", " + VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN +
@@ -1160,8 +1148,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         //", " + VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_BEST_AUDIOTRACK_CHANNELS +
                         ", " + VideoStore.Video.VideoColumns.ARCHOS_NUMBER_OF_CHANNELS +
                         ", " + VideoStore.Video.VideoColumns.SIZE +
-
-
                         " FROM " + VideoOpenHelper.VIDEO_VIEW_NAME +
                         " WHERE (" + VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID + " = " + onlineId +
                         " AND " + VideoStore.Video.VideoColumns.SCRAPER_E_SEASON + " = " + season + ")" +
