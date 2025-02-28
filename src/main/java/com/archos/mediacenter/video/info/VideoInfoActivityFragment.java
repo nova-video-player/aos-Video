@@ -1012,6 +1012,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         // Update UI
         updateEpisodeUI(direction);
+        updateFragment(episodeModels.get(mCurrentPosition));
         Log.d("GESTURE", "Switched to episode at index: " + mCurrentPosition);
     }
 
