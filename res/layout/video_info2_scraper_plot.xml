@@ -239,10 +239,31 @@
         </LinearLayout>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/episode_selector"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:id="@+id/episode_selector_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp">
+        <TextView
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:layout_marginTop="5dp"
+            android:lines="1"
+            android:maxLines="1"
+            android:text="@string/episode_select"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/header_font"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/video_info_medium_text" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/episode_selector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/info_part2"
