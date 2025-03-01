@@ -55,6 +55,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -1008,36 +1009,40 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         updateFragment(episodeModels.get(mCurrentPosition));
         Log.d("GESTURE", "Switched to episode at index: " + mCurrentPosition);
     }
-
     private void updateEpisodeUI(int direction) {
         // Get the new episode
         EpisodeModel episode = episodeModels.get(mCurrentPosition);
 
+        // Views to animate
+        LinearLayout infoPart1 = mRoot.findViewById(R.id.info_part1);
+        LinearLayout infoPart2 = mRoot.findViewById(R.id.info_part2);  // Example additional view
+        FrameLayout PosterActionContainer = mRoot.findViewById(R.id.poster_action_container); // Another view to animate
+        LinearLayout fileInfoContent = mRoot.findViewById(R.id.info_file_container);
+
         // Determine slide direction
-        float slideOutTo = direction == 1 ? -mRoot.getWidth() : mRoot.getWidth(); // Slide left (-) or right (+)
-        float slideInFrom = direction == 1 ? mRoot.getWidth() : -mRoot.getWidth(); // Opposite direction
+        float slideOutTo = direction == 1 ? -infoPart1.getWidth() : infoPart1.getWidth(); // Slide left (-) or right (+)
+        float slideInFrom = direction == 1 ? infoPart1.getWidth() : -infoPart1.getWidth(); // Opposite direction
 
-        // Slide out with SpringAnimation
-        SpringAnimation slideOut = new SpringAnimation(mRoot, SpringAnimation.TRANSLATION_X, slideOutTo);
-        slideOut.getSpring().setStiffness(SpringForce.STIFFNESS_MEDIUM);
-        slideOut.getSpring().setDampingRatio(SpringForce.DAMPING_RATIO_LOW_BOUNCY);
+        // Create animations for multiple views
+        SpringAnimation slideOut1 = new SpringAnimation(infoPart1, SpringAnimation.TRANSLATION_X, slideOutTo);
+        SpringAnimation slideOut2 = new SpringAnimation(infoPart2, SpringAnimation.TRANSLATION_X, slideOutTo);
+        SpringAnimation slideOut3 = new SpringAnimation(PosterActionContainer, SpringAnimation.TRANSLATION_X, slideOutTo);
+        SpringAnimation slideOut4 = new SpringAnimation(fileInfoContent, SpringAnimation.TRANSLATION_X, slideOutTo);
 
-        // Slide in with SpringAnimation
-        SpringAnimation slideIn = new SpringAnimation(mRoot, SpringAnimation.TRANSLATION_X, 0);
-        slideIn.getSpring().setStiffness(SpringForce.STIFFNESS_MEDIUM);
-        slideIn.getSpring().setDampingRatio(SpringForce.DAMPING_RATIO_LOW_BOUNCY);
+        SpringAnimation slideIn1 = new SpringAnimation(infoPart1, SpringAnimation.TRANSLATION_X, 0);
+        SpringAnimation slideIn2 = new SpringAnimation(infoPart2, SpringAnimation.TRANSLATION_X, 0);
+        SpringAnimation slideIn3 = new SpringAnimation(PosterActionContainer, SpringAnimation.TRANSLATION_X, 0);
+        SpringAnimation slideIn4 = new SpringAnimation(fileInfoContent, SpringAnimation.TRANSLATION_X, 0);
 
-        slideOut.addEndListener((animation, canceled, value, velocity) -> {
+        // Configure animation properties
+        for (SpringAnimation anim : new SpringAnimation[]{slideOut1, slideOut2, slideOut3, slideOut4, slideIn1, slideIn2, slideIn3, slideIn4}) {
+            anim.getSpring().setStiffness(SpringForce.STIFFNESS_MEDIUM);
+            anim.getSpring().setDampingRatio(SpringForce.DAMPING_RATIO_LOW_BOUNCY);
+        }
+
+        // Slide-out animations
+        slideOut1.addEndListener((animation, canceled, value, velocity) -> {
             // Update UI content after old episode slides out
-            // Remove old click listener before updating text
-            mPlotTextView.setOnClickListener(null);
-            mPlotTextView.setEllipsize(null);
-            mPlotTextView.setMaxLines(Integer.MAX_VALUE);  // Temporarily unbound
-
-            // Set new plot
-            setTextOrHideContainer(mPlotTextView, episode.getEpisodePlot(), mPlotTextView);
-
-            // Post a runnable to ensure measurements are updated after layout pass
             mPlotTextView.post(() -> {
                 int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
                 mPlotTextView.measure(
@@ -1079,16 +1084,26 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 }
             });
 
-            // Move view to starting position for slide-in effect
-            mRoot.setTranslationX(slideInFrom);
+            // Move views to starting position for slide-in effect
+            infoPart1.setTranslationX(slideInFrom);
+            infoPart2.setTranslationX(slideInFrom);
+            PosterActionContainer.setTranslationX(slideInFrom);
+            fileInfoContent.setTranslationX(slideInFrom);
 
-            // Start slide-in animation
-            slideIn.start();
+            // Start slide-in animations together
+            slideIn1.start();
+            slideIn2.start();
+            slideIn3.start();
+            slideIn4.start();
         });
 
-        // Start slide-out animation
-        slideOut.start();
+        // Start slide-out animations together
+        slideOut1.start();
+        slideOut2.start();
+        slideOut3.start();
+        slideOut4.start();
     }
+
 
     public void updateFragment(EpisodeModel episodeModel) {
         if (getActivity() == null) return;
