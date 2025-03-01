@@ -1010,9 +1010,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         Log.d("GESTURE", "Switched to episode at index: " + mCurrentPosition);
     }
     private void updateEpisodeUI(int direction) {
-        // Get the new episode
-        EpisodeModel episode = episodeModels.get(mCurrentPosition);
-
         // Views to animate
         LinearLayout infoPart1 = mRoot.findViewById(R.id.info_part1);
         LinearLayout infoPart2 = mRoot.findViewById(R.id.info_part2);  // Example additional view
