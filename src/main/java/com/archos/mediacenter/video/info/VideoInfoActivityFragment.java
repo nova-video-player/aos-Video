@@ -80,6 +80,7 @@ import androidx.core.view.ViewCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
@@ -433,6 +434,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         void onEpisodeSwiped(int direction);  // direction = 1 for next, -1 for previous
     }
     private OnEpisodeSwitchListener episodeSwitchListener;
+    private EpisodeViewModel episodeViewModel;
     public static VideoInfoActivityFragment getInstance(Video video, Uri path, long id, boolean forceVideoSelection){
         log.debug("VideoInfoActivityFragment for uri=" + path);
         Bundle arguments = new Bundle();
@@ -463,6 +465,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 .build();
         mBackgroundSetter = new ImageViewSetter(getActivity(), config);
         mSubtitleListCache = new HashMap<>();
+        episodeViewModel = new ViewModelProvider(this).get(EpisodeViewModel.class);
     }
 
     @Override
@@ -713,98 +716,106 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             episodesRecyclerView.setLayoutManager(layoutManager);
 
-            episodeModels = new ArrayList<>();
-            Cursor cursor = getShowEpisodesListForSeason(onlineId, season, mContext);
-            if (cursor != null) {
-                int mId  = cursor.getColumnIndex(VideoStore.Video.VideoColumns._ID);
-                int mEpisodeId  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_EPISODE_ID);
-                int mSeasonNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
-                int mEpisodeNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
-                int mEpisodeName  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_NAME);
-                int mEpisodeDate  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_AIRED);
-                int mEpisodeRating  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_RATING);
-                int mEpisodeContentRating  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_CONTENT_RATING);
-                int mEpisodePlot  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PLOT);
-                int mShowName  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_NAME);
-                int mFilePath  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.DATA);
-                int mPictureUri  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
-                int mPosterUri  = cursor.getColumnIndex(VideoLoader.COLUMN_COVER_PATH);
-                int mDuration  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.DURATION);
-                int mResume  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.BOOKMARK);
-                int mVideo3dMode   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_VIDEO_STEREO);
-                int mGuessedDefinition   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_VIDEO_DEFINITION);
-                int mTraktSeen   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN);
-                int mIsTraktLibrary   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY);
-                int mHasSubs  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SUBTITLE_COUNT_EXTERNAL);
-                int mIsUserHidden  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER);
-                int mOnlineId  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID);
-                int mLastTimePlayed  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED);
-                int mCalculatedWidth  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.WIDTH);
-                int mCalculatedHeight  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.HEIGHT);
-                int mBestAudioFormat  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_BEST_AUDIOTRACK_FORMAT);
-                int mVideoFormat  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_VIDEO_FORMAT);
-                int mGuessedAudioFormat  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_GUESSED_AUDIO_FORMAT);
-                int mGuessedVideoFormat   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_GUESSED_VIDEO_FORMAT);
-                //int mCalculatedBestAudiotrack   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_BEST_AUDIOTRACK_CHANNELS);
-                int mOccurencies  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_NUMBER_OF_CHANNELS);
-                int mSize  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SIZE);
+            if (episodeViewModel.getEpisodeModels() != null) {
+                // Restore episodes from ViewModel
+                episodeModels = episodeViewModel.getEpisodeModels();
+                mCurrentPosition = episodeViewModel.getCurrentPosition();  // Ensure position consistency
+            } else  {
+                mCurrentPosition = getActivity().getIntent().getIntExtra(EXTRA_CURRENT_POSITION, 0);
+                // Load data from database
+                episodeModels = new ArrayList<>();
+                Cursor cursor = getShowEpisodesListForSeason(onlineId, season, mContext);
+                if (cursor != null) {
+                    int mId  = cursor.getColumnIndex(VideoStore.Video.VideoColumns._ID);
+                    int mEpisodeId  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_EPISODE_ID);
+                    int mSeasonNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON);
+                    int mEpisodeNumberColumn  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
+                    int mEpisodeName  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_NAME);
+                    int mEpisodeDate  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_AIRED);
+                    int mEpisodeRating  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_RATING);
+                    int mEpisodeContentRating  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_CONTENT_RATING);
+                    int mEpisodePlot  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PLOT);
+                    int mShowName  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_NAME);
+                    int mFilePath  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.DATA);
+                    int mPictureUri  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_PICTURE);
+                    int mPosterUri  = cursor.getColumnIndex(VideoLoader.COLUMN_COVER_PATH);
+                    int mDuration  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.DURATION);
+                    int mResume  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.BOOKMARK);
+                    int mVideo3dMode   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_VIDEO_STEREO);
+                    int mGuessedDefinition   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_VIDEO_DEFINITION);
+                    int mTraktSeen   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_SEEN);
+                    int mIsTraktLibrary   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY);
+                    int mHasSubs  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SUBTITLE_COUNT_EXTERNAL);
+                    int mIsUserHidden  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER);
+                    int mOnlineId  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_ONLINE_ID);
+                    int mLastTimePlayed  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED);
+                    int mCalculatedWidth  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.WIDTH);
+                    int mCalculatedHeight  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.HEIGHT);
+                    int mBestAudioFormat  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_BEST_AUDIOTRACK_FORMAT);
+                    int mVideoFormat  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_VIDEO_FORMAT);
+                    int mGuessedAudioFormat  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_GUESSED_AUDIO_FORMAT);
+                    int mGuessedVideoFormat   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_GUESSED_VIDEO_FORMAT);
+                    //int mCalculatedBestAudiotrack   = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_CALCULATED_BEST_AUDIOTRACK_CHANNELS);
+                    int mOccurencies  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_NUMBER_OF_CHANNELS);
+                    int mSize  = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SIZE);
 
-                while (cursor.moveToNext()) {
-                    EpisodeModel episodeModel = new EpisodeModel();
-                    String Picture = cursor.getString(mPictureUri);
-                    File PictureFile = new File(Picture);
-                    Uri PictureUri = Uri.fromFile(PictureFile);
+                    while (cursor.moveToNext()) {
+                        EpisodeModel episodeModel = new EpisodeModel();
+                        String Picture = cursor.getString(mPictureUri);
+                        File PictureFile = new File(Picture);
+                        Uri PictureUri = Uri.fromFile(PictureFile);
 
-                    String Poster = cursor.getString(mPosterUri);
-                    File PosterFile = new File(Poster);
-                    Uri PosterUri = Uri.fromFile(PosterFile);
+                        String Poster = cursor.getString(mPosterUri);
+                        File PosterFile = new File(Poster);
+                        Uri PosterUri = Uri.fromFile(PosterFile);
 
-                    episodeModel.setId(cursor.getLong(mId));
-                    episodeModel.setEpisodeId(cursor.getLong(mEpisodeId));
-                    episodeModel.setSeasonNumber(cursor.getInt(mSeasonNumberColumn));
-                    episodeModel.setEpisodeNumber(cursor.getInt(mEpisodeNumberColumn));
-                    episodeModel.setEpisodeName(cursor.getString(mEpisodeName));
-                    episodeModel.setEpisodeDate(cursor.getLong(mEpisodeDate));
-                    episodeModel.setEpisodeRating(cursor.getFloat(mEpisodeRating));
-                    episodeModel.setEpisodeContentRating(cursor.getString(mEpisodeContentRating));
-                    episodeModel.setEpisodePlot(cursor.getString(mEpisodePlot));
-                    episodeModel.setShowName(cursor.getString(mShowName));
-                    episodeModel.setEpisodeFilePath(cursor.getString(mFilePath));
-                    episodeModel.setPictureUri(PictureUri);
-                    episodeModel.setPosterUri(PosterUri);
-                    episodeModel.setDuration(cursor.getInt(mDuration));
-                    episodeModel.setResume(cursor.getInt(mResume));
-                    episodeModel.setVideo3dMode(cursor.getInt(mVideo3dMode));
-                    episodeModel.setGuessedDefinition(cursor.getInt(mGuessedDefinition));
+                        episodeModel.setId(cursor.getLong(mId));
+                        episodeModel.setEpisodeId(cursor.getLong(mEpisodeId));
+                        episodeModel.setSeasonNumber(cursor.getInt(mSeasonNumberColumn));
+                        episodeModel.setEpisodeNumber(cursor.getInt(mEpisodeNumberColumn));
+                        episodeModel.setEpisodeName(cursor.getString(mEpisodeName));
+                        episodeModel.setEpisodeDate(cursor.getLong(mEpisodeDate));
+                        episodeModel.setEpisodeRating(cursor.getFloat(mEpisodeRating));
+                        episodeModel.setEpisodeContentRating(cursor.getString(mEpisodeContentRating));
+                        episodeModel.setEpisodePlot(cursor.getString(mEpisodePlot));
+                        episodeModel.setShowName(cursor.getString(mShowName));
+                        episodeModel.setEpisodeFilePath(cursor.getString(mFilePath));
+                        episodeModel.setPictureUri(PictureUri);
+                        episodeModel.setPosterUri(PosterUri);
+                        episodeModel.setDuration(cursor.getInt(mDuration));
+                        episodeModel.setResume(cursor.getInt(mResume));
+                        episodeModel.setVideo3dMode(cursor.getInt(mVideo3dMode));
+                        episodeModel.setGuessedDefinition(cursor.getInt(mGuessedDefinition));
 
-                    boolean traktSeen = cursor.getInt(mTraktSeen) != 0;
-                    episodeModel.setTraktSeen(traktSeen);
-                    boolean isTraktLibrary = cursor.getInt(mIsTraktLibrary) != 0;
-                    episodeModel.setTraktLibrary(isTraktLibrary);
-                    boolean hasSubs = cursor.getInt(mHasSubs) != 0;
-                    episodeModel.setHasSubs(hasSubs);
-                    boolean isUserHidden = cursor.getInt(mIsUserHidden) != 0;
-                    episodeModel.setUserHidden(isUserHidden);
+                        boolean traktSeen = cursor.getInt(mTraktSeen) != 0;
+                        episodeModel.setTraktSeen(traktSeen);
+                        boolean isTraktLibrary = cursor.getInt(mIsTraktLibrary) != 0;
+                        episodeModel.setTraktLibrary(isTraktLibrary);
+                        boolean hasSubs = cursor.getInt(mHasSubs) != 0;
+                        episodeModel.setHasSubs(hasSubs);
+                        boolean isUserHidden = cursor.getInt(mIsUserHidden) != 0;
+                        episodeModel.setUserHidden(isUserHidden);
 
-                    episodeModel.setOnlineId(cursor.getLong(mOnlineId));
-                    episodeModel.setLastTimePlayed(cursor.getLong(mLastTimePlayed));
-                    episodeModel.setCalculatedWidth(cursor.getInt(mCalculatedWidth));
-                    episodeModel.setCalculatedHeight(cursor.getInt(mCalculatedHeight));
-                    episodeModel.setBestAudioFormat(cursor.getString(mBestAudioFormat));
-                    episodeModel.setVideoFormat(cursor.getString(mVideoFormat));
-                    episodeModel.setGuessedAudioFormat(cursor.getString(mGuessedAudioFormat));
-                    episodeModel.setGuessedVideoFormat(cursor.getString(mGuessedVideoFormat));
+                        episodeModel.setOnlineId(cursor.getLong(mOnlineId));
+                        episodeModel.setLastTimePlayed(cursor.getLong(mLastTimePlayed));
+                        episodeModel.setCalculatedWidth(cursor.getInt(mCalculatedWidth));
+                        episodeModel.setCalculatedHeight(cursor.getInt(mCalculatedHeight));
+                        episodeModel.setBestAudioFormat(cursor.getString(mBestAudioFormat));
+                        episodeModel.setVideoFormat(cursor.getString(mVideoFormat));
+                        episodeModel.setGuessedAudioFormat(cursor.getString(mGuessedAudioFormat));
+                        episodeModel.setGuessedVideoFormat(cursor.getString(mGuessedVideoFormat));
 
-                    episodeModel.setCalculatedBestAudioTrack(-1);
+                        episodeModel.setCalculatedBestAudioTrack(-1);
 
-                    episodeModel.setOccurrences(cursor.getInt(mOccurencies));
-                    episodeModel.setSize(cursor.getLong(mSize));
+                        episodeModel.setOccurrences(cursor.getInt(mOccurencies));
+                        episodeModel.setSize(cursor.getLong(mSize));
 
-                    episodeModels.add(episodeModel);
+                        episodeModels.add(episodeModel);
+                    }
+                    cursor.close();
                 }
-                cursor.close();
+                episodeViewModel.setEpisodeModels(episodeModels);
             }
-            mCurrentPosition = getActivity().getIntent().getIntExtra(EXTRA_CURRENT_POSITION, 0);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             boolean BrowserListOfEpisodes = prefs.getBoolean("BrowserListOfEpisodes", true);
             boolean oneEpisode;
@@ -3700,6 +3711,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         log.debug("onDestroy");
         removeNetworkListener();
         super.onDestroy();
+        episodeViewModel.setEpisodeModels(episodeModels);
+        episodeViewModel.setCurrentPosition(mCurrentPosition);
     }
 
     private void addNetworkListener() {
