@@ -712,6 +712,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             Episode episodeVideo = (Episode) mCurrentVideo;
             long onlineId = episodeVideo.getOnlineId();
             int season = episodeVideo.getSeasonNumber();
+            LinearLayout episodeSelectorContainer = mRoot.findViewById(R.id.episode_selector_container);
             episodesRecyclerView = mRoot.findViewById(R.id.episode_selector);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             episodesRecyclerView.setLayoutManager(layoutManager);
@@ -819,11 +820,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             boolean BrowserListOfEpisodes = prefs.getBoolean("BrowserListOfEpisodes", true);
             boolean oneEpisode;
-            if(episodeModels.size() == 1){
-                oneEpisode = true;
-            }else{
-                oneEpisode = false;
-            }
+            oneEpisode = episodeModels.size() == 1;
             prefs.edit().putBoolean("oneEpisode", oneEpisode).apply();
 
             String mode = prefs.getString("episode_scrollView", null);
@@ -853,7 +850,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 episodesAdapter.setSelectedIndex(mCurrentPosition);
                 episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
                 episodesAdapter.notifyItemChanged(mCurrentPosition);
-            } else
+            }
             //Option 2 Episode scroll mode is Episode numbers
             if (selectedMode == 1){
                 // Setting Episode numbers RecyclerView Adapter
@@ -874,11 +871,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 episodeNumbersAdapter.setSelectedIndex(mCurrentPosition);
                 episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
                 episodeNumbersAdapter.notifyItemChanged(mCurrentPosition);
-            } else
-            //Option 1 Episode scroll mode is Episode RecyclerView
+            }
+            //Option 3 Episode scroll mode is hidden
             if (selectedMode == 2 || oneEpisode || !BrowserListOfEpisodes){
                 // Hide Episode RecyclerView
                 episodesRecyclerView.setVisibility(View.GONE);
+                episodeSelectorContainer.setVisibility(View.GONE);
             }
             // Disable gestureDetector swiping on episodes recyclerview
             episodesRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
