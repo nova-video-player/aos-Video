@@ -271,6 +271,11 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
         public int getCount() {
             return mPaths.size()>0?mPaths.size():1;
         }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;  // Forces ViewPager to recreate all fragments
+        }
     }
 
     // This method should not have the @Override annotation
@@ -305,5 +310,13 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
             return true;
         }
         return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mViewPager.getAdapter() != null) {
+            mViewPager.getAdapter().notifyDataSetChanged();  // Force ViewPager to refresh its fragments
+        }
     }
 }
