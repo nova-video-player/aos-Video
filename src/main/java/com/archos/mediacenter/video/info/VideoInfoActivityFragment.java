@@ -56,6 +56,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -1024,6 +1026,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         LinearLayout infoPart2 = mRoot.findViewById(R.id.info_part2);  // Example additional view
         FrameLayout PosterActionContainer = mRoot.findViewById(R.id.poster_action_container); // Another view to animate
         LinearLayout fileInfoContent = mRoot.findViewById(R.id.info_file_container);
+        GridLayout MediaFlags = mRoot.findViewById(R.id.media_flags_container);
+        LinearLayout subtitle = mRoot.findViewById(R.id.subtitles_container);
+        LinearLayout scraper = mRoot.findViewById(R.id.scraper_container);
+        HorizontalScrollView source = mRoot.findViewById(R.id.source_container);
 
         // Determine slide direction
         float slideOutTo = direction == 1 ? -infoPart1.getWidth() : infoPart1.getWidth(); // Slide left (-) or right (+)
@@ -1034,14 +1040,22 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         SpringAnimation slideOut2 = new SpringAnimation(infoPart2, SpringAnimation.TRANSLATION_X, slideOutTo);
         SpringAnimation slideOut3 = new SpringAnimation(PosterActionContainer, SpringAnimation.TRANSLATION_X, slideOutTo);
         SpringAnimation slideOut4 = new SpringAnimation(fileInfoContent, SpringAnimation.TRANSLATION_X, slideOutTo);
+        SpringAnimation slideOut5 = new SpringAnimation(MediaFlags, SpringAnimation.TRANSLATION_X, slideOutTo);
+        SpringAnimation slideOut6 = new SpringAnimation(subtitle, SpringAnimation.TRANSLATION_X, slideOutTo);
+        SpringAnimation slideOut7 = new SpringAnimation(scraper, SpringAnimation.TRANSLATION_X, slideOutTo);
+        SpringAnimation slideOut8 = new SpringAnimation(source, SpringAnimation.TRANSLATION_X, slideOutTo);
 
         SpringAnimation slideIn1 = new SpringAnimation(infoPart1, SpringAnimation.TRANSLATION_X, 0);
         SpringAnimation slideIn2 = new SpringAnimation(infoPart2, SpringAnimation.TRANSLATION_X, 0);
         SpringAnimation slideIn3 = new SpringAnimation(PosterActionContainer, SpringAnimation.TRANSLATION_X, 0);
         SpringAnimation slideIn4 = new SpringAnimation(fileInfoContent, SpringAnimation.TRANSLATION_X, 0);
+        SpringAnimation slideIn5 = new SpringAnimation(MediaFlags, SpringAnimation.TRANSLATION_X, 0);
+        SpringAnimation slideIn6 = new SpringAnimation(subtitle, SpringAnimation.TRANSLATION_X, 0);
+        SpringAnimation slideIn7 = new SpringAnimation(scraper, SpringAnimation.TRANSLATION_X, 0);
+        SpringAnimation slideIn8 = new SpringAnimation(source, SpringAnimation.TRANSLATION_X, 0);
 
         // Configure animation properties
-        for (SpringAnimation anim : new SpringAnimation[]{slideOut1, slideOut2, slideOut3, slideOut4, slideIn1, slideIn2, slideIn3, slideIn4}) {
+        for (SpringAnimation anim : new SpringAnimation[]{slideOut1, slideOut2, slideOut3, slideOut4, slideOut5, slideOut6, slideOut7, slideOut8, slideIn1, slideIn2, slideIn3, slideIn4, slideIn5, slideIn6, slideIn7, slideIn8}) {
             anim.getSpring().setStiffness(SpringForce.STIFFNESS_MEDIUM);
             anim.getSpring().setDampingRatio(SpringForce.DAMPING_RATIO_LOW_BOUNCY);
         }
@@ -1095,12 +1109,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             infoPart2.setTranslationX(slideInFrom);
             PosterActionContainer.setTranslationX(slideInFrom);
             fileInfoContent.setTranslationX(slideInFrom);
+            MediaFlags.setTranslationX(slideInFrom);
+            subtitle.setTranslationX(slideInFrom);
+            scraper.setTranslationX(slideInFrom);
+            source.setTranslationX(slideInFrom);
 
             // Start slide-in animations together
             slideIn1.start();
             slideIn2.start();
             slideIn3.start();
             slideIn4.start();
+            slideIn5.start();
+            slideIn6.start();
+            slideIn7.start();
+            slideIn8.start();
         });
 
         // Start slide-out animations together
@@ -1108,6 +1130,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         slideOut2.start();
         slideOut3.start();
         slideOut4.start();
+        slideOut5.start();
+        slideOut6.start();
+        slideOut7.start();
+        slideOut8.start();
     }
 
 
