@@ -437,6 +437,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     }
     private OnEpisodeSwitchListener episodeSwitchListener;
     private EpisodeViewModel episodeViewModel;
+    private LinearLayout episodeSelectorContainer;
     public static VideoInfoActivityFragment getInstance(Video video, Uri path, long id, boolean forceVideoSelection){
         log.debug("VideoInfoActivityFragment for uri=" + path);
         Bundle arguments = new Bundle();
@@ -709,12 +710,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             //mActionButtonsContainer.setVisibility(View.GONE);
 
 
-
+        episodeSelectorContainer = mRoot.findViewById(R.id.episode_selector_container);
         if (mCurrentVideo instanceof Episode){
             Episode episodeVideo = (Episode) mCurrentVideo;
             long onlineId = episodeVideo.getOnlineId();
             int season = episodeVideo.getSeasonNumber();
-            LinearLayout episodeSelectorContainer = mRoot.findViewById(R.id.episode_selector_container);
             episodesRecyclerView = mRoot.findViewById(R.id.episode_selector);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             episodesRecyclerView.setLayoutManager(layoutManager);
@@ -899,6 +899,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 @Override
                 public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
             });
+        }else{
+            episodeSelectorContainer.setVisibility(View.GONE);
         }
 
         return mRoot;
