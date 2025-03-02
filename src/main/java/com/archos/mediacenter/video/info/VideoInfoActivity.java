@@ -17,13 +17,8 @@ package com.archos.mediacenter.video.info;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -38,21 +33,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
-import com.archos.mediaprovider.VideoDb;
-import com.archos.mediaprovider.video.VideoOpenHelper;
-import com.archos.mediaprovider.video.VideoStore;
-import com.archos.mediascraper.EpisodeTags;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoActivityFragment.OnEpisodeSwitchListener {
 
@@ -70,12 +57,10 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
     public static final String EXTRA_PLAYLIST_ID = "playlist_id";
     public static final String EXTRA_LAUNCHED_FROM_PLAYER = "launchedFromPlayer";
     public static final String EXTRA_VIDEO_PATHS = "video_paths";
-    public static final String EXTRA_VIDEO_PATH = "video_path";
     public static final String EXTRA_CURRENT_POSITION = "current_position";
     public static final String EXTRA_USE_VIDEO_METADATA = "useVideoMetadata";
     public static final String EXTRA_PLAYER_TYPE = "playerType";
     public static final String EXTRA_FORCE_VIDEO_SELECTION = "force_video_selection";
-    List<VideoInfoActivityFragment> fragments = new ArrayList<>();
 
     private ArrayList<Uri> mPaths;
     private Video mCurrentVideo;
@@ -83,9 +68,6 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
     private long mId;
     private boolean mForceCurrentPosition;
     private Fragment mCurrentFragment;
-
-    private static final float MILLISECONDS_PER_INCH_PIC = 45f; //default is 25f (bigger = slower)
-    private static final float MILLISECONDS_PER_INCH_NUM = 85f;
 
     private boolean BrowserListOfEpisodes;
 

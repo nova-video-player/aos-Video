@@ -30,7 +30,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -39,10 +38,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.text.format.Formatter;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -77,7 +74,6 @@ import androidx.appcompat.widget.ToolbarWidgetWrapper;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.ViewCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
@@ -89,9 +85,7 @@ import androidx.loader.content.Loader;
 import androidx.palette.graphics.Palette;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.FileUtils;
@@ -150,8 +144,6 @@ import com.archos.mediascraper.Scraper;
 import com.archos.mediascraper.ScraperTrailer;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.VideoTags;
-import com.archos.mediascraper.xml.MovieScraper3;
-import com.archos.mediascraper.xml.ShowScraper4;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -176,7 +168,6 @@ import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.
 import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.replaceLanguageCodeInString;
 import static com.archos.mediacenter.video.info.VideoInfoActivity.EXTRA_CURRENT_POSITION;
 import static com.archos.mediacenter.video.utils.VideoUtils.getFileUriStringFromContentUri;
-import static com.archos.mediaprovider.video.ScraperStore.Episode.COVER;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -2446,10 +2437,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         public SubtitleFilesListerTask(Activity activity){
             mActivity = activity;
-        }
-
-        private Activity getActivity(){
-            return mActivity;
         }
 
         @Override
