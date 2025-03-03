@@ -160,7 +160,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     };
 
     private final static String[] SCRAPER_PROJECTION = {
-            ScraperStore.AllVideos.MOVIE_OR_SHOW_NAME, ScraperStore.AllVideos.MOVIE_OR_SHOW_COVER,
+            ScraperStore.AllVideos.MOVIE_OR_SHOW_NAME, ScraperStore.AllVideos.MOVIE_OR_SHOW_BACKDROP,
             ScraperStore.AllVideos.EPISODE_NUMBER, ScraperStore.AllVideos.EPISODE_SEASON_NUMBER,
             ScraperStore.AllVideos.EPISODE_NAME
     };
@@ -823,7 +823,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                             SCRAPER_PROJECTION, SCRAPER_SELECTION, selectionArgs, null);
                     if (scraperCursor.moveToFirst()) {
                         int index_cover = scraperCursor
-                                .getColumnIndex(ScraperStore.AllVideos.MOVIE_OR_SHOW_COVER);
+                                .getColumnIndex(ScraperStore.AllVideos.MOVIE_OR_SHOW_BACKDROP);
                         int index_name = scraperCursor
                                 .getColumnIndex(ScraperStore.AllVideos.MOVIE_OR_SHOW_NAME);
 
