@@ -50,6 +50,8 @@
             android:id="@+id/play_pause_touch_zone"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
+            android:layout_marginStart="75dp"
+            android:layout_marginEnd="75dp"
             android:layout_weight = "1"
             android:layout_gravity="center"
             android:scrollbars="horizontal"
