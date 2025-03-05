@@ -164,6 +164,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static com.archos.filecorelibrary.ImagePaddingUtil.addPadding;
+import static com.archos.filecorelibrary.ImagePaddingUtil.getPaddingForRatio;
+import static com.archos.filecorelibrary.ImagePaddingUtil.shouldApplyPadding;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateTrackName;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.replaceLanguageCodeInString;
 import static com.archos.mediacenter.video.info.VideoInfoActivity.EXTRA_CURRENT_POSITION;
@@ -3402,10 +3405,40 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (tags.getStudioLogo() != null){
                         File studioFile = new File(tags.getStudioLogo().getPath());
                         if (studioFile.exists()){
-                            Picasso.get().load(tags.getStudioLogo()).fit().centerInside().into(mLogo);
+                            // Load bitmap from file
+                            Bitmap originalBitmap = BitmapFactory.decodeFile(tags.getStudioLogo().getAbsolutePath());
+                            if (originalBitmap != null) {
+                                // Calculate padding based on a fixed ratio (e.g., 8% of the image width)
+                                int padding = getPaddingForRatio(originalBitmap.getWidth(), 0.20f); // Use 20% of the image width for padding
+                                float transparencyThreshold = 0.65f;  // Define a threshold (e.g., 65% transparent pixels on edges)
+                                // Check if the edges of the image are transparent enough
+                                boolean shouldAddPadding = shouldApplyPadding(originalBitmap, padding, transparencyThreshold);
+                                // If padding should be added, apply it; otherwise, just use the original image
+                                if (shouldAddPadding) {
+                                    Bitmap paddedBitmap = addPadding(originalBitmap, padding);
+                                    mLogo.setImageBitmap(paddedBitmap);
+                                } else {
+                                    mLogo.setImageBitmap(originalBitmap);
+                                }
+                            }
                         } else {
                             for (int i = 0; i < availableStudioLogos.size(); i++) {
-                                Picasso.get().load(availableStudioLogos.get(0)).fit().centerInside().into(mLogo);
+                                // Load bitmap from file
+                                Bitmap originalBitmap = BitmapFactory.decodeFile(availableStudioLogos.get(0).getAbsolutePath());
+                                if (originalBitmap != null) {
+                                    // Calculate padding based on a fixed ratio (e.g., 8% of the image width)
+                                    int padding = getPaddingForRatio(originalBitmap.getWidth(), 0.20f); // Use 20% of the image width for padding
+                                    float transparencyThreshold = 0.65f;  // Define a threshold (e.g., 65% transparent pixels on edges)
+                                    // Check if the edges of the image are transparent enough
+                                    boolean shouldAddPadding = shouldApplyPadding(originalBitmap, padding, transparencyThreshold);
+                                    // If padding should be added, apply it; otherwise, just use the original image
+                                    if (shouldAddPadding) {
+                                        Bitmap paddedBitmap = addPadding(originalBitmap, padding);
+                                        mLogo.setImageBitmap(paddedBitmap);
+                                    } else {
+                                        mLogo.setImageBitmap(originalBitmap);
+                                    }
+                                }
                             }
                         }
                     }
