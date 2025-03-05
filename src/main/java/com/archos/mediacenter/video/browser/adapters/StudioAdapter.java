@@ -43,7 +43,22 @@ public class StudioAdapter extends RecyclerView.Adapter<StudioAdapter.StudioView
         final String path = StudioLogoPaths.get(position);
         File file = new File(path);
         if (file.exists()){
-            Picasso.get().load(file).into(vh.logoImage);
+            // Load bitmap from file
+            Bitmap originalBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            if (originalBitmap != null) {
+                // Calculate padding based on a fixed ratio (e.g., 8% of the image width)
+                int padding = getPaddingForRatio(originalBitmap.getWidth(), 0.20f); // Use 20% of the image width for padding
+                float transparencyThreshold = 0.65f;  // Define a threshold (e.g., 65% transparent pixels on edges)
+                // Check if the edges of the image are transparent enough
+                boolean shouldAddPadding = shouldApplyPadding(originalBitmap, padding, transparencyThreshold);
+                // If padding should be added, apply it; otherwise, just use the original image
+                if (shouldAddPadding) {
+                    Bitmap paddedBitmap = addPadding(originalBitmap, padding);
+                    vh.logoImage.setImageBitmap(paddedBitmap);
+                } else {
+                    vh.logoImage.setImageBitmap(originalBitmap);
+                }
+            }
         } else {
             ViewGroup.LayoutParams params = vh.itemView.getLayoutParams();
             params.height = 0;
@@ -69,26 +84,6 @@ public class StudioAdapter extends RecyclerView.Adapter<StudioAdapter.StudioView
                 return true;
             }
         });
-
-        // Load bitmap from file
-        Bitmap originalBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-
-        if (originalBitmap != null) {
-            // Calculate padding based on a fixed ratio (e.g., 8% of the image width)
-            int padding = getPaddingForRatio(originalBitmap.getWidth(), 0.20f); // Use 20% of the image width for padding
-            float transparencyThreshold = 0.65f;  // Define a threshold (e.g., 65% transparent pixels on edges)
-
-            // Check if the edges of the image are transparent enough
-            boolean shouldAddPadding = shouldApplyPadding(originalBitmap, padding, transparencyThreshold);
-
-            // If padding should be added, apply it; otherwise, just use the original image
-            if (shouldAddPadding) {
-                Bitmap paddedBitmap = addPadding(originalBitmap, padding);
-                vh.logoImage.setImageBitmap(paddedBitmap);
-            } else {
-                vh.logoImage.setImageBitmap(originalBitmap);
-            }
-        }
     }
     @Override
     public int getItemCount() {
