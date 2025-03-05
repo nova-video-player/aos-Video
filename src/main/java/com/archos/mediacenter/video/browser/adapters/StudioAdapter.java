@@ -75,8 +75,8 @@ public class StudioAdapter extends RecyclerView.Adapter<StudioAdapter.StudioView
 
         if (originalBitmap != null) {
             // Calculate padding based on a fixed ratio (e.g., 8% of the image width)
-            int padding = getPaddingForRatio(originalBitmap.getWidth(), 0.10f); // Use 8% of the image width for padding
-            float transparencyThreshold = 0.65f;  // Define a threshold (e.g., 85% transparent pixels on edges)
+            int padding = getPaddingForRatio(originalBitmap.getWidth(), 0.20f); // Use 20% of the image width for padding
+            float transparencyThreshold = 0.65f;  // Define a threshold (e.g., 65% transparent pixels on edges)
 
             // Check if the edges of the image are transparent enough
             boolean shouldAddPadding = shouldApplyPadding(originalBitmap, padding, transparencyThreshold);
