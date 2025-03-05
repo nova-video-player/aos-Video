@@ -3392,7 +3392,22 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             toast.setDuration(Toast.LENGTH_SHORT);
                             toast.setView(layout);
                             toast.show();
-                            Picasso.get().load(tags.getStudioLogosLargeFileF().get(position)).fit().centerInside().into(mLogo);
+                            // Load bitmap from file
+                            Bitmap originalBitmap = BitmapFactory.decodeFile(tags.getStudioLogosLargeFileF().get(position).getAbsolutePath());
+                            if (originalBitmap != null) {
+                                // Calculate padding based on a fixed ratio (e.g., 8% of the image width)
+                                int padding = getPaddingForRatio(originalBitmap.getWidth(), 0.20f); // Use 20% of the image width for padding
+                                float transparencyThreshold = 0.65f;  // Define a threshold (e.g., 65% transparent pixels on edges)
+                                // Check if the edges of the image are transparent enough
+                                boolean shouldAddPadding = shouldApplyPadding(originalBitmap, padding, transparencyThreshold);
+                                // If padding should be added, apply it; otherwise, just use the original image
+                                if (shouldAddPadding) {
+                                    Bitmap paddedBitmap = addPadding(originalBitmap, padding);
+                                    mLogo.setImageBitmap(paddedBitmap);
+                                } else {
+                                    mLogo.setImageBitmap(originalBitmap);
+                                }
+                            }                            
                             ScraperImage clickedImage = (ScraperImage) studioImage.get(position);
                             new LogoSaver(mContext).execute(clickedImage);
                             mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
