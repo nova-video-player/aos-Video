@@ -542,6 +542,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                 int TotalHorizontalSpacingTabletPortrait = (int) getResources().getDimension(R.dimen.total_horizontal_spacing_tablet_portrait);
                 int TotalHorizontalSpacingTabletLandscape = (int) getResources().getDimension(R.dimen.total_horizontal_spacing_tablet_landscape);
                 int subtractionTablet = categoryWidth + TotalHorizontalSpacingTabletLandscape;
+                int subtractionTabletPortrait = categoryWidth + TotalHorizontalSpacingTabletPortrait;
 
                 int width;
                 if(!mIsTablet){
@@ -556,7 +557,11 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                     if(mIsLandscapeMode){
                         width = windowWidth - subtractionTablet;
                     }else{
-                        width = windowWidth - TotalHorizontalSpacingTabletPortrait;
+                        if(drawerIsNull){
+                            width = windowWidth - subtractionTabletPortrait;
+                        }else{
+                            width = windowWidth - TotalHorizontalSpacingTabletPortrait;
+                        }
                     }
                 }
 
@@ -573,7 +578,11 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                     if(mIsLandscapeMode){
                         columnWidth = width / 8;
                     }else{
-                        columnWidth = width / 5;
+                        if(drawerIsNull){
+                            columnWidth = width / 4;
+                        }else{
+                            columnWidth = width / 5;
+                        }
                     }
                 }
 
@@ -582,7 +591,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                 mRootView.findViewById(R.id.archos_list_view).setVisibility(View.GONE);
                 mArchosGridView.setVisibility(View.VISIBLE);
                 if(mArchosGridView instanceof GridView) {
-                    if(!mIsTablet){
+                    if(!mIsTablet){ // Phone
                         if(mIsPortraitMode){
                             ((GridView) mArchosGridView).setNumColumns(3);
                         }else if(mIsLandscapeMode && drawerIsNull){
@@ -590,14 +599,36 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                         }else{
                             ((GridView) mArchosGridView).setNumColumns(6);
                         }
-                    }else{
-                        if(mIsLandscapeMode){
+                    }else{ // Tablet
+                        if(mIsLandscapeMode){ // Tablet & landscape
                             ((GridView) mArchosGridView).setNumColumns(8);
-                        }else{
-                            ((GridView) mArchosGridView).setNumColumns(5);
+                        }else{ // Tablet & portrait
+                            if(drawerIsNull){
+                                ((GridView) mArchosGridView).setNumColumns(4);
+                            }else{
+                                ((GridView) mArchosGridView).setNumColumns(5);
+                            }
                         }
                     }
                 }
+
+                /*
+                // Adjust number of columns based on screen density
+                float density = getResources().getDisplayMetrics().densityDpi;
+
+                // Apply density-based column adjustments
+                if (density <= DisplayMetrics.DENSITY_MEDIUM) { // ldpi 120, mdpi 160
+                    ((GridView) mArchosGridView).setNumColumns(3); // Ensure at least 3 columns for low-density devices
+                } else if (density <= DisplayMetrics.DENSITY_HIGH) { // hdpi 240
+                    ((GridView) mArchosGridView).setNumColumns(4); // Ensure at least 4 columns for medium-density devices
+                } else if (density <= DisplayMetrics.DENSITY_XHIGH) { // xhdpi 320
+                    ((GridView) mArchosGridView).setNumColumns(6); // Ensure at least 6 columns for high-density devices
+                } else { // xxhdpi 480, xxxhdpi 640
+                    ((GridView) mArchosGridView).setNumColumns(8); // Ensure at least 8 columns for extra-high-density devices
+                }
+                */
+
+
                 verticalSpacing = (int) getResources().getDimension(R.dimen.gridview_vertical_spacing);
                 // setHorizontalSpacing() doesn't allow to have well-centered column. Having larger
                 // columns and making sure the items are centered in it makes it.

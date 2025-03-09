@@ -106,6 +106,7 @@ public class SeasonGridPresenter extends SeasonPresenter{
         int TotalHorizontalSpacingTabletPortrait = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_tablet_portrait);
         int TotalHorizontalSpacingTabletLandscape = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_tablet_landscape);
         int subtractionTablet = categoryWidth + TotalHorizontalSpacingTabletLandscape;
+        int subtractionTabletPortrait = categoryWidth + TotalHorizontalSpacingTabletPortrait;
 
         int width;
         if(!IsTablet){
@@ -120,7 +121,11 @@ public class SeasonGridPresenter extends SeasonPresenter{
             if(mIsLandscapeMode){
                 width = windowWidth - subtractionTablet;
             }else{
-                width = windowWidth - TotalHorizontalSpacingTabletPortrait;
+                if(drawerIsNull){
+                    width = windowWidth - subtractionTabletPortrait;
+                }else{
+                    width = windowWidth - TotalHorizontalSpacingTabletPortrait;
+                }
             }
         }
 
@@ -137,9 +142,14 @@ public class SeasonGridPresenter extends SeasonPresenter{
             if(mIsLandscapeMode){
                 columnWidth = width / 8;
             }else{
-                columnWidth = width / 5;
+                if(drawerIsNull){
+                    columnWidth = width / 4;
+                }else{
+                    columnWidth = width / 5;
+                }
             }
         }
+
         int height = columnWidth / 2;
         int columnHeight = height * 3;
         holder.thumbnail.setLayoutParams(new RelativeLayout.LayoutParams(columnWidth, columnHeight));
