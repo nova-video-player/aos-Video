@@ -1191,6 +1191,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
         });
 
+        if (mPlayerController != null) {
+            mPlayerController.updateMarginBasedOnOrientation(); // Notify PlayerController to update the margin
+        }
+
         invalidateOptionsMenu();
     }
 
@@ -2879,6 +2883,15 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
 
         //mPlayerController.setVideoTitle(mTitle);
+
+        // set movie or show clearlogo in action bar
+        String mMovieClearLogo = mVideoInfo.scraperMovieClearLogo;
+        String mShowClearLogo = mVideoInfo.scraperShowClearLogo;
+        if (!mVideoInfo.isShow){
+            mPlayerController.setVideoClearlogo(mMovieClearLogo);
+        }else{
+            mPlayerController.setVideoClearlogo(mShowClearLogo);
+        }
 
         postVideoInfoAndPrepared();
     }

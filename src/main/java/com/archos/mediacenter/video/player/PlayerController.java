@@ -26,6 +26,8 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Insets;
@@ -187,6 +189,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     private TextView            mVideoTitle;
 
+    private ImageView            mVideoClearLogo;
+
     private View                mControlBar;
     private View                mControlBar2;
     private ImageButton         mPauseButton;
@@ -313,7 +317,28 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         // Default to GONE, enable it if you want it
         mVideoTitle.setVisibility(View.GONE);
         mActionBar.setDisplayShowCustomEnabled(true);
-        mActionBar.setCustomView(mVideoTitle);
+
+        // set movie or show clearlogo in action bar
+        mVideoClearLogo = (ImageView) inflater.inflate(R.layout.video_title_clearlogo, null);
+        boolean isPortraitMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        int widthInDp = 100; // Example width in dp
+        int marginLeftInDp; // Left margin in dp
+        if (isPortraitMode){
+            marginLeftInDp = 0;
+        }else{
+            marginLeftInDp = 60;
+        }
+        // Convert dp to pixels
+        float density = mContext.getResources().getDisplayMetrics().density;
+        int widthInPx = (int) (widthInDp * density);
+        int marginLeftPx = (int) (marginLeftInDp * density);
+        // Create MarginLayoutParams instead of LayoutParams
+        ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(widthInPx, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.leftMargin = marginLeftPx; // Apply left margin
+        // Set the updated layout parameters
+        mVideoClearLogo.setLayoutParams(params);
+
+        mActionBar.setCustomView(mVideoClearLogo);
         manualVisibilityChange=false;
 
         mSystemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -1577,6 +1602,28 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if (mVideoTitle != null && title != null && !title.isEmpty()) {
             mVideoTitle.setText(title);
         }
+    }
+
+    public void setVideoClearlogo(String path) {
+        if (mVideoClearLogo != null && path != null && !path.isEmpty()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(path); // Decode the file into a Bitmap
+            if (bitmap != null) {
+                mVideoClearLogo.setImageBitmap(bitmap); // Set the Bitmap into the ImageView
+            }
+        }
+    }
+
+    public void updateMarginBasedOnOrientation() {
+        if (mVideoClearLogo == null) return;
+        boolean isPortraitMode = mVideoClearLogo.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        int marginLeftInDp = isPortraitMode ? 0 : 60;
+        // Convert dp to pixels
+        float density = mVideoClearLogo.getContext().getResources().getDisplayMetrics().density;
+        int marginLeftPx = (int) (marginLeftInDp * density);
+        // Update margin
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mVideoClearLogo.getLayoutParams();
+        params.leftMargin = marginLeftPx;
+        mVideoClearLogo.setLayoutParams(params);
     }
 
     public void start() {
