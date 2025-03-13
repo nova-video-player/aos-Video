@@ -154,7 +154,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         IndexHelper.Listener, PermissionChecker.PermissionListener {
 
     private static final Logger log = LoggerFactory.getLogger(PlayerActivity.class);
-
     public static final int RESUME_NO = 0;
     public static final int RESUME_FROM_LAST_POS = 1;
     public static final int RESUME_FROM_BOOKMARK = 2;
@@ -266,6 +265,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     private NetworkState networkState = null;
     private PropertyChangeListener propertyChangeListener = null;
+
+    private VideoInfoManager videoInfoManager;
 
     public void setCutoutMetrics() {
         // create list of 4 elements {L,T,R,B}
@@ -2798,7 +2799,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mPosterPath = null;
             mPoster = false;
 
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             int definition = getNormalizedDefinition();
             if (mVideoInfo.isScraped) {
                 mMovieOrShowName = mVideoInfo.scraperTitle;
@@ -2812,13 +2812,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (!TextUtils.isEmpty(mVideoInfo.scraperCover)) {
                     mPosterPath = mVideoInfo.scraperCover;
                 }
-                if(mPosterPath!=null) {
-                    prefs.edit().putString("mPosterPath", mPosterPath).apply();
-                }else{
-                    prefs.edit().putString("mPosterPath", "").apply();
-                }
-                String mContentRating = mVideoInfo.mContentRating;
-                String mMovieYear = mVideoInfo.mMovieYear;
+                // set episode air date
                 String mEpisodeAirDate = mVideoInfo.mEpisodeAirDate;
                 DateFormat mDateFormat = DateFormat.getDateInstance(DateFormat.LONG);
                 long EpisodeAirDate = 0;
@@ -2826,22 +2820,27 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     EpisodeAirDate = Long.parseLong(mEpisodeAirDate);
                 }
                 String FinalEpisodeAirDate = mDateFormat.format(new Date(EpisodeAirDate));
-                String rating = mVideoInfo.mRating;
-                String FinalRating = String.format("%.1f", Double.valueOf(rating));
-                prefs.edit().putString("mTitle", mTitle).apply();
-                prefs.edit().putInt("mVideoDefinition", definition).apply();
-                prefs.edit().putString("mContentRating", mContentRating).apply();
-                prefs.edit().putString("mMovieYear", mMovieYear).apply();
-                prefs.edit().putString("FinalEpisodeAirDate", FinalEpisodeAirDate).apply();
-                prefs.edit().putString("mRating", FinalRating).apply();
+                if (VideoInfoManager.getInstance() != null) {
+                    videoInfoManager = VideoInfoManager.getInstance();
+                    videoInfoManager.setVideoTitle(mTitle);
+                    videoInfoManager.setVideoDefinition(definition);
+                    videoInfoManager.setContentRating(mVideoInfo.mContentRating);
+                    videoInfoManager.setMovieYear(mVideoInfo.mMovieYear);
+                    videoInfoManager.setFinalEpisodeAirDate(FinalEpisodeAirDate);
+                    videoInfoManager.setRating(mVideoInfo.mRating);
+                    videoInfoManager.setPosterPath(mPosterPath != null ? mPosterPath : "");
+                }
             }else{
-                prefs.edit().putString("mPosterPath", "").apply();
-                prefs.edit().putString("mTitle", mTitle).apply();
-                prefs.edit().putInt("mVideoDefinition", definition).apply();
-                prefs.edit().putString("mContentRating", "").apply();
-                prefs.edit().putString("mMovieYear", "").apply();
-                prefs.edit().putString("FinalEpisodeAirDate", "").apply();
-                prefs.edit().putString("mRating", "").apply();
+                if (VideoInfoManager.getInstance() != null) {
+                    videoInfoManager = VideoInfoManager.getInstance();
+                    videoInfoManager.setVideoTitle(mTitle);
+                    videoInfoManager.setVideoDefinition(definition);
+                    videoInfoManager.setContentRating("");
+                    videoInfoManager.setMovieYear("");
+                    videoInfoManager.setFinalEpisodeAirDate("");
+                    videoInfoManager.setRating("");
+                    videoInfoManager.setPosterPath("");
+                }
             }
 
             switch (mVideoInfo.videoStereo) {

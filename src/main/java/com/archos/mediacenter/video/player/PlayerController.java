@@ -123,7 +123,7 @@ import org.slf4j.LoggerFactory;
  * </ul>
  */
 
-public class PlayerController implements View.OnTouchListener, OnGenericMotionListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener
+public class PlayerController implements OnTouchListener, OnGenericMotionListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener
 {
     private static final Logger log = LoggerFactory.getLogger(PlayerController.class);
     private static final boolean DBG_ALWAYS_SHOW = false;
@@ -283,6 +283,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private GestureDetector gestureDetector;
     private float currentBrightness;
 
+    private VideoInfoManager videoInfoManager;
+
     public interface Settings {
         void switchSubtitleTrack();
         void switchAudioTrack();
@@ -361,7 +363,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 return false;
             }
         }, getActionBarView());
-        mActionBar.getCustomView().setOnTouchListener(new View.OnTouchListener() {
+        mActionBar.getCustomView().setOnTouchListener(new OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -493,36 +495,37 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             }
         };
 
+        // set player views
+        TextView title = v.findViewById(R.id.title);
+        TextView mVideoDefinition = v.findViewById(R.id.definition);
+        LinearLayout mVideoDefinitionContainer = v.findViewById(R.id.definition_container);
+        TextView ContentRating = v.findViewById(R.id.content_rating);
+        LinearLayout ContentRatingContainer = v.findViewById(R.id.content_rating_container);
+        TextView mReleaseDate = v.findViewById(R.id.release_date);
+        TextView Rating = v.findViewById(R.id.rating);
+        LinearLayout RatingContainer = v.findViewById(R.id.rating_container);
+        ImageView ratingStar = v.findViewById(R.id.rating_star);
         ImageView poster = v.findViewById(R.id.poster);
         boolean mIsLandscapeMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String mPosterPath = prefs.getString("mPosterPath", null);
         boolean mDisplayPosterInPlayer = prefs.getBoolean("display_poster_player", true);
-        if(mIsLandscapeMode && mDisplayPosterInPlayer){
-            if(mPosterPath ==null || mPosterPath.isEmpty()) {
-                poster.setVisibility(View.GONE);
-            }else{
-                Picasso.get().load(new File(mPosterPath)).into(poster);
-            }
-        }else{
-            poster.setVisibility(View.GONE);
-        }
 
-        LinearLayout linearLayout = v.findViewById(R.id.poster_cardview_layout);
-        linearLayout.setOutlineProvider(mViewOutlineProvider);
-        linearLayout.setClipToOutline(true);
+        // get video info
+        videoInfoManager = VideoInfoManager.getInstance();
+        String mTitle = videoInfoManager.getVideoTitle();
+        int mDefinition = videoInfoManager.getVideoDefinition();
+        String mContentRating = videoInfoManager.getContentRating();
+        String mMovieYear = videoInfoManager.getMovieYear();
+        String mEpisodeAirDate = videoInfoManager.getFinalEpisodeAirDate();
+        String mRating = videoInfoManager.getRating();
+        String mPosterPath = videoInfoManager.getPosterPath();
 
-        TextView title = v.findViewById(R.id.title);
-        String mTitle = prefs.getString("mTitle", null);
+        // set video title
         title.setText(mTitle);
 
-        int definition = prefs.getInt("mVideoDefinition", 0);
-
-        TextView mVideoDefinition = v.findViewById(R.id.definition);
-        LinearLayout mVideoDefinitionContainer = v.findViewById(R.id.definition_container);
-
+        // set video definition
         if(mIsLandscapeMode){
-            switch (definition) {
+            switch (mDefinition) {
                 case 1:
                 case 2:
                     mVideoDefinition.setText(mContext.getResources().getString(R.string.resolution_HD));
@@ -540,9 +543,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             }
         }
 
-        String mContentRating = prefs.getString("mContentRating", null);
-        TextView ContentRating = v.findViewById(R.id.content_rating);
-        LinearLayout ContentRatingContainer = v.findViewById(R.id.content_rating_container);
+        // set content rating
         if(mIsLandscapeMode){
             if (mContentRating == null || mContentRating.isEmpty()){
                 ContentRatingContainer.setVisibility(View.GONE);
@@ -553,24 +554,19 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             ContentRatingContainer.setVisibility(View.GONE);
         }
 
-        String mMovieYear = prefs.getString("mMovieYear", null);
-        String FinalEpisodeAirDate = prefs.getString("FinalEpisodeAirDate", null);
-        TextView mReleaseDate = v.findViewById(R.id.release_date);
+
+        // set movie year - episode air date
         if(mIsLandscapeMode){
             if(mMovieYear != null){
                 mReleaseDate.setText(mMovieYear);
-            }else if(FinalEpisodeAirDate != null){
-                mReleaseDate.setText(FinalEpisodeAirDate);
+            }else if(mEpisodeAirDate != null){
+                mReleaseDate.setText(mEpisodeAirDate);
             }else{
                 mReleaseDate.setVisibility(View.GONE);
             }
         }
 
-        String mRating = prefs.getString("mRating", null);
-        TextView Rating = v.findViewById(R.id.rating);
-        LinearLayout RatingContainer = v.findViewById(R.id.rating_container);
-        ImageView ratingStar = v.findViewById(R.id.rating_star);
-
+        // set rating
         if (mIsLandscapeMode) {
             if (mRating != null && !mRating.isEmpty()) {
                 Rating.setText(mRating);
@@ -583,6 +579,19 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             RatingContainer.setVisibility(View.GONE);
         }
 
+        // set poster
+        if(mIsLandscapeMode && mDisplayPosterInPlayer){
+            if(mPosterPath ==null || mPosterPath.isEmpty()) {
+                poster.setVisibility(View.GONE);
+            }else{
+                Picasso.get().load(new File(mPosterPath)).into(poster);
+            }
+        }else{
+            poster.setVisibility(View.GONE);
+        }
+        LinearLayout linearLayout = v.findViewById(R.id.poster_cardview_layout);
+        linearLayout.setOutlineProvider(mViewOutlineProvider);
+        linearLayout.setClipToOutline(true);
 
 
         ImageButton mForwardButton = (ImageButton) v.findViewById(R.id.forward);
