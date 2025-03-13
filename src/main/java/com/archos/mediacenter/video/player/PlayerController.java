@@ -294,7 +294,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         void onHide();
         void onBottomBarHeightChange(int height);
     }
-
     public PlayerController(Context context, Window window, ViewGroup playerView, SurfaceController surfaceController, Settings settings, ActionBar actionBar) {
         mContext = context;
         mSurfaceController = surfaceController;
@@ -570,15 +569,20 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         String mRating = prefs.getString("mRating", null);
         TextView Rating = v.findViewById(R.id.rating);
         LinearLayout RatingContainer = v.findViewById(R.id.rating_container);
-        if(mIsLandscapeMode){
-            if(mRating != null){
+        ImageView ratingStar = v.findViewById(R.id.rating_star);
+
+        if (mIsLandscapeMode) {
+            if (mRating != null && !mRating.isEmpty()) {
                 Rating.setText(mRating);
-            }else{
+                RatingContainer.setVisibility(View.VISIBLE); // Ensure it's visible
+            } else {
                 RatingContainer.setVisibility(View.GONE);
+                ratingStar.setVisibility(View.GONE);
             }
-        }else{
+        } else {
             RatingContainer.setVisibility(View.GONE);
         }
+
 
 
         ImageButton mForwardButton = (ImageButton) v.findViewById(R.id.forward);

@@ -2798,6 +2798,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mPosterPath = null;
             mPoster = false;
 
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            int definition = getNormalizedDefinition();
             if (mVideoInfo.isScraped) {
                 mMovieOrShowName = mVideoInfo.scraperTitle;
                 if (mMovieOrShowName != null) {
@@ -2810,13 +2812,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (!TextUtils.isEmpty(mVideoInfo.scraperCover)) {
                     mPosterPath = mVideoInfo.scraperCover;
                 }
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 if(mPosterPath!=null) {
                     prefs.edit().putString("mPosterPath", mPosterPath).apply();
                 }else{
                     prefs.edit().putString("mPosterPath", "").apply();
                 }
-                int definition = getNormalizedDefinition();
                 String mContentRating = mVideoInfo.mContentRating;
                 String mMovieYear = mVideoInfo.mMovieYear;
                 String mEpisodeAirDate = mVideoInfo.mEpisodeAirDate;
@@ -2834,6 +2834,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 prefs.edit().putString("mMovieYear", mMovieYear).apply();
                 prefs.edit().putString("FinalEpisodeAirDate", FinalEpisodeAirDate).apply();
                 prefs.edit().putString("mRating", FinalRating).apply();
+            }else{
+                prefs.edit().putString("mPosterPath", "").apply();
+                prefs.edit().putString("mTitle", mTitle).apply();
+                prefs.edit().putInt("mVideoDefinition", definition).apply();
+                prefs.edit().putString("mContentRating", "").apply();
+                prefs.edit().putString("mMovieYear", "").apply();
+                prefs.edit().putString("FinalEpisodeAirDate", "").apply();
+                prefs.edit().putString("mRating", "").apply();
             }
 
             switch (mVideoInfo.videoStereo) {
