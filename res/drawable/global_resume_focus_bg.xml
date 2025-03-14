@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Transparent background -->
+    <solid android:color="@android:color/transparent" />
+
+    <!-- Stroke with 1 dp width and black color -->
+    <stroke
+        android:width="2dp"
+        android:color="@color/global_resume_button_focus" />
+
+    <!-- Optional: rounded corners (if needed) -->
+    <corners android:radius="11dp" />
+</shape>

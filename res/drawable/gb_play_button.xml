@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Semi-transparent circular background -->
+    <item>
+        <shape>
+            <solid android:color="#80000000" /> <!-- Semi-transparent black -->
+            <corners android:radius="120dp" /> <!-- Circular shape (50% radius for a perfect circle) -->
+            <size android:width="60dp" android:height="60dp" /> <!-- Adjust size to fit your image -->
+        </shape>
+    </item>
+
+    <!-- Original PNG image on top (circle area will be visible) -->
+    <item android:left="1dp" android:top="1dp" android:right="1dp" android:bottom="1dp">
+        <bitmap
+            android:src="@drawable/gb_play"
+        android:gravity="center" />
+    </item>
+</layer-list>

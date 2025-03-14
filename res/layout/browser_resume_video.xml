@@ -21,26 +21,32 @@ access to last video played. -->
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/global_resume_icon_padding_left"
         android:layout_marginRight="@dimen/global_resume_icon_padding_right"
-        android:background="@drawable/nowplaying_btn_background"
-        app:srcCompat="@drawable/nowplaying_play"
-        />
+        app:srcCompat="@drawable/gb_play_button"
+        app:tint="@color/play_button_tint"
+
+        app:tintMode="src_atop"/>
 
     <TextView
         android:id="@+id/global_resume_text"
-        style="@style/NowPlaying.Video"
         android:layout_toRightOf="@id/global_resume_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="3dip"
-        android:layout_marginRight="3dip"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="6dp"
+        android:fontFamily="@font/lato_bold"
+        android:textColor="@color/white_font"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:background="@drawable/rounded_background"
         />
 
     <ImageView
         android:id="@+id/global_resume_focus"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/now_playing_tile_pressed"
+        android:background="@drawable/global_resume_focus_bg"
         android:visibility="gone"
         />
 
