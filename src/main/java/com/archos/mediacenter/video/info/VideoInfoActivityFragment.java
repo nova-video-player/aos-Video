@@ -103,7 +103,6 @@ import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.FileManagerService;
 import com.archos.mediacenter.video.browser.adapters.CastAdapter;
 import com.archos.mediacenter.video.browser.adapters.CastData;
-import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
 import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
@@ -2944,46 +2943,66 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(baseStudioPath, "").replaceAll(extension, "") + ", ";
                         studio = names.substring(0, names.length() - 2);
                     }
-                    // set episode runtime of the entire series(not episode)
-                    List<SeriesTags> tvShowTags = new ArrayList<>();
-                    SeriesTags seriesTags;
+
+                    // setting multiple series tags using JSON formatting (tagline, type, status, vote_count, popularity, runtime, original language)
+                    String tagline = "";
+                    String type = "";
+                    String status = "";
+                    String votes = "";
+                    String popularity = "";
+                    String runtime = "";
+                    String originalLanguage = "";
                     for (int i = 0; i < showTags.getTaglines().size(); i++) {
-                        String TvTags = showTags.getTaglines().get(i);
-                        List <String>  TvTagsFormatted;
-                        TvTagsFormatted = Arrays.asList(TvTags.split("\\s*=&%#\\s*"));
-                        seriesTags = new SeriesTags();
-                        seriesTags.setTagline(TvTagsFormatted.get(0));
-                        seriesTags.setType(TvTagsFormatted.get(1));
-                        seriesTags.setStatus(TvTagsFormatted.get(2));
-                        seriesTags.setVotes(TvTagsFormatted.get(3));
-                        seriesTags.setPopularity(TvTagsFormatted.get(4));
-                        seriesTags.setRuntime(TvTagsFormatted.get(5));
-                        seriesTags.setOriginallanguage(TvTagsFormatted.get(6));
-                        tvShowTags.add(seriesTags);
+                        String showTagsJson = showTags.getTaglines().get(i); // Get JSON string
+                        try {
+                            JSONObject jsonObject = new JSONObject(showTagsJson); // Parse JSON
+                            // Safely extract values using optString(), optInt(), etc.
+                            tagline = jsonObject.optString("tagline", "");
+                            type = jsonObject.optString("type", ""); // not used here
+                            status = jsonObject.optString("status", ""); // not used here
+                            votes = jsonObject.optString("vote_count", "");
+                            popularity = jsonObject.optString("popularity", "");
+                            runtime = jsonObject.optString("runtime", "");
+                            originalLanguage = jsonObject.optString("original_language", "");
+                            // Now you have each show's details properly retrieved!
+                        } catch (JSONException e) {
+                            e.printStackTrace();  // Log error to prevent app crashes
+                        }
                     }
-                    String runtimeReady = tvShowTags.get(0).getRuntime() + " " + getResources().getString(R.string.minutes);
-                    mRuntime.setText(runtimeReady);
-                    // set episode vote count
-                    String voteCountReady = tags.getTaglinesFormatted() + " " + getResources().getString(R.string.votes);
-                    mVoteCount.setText(voteCountReady);
-                    // set series premiered year
-                    mYear.setText(Integer.toString(showTags.getPremieredYear()));
                     // set series tagline
-                    if (!tvShowTags.get(0).getTagline().isEmpty()) {
-                        mTagline.setText(tvShowTags.get(0).getTagline());
+                    if (!tagline.isEmpty()) {
+                        mTagline.setText(tagline);
                     } else {
                         mTagline.setVisibility(View.GONE);
                     }
+                    // set episode vote count
+                    String voteCountReady = votes + " " + getResources().getString(R.string.votes);
+                    mVoteCount.setText(voteCountReady);
+                    //set series Popularity
+                    if(popularity.isEmpty()){
+                        mSeriesPopularityContainer.setVisibility(View.GONE);
+                    }else{
+                        mSeriesPopularity.setText(popularity);
+                    }
+                    // set runtime of the entire series(not episode)
+                    String runtimeReady = runtime + " " + getResources().getString(R.string.minutes);
+                    mRuntime.setText(runtimeReady);
                     // set Original language
-                    Locale loc = new Locale(tvShowTags.get(0).getOriginallanguage());
+                    Locale loc = new Locale(originalLanguage);
                     String name = loc.getDisplayLanguage(loc);
-                    if (tvShowTags.get(0).getOriginallanguage().isEmpty()) {
+                    if (originalLanguage.isEmpty()) {
                         mOriginalLanguage.setVisibility(View.GONE);
                         mOriginalLanguageContainer.setVisibility(View.GONE);
                     } else {
                         setTextOrHideContainer(mOriginalLanguage, name, mOriginalLanguageContainer);
                     }
+
+                    // set episode air date header
                     mDate.setText(getResources().getString(R.string.airdate));
+
+                    // set series premiered year
+                    mYear.setText(Integer.toString(showTags.getPremieredYear()));
+
                     // set series created by
                     if (showTags.getDirectorsFormatted() == null || showTags.getDirectorsFormatted().isEmpty()) {
                         mCreatedBy.setVisibility(View.GONE);
@@ -3227,12 +3246,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     });
                     //hide movie Info Container
                     mMovieInfoContainer.setVisibility(View.GONE);
-                    //set series Popularity
-                    if(tvShowTags.get(0).getPopularity().isEmpty()){
-                        mSeriesPopularityContainer.setVisibility(View.GONE);
-                    }else{
-                        mSeriesPopularity.setText(tvShowTags.get(0).getPopularity());
-                    }
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
