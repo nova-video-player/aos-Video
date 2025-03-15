@@ -169,6 +169,8 @@ import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.
 import static com.archos.mediacenter.video.info.VideoInfoActivity.EXTRA_CURRENT_POSITION;
 import static com.archos.mediacenter.video.utils.VideoUtils.getFileUriStringFromContentUri;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -3261,18 +3263,24 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     String releaseDate = "";
                     String originalLanguage = "";
                     for (int i = 0; i < tags.getTaglines().size(); i++) {
-                        String MovieTags = tags.getTaglines().get(i);
-                        List <String>  MovieTagsFormatted;
-                        MovieTagsFormatted = Arrays.asList(MovieTags.split("\\s*=&%#\\s*"));
-                        tagline = MovieTagsFormatted.get(0);
-                        budget = MovieTagsFormatted.get(1);
-                        revenue = MovieTagsFormatted.get(2);
-                        runtime = MovieTagsFormatted.get(3);
-                        votes = MovieTagsFormatted.get(4);
-                        popularity = MovieTagsFormatted.get(5);
-                        releaseDate = MovieTagsFormatted.get(6);
-                        originalLanguage = MovieTagsFormatted.get(7);
+                        String movieTagsJson = tags.getTaglines().get(i); // Get JSON string
+                        try {
+                            JSONObject jsonObject = new JSONObject(movieTagsJson); // Parse JSON
+                            // Safely extract values using optString(), optInt(), etc.
+                            tagline = jsonObject.optString("tagline", "");
+                            budget = jsonObject.optString("budget", "");
+                            revenue = jsonObject.optString("revenue", "");
+                            runtime = jsonObject.optString("runtime", "");
+                            votes = jsonObject.optString("vote_count", "");
+                            popularity = jsonObject.optString("popularity", "");
+                            releaseDate = jsonObject.optString("release_date", "");
+                            originalLanguage = jsonObject.optString("original_language", "");
+                            // Now you have each movie's details properly retrieved!
+                        } catch (JSONException e) {
+                            e.printStackTrace();  // Log error to prevent app crashes
+                        }
                     }
+
                     date = releaseDate;
                     String voteCountReady = votes + " " + getResources().getString(R.string.votes);
                     mVoteCount.setText(voteCountReady);
