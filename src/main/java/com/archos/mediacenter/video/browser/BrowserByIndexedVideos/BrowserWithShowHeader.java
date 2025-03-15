@@ -78,6 +78,8 @@ import com.archos.mediascraper.ScraperImage;
 import com.archos.mediascraper.ShowTags;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -709,66 +711,89 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 actors.setVisibility(View.GONE);
             }
 
-            List<SeriesTags> tvShowTags = new ArrayList<>();
-            SeriesTags seriesTags;
+            // setting multiple series tags using JSON formatting (tagline, type, status, vote_count, popularity, runtime, original language)
+            String tagline = "";
+            String type = "";
+            String status = "";
+            String votes = "";
+            String popularity = "";
+            String runtime = "";
+            String originalLanguage = "";
             for (int i = 0; i < tags.getTaglines().size(); i++) {
-                String TvTags = tags.getTaglines().get(i);
-                List <String>  TvTagsFormatted;
-                TvTagsFormatted = Arrays.asList(TvTags.split("\\s*=&%#\\s*"));
-                seriesTags = new SeriesTags();
-                seriesTags.setTagline(TvTagsFormatted.get(0));
-                seriesTags.setType(TvTagsFormatted.get(1));
-                seriesTags.setStatus(TvTagsFormatted.get(2));
-                seriesTags.setVotes(TvTagsFormatted.get(3));
-                seriesTags.setPopularity(TvTagsFormatted.get(4));
-                seriesTags.setRuntime(TvTagsFormatted.get(5));
-                seriesTags.setOriginallanguage(TvTagsFormatted.get(6));
-                tvShowTags.add(seriesTags);
+                String showTagsJson = tags.getTaglines().get(i); // Get JSON string
+                try {
+                    JSONObject jsonObject = new JSONObject(showTagsJson); // Parse JSON
+                    // Safely extract values using optString(), optInt(), etc.
+                    tagline = jsonObject.optString("tagline", "");
+                    type = jsonObject.optString("type", "");
+                    status = jsonObject.optString("status", "");
+                    votes = jsonObject.optString("vote_count", "");
+                    popularity = jsonObject.optString("popularity", "");
+                    runtime = jsonObject.optString("runtime", "");
+                    originalLanguage = jsonObject.optString("original_language", "");
+                    // Now you have each show's details properly retrieved!
+                } catch (JSONException e) {
+                    e.printStackTrace();  // Log error to prevent app crashes
+                }
             }
-            TextView tagline = mHeaderView.findViewById(R.id.series_tagline);
-            tagline.setText(tvShowTags.get(0).getTagline());
-            if (tvShowTags.get(0).getTagline().isEmpty()){
-                tagline.setVisibility(View.GONE);
+            // set tagline
+            TextView mTagline = mHeaderView.findViewById(R.id.series_tagline);
+            mTagline.setText(tagline);
+            if (tagline.isEmpty()){
+                mTagline.setVisibility(View.GONE);
             }
 
-            TextView votes = mHeaderView.findViewById(R.id.vote_count);
-            String voteCountReady = tvShowTags.get(0).getVotes() + " " + getResources().getString(R.string.votes);
-            if (tvShowTags.get(0).getVotes().isEmpty()){
-                votes.setVisibility(View.GONE);
+            // set show type
+            TextView mShowType = mHeaderView.findViewById(R.id.showtype);
+            mShowType.setText(type);
+            if (type.isEmpty()){
+                mShowType.setVisibility(View.GONE);
+            }
+
+            // set show status
+            TextView mStatus = mHeaderView.findViewById(R.id.series_status);
+            mStatus.setText(status);
+            if (status.isEmpty()){
+                mStatus.setVisibility(View.GONE);
+            }
+
+            // set show vote count
+            TextView mVotes = mHeaderView.findViewById(R.id.vote_count);
+            String voteCountReady = votes + " " + getResources().getString(R.string.votes);
+            if (votes.isEmpty()){
+                mVotes.setVisibility(View.GONE);
             }else{
-                votes.setText(voteCountReady);
+                mVotes.setText(voteCountReady);
             }
 
-            TextView status = mHeaderView.findViewById(R.id.series_status);
-            status.setText(tvShowTags.get(0).getStatus());
-            if (tvShowTags.get(0).getStatus().isEmpty()){
-                status.setVisibility(View.GONE);
+            // set show popularity
+            TextView mPopularity = mHeaderView.findViewById(R.id.scrap_popularity);
+            if (popularity.isEmpty()){
+                mPopularity.setVisibility(View.GONE);
+            }else{
+                mPopularity.setText(popularity);
             }
 
+            // set show episode runtime
             TextView episodeRuntime = mHeaderView.findViewById(R.id.episode_runtime);
-            String runtimeReady = tvShowTags.get(0).getRuntime() + " " + getResources().getString(R.string.minutes);
+            String runtimeReady = runtime + " " + getResources().getString(R.string.minutes);
             episodeRuntime.setText(runtimeReady);
-            if (tvShowTags.get(0).getRuntime().isEmpty()){
+            if (runtime.isEmpty()){
                 episodeRuntime.setVisibility(View.GONE);
             }
 
-            TextView showType = mHeaderView.findViewById(R.id.showtype);
-            showType.setText(tvShowTags.get(0).getType());
-            if (tvShowTags.get(0).getType().isEmpty()){
-                showType.setVisibility(View.GONE);
-            }
-
-            // set Original language
-            Locale loc = new Locale(tvShowTags.get(0).getOriginallanguage());
+            // set show original language
+            Locale loc = new Locale(originalLanguage);
             String name = loc.getDisplayLanguage(loc);
             TextView mOriginalLanguage = mHeaderView.findViewById(R.id.scrap_original_language);
             LinearLayout mOriginalLanguageContainer = mHeaderView.findViewById(R.id.scrap_original_language_container);
-            if (tvShowTags.get(0).getOriginallanguage().isEmpty()) {
+            if (originalLanguage.isEmpty()) {
                 mOriginalLanguage.setVisibility(View.GONE);
                 mOriginalLanguageContainer.setVisibility(View.GONE);
             } else {
                 mOriginalLanguage.setText(name);
             }
+
 
             // set production countries
             TextView mCountries = mHeaderView.findViewById(R.id.scrap_production_countries);
@@ -790,12 +815,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 mSpokenLanguages.setText(showTags.getSpokenlanguagesFormatted());
             }
 
-            TextView popularity = mHeaderView.findViewById(R.id.scrap_popularity);
-            if (tvShowTags.get(0).getPopularity().isEmpty()){
-                popularity.setVisibility(View.GONE);
-            }else{
-                popularity.setText(tvShowTags.get(0).getPopularity());
-            }
 
             ImageView posterView = mHeaderView.findViewById(R.id.thumbnail);
             posterView.setImageBitmap(result.bitmap);
