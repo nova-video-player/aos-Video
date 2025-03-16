@@ -477,18 +477,30 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             TextView seasonPlotHeader = mHeaderView.findViewById(R.id.season_plot_header);
             TextView seasonAirDate = mHeaderView.findViewById(R.id.season_airdate);
             LinearLayout seasonAirDateContainer = mHeaderView.findViewById(R.id.season_airdate_container);
-            List <String>  seasonPlots = showTags.getSeasonPlots();
+            List<String> seasonTagsList = showTags.getSeasonPlots();
             List <SeasonsData>  finalSeasonPlots = new ArrayList<>();
-            for (int i = 0; i < seasonPlots.size(); i++) {
-                String seasonPlot = seasonPlots.get(i);
-                List <String>  seasonPlotsFormatted;
-                seasonPlotsFormatted = Arrays.asList(seasonPlot.split("\\s*=&%#\\s*"));
-                seasonsData = new SeasonsData();
-                seasonsData.setSeasonNumber(seasonPlotsFormatted.get(0));
-                seasonsData.setSeasonPlot(seasonPlotsFormatted.get(1));
-                seasonsData.setSeasonName(seasonPlotsFormatted.get(2));
-                seasonsData.setSeasonAirdate(seasonPlotsFormatted.get(3).replaceAll("&&&&####", ""));
-                finalSeasonPlots.add(seasonsData);
+            if (seasonTagsList != null && !seasonTagsList.isEmpty()) {
+                for (int i = 0; i < seasonTagsList.size(); i++) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(seasonTagsList.get(i)); // Convert back to JSON
+
+                        String airdate = jsonObject.optString("airdate", "");
+                        String overview = jsonObject.optString("overview", "");
+                        String seasonNumber = jsonObject.optString("seasonNumber", "");
+                        String name = jsonObject.optString("name", "");
+
+                        seasonsData = new SeasonsData();
+                        seasonsData.setSeasonAirdate(airdate);
+                        seasonsData.setSeasonPlot(overview);
+                        seasonsData.setSeasonNumber(seasonNumber);
+                        seasonsData.setSeasonName(name);
+                        finalSeasonPlots.add(seasonsData);
+
+                        // Now you have the extracted values
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
             Bundle args = getArguments();
             int currentSeason = args.getInt(VideoStore.Video.VideoColumns.SCRAPER_E_SEASON, 0);

@@ -81,6 +81,10 @@ public class Season extends Base implements Serializable {
         return TagsFactory.buildShowTags(context, mShowId);
     }
     public String getSeasonTags() {
-        return mSeasonTags;
+        if (mSeasonTags != null && !mSeasonTags.isEmpty()) {
+            // Add square brackets around the string
+            return "[" + mSeasonTags + "]";
+        }
+        return "[]"; // Return empty array if no tags are available
     }
 }

@@ -34,6 +34,10 @@ import com.google.android.material.shape.CornerFamily;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -68,20 +72,28 @@ public class SeasonListPresenter extends SeasonPresenter{
         super.bindView(view,object, result, positionInAdapter);
         ViewHolder holder = (ViewHolder) view.getTag();
         Season season = (Season) object;
-        List<String> seasonTags = Arrays.asList(season.getSeasonTags().split("\\s*&&&&####,\\s*"));
+        List<SeasonsBrowserData> finalSeasonTags = new ArrayList<>();
+        // Ensure `season.getSeasonTags()` contains multiple JSON objects in a JSON array format
+        try {
+            JSONArray jsonArray = new JSONArray(season.getSeasonTags()); // Parse the full JSON array
 
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i); // Get each season object
 
-        List <SeasonsBrowserData>  finalSeasonTags = new ArrayList<>();
-        for (int i = 0; i < seasonTags.size(); i++) {
-            String seasonPlot = seasonTags.get(i);
-            List <String>  seasonPlotsFormatted;
-            seasonPlotsFormatted = Arrays.asList(seasonPlot.split("\\s*=&%#\\s*"));
-            SeasonsBrowserData seasonsBrowserData = new SeasonsBrowserData();
-            seasonsBrowserData.setSeasonNumber(seasonPlotsFormatted.get(0));
-            seasonsBrowserData.setSeasonPlot(seasonPlotsFormatted.get(1));
-            seasonsBrowserData.setSeasonName(seasonPlotsFormatted.get(2));
-            seasonsBrowserData.setSeasonAirdate(seasonPlotsFormatted.get(3).replaceAll("&&&&####", ""));
-            finalSeasonTags.add(seasonsBrowserData);
+                String airdate = jsonObject.optString("airdate", "");
+                String overview = jsonObject.optString("overview", "");
+                String seasonNumber = jsonObject.optString("seasonNumber", "");
+                String name = jsonObject.optString("name", "");
+
+                SeasonsBrowserData seasonsBrowserData = new SeasonsBrowserData();
+                seasonsBrowserData.setSeasonNumber(seasonNumber);
+                seasonsBrowserData.setSeasonName(name);
+                seasonsBrowserData.setSeasonPlot(overview);
+                seasonsBrowserData.setSeasonAirdate(airdate);
+                finalSeasonTags.add(seasonsBrowserData); // Add each season to the list
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
         String seasonText = mContext.getResources().getString(R.string.episode_season);
