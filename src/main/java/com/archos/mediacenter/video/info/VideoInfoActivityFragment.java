@@ -3024,18 +3024,21 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             }
                         }
                     });
-                    // setting Actors RecyclerView
+                    // set series actors
                     List<CastData> seriesActors = new ArrayList<>();
                     CastData castData;
                     for (int i = 0; i < showTags.getWriters().size(); i++) {
-                        String actor = showTags.getWriters().get(i);
-                        List <String>  actorsFormatted;
-                        actorsFormatted = Arrays.asList(actor.split("\\s*=&%#\\s*"));
-                        castData = new CastData();
-                        castData.setName(actorsFormatted.get(0));
-                        castData.setCharacter(actorsFormatted.get(1));
-                        castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + actorsFormatted.get(2));
-                        seriesActors.add(castData);
+                        String actorTags = showTags.getWriters().get(i);
+                        try {
+                            JSONObject jsonObject = new JSONObject(actorTags);
+                            castData = new CastData();
+                            castData.setName(jsonObject.optString("name", ""));
+                            castData.setCharacter(jsonObject.optString("character", ""));
+                            castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + jsonObject.optString("profile_path", ""));
+                            seriesActors.add(castData);
+                        } catch (JSONException e) {
+                            e.printStackTrace();  // Log error to prevent app crashes
+                        }
                     }
                     LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
                     actors.setLayoutManager(actorsLayoutManager);
@@ -3329,19 +3332,20 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     // set year
                     mYear.setText(((MovieTags) tags).getYear()+"");
-                    //set cast
+                    // set movie actors
                     List<CastData> movieActors = new ArrayList<>();
                     CastData castData;
-                    for (Map.Entry<String, String> entry : tags.getActors().entrySet()) {
-                        String values = entry.getValue();
-                        List <String>  valuesFormatted;
-                        valuesFormatted = Arrays.asList(values.split("\\s*=&%#\\s*"));
-                        castData = new CastData();
-
-                        castData.setName(entry.getKey());
-                        castData.setCharacter(valuesFormatted.get(0));
-                        castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + valuesFormatted.get(1));
-                        movieActors.add(castData);
+                    for (String movieActorsJson : tags.getActors().keySet()) {  // Iterate over keys
+                        try {
+                            JSONObject jsonObject = new JSONObject(movieActorsJson);
+                            castData = new CastData();
+                            castData.setName(jsonObject.optString("name", ""));
+                            castData.setCharacter(jsonObject.optString("character", ""));
+                            castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + jsonObject.optString("profile_path", ""));
+                            movieActors.add(castData);
+                        } catch (JSONException e) {
+                            Log.e("Actors", "JSON Parsing error: " + e.getMessage());
+                        }
                     }
                     LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
                     actors.setLayoutManager(actorsLayoutManager);

@@ -692,14 +692,17 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             List<CastData> seriesActors = new ArrayList<>();
             CastData castData;
             for (int i = 0; i < tags.getWriters().size(); i++) {
-                String actor = tags.getWriters().get(i);
-                List <String>  actorsFormatted;
-                actorsFormatted = Arrays.asList(actor.split("\\s*=&%#\\s*"));
-                castData = new CastData();
-                castData.setName(actorsFormatted.get(0));
-                castData.setCharacter(actorsFormatted.get(1));
-                castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + actorsFormatted.get(2));
-                seriesActors.add(castData);
+                String seriesActorsJson = tags.getWriters().get(i);
+                try {
+                    JSONObject jsonObject = new JSONObject(seriesActorsJson);
+                    castData = new CastData();
+                    castData.setName(jsonObject.optString("name", ""));
+                    castData.setCharacter(jsonObject.optString("character", ""));
+                    castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + jsonObject.optString("profile_path", ""));
+                    seriesActors.add(castData);
+                } catch (JSONException e) {
+                    e.printStackTrace();  // Log error to prevent app crashes
+                }
             }
             LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             actors.setLayoutManager(actorsLayoutManager);
