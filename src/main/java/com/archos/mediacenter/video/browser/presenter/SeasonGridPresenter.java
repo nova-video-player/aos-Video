@@ -67,8 +67,6 @@ public class SeasonGridPresenter extends SeasonPresenter{
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i); // Get each season object
 
-                String airdate = jsonObject.optString("airdate", "");
-                String overview = jsonObject.optString("overview", "");
                 String seasonNumber = jsonObject.optString("seasonNumber", "");
                 String name = jsonObject.optString("name", "");
 
