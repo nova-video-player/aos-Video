@@ -10,6 +10,6 @@
     android:paddingLeft="16dip"
     android:paddingRight="16dip"
     android:background="@drawable/category_item_background_normal"
-
+    android:textStyle="bold"
     android:maxLines="2"
     />

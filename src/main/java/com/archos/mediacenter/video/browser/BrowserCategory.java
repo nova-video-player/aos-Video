@@ -20,8 +20,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceManager;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -625,9 +628,19 @@ abstract public class BrowserCategory extends ListFragment {
                 // Set the category name
                 ItemData item = (ItemData) mCategoryList.get(position);
                 tv.setText(item.text);
-                if(item.icon!=-1)
+                if(item.icon != -1) {
                     tv.setCompoundDrawablesWithIntrinsicBounds(item.icon, 0 , 0 , 0);
-                else tv.setCompoundDrawablesWithIntrinsicBounds(0, 0 , 0 , 0);
+                } else {
+                    tv.setCompoundDrawablesWithIntrinsicBounds(0, 0 , 0 , 0);
+                }
+
+                // Apply custom font
+                Typeface customFont = ResourcesCompat.getFont(inflater.getContext(), R.font.gotham_book);
+                tv.setTypeface(customFont);
+                //tv.setTypeface(customFont, Typeface.BOLD);
+
+                // Set larger font size
+                tv.setTextSize(18); // Change the value to your preferred size
             }
             else {
                 tv.setText((CharSequence) mCategoryList.get(position));
@@ -635,6 +648,7 @@ abstract public class BrowserCategory extends ListFragment {
 
             return convertView;
         }
+
 
         /*private int getSelectedItemIndex() {
             // Look for the index of the item whose id is equal to
