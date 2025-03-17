@@ -2803,31 +2803,32 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                 }
                 // Movie Cast
-                String movieCastFormatted = "";
                 StringBuilder sb = new StringBuilder();
                 boolean firstTime = true;
                 for (Map.Entry<String, String> item : tags.getActors().entrySet()) {
-                    if (firstTime) {
-                        firstTime = false;
-                    } else {
-                        sb.append(", ");
-                    }
-
-                    String values = item.getValue();
-                    List <String>  valuesFormatted;
-                    valuesFormatted = Arrays.asList(values.split("\\s*=&%#\\s*"));
-                    String actor = item.getKey();
-                    String role = valuesFormatted.get(0);
-                    sb.append(actor);
-                    if (role != null && !role.isEmpty()) {
-                        sb.append(" (");
-                        sb.append(role);
-                        sb.append(')');
+                    try {
+                        // Convert the JSON key to an object
+                        JSONObject jsonObject = new JSONObject(item.getKey());
+                        String actorName = jsonObject.optString("name", "");
+                        String role = jsonObject.optString("character", "");
+                        if (!actorName.isEmpty()) {
+                            if (firstTime) {
+                                firstTime = false;
+                            } else {
+                                sb.append(", ");
+                            }
+                            sb.append(actorName);
+                            if (!role.isEmpty()) {
+                                sb.append(" (").append(role).append(")");
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();  // Log error but prevent app crash
                     }
                 }
-                movieCastFormatted = sb.toString();
-                String cast = movieCastFormatted;
-                mCastTextView.setText(cast);
+                String movieCastFormatted = sb.toString();
+                mCastTextView.setText(movieCastFormatted);
+
                 String studio = null;
 
                 // click on ClearLogo to choose another
