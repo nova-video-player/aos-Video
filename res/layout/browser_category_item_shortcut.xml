@@ -12,4 +12,5 @@
     android:background="@drawable/category_item_background_normal"
     android:textStyle="bold"
     android:maxLines="2"
+    android:textColor="@color/selector_text_color"
     />
