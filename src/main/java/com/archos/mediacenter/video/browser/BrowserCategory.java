@@ -635,8 +635,8 @@ abstract public class BrowserCategory extends ListFragment {
                 }
 
                 // Apply custom font
-                Typeface customFont = ResourcesCompat.getFont(inflater.getContext(), R.font.gotham_book);
-                tv.setTypeface(customFont);
+                //Typeface customFont = ResourcesCompat.getFont(inflater.getContext(), R.font.gotham_book);
+                //tv.setTypeface(customFont);
                 //tv.setTypeface(customFont, Typeface.BOLD);
 
                 // Set larger font size
