@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/SecondaryLine"
     android:id="@+id/category_name"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -11,8 +10,8 @@
     android:focusable="false"
     android:paddingLeft="8dip"
     android:paddingRight="8dip"
-    android:background="@drawable/category_title_background"
+    android:background="@drawable/browser_category_item_separator_bg"
 
-    android:textColor="@color/lightblue500"
+    android:textColor="@color/yellow_category_list_selector_light"
     android:singleLine="true"
      />
