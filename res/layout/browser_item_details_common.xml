@@ -13,6 +13,9 @@
     <TextView
         android:id="@+id/name"
         style="@style/BrowserText.Name.Video"
+        android:fontFamily="@font/gotham_book"
+        android:textStyle="bold"
+        android:textSize="20sp"
         android:layout_width="fill_parent"
         android:layout_toRightOf="@id/left_area" />
 
@@ -23,6 +26,8 @@
     <TextView
         android:id="@+id/release_date"
         style="@style/BrowserText.Details"
+        android:fontFamily="@font/gotham_book"
+        android:textColor="@color/header_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dip"
