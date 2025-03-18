@@ -24,6 +24,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceManager;
 import androidx.fragment.app.Fragment;
@@ -55,6 +56,7 @@ import com.archos.environment.NetworkState;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 abstract public class BrowserCategory extends ListFragment {
 
@@ -612,8 +614,10 @@ abstract public class BrowserCategory extends ListFragment {
             return getItemViewType(position) == ITEM_VIEW_TYPE_CATEGORY;
         }
 
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final int type = getItemViewType(position);
+
             if (convertView == null) {
                 if (type == ITEM_VIEW_TYPE_CATEGORY) {
                     convertView = inflater.inflate(R.layout.browser_category_item_shortcut, parent, false);
@@ -623,31 +627,43 @@ abstract public class BrowserCategory extends ListFragment {
             }
 
             final TextView tv = (TextView) convertView;
+
             if (type == ITEM_VIEW_TYPE_CATEGORY) {
                 convertView.setBackgroundResource(R.drawable.category_item_background_normal);
                 // Set the category name
                 ItemData item = (ItemData) mCategoryList.get(position);
                 tv.setText(item.text);
-                if(item.icon != -1) {
-                    tv.setCompoundDrawablesWithIntrinsicBounds(item.icon, 0 , 0 , 0);
+
+                if (item.icon != -1) {
+                    tv.setCompoundDrawablesWithIntrinsicBounds(item.icon, 0, 0, 0);
                 } else {
-                    tv.setCompoundDrawablesWithIntrinsicBounds(0, 0 , 0 , 0);
+                    tv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 }
 
-                // Apply custom font
-                //Typeface customFont = ResourcesCompat.getFont(inflater.getContext(), R.font.gotham_book);
-                //tv.setTypeface(customFont);
-                //tv.setTypeface(customFont, Typeface.BOLD);
-
-                // Set larger font size
                 tv.setTextSize(18); // Change the value to your preferred size
             }
-            else {
+            else { // This is ITEM_VIEW_TYPE_SEPARATOR
                 tv.setText((CharSequence) mCategoryList.get(position));
+
+                // Now it's safe to access category_name
+                TextView textView = convertView.findViewById(R.id.category_name);
+                if (textView != null) {
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    boolean darkModeActive = prefs.getBoolean("dark_mode", false);
+
+                    if (darkModeActive) {
+                        textView.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_category_item_separator_bg_dark));
+                    } else {
+                        textView.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_category_item_separator_bg));
+                    }
+                } else {
+                    Log.e("CategoryAdapter", "TextView category_name is NULL! Check layout browser_category_item_separator.");
+                }
             }
 
             return convertView;
         }
+
 
 
         /*private int getSelectedItemIndex() {

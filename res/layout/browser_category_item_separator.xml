@@ -10,7 +10,6 @@
     android:focusable="false"
     android:paddingLeft="8dip"
     android:paddingRight="8dip"
-    android:background="@drawable/browser_category_item_separator_bg"
 
     android:textColor="@color/yellow_category_list_selector_light"
     android:singleLine="true"
