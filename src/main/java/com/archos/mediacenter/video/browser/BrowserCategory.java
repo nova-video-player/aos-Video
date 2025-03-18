@@ -326,10 +326,6 @@ abstract public class BrowserCategory extends ListFragment {
             } else {
 
                 updateListSelection(v, item);
-
-                // Refresh the list to apply the new highlight
-                mCategoryAdapter.notifyDataSetChanged();
-
                 setFragment(item.path);
                 if(item.id!=ITEM_ID_PROVIDER) { //don't save when provider to avoid restarting with android browser view
                     PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putInt(PREFERENCE_LAST_FRAGMENT, mSelectedItemId).apply();
@@ -636,13 +632,6 @@ abstract public class BrowserCategory extends ListFragment {
                     tv.setCompoundDrawablesWithIntrinsicBounds(item.icon, 0 , 0 , 0);
                 } else {
                     tv.setCompoundDrawablesWithIntrinsicBounds(0, 0 , 0 , 0);
-                }
-
-                // Set highlight color when selected
-                if (item.id == mSelectedItemId) {
-                    convertView.setBackgroundColor(inflater.getContext().getResources().getColor(R.color.error_text_over_blue_background));
-                } else {
-                    //convertView.setBackgroundColor(inflater.getContext().getResources().getColor(R.color.dragndrop_background));
                 }
 
                 // Apply custom font
