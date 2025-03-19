@@ -109,7 +109,7 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         prefs.edit().putBoolean("BrowserListOfEpisodes", BrowserListOfEpisodes).apply();
 
-        if(mCurrentVideo instanceof Episode) {
+        if(mCurrentVideo instanceof Episode && BrowserListOfEpisodes) {
             mViewPager.setVisibility(View.GONE);
             // Initialize GestureDetector and pass the listener
             gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
