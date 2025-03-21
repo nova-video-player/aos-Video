@@ -104,6 +104,9 @@
     <TextView
         android:id="@+id/name"
         style="@style/BrowserText.Name"
+        android:fontFamily="@font/gotham_book"
+        android:textStyle="bold"
+        android:textSize="20sp"
         android:paddingTop="8dip"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
@@ -114,8 +117,11 @@
 
     <TextView
         android:id="@+id/info"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="7dp"
         style="@style/BrowserText.Info.Video"
+        android:fontFamily="@font/gotham_book"
+        android:textColor="@color/header_font"
+        android:textSize="16sp"
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@id/name"
         android:layout_marginRight="3dp"
