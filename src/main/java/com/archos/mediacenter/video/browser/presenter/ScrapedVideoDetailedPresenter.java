@@ -120,6 +120,7 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             detailedLineThree = episode.getDescriptionBody();
             holder.detailLineOne.setText(detailedLineOne);
             holder.detailLineOne.setVisibility(View.GONE);
+            holder.detailLineThree.setVisibility(View.VISIBLE);
             holder.detailLineThree.setText(detailedLineThree);
             holder.detailLineTwo.setText(detailedLineTwo);
             holder.detailLineTwo.setVisibility(View.GONE);
