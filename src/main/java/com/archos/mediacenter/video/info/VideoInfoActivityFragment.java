@@ -1011,8 +1011,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
 
         // Update UI
+        updateEpisodeUI(episodeModels.get(mCurrentPosition));
         updateEpisodeUI(direction);
         updateFragment(episodeModels.get(mCurrentPosition));
+        updateUI();
         Log.d("GESTURE", "Switched to episode at index: " + mCurrentPosition);
     }
     private void updateEpisodeUI(int direction) {
@@ -1057,48 +1059,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         // Slide-out animations
         slideOut1.addEndListener((animation, canceled, value, velocity) -> {
-            // Update UI content after old episode slides out
-            mPlotTextView.post(() -> {
-                int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
-                mPlotTextView.measure(
-                        View.MeasureSpec.makeMeasureSpec(expectedWidthOfTextView, View.MeasureSpec.AT_MOST),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                );
-
-                int lineHeight = mPlotTextView.getLineHeight();
-                int measuredLineCount = mPlotTextView.getLineCount();
-                int measuredTargetHeight = mPlotTextView.getMeasuredHeight();
-
-                if (measuredLineCount <= 4) {
-                    // If 4 or fewer lines, allow normal wrapping without extra space
-                    mPlotTextView.setMaxLines(Integer.MAX_VALUE);
-                    mPlotTextView.setEllipsize(null);  // Remove ellipsize
-                    mPlotTextView.setOnClickListener(null);  // Disable expansion
-
-                    // Directly set the height to fit content
-                    ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
-                    layoutParams.height = measuredTargetHeight;  // Use the exact height of content
-                    mPlotTextView.setLayoutParams(layoutParams);
-                } else {
-                    // If more than 4 lines, collapse with ellipsize and allow expansion
-                    mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
-                    mPlotTextView.setMaxLines(4);
-                    mPlotTextView.setTag(true);  // Collapsed by default
-
-                    mPlotTextView.setOnClickListener(v -> {
-                        if ((Boolean) mPlotTextView.getTag()) {
-                            // Expand
-                            expandTextView(measuredTargetHeight, lineHeight);
-                            mPlotTextView.setTag(false);
-                        } else {
-                            // Collapse
-                            collapseTextView(4, lineHeight);  // Collapse to 4 lines, fixed height
-                            mPlotTextView.setTag(true);
-                        }
-                    });
-                }
-            });
-
             // Move views to starting position for slide-in effect
             infoPart1.setTranslationX(slideInFrom);
             infoPart2.setTranslationX(slideInFrom);
