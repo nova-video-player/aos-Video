@@ -758,8 +758,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     while (cursor.moveToNext()) {
                         EpisodeModel episodeModel = new EpisodeModel();
                         String Picture = cursor.getString(mPictureUri);
-                        File PictureFile = new File(Picture);
-                        Uri PictureUri = Uri.fromFile(PictureFile);
+                        File PictureFile;
+                        Uri PictureUri = null;
+                        if (Picture != null) {
+                             PictureFile = new File(Picture);
+                             PictureUri = Uri.fromFile(PictureFile);
+                        } else {
+                            Log.e("VideoInfoAF", "Path is null!");
+                        }
 
                         String Poster = cursor.getString(mPosterUri);
                         File PosterFile = new File(Poster);
