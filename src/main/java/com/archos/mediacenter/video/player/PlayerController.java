@@ -509,6 +509,12 @@ public class PlayerController implements OnTouchListener, OnGenericMotionListene
         boolean mIsLandscapeMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         boolean mDisplayPosterInPlayer = prefs.getBoolean("display_poster_player", true);
+        boolean mDisplayClearLogoInPlayer = prefs.getBoolean("display_clearlogo_player", true);
+
+        // hide clearlogo if disabled in preferences
+        if(!mDisplayClearLogoInPlayer){
+            mVideoClearLogo.setVisibility(View.GONE);
+        }
 
         // get video info
         videoInfoManager = VideoInfoManager.getInstance();
