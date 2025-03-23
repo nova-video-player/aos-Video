@@ -247,6 +247,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mEnableCutoutModeShortEdge = null;
     private CheckBoxPreference mEnablePlayPauseOnTouch = null;
     private CheckBoxPreference mDisplayPosterInPlayer = null;
+    private CheckBoxPreference mDisplayClearLogoInPlayer = null;
     private CheckBoxPreference mHideGridViewInfo = null;
     private CheckBoxPreference mDisplayActorPhotoToast = null;
     private CheckBoxPreference mDarkMode = null;
@@ -507,6 +508,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mEnableCutoutModeShortEdge = (CheckBoxPreference) findPreference("enable_cutout_mode_short_edges");
         mEnablePlayPauseOnTouch = (CheckBoxPreference) findPreference("enable_PlayPause_onTouch");
         mDisplayPosterInPlayer = (CheckBoxPreference) findPreference("display_poster_player");
+        mDisplayClearLogoInPlayer = (CheckBoxPreference) findPreference("display_clearlogo_player");
         mHideGridViewInfo = (CheckBoxPreference) findPreference("hide_gridview_info");
         mDisplayActorPhotoToast = (CheckBoxPreference) findPreference("display_actorPhoto_toast");
         mActivateRefreshrateTVSwitch = (ListPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);
