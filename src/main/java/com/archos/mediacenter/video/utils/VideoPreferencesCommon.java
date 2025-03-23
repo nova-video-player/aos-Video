@@ -70,6 +70,7 @@ import com.archos.mediacenter.video.leanback.settings.VideoSettingsLicencesActiv
 import com.archos.mediacenter.video.leanback.settings.VideoSettingsMoreLeanbackActivity;
 import com.archos.mediacenter.video.leanback.tvshow.AllTvshowsGridFragment;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowsSortOrderEntry;
+import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.tvshow.AnimeShowSortOrderEntries;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.credentialsmanager.CredentialsManagerPreferenceActivity;
@@ -626,10 +627,16 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                     MainActivity.getmInstanceActivity().setDarkMode();
                     VideoPreferencesActivity.getmInstanceActivity().setDarkMode();
                     VideoPreferencesActivity.getmInstanceActivity().recreate();
+                    if (PrivateMode.isActive()){
+                        PrivateMode.toggle(); // deactivate private mode if active
+                    }
                 } else {
                     MainActivity.getmInstanceActivity().setNormalMode();
                     VideoPreferencesActivity.getmInstanceActivity().setNormalMode();
                     VideoPreferencesActivity.getmInstanceActivity().recreate();
+                    if (PrivateMode.isActive()){
+                        PrivateMode.toggle(); // deactivate private mode if active
+                    }
                 }
                 return true;
             }
