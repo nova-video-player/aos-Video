@@ -20,7 +20,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -345,6 +347,11 @@ abstract public class BrowserCategory extends ListFragment {
         mSelectedItemId = item.id;
         if(v!=null)
             mSelectedItemTop = v.getTop();
+
+        // Force the list to refresh and apply new tint to selected item
+        if (mCategoryAdapter != null) {
+            mCategoryAdapter.notifyDataSetChanged();
+        }
     }
 
     public void loadFragmentAfterStackReset(Fragment f) {
@@ -635,9 +642,20 @@ abstract public class BrowserCategory extends ListFragment {
                 tv.setText(item.text);
 
                 if (item.icon != -1) {
-                    tv.setCompoundDrawablesWithIntrinsicBounds(item.icon, 0, 0, 0);
+                    Drawable iconDrawable = ContextCompat.getDrawable(parent.getContext(), item.icon);
+                    if (iconDrawable != null) {
+                        if (item.id == mSelectedItemId) {
+                            // Apply tint only if this is the selected item
+                            iconDrawable.setTint(ContextCompat.getColor(parent.getContext(), R.color.black));
+                        } else {
+                            // Default color (no tint)
+                            iconDrawable.setTint(ContextCompat.getColor(parent.getContext(), R.color.white));
+                        }
+                        iconDrawable.setTintMode(PorterDuff.Mode.SRC_IN);
+                        tv.setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null);
+                    }
                 } else {
-                    tv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    tv.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 }
 
                 tv.setTextSize(18); // Change the value to your preferred size
