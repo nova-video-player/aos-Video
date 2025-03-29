@@ -9,5 +9,5 @@
         android:color="@color/global_resume_button_focus" />
 
     <!-- Optional: rounded corners (if needed) -->
-    <corners android:radius="18dp" />
+    <corners android:radius="7dp" />
 </shape>
