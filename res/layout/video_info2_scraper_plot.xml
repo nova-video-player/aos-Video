@@ -519,7 +519,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp"/>
+                android:textSize="@dimen/video_info_small_text"/>
             <TextView
                 android:id="@+id/scrap_musiccomposer"
                 android:layout_width="wrap_content"
@@ -527,7 +527,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp"/>
+                android:textSize="@dimen/video_info_small_text"/>
         </LinearLayout>
 
         <LinearLayout
@@ -550,7 +550,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp"/>
+                android:textSize="@dimen/video_info_small_text"/>
             <TextView
                 android:id="@+id/scrap_original_language"
                 android:layout_width="wrap_content"
@@ -558,7 +558,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp"/>
+                android:textSize="@dimen/video_info_small_text"/>
         </LinearLayout>
 
         <LinearLayout
@@ -581,7 +581,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp"/>
+                android:textSize="@dimen/video_info_small_text"/>
             <TextView
                 android:id="@+id/scrap_production_countries"
                 android:layout_width="wrap_content"
@@ -589,7 +589,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp"/>
+                android:textSize="@dimen/video_info_small_text"/>
         </LinearLayout>
 
         <LinearLayout
@@ -612,7 +612,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp"/>
+                android:textSize="@dimen/video_info_small_text"/>
             <TextView
                 android:id="@+id/scrap_spoken_languages"
                 android:layout_width="wrap_content"
@@ -620,7 +620,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp"/>
+                android:textSize="@dimen/video_info_small_text"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
