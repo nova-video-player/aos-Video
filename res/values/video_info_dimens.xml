@@ -28,6 +28,7 @@
     <dimen name="video_info_poster_max_height">350dip</dimen>
     <dimen name="video_info_small_text">14sp</dimen>
     <dimen name="video_info_medium_text">18sp</dimen>
+    <dimen name="video_info_medium_text_new">16sp</dimen>
     <dimen name="video_info_big_text">22sp</dimen>
     <dimen name="video_info_very_big_text">30sp</dimen>
 

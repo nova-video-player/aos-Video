@@ -21,7 +21,7 @@
             android:fontFamily="@font/nhaasgrotesktxpro_55rg"
             android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
+            android:textSize="@dimen/video_info_medium_text_new" />
 
         <LinearLayout
             android:id="@+id/scrap_genre_container"
@@ -43,7 +43,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
                 android:id="@+id/scrap_genre"
                 android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
         <LinearLayout
@@ -74,7 +74,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
                 android:id="@+id/scrap_director"
                 android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
         <LinearLayout
@@ -106,7 +106,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
                 android:id="@+id/scrap_writer"
                 android:layout_width="wrap_content"
@@ -115,7 +115,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
         <LinearLayout
@@ -138,7 +138,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
                 android:id="@+id/scrap_createdby"
                 android:layout_width="wrap_content"
@@ -147,7 +147,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
         <LinearLayout
@@ -170,7 +170,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
                 android:id="@+id/scrap_producer"
                 android:layout_width="wrap_content"
@@ -179,7 +179,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
         <LinearLayout
@@ -202,7 +202,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -210,7 +210,7 @@
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/scrap_date"
-                android:textSize="@dimen/video_info_medium_text"
+                android:textSize="@dimen/video_info_medium_text_new"
                 />
         </LinearLayout>
 
@@ -233,7 +233,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -241,7 +241,7 @@
                 android:id="@+id/scrap_duration"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
-                android:textSize="@dimen/video_info_medium_text"
+                android:textSize="@dimen/video_info_medium_text_new"
                 />
         </LinearLayout>
     </LinearLayout>
@@ -266,7 +266,7 @@
             android:fontFamily="@font/nhaasgrotesktxpro_55rg"
             android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
+            android:textSize="@dimen/video_info_medium_text_new" />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/episode_selector"
             android:layout_width="match_parent"
@@ -287,7 +287,7 @@
             android:maxLines="4"
             android:clickable="true"
             android:focusable="true"
-            android:textSize="@dimen/video_info_medium_text"
+            android:textSize="@dimen/video_info_medium_text_new"
             android:ellipsize="end"/>
 
         <LinearLayout
@@ -308,7 +308,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
                 android:id="@+id/scrap_cast"
                 android:layout_width="wrap_content"
@@ -317,7 +317,7 @@
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:ellipsize="end"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -345,7 +345,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
                 android:id="@+id/scrap_screenplay"
                 android:layout_width="wrap_content"
@@ -354,7 +354,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
         <LinearLayout
@@ -377,7 +377,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
                 android:id="@+id/scrap_gueststars"
                 android:layout_width="wrap_content"
@@ -386,7 +386,7 @@
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:ellipsize="end"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
         <LinearLayout
@@ -409,7 +409,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/scrap_popularity"
@@ -418,7 +418,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <LinearLayout
@@ -441,7 +441,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/networks"
@@ -451,7 +451,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -480,7 +480,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
                 android:id="@+id/scrap_studio"
                 android:layout_width="wrap_content"
@@ -489,7 +489,7 @@
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:ellipsize="end"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
