@@ -192,11 +192,11 @@
     <string name="scrap_director">Director:</string>
     <string name="scrap_writer">Writer:</string>
     <string name="scrap_screenplay">Screenplay:</string>
-    <string name="scrap_musiccomposer">Music Composer:</string>
-    <string name="scrap_original_language">Original Language:</string>
-    <string name="scrap_production_countries">Production Countries:</string>
-    <string name="scrap_spoken_languages">Spoken Languages:</string>
-    <string name="scrap_popularity">Popularity:</string>
+    <string name="scrap_musiccomposer">Composer:</string>
+    <string name="scrap_original_language">Language:</string>
+    <string name="scrap_production_countries">Countries:</string>
+    <string name="scrap_spoken_languages">Spoken In:</string>
+    <string name="scrap_popularity">Score:</string>
     <string name="scrap_producer">Producer:</string>
     <string name="scrap_director_format">Director: %s</string>
     <string name="scrap_writer_format">Writer: %s</string>
@@ -208,7 +208,7 @@
     <string name="scrap_plot">Plot</string>
     <string name="scrap_trailer">Trailers</string>
     <string name="scrap_cast">Cast:</string>
-    <string name="guest_starts">Guest Stars:</string>
+    <string name="guest_starts">Guests:</string>
     <string name="scrap_cast_format">Cast: %s</string>
     <string name="scrap_genre">Genre</string>
     <string name="scrap_genre_format">Genres: %s</string>
@@ -1042,7 +1042,7 @@
     <string name="upgrade_info">Upgrade information</string>
     <string name="v5_v6_upgrade_info">WARNING: this Nova major update requires to rescan all video collection for multimedia information re-aquisition.
         It is strongly advised to restart from a clean install to avoid problems. Please check FAQ for details.</string>
-    <string name="created_by">Created By:</string>
+    <string name="created_by">Creator:</string>
     <string name="networks">Networks:</string>
     <string name="studios">Studios:</string>
     <string name="premiered">Premiered:</string>
