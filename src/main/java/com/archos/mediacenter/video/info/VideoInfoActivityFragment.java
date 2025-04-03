@@ -902,54 +902,66 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     }
 
     private void updateEpisodeUI(EpisodeModel episodeModel) {
-        // Remove old click listener before updating text
+        // Reset previous click listener and properties
         mPlotTextView.setOnClickListener(null);
         mPlotTextView.setEllipsize(null);
-        mPlotTextView.setMaxLines(Integer.MAX_VALUE);  // Temporarily unbound
+        mPlotTextView.setMaxLines(Integer.MAX_VALUE); // Temporarily set no limit
 
-        // Set new plot
-        setTextOrHideContainer(mPlotTextView, episodeModel.getEpisodePlot(), mPlotTextView);
+        String plot = episodeModel.getEpisodePlot();
+        Log.d("EpisodePlot", "Setting plot text: " + plot);
 
-        // Post a runnable to ensure measurements are updated after layout pass
+        // Set text or hide container if empty
+        if (plot == null || plot.isEmpty()) {
+            mPlotTextView.setText("");  // Set text to empty if no plot
+            Log.d("EpisodePlot", "Plot is empty, hiding container");
+            return;
+        }
+        mPlotTextView.setText(plot);  // Set the plot text
+
+        // Force re-layout of TextView after setting text
+        mPlotTextView.requestLayout();
+        mPlotTextView.invalidate();
+
+        // Measure the TextView after layout pass
         mPlotTextView.post(() -> {
-            int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
+            int expectedWidth = getResources().getDisplayMetrics().widthPixels;
             mPlotTextView.measure(
-                    View.MeasureSpec.makeMeasureSpec(expectedWidthOfTextView, View.MeasureSpec.AT_MOST),
+                    View.MeasureSpec.makeMeasureSpec(expectedWidth, View.MeasureSpec.AT_MOST),
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
             );
 
             int lineHeight = mPlotTextView.getLineHeight();
             int measuredLineCount = mPlotTextView.getLineCount();
-            int measuredTargetHeight = mPlotTextView.getMeasuredHeight();
+            int measuredHeight = mPlotTextView.getMeasuredHeight();
 
+            Log.d("EpisodePlot", "Measured line count: " + measuredLineCount);
+            Log.d("EpisodePlot", "Measured TextView height: " + measuredHeight);
+
+            // If the plot text has more than 4 lines, allow it to expand/collapse
             if (measuredLineCount <= 4) {
-                // If 4 or fewer lines, allow normal wrapping without extra space
-                mPlotTextView.setMaxLines(Integer.MAX_VALUE);
-                mPlotTextView.setEllipsize(null);  // Remove ellipsize
+                // If line count <= 4, remove ellipsize, allow full height
+                mPlotTextView.setMaxLines(Integer.MAX_VALUE); // No limit
+                mPlotTextView.setEllipsize(null);
                 mPlotTextView.setOnClickListener(null);  // Disable expansion
-
-                // Directly set the height to fit content
-                ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
-                layoutParams.height = measuredTargetHeight;  // Use the exact height of content
-                mPlotTextView.setLayoutParams(layoutParams);
+                mPlotTextView.setTag(true);  // Initially collapsed
             } else {
-                // If more than 4 lines, collapse with ellipsize and allow expansion
-                mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
+                // If line count > 4, enable ellipsize and set max lines
                 mPlotTextView.setMaxLines(4);
-                mPlotTextView.setTag(true);  // Collapsed by default
+                mPlotTextView.setTag(true);  // Initially collapsed
 
                 mPlotTextView.setOnClickListener(v -> {
                     if ((Boolean) mPlotTextView.getTag()) {
-                        // Expand
-                        expandTextView(measuredTargetHeight, lineHeight);
+                        expandTextView(measuredHeight, lineHeight);
                         mPlotTextView.setTag(false);
                     } else {
-                        // Collapse
-                        collapseTextView(4, lineHeight);  // Collapse to 4 lines, fixed height
+                        collapseTextView(4, lineHeight);
                         mPlotTextView.setTag(true);
                     }
                 });
             }
+
+            // Ensure TextView height is reset after expanding/collapsing
+            resetTextViewHeight();
         });
     }
 
@@ -961,7 +973,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), targetHeight);
         animation.addUpdateListener(valueAnimator -> {
             layoutParams.height = (int) valueAnimator.getAnimatedValue();
-            mPlotTextView.requestLayout();
+            mPlotTextView.requestLayout();  // Trigger layout update
         });
         animation.setDuration(300);
         animation.start();
@@ -979,7 +991,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), targetHeight);
         animation.addUpdateListener(valueAnimator -> {
             layoutParams.height = (int) valueAnimator.getAnimatedValue();
-            mPlotTextView.requestLayout();
+            mPlotTextView.requestLayout();  // Trigger layout update
         });
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -990,6 +1002,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         });
         animation.setDuration(300);
         animation.start();
+    }
+
+    private void resetTextViewHeight() {
+        // Reset height to match the new content
+        ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;  // Reset to wrap content height
+        mPlotTextView.setLayoutParams(layoutParams);
+        mPlotTextView.requestLayout();
+        mPlotTextView.invalidate();
     }
 
     void SwitchEpisode(int direction) {
@@ -3545,6 +3566,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             if(toHideOrShow!=null){
                 for(View v : toHideOrShow)
                     v.setVisibility(View.VISIBLE);
+                textView.requestLayout();
+                textView.invalidate();
             }
         }
         else  if(toHideOrShow!=null){
