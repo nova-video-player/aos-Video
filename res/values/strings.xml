@@ -191,7 +191,6 @@
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Director:</string>
     <string name="scrap_writer">Writer:</string>
-    <string name="scrap_screenplay">Screenplay:</string>
     <string name="scrap_musiccomposer">Composer:</string>
     <string name="scrap_original_language">Language:</string>
     <string name="scrap_production_countries">Countries:</string>
