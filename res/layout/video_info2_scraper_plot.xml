@@ -41,7 +41,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
@@ -72,7 +72,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
@@ -104,7 +104,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
@@ -136,7 +136,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
@@ -168,7 +168,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
@@ -200,7 +200,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new" />
             <TextView
@@ -231,7 +231,7 @@
                 android:maxLines="1"
                 android:text="@string/video_runtime"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new" />
             <TextView
@@ -264,7 +264,7 @@
             android:maxLines="1"
             android:text="@string/episode_select"
             android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-            android:textColor="@color/header_font"
+            android:textColor="@color/video_info_header_text_color"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text_new" />
         <androidx.recyclerview.widget.RecyclerView
@@ -306,7 +306,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
@@ -343,7 +343,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
@@ -375,7 +375,7 @@
                 android:maxLines="1"
                 android:text="@string/scrap_popularity"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new" />
 
@@ -407,7 +407,7 @@
                 android:maxLines="1"
                 android:text="@string/networks"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new" />
 
@@ -439,7 +439,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
@@ -485,7 +485,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
@@ -516,7 +516,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
@@ -547,7 +547,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
@@ -578,7 +578,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
-                android:textColor="@color/header_font"
+                android:textColor="@color/video_info_header_text_color"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
