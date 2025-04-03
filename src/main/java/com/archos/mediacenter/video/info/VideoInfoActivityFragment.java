@@ -352,8 +352,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mGuestStarsTitle;
     private LinearLayout genresContainer;
     private RecyclerView networks;
-    private TextView mScreenplay;
-    private View mScreenplayContainer;
     private TextView mMusiccomposer;
     private View mMusiccomposerContainer;
     private TextView mOriginalLanguage;
@@ -596,8 +594,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mCreatedByContainer = mRoot.findViewById(R.id.scrap_createdby_container);
         genresContainer = mRoot.findViewById(R.id.scrap_genre_container);
         networks = mRoot.findViewById(R.id.network_logo_rv);
-        mScreenplay = mRoot.findViewById(R.id.scrap_screenplay);
-        mScreenplayContainer = mRoot.findViewById(R.id.scrap_screenplay_container);
         mMusiccomposer = mRoot.findViewById(R.id.scrap_musiccomposer);
         mMusiccomposerContainer = mRoot.findViewById(R.id.scrap_musiccomposer_container);
         mOriginalLanguage = mRoot.findViewById(R.id.scrap_original_language);
@@ -2828,7 +2824,21 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                 });
                 setTextOrHideContainer(mScrapDirector, tags.getDirectorsFormatted(), mScrapDirector, mScrapDirectorTitle);
-                setTextOrHideContainer(mScrapWriter, tags.getWritersFormatted(), mScrapWriter, mScrapWriterTitle);
+                // set Writer
+                String writer = tags.getWritersFormatted();
+                String screenplay = tags.getScreenplaysFormatted();
+                // Check if Writer is available
+                if (writer != null && !writer.isEmpty()) {
+                    setTextOrHideContainer(mScrapWriter, writer, mScrapWriter, mScrapWriterTitle);
+                } else if (screenplay != null && !screenplay.isEmpty()) {
+                    // If Writer is not available, use Screenplay
+                    setTextOrHideContainer(mScrapWriter, screenplay, mScrapWriter, mScrapWriterTitle);
+                } else {
+                    // If neither Writer nor Screenplay is available, hide the container
+                    mScrapWriter.setVisibility(View.GONE);
+                    mScrapWriterTitle.setVisibility(View.GONE);
+                }
+
                 mScrapDirector.setMaxLines(2);
                 mScrapDirector.setTag(true);
                 mScrapDirector.setOnClickListener(new View.OnClickListener() {
@@ -3163,9 +3173,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     };
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
                     studios.setAdapter(studioAdapter);
-                    //hide screenplay
-                    mScreenplay.setVisibility(View.GONE);
-                    mScreenplayContainer.setVisibility(View.GONE);
                     // set Original Music Composer
                     if (showTags.getMusiccomposersFormatted() == null || showTags.getMusiccomposersFormatted().isEmpty()) {
                         mMusiccomposer.setVisibility(View.GONE);
@@ -3428,27 +3435,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mCreatedByContainer.setVisibility(View.GONE);
                     //Hide networks rv in movie
                     networks.setVisibility(View.GONE);
-                    // set screenplay
-                    if (tags.getScreenplaysFormatted() == null || tags.getScreenplaysFormatted().isEmpty()) {
-                        mScreenplay.setVisibility(View.GONE);
-                        mScreenplayContainer.setVisibility(View.GONE);
-                    } else {
-                        setTextOrHideContainer(mScreenplay, tags.getScreenplaysFormatted() , mScreenplayContainer);
-                    }
-                    mScreenplay.setMaxLines(2);
-                    mScreenplay.setTag(true);
-                    mScreenplay.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (((Boolean) mScreenplay.getTag())) {
-                                mScreenplay.setMaxLines(50);
-                                mScreenplay.setTag(false);
-                            } else {
-                                mScreenplay.setMaxLines(2);
-                                mScreenplay.setTag(true);
-                            }
-                        }
-                    });
                     // set Original Music Composer
                     if (tags.getMusiccomposersFormatted() == null || tags.getMusiccomposersFormatted().isEmpty()) {
                         mMusiccomposer.setVisibility(View.GONE);
