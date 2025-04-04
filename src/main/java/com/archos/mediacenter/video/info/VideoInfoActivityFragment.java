@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.info;
 
+import static androidx.recyclerview.widget.LinearSmoothScroller.SNAP_TO_START;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -40,6 +42,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -85,6 +88,7 @@ import androidx.loader.content.Loader;
 import androidx.palette.graphics.Palette;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.archos.environment.NetworkState;
@@ -845,8 +849,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 });
                 episodesRecyclerView.setAdapter(episodesAdapter);
                 episodesAdapter.setSelectedIndex(mCurrentPosition);
-                episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
                 episodesAdapter.notifyItemChanged(mCurrentPosition);
+                smoothScrollToPosition(mCurrentPosition);
             }
             //Option 2 Episode scroll mode is Episode numbers
             if (selectedMode == 1){
@@ -866,8 +870,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 });
                 episodesRecyclerView.setAdapter(episodeNumbersAdapter);
                 episodeNumbersAdapter.setSelectedIndex(mCurrentPosition);
-                episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
                 episodeNumbersAdapter.notifyItemChanged(mCurrentPosition);
+                smoothScrollToPosition(mCurrentPosition);
             }
             //Option 3 Episode scroll mode is hidden
             if (selectedMode == 2 || oneEpisode || !BrowserListOfEpisodes){
@@ -899,6 +903,23 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }
 
         return mRoot;
+    }
+
+    private void smoothScrollToPosition(final int position) {
+        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(mContext) {
+            @Override
+            protected int getHorizontalSnapPreference() {
+                return SNAP_TO_START; // Align item to the start
+            }
+
+            @Override
+            protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
+                return 100f / displayMetrics.densityDpi; // Adjust this for speed (higher = slower)
+            }
+        };
+
+        smoothScroller.setTargetPosition(position);
+        episodesRecyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
     }
 
     private void updateEpisodeUI(EpisodeModel episodeModel) {
