@@ -282,11 +282,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
-                            android:fontFamily="@font/nhaasgroteskdspro_65md"
+                            android:fontFamily="@font/nhaasgroteskdspro_75bd"
                             android:textColor="@color/header_font"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textSize="@dimen/video_info_medium_text"
-                            android:textStyle="bold" />
+                            android:textSize="@dimen/video_info_medium_text"/>
                         <TextView
                             android:id="@+id/vote_count"
                             android:layout_width="wrap_content"
@@ -305,7 +304,7 @@
                         android:id="@+id/year"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/nhaasgroteskdspro_65md"
+                        android:fontFamily="@font/nhaasgroteskdspro_75bd"
                         android:textColor="@color/header_font"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textSize="@dimen/video_info_medium_text"/>
