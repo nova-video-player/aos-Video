@@ -18,7 +18,7 @@
             android:layout_marginBottom="2dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/nhaasgrotesktxpro_55rg"
+            android:fontFamily="@font/nhaasgroteskdspro_65md"
             android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text_new" />
