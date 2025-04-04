@@ -252,14 +252,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp">
+        android:layout_marginBottom="2dp"
+        android:gravity="center_vertical">
         <TextView
             android:layout_width="112dp"
             android:layout_height="wrap_content"
             android:textAllCaps="true"
             android:ellipsize="end"
             android:gravity="start"
-            android:layout_marginTop="5dp"
             android:lines="1"
             android:maxLines="1"
             android:text="@string/episode_select"
