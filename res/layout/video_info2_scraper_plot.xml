@@ -34,7 +34,7 @@
                 android:id="@+id/scrap_genres_title"
                 android:text="@string/genres"
                 android:textAllCaps="true"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -65,7 +65,7 @@
                 android:id="@+id/scrap_director_title"
                 android:text="@string/scrap_director"
                 android:textAllCaps="true"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -97,7 +97,7 @@
                 android:id="@+id/scrap_writer_title"
                 android:text="@string/scrap_writer"
                 android:textAllCaps="true"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -129,7 +129,7 @@
                 android:id="@+id/scrap_createdby_title"
                 android:text="@string/created_by"
                 android:textAllCaps="true"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -161,7 +161,7 @@
                 android:id="@+id/scrap_producer_title"
                 android:text="@string/scrap_producer"
                 android:textAllCaps="true"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -193,7 +193,7 @@
                 android:id="@+id/scrap_date_title"
                 android:text="@string/released"
                 android:textAllCaps="true"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -222,7 +222,7 @@
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp">
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:textAllCaps="true"
                 android:ellipsize="end"
@@ -254,7 +254,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp">
         <TextView
-            android:layout_width="110dp"
+            android:layout_width="112dp"
             android:layout_height="wrap_content"
             android:textAllCaps="true"
             android:ellipsize="end"
@@ -299,7 +299,7 @@
                 android:id="@+id/scrap_cast_title"
                 android:text="@string/scrap_cast"
                 android:textAllCaps="true"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -336,7 +336,7 @@
                 android:id="@+id/scrap_gueststars_title"
                 android:text="@string/guest_starts"
                 android:textAllCaps="true"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -366,7 +366,7 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:textAllCaps="true"
                 android:ellipsize="end"
@@ -398,7 +398,7 @@
             android:layout_marginBottom="2dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:textAllCaps="true"
                 android:ellipsize="end"
@@ -431,7 +431,7 @@
             android:layout_marginBottom="2dp">
             <TextView
                 android:text="@string/scrap_studio"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:textAllCaps="true"
                 android:ellipsize="end"
@@ -477,7 +477,7 @@
             <TextView
                 android:id="@+id/scrap_musiccomposer_title"
                 android:text="@string/scrap_musiccomposer"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:textAllCaps="true"
                 android:ellipsize="end"
@@ -508,7 +508,7 @@
             <TextView
                 android:id="@+id/scrap_original_language_title"
                 android:text="@string/scrap_original_language"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:textAllCaps="true"
                 android:ellipsize="end"
@@ -539,7 +539,7 @@
             <TextView
                 android:id="@+id/scrap_production_countries_title"
                 android:text="@string/scrap_production_countries"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:textAllCaps="true"
                 android:ellipsize="end"
@@ -571,7 +571,7 @@
                 android:id="@+id/scrap_spoken_languages_title"
                 android:text="@string/scrap_spoken_languages"
                 android:textAllCaps="true"
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
