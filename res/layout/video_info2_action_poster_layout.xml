@@ -246,7 +246,7 @@
                                 android:layout_marginLeft="3dp"
                                 android:layout_marginRight="3dp"
                                 android:text="HD"
-                                android:fontFamily="@font/nhaasgroteskdspro_75bd"
+                                android:fontFamily="@font/gotham_narrow_black"
                                 android:gravity="center_horizontal"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:textColor="@color/black"
