@@ -14,7 +14,8 @@
 		<TextView android:id="@+id/file_info_header"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:fontFamily="@font/lato_regular"
+			android:textSize="@dimen/video_info_medium_text_new"
+			android:fontFamily="@font/nhaasgroteskdspro_55rg"
 			android:textColor="@color/header_font"
 			android:text="@string/info_file"/>
 		<LinearLayout
@@ -27,19 +28,20 @@
 			<TextView android:id="@+id/fullpath"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:fontFamily="@font/lato_regular"
+				android:fontFamily="@font/nhaasgroteskdspro_55rg"
 				android:textColor="@color/white_font"
-				android:textSize="@dimen/video_info_medium_text"/>
+				android:textSize="@dimen/video_info_medium_text_new"/>
 
 			<TextView
 				android:id="@+id/file_error"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:fontFamily="@font/lato_bold"
+				android:fontFamily="@font/nhaasgroteskdspro_65md"
 				style="@style/VideoInfoFileInfo"
 				android:paddingTop="@dimen/video_info_margin_half"
 				android:singleLine="false"
 				android:text="@string/file_access_error"
+				android:textSize="@dimen/video_info_medium_text_new"
 				android:textColor="@color/error_text_over_blue_background"
 				/>
 
@@ -52,14 +54,16 @@
 				<TextView
 					android:id="@+id/duration"
 					style="@style/VideoInfoFileInfo"
-					android:fontFamily="@font/lato_regular"
+					android:fontFamily="@font/nhaasgroteskdspro_55rg"
+					android:textSize="@dimen/video_info_medium_text_new"
 					android:textColor="@color/white_font"
 					android:layout_marginRight="50dip"/>
 
 				<TextView
 					android:id="@+id/filesize"
 					style="@style/VideoInfoFileInfo"
-					android:fontFamily="@font/lato_regular"
+					android:fontFamily="@font/nhaasgroteskdspro_55rg"
+					android:textSize="@dimen/video_info_medium_text_new"
 					android:textColor="@color/white_font"
 					android:layout_marginLeft="10dip"/>
 			</LinearLayout>

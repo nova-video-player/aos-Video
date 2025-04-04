@@ -12,6 +12,7 @@
         android:id="@+id/video_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:layout_marginTop="16dip">
         <ImageView
             android:layout_width="wrap_content"
@@ -26,7 +27,8 @@
             <TextView
                 android:id="@+id/video_track"
                 style="@style/VideoInfoFileInfo"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgroteskdspro_55rg"
+                android:textSize="@dimen/video_info_medium_text_new"
                 android:textColor="@color/white_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,8 +36,9 @@
             <TextView
                 android:id="@+id/video_decoder"
                 style="@style/VideoInfoFileInfo.Smaller"
-                android:fontFamily="@font/lato_regular_italic"
+                android:fontFamily="@font/nhaasgroteskdspro_46ltit"
                 android:textColor="@color/white_font"
+                android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="italic"/>
@@ -48,6 +51,7 @@
         android:id="@+id/audio_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:layout_marginTop="16dip">
         <ImageView
             android:layout_width="wrap_content"
@@ -63,7 +67,8 @@
             <TextView
                 android:id="@+id/audio_track"
                 style="@style/VideoInfoFileInfo"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgroteskdspro_55rg"
+                android:textSize="@dimen/video_info_medium_text_new"
                 android:textColor="@color/white_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
