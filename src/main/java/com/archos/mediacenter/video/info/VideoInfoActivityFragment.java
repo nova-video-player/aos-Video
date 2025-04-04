@@ -33,6 +33,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -77,6 +78,7 @@ import androidx.appcompat.widget.ToolbarWidgetWrapper;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
@@ -3553,6 +3555,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         button.setBackgroundResource(R.drawable.transparent_ripple);
                         button.setCompoundDrawables(img, null, null, null);
                         button.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                        button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                        Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_55rg);
+                        button.setTypeface(typeface);
                         mScrapTrailers.addView(button);
                     }
 
