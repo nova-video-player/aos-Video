@@ -45,7 +45,7 @@
                         android:id="@+id/toolbar_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/lato_regular"
+                        android:fontFamily="@font/nhaasgroteskdspro_65md"
                         android:singleLine="true"
                         android:textColor="@color/white_font"
                         android:textSize="24sp"/>
