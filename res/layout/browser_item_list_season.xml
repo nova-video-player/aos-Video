@@ -12,7 +12,6 @@ for informations (duration for files, number of files for directories).
 	android:paddingStart="4dip"
 	android:paddingEnd="4dip"
 	android:descendantFocusability="blocksDescendants"
-	android:background="@drawable/list_item_background"
 	android:gravity="center_vertical" >
 
 	<RelativeLayout
