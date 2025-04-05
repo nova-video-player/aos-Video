@@ -101,7 +101,7 @@
         android:layout_below="@id/show_clearlogo"
         android:layout_marginTop="8dip"
         android:layout_toEndOf="@id/series_thumbnail_cardview"
-        android:fontFamily="@font/lato_regular"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
         android:paddingTop="1dp"
         android:singleLine="true"
         android:textColor="@color/white_font"
@@ -110,14 +110,14 @@
     <!-- TV show season -->
     <TextView
         android:id="@+id/season"
-        android:fontFamily="@font/lato_bold"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
         android:textColor="@color/header_font"
         android:layout_width="match_parent"
         android:layout_below="@id/name"
         android:layout_toEndOf="@id/series_thumbnail_cardview"
         android:singleLine="true"
         android:paddingTop="1dp"
-        android:textSize="14sp"
+        android:textSize="@dimen/video_info_medium_text_new"
         android:layout_height="wrap_content"/>
 
     <LinearLayout
@@ -169,10 +169,10 @@
                 android:id="@+id/episode_runtime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_bold"
+                android:fontFamily="@font/nhaasgroteskdspro_65md"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
         <ImageView
@@ -213,17 +213,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:fontFamily="@font/lato_bold"
+                android:fontFamily="@font/nhaasgroteskdspro_75bd"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text"/>
+                android:textSize="@dimen/video_info_medium_text_new"/>
             <TextView
                 android:id="@+id/vote_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginStart="3dp"
-                android:fontFamily="@font/lato_light"
+                android:fontFamily="@font/nhaasgroteskdspro_45lt"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="12sp" />
@@ -234,10 +234,10 @@
             android:id="@+id/premiered_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/lato_bold"
+            android:fontFamily="@font/nhaasgroteskdspro_75bd"
             android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text"/>
+            android:textSize="@dimen/video_info_medium_text_new"/>
     </LinearLayout>
 
     <TextView
@@ -246,7 +246,7 @@
         android:layout_toEndOf="@+id/series_thumbnail_cardview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/lato_bold"
+        android:fontFamily="@font/nhaasgroteskdspro_55rg"
         android:textColor="@color/header_font"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/video_info_small_text"/>
@@ -266,10 +266,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:layout_marginBottom="3dp"
-            android:fontFamily="@font/lato_regular"
+            android:fontFamily="@font/nhaasgroteskdspro_65md"
             android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
+            android:textSize="@dimen/video_info_medium_text_new" />
 
         <LinearLayout
             android:id="@+id/genres_container"
@@ -280,26 +280,27 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/genres"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/series_genres"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <LinearLayout
@@ -311,27 +312,28 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/created_by"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/created_by"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <LinearLayout
@@ -343,27 +345,28 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/scrap_producer"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/producer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <LinearLayout
@@ -375,26 +378,27 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/premiered"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/premiered"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <LinearLayout
@@ -406,32 +410,34 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/airdate"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/season_airdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/season_plot_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAllCaps="true"
             android:layout_marginTop="3dp"
             android:layout_marginBottom="3dp"
             android:ellipsize="end"
@@ -439,10 +445,10 @@
             android:maxLines="1"
             android:singleLine="true"
             android:text="@string/season_plot"
-            android:fontFamily="@font/lato_regular"
+            android:fontFamily="@font/nhaasgrotesktxpro_55rg"
             android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
+            android:textSize="@dimen/video_info_medium_text_new" />
 
         <TextView
             android:id="@+id/season_plot"
@@ -453,14 +459,16 @@
             android:layout_marginTop="3dp"
             android:layout_marginBottom="3dp"
             android:background="@drawable/transparent_ripple"
-            android:fontFamily="@font/lato_regular"
+            android:fontFamily="@font/nhaasgrotesktxpro_55rg"
             android:textColor="@color/white_font"
+            android:textSize="@dimen/video_info_medium_text_new"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/series_plot_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAllCaps="true"
             android:layout_marginTop="3dp"
             android:layout_marginBottom="3dp"
             android:ellipsize="end"
@@ -468,10 +476,10 @@
             android:maxLines="1"
             android:singleLine="true"
             android:text="@string/series_plot"
-            android:fontFamily="@font/lato_regular"
+            android:fontFamily="@font/nhaasgrotesktxpro_55rg"
             android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
+            android:textSize="@dimen/video_info_medium_text_new" />
 
         <LinearLayout
             android:id="@+id/series_plot_container"
@@ -486,7 +494,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
+                android:textSize="@dimen/video_info_medium_text_new"
                 android:textColor="@color/white_font"
                 android:background="@drawable/transparent_ripple"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -496,6 +505,7 @@
             android:id="@+id/actors_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAllCaps="true"
             android:layout_marginStart="@dimen/video_details_poster_margin_left"
             android:layout_marginTop="3dp"
             android:layout_marginBottom="3dp"
@@ -503,11 +513,11 @@
             android:lines="1"
             android:maxLines="1"
             android:singleLine="true"
-            android:text="@string/actors_header"
-            android:fontFamily="@font/lato_regular"
+            android:text="@string/scrap_cast"
+            android:fontFamily="@font/nhaasgrotesktxpro_55rg"
             android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text" />
+            android:textSize="@dimen/video_info_medium_text_new" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/actor_photos"
@@ -525,26 +535,27 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/show_type"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/showtype"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <LinearLayout
@@ -556,26 +567,27 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/scrap_popularity"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/scrap_popularity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <LinearLayout
@@ -587,27 +599,28 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/networks"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/network"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -628,27 +641,28 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/studios"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/studio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -669,26 +683,27 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="155dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/scrap_musiccomposer"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/musiccomposer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <LinearLayout
@@ -700,26 +715,27 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="155dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/scrap_original_language"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/scrap_original_language"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <LinearLayout
@@ -731,26 +747,27 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="155dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/scrap_production_countries"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/scrap_production_countries"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
         <LinearLayout
@@ -762,26 +779,27 @@
             android:layout_marginBottom="3dp">
 
             <TextView
-                android:layout_width="155dp"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/scrap_spoken_languages"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp" />
+                android:textSize="@dimen/video_info_medium_text_new" />
 
             <TextView
                 android:id="@+id/scrap_spoken_languages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_regular"
+                android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14sp" />
+                android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
     </LinearLayout>
