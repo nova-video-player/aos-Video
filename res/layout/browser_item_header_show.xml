@@ -172,7 +172,7 @@
                 android:fontFamily="@font/nhaasgroteskdspro_65md"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text_new"/>
+                android:textSize="@dimen/video_info_medium_text"/>
         </LinearLayout>
 
         <ImageView
@@ -216,7 +216,7 @@
                 android:fontFamily="@font/nhaasgroteskdspro_75bd"
                 android:textColor="@color/header_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="@dimen/video_info_medium_text_new"/>
+                android:textSize="@dimen/video_info_medium_text"/>
             <TextView
                 android:id="@+id/vote_count"
                 android:layout_width="wrap_content"
@@ -237,7 +237,7 @@
             android:fontFamily="@font/nhaasgroteskdspro_75bd"
             android:textColor="@color/header_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/video_info_medium_text_new"/>
+            android:textSize="@dimen/video_info_medium_text"/>
     </LinearLayout>
 
     <TextView
