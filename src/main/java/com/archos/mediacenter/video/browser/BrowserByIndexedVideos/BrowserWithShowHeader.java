@@ -851,8 +851,12 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             //notify browser adapter that the views are filled with data for wrap content to work
             mBrowserAdapter.notifyDataSetChanged();
 
-            animateTextViewExpansionCollapse(plotTv, getResources().getInteger(R.integer.show_details_max_lines));
-            animateTextViewExpansionCollapse(mSeasonPlot, getResources().getInteger(R.integer.show_details_max_lines));
+            if (plotTv.getLineCount() > 4) {
+                animateTextViewExpansionCollapse(plotTv, 4);  // Apply the collapse at 4 lines
+            }
+            if (mSeasonPlot.getLineCount() > 4) {
+                animateTextViewExpansionCollapse(mSeasonPlot, 4);  // Apply the collapse at 4 lines
+            }
 
             if(result.tags!=null&&result.tags.getDefaultBackdrop()!=null)
                 mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, result.tags.getDefaultBackdrop());
