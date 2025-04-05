@@ -15,6 +15,7 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -872,18 +873,26 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             //notify browser adapter that the views are filled with data for wrap content to work
             mBrowserAdapter.notifyDataSetChanged();
 
-            plotTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (((Boolean) plotTv.getTag())) {
-                        plotTv.setMaxLines(Integer.MAX_VALUE);
-                        plotTv.setTag(false);
-                    } else {
-                        plotTv.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
-                        plotTv.setTag(true);
-                    }
-                    mBrowserAdapter.notifyDataSetChanged();
-                }
+            plotTv.setOnClickListener(v -> {
+                boolean isCollapsed = (Boolean) plotTv.getTag(); // true = collapsed, false = expanded
+                plotTv.setTag(!isCollapsed);
+
+                // Save original height
+                int startHeight = plotTv.getHeight();
+
+                // Update maxLines for measurement
+                plotTv.setMaxLines(isCollapsed ? Integer.MAX_VALUE :
+                        getResources().getInteger(R.integer.show_details_max_lines));
+
+                // Measure new height
+                plotTv.measure(
+                        View.MeasureSpec.makeMeasureSpec(plotTv.getWidth(), View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.UNSPECIFIED
+                );
+                int endHeight = plotTv.getMeasuredHeight();
+
+                // Animate height change
+                animatePlotHeightChange(plotTv, startHeight, endHeight);
             });
 
             mSeasonPlot.setOnClickListener(new View.OnClickListener() {
@@ -904,6 +913,31 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, result.tags.getDefaultBackdrop());
 
         }
+    }
+
+    private void animatePlotHeightChange(final TextView plotTv, int startHeight, int endHeight) {
+        ValueAnimator animator = ValueAnimator.ofInt(startHeight, endHeight);
+        animator.setDuration(300); // Duration of animation
+
+        animator.addUpdateListener(animation -> {
+            int animatedValue = (int) animation.getAnimatedValue();
+
+            ViewGroup.LayoutParams params = plotTv.getLayoutParams();
+            params.height = animatedValue;
+            plotTv.setLayoutParams(params);
+
+            // Force header to re-layout during animation
+            if (mArchosGridView instanceof HeaderGridView) {
+                HeaderGridView headerGridView = (HeaderGridView) mArchosGridView;
+                View header = headerGridView.getHeaderView();
+                if (header != null) {
+                    header.requestLayout();
+                }
+            }
+            mArchosGridView.invalidateViews(); // Optional: force redraw
+        });
+
+        animator.start();
     }
 
     public class LogoSaver extends AsyncTask<ScraperImage, Void, Void> {

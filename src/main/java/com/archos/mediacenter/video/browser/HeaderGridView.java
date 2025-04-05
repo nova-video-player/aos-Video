@@ -435,4 +435,10 @@ public class HeaderGridView extends GridView {
             mDataSetObservable.notifyChanged();
         }
     }
+    public View getHeaderView() {
+        if (mHeaderViewInfos != null && !mHeaderViewInfos.isEmpty()) {
+            return mHeaderViewInfos.get(0).view;
+        }
+        return null;
+    }
 }
