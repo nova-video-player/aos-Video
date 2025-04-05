@@ -127,6 +127,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     private RecyclerView actors;
     private SeasonsData seasonsData;
 
+    private static final int ANIMATION_DURATION = 300;
+
     public BrowserWithShowHeader() {
         log.debug("BrowserBySeason()");
     }
@@ -420,21 +422,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             LinearLayout producerContainer = mHeaderView.findViewById(R.id.producer_container);
             if (tags.getProducersFormatted() == null)
                 producerContainer.setVisibility(View.GONE);
-            producer.setMaxLines(2);
             producer.setTag(true);
-            producer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (((Boolean) producer.getTag())) {
-                        producer.setMaxLines(Integer.MAX_VALUE);
-                        producer.setTag(false);
-                    } else {
-                        producer.setMaxLines(2);
-                        producer.setTag(true);
-                    }
-                    mBrowserAdapter.notifyDataSetChanged();
-                }
-            });
+            animateTextViewExpansionCollapse(producer, 1);
 
             // set Original Music Composer
             TextView mMusiccomposer = mHeaderView.findViewById(R.id.musiccomposer);
@@ -885,67 +874,109 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     }
 
     public void animateTextViewExpansionCollapse(final TextView textView, final int collapsedLines) {
-        // Temporarily remove line limit to measure
+        // Allow full height temporarily to measure expanded size
         textView.setMaxLines(Integer.MAX_VALUE);
-        textView.measure(
-                View.MeasureSpec.makeMeasureSpec(textView.getWidth(), View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.UNSPECIFIED
-        );
+        textView.setEllipsize(null);
 
-        int fullLineCount = textView.getLineCount();
-        int fullHeight = textView.getMeasuredHeight();
-        int lineHeight = textView.getLineHeight();
-        int collapsedHeight = (lineHeight * collapsedLines) + 10;
+        textView.post(() -> {
+            View parent = (View) textView.getParent();
+            if (parent != null) parent.requestLayout();
 
-        textView.setEllipsize(TextUtils.TruncateAt.END);
-        textView.setMaxLines(collapsedLines);
-        textView.setTag(true); // collapsed by default
+            if (mArchosGridView instanceof HeaderGridView headerGridView) {
+                View header = headerGridView.getHeaderView();
+                if (header != null) {
+                    header.requestLayout();
+                }
+                headerGridView.invalidateViews();
+            }
 
-        if (fullLineCount > collapsedLines) {
+            // Measure full height of expanded TextView
+            textView.measure(
+                    View.MeasureSpec.makeMeasureSpec(textView.getWidth(), View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.UNSPECIFIED
+            );
+            int lineHeight = textView.getLineHeight();
+            int collapsedHeight = (lineHeight * collapsedLines)
+                    + textView.getPaddingTop()
+                    + textView.getPaddingBottom();
+
+            // Set collapsed state initially
+            textView.setMaxLines(collapsedLines);
+            textView.setEllipsize(TextUtils.TruncateAt.END);
+            textView.setTag(true); // collapsed
+
             textView.setOnClickListener(v -> {
                 boolean isCollapsed = (Boolean) textView.getTag();
                 textView.setTag(!isCollapsed);
 
+                View parentView = (View) textView.getParent();
                 int startHeight = textView.getHeight();
-                int endHeight = isCollapsed ? fullHeight : collapsedHeight;
+                int endHeight;
 
                 if (isCollapsed) {
-                    textView.setMaxLines(Integer.MAX_VALUE); // Expand immediately for measurement
+                    // Expanding
+                    textView.setMaxLines(Integer.MAX_VALUE);
+                    textView.setEllipsize(null);
+
+                    textView.measure(
+                            View.MeasureSpec.makeMeasureSpec(textView.getWidth(), View.MeasureSpec.EXACTLY),
+                            View.MeasureSpec.UNSPECIFIED
+                    );
+                    endHeight = textView.getMeasuredHeight();
+                } else {
+                    // Collapsing
+                    endHeight = collapsedHeight;
                 }
 
                 ValueAnimator animator = ValueAnimator.ofInt(startHeight, endHeight);
-                animator.setDuration(300);
+                animator.setDuration(ANIMATION_DURATION);
                 animator.addUpdateListener(animation -> {
-                    int animatedValue = (int) animation.getAnimatedValue();
+                    int value = (int) animation.getAnimatedValue();
                     ViewGroup.LayoutParams params = textView.getLayoutParams();
-                    params.height = animatedValue;
+                    params.height = value;
                     textView.setLayoutParams(params);
 
-                    // Ensure grid layout keeps updating
-                    if (mArchosGridView instanceof HeaderGridView) {
-                        HeaderGridView headerGridView = (HeaderGridView) mArchosGridView;
-                        View header = headerGridView.getHeaderView();
+                    if (parentView != null) parentView.requestLayout();
+
+                    if (mArchosGridView instanceof HeaderGridView headerGridViewInner) {
+                        View header = headerGridViewInner.getHeaderView();
                         if (header != null) {
                             header.requestLayout();
                         }
+                        headerGridViewInner.invalidateViews();
                     }
-                    mArchosGridView.invalidateViews(); // Optional
                 });
 
-                if (!isCollapsed) {
-                    animator.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
+                animator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        ViewGroup.LayoutParams params = textView.getLayoutParams();
+                        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        textView.setLayoutParams(params);
+
+                        if (!isCollapsed) {
                             textView.setMaxLines(collapsedLines);
+                            textView.setEllipsize(TextUtils.TruncateAt.END);
                         }
-                    });
-                }
+
+                        if (parentView != null) {
+                            parentView.requestLayout();
+                            parentView.invalidate();
+
+                            if (parentView.getParent() instanceof HeaderGridView headerGridViewFinal) {
+                                headerGridViewFinal.invalidateViews();
+                            }
+                        }
+
+                        // Optional: improve accessibility feedback
+                        textView.announceForAccessibility(isCollapsed ? "Expanded" : "Collapsed");
+                    }
+                });
 
                 animator.start();
             });
-        }
+        });
     }
-
 
     public class LogoSaver extends AsyncTask<ScraperImage, Void, Void> {
         public LogoSaver(Context context) {
