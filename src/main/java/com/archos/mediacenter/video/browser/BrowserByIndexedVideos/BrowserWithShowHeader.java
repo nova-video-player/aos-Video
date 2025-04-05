@@ -663,21 +663,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             LinearLayout studioNamesContainer = mHeaderView.findViewById(R.id.studio_container);
             if (studioNames.isEmpty())
                 studioNamesContainer.setVisibility(View.GONE);
-            studio.setMaxLines(1);
             studio.setTag(true);
-            studio.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (((Boolean) studio.getTag())) {
-                        studio.setMaxLines(Integer.MAX_VALUE);
-                        studio.setTag(false);
-                    } else {
-                        studio.setMaxLines(1);
-                        studio.setTag(true);
-                    }
-                    mBrowserAdapter.notifyDataSetChanged();
-                }
-            });
+            animateTextViewExpansionCollapse(studio, 1);
 
 
             // setting Actors RecyclerView
