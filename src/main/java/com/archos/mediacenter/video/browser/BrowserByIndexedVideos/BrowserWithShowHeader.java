@@ -875,86 +875,77 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             //notify browser adapter that the views are filled with data for wrap content to work
             mBrowserAdapter.notifyDataSetChanged();
 
-            plotTv.setMaxLines(Integer.MAX_VALUE); // Temporarily remove line limit to measure
-            plotTv.measure(
-                    View.MeasureSpec.makeMeasureSpec(plotTv.getWidth(), View.MeasureSpec.EXACTLY),
-                    View.MeasureSpec.UNSPECIFIED
-            );
-
-            int fullLineCount = plotTv.getLineCount();
-            int collapsedLines = getResources().getInteger(R.integer.show_details_max_lines);
-            int fullHeight = plotTv.getMeasuredHeight();
-            int lineHeight = plotTv.getLineHeight();
-            int collapsedHeight = (lineHeight * collapsedLines) + 10;
-
-            plotTv.setEllipsize(TextUtils.TruncateAt.END);
-            plotTv.setMaxLines(collapsedLines);
-            plotTv.setTag(true); // collapsed by default
-
-            if (fullLineCount > collapsedLines) {
-                plotTv.setOnClickListener(v -> {
-                    boolean isCollapsed = (Boolean) plotTv.getTag();
-                    plotTv.setTag(!isCollapsed);
-
-                    int startHeight = plotTv.getHeight();
-                    int endHeight = isCollapsed ? fullHeight : collapsedHeight;
-
-                    if (isCollapsed) {
-                        plotTv.setMaxLines(Integer.MAX_VALUE); // Expand immediately for measurement
-                    }
-
-                    ValueAnimator animator = ValueAnimator.ofInt(startHeight, endHeight);
-                    animator.setDuration(300);
-                    animator.addUpdateListener(animation -> {
-                        int animatedValue = (int) animation.getAnimatedValue();
-                        ViewGroup.LayoutParams params = plotTv.getLayoutParams();
-                        params.height = animatedValue;
-                        plotTv.setLayoutParams(params);
-
-                        // Ensure grid layout keeps updating
-                        if (mArchosGridView instanceof HeaderGridView) {
-                            HeaderGridView headerGridView = (HeaderGridView) mArchosGridView;
-                            View header = headerGridView.getHeaderView();
-                            if (header != null) {
-                                header.requestLayout();
-                            }
-                        }
-                        mArchosGridView.invalidateViews(); // Optional
-                    });
-
-                    if (!isCollapsed) {
-                        animator.addListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                plotTv.setMaxLines(collapsedLines);
-                            }
-                        });
-                    }
-
-                    animator.start();
-                });
-            }
-
-
-            mSeasonPlot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (((Boolean) mSeasonPlot.getTag())) {
-                        mSeasonPlot.setMaxLines(Integer.MAX_VALUE);
-                        mSeasonPlot.setTag(false);
-                    } else {
-                        mSeasonPlot.setMaxLines(mContext.getResources().getInteger(R.integer.show_details_max_lines));
-                        mSeasonPlot.setTag(true);
-                    }
-                    mBrowserAdapter.notifyDataSetChanged();
-                }
-            });
+            animateTextViewExpansionCollapse(plotTv, getResources().getInteger(R.integer.show_details_max_lines));
+            animateTextViewExpansionCollapse(mSeasonPlot, getResources().getInteger(R.integer.show_details_max_lines));
 
             if(result.tags!=null&&result.tags.getDefaultBackdrop()!=null)
                 mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, result.tags.getDefaultBackdrop());
 
         }
     }
+
+    public void animateTextViewExpansionCollapse(final TextView textView, final int collapsedLines) {
+        // Temporarily remove line limit to measure
+        textView.setMaxLines(Integer.MAX_VALUE);
+        textView.measure(
+                View.MeasureSpec.makeMeasureSpec(textView.getWidth(), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.UNSPECIFIED
+        );
+
+        int fullLineCount = textView.getLineCount();
+        int fullHeight = textView.getMeasuredHeight();
+        int lineHeight = textView.getLineHeight();
+        int collapsedHeight = (lineHeight * collapsedLines) + 10;
+
+        textView.setEllipsize(TextUtils.TruncateAt.END);
+        textView.setMaxLines(collapsedLines);
+        textView.setTag(true); // collapsed by default
+
+        if (fullLineCount > collapsedLines) {
+            textView.setOnClickListener(v -> {
+                boolean isCollapsed = (Boolean) textView.getTag();
+                textView.setTag(!isCollapsed);
+
+                int startHeight = textView.getHeight();
+                int endHeight = isCollapsed ? fullHeight : collapsedHeight;
+
+                if (isCollapsed) {
+                    textView.setMaxLines(Integer.MAX_VALUE); // Expand immediately for measurement
+                }
+
+                ValueAnimator animator = ValueAnimator.ofInt(startHeight, endHeight);
+                animator.setDuration(300);
+                animator.addUpdateListener(animation -> {
+                    int animatedValue = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams params = textView.getLayoutParams();
+                    params.height = animatedValue;
+                    textView.setLayoutParams(params);
+
+                    // Ensure grid layout keeps updating
+                    if (mArchosGridView instanceof HeaderGridView) {
+                        HeaderGridView headerGridView = (HeaderGridView) mArchosGridView;
+                        View header = headerGridView.getHeaderView();
+                        if (header != null) {
+                            header.requestLayout();
+                        }
+                    }
+                    mArchosGridView.invalidateViews(); // Optional
+                });
+
+                if (!isCollapsed) {
+                    animator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            textView.setMaxLines(collapsedLines);
+                        }
+                    });
+                }
+
+                animator.start();
+            });
+        }
+    }
+
 
     public class LogoSaver extends AsyncTask<ScraperImage, Void, Void> {
         public LogoSaver(Context context) {
