@@ -104,6 +104,7 @@
     <TextView
         android:id="@+id/name"
         style="@style/BrowserText.Title"
+        android:fontFamily="@font/nhaasgroteskdspro_75bd"
         android:paddingTop="14dip"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
@@ -116,7 +117,7 @@
         style="@style/BrowserText.Info.Video"
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@id/name"
-
+        android:fontFamily="@font/nhaasgrotesktxpro_65md"
         android:layout_marginRight="3dp"
         android:layout_toRightOf="@id/left_area" />
 </merge>
