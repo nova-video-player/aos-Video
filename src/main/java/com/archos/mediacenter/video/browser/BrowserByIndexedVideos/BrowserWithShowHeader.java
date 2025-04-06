@@ -400,21 +400,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             LinearLayout createdbyContainer = mHeaderView.findViewById(R.id.created_by_container);
             if (tags.getDirectorsFormatted() == null)
                 createdbyContainer.setVisibility(View.GONE);
-            createdBy.setMaxLines(2);
             createdBy.setTag(true);
-            createdBy.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (((Boolean) createdBy.getTag())) {
-                        createdBy.setMaxLines(Integer.MAX_VALUE);
-                        createdBy.setTag(false);
-                    } else {
-                        createdBy.setMaxLines(2);
-                        createdBy.setTag(true);
-                    }
-                    mBrowserAdapter.notifyDataSetChanged();
-                }
-            });
+            animateTextViewExpansionCollapse(createdBy, 1);
 
 
             TextView producer = mHeaderView.findViewById(R.id.producer);
