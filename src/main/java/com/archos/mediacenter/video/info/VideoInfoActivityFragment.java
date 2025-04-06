@@ -971,6 +971,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             } else {
                 // If line count > 4, enable ellipsize and set max lines
                 mPlotTextView.setMaxLines(4);
+                mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
                 mPlotTextView.setTag(true);  // Initially collapsed
 
                 mPlotTextView.setOnClickListener(v -> {
