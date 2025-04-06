@@ -2934,6 +2934,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                 });
 
+                // set Guest Stars
                 String guestStars = "";
                 if (tags instanceof EpisodeTags) {
                     guestStars = tags.getActorsFormatted();
