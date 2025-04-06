@@ -434,6 +434,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private OnEpisodeSwitchListener episodeSwitchListener;
     private EpisodeViewModel episodeViewModel;
     private LinearLayout episodeSelectorContainer;
+    private static final int ANIMATION_DURATION = 300;
     public static VideoInfoActivityFragment getInstance(Video video, Uri path, long id, boolean forceVideoSelection){
         log.debug("VideoInfoActivityFragment for uri=" + path);
         Bundle arguments = new Bundle();
@@ -1227,6 +1228,91 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         " GROUP BY " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE +
                         " ORDER BY " + VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE
                 , null);
+    }
+
+    public void animateTextViewExpansionCollapse(final TextView textView, final int collapsedLines) {
+        // Allow full height temporarily to measure expanded size
+        textView.setMaxLines(Integer.MAX_VALUE);
+        textView.setEllipsize(null);
+
+        textView.post(() -> {
+            View parent = (View) textView.getParent();
+            if (parent != null) parent.requestLayout();
+
+            // Measure full height of expanded TextView
+            textView.measure(
+                    View.MeasureSpec.makeMeasureSpec(textView.getWidth(), View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.UNSPECIFIED
+            );
+            int lineHeight = textView.getLineHeight();
+            int collapsedHeight = (lineHeight * collapsedLines)
+                    + textView.getPaddingTop()
+                    + textView.getPaddingBottom();
+
+            // Set collapsed state initially
+            textView.setMaxLines(collapsedLines);
+            textView.setEllipsize(TextUtils.TruncateAt.END);
+            textView.setTag(true); // collapsed
+
+            textView.setOnClickListener(v -> {
+                boolean isCollapsed = (Boolean) textView.getTag();
+                textView.setTag(!isCollapsed);
+
+                View parentView = (View) textView.getParent();
+                int startHeight = textView.getHeight();
+                int endHeight;
+
+                if (isCollapsed) {
+                    // Expanding
+                    textView.setMaxLines(Integer.MAX_VALUE);
+                    textView.setEllipsize(null);
+
+                    textView.measure(
+                            View.MeasureSpec.makeMeasureSpec(textView.getWidth(), View.MeasureSpec.EXACTLY),
+                            View.MeasureSpec.UNSPECIFIED
+                    );
+                    endHeight = textView.getMeasuredHeight();
+                } else {
+                    // Collapsing
+                    endHeight = collapsedHeight;
+                }
+
+                ValueAnimator animator = ValueAnimator.ofInt(startHeight, endHeight);
+                animator.setDuration(ANIMATION_DURATION);
+                animator.addUpdateListener(animation -> {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams params = textView.getLayoutParams();
+                    params.height = value;
+                    textView.setLayoutParams(params);
+
+                    if (parentView != null) parentView.requestLayout();
+                });
+
+                animator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        ViewGroup.LayoutParams params = textView.getLayoutParams();
+                        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        textView.setLayoutParams(params);
+
+                        if (!isCollapsed) {
+                            textView.setMaxLines(collapsedLines);
+                            textView.setEllipsize(TextUtils.TruncateAt.END);
+                        }
+
+                        if (parentView != null) {
+                            parentView.requestLayout();
+                            parentView.invalidate();
+                        }
+
+                        // Optional: improve accessibility feedback
+                        textView.announceForAccessibility(isCollapsed ? "Expanded" : "Collapsed");
+                    }
+                });
+
+                animator.start();
+            });
+        });
     }
 
     private void updateGenericButtonAction() {
@@ -2853,20 +2939,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     guestStars = tags.getActorsFormatted();
                 }
                 setTextOrHideContainer(mGuestStars, guestStars, mGuestStars, mGuestStarsTitle);
-                mGuestStars.setMaxLines(2);
                 mGuestStars.setTag(true);
-                mGuestStars.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (((Boolean) mGuestStars.getTag())) {
-                            mGuestStars.setMaxLines(200);
-                            mGuestStars.setTag(false);
-                        } else {
-                            mGuestStars.setMaxLines(2);
-                            mGuestStars.setTag(true);
-                        }
-                    }
-                });
+                animateTextViewExpansionCollapse(mGuestStars, 1);
                 setTextOrHideContainer(mScrapDirector, tags.getDirectorsFormatted(), mScrapDirector, mScrapDirectorTitle);
                 // set Writer
                 String writer = tags.getWritersFormatted();
