@@ -3468,20 +3468,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     Picasso.get().load(tags.getClearLogo()).into(mClearLogo);
                     setTextOrHideContainer(mScrapProducer, tags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
-                    mScrapProducer.setMaxLines(2);
                     mScrapProducer.setTag(true);
-                    mScrapProducer.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (((Boolean) mScrapProducer.getTag())) {
-                                mScrapProducer.setMaxLines(50);
-                                mScrapProducer.setTag(false);
-                            } else {
-                                mScrapProducer.setMaxLines(2);
-                                mScrapProducer.setTag(true);
-                            }
-                        }
-                    });
+                    animateTextViewExpansionCollapse(mScrapProducer, 1);
                     // hide Created by
                     mCreatedBy.setVisibility(View.GONE);
                     mCreatedByContainer.setVisibility(View.GONE);
