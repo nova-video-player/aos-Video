@@ -3192,7 +3192,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         }
                     }
                     networksSize = availableNetworkLogos.size();
-                    if (networksSize == 0){
+                    if (networksSize <= 1){
                         networks.setVisibility(View.GONE);
                     }
                     // Set default series network logo
