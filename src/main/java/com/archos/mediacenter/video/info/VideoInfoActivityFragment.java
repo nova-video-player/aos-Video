@@ -3412,7 +3412,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         }
                     }
                     studiosSize = availableStudioLogos.size();
-                    if (studiosSize == 0){
+                    if (studiosSize <= 1){
                         studios.setVisibility(View.GONE);
                     }
                     List<ScraperImage> studioImage = tags.getStudioLogos();
