@@ -437,21 +437,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             TextView network = mHeaderView.findViewById(R.id.network);
             network.setText(show.getStudio());
-            network.setMaxLines(1);
             network.setTag(true);
-            network.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (((Boolean) network.getTag())) {
-                        network.setMaxLines(Integer.MAX_VALUE);
-                        network.setTag(false);
-                    } else {
-                        network.setMaxLines(1);
-                        network.setTag(true);
-                    }
-                    mBrowserAdapter.notifyDataSetChanged();
-                }
-            });
+            animateTextViewExpansionCollapse(network, 1);
 
             TextView Premiered = mHeaderView.findViewById(R.id.premiered);
             String pattern = "MMMM dd, yyyy";
