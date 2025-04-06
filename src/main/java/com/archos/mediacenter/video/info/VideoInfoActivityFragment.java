@@ -2941,7 +2941,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 setTextOrHideContainer(mGuestStars, guestStars, mGuestStars, mGuestStarsTitle);
                 mGuestStars.setTag(true);
                 animateTextViewExpansionCollapse(mGuestStars, 1);
+
+                // set Director
                 setTextOrHideContainer(mScrapDirector, tags.getDirectorsFormatted(), mScrapDirector, mScrapDirectorTitle);
+
                 // set Writer
                 String writer = tags.getWritersFormatted();
                 String screenplay = tags.getScreenplaysFormatted();
