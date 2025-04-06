@@ -422,6 +422,13 @@
                 android:textSize="@dimen/video_info_medium_text_new" />
         </LinearLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/network_logo_rv"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="-2dp"
+            android:layout_marginBottom="-2dp"/>
+
         <LinearLayout
             android:id="@+id/scrap_studio_container"
             android:layout_width="fill_parent"
@@ -452,13 +459,6 @@
                 android:ellipsize="end"
                 android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/network_logo_rv"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginTop="-2dp"
-            android:layout_marginBottom="-2dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/studio_logo_rv"
