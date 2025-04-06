@@ -2961,34 +2961,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mScrapWriterTitle.setVisibility(View.GONE);
                 }
 
-                mScrapDirector.setMaxLines(2);
                 mScrapDirector.setTag(true);
-                mScrapDirector.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (((Boolean) mScrapDirector.getTag())) {
-                            mScrapDirector.setMaxLines(50);
-                            mScrapDirector.setTag(false);
-                        } else {
-                            mScrapDirector.setMaxLines(2);
-                            mScrapDirector.setTag(true);
-                        }
-                    }
-                });
-                mScrapWriter.setMaxLines(2);
+                animateTextViewExpansionCollapse(mScrapDirector, 1);
+
                 mScrapWriter.setTag(true);
-                mScrapWriter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (((Boolean) mScrapWriter.getTag())) {
-                            mScrapWriter.setMaxLines(50);
-                            mScrapWriter.setTag(false);
-                        } else {
-                            mScrapWriter.setMaxLines(2);
-                            mScrapWriter.setTag(true);
-                        }
-                    }
-                });
+                animateTextViewExpansionCollapse(mScrapWriter, 1);
+
                 String date = null;
                 String baseStudioPath = MediaScraper.getStudioLogoDirectory(mContext).getPath() + "/";
                 String baseNetworkPath = MediaScraper.getNetworkLogoDirectory(mContext).getPath() + "/";
@@ -3022,20 +3000,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     Picasso.get().load(showTags.getClearLogo()).into(mClearLogo);
                     //set series producer
                     setTextOrHideContainer(mScrapProducer, showTags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
-                    mScrapProducer.setMaxLines(2);
                     mScrapProducer.setTag(true);
-                    mScrapProducer.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (((Boolean) mScrapProducer.getTag())) {
-                                mScrapProducer.setMaxLines(50);
-                                mScrapProducer.setTag(false);
-                            } else {
-                                mScrapProducer.setMaxLines(2);
-                                mScrapProducer.setTag(true);
-                            }
-                        }
-                    });
+                    animateTextViewExpansionCollapse(mScrapProducer, 1);
                     // set series studio names for episode view
                     String names = "";
                     for (int i = showTags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
@@ -3109,20 +3075,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         setTextOrHideContainer(mCreatedBy, showTags.getDirectorsFormatted() , mCreatedByContainer);
                     }
-                    mCreatedBy.setMaxLines(2);
                     mCreatedBy.setTag(true);
-                    mCreatedBy.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (((Boolean) mCreatedBy.getTag())) {
-                                mCreatedBy.setMaxLines(50);
-                                mCreatedBy.setTag(false);
-                            } else {
-                                mCreatedBy.setMaxLines(2);
-                                mCreatedBy.setTag(true);
-                            }
-                        }
-                    });
+                    animateTextViewExpansionCollapse(mCreatedBy, 1);
                     // set series actors
                     List<CastData> seriesActors = new ArrayList<>();
                     CastData castData;
@@ -3185,20 +3139,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                     }
-                    mGenreTextView.setMaxLines(2);
                     mGenreTextView.setTag(true);
-                    mGenreTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (((Boolean) mGenreTextView.getTag())) {
-                                mGenreTextView.setMaxLines(50);
-                                mGenreTextView.setTag(false);
-                            } else {
-                                mGenreTextView.setMaxLines(2);
-                                mGenreTextView.setTag(true);
-                            }
-                        }
-                    });
+                    animateTextViewExpansionCollapse(mGenreTextView, 1);
                     // setting Networks RecyclerView
                     List<ScraperImage> networkImage = showTags.getNetworkLogos();
                     List<String> NetworkLogoPaths = new ArrayList<>();
@@ -3329,20 +3271,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }else{
                         mNetworks.setText(networkNames);
                     }
-                    mNetworks.setMaxLines(1);
                     mNetworks.setTag(true);
-                    mNetworks.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (((Boolean) mNetworks.getTag())) {
-                                mNetworks.setMaxLines(50);
-                                mNetworks.setTag(false);
-                            } else {
-                                mNetworks.setMaxLines(1);
-                                mNetworks.setTag(true);
-                            }
-                        }
-                    });
+                    animateTextViewExpansionCollapse(mNetworks, 1);
                     //hide movie Info Container
                     mMovieInfoContainer.setVisibility(View.GONE);
                 }
