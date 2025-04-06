@@ -3507,20 +3507,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if(mIMDBId==null||mIMDBId.isEmpty())
                     mIMDBIcon.setVisibility(View.GONE);
                 setTextOrHideContainer(mScrapStudio, studio,mScrapStudioContainer);
-                mScrapStudio.setMaxLines(1);
                 mScrapStudio.setTag(true);
-                mScrapStudio.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (((Boolean) mScrapStudio.getTag())) {
-                            mScrapStudio.setMaxLines(50);
-                            mScrapStudio.setTag(false);
-                        } else {
-                            mScrapStudio.setMaxLines(1);
-                            mScrapStudio.setTag(true);
-                        }
-                    }
-                });
+                animateTextViewExpansionCollapse(mScrapStudio, 1);
+
                 setTextOrHideContainer(mScrapYear, date, mScrapYear);
                 setTextOrHideContainer(mScrapDuration, MediaUtils.formatTime(mCurrentVideo.getDurationMs()),mScrapDuration);
                 setTextOrHideContainer(mScrapRating, String.valueOf(tags.getRating()), mScrapRating);
