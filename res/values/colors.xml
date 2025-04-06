@@ -72,6 +72,7 @@
     <color name="white_font">#FFFFFF</color>
     <color name="header_font">#C5D1DB</color>
     <color name="video_info_header_text_color">#A2AFBC</color>
+    <color name="info_text_color">#D5D8DC</color>
 
     <color name="light_orange">#CC9900</color>
 </resources>

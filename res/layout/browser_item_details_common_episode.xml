@@ -13,6 +13,7 @@
 	<TextView
 		android:id="@+id/name"
 		style="@style/BrowserText.Title"
+		android:fontFamily="@font/nhaasgroteskdspro_75bd"
 		android:paddingTop="14dip"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
@@ -58,6 +59,7 @@
 	<TextView
 		android:id="@+id/info"
 		style="@style/BrowserText.Info.Video"
+		android:fontFamily="@font/nhaasgrotesktxpro_65md"
 		android:layout_below="@id/detail_line_two"
 		android:layout_toRightOf="@id/left_area" />
 
@@ -69,10 +71,12 @@
 	<TextView
 		android:id="@+id/detail_line_three"
 		style="@style/BrowserText.Details"
+		android:fontFamily="@font/nhaasgroteskdspro_56it"
+		android:textColor="@color/info_text_color"
 		android:layout_marginStart="4dp"
 		android:layout_marginEnd="4dp"
 		android:layout_below="@id/info"
-		android:layout_marginTop="18dip"
+		android:layout_marginTop="22dip"
 		android:ellipsize="end" />
 
 	<!-- Movie or TV show  : release date and rating -->
@@ -89,6 +93,7 @@
 
 		<TextView android:id="@+id/release_date"
 			style="@style/BrowserText.Details"
+			android:fontFamily="@font/nhaasgroteskdspro_55rg"
 			android:layout_width="0dip"
 			android:layout_height="wrap_content"
 			android:layout_weight="1.0"/>
@@ -97,6 +102,7 @@
 		<TextView
 			android:id="@+id/rating"
 			style="@style/BrowserText.Details"
+			android:fontFamily="@font/nhaasgrotesktxpro_65md"
 			android:drawablePadding="2dip"
 			android:drawableLeft="@drawable/little_star"
 			android:layout_weight="0.7"

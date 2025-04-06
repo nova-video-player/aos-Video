@@ -114,13 +114,8 @@ public class EpisodeListDetailedPresenter extends EpisodePresenter{
                 holder.release_date.setText(R.string.scrap_aired);
             }
             holder.detailLineTwo.setSingleLine(true);
-            holder.detailLineThree.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
             holder.detailLineThree.setSingleLine(false);
-            holder.detailLineThree.setMaxLines(3);
-
-
-
-
+            holder.detailLineThree.setMaxLines(4);
         return view;
     }
     private void setViewHolderVisibility(ViewHolderDetails holder, int visibility) {
