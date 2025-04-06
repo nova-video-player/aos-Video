@@ -625,7 +625,7 @@
             android:id="@+id/net_logo_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/video_details_poster_margin_left"
+            android:layout_marginStart="112dp"
             android:layout_marginEnd="@dimen/video_details_poster_margin_left"
             android:layout_marginTop="-3dp"
             android:layout_marginBottom="-3dp"/>
