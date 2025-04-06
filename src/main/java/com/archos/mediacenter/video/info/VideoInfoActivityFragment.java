@@ -1315,6 +1315,72 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         });
     }
 
+    public static void setupAnimatedPlotExpansion(TextView textView, int collapsedLines) {
+        int expectedWidthOfTextView = textView.getResources().getDisplayMetrics().widthPixels;
+        int originalMaxLines = textView.getMaxLines();
+
+        if (originalMaxLines < 0 || originalMaxLines == Integer.MAX_VALUE) {
+            Log.d("PlotAnim", "Already unbounded maxLines");
+        } else {
+            textView.setMaxLines(Integer.MAX_VALUE);
+            textView.measure(
+                    View.MeasureSpec.makeMeasureSpec(expectedWidthOfTextView, View.MeasureSpec.AT_MOST),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            );
+
+            int measuredLineCount = textView.getLineCount();
+            int measuredTargetHeight = textView.getMeasuredHeight();
+            int lineHeight = textView.getLineHeight();
+
+            Log.d("PlotAnim", "Lines: " + measuredLineCount + "/" + originalMaxLines);
+
+            textView.setEllipsize(TextUtils.TruncateAt.END);
+            textView.setMaxLines(collapsedLines);
+
+            if (measuredLineCount <= originalMaxLines) {
+                Log.d("PlotAnim", "Text fits within original maxLines");
+            } else {
+                Log.d("PlotAnim", "Text exceeds original maxLines");
+                textView.setTag(true); // collapsed
+
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean isCollapsed = (Boolean) textView.getTag();
+                        ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
+
+                        if (isCollapsed) {
+                            textView.setMaxLines(Integer.MAX_VALUE);
+                            ValueAnimator animation = ValueAnimator.ofInt(textView.getHeight(), measuredTargetHeight);
+                            animation.addUpdateListener(valueAnimator -> {
+                                layoutParams.height = (int) valueAnimator.getAnimatedValue();
+                                textView.requestLayout();
+                            });
+                            animation.start();
+                            layoutParams.height = textView.getHeight();
+                            textView.setTag(false);
+                        } else {
+                            ValueAnimator animation = ValueAnimator.ofInt(textView.getHeight(), lineHeight * collapsedLines + 10);
+                            animation.addUpdateListener(valueAnimator -> {
+                                layoutParams.height = (int) valueAnimator.getAnimatedValue();
+                                textView.requestLayout();
+                            });
+                            animation.addListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    textView.setMaxLines(collapsedLines);
+                                }
+                            });
+                            animation.start();
+                            layoutParams.height = textView.getHeight();
+                            textView.setTag(true);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
     private void updateGenericButtonAction() {
         log.debug("updateGenericButtonAction");
         int resume = 0;
@@ -2828,72 +2894,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 });
                 setTextOrHideContainer(mPlotTextView, plot, mPlotTextView);
                 // set plot animation
-                int expectedWidthOfTextView = getResources().getDisplayMetrics().widthPixels;
-                int originalMaxLines = mPlotTextView.getMaxLines();
-                if (originalMaxLines < 0 || originalMaxLines == Integer.MAX_VALUE)
-                    log.debug("FullScraperTagsTask: already unbounded textView maxLines");
-                else {
-                    mPlotTextView.setMaxLines(Integer.MAX_VALUE);
-                    mPlotTextView.measure(
-                            View.MeasureSpec.makeMeasureSpec(expectedWidthOfTextView, View.MeasureSpec.AT_MOST),
-                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                    );
-                    int measuredLineCount = mPlotTextView.getLineCount();
-                    int measuredTargetHeight = mPlotTextView.getMeasuredHeight();
-                    int lineHeight = mPlotTextView.getLineHeight();
-                    log.debug("FullScraperTagsTask: lines:$measuredLineCount/$originalMaxLines");
-                    mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
-                    mPlotTextView.setMaxLines(4);
-                    if (measuredLineCount <= originalMaxLines)
-                        log.debug("FullScraperTagsTask: fit in original maxLines");
-                    else {
-                        log.debug("FullScraperTagsTask: exceeded original maxLines");
-                        mPlotTextView.setTag(true);
-                        mPlotTextView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (((Boolean) mPlotTextView.getTag())) {
-                                    mPlotTextView.setMaxLines(Integer.MAX_VALUE);
-                                    ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
-                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), measuredTargetHeight);
-                                    animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                        @Override
-                                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                            layoutParams.height =  (int) valueAnimator.getAnimatedValue();
-                                            mPlotTextView.requestLayout();
-                                        }
-                                    });
-                                    animation.start();
-                                    //animation.setDuration(500);
-                                    layoutParams.height = mPlotTextView.getHeight();
-                                    mPlotTextView.setTag(false);
-                                } else {
-                                    ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
-                                    ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), lineHeight * 4 + 10);
-                                    animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                        @Override
-                                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                            layoutParams.height =  (int) valueAnimator.getAnimatedValue();
-                                            mPlotTextView.requestLayout();
-                                        }
-                                    });
-                                    animation.addListener(new AnimatorListenerAdapter()
-                                    {
-                                        @Override
-                                        public void onAnimationEnd(Animator animation)
-                                        {
-                                            mPlotTextView.setMaxLines(4);
-                                        }
-                                    });
-                                    animation.start();
-                                    //animation.setDuration(500);
-                                    layoutParams.height = mPlotTextView.getHeight();
-                                    mPlotTextView.setTag(true);
-                                }
-                            }
-                        });
-                    }
-                }
+                setupAnimatedPlotExpansion(mPlotTextView, 4);
                 // Movie Cast
                 StringBuilder sb = new StringBuilder();
                 boolean firstTime = true;
