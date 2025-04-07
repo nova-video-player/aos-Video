@@ -59,6 +59,7 @@ import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -953,6 +954,12 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                             return false;
                         }
                     });
+                }
+                // change browser resume button height to 240 (smaller) when in phone and landscape mode
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)) {
+                    grv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240));
+                    //text.setBackground(null);
+                    //grv.clearImage(); // optionally remove the image
                 }
             }
         }
