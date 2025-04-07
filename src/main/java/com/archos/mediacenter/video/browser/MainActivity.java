@@ -68,6 +68,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -958,8 +959,9 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 // change browser resume button height to 240 (smaller) when in phone and landscape mode
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)) {
                     grv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240));
-                    //text.setBackground(null);
-                    //grv.clearImage(); // optionally remove the image
+                    text.setBackground(null);
+                    grv.clearImage(); // optionally remove the image
+                    grv.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.browser_resume_stroke));
                 }
             }
         }
