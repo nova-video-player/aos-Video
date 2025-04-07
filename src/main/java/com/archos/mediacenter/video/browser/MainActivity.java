@@ -959,9 +959,13 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 // change browser resume button height to 240 (smaller) when in phone and landscape mode
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)) {
                     grv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240));
-                    text.setBackground(null);
-                    grv.clearImage(); // optionally remove the image
-                    grv.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.browser_resume_stroke));
+                    SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    boolean mDisplayClearLogoInPlayer = mPreferences.getBoolean("display_backdrop_global_resume", true);
+                    if (mDisplayClearLogoInPlayer){
+                        text.setBackground(null);
+                        grv.clearImage(); // optionally remove the image
+                        grv.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.browser_resume_stroke));
+                    }
                 }
             }
         }

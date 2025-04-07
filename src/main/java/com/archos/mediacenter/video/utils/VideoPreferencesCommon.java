@@ -248,6 +248,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mEnablePlayPauseOnTouch = null;
     private CheckBoxPreference mDisplayPosterInPlayer = null;
     private CheckBoxPreference mDisplayClearLogoInPlayer = null;
+    private CheckBoxPreference mDisplayBackdropInGlobalResume = null;
     private CheckBoxPreference mHideGridViewInfo = null;
     private CheckBoxPreference mDisplayActorPhotoToast = null;
     private CheckBoxPreference mDarkMode = null;
@@ -509,6 +510,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mEnablePlayPauseOnTouch = (CheckBoxPreference) findPreference("enable_PlayPause_onTouch");
         mDisplayPosterInPlayer = (CheckBoxPreference) findPreference("display_poster_player");
         mDisplayClearLogoInPlayer = (CheckBoxPreference) findPreference("display_clearlogo_player");
+        mDisplayBackdropInGlobalResume = (CheckBoxPreference) findPreference("display_backdrop_global_resume");
         mHideGridViewInfo = (CheckBoxPreference) findPreference("hide_gridview_info");
         mDisplayActorPhotoToast = (CheckBoxPreference) findPreference("display_actorPhoto_toast");
         mActivateRefreshrateTVSwitch = (ListPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);

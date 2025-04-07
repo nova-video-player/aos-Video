@@ -79,6 +79,13 @@
             android:title="@string/preference_display_clearlogo_player_title"
             app:iconSpaceReserved="false" />
         <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="display_backdrop_global_resume"
+            android:persistent="true"
+            android:summary="@string/preference_display_backdrop_global_resume_summary"
+            android:title="@string/preference_display_backdrop_global_resume_title"
+            app:iconSpaceReserved="false" />
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="allow_3rd_party_player"
             android:persistent="true"

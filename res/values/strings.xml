@@ -1090,6 +1090,9 @@
     <string name="preference_display_clearlogo_player_title">Display logo in video player</string>
     <string name="preference_display_clearlogo_player_summary">Displays Movie or Episode logo of the currently playing video in the playback screen.</string>
 
+    <string name="preference_display_backdrop_global_resume_title">Display Backdrop in Global Resume</string>
+    <string name="preference_display_backdrop_global_resume_summary">Displays Backdrop in Global Resume Button when in phone mode and landscape mode.</string>
+
     <string name="start_time">start time</string>
     <string name="end_time">end time</string>
     <string name="video_definition">HD</string>
