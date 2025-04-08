@@ -46,6 +46,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.DisplayCutout;
 import android.view.InputDevice;
 import android.view.InputEvent;
@@ -883,6 +884,12 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 grv.resetOpenAnimation();
                 TextView text = (TextView) grv.findViewById(R.id.global_resume_text);
                 text.setText((CharSequence) result.get("name"));
+                text.setSingleLine(true);
+                text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                text.setMarqueeRepeatLimit(-1); // -1 for infinite
+                text.setSelected(true); // Required to start marquee
+                text.setFocusable(true);
+                text.setFocusableInTouchMode(true);
                 View tint = grv.findViewById(R.id.tint);
 
                 // it seems to be possible that tint is null. Prevent crash and
