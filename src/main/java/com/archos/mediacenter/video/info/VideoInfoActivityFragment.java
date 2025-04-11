@@ -905,6 +905,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             episodeSelectorContainer.setVisibility(View.GONE);
         }
 
+        // disable saving scroll state
+        mScrollView.setSaveEnabled(false);
+
         return mRoot;
     }
 
