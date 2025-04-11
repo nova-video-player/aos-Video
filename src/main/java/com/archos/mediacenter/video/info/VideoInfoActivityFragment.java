@@ -53,6 +53,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -3728,6 +3729,38 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         } else {
             log.debug("onResume: mCurrentVideo=null");
         }
+        // scroll to level of the poster when in phone and landscape mode.
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)) {
+            scrollToPosterIfLandscape();
+        }
+    }
+
+    private void scrollToPosterIfLandscape() {
+        mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                // Delay scroll to give Android time to restore original scroll position
+                mScrollView.postDelayed(() -> {
+                    Log.d("ScrollCheck", "Before scrollTo: ScrollY = " + mScrollView.getScrollY());
+
+                    int[] scrollViewLocation = new int[2];
+                    int[] posterLocation = new int[2];
+
+                    mScrollView.getLocationOnScreen(scrollViewLocation);
+                    mPosterImageView.getLocationOnScreen(posterLocation);
+
+                    int relativeY = posterLocation[1] - scrollViewLocation[1] - mHeaderHeight;
+
+                    if (relativeY > 0) {
+                        mScrollView.scrollTo(0, relativeY);
+                        Log.d("ScrollCheck", "After scrollTo: ScrollY = " + mScrollView.getScrollY());
+                    }
+                }, 200);
+
+            }
+        });
     }
 
     @Override
