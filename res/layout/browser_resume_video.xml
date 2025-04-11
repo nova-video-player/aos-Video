@@ -16,28 +16,31 @@ access to last video played. -->
 
     <ImageView
         android:id="@+id/global_resume_btn"
-        android:layout_width="@dimen/global_resume_playbutton_width"
-        android:layout_height="@dimen/global_resume_playbutton_height"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/global_resume_icon_padding_left"
         android:layout_marginRight="@dimen/global_resume_icon_padding_right"
-        app:srcCompat="@drawable/gb_play_button"
+        app:srcCompat="@drawable/resume"
         app:tint="@color/play_button_tint"
 
         app:tintMode="src_atop"/>
 
     <TextView
         android:id="@+id/global_resume_text"
-        android:layout_toRightOf="@id/global_resume_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/global_resume_btn"
+        android:text="Mad Max Fury Road"
+        android:textSize="20sp"
         android:paddingStart="4dp"
         android:paddingEnd="4dp"
         android:paddingBottom="2dp"
+        android:paddingTop="2dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="1dp"
-        android:fontFamily="@font/lato_bold"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="6dp"
+        android:fontFamily="@font/nhaasgroteskdspro_75bd"
         android:textColor="@color/white_font"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:background="@drawable/rounded_background"
@@ -51,4 +54,84 @@ access to last video played. -->
         android:visibility="gone"
         />
 
+    <!-- Custom resume button -->
+    <LinearLayout
+        android:id="@+id/resume_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="end"
+        android:paddingEnd="1dp"
+        android:paddingStart="1dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:focusable="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|start">
+
+            <!-- Text and Icon Container -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0.5dp"
+                android:layout_marginEnd="2dp"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <!-- Resume Text -->
+                <TextView
+                    android:id="@+id/resume_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="3dp"
+                    android:includeFontPadding="false"
+                    android:background="@android:color/transparent"
+                    android:lineSpacingExtra="0dp"
+                    android:text="Resume"
+                    android:fontFamily="@font/gotham_narrow_book"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="4dp"
+                    android:shadowColor="#AA000000"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:textAllCaps="true" />
+
+                <!-- Timestamp Text -->
+                <TextView
+                    android:id="@+id/timestamp_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-8.7dp"
+                    android:text="00:00"
+                    android:textColor="@android:color/white"
+                    android:fontFamily="@font/nhaasgroteskdspro_75bd"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:shadowColor="#AA000000"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2" />
+            </LinearLayout>
+
+            <!-- Icon -->
+            <ImageView
+                android:id="@+id/resume_icon"
+                android:layout_gravity="center"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/resume"
+                app:tint="@color/play_button_tint"
+                app:tintMode="src_atop"/>
+        </LinearLayout>
+    </LinearLayout>
 </com.archos.mediacenter.utils.GlobalResumeView>

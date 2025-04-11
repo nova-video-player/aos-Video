@@ -59,6 +59,8 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowInsets;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -111,6 +113,7 @@ import com.archos.mediascraper.AutoScrapeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -797,16 +800,24 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     private class GlobalResumeTask extends AsyncTask<Void, Void, Map> {
         protected Map doInBackground(Void... anything) {
-            Map<String, Object> result;
+            Map<String, Object> result = new HashMap<>();
             ContentResolver contentResolver = getContentResolver();
-            Cursor c = contentResolver.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, CURSORS,
-                    VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "!=0" + (LoaderUtils.mustHideUserHiddenObjects() ? " AND " + LoaderUtils.HIDE_USER_HIDDEN_FILTER : ""), null,
+
+            // Add the BOOKMARK column to the query so we can fetch resume time
+            String[] projection = Arrays.copyOf(CURSORS, CURSORS.length + 1);
+            projection[CURSORS.length] = VideoStore.Video.VideoColumns.BOOKMARK;
+
+            Cursor c = contentResolver.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, projection,
+                    VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "!=0" +
+                            (LoaderUtils.mustHideUserHiddenObjects() ? " AND " + LoaderUtils.HIDE_USER_HIDDEN_FILTER : ""),
+                    null,
                     VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + " DESC LIMIT 1");
 
             if (c != null && c.getCount() != 0) {
                 int index_id = c.getColumnIndex(VideoStore.Video.VideoColumns._ID);
-                int index_scraper_id = c
-                        .getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_ID);
+                int index_scraper_id = c.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_ID);
+                int index_bookmark = c.getColumnIndex(VideoStore.Video.VideoColumns.BOOKMARK);  // Bookmark column
+
                 c.moveToFirst();
 
                 boolean firstGlobalResume = (mGlobalResumeId == -1);
@@ -814,10 +825,10 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 Bitmap thumbnail = null;
                 CharSequence name = null;
                 int scraperId = c.getInt(index_scraper_id);
+                long resumeTime = c.getLong(index_bookmark);  // Get resume time from the cursor
 
                 if (scraperId > 0) {
-                    int scraperType = c
-                            .getInt(c.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE));
+                    int scraperType = c.getInt(c.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE));
                     String[] selectionArgs = new String[] {
                             String.valueOf(scraperType), String.valueOf(scraperId)
                     };
@@ -825,28 +836,23 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                     Cursor scraperCursor = contentResolver.query(ScraperStore.AllVideos.URI.ALL,
                             SCRAPER_PROJECTION, SCRAPER_SELECTION, selectionArgs, null);
                     if (scraperCursor.moveToFirst()) {
-                        int index_cover = scraperCursor
-                                .getColumnIndex(ScraperStore.AllVideos.MOVIE_OR_SHOW_BACKDROP);
-                        int index_name = scraperCursor
-                                .getColumnIndex(ScraperStore.AllVideos.MOVIE_OR_SHOW_NAME);
+                        int index_cover = scraperCursor.getColumnIndex(ScraperStore.AllVideos.MOVIE_OR_SHOW_BACKDROP);
+                        int index_name = scraperCursor.getColumnIndex(ScraperStore.AllVideos.MOVIE_OR_SHOW_NAME);
 
                         thumbnail = BitmapFactory.decodeFile(scraperCursor.getString(index_cover));
 
                         if (scraperType == com.archos.mediascraper.BaseTags.MOVIE) {
                             name = scraperCursor.getString(index_name);
                         } else {
-                            int index_number = scraperCursor
-                                    .getColumnIndex(ScraperStore.AllVideos.EPISODE_NUMBER);
-                            int index_season = scraperCursor
-                                    .getColumnIndex(ScraperStore.AllVideos.EPISODE_SEASON_NUMBER);
-                            int index_episode_name = scraperCursor
-                                    .getColumnIndex(ScraperStore.AllVideos.EPISODE_NAME);
+                            int index_number = scraperCursor.getColumnIndex(ScraperStore.AllVideos.EPISODE_NUMBER);
+                            int index_season = scraperCursor.getColumnIndex(ScraperStore.AllVideos.EPISODE_SEASON_NUMBER);
+                            int index_episode_name = scraperCursor.getColumnIndex(ScraperStore.AllVideos.EPISODE_NAME);
                             String episodeName = String.format(getString(R.string.quotation_format),
                                     scraperCursor.getString(index_episode_name));
-                            name = HtmlCompat.fromHtml(String.format(Locale.ENGLISH,TITLE_FORMAT,
-                                    scraperCursor.getString(index_name),
-                                    scraperCursor.getInt(index_season),
-                                    scraperCursor.getInt(index_number), episodeName),
+                            name = HtmlCompat.fromHtml(String.format(Locale.ENGLISH, TITLE_FORMAT,
+                                            scraperCursor.getString(index_name),
+                                            scraperCursor.getInt(index_season),
+                                            scraperCursor.getInt(index_number), episodeName),
                                     HtmlCompat.FROM_HTML_MODE_LEGACY);
                         }
                     } // else: cursor is empty -> no thumbnail
@@ -863,16 +869,17 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                             VideoStore.Video.Thumbnails.MINI_KIND, null);
                 }
 
-                result = new HashMap<>(3);
                 result.put("name", name);
                 result.put("thumbnail", thumbnail);
                 result.put("setListener", firstGlobalResume);
+                result.put("resumeTime", resumeTime);  // Add resume time to the result map
             } else {
                 result = new HashMap<>(0);
             }
 
-            if (c != null)
+            if (c != null) {
                 c.close();
+            }
 
             return result;
         }
@@ -883,6 +890,29 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 GlobalResumeView grv = getGlobalResumeView();
                 grv.resetOpenAnimation();
                 TextView text = (TextView) grv.findViewById(R.id.global_resume_text);
+                TextView timestamp = (TextView) grv.findViewById(R.id.timestamp_text);
+
+                long resumeTime = (Long) result.get("resumeTime");
+                // Convert milliseconds to minutes and seconds
+                long minutes = (resumeTime / 1000) / 60;
+                long seconds = (resumeTime / 1000) % 60;
+
+                // Format the time as MM:SS
+                String formattedTime = String.format("%02d:%02d", minutes, seconds);
+                timestamp.setText(formattedTime);
+
+                // Create the blinking animation
+                AlphaAnimation blinkAnimation = new AlphaAnimation(0.0f, 1.0f);  // Fade out to fully visible
+                blinkAnimation.setDuration(500);  // Duration for each fade cycle (in milliseconds)
+                blinkAnimation.setRepeatMode(Animation.REVERSE);  // Reverse the animation (fade in/out)
+                blinkAnimation.setRepeatCount(Animation.INFINITE);  // Repeat infinitely
+
+                // Set the blinking effect on the timestamp TextView
+                // timestamp.startAnimation(blinkAnimation);
+
+                // Set the text color to red initially
+                timestamp.setTextColor(Color.RED);
+
                 text.setText((CharSequence) result.get("name"));
                 text.setSingleLine(true);
                 text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
