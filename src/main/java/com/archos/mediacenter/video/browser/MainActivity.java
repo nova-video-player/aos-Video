@@ -47,6 +47,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.DisplayCutout;
 import android.view.InputDevice;
 import android.view.InputEvent;
@@ -63,6 +64,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -935,6 +937,26 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                     tint.setVisibility(View.GONE);
                 }
 
+                // resume icon option
+                SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String mode = mPreferences.getString("global_resume_icon", null);
+                int iconStyle;
+                if(mode == null){
+                    iconStyle = 0;
+                }else{
+                    iconStyle = Integer.parseInt(mode);
+                }
+                ImageView resumeButton = (ImageView) findViewById(R.id.global_resume_btn);
+                LinearLayout resumeButtonDetailed =  (LinearLayout) findViewById(R.id.resume_button);
+                if (iconStyle == 0){
+                    resumeButton.setVisibility(View.VISIBLE);
+                    resumeButtonDetailed.setVisibility(View.GONE);
+                }
+                if (iconStyle == 1){
+                    resumeButton.setVisibility(View.GONE);
+                    resumeButtonDetailed.setVisibility(View.VISIBLE);
+                }
+
                 if ((Boolean) result.get("setListener")) {
                     final GlobalResumeView f_grv = grv;
 
@@ -996,12 +1018,30 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 // change browser resume button height to 240 (smaller) when in phone and landscape mode
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)) {
                     grv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240));
-                    SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     boolean mDisplayClearLogoInPlayer = mPreferences.getBoolean("display_backdrop_global_resume", true);
                     if (!mDisplayClearLogoInPlayer){
                         text.setBackground(null);
                         grv.clearImage(); // optionally remove the image
                         grv.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.browser_resume_stroke));
+                    }
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) text.getLayoutParams();
+                    if (iconStyle == 0){
+                        params.removeRule(RelativeLayout.ALIGN_PARENT_TOP);
+                        params.removeRule(RelativeLayout.ALIGN_PARENT_START);
+                        text.setLayoutParams(params);
+                    }
+                    if (iconStyle == 1){
+                        params.addRule(RelativeLayout.ALIGN_PARENT_START);
+                        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                        // Convert 2dp to pixels
+                        int marginTopInPx = (int) TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                2,
+                                text.getResources().getDisplayMetrics()
+                        );
+                        // Set the top margin
+                        params.topMargin = marginTopInPx;
+                        text.setLayoutParams(params);
                     }
                 }
             }

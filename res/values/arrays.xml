@@ -222,6 +222,10 @@
         <item>@string/episode_numbers</item>
         <item>@string/hide_episode_scrollview</item>
     </string-array>
+    <string-array name="global_resume_icon_entries" translatable="false">
+        <item>@string/global_resume_icon_simple</item>
+        <item>@string/global_resume_icon_detailed</item>
+    </string-array>
     <string-array name="episode_scrollView_mode_entryValues">
         <item>0</item>
         <item>1</item>

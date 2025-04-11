@@ -1066,6 +1066,8 @@
     <string name="episode_scrollView_mode_summery">Displays a horizontal scroll view when viewing Episode info, through which you can instantly switch to the desired episode. There are three viewing modes, episode pictures, episode numbers or completely hide the scroll view.</string>
     <string name="episode_pictures">Episode Pictures</string>
     <string name="episode_numbers">Episode Numbers</string>
+    <string name="global_resume_icon_simple">Simple Resume Icon</string>
+    <string name="global_resume_icon_detailed">Detailed Resume Icon</string>
     <string name="hide_episode_scrollview">Hide</string>
 
     <string name="preference_display_TvOverview_if_only_one_season">Display TV Show overview</string>
@@ -1092,6 +1094,9 @@
 
     <string name="preference_display_backdrop_global_resume_title">Display Backdrop in Global Resume</string>
     <string name="preference_display_backdrop_global_resume_summary">Displays Backdrop in Global Resume Button when in phone mode and landscape mode.</string>
+
+    <string name="global_resume_icon_title">Global Resume Icon</string>
+    <string name="global_resume_icon_summery">Choose between simple and detailed global resume icons.</string>
 
     <string name="start_time">start time</string>
     <string name="end_time">end time</string>

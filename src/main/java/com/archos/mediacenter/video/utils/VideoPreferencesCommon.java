@@ -236,6 +236,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private long mMoreLeanbackPrefsClickLastTime = 0;
     private ListPreference mDecChoicePreferences = null;
     private ListPreference mEpisodeScrollViewPreferences = null;
+    private ListPreference mGlobalResumeIconPreferences = null;
     private ListPreference mParserSyncMode = null;
     private ListPreference mAudioInterfaceChoicePreferences = null;
     private CheckBoxPreference mForceSwDecPreferences = null;
@@ -417,6 +418,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             netShareCategory.addPreference(mSmbDisableMdnsDiscovery);
             getPreferenceScreen().addPreference(mAdvancedPreferences);
             if (BuildConfig.ADULT_SCRAPE) prefScraperCategory.addPreference(mAdultScrape);
+            prefCategory.addPreference(mGlobalResumeIconPreferences);
         } else {
             // normal preferences
             //Editor editor = mDecChoicePreferences.getEditor();
@@ -511,6 +513,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mDisplayPosterInPlayer = (CheckBoxPreference) findPreference("display_poster_player");
         mDisplayClearLogoInPlayer = (CheckBoxPreference) findPreference("display_clearlogo_player");
         mDisplayBackdropInGlobalResume = (CheckBoxPreference) findPreference("display_backdrop_global_resume");
+        mGlobalResumeIconPreferences = (ListPreference) findPreference("global_resume_icon");
         mHideGridViewInfo = (CheckBoxPreference) findPreference("hide_gridview_info");
         mDisplayActorPhotoToast = (CheckBoxPreference) findPreference("display_actorPhoto_toast");
         mActivateRefreshrateTVSwitch = (ListPreference) findPreference(KEY_ACTIVATE_REFRESHRATE_SWITCH);

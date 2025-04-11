@@ -85,6 +85,16 @@
             android:summary="@string/preference_display_backdrop_global_resume_summary"
             android:title="@string/preference_display_backdrop_global_resume_title"
             app:iconSpaceReserved="false" />
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="@string/global_resume_icon_title"
+            android:entries="@array/global_resume_icon_entries"
+            android:entryValues="@array/episode_scrollView_mode_entryValues"
+            android:key="global_resume_icon"
+            android:persistent="true"
+            android:summary="@string/global_resume_icon_summery"
+            android:title="@string/global_resume_icon_title"
+            app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="allow_3rd_party_player"
