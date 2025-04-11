@@ -998,7 +998,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                     grv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240));
                     SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     boolean mDisplayClearLogoInPlayer = mPreferences.getBoolean("display_backdrop_global_resume", true);
-                    if (mDisplayClearLogoInPlayer){
+                    if (!mDisplayClearLogoInPlayer){
                         text.setBackground(null);
                         grv.clearImage(); // optionally remove the image
                         grv.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.browser_resume_stroke));
