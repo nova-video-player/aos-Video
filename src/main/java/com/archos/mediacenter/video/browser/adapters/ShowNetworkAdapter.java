@@ -37,6 +37,13 @@ public class ShowNetworkAdapter extends RecyclerView.Adapter<ShowNetworkAdapter.
         final String path = NetworkLogoPaths.get(position);
         File file = new File(path);
         if (file.exists()){
+            // Reset view in case it was previously hidden
+            vh.itemView.setVisibility(View.VISIBLE);
+            ViewGroup.LayoutParams params = vh.itemView.getLayoutParams();
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            vh.itemView.setLayoutParams(params);
+
             Picasso.get().load(file).into(vh.logoImage);
         } else {
             ViewGroup.LayoutParams params = vh.itemView.getLayoutParams();
