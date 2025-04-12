@@ -2929,6 +2929,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                 });
 
+                // click on ClearLogoInfo to choose another
+                mClearLogoInfo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+                        intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
+                        intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_CLEARLOGO, true);
+                        activityResultLaunch.launch(intent);
+                    }
+                });
+
                 // set Guest Stars
                 String guestStars = "";
                 if (tags instanceof EpisodeTags) {
