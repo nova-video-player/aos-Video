@@ -236,6 +236,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private long mMoreLeanbackPrefsClickLastTime = 0;
     private ListPreference mDecChoicePreferences = null;
     private ListPreference mEpisodeScrollViewPreferences = null;
+    private ListPreference mClearlogoLocation = null;
     private ListPreference mGlobalResumeIconPreferences = null;
     private ListPreference mParserSyncMode = null;
     private ListPreference mAudioInterfaceChoicePreferences = null;
@@ -489,6 +490,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mDecChoicePreferences = (ListPreference) findPreference(KEY_DEC_CHOICE);
         mEpisodeScrollViewPreferences = (ListPreference) findPreference("episode_scrollView");
+        mClearlogoLocation = (ListPreference) findPreference("clearlogo_loaction");
         mDarkMode = (CheckBoxPreference) findPreference("dark_mode");
         mEnableDisplayTvOverView = (CheckBoxPreference) findPreference("display_TvOverview");
         mAudioInterfaceChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_INTERFACE_CHOICE);
@@ -934,6 +936,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                     userInterfaceCategory.removePreference(uiZoomPref);
                 }
             }
+            userInterfaceCategory.addPreference(mClearlogoLocation);
             userInterfaceCategory.addPreference(mEpisodeScrollViewPreferences);
             userInterfaceCategory.addPreference(mEnableDisplayTvOverView);
         }

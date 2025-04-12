@@ -1062,6 +1062,11 @@
     <string name="preference_PlayPause_onTouch">Enable Play/Pause on Touch</string>
     <string name="preference_PlayPause_onTouch_summary">When tapping on the middle area of the player screen the video will be paused/resumed on successive taps instead of showing On-Screen controls. To show On-Screen controls tap on upper or lower part of the screen.</string>
 
+    <string name="clearlogo_loaction_title">Location of Logo</string>
+    <string name="clearlogo_loaction_summery">Choose location of movie or tv show logo in the information screen. The choices are either in the toolbar or beside the poster image.</string>
+    <string name="clearlogo_beside_poster">Beside Poster</string>
+    <string name="clearlogo_inside_toolbar">Inside Toolbar</string>
+
     <string name="episode_scrollView_mode_title">Episode Scroll Mode</string>
     <string name="episode_scrollView_mode_summery">Displays a horizontal scroll view when viewing Episode info, through which you can instantly switch to the desired episode. There are three viewing modes, episode pictures, episode numbers or completely hide the scroll view.</string>
     <string name="episode_pictures">Episode Pictures</string>

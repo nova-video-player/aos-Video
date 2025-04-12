@@ -111,20 +111,34 @@
                 android:layout_weight="5"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/title_view"
+                <RelativeLayout
+                    android:id="@+id/title_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/nhaasgroteskdspro_65md"
-                    android:textColor="@color/white_font"
-                    android:singleLine="true"
-                    android:textSize="22sp" />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/title_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nhaasgroteskdspro_65md"
+                        android:textColor="@color/white_font"
+                        android:singleLine="true"
+                        android:textSize="22sp" />
+
+                    <ImageView
+                        android:id="@+id/clearlogo_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="2dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitStart" />
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/episode_info_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/title_view"
+                    android:layout_below="@+id/title_container"
                     android:layout_alignEnd="@+id/info_container"
                     android:orientation="horizontal">
 

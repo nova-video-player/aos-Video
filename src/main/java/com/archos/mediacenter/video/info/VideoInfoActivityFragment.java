@@ -339,6 +339,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private View mToolbarContainer;
     private ViewGroup mSecondaryTitleBar;
     private TextView mTitleTextView;
+    private ImageView mClearLogoInfo;
     private TextView mEpisodeSeasonView;
     private TextView mEpisodeTitleView;
 
@@ -585,6 +586,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
 
         mClearLogo = mRoot.findViewById(R.id.clearlogo);
+        mClearLogoInfo = mRoot.findViewById(R.id.clearlogo_info);
         mLogo = mRoot.findViewById(R.id.logo);
         mPictureBackdrop = mRoot.findViewById(R.id.picture_backdrop);
         mRuntime = mRoot.findViewById(R.id.runtime);
@@ -2966,6 +2968,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 String extension = ".png";
                 // hide cast textview
                 mCastTextView.setVisibility(View.GONE);
+                SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
                 if(tags instanceof EpisodeTags){
                     mIsVideoMovie = false;
                     mTVDBIcon.setVisibility(View.GONE);
@@ -2985,12 +2988,34 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     log.debug("FullScraperTagsTask:onPostExecute: mTMDBId=" + mTMDBId);
                     // Set series clearlogo
                     ShowTags showTags = ((EpisodeTags) tags).getShowTags();
+                    // Set series clearlogo
                     if (showTags.getClearLogo() != null){
-                        mToolbarTitle.setVisibility(View.GONE);
+                        // Clearlogo option
+                        String mode = mPreferences.getString("clearlogo_loaction", null);
+                        int clearLogoMode;
+                        if(mode == null){
+                            clearLogoMode = 0;
+                        }else{
+                            clearLogoMode = Integer.parseInt(mode);
+                        }
+                        if (clearLogoMode == 0){
+                            Picasso.get().load(showTags.getClearLogo()).into(mClearLogoInfo);
+                            mClearLogo.setVisibility(View.GONE);
+                            mTitleTextView.setVisibility(View.GONE);
+                            mToolbarTitle.setVisibility(View.VISIBLE);
+                        }
+                        if (clearLogoMode == 1){
+                            Picasso.get().load(showTags.getClearLogo()).into(mClearLogo);
+                            mClearLogoInfo.setVisibility(View.GONE);
+                            mToolbarTitle.setVisibility(View.GONE);
+                            mTitleTextView.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         mClearLogo.setVisibility(View.GONE);
+                        mClearLogoInfo.setVisibility(View.GONE);
+                        mTitleTextView.setVisibility(View.VISIBLE);
+                        mToolbarTitle.setVisibility(View.VISIBLE);
                     }
-                    Picasso.get().load(showTags.getClearLogo()).into(mClearLogo);
                     //set series producer
                     setTextOrHideContainer(mScrapProducer, showTags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
                     mScrapProducer.setTag(true);
@@ -3459,11 +3484,32 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     // movie ClearLogo
                     if (tags.getClearLogo() != null){
-                        mToolbarTitle.setVisibility(View.GONE);
+                        // Clearlogo option
+                        String mode = mPreferences.getString("clearlogo_loaction", null);
+                        int clearLogoMode;
+                        if(mode == null){
+                            clearLogoMode = 0;
+                        }else{
+                            clearLogoMode = Integer.parseInt(mode);
+                        }
+                        if (clearLogoMode == 0){
+                            Picasso.get().load(tags.getClearLogo()).into(mClearLogoInfo);
+                            mClearLogo.setVisibility(View.GONE);
+                            mTitleTextView.setVisibility(View.GONE);
+                            mToolbarTitle.setVisibility(View.VISIBLE);
+                        }
+                        if (clearLogoMode == 1){
+                            Picasso.get().load(tags.getClearLogo()).into(mClearLogo);
+                            mClearLogoInfo.setVisibility(View.GONE);
+                            mToolbarTitle.setVisibility(View.GONE);
+                            mTitleTextView.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         mClearLogo.setVisibility(View.GONE);
+                        mClearLogoInfo.setVisibility(View.GONE);
+                        mTitleTextView.setVisibility(View.VISIBLE);
+                        mToolbarTitle.setVisibility(View.VISIBLE);
                     }
-                    Picasso.get().load(tags.getClearLogo()).into(mClearLogo);
                     setTextOrHideContainer(mScrapProducer, tags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
                     mScrapProducer.setTag(true);
                     animateTextViewExpansionCollapse(mScrapProducer, 1);
