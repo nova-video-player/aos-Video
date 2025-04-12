@@ -89,7 +89,7 @@
             android:defaultValue="0"
             android:dialogTitle="@string/global_resume_icon_title"
             android:entries="@array/global_resume_icon_entries"
-            android:entryValues="@array/episode_scrollView_mode_entryValues"
+            android:entryValues="@array/global_resume_icon_entryValues"
             android:key="global_resume_icon"
             android:persistent="true"
             android:summary="@string/global_resume_icon_summery"
