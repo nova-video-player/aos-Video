@@ -3247,6 +3247,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }else{
                         mCountries.setText(showTags.getCountriesFormatted());
                     }
+                    animateTextViewExpansionCollapse(mCountries, 1);
                     // set spoken languages
                     if (showTags.getSpokenlanguagesFormatted() == null || showTags.getSpokenlanguagesFormatted().isEmpty()){
                         mSpokenLanguages.setVisibility(View.GONE);
@@ -3254,6 +3255,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }else{
                         mSpokenLanguages.setText(showTags.getSpokenlanguagesFormatted());
                     }
+                    animateTextViewExpansionCollapse(mSpokenLanguages, 1);
                     // set network names
                     String networkNames = "";
                     String networks = "";
@@ -3345,6 +3347,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }else{
                         mSpokenLanguages.setText(tags.getSpokenlanguagesFormatted());
                     }
+                    animateTextViewExpansionCollapse(mSpokenLanguages, 1);
                     // set production countries
                     if (tags.getCountriesFormatted() == null || tags.getCountriesFormatted().isEmpty()){
                         mCountries.setVisibility(View.GONE);
@@ -3352,6 +3355,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }else{
                         mCountries.setText(tags.getCountriesFormatted());
                     }
+                    animateTextViewExpansionCollapse(mCountries, 1);
                     // set year
                     mYear.setText(((MovieTags) tags).getYear()+"");
                     // set movie actors
