@@ -41,6 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nhaasgroteskdspro_65md"
+                    android:layout_centerVertical="true"
                     android:singleLine="true"
                     android:textColor="@color/white_font"
                     android:textSize="24sp"/>
