@@ -439,6 +439,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
             TextView seriesGenres = mHeaderView.findViewById(R.id.series_genres);
             seriesGenres.setText(showTags.getGenresFormatted());
+            animateTextViewExpansionCollapse(seriesGenres, 1);
 
             TextView mSeasonPlot = mHeaderView.findViewById(R.id.season_plot);
             TextView seasonPlotHeader = mHeaderView.findViewById(R.id.season_plot_header);
@@ -773,6 +774,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             } else {
                 mCountries.setText(showTags.getCountriesFormatted());
             }
+            animateTextViewExpansionCollapse(mCountries, 1);
 
             // set spoken languages
             TextView mSpokenLanguages = mHeaderView.findViewById(R.id.scrap_spoken_languages);
@@ -783,6 +785,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             } else {
                 mSpokenLanguages.setText(showTags.getSpokenlanguagesFormatted());
             }
+            animateTextViewExpansionCollapse(mSpokenLanguages, 1);
 
 
             ImageView posterView = mHeaderView.findViewById(R.id.thumbnail);
