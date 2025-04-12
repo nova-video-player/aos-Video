@@ -501,9 +501,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mEpisodeSeasonView =(TextView) mTitleBarContent.findViewById(R.id.s_e_text_view);
 
         mTitleTextView = (TextView) mTitleBarContent.findViewById(R.id.title_view);
-
-
-        mTitleTextView = (TextView) mTitleBarContent.findViewById(R.id.title_view);
         setBackdropToApplicationBackground();
 
         mFileInfoContent = mRoot.findViewById(R.id.file_info_content);
