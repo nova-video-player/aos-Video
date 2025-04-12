@@ -253,6 +253,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mDisplayBackdropInGlobalResume = null;
     private CheckBoxPreference mHideGridViewInfo = null;
     private CheckBoxPreference mDisplayActorPhotoToast = null;
+    private CheckBoxPreference mApplicationBackdrop = null;
     private CheckBoxPreference mDarkMode = null;
     private CheckBoxPreference mEnableDisplayTvOverView = null;
     private CheckBoxPreference mActivate3DTVSwitch = null;
@@ -491,6 +492,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mDecChoicePreferences = (ListPreference) findPreference(KEY_DEC_CHOICE);
         mEpisodeScrollViewPreferences = (ListPreference) findPreference("episode_scrollView");
         mClearlogoLocation = (ListPreference) findPreference("clearlogo_loaction");
+        mApplicationBackdrop = (CheckBoxPreference) findPreference("application_backdrop");
         mDarkMode = (CheckBoxPreference) findPreference("dark_mode");
         mEnableDisplayTvOverView = (CheckBoxPreference) findPreference("display_TvOverview");
         mAudioInterfaceChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_INTERFACE_CHOICE);
@@ -642,6 +644,35 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 } else {
                     MainActivity.getmInstanceActivity().setNormalMode();
                     VideoPreferencesActivity.getmInstanceActivity().setNormalMode();
+                    VideoPreferencesActivity.getmInstanceActivity().recreate();
+                    if (PrivateMode.isActive()){
+                        PrivateMode.toggle(); // deactivate private mode if active
+                    }
+                }
+                return true;
+            }
+        });
+
+        // set Application Backdrop (disabling will enable dark mode and vice versa)
+        mApplicationBackdrop.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(@NonNull Preference preference, Object backdropEnabled) {
+                if ((Boolean) backdropEnabled) {
+                    if (mDarkMode != null) {
+                        mDarkMode.setChecked(false);
+                    }
+                    MainActivity.getmInstanceActivity().setNormalMode();
+                    VideoPreferencesActivity.getmInstanceActivity().setNormalMode();
+                    VideoPreferencesActivity.getmInstanceActivity().recreate();
+                    if (PrivateMode.isActive()){
+                        PrivateMode.toggle(); // deactivate private mode if active
+                    }
+                } else {
+                    if (mDarkMode != null) {
+                        mDarkMode.setChecked(true);
+                    }
+                    MainActivity.getmInstanceActivity().setDarkMode();
+                    VideoPreferencesActivity.getmInstanceActivity().setDarkMode();
                     VideoPreferencesActivity.getmInstanceActivity().recreate();
                     if (PrivateMode.isActive()){
                         PrivateMode.toggle(); // deactivate private mode if active

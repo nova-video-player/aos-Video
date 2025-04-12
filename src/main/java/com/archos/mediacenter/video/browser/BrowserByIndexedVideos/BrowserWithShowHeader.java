@@ -835,9 +835,15 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 animateTextViewExpansionCollapse(mSeasonPlot, 4);  // Apply the collapse at 4 lines
             }
 
-            if(result.tags!=null&&result.tags.getDefaultBackdrop()!=null)
-                mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, result.tags.getDefaultBackdrop());
-
+            // enable/disable application backdrop
+            boolean backdropEnabled = mPreferences.getBoolean("application_backdrop", true);
+            if(result.tags!=null&&result.tags.getDefaultBackdrop()!=null) {
+                if(backdropEnabled){
+                    mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, result.tags.getDefaultBackdrop());
+                }else{
+                    mBackgroundSetter.stopLoading(mApplicationBackdrop);
+                }
+            }
         }
     }
 

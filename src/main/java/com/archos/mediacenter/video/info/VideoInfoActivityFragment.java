@@ -2867,11 +2867,18 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 return;
             mTags = tags;
             if (tags!=null) {
-
+                SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+                // enable/disable application backdrop
+                boolean backdropEnabled = mPreferences.getBoolean("application_backdrop", true);
+                if(!mIsLaunchFromPlayer){
+                    if(backdropEnabled){
+                        mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, tags.getDefaultBackdrop());
+                    }else{
+                        mBackgroundSetter.stopLoading(mApplicationBackdrop);
+                    }
+                }
                 // Plot & Genres
                 final String plot = tags.getPlot();
-                if(!mIsLaunchFromPlayer)
-                    mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, tags.getDefaultBackdrop());
                 String genres = null;
                 if (tags instanceof VideoTags) {
                     mIsVideoMovie = null;
@@ -2979,7 +2986,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 String extension = ".png";
                 // hide cast textview
                 mCastTextView.setVisibility(View.GONE);
-                SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
                 if(tags instanceof EpisodeTags){
                     mIsVideoMovie = false;
                     mTVDBIcon.setVisibility(View.GONE);
