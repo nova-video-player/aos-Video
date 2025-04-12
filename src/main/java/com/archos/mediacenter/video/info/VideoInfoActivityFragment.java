@@ -2883,20 +2883,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                     }
                 }
-                mGenreTextView.setMaxLines(2);
                 mGenreTextView.setTag(true);
-                mGenreTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (((Boolean) mGenreTextView.getTag())) {
-                            mGenreTextView.setMaxLines(50);
-                            mGenreTextView.setTag(false);
-                        } else {
-                            mGenreTextView.setMaxLines(2);
-                            mGenreTextView.setTag(true);
-                        }
-                    }
-                });
+                // set movie genres animation
+                animateTextViewExpansionCollapse(mGenreTextView, 1);
+                // set plot
                 setTextOrHideContainer(mPlotTextView, plot, mPlotTextView);
                 // set plot animation
                 setupAnimatedPlotExpansion(mPlotTextView, 4);
