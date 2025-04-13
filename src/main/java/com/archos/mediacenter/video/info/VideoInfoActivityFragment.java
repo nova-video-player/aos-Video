@@ -1661,14 +1661,23 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             if(oldVideo == null|| oldVideo.getPosterUri()==null||!oldVideo.getPosterUri().equals(mCurrentVideo.getPosterUri()))
                 getThumbnailSync(mCurrentVideo);
 
-            if (mBitmap!= null) {
-                mPosterImageView.setImageBitmap(mBitmap);
-                mPosterImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            } else {
-                mPosterImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video_poster));
-                mPosterImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
+            SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+            boolean posterInsideInfo = mPreferences.getBoolean("poster_insideInfo", true);
+            if (posterInsideInfo){
+                if (mBitmap!= null) {
+                    mPosterImageView.setImageBitmap(mBitmap);
+                    mPosterImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                } else {
+                    mPosterImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video_poster));
+                    mPosterImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                }
+                mPosterImageView.setVisibility(View.VISIBLE);
+                ((CardView)mPosterImageView.getParent().getParent()).setVisibility(View.VISIBLE);
+            }else{
+                mPosterImageView.setVisibility(View.GONE);
+                ((CardView)mPosterImageView.getParent().getParent()).setVisibility(View.GONE);
             }
+
             setBackground();
             //execute async task BEFORE xml parsing
             startAsyncTasks();

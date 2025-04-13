@@ -789,13 +789,19 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
 
             ImageView posterView = mHeaderView.findViewById(R.id.thumbnail);
-            posterView.setImageBitmap(result.bitmap);
-            posterView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onPosterClick();
-                }
-            });
+            boolean posterInsideInfo = mPreferences.getBoolean("poster_insideInfo", true);
+            if (posterInsideInfo){
+                posterView.setImageBitmap(result.bitmap);
+                posterView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onPosterClick();
+                    }
+                });
+                posterView.setVisibility(View.VISIBLE);
+            }else{
+                posterView.setVisibility(View.GONE);
+            }
 
             setColor(mColor);
 

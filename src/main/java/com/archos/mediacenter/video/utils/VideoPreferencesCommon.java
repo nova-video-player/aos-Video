@@ -254,6 +254,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mHideGridViewInfo = null;
     private CheckBoxPreference mDisplayActorPhotoToast = null;
     private CheckBoxPreference mApplicationBackdrop = null;
+    private CheckBoxPreference mPosterInsideInfo = null;
     private CheckBoxPreference mDarkMode = null;
     private CheckBoxPreference mEnableDisplayTvOverView = null;
     private CheckBoxPreference mActivate3DTVSwitch = null;
@@ -493,6 +494,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mEpisodeScrollViewPreferences = (ListPreference) findPreference("episode_scrollView");
         mClearlogoLocation = (ListPreference) findPreference("clearlogo_loaction");
         mApplicationBackdrop = (CheckBoxPreference) findPreference("application_backdrop");
+        mPosterInsideInfo = (CheckBoxPreference) findPreference("poster_insideInfo");
         mDarkMode = (CheckBoxPreference) findPreference("dark_mode");
         mEnableDisplayTvOverView = (CheckBoxPreference) findPreference("display_TvOverview");
         mAudioInterfaceChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_INTERFACE_CHOICE);
