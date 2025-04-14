@@ -3820,7 +3820,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mScrollView.getLocationOnScreen(scrollViewLocation);
                     mPosterImageView.getLocationOnScreen(posterLocation);
 
-                    int relativeY = posterLocation[1] - scrollViewLocation[1] - mHeaderHeight;
+                    int offsetInPx = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+
+                    int relativeY = posterLocation[1] - scrollViewLocation[1] - mHeaderHeight - offsetInPx;
+
 
                     if (relativeY > 0) {
                         mScrollView.scrollTo(0, relativeY);
