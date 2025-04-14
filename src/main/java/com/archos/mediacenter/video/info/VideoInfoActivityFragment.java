@@ -257,6 +257,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     //poster
     private View mWatchedView;
+    private View mWatchedViewBackdrop;
+    private SharedPreferences mPreferences;
+    private boolean mPosterInsideInfo;
 
     //scrap details
     private TextView mCastTextView;
@@ -542,6 +545,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mPosterImageView = (ImageView)mRoot.findViewById(R.id.poster);
         mPosterImageView.setOnClickListener(this);
         mWatchedView = mRoot.findViewById(R.id.trakt_watched);
+        mWatchedViewBackdrop = mRoot.findViewById(R.id.trakt_watched_bd);
         //poster animation
         mPosterImageView.setTransitionName(VideoInfoActivity.SHARED_ELEMENT_NAME);
         mVideoTrackTextView = (TextView) mRoot.findViewById(R.id.video_track);
@@ -631,6 +635,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mMainInfoContainer = mRoot.findViewById(R.id.main_info_container);
         mSeriesPopularity = mRoot.findViewById(R.id.scrap_popularity);
         mSeriesPopularityContainer = mRoot.findViewById(R.id.scrap_popularity_container);
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mPosterInsideInfo = mPreferences.getBoolean("poster_insideInfo", true);
 
         mFileInfoAudioVideoContainer.setVisibility(View.GONE);
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
@@ -821,13 +827,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 }
                 episodeViewModel.setEpisodeModels(episodeModels);
             }
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            boolean BrowserListOfEpisodes = prefs.getBoolean("BrowserListOfEpisodes", true);
+            boolean BrowserListOfEpisodes = mPreferences.getBoolean("BrowserListOfEpisodes", true);
             boolean oneEpisode;
             oneEpisode = episodeModels.size() == 1;
-            prefs.edit().putBoolean("oneEpisode", oneEpisode).apply();
+            mPreferences.edit().putBoolean("oneEpisode", oneEpisode).apply();
 
-            String mode = prefs.getString("episode_scrollView", null);
+            String mode = mPreferences.getString("episode_scrollView", null);
             int selectedMode;
             if(mode == null){
                 selectedMode = 1;
@@ -1569,8 +1574,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if(mSecondaryTitleBar!=null)
             mTitleBarContent.setBackgroundColor(mColor);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        boolean darkModeActive = prefs.getBoolean("dark_mode", false);
+        boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
         if(!mIsLaunchFromPlayer) {
             if (darkModeActive) {
                 mRoot.setBackgroundColor(mContext.getResources().getColor(R.color.deep_dark_blue));
@@ -1661,9 +1665,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             if(oldVideo == null|| oldVideo.getPosterUri()==null||!oldVideo.getPosterUri().equals(mCurrentVideo.getPosterUri()))
                 getThumbnailSync(mCurrentVideo);
 
-            SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-            boolean posterInsideInfo = mPreferences.getBoolean("poster_insideInfo", true);
-            if (posterInsideInfo){
+            if (mPosterInsideInfo){
                 if (mBitmap!= null) {
                     mPosterImageView.setImageBitmap(mBitmap);
                     mPosterImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -2489,8 +2491,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             coeff=0;
         int alpha = (int) (coeff * 255);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        boolean darkModeActive = prefs.getBoolean("dark_mode", false);
+        boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
         if(darkModeActive){
             mTitleBar.setBackgroundColor(mContext.getResources().getColor(R.color.deep_dark_blue_transparent));
         }else{
@@ -2807,7 +2808,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     break;
             }
         }
-        mWatchedView.setVisibility(mWatchedStatus?View.VISIBLE:View.GONE);
+        if (mPosterInsideInfo){
+            mWatchedView.setVisibility(mWatchedStatus?View.VISIBLE:View.GONE);
+            mWatchedViewBackdrop.setVisibility(View.GONE);
+        }else{
+            mWatchedView.setVisibility(View.GONE);
+            mWatchedViewBackdrop.setVisibility(mWatchedStatus?View.VISIBLE:View.GONE);
+        }
     }
 
     @Override
@@ -2876,7 +2883,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 return;
             mTags = tags;
             if (tags!=null) {
-                SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
                 // enable/disable application backdrop
                 boolean backdropEnabled = mPreferences.getBoolean("application_backdrop", true);
                 if(!mIsLaunchFromPlayer){
