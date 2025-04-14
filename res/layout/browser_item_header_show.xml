@@ -18,7 +18,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/series_backdrop_cardview"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        card_view:cardCornerRadius="4dp"
+        card_view:cardCornerRadius="6dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
@@ -43,7 +43,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/series_thumbnail_cardview"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            card_view:cardCornerRadius="4dp"
+            card_view:cardCornerRadius="6dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
