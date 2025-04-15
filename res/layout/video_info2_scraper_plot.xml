@@ -51,6 +51,7 @@
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:maxLines="1"
                 android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
@@ -80,6 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -112,6 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -144,6 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -176,6 +180,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -354,6 +359,7 @@
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
@@ -416,6 +422,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -458,6 +465,7 @@
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:textSize="@dimen/video_info_medium_text_new"/>
         </LinearLayout>
 
@@ -557,6 +565,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/video_info_medium_text_new"/>
@@ -587,6 +597,8 @@
                 android:id="@+id/scrap_spoken_languages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:fontFamily="@font/nhaasgrotesktxpro_55rg"
                 android:textColor="@color/white_font"
                 android:textAppearance="?android:attr/textAppearanceMedium"

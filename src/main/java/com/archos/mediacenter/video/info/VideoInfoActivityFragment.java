@@ -1239,87 +1239,97 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 , null);
     }
 
-    public void animateTextViewExpansionCollapse(final TextView textView, final int collapsedLines) {
-        // Allow full height temporarily to measure expanded size
-        textView.setMaxLines(Integer.MAX_VALUE);
-        textView.setEllipsize(null);
+    public static void animateTextViewExpansionCollapse(final TextView textView, final int collapsedLines) {
+        final int EXPANSION_STATE_KEY = 123456789; // Unique key for tagging
 
         textView.post(() -> {
-            View parent = (View) textView.getParent();
-            if (parent != null) parent.requestLayout();
+            Context context = textView.getContext();
+            int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
-            // Measure full height of expanded TextView
+            // Local inline dpToPx converter
+            java.util.function.IntFunction<Integer> dpToPx = dp ->
+                    Math.round(dp * context.getResources().getDisplayMetrics().density);
+
+            // Determine available width
+            ViewGroup parent = (ViewGroup) textView.getParent();
+            final int availableWidth = (parent instanceof LinearLayout && ((LinearLayout) parent).getOrientation() == LinearLayout.HORIZONTAL)
+                    ? screenWidth - textView.getPaddingLeft() - textView.getPaddingRight() - dpToPx.apply(112)
+                    : screenWidth;
+
+            // Restore previous expansion state
+            Object tag = textView.getTag(EXPANSION_STATE_KEY);
+            boolean wasExpanded = tag instanceof Boolean && !(Boolean) tag; // false == expanded
+
+            // Measure expanded height
+            textView.setMaxLines(Integer.MAX_VALUE);
+            textView.setEllipsize(null);
             textView.measure(
-                    View.MeasureSpec.makeMeasureSpec(textView.getWidth(), View.MeasureSpec.EXACTLY),
-                    View.MeasureSpec.UNSPECIFIED
+                    View.MeasureSpec.makeMeasureSpec(availableWidth, View.MeasureSpec.AT_MOST),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
             );
-            int lineHeight = textView.getLineHeight();
-            int collapsedHeight = (lineHeight * collapsedLines)
-                    + textView.getPaddingTop()
-                    + textView.getPaddingBottom();
 
-            // Set collapsed state initially
-            textView.setMaxLines(collapsedLines);
-            textView.setEllipsize(TextUtils.TruncateAt.END);
-            textView.setTag(true); // collapsed
+            int expandedHeight = textView.getMeasuredHeight();
+            int fullLineCount = textView.getLineCount();
+            int lineHeight = textView.getLineHeight();
+            int collapsedHeight = lineHeight * collapsedLines + dpToPx.apply(4);
+            ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
+
+            if (fullLineCount <= collapsedLines) {
+                textView.setMaxLines(collapsedLines);
+                textView.setEllipsize(TextUtils.TruncateAt.END);
+                textView.setTag(EXPANSION_STATE_KEY, true); // collapsed
+                return;
+            }
+
+            if (wasExpanded) {
+                textView.setMaxLines(Integer.MAX_VALUE);
+                textView.setEllipsize(null);
+                layoutParams.height = expandedHeight;
+                textView.setLayoutParams(layoutParams);
+                textView.setTag(EXPANSION_STATE_KEY, false); // expanded
+            } else {
+                textView.setMaxLines(collapsedLines);
+                textView.setEllipsize(TextUtils.TruncateAt.END);
+                layoutParams.height = collapsedHeight;
+                textView.setLayoutParams(layoutParams);
+                textView.setTag(EXPANSION_STATE_KEY, true); // collapsed
+            }
 
             textView.setOnClickListener(v -> {
-                boolean isCollapsed = (Boolean) textView.getTag();
-                textView.setTag(!isCollapsed);
-
-                View parentView = (View) textView.getParent();
-                int startHeight = textView.getHeight();
-                int endHeight;
+                boolean isCollapsed = (Boolean) textView.getTag(EXPANSION_STATE_KEY);
 
                 if (isCollapsed) {
-                    // Expanding
                     textView.setMaxLines(Integer.MAX_VALUE);
                     textView.setEllipsize(null);
-
                     textView.measure(
-                            View.MeasureSpec.makeMeasureSpec(textView.getWidth(), View.MeasureSpec.EXACTLY),
-                            View.MeasureSpec.UNSPECIFIED
+                            View.MeasureSpec.makeMeasureSpec(availableWidth, View.MeasureSpec.AT_MOST),
+                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
                     );
-                    endHeight = textView.getMeasuredHeight();
+                    int newExpandedHeight = textView.getMeasuredHeight();
+
+                    ValueAnimator animator = ValueAnimator.ofInt(textView.getHeight(), newExpandedHeight);
+                    animator.addUpdateListener(animation -> {
+                        layoutParams.height = (int) animation.getAnimatedValue();
+                        textView.setLayoutParams(layoutParams);
+                    });
+                    animator.start();
+                    textView.setTag(EXPANSION_STATE_KEY, false); // expanded
                 } else {
-                    // Collapsing
-                    endHeight = collapsedHeight;
-                }
-
-                ValueAnimator animator = ValueAnimator.ofInt(startHeight, endHeight);
-                animator.setDuration(ANIMATION_DURATION);
-                animator.addUpdateListener(animation -> {
-                    int value = (int) animation.getAnimatedValue();
-                    ViewGroup.LayoutParams params = textView.getLayoutParams();
-                    params.height = value;
-                    textView.setLayoutParams(params);
-
-                    if (parentView != null) parentView.requestLayout();
-                });
-
-                animator.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        ViewGroup.LayoutParams params = textView.getLayoutParams();
-                        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        textView.setLayoutParams(params);
-
-                        if (!isCollapsed) {
+                    ValueAnimator animator = ValueAnimator.ofInt(textView.getHeight(), collapsedHeight);
+                    animator.addUpdateListener(animation -> {
+                        layoutParams.height = (int) animation.getAnimatedValue();
+                        textView.setLayoutParams(layoutParams);
+                    });
+                    animator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
                             textView.setMaxLines(collapsedLines);
                             textView.setEllipsize(TextUtils.TruncateAt.END);
                         }
-
-                        if (parentView != null) {
-                            parentView.requestLayout();
-                            parentView.invalidate();
-                        }
-
-                        // Optional: improve accessibility feedback
-                        textView.announceForAccessibility(isCollapsed ? "Expanded" : "Collapsed");
-                    }
-                });
-
-                animator.start();
+                    });
+                    animator.start();
+                    textView.setTag(EXPANSION_STATE_KEY, true); // collapsed
+                }
             });
         });
     }
@@ -2904,7 +2914,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                     }
                 }
-                mGenreTextView.setTag(true);
                 // set movie genres animation
                 animateTextViewExpansionCollapse(mGenreTextView, 1);
                 // set plot
@@ -2968,7 +2977,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     guestStars = tags.getActorsFormatted();
                 }
                 setTextOrHideContainer(mGuestStars, guestStars, mGuestStars, mGuestStarsTitle);
-                mGuestStars.setTag(true);
                 animateTextViewExpansionCollapse(mGuestStars, 1);
 
                 // set Director
@@ -2989,10 +2997,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mScrapWriterTitle.setVisibility(View.GONE);
                 }
 
-                mScrapDirector.setTag(true);
                 animateTextViewExpansionCollapse(mScrapDirector, 1);
 
-                mScrapWriter.setTag(true);
                 animateTextViewExpansionCollapse(mScrapWriter, 1);
 
                 String date = null;
@@ -3050,7 +3056,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     //set series producer
                     setTextOrHideContainer(mScrapProducer, showTags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
-                    mScrapProducer.setTag(true);
                     animateTextViewExpansionCollapse(mScrapProducer, 1);
                     // set series studio names for episode view
                     String names = "";
@@ -3125,7 +3130,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         setTextOrHideContainer(mCreatedBy, showTags.getDirectorsFormatted() , mCreatedByContainer);
                     }
-                    mCreatedBy.setTag(true);
                     animateTextViewExpansionCollapse(mCreatedBy, 1);
                     // set series actors
                     List<CastData> seriesActors = new ArrayList<>();
@@ -3189,7 +3193,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     } else {
                         setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);
                     }
-                    mGenreTextView.setTag(true);
                     animateTextViewExpansionCollapse(mGenreTextView, 1);
                     // setting Networks RecyclerView
                     List<ScraperImage> networkImage = showTags.getNetworkLogos();
@@ -3323,7 +3326,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }else{
                         mNetworks.setText(networkNames);
                     }
-                    mNetworks.setTag(true);
                     animateTextViewExpansionCollapse(mNetworks, 1);
                     //hide movie Info Container
                     mMovieInfoContainer.setVisibility(View.GONE);
@@ -3543,7 +3545,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mToolbarTitle.setVisibility(View.VISIBLE);
                     }
                     setTextOrHideContainer(mScrapProducer, tags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
-                    mScrapProducer.setTag(true);
                     animateTextViewExpansionCollapse(mScrapProducer, 1);
                     // hide Created by
                     mCreatedBy.setVisibility(View.GONE);
@@ -3582,7 +3583,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if(mIMDBId==null||mIMDBId.isEmpty())
                     mIMDBIcon.setVisibility(View.GONE);
                 setTextOrHideContainer(mScrapStudio, studio,mScrapStudioContainer);
-                mScrapStudio.setTag(true);
                 animateTextViewExpansionCollapse(mScrapStudio, 1);
 
                 setTextOrHideContainer(mScrapYear, date, mScrapYear);
