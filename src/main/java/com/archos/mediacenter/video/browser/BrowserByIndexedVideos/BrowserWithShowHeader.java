@@ -854,57 +854,65 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     }
 
     public void animateTextViewExpansionCollapse(final TextView textView, final int collapsedLines) {
-        // Allow full height temporarily to measure expanded size
-        textView.setMaxLines(Integer.MAX_VALUE);
-        textView.setEllipsize(null);
+        final int ANIMATION_DURATION = 300;
+        final int EXPANSION_STATE_KEY = 123456789;
 
         textView.post(() -> {
+            // Determine if previously expanded
+            Boolean wasCollapsed = (Boolean) textView.getTag(EXPANSION_STATE_KEY);
+            boolean isCollapsed = wasCollapsed == null ? true : wasCollapsed;
+
+            // Allow full height temporarily to measure expanded size
+            textView.setMaxLines(Integer.MAX_VALUE);
+            textView.setEllipsize(null);
+
             View parent = (View) textView.getParent();
             if (parent != null) parent.requestLayout();
 
             if (mArchosGridView instanceof HeaderGridView headerGridView) {
                 View header = headerGridView.getHeaderView();
-                if (header != null) {
-                    header.requestLayout();
-                }
+                if (header != null) header.requestLayout();
                 headerGridView.invalidateViews();
             }
 
-            // Measure full height of expanded TextView
             textView.measure(
                     View.MeasureSpec.makeMeasureSpec(textView.getWidth(), View.MeasureSpec.EXACTLY),
                     View.MeasureSpec.UNSPECIFIED
             );
+            int fullHeight = textView.getMeasuredHeight();
             int lineHeight = textView.getLineHeight();
             int collapsedHeight = (lineHeight * collapsedLines)
                     + textView.getPaddingTop()
                     + textView.getPaddingBottom();
 
-            // Set collapsed state initially
-            textView.setMaxLines(collapsedLines);
-            textView.setEllipsize(TextUtils.TruncateAt.END);
-            textView.setTag(true); // collapsed
+            // Apply initial state
+            if (isCollapsed) {
+                textView.setMaxLines(collapsedLines);
+                textView.setEllipsize(TextUtils.TruncateAt.END);
+            } else {
+                textView.setMaxLines(Integer.MAX_VALUE);
+                textView.setEllipsize(null);
+            }
 
             textView.setOnClickListener(v -> {
-                boolean isCollapsed = (Boolean) textView.getTag();
-                textView.setTag(!isCollapsed);
+                Boolean currentlyCollapsed = (Boolean) textView.getTag(EXPANSION_STATE_KEY);
+                boolean nowExpanding = currentlyCollapsed == null || currentlyCollapsed;
+
+                textView.setTag(EXPANSION_STATE_KEY, !nowExpanding); // Toggle state
 
                 View parentView = (View) textView.getParent();
                 int startHeight = textView.getHeight();
                 int endHeight;
 
-                if (isCollapsed) {
-                    // Expanding
+                if (nowExpanding) {
                     textView.setMaxLines(Integer.MAX_VALUE);
                     textView.setEllipsize(null);
-
                     textView.measure(
                             View.MeasureSpec.makeMeasureSpec(textView.getWidth(), View.MeasureSpec.EXACTLY),
                             View.MeasureSpec.UNSPECIFIED
                     );
                     endHeight = textView.getMeasuredHeight();
                 } else {
-                    // Collapsing
                     endHeight = collapsedHeight;
                 }
 
@@ -920,9 +928,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
                     if (mArchosGridView instanceof HeaderGridView headerGridViewInner) {
                         View header = headerGridViewInner.getHeaderView();
-                        if (header != null) {
-                            header.requestLayout();
-                        }
+                        if (header != null) header.requestLayout();
                         headerGridViewInner.invalidateViews();
                     }
                 });
@@ -934,7 +940,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                         textView.setLayoutParams(params);
 
-                        if (!isCollapsed) {
+                        if (!nowExpanding) {
                             textView.setMaxLines(collapsedLines);
                             textView.setEllipsize(TextUtils.TruncateAt.END);
                         }
@@ -948,8 +954,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                             }
                         }
 
-                        // Optional: improve accessibility feedback
-                        textView.announceForAccessibility(isCollapsed ? "Expanded" : "Collapsed");
+                        textView.announceForAccessibility(nowExpanding ? "Expanded" : "Collapsed");
                     }
                 });
 
