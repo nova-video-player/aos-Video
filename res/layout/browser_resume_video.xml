@@ -20,6 +20,13 @@ access to last video played. -->
         android:layout_marginEnd="@dimen/global_resume_icon_padding_right"
         app:srcCompat="@drawable/resume"/>
 
+    <ImageView
+        android:id="@+id/global_resume_focus"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/global_resume_focus_bg"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/global_resume_text"
         android:layout_width="wrap_content"
@@ -38,13 +45,6 @@ access to last video played. -->
         android:textColor="@color/white_font"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:background="@drawable/rounded_background"/>
-
-    <ImageView
-        android:id="@+id/global_resume_focus"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/global_resume_focus_bg"
-        android:visibility="gone"/>
 
     <!-- Custom resume button -->
     <LinearLayout
