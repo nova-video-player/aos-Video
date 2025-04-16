@@ -1,30 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!-- This is the resume view of the video browser for getting fast
 access to last video played. -->
-
 <com.archos.mediacenter.utils.GlobalResumeView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/global_resume"
     android:layout_width="match_parent"
     android:layout_height="@dimen/global_resume_video_height"
-    android:focusable="true"
-    >
+    android:focusable="true">
 
     <include layout="@layout/nowplaying_header" />
 
     <ImageView
         android:id="@+id/global_resume_btn"
-        android:layout_width="32dp"
+        android:layout_width="35dp"
         android:layout_height="32dp"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/global_resume_icon_padding_left"
         android:layout_marginEnd="@dimen/global_resume_icon_padding_right"
-        app:srcCompat="@drawable/resume"
-        app:tint="@color/play_button_tint"
-
-        app:tintMode="src_atop"/>
+        app:srcCompat="@drawable/resume"/>
 
     <TextView
         android:id="@+id/global_resume_text"
@@ -43,16 +37,14 @@ access to last video played. -->
         android:fontFamily="@font/nhaasgroteskdspro_75bd"
         android:textColor="@color/white_font"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:background="@drawable/rounded_background"
-        />
+        android:background="@drawable/rounded_background"/>
 
     <ImageView
         android:id="@+id/global_resume_focus"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/global_resume_focus_bg"
-        android:visibility="gone"
-        />
+        android:visibility="gone"/>
 
     <!-- Custom resume button -->
     <LinearLayout
@@ -70,7 +62,7 @@ access to last video played. -->
         android:clickable="true"
         android:focusable="true">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -78,60 +70,53 @@ access to last video played. -->
 
             <!-- Text and Icon Container -->
             <LinearLayout
+                android:id="@+id/resume_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0.5dp"
                 android:layout_marginEnd="2dp"
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
 
                 <!-- Resume Text -->
-                <TextView
+                <ImageView
                     android:id="@+id/resume_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="3dp"
-                    android:includeFontPadding="false"
-                    android:background="@android:color/transparent"
-                    android:lineSpacingExtra="0dp"
-                    android:text="Resume"
-                    android:fontFamily="@font/gotham_narrow_book"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:layout_marginBottom="4dp"
-                    android:shadowColor="#AA000000"
-                    android:shadowDx="1"
-                    android:shadowDy="1"
-                    android:shadowRadius="2"
-                    android:textAllCaps="true" />
-
+                    android:layout_gravity="center"
+                    android:layout_width="75dp"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="1dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/resume_text"
+                    app:tint="@color/play_button_tint"
+                    app:tintMode="src_atop"/>
                 <!-- Timestamp Text -->
                 <TextView
                     android:id="@+id/timestamp_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-8.7dp"
+                    android:layout_marginTop="-2dp"
                     android:text="00:00"
                     android:textColor="@android:color/white"
                     android:fontFamily="@font/nhaasgroteskdspro_75bd"
                     android:textStyle="bold"
-                    android:textSize="12sp"
+                    android:textSize="10sp"
                     android:shadowColor="#AA000000"
                     android:shadowDx="1"
                     android:shadowDy="1"
-                    android:shadowRadius="2" />
+                    android:shadowRadius="2"/>
             </LinearLayout>
 
             <!-- Icon -->
             <ImageView
                 android:id="@+id/resume_icon"
                 android:layout_gravity="center"
-                android:layout_width="28dp"
+                android:layout_width="30dp"
                 android:layout_height="28dp"
+                android:scaleType="centerInside"
+                android:layout_alignBaseline="@id/resume_container"
+                android:layout_toEndOf="@+id/resume_container"
                 android:src="@drawable/resume"
                 app:tint="@color/play_button_tint"
                 app:tintMode="src_atop"/>
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 </com.archos.mediacenter.utils.GlobalResumeView>

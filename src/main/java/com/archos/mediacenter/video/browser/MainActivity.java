@@ -40,6 +40,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -913,7 +914,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 // timestamp.startAnimation(blinkAnimation);
 
                 // Set the text color to red initially
-                timestamp.setTextColor(Color.RED);
+                timestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.yellow_light));
 
                 text.setText((CharSequence) result.get("name"));
                 text.setSingleLine(true);
@@ -1005,11 +1006,24 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                         // area when it is pressed
                         public boolean onTouch(View v, MotionEvent event) {
                             ImageView resumeGlobalFocusView = (ImageView) findViewById(R.id.global_resume_focus);
+                            ImageView resumeIcon = (ImageView) grv.findViewById(R.id.resume_icon);
+                            ImageView resumeText = (ImageView) grv.findViewById(R.id.resume_text);
+                            ImageView globalResumeButton = (ImageView) grv.findViewById(R.id.global_resume_btn);
                             int action = event.getAction();
                             if (action == MotionEvent.ACTION_DOWN) {
                                 resumeGlobalFocusView.setVisibility(View.VISIBLE);
+                                text.setTextColor(Color.RED);
+                                resumeIcon.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
+                                timestamp.setTextColor(Color.RED);
+                                resumeText.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
+                                globalResumeButton.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
                             } else if (action == MotionEvent.ACTION_UP) {
                                 resumeGlobalFocusView.setVisibility(View.GONE);
+                                text.setTextColor(Color.WHITE);
+                                resumeIcon.clearColorFilter();
+                                timestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.yellow_light));
+                                resumeText.clearColorFilter();
+                                globalResumeButton.clearColorFilter();
                             }
                             return false;
                         }

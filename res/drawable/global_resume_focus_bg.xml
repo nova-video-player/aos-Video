@@ -6,7 +6,7 @@
     <!-- Stroke with 1 dp width and black color -->
     <stroke
         android:width="2dp"
-        android:color="@color/global_resume_button_focus" />
+        android:color="@color/red" />
 
     <!-- Optional: rounded corners (if needed) -->
     <corners android:radius="7dp" />
