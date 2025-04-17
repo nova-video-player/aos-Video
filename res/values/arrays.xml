@@ -236,7 +236,7 @@
         <item>1</item>
     </string-array>
     <string-array name="clearlogo_loaction_entries" translatable="false">
-        <item>@string/clearlogo_beside_poster</item>
+        <item>@string/clearlogo_below_backdrop</item>
         <item>@string/clearlogo_inside_toolbar</item>
     </string-array>
     <string-array name="clearlogo_loaction_entryValues">

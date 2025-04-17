@@ -1064,7 +1064,7 @@
 
     <string name="clearlogo_loaction_title">Location of Logo</string>
     <string name="clearlogo_loaction_summery">Choose location of movie or tv show logo in the information screen. The choices are either in the toolbar or beside the poster image.</string>
-    <string name="clearlogo_beside_poster">Beside Poster</string>
+    <string name="clearlogo_below_backdrop">Below Backdrop</string>
     <string name="clearlogo_inside_toolbar">Inside Toolbar</string>
 
     <string name="episode_scrollView_mode_title">Episode Scroll Mode</string>
