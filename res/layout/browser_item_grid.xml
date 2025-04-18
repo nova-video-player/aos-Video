@@ -13,7 +13,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="left"
     card_view:cardBackgroundColor="@color/grid_item_background"
-    card_view:cardCornerRadius="4dp"
+    card_view:cardCornerRadius="8dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     >
@@ -34,6 +34,7 @@
             android:id="@+id/thumbnail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/filetype_new_video_poster"
             android:background="@color/default_icon_background"
             android:scaleType="centerCrop" />
 
@@ -113,6 +114,10 @@
 
             <TextView
                 android:id="@+id/name"
+                android:fontFamily="@font/nhaasgroteskdspro_75bd"
+                android:layout_marginBottom="-4dp"
+                android:textSize="15sp"
+                android:text="The Dark Knight"
                 style="@style/BrowserTinyText.Name"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
@@ -124,6 +129,7 @@
 
             <LinearLayout
                 android:id="@+id/bottom_row"
+                android:layout_marginBottom="-3dp"
                 android:layout_width="wrap_content"
                 android:layout_height="22dip"
                 android:layout_alignParentLeft="true"
@@ -161,6 +167,9 @@
                     android:src="@drawable/label_network_small" />
                 <TextView
                     android:id="@+id/info"
+                    android:fontFamily="@font/nhaasgroteskdspro_65md"
+                    android:textColor="@color/header_font"
+                    android:text="2 Seasons"
                     style="@style/BrowserTinyText.Info"
                     android:layout_marginBottom="1dip"
                     android:layout_marginLeft="4dip"
@@ -179,6 +188,7 @@
                 android:paddingLeft="4dip"
                 android:paddingRight="14dip"
                 android:paddingTop="2dip"
+                android:visibility="gone"
                 card_view:srcCompat="@drawable/label_infoarrow" />
         </RelativeLayout>
 
