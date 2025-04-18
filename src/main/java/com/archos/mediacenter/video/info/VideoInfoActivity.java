@@ -97,7 +97,7 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
             mCurrentVideo = (Video) getIntent().getSerializableExtra(EXTRA_VIDEO);
 
         // Load the fragment dynamically
-        if (savedInstanceState == null) {
+        if(mCurrentVideo instanceof Episode && savedInstanceState == null) {
             loadFragment(VideoInfoActivityFragment.getInstance(mCurrentVideo, null, mId, mForceCurrentPosition));
         }
         setContentView(R.layout.activity_video_info);
