@@ -40,7 +40,7 @@ for informations (duration for files, number of files for directories).
 
         <RelativeLayout
             android:id="@+id/left_area"
-            android:layout_marginLeft="142dip"
+            android:layout_marginLeft="138dip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
