@@ -116,7 +116,7 @@
                 android:id="@+id/name"
                 style="@style/BrowserText.Name"
                 android:fontFamily="@font/nhaasgroteskdspro_75bd"
-                android:textSize="22sp"/>
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/info"
