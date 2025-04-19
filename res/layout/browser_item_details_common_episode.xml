@@ -10,14 +10,39 @@
 	<!-- TV show : TV show title -->
 	<!-- Other   : filename -->
 
-	<TextView
-		android:id="@+id/name"
-		style="@style/BrowserText.Title"
-		android:fontFamily="@font/nhaasgroteskdspro_75bd"
-		android:paddingTop="14dip"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/left_area"/>
+	<FrameLayout
+		android:id="@+id/name_info_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_alignTop="@id/episode_picture_cardview"
+		android:layout_alignBottom="@id/episode_picture_cardview"
+		android:layout_marginStart="8dp"
+		android:layout_marginEnd="6dip"
+		android:layout_toLeftOf="@id/expanded"
+		android:layout_toRightOf="@id/episode_picture_cardview"
+		android:layout_alignParentTop="true"
+		android:layout_alignWithParentIfMissing="true">
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:layout_gravity="center_vertical">
+			<TextView
+				android:id="@+id/name"
+				style="@style/BrowserText.Title"
+				android:fontFamily="@font/nhaasgroteskdspro_75bd"
+				android:textSize="20sp"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"/>
+			<!-- All : duration -->
+			<TextView
+				android:id="@+id/info"
+				style="@style/BrowserText.Info.Video"
+				android:fontFamily="@font/nhaasgroteskdspro_65md"
+				android:textColor="@color/header_font"
+				android:textSize="16sp"/>
+		</LinearLayout>
+	</FrameLayout>
 
 	<!-- Movie   : director(s) -->
 	<!-- TV show : season + episode numbers -->
@@ -37,7 +62,7 @@
 	<TextView
 		android:id="@+id/detail_line_one"
 		style="@style/BrowserText.Details"
-		android:layout_below="@id/name"
+		android:layout_below="@id/name_info_container"
 		android:layout_marginTop="8dip"
 		android:layout_toRightOf="@id/left_area"
 		android:singleLine="true" />
@@ -55,14 +80,6 @@
 		android:ellipsize="end"
 		android:textStyle="italic" />
 
-	<!-- All : duration -->
-	<TextView
-		android:id="@+id/info"
-		style="@style/BrowserText.Info.Video"
-		android:fontFamily="@font/nhaasgrotesktxpro_65md"
-		android:layout_below="@id/detail_line_two"
-		android:layout_toRightOf="@id/left_area" />
-
 	<!-- Movie   : cast -->
 	<!-- TV show : plot -->
 	<!-- Other   : empty -->
@@ -71,12 +88,12 @@
 	<TextView
 		android:id="@+id/detail_line_three"
 		style="@style/BrowserText.Details"
-		android:fontFamily="@font/nhaasgroteskdspro_56it"
+		android:fontFamily="@font/nhaasgroteskdspro_45lt"
 		android:textColor="@color/info_text_color"
-		android:layout_marginStart="4dp"
-		android:layout_marginEnd="4dp"
-		android:layout_below="@id/info"
-		android:layout_marginTop="22dip"
+		android:layout_marginStart="5dp"
+		android:layout_marginEnd="5dp"
+		android:layout_below="@id/episode_picture_cardview"
+		android:layout_marginTop="1dip"
 		android:ellipsize="end" />
 
 	<!-- Movie or TV show  : release date and rating -->
@@ -87,13 +104,13 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
-		android:layout_marginStart="4dp"
-		android:layout_marginBottom="2dip"
+		android:layout_marginStart="5dp"
+		android:paddingBottom="2dp"
 		android:orientation="horizontal">
 
 		<TextView android:id="@+id/release_date"
 			style="@style/BrowserText.Details"
-			android:fontFamily="@font/nhaasgroteskdspro_55rg"
+			android:fontFamily="@font/nhaasgroteskdspro_65md"
 			android:layout_width="0dip"
 			android:layout_height="wrap_content"
 			android:layout_weight="1.0"/>
@@ -102,7 +119,7 @@
 		<TextView
 			android:id="@+id/rating"
 			style="@style/BrowserText.Details"
-			android:fontFamily="@font/nhaasgrotesktxpro_65md"
+			android:fontFamily="@font/nhaasgroteskdspro_75bd"
 			android:drawablePadding="2dip"
 			android:drawableLeft="@drawable/little_star"
 			android:layout_weight="0.7"
@@ -138,8 +155,8 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignBottom="@id/expanded"
-		android:paddingRight="@dimen/content_list_right_margin"
-		android:paddingBottom="2dip"
+		android:paddingRight="2dip"
+		android:paddingBottom="3dip"
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentRight="true"
 		android:layout_toLeftOf="@id/expanded"
@@ -152,7 +169,7 @@
 			android:layout_width="@dimen/video_resume_slider_length_list"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
-			android:layout_marginBottom="3dip"
+			android:layout_marginBottom="2dip"
 			android:layout_marginRight="10dip"
 			android:clickable="false"
 			android:indeterminate="false"
