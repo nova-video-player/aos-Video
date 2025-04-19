@@ -15,16 +15,19 @@
 package com.archos.mediacenter.video.browser.presenter;
 
 import android.content.Context;
-import android.os.Build;
-import android.text.Html;
+import android.content.SharedPreferences;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.RelativeLayout;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
+import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
+import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesList;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
@@ -46,6 +49,7 @@ public class VideoListPresenter extends VideoPresenter{
     private final TextShadowSpan mTextNoShadowSpan;
     private static final String ITALIC = "</i>";
     private final boolean mThinPhoneInPortrait;
+    private SharedPreferences mPreferences;
     private SpannableStringBuilder mSpannableStringBuilder;
     public VideoListPresenter(Context context,  ExtendedClickListener onExtendedClick, HttpImageManager imageManager ) {
         this(context, AdapterDefaultValuesList.INSTANCE,  onExtendedClick, imageManager);
@@ -56,6 +60,7 @@ public class VideoListPresenter extends VideoPresenter{
         mSpannableStringBuilder = new SpannableStringBuilder();
         mTextNoShadowSpan = new TextShadowSpan();
         mThinPhoneInPortrait = (mContext.getResources().getConfiguration().screenWidthDp < 350);
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
     @Override
@@ -112,6 +117,17 @@ public class VideoListPresenter extends VideoPresenter{
                 Picasso.get().load(new File(movie.getBackdropPath())).into(holder.thumbnail);
             holder.thumbnail.setClipToOutline(true);
         }
+
+        // Get the RelativeLayout view
+        RelativeLayout relativeLayout = view.findViewById(R.id.relative_layout);
+        RelativeLayout leftArea = view.findViewById(R.id.left_area);
+        boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
+        if (darkModeActive){
+            relativeLayout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.browser_list_dark_background));
+        }
+        // Ensure the views clip correctly
+        relativeLayout.setClipToOutline(true);
+        leftArea.setClipToOutline(true);
 
         return view;
     }
