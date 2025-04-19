@@ -103,7 +103,7 @@ public class EpisodePresenter extends VideoPresenter implements Presenter {
 
         //setting a corner radius programmatically
         float density = mContext.getResources().getDisplayMetrics().density;
-        float cornerRadius = 6 * density; // equivalent to 6dp
+        float cornerRadius = 8 * density; // equivalent to 6dp
         // Create a MaterialShapeDrawable for rounded corners and transparent background
         MaterialShapeDrawable materialShapeDrawable = new MaterialShapeDrawable();
         materialShapeDrawable.setShapeAppearanceModel(
