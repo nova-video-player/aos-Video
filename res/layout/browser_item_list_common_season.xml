@@ -36,8 +36,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/expanded"
-        android:paddingRight="6dip"
-        android:paddingBottom="2dip"
+        android:paddingRight="7dip"
+        android:paddingBottom="3dip"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_toLeftOf="@id/expanded"
@@ -107,6 +107,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
         android:fontFamily="@font/nhaasgroteskdspro_65md"
+        android:textSize="18sp"
         android:layout_marginRight="18dip"
         android:layout_toLeftOf="@id/expanded"
         android:layout_toRightOf="@id/left_area" />
@@ -114,6 +115,9 @@
     <TextView
         android:id="@+id/info"
         style="@style/BrowserText.Info.Video"
+        android:layout_marginTop="-6dp"
+        android:textSize="14sp"
+        android:textColor="@color/header_font"
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@id/name"
         android:fontFamily="@font/nhaasgrotesktxpro_65md"
@@ -128,7 +132,7 @@
         android:layout_below="@+id/info"
         android:ellipsize="end"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="5dp"
         android:layout_toStartOf="@id/expanded"
         android:layout_toEndOf="@id/left_area"/>
 
@@ -136,11 +140,12 @@
         android:id="@+id/season_air_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/nhaasgroteskdspro_55rg"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
         android:textColor="@color/white_font"
+        android:textSize="14sp"
         android:layout_alignWithParentIfMissing="true"
         android:layout_toStartOf="@id/expanded"
         android:layout_toEndOf="@id/left_area"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="2dp"/>
+        android:paddingBottom="3dp"/>
 </merge>
