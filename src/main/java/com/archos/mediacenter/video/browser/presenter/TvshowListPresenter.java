@@ -15,11 +15,17 @@
 package com.archos.mediacenter.video.browser.presenter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
+import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
+import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesList;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesListShow;
@@ -116,6 +122,21 @@ public class TvshowListPresenter extends TvShowPresenter{
         if (tvShow.getBackdropPath()!= null)
             Picasso.get().load(new File(tvShow.getBackdropPath())).into(holder.thumbnail);
         holder.thumbnail.setClipToOutline(true);
+
+        // Get the RelativeLayout view
+        RelativeLayout relativeLayout = view.findViewById(R.id.relative_layout);
+        RelativeLayout leftArea = view.findViewById(R.id.left_area);
+        SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
+        if (darkModeActive){
+            relativeLayout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.browser_list_dark_background));
+        }else{
+            relativeLayout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.round_semitransparent_bg));
+        }
+        // Ensure the views clip correctly
+        relativeLayout.setClipToOutline(true);
+        leftArea.setClipToOutline(true);
+
         return view;
     }
 
