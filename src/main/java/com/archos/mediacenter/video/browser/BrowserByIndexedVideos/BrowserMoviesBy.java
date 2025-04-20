@@ -15,9 +15,12 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -31,6 +34,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
+import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.video.R;
@@ -58,6 +62,9 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
     public static final String COLUMN_NUMBER_OF_MOVIES = "number";
     public static final String COLUMN_LIST_OF_POSTER_FILES = "po_file_list";
 
+	private int columnWidth;
+	private int columnHeight;
+
 	protected String mSortOrder = getDefaultSortOrder();
 
 	protected String getSortOrderParamKey() {
@@ -74,6 +81,72 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 		else {
 			mSortOrder = mPreferences.getString(getSortOrderParamKey(), getDefaultSortOrder());
 		}
+
+		//set gridview thumbnail Width & Height
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+		boolean drawerIsNull = prefs.getBoolean("drawerIsNull", true);
+		boolean mIsLandscapeMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+		boolean mIsPortraitMode = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+		boolean IsTablet = mContext.getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE);
+
+		//width subtraction when number of columns is 5 && mIsLandscapeMode && drawerIsNull
+		int categoryWidth = (int) mContext.getResources().getDimension(R.dimen.categories_list_width);
+		int TotalHorizontalSpacingLandscapeNullDrawer = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_landscape_null_drawer);
+		int subtraction = categoryWidth + TotalHorizontalSpacingLandscapeNullDrawer;
+
+		DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
+		int windowWidth = displayMetrics.widthPixels;
+		int TotalHorizontalSpacingPortrait = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_portrait);
+		int TotalHorizontalSpacingLandscape = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_landscape);
+
+		int TotalHorizontalSpacingTabletPortrait = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_tablet_portrait);
+		int TotalHorizontalSpacingTabletLandscape = (int) mContext.getResources().getDimension(R.dimen.total_horizontal_spacing_tablet_landscape);
+		int subtractionTablet = categoryWidth + TotalHorizontalSpacingTabletLandscape;
+		int subtractionTabletPortrait = categoryWidth + TotalHorizontalSpacingTabletPortrait;
+
+		int width;
+		if(!IsTablet){
+			if(mIsPortraitMode){
+				width = windowWidth - TotalHorizontalSpacingPortrait;
+			}else if(mIsLandscapeMode && drawerIsNull){
+				width = windowWidth - subtraction;
+			}else{
+				width = windowWidth - TotalHorizontalSpacingLandscape;
+			}
+		}else{
+			if(mIsLandscapeMode){
+				width = windowWidth - subtractionTablet;
+			}else{
+				if(drawerIsNull){
+					width = windowWidth - subtractionTabletPortrait;
+				}else{
+					width = windowWidth - TotalHorizontalSpacingTabletPortrait;
+				}
+			}
+		}
+
+		if(!IsTablet){
+			if(mIsPortraitMode){
+				columnWidth = width / 3 ;
+			}else if(mIsLandscapeMode && drawerIsNull){
+				columnWidth = width / 5 ;
+			}else{
+				columnWidth = width / 6 ;
+			}
+		}else{
+			if(mIsLandscapeMode){
+				columnWidth = width / 8;
+			}else{
+				if(drawerIsNull){
+					columnWidth = width / 4;
+				}else{
+					columnWidth = width / 5;
+				}
+			}
+		}
+
+		int height = columnWidth / 2;
+		columnHeight = height * 3;
 	}
 
 	@Override
@@ -165,9 +238,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
         mThumbnailEngine.setThumbnailType(getThumbnailsType());
         mThumbnailRequester = new ThumbnailRequesterVideo(mThumbnailEngine,
                 (GroupOfMovieAdapter) mBrowserAdapter);
-        mThumbnailEngine.setThumbnailSize(
-                getResources().getDimensionPixelSize(R.dimen.video_grid_poster_width),
-                getResources().getDimensionPixelSize(R.dimen.video_grid_poster_height));
+        mThumbnailEngine.setThumbnailSize(columnWidth, columnHeight);
     }
 
     @Override
