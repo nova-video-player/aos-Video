@@ -107,7 +107,7 @@ public class TvshowDetailedPresenter extends TvshowListPresenter{
             } else {
                 ratingFormated = "";
             }
-            holder.rating.setText(mContext.getResources().getString(R.string.scrap_rating_format, ratingFormated));
+            holder.rating.setText(ratingFormated);
 
             if (date > 0) {
                 holder.release_date.setText(mContext.getResources().getString(
@@ -118,7 +118,7 @@ public class TvshowDetailedPresenter extends TvshowListPresenter{
         holder.release_date.setVisibility(View.GONE);
 
         holder.resume.setVisibility(View.GONE);
-            holder.detailLineTwo.setMaxLines(3);
+            holder.detailLineTwo.setMaxLines(4);
             holder.detailLineThree.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
             holder.detailLineThree.setSingleLine(false);
             holder.detailLineThree.setMaxLines(3);
