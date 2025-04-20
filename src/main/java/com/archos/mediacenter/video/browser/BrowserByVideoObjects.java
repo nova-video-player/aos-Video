@@ -243,8 +243,8 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
 
         }
         else if(viewMode==VideoUtils.VIEW_MODE_DETAILS){
-            adapterInterface.setPresenter(NonIndexedVideo.class, new VideoListPresenter(activity, listener,imageManager));
-            adapterInterface.setPresenter(Video.class, new VideoListPresenter(activity, listener,imageManager));
+            adapterInterface.setPresenter(NonIndexedVideo.class, new ScrapedVideoDetailedPresenter(activity, listener,imageManager));
+            adapterInterface.setPresenter(Video.class, new ScrapedVideoDetailedPresenter(activity, listener,imageManager));
             adapterInterface.setPresenter(Episode.class, new ScrapedVideoDetailedPresenter(activity, listener,imageManager));
             adapterInterface.setPresenter(Movie.class, new ScrapedVideoDetailedPresenter(activity, listener,imageManager));
         }
