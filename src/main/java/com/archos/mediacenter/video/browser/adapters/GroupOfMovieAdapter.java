@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
@@ -97,7 +98,10 @@ public class GroupOfMovieAdapter extends CursorAdapter implements SectionIndexer
         String format = context.getResources().getQuantityText(R.plurals.Nmovies, movieCount).toString();
         mPresenter.bindView(view, new Pair<String,String>(cursor.getString(mNameColumnIdx),String.format(format, movieCount)),mThumbnailEngine.getResultFromPool(getItemId(cursor.getPosition())),cursor.getPosition());
 
-
+        if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
+            RelativeLayout leftArea = view.findViewById(R.id.left_area);
+            leftArea.setClipToOutline(true);
+        }
     }
 
     private void setSections() {
