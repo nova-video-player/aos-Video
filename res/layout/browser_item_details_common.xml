@@ -13,8 +13,8 @@
     <TextView
         android:id="@+id/name"
         style="@style/BrowserText.Name.Video"
-        android:fontFamily="@font/gotham_book"
-        android:textStyle="bold"
+        android:layout_marginEnd="6dp"
+        android:fontFamily="@font/nhaasgroteskdspro_75bd"
         android:textSize="20sp"
         android:layout_width="fill_parent"
         android:layout_toRightOf="@id/left_area" />
@@ -26,8 +26,9 @@
     <TextView
         android:id="@+id/release_date"
         style="@style/BrowserText.Details"
-        android:fontFamily="@font/gotham_book"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
         android:textColor="@color/header_font"
+        android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dip"
@@ -45,21 +46,26 @@
     <!-- Movie   : plot -->
     <!-- TV show : episode name -->
     <!-- Other   : empty -->
-
     <TextView
         android:id="@+id/detail_line_two"
         style="@style/BrowserText.Details"
         android:layout_below="@id/detail_line_one"
-        android:layout_marginTop="4dip"
+        android:textColor="@color/info_text_color"
+        android:layout_marginTop="3dip"
+        android:layout_marginEnd="4dp"
+        android:textSize="14sp"
+        android:fontFamily="@font/nhaasgroteskdspro_45lt"
         android:layout_toRightOf="@id/left_area"
-        android:ellipsize="end"
-        android:textStyle="italic" />
+        android:ellipsize="end"/>
 
     <!-- All : duration -->
     <TextView
         android:id="@+id/info"
         style="@style/BrowserText.Info.Video"
-        android:layout_below="@id/detail_line_two"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
+        android:textColor="@color/header_font"
+        android:textSize="15sp"
+        android:layout_above="@+id/rating_container"
         android:layout_toRightOf="@id/left_area" />
 
     <!-- Movie   : cast -->
@@ -69,8 +75,12 @@
     <TextView
         android:id="@+id/detail_line_three"
         style="@style/BrowserText.Details"
-        android:layout_below="@id/info"
-        android:layout_marginTop="10dip"
+        android:layout_below="@id/release_date"
+        android:textColor="@color/info_text_color"
+        android:layout_marginTop="3dip"
+        android:layout_marginEnd="4dp"
+        android:textSize="14sp"
+        android:fontFamily="@font/nhaasgroteskdspro_45lt"
         android:ellipsize="end"
         android:layout_toRightOf="@id/left_area"/>
 
@@ -78,11 +88,12 @@
     <!-- Other             : empty -->
 
     <LinearLayout
+        android:id="@+id/rating_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/detail_line_three"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="2dip"
+        android:layout_marginTop="0dip"
+        android:paddingBottom="1dip"
         android:layout_toRightOf="@id/left_area">
         <LinearLayout
             android:orientation="horizontal"
@@ -92,11 +103,12 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0.9dp"
                 android:src="@drawable/little_star"/>
             <TextView
                 android:id="@+id/rating"
                 style="@style/BrowserText.Details"
+                android:fontFamily="@font/nhaasgroteskdspro_75bd"
+                android:textSize="15sp"
                 android:layout_marginStart="1dp"
                 android:drawablePadding="2dip"/>
         </LinearLayout>
@@ -130,8 +142,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/expanded"
-        android:paddingRight="2dip"
-        android:paddingBottom="2dip"
+        android:paddingRight="6dip"
+        android:paddingBottom="3dip"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_toLeftOf="@id/expanded"
@@ -143,7 +155,7 @@
             android:layout_width="@dimen/video_resume_slider_length_list"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="3dip"
+            android:layout_marginBottom="2dip"
             android:layout_marginRight="10dip"
             android:clickable="false"
             android:indeterminate="false"
