@@ -69,6 +69,8 @@ public class GroupOfMovieAdapter extends CursorAdapter implements SectionIndexer
             mPresenter = new MovieByPresenter(context,AdapterDefaultValuesList.INSTANCE,null);
         } else if (mViewMode == VideoUtils.VIEW_MODE_GRID) {
             mPresenter = new MovieByPresenter(context,AdapterDefaultValuesGrid.INSTANCE,null);
+        } else if (mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
+            mPresenter = new MovieByPresenter(context,AdapterDefaultValuesDetailsMoviesBy.INSTANCE,null);
         } else {
             // should not happen, default to grid
             mPresenter = new MovieByPresenter(context,AdapterDefaultValuesGrid.INSTANCE,null);

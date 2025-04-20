@@ -15,12 +15,18 @@
 package com.archos.mediacenter.video.browser.presenter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+
+import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
+import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 
 /**
@@ -28,11 +34,11 @@ import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
  */
 public class MovieByPresenter extends CommonPresenter{
 
-
+    private SharedPreferences mPreferences;
 
     public MovieByPresenter(Context context, AdapterDefaultValues defaultValues, ExtendedClickListener onExtendedClick) {
         super(context, defaultValues,onExtendedClick);
-
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
 
@@ -88,7 +94,14 @@ public class MovieByPresenter extends CommonPresenter{
         if(holder.expanded!=null)
             holder.expanded.setVisibility(View.GONE);
 
-
+        // Get the RelativeLayout view
+        RelativeLayout relativeLayout = view.findViewById(R.id.relative_layout);
+        boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
+        if (darkModeActive){
+            relativeLayout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.browser_list_dark_background));
+        }else{
+            relativeLayout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.round_semitransparent_bg));
+        }
         return view;
     }
 

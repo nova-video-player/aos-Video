@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/video_details_poster_height"
+    android:paddingStart="4dip"
+    android:paddingEnd="4dip"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical" >
+
+    <RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/round_semitransparent_bg"
+        android:outlineProvider="background"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/left_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true">
+
+            <!-- Poster on the left side -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/thumbnail_cardview"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                card_view:cardCornerRadius="8dp"
+                android:layout_width="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"	>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+                    <ImageView
+                        android:id="@+id/thumbnail"
+                        android:layout_width="@dimen/video_details_poster_width"
+                        android:layout_height="@dimen/video_details_poster_height"
+                        android:background="@color/default_icon_background"
+                        android:scaleType="center" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="4dip"
+            android:layout_toRightOf="@id/left_area">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical">
+                <!-- Title : genre or year of movies -->
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/BrowserText.Name.Video"
+                    android:paddingTop="0dp"
+                    android:layout_marginEnd="6dp"
+                    android:fontFamily="@font/nhaasgroteskdspro_75bd"
+                    android:textSize="24sp"
+                    android:layout_width="fill_parent" />
+                <!-- number of movies -->
+                <TextView
+                    android:id="@+id/info"
+                    style="@style/BrowserText.Info.Video"
+                    android:paddingTop="0dp"
+                    android:fontFamily="@font/nhaasgroteskdspro_65md"
+                    android:textColor="@color/header_font"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+        </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/expanded"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/video_list_thumbnail_height"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:paddingBottom="2dip"
+            android:paddingLeft="30dip"
+            android:paddingTop="30dip"
+            android:paddingRight="@dimen/list_expanded_padding"
+            android:visibility="gone"
+            android:background="@drawable/list_selector_holo_dark"
+            app:srcCompat="@drawable/label_infoarrow" />
+
+        <LinearLayout
+            android:id="@+id/bottom_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/expanded"
+            android:paddingRight="6dip"
+            android:paddingBottom="3dip"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@id/expanded"
+            android:orientation="horizontal" >
+
+            <ProgressBar
+                android:id="@+id/resume_notif"
+                style="@style/BrowserResumeSlider"
+                android:layout_width="@dimen/video_resume_slider_length_list"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="2dip"
+                android:layout_marginRight="10dip"
+                android:clickable="false"
+                android:indeterminate="false"
+                android:paddingBottom="0dip"
+                android:progress="0" />
+
+            <com.archos.mediacenter.utils.ImageLabel
+                android:id="@+id/resume_notif_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="8dip"
+                android:clickable="false"
+                android:src="@drawable/label_resume"
+                android:visibility="gone" />
+
+            <com.archos.mediacenter.utils.ImageLabel
+                android:id="@+id/bookmark_notif"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="8dip"
+                android:clickable="false"
+                android:visibility="gone"
+                android:src="@drawable/label_bookmark" />
+
+            <com.archos.mediacenter.utils.ImageLabel
+                android:id="@+id/subtitle_notif"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="8dip"
+                android:clickable="false"
+                android:src="@drawable/label_subtitles" />
+
+            <com.archos.mediacenter.utils.ImageLabel
+                android:id="@+id/network_notif"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:src="@drawable/label_network" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

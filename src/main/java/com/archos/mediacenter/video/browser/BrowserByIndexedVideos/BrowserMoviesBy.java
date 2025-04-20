@@ -201,6 +201,8 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
             mDisplayModeSubmenu.clear();
             mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, R.string.view_mode_list, 0);
             mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_poster_mode, R.string.view_mode_grid, 0);
+
+			mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_details_mode2, R.string.view_mode_details, 0);
             // no Details view mode here
             mDisplayModeSubmenu.selectSubmenuItem(getSubmenuItemIndex(mViewMode));
 
