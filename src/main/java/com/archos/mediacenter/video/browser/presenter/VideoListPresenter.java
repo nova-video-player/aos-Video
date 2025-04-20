@@ -47,7 +47,6 @@ import httpimage.HttpImageManager;
 public class VideoListPresenter extends VideoPresenter{
     private final ExtendedClickListener mOnExtendedClick;
     private final TextShadowSpan mTextNoShadowSpan;
-    private static final String ITALIC = "</i>";
     private final boolean mThinPhoneInPortrait;
     private SharedPreferences mPreferences;
     private SpannableStringBuilder mSpannableStringBuilder;
@@ -72,10 +71,10 @@ public class VideoListPresenter extends VideoPresenter{
         String name = video.getName();
         if(video instanceof Episode){
             Episode episode = (Episode) video;
-            name = episode.getShowName()+" S"+episode.getSeasonNumber()+"E"+episode.getEpisodeNumber()+" "+"<i>"+episode.getName()+ITALIC;
+            name = episode.getShowName()+" S"+episode.getSeasonNumber()+"E"+episode.getEpisodeNumber()+" "+episode.getName();
         }
         if (name == null) name = "";
-        if (name.endsWith(ITALIC)&&holder.name!=null) {
+        if (holder.name!=null) {
             Spanned htmlName = null;
             htmlName = HtmlCompat.fromHtml(name, HtmlCompat.FROM_HTML_MODE_LEGACY);
             // Display a string containing several display
