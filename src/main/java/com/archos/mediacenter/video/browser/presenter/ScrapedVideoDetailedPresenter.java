@@ -184,17 +184,14 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
 
             date = ((Episode)video).getEpisodeDate();
             if (date > 0) {
-                holder.release_date.setText(mContext.getResources().getString(
-                        R.string.scrap_aired_format, mDateFormat.format(new Date(date))));
+                holder.release_date.setText(mContext.getResources().getString(R.string.scrap_aired_format, mDateFormat.format(new Date(date))));
+                holder.release_date.setVisibility(View.VISIBLE);
             } else {
-                holder.release_date.setText(R.string.scrap_aired);
+                holder.release_date.setVisibility(View.GONE);
             }
             holder.detailLineTwo.setSingleLine(true);
             holder.detailLineThree.setSingleLine(false);
             holder.detailLineThree.setMaxLines(4);
-
-
-            holder.release_date.setVisibility(View.VISIBLE);
 
         }else{
             params.removeRule(RelativeLayout.ABOVE); // Remove the above rule
