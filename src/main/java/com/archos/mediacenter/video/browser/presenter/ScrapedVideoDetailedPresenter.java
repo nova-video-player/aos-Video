@@ -27,7 +27,6 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetails;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
-import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.squareup.picasso.Picasso;
 
