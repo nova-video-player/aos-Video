@@ -86,16 +86,36 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
         ViewHolderDetails holder = (ViewHolderDetails) view.getTag();
         Video video = (Video) object;
 
-
-
         long date = -1;
         float rating = -1;
+        String ratingFormated;
         String detailedLineOne = "";
         String detailedLineTwo = "";
         String detailedLineThree = "";
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.info.getLayoutParams();
         if(video instanceof Movie) {
             Movie movie = (Movie) video;
             rating = movie.getRating();
+            if (rating >= 0.0f) {
+                ratingFormated = mNumberFormat.format(rating);
+            } else {
+                ratingFormated = "";
+            }
+            if (ratingFormated.isEmpty() || ratingFormated.equalsIgnoreCase("0.0")){
+                holder.rating.setVisibility(View.GONE);
+                holder.ratingContainer.setVisibility(View.GONE);
+                params.removeRule(RelativeLayout.ABOVE);
+                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                holder.info.setLayoutParams(params);
+            }else{
+                holder.rating.setVisibility(View.VISIBLE);
+                holder.ratingContainer.setVisibility(View.VISIBLE);
+                holder.rating.setText(ratingFormated);
+                params.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                params.addRule(RelativeLayout.ABOVE, R.id.rating_container);
+                holder.info.setLayoutParams(params);
+            }
+
             detailedLineOne = mContext.getResources().getString(R.string.scrap_director)+" "+movie.getDirector();
             detailedLineTwo = movie.getDescriptionBody();
             detailedLineThree = mContext.getResources().getString(R.string.scrap_cast)+" "+movie.getActors();
@@ -106,6 +126,17 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             holder.detailLineTwo.setText(detailedLineTwo);
             holder.detailLineTwo.setVisibility(View.VISIBLE);
 
+            date = ((Movie)video).getYear();
+            if (date > 0) {
+                holder.release_date.setText(String.valueOf(date));
+            } else {
+                holder.release_date.setText(mContext.getResources().getString(R.string.scrap_year));
+            }
+            holder.detailLineTwo.setSingleLine(false);
+            holder.detailLineTwo.setMaxLines(4);
+            holder.detailLineThree.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
+            holder.detailLineThree.setSingleLine(true);
+
             // Set thumbnail.
             if (movie.getPosterUri() != null) {
                 Picasso.get().load(String.valueOf(movie.getPosterUri())).into(holder.thumbnail);
@@ -113,10 +144,30 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
                 holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
             holder.release_date.setVisibility(View.VISIBLE);
-        }
-        else if(video instanceof  Episode){
+
+        }else if(video instanceof  Episode){
             Episode episode = (Episode)video;
             rating = episode.getEpisodeRating();
+            if (rating >= 0.0f) {
+                ratingFormated = mNumberFormat.format(rating);
+            } else {
+                ratingFormated = "";
+            }
+            if (ratingFormated.isEmpty() || ratingFormated.equalsIgnoreCase("0.0")){
+                holder.rating.setVisibility(View.GONE);
+                holder.ratingContainer.setVisibility(View.GONE);
+                params.removeRule(RelativeLayout.ABOVE);
+                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                holder.info.setLayoutParams(params);
+            }else{
+                holder.rating.setVisibility(View.VISIBLE);
+                holder.ratingContainer.setVisibility(View.VISIBLE);
+                holder.rating.setText(ratingFormated);
+                params.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                params.addRule(RelativeLayout.ABOVE, R.id.rating_container);
+                holder.info.setLayoutParams(params);
+            }
+
             detailedLineOne = mContext.getResources().getString(R.string.episode_season)+" "
                     +episode.getSeasonNumber()+" "
                     + mContext.getResources().getString(R.string.episode_name)+" "
@@ -131,50 +182,6 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             holder.detailLineTwo.setText(detailedLineTwo);
             holder.detailLineTwo.setVisibility(View.GONE);
 
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.info.getLayoutParams();
-            params.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            params.addRule(RelativeLayout.ABOVE, R.id.rating_container);
-            holder.info.setLayoutParams(params);
-
-            holder.ratingContainer.setVisibility(View.VISIBLE);
-            holder.release_date.setVisibility(View.VISIBLE);
-        }
-
-        else{
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.info.getLayoutParams();
-            params.removeRule(RelativeLayout.ABOVE); // Remove the above rule
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM); // Anchor to the bottom instead
-            holder.info.setLayoutParams(params); // Apply the changes
-
-            holder.ratingContainer.setVisibility(View.GONE);
-            holder.detailLineThree.setVisibility(View.GONE);
-            holder.release_date.setVisibility(View.GONE);
-            holder.detailLineTwo.setVisibility(View.GONE);
-        }
-
-
-
-        String ratingFormated;
-        if (rating >= 0.0f) {
-            ratingFormated = mNumberFormat.format(rating);
-        } else {
-            ratingFormated = "";
-        }
-        holder.rating.setText(ratingFormated);
-
-        if(video instanceof Movie) {
-            date = ((Movie)video).getYear();
-            if (date > 0) {
-                holder.release_date.setText(String.valueOf(date))   ;
-            } else {
-                holder.release_date.setText(mContext.getResources().getString(R.string.scrap_year));
-            }
-            holder.detailLineTwo.setSingleLine(false);
-            holder.detailLineTwo.setMaxLines(4);
-            holder.detailLineThree.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
-            holder.detailLineThree.setSingleLine(true);
-        }
-        else if (video instanceof Episode) {
             date = ((Episode)video).getEpisodeDate();
             if (date > 0) {
                 holder.release_date.setText(mContext.getResources().getString(
@@ -185,7 +192,22 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             holder.detailLineTwo.setSingleLine(true);
             holder.detailLineThree.setSingleLine(false);
             holder.detailLineThree.setMaxLines(4);
+
+
+            holder.release_date.setVisibility(View.VISIBLE);
+
+        }else{
+            params.removeRule(RelativeLayout.ABOVE); // Remove the above rule
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM); // Anchor to the bottom instead
+            holder.info.setLayoutParams(params); // Apply the changes
+
+            holder.rating.setVisibility(View.GONE);
+            holder.ratingContainer.setVisibility(View.GONE);
+            holder.detailLineThree.setVisibility(View.GONE);
+            holder.release_date.setVisibility(View.GONE);
+            holder.detailLineTwo.setVisibility(View.GONE);
         }
+
         return view;
     }
 }
