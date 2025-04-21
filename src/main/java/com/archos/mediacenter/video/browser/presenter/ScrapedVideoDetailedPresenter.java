@@ -19,6 +19,8 @@ import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
@@ -26,6 +28,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesDetails;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
+import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.squareup.picasso.Picasso;
 
@@ -57,6 +60,7 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
         TextView detailLineThree;
         TextView rating;
         TextView release_date;
+        LinearLayout ratingContainer;
     }
     @Override
     public ViewHolderDetails getNewViewHolder() {
@@ -71,6 +75,7 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
         holder.detailLineThree = (TextView) view.findViewById(R.id.detail_line_three);
         holder.rating = (TextView) view.findViewById(R.id.rating);
         holder.release_date = (TextView) view.findViewById(R.id.release_date);
+        holder.ratingContainer = (LinearLayout) view.findViewById(R.id.rating_container);
         return view;
 
     }
@@ -107,6 +112,7 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
                 holder.thumbnail.clearColorFilter();
                 holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
+            holder.release_date.setVisibility(View.VISIBLE);
         }
         else if(video instanceof  Episode){
             Episode episode = (Episode)video;
@@ -124,8 +130,27 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             holder.detailLineThree.setText(detailedLineThree);
             holder.detailLineTwo.setText(detailedLineTwo);
             holder.detailLineTwo.setVisibility(View.GONE);
+
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.info.getLayoutParams();
+            params.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            params.addRule(RelativeLayout.ABOVE, R.id.rating_container);
+            holder.info.setLayoutParams(params);
+
+            holder.ratingContainer.setVisibility(View.VISIBLE);
+            holder.release_date.setVisibility(View.VISIBLE);
         }
 
+        else{
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.info.getLayoutParams();
+            params.removeRule(RelativeLayout.ABOVE); // Remove the above rule
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM); // Anchor to the bottom instead
+            holder.info.setLayoutParams(params); // Apply the changes
+
+            holder.ratingContainer.setVisibility(View.GONE);
+            holder.detailLineThree.setVisibility(View.GONE);
+            holder.release_date.setVisibility(View.GONE);
+            holder.detailLineTwo.setVisibility(View.GONE);
+        }
 
 
 
