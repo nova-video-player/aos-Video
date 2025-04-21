@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.browser.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.Log;
 import android.util.Pair;
@@ -25,6 +26,9 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
+
+import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.utils.MediaUtils;
@@ -100,9 +104,17 @@ public class GroupOfMovieAdapter extends CursorAdapter implements SectionIndexer
         String format = context.getResources().getQuantityText(R.plurals.Nmovies, movieCount).toString();
         mPresenter.bindView(view, new Pair<String,String>(cursor.getString(mNameColumnIdx),String.format(format, movieCount)),mThumbnailEngine.getResultFromPool(getItemId(cursor.getPosition())),cursor.getPosition());
 
-        if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
+        SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
+        if (mViewMode == VideoUtils.VIEW_MODE_LIST || mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
             RelativeLayout leftArea = view.findViewById(R.id.left_area);
             leftArea.setClipToOutline(true);
+            RelativeLayout relativeLayout = view.findViewById(R.id.relative_layout);
+            if (darkModeActive){
+                relativeLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.browser_list_dark_background));
+            }else{
+                relativeLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.round_semitransparent_bg));
+            }
         }
     }
 
