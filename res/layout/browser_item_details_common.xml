@@ -19,10 +19,8 @@
         android:layout_width="fill_parent"
         android:layout_toRightOf="@id/left_area" />
 
-    <!-- Movie   : director(s) -->
-    <!-- TV show : season + episode numbers -->
-    <!-- Other   : empty -->
-
+    <!-- Movie   : Year -->
+    <!-- Episode : Aired Date -->
     <TextView
         android:id="@+id/release_date"
         style="@style/BrowserText.Details"
@@ -44,8 +42,6 @@
         android:singleLine="true" />
 
     <!-- Movie   : plot -->
-    <!-- TV show : episode name -->
-    <!-- Other   : empty -->
     <TextView
         android:id="@+id/detail_line_two"
         style="@style/BrowserText.Details"
@@ -68,10 +64,8 @@
         android:layout_above="@+id/rating_container"
         android:layout_toRightOf="@id/left_area" />
 
-    <!-- Movie   : cast -->
-    <!-- TV show : plot -->
-    <!-- Other   : empty -->
 
+    <!-- Episode : plot -->
     <TextView
         android:id="@+id/detail_line_three"
         style="@style/BrowserText.Details"
