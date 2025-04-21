@@ -15,7 +15,6 @@
 package com.archos.mediacenter.video.browser.presenter;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -134,8 +133,6 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             }
             holder.detailLineTwo.setSingleLine(false);
             holder.detailLineTwo.setMaxLines(4);
-            holder.detailLineThree.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
-            holder.detailLineThree.setSingleLine(true);
 
             // Set thumbnail.
             if (movie.getPosterUri() != null) {
