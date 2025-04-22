@@ -41,6 +41,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -116,6 +117,7 @@ import com.archos.mediascraper.AutoScrapeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
@@ -256,6 +258,16 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             } else {
                 mSearchView = new SearchView(this);
                 mSearchView.setSearchableInfo(mSearchManager.getSearchableInfo(getComponentName()));
+
+                //hide search view hint icon
+                try {
+                    Field mDrawable = SearchView.class.getDeclaredField("mSearchHintIcon");
+                    mDrawable.setAccessible(true);
+                    Drawable drawable = (Drawable) mDrawable.get(mSearchView);
+                    drawable.setBounds(0, 0, 0, 0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (IllegalStateException e) {
             log.error("onCreate: searchManager is null");
