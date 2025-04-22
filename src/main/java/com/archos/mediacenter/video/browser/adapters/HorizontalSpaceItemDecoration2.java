@@ -6,10 +6,10 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class HorizontalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+public class HorizontalSpaceItemDecoration2 extends RecyclerView.ItemDecoration {
     private final int horizontalSpace;
 
-    public HorizontalSpaceItemDecoration(int horizontalSpace) {
+    public HorizontalSpaceItemDecoration2(int horizontalSpace) {
         this.horizontalSpace = horizontalSpace;
     }
 
@@ -38,6 +38,3 @@ public class HorizontalSpaceItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 }
-
-
-

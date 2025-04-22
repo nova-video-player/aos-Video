@@ -110,7 +110,8 @@ import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.FileManagerService;
 import com.archos.mediacenter.video.browser.adapters.CastAdapter;
 import com.archos.mediacenter.video.browser.adapters.CastData;
-import com.archos.mediacenter.video.browser.adapters.HorizontalSpaceItemDecoration;
+import com.archos.mediacenter.video.browser.adapters.HorizontalSpaceItemDecoration1;
+import com.archos.mediacenter.video.browser.adapters.HorizontalSpaceItemDecoration2;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
 import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
@@ -357,7 +358,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mYear;
     private RecyclerView actors;
     private RecyclerView studios;
-    private HorizontalSpaceItemDecoration logoItemDecoration;
+    private HorizontalSpaceItemDecoration1 logoItemDecoration1;
+    private HorizontalSpaceItemDecoration2 logoItemDecoration2;
     private TextView mToolbarTitle;
     private TextView mCreatedBy;
     private View mCreatedByContainer;
@@ -3240,9 +3242,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         }
                     };
                     // set spacing between items
-                    if (logoItemDecoration == null) {
-                        logoItemDecoration = new HorizontalSpaceItemDecoration(spacingInPixels);
-                        networks.addItemDecoration(logoItemDecoration);
+                    if (logoItemDecoration1 == null) {
+                        logoItemDecoration1 = new HorizontalSpaceItemDecoration1(spacingInPixels);
+                        networks.addItemDecoration(logoItemDecoration1);
                     }
 
                     final ShowNetworkAdapter networkLogoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
@@ -3302,9 +3304,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         }
                     };
                     // set spacing between items
-                    if (logoItemDecoration == null) {
-                        logoItemDecoration = new HorizontalSpaceItemDecoration(spacingInPixels);
-                        studios.addItemDecoration(logoItemDecoration);
+                    if (logoItemDecoration2 == null) {
+                        logoItemDecoration2 = new HorizontalSpaceItemDecoration2(spacingInPixels);
+                        studios.addItemDecoration(logoItemDecoration2);
                     }
 
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
@@ -3523,9 +3525,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         }
                     };
                     // set spacing between items
-                    if (logoItemDecoration == null) {
-                        logoItemDecoration = new HorizontalSpaceItemDecoration(spacingInPixels);
-                        studios.addItemDecoration(logoItemDecoration);
+                    if (logoItemDecoration1 == null) {
+                        logoItemDecoration1 = new HorizontalSpaceItemDecoration1(spacingInPixels);
+                        studios.addItemDecoration(logoItemDecoration1);
                     }
 
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);

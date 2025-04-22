@@ -54,7 +54,8 @@ import android.widget.Toast;
 
 import com.archos.mediacenter.video.browser.adapters.CastAdapter;
 import com.archos.mediacenter.video.browser.adapters.CastData;
-import com.archos.mediacenter.video.browser.adapters.HorizontalSpaceItemDecoration;
+import com.archos.mediacenter.video.browser.adapters.HorizontalSpaceItemDecoration1;
+import com.archos.mediacenter.video.browser.adapters.HorizontalSpaceItemDecoration2;
 import com.archos.mediacenter.video.browser.adapters.SeasonsData;
 import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
@@ -126,7 +127,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     private boolean mPlotIsFullyDisplayed;
     private RecyclerView networkLogos;
     private RecyclerView studioLogos;
-    private HorizontalSpaceItemDecoration logoItemDecoration;
+    private HorizontalSpaceItemDecoration1 logoItemDecoration1;
+    private HorizontalSpaceItemDecoration2 logoItemDecoration2;
 
     private RecyclerView actors;
     private SeasonsData seasonsData;
@@ -572,9 +574,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 }
             };
             // set spacing between items
-            if (logoItemDecoration == null) {
-                logoItemDecoration = new HorizontalSpaceItemDecoration(spacingInPixels);
-                networkLogos.addItemDecoration(logoItemDecoration);
+            if (logoItemDecoration1 == null) {
+                logoItemDecoration1 = new HorizontalSpaceItemDecoration1(spacingInPixels);
+                networkLogos.addItemDecoration(logoItemDecoration1);
             }
 
             final ShowNetworkAdapter logoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
@@ -624,9 +626,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 }
             };
             // set spacing between items
-            if (logoItemDecoration == null) {
-                logoItemDecoration = new HorizontalSpaceItemDecoration(spacingInPixels);
-                studioLogos.addItemDecoration(logoItemDecoration);
+            if (logoItemDecoration2 == null) {
+                logoItemDecoration2 = new HorizontalSpaceItemDecoration2(spacingInPixels);
+                studioLogos.addItemDecoration(logoItemDecoration2);
             }
 
             final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
