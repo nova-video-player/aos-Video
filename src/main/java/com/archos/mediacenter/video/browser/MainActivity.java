@@ -259,14 +259,18 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 mSearchView = new SearchView(this);
                 mSearchView.setSearchableInfo(mSearchManager.getSearchableInfo(getComponentName()));
 
-                //hide search view hint icon
-                try {
-                    Field mDrawable = SearchView.class.getDeclaredField("mSearchHintIcon");
-                    mDrawable.setAccessible(true);
-                    Drawable drawable = (Drawable) mDrawable.get(mSearchView);
-                    drawable.setBounds(0, 0, 0, 0);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                // Set iconified state
+                mSearchView.setIconifiedByDefault(false);
+
+                // Update the search icon immediately after initializing mSearchView
+                ImageView searchIcon = mSearchView.findViewById(
+                        mSearchView.getContext().getResources().getIdentifier(
+                                "search_mag_icon", "id", mSearchView.getContext().getPackageName()
+                        )
+                );
+                if (searchIcon != null) {
+                    searchIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.android29_ic_menu_search_mtrl_alpha));
+                    searchIcon.setColorFilter(null);
                 }
             }
         } catch (IllegalStateException e) {
