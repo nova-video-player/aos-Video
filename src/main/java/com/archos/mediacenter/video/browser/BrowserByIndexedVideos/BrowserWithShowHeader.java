@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -53,6 +54,7 @@ import android.widget.Toast;
 
 import com.archos.mediacenter.video.browser.adapters.CastAdapter;
 import com.archos.mediacenter.video.browser.adapters.CastData;
+import com.archos.mediacenter.video.browser.adapters.HorizontalSpaceItemDecoration;
 import com.archos.mediacenter.video.browser.adapters.SeasonsData;
 import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
@@ -382,6 +384,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             BaseTags tags = result.tags;
             ShowTags showTags = result.tags;
 
+            int spacingInPixels = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 8, // 8 dp
+                    getResources().getDisplayMetrics());
+
             final TextView plotTv = mHeaderView.findViewById(R.id.series_plot);
             mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
 
@@ -563,6 +569,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                     new BrowserWithShowHeader.LogoSaver(mContext).execute(clickedImage);
                 }
             };
+            // set spacing between items
+            networkLogos.addItemDecoration(new HorizontalSpaceItemDecoration(spacingInPixels));
+
             final ShowNetworkAdapter logoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
             networkLogos.setAdapter(logoAdapter);
             // if only one or zero logo available locally hide networkLogos
@@ -609,6 +618,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
                 }
             };
+            // set spacing between items
+            studioLogos.addItemDecoration(new HorizontalSpaceItemDecoration(spacingInPixels));
+
             final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
             studioLogos.setAdapter(studioAdapter);
             // if no Studio file found locally hide studios

@@ -433,6 +433,9 @@
             android:id="@+id/network_logo_rv"
             android:layout_width="match_parent"
             android:layout_height="55dp"
+            android:clipToPadding="false"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
             android:layout_marginStart="112dp"
             android:layout_marginTop="-2dp"
             android:layout_marginBottom="-2dp"/>
@@ -473,6 +476,9 @@
             android:id="@+id/studio_logo_rv"
             android:layout_width="match_parent"
             android:layout_height="55dp"
+            android:clipToPadding="false"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
             android:layout_marginStart="112dp"
             android:layout_marginTop="-2dp"
             android:layout_marginBottom="-2dp"/>

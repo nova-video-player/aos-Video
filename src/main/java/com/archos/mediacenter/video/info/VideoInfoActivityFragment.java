@@ -110,6 +110,7 @@ import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.FileManagerService;
 import com.archos.mediacenter.video.browser.adapters.CastAdapter;
 import com.archos.mediacenter.video.browser.adapters.CastData;
+import com.archos.mediacenter.video.browser.adapters.HorizontalSpaceItemDecoration;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
 import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
@@ -2892,6 +2893,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             if(isCancelled()||!isAdded()||isDetached())
                 return;
             mTags = tags;
+
+            int spacingInPixels = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 8, // 8 dp
+                    getResources().getDisplayMetrics());
+
             if (tags!=null) {
                 // enable/disable application backdrop
                 boolean backdropEnabled = mPreferences.getBoolean("application_backdrop", true);
@@ -3232,6 +3238,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             mFullScraperTagsTask.execute(mCurrentVideo);
                         }
                     };
+                    // set spacing between items
+                    networks.addItemDecoration(new HorizontalSpaceItemDecoration(spacingInPixels));
+
                     final ShowNetworkAdapter networkLogoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
                     networks.setAdapter(networkLogoAdapter);
                     // if no network file found locally hide networks
@@ -3288,6 +3297,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         public void onItemLongClick(int position) {
                         }
                     };
+                    // set spacing between items
+                    studios.addItemDecoration(new HorizontalSpaceItemDecoration(spacingInPixels));
+
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
                     studios.setAdapter(studioAdapter);
                     // set Original Music Composer
@@ -3503,6 +3515,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             mFullScraperTagsTask.execute(mCurrentVideo);
                         }
                     };
+                    // set spacing between items
+                    studios.addItemDecoration(new HorizontalSpaceItemDecoration(spacingInPixels));
+
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
                     studios.setAdapter(studioAdapter);
                     // Set default movie studio logo
