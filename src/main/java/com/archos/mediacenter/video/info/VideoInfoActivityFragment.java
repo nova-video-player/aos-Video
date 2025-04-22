@@ -357,6 +357,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private TextView mYear;
     private RecyclerView actors;
     private RecyclerView studios;
+    private HorizontalSpaceItemDecoration logoItemDecoration;
     private TextView mToolbarTitle;
     private TextView mCreatedBy;
     private View mCreatedByContainer;
@@ -3239,7 +3240,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         }
                     };
                     // set spacing between items
-                    networks.addItemDecoration(new HorizontalSpaceItemDecoration(spacingInPixels));
+                    if (logoItemDecoration == null) {
+                        logoItemDecoration = new HorizontalSpaceItemDecoration(spacingInPixels);
+                        networks.addItemDecoration(logoItemDecoration);
+                    }
 
                     final ShowNetworkAdapter networkLogoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
                     networks.setAdapter(networkLogoAdapter);
@@ -3298,7 +3302,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         }
                     };
                     // set spacing between items
-                    studios.addItemDecoration(new HorizontalSpaceItemDecoration(spacingInPixels));
+                    if (logoItemDecoration == null) {
+                        logoItemDecoration = new HorizontalSpaceItemDecoration(spacingInPixels);
+                        studios.addItemDecoration(logoItemDecoration);
+                    }
 
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
                     studios.setAdapter(studioAdapter);
@@ -3516,7 +3523,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         }
                     };
                     // set spacing between items
-                    studios.addItemDecoration(new HorizontalSpaceItemDecoration(spacingInPixels));
+                    if (logoItemDecoration == null) {
+                        logoItemDecoration = new HorizontalSpaceItemDecoration(spacingInPixels);
+                        studios.addItemDecoration(logoItemDecoration);
+                    }
 
                     final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
                     studios.setAdapter(studioAdapter);

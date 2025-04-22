@@ -126,6 +126,8 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     private boolean mPlotIsFullyDisplayed;
     private RecyclerView networkLogos;
     private RecyclerView studioLogos;
+    private HorizontalSpaceItemDecoration logoItemDecoration;
+
     private RecyclerView actors;
     private SeasonsData seasonsData;
 
@@ -570,7 +572,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 }
             };
             // set spacing between items
-            networkLogos.addItemDecoration(new HorizontalSpaceItemDecoration(spacingInPixels));
+            if (logoItemDecoration == null) {
+                logoItemDecoration = new HorizontalSpaceItemDecoration(spacingInPixels);
+                networkLogos.addItemDecoration(logoItemDecoration);
+            }
 
             final ShowNetworkAdapter logoAdapter = new ShowNetworkAdapter(NetworkLogoPaths,indicatorCallback);
             networkLogos.setAdapter(logoAdapter);
@@ -619,7 +624,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 }
             };
             // set spacing between items
-            studioLogos.addItemDecoration(new HorizontalSpaceItemDecoration(spacingInPixels));
+            if (logoItemDecoration == null) {
+                logoItemDecoration = new HorizontalSpaceItemDecoration(spacingInPixels);
+                studioLogos.addItemDecoration(logoItemDecoration);
+            }
 
             final StudioAdapter studioAdapter = new StudioAdapter(StudioLogoPaths,studioLogoCallback);
             studioLogos.setAdapter(studioAdapter);
