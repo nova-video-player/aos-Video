@@ -1255,7 +1255,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             // Determine available width
             ViewGroup parent = (ViewGroup) textView.getParent();
             final int availableWidth = (parent instanceof LinearLayout && ((LinearLayout) parent).getOrientation() == LinearLayout.HORIZONTAL)
-                    ? screenWidth - textView.getPaddingLeft() - textView.getPaddingRight() - dpToPx.apply(112)
+                    ? screenWidth - textView.getPaddingLeft() - textView.getPaddingRight() - dpToPx.apply(120)
                     : screenWidth;
 
             // Restore previous expansion state
