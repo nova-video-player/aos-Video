@@ -635,6 +635,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             item.setIcon(R.drawable.android29_ic_menu_search_mtrl_alpha);
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
             item.setActionView(mSearchView);
+            // Set custom search hint text
+            mSearchView.setQueryHint(" Search");
             mSearchItem = item;
         }
         MenuItem menuItem = menu.add(MENU_SCRAPER_GROUP, MENU_START_AUTO_SCRAPER_ACTIVITY, Menu.NONE,
