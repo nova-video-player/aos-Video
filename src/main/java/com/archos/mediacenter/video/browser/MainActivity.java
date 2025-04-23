@@ -54,6 +54,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.DisplayCutout;
+import android.view.Gravity;
 import android.view.InputDevice;
 import android.view.InputEvent;
 import android.view.KeyEvent;
@@ -663,6 +664,13 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 }
                 @Override public void afterTextChanged(Editable s) {}
             });
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.gravity = Gravity.CENTER; // Center inside LinearLayout
+            searchEditText.setLayoutParams(params);
 
             mSearchItem = item;
         }
