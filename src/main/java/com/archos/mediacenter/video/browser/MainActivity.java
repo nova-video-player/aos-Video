@@ -276,6 +276,27 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 if (searchIcon != null) {
                     searchIcon.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.android29_ic_menu_search_mtrl_alpha));
                     searchIcon.setColorFilter(null);
+
+                    // Remove default padding from the SearchView that pushes icon to the side
+                    View searchPlate = mSearchView.findViewById(
+                            mSearchView.getContext().getResources().getIdentifier(
+                                    "search_plate", "id", mSearchView.getContext().getPackageName()
+                            )
+                    );
+                    if (searchPlate != null) {
+                        searchPlate.setPadding(0, 0, 0, 0);
+                    }
+
+                    // Add margin to center icon better (tweak these numbers as needed)
+                    ViewGroup.MarginLayoutParams iconParams = (ViewGroup.MarginLayoutParams) searchIcon.getLayoutParams();
+                    iconParams.setMargins(16, 0, 16, 0);  // Adjust to center it visually
+                    searchIcon.setLayoutParams(iconParams);
+
+                    // Optionally center the icon in its parent using layout gravity
+                    ViewGroup parent = (ViewGroup) searchIcon.getParent();
+                    if (parent instanceof LinearLayout) {
+                        ((LinearLayout) parent).setGravity(Gravity.CENTER_VERTICAL);
+                    }
                 }
             }
         } catch (IllegalStateException e) {
