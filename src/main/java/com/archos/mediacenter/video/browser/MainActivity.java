@@ -41,6 +41,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -48,7 +49,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.DisplayCutout;
 import android.view.InputDevice;
@@ -76,6 +79,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -635,8 +639,31 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             item.setIcon(R.drawable.android29_ic_menu_search_mtrl_alpha);
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
             item.setActionView(mSearchView);
-            // Set custom search hint text
-            mSearchView.setQueryHint(" Search");
+            // Set custom search text and hint text
+            // 1. Get the SearchAutoComplete (internal EditText)
+            SearchView.SearchAutoComplete searchEditText = mSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
+            // 2. Set custom font (from res/font/)
+            Typeface customFont = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_45lt);
+            if (customFont != null) {
+                searchEditText.setTypeface(customFont);
+            }
+            // 3. Set hint and color
+            searchEditText.setHint(" Search");
+            searchEditText.setHintTextColor(Color.GRAY);
+            searchEditText.setTextColor(Color.WHITE); // Optional: set typing text color
+            // 4. Optional: clear hint when user types
+            searchEditText.addTextChangedListener(new TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.length() > 0) {
+                        searchEditText.setHint("");
+                    } else {
+                        searchEditText.setHint(" Search");
+                    }
+                }
+                @Override public void afterTextChanged(Editable s) {}
+            });
+
             mSearchItem = item;
         }
         MenuItem menuItem = menu.add(MENU_SCRAPER_GROUP, MENU_START_AUTO_SCRAPER_ACTIVITY, Menu.NONE,
