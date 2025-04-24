@@ -1257,7 +1257,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             // Determine available width
             ViewGroup parent = (ViewGroup) textView.getParent();
             final int availableWidth = (parent instanceof LinearLayout && ((LinearLayout) parent).getOrientation() == LinearLayout.HORIZONTAL)
-                    ? screenWidth - textView.getPaddingLeft() - textView.getPaddingRight() - dpToPx.apply(120)
+                    ? screenWidth - textView.getPaddingLeft() - textView.getPaddingRight() - dpToPx.apply(120) // minus 120dp
                     : screenWidth;
 
             // Restore previous expansion state
@@ -1339,7 +1339,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     }
 
     public static void setupAnimatedPlotExpansion(TextView textView, int collapsedLines) {
-        int expectedWidthOfTextView = textView.getResources().getDisplayMetrics().widthPixels;
+        // Local inline dpToPx converter
+        java.util.function.IntFunction<Integer> dpToPx = dp ->
+                Math.round(dp * mContext.getResources().getDisplayMetrics().density);
+
+        int expectedWidthOfTextView = textView.getResources().getDisplayMetrics().widthPixels- dpToPx.apply(8); // minus 8dp of left and right padding of parent view
         int originalMaxLines = textView.getMaxLines();
 
         if (originalMaxLines < 0 || originalMaxLines == Integer.MAX_VALUE) {
