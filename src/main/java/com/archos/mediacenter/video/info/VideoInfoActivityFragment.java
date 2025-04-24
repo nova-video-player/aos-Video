@@ -960,7 +960,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         // Measure the TextView after layout pass
         mPlotTextView.post(() -> {
-            int expectedWidth = getResources().getDisplayMetrics().widthPixels;
+            // Local inline dpToPx converter
+            java.util.function.IntFunction<Integer> dpToPx = dp ->
+                    Math.round(dp * mContext.getResources().getDisplayMetrics().density);
+
+            int expectedWidth = getResources().getDisplayMetrics().widthPixels - dpToPx.apply(8); // minus 4dp left and 4dp right padding of parent view (scroll_content)
             mPlotTextView.measure(
                     View.MeasureSpec.makeMeasureSpec(expectedWidth, View.MeasureSpec.AT_MOST),
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
@@ -1257,7 +1261,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             // Determine available width
             ViewGroup parent = (ViewGroup) textView.getParent();
             final int availableWidth = (parent instanceof LinearLayout && ((LinearLayout) parent).getOrientation() == LinearLayout.HORIZONTAL)
-                    ? screenWidth - textView.getPaddingLeft() - textView.getPaddingRight() - dpToPx.apply(120) // minus 120dp
+                    ? screenWidth - textView.getPaddingLeft() - textView.getPaddingRight() - dpToPx.apply(120) // minus ( 112 marginStart (header) + 4dp left and 4dp right padding of parent view (scroll_content) ) = 120dp
                     : screenWidth;
 
             // Restore previous expansion state
@@ -1343,7 +1347,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         java.util.function.IntFunction<Integer> dpToPx = dp ->
                 Math.round(dp * mContext.getResources().getDisplayMetrics().density);
 
-        int expectedWidthOfTextView = textView.getResources().getDisplayMetrics().widthPixels- dpToPx.apply(8); // minus 8dp of left and right padding of parent view
+        int expectedWidthOfTextView = textView.getResources().getDisplayMetrics().widthPixels - dpToPx.apply(8); // minus 4dp left and 4dp right padding of parent view (scroll_content)
         int originalMaxLines = textView.getMaxLines();
 
         if (originalMaxLines < 0 || originalMaxLines == Integer.MAX_VALUE) {
