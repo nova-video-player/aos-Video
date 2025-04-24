@@ -2711,7 +2711,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private void updateSourceList(){
         if(mVideoBadgePresenter == null)
             mVideoBadgePresenter = new VideoBadgePresenter(getActivity());
-        mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
+        boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
+        if (darkModeActive) {
+            mVideoBadgePresenter.setSelectedBackgroundColor(mContext.getResources().getColor(R.color.dark_blue));
+        } else {
+            mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
+        }
         log.debug("updateSourceList, mCurrentVideo.getFileUri()=" + mCurrentVideo.getFileUri());
         mVideoBadgePresenter.setSelectedUri(mCurrentVideo.getFileUri());
         mSourceLayout.removeAllViews();
