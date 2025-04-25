@@ -403,12 +403,11 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
         mInstanceActivity = this;
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean darkModeActive = prefs.getBoolean("dark_mode", false);
+        boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
 
         boolean drawerIsNull;
         drawerIsNull = mDrawerLayout == null;
-        prefs.edit().putBoolean("drawerIsNull", drawerIsNull).apply();
+        mPreferences.edit().putBoolean("drawerIsNull", drawerIsNull).apply();
 
         if(darkModeActive){
             setDarkMode();
@@ -877,7 +876,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         if (mGlobalResumeView == null) {
             mGlobalResumeView = (GlobalResumeView) mGlobalResumeViewStub.inflate();
         }
-        SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mGlobalResumeView.setVisibility(View.VISIBLE);
         return mGlobalResumeView;
     }
@@ -1020,7 +1018,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 }
 
                 // resume icon option
-                SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 String mode = mPreferences.getString("global_resume_icon", null);
                 int iconStyle;
                 if(mode == null){
