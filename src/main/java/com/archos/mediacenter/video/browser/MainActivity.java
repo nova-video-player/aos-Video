@@ -746,6 +746,13 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 if (!PrivateMode.isActive() && PrivateMode.canShowDialog(this)) {
                     PrivateMode.showDialog(this);
                 }
+                // disable dark mode before toggling private mode
+                mPreferences.edit().putBoolean("dark_mode", false).apply();
+                BrowserCategory category = (BrowserCategory) getSupportFragmentManager().findFragmentById(R.id.category);
+                if (category != null){
+                    category.setCategoryItemSeparatorBackground();
+                }
+                setNormalMode();
                 PrivateMode.toggle();
                 setBackground();
                 //setHomeButton();

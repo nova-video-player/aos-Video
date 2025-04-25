@@ -98,6 +98,25 @@ abstract public class BrowserCategory extends ListFragment {
     private PropertyChangeListener propertyChangeListener = null;
     private boolean mNetworkStateListenerAdded = false;
     private boolean mEnableSponsor = false;
+    private TextView categoryName;
+
+    public void setCategoryItemSeparatorBackground() {
+        boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
+
+        if (darkModeActive || PrivateMode.isActive()) {
+            categoryName.setBackground(null);
+            getListView().invalidateViews(); // redraw all list items
+            getListView().invalidate();      // force a visual refresh
+            getListView().requestLayout();   // re-calculate layout
+            categoryName.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.browser_category_item_separator_bg_dark));
+        } else {
+            categoryName.setBackground(null);
+            getListView().invalidateViews();
+            getListView().invalidate();
+            getListView().requestLayout();
+            categoryName.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.browser_category_item_separator_bg));
+        }
+    }
 
     /**
      * This object is used to store basic info for the category list item.
@@ -664,15 +683,22 @@ abstract public class BrowserCategory extends ListFragment {
                 tv.setText((CharSequence) mCategoryList.get(position));
 
                 // Now it's safe to access category_name
-                TextView textView = convertView.findViewById(R.id.category_name);
-                if (textView != null) {
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                    boolean darkModeActive = prefs.getBoolean("dark_mode", false);
+                categoryName = convertView.findViewById(R.id.category_name);
+                if (categoryName != null) {
+                    boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
 
-                    if (darkModeActive) {
-                        textView.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_category_item_separator_bg_dark));
+                    if (darkModeActive || PrivateMode.isActive()) {
+                        categoryName.setBackground(null);
+                        getListView().invalidateViews(); // redraw all list items
+                        getListView().invalidate();      // force a visual refresh
+                        getListView().requestLayout();   // re-calculate layout
+                        categoryName.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_category_item_separator_bg_dark));
                     } else {
-                        textView.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_category_item_separator_bg));
+                        categoryName.setBackground(null);
+                        getListView().invalidateViews(); // redraw all list items
+                        getListView().invalidate();      // force a visual refresh
+                        getListView().requestLayout();   // re-calculate layout
+                        categoryName.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_category_item_separator_bg));
                     }
                 } else {
                     Log.e("CategoryAdapter", "TextView category_name is NULL! Check layout browser_category_item_separator.");
