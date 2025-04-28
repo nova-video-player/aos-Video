@@ -346,7 +346,7 @@ dependencies {
     implementation 'androidx.tvprovider:tvprovider:1.0.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
     implementation 'com.github.tony19:logback-android:3.0.0'
-    implementation 'io.sentry:sentry-android:8.3.0'
+    implementation 'io.sentry:sentry-android:8.10.0'
     implementation 'io.sentry:sentry:8.3.0'
 }
 
