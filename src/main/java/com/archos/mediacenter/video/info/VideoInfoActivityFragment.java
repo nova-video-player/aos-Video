@@ -444,6 +444,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private EpisodeViewModel episodeViewModel;
     private LinearLayout episodeSelectorContainer;
     private static final int ANIMATION_DURATION = 300;
+    private static final String TAG = "VideoInfoActivityF";
     public static VideoInfoActivityFragment getInstance(Video video, Uri path, long id, boolean forceVideoSelection){
         log.debug("VideoInfoActivityFragment for uri=" + path);
         Bundle arguments = new Bundle();
@@ -2401,7 +2402,16 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 DbUtils.markAsHiddenByUser(getActivity(), mCurrentVideo);
                 break;
             case R.string.scrap_remove:
-                DbUtils.deleteScraperInfo(getActivity(), mCurrentVideo);
+                if (mCurrentVideo != null) {
+                    // Always capture previous onlineId FIRST
+                    if (mCurrentVideo instanceof Movie) {
+                        VideoInfoActivity.setPreviousOnlineId(((Movie) mCurrentVideo).getOnlineId());
+                    } else if (mCurrentVideo instanceof Episode) {
+                        VideoInfoActivity.setPreviousOnlineId(((Episode) mCurrentVideo).getOnlineId());
+                    }
+                    // THEN call deletion
+                    DbUtils.deleteScraperInfo(getActivity(), mCurrentVideo);
+                }
                 break;
             case R.string.info_menu_backdrop_select:
                 Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
@@ -2817,6 +2827,33 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         setCurrentVideo(newVideo);
 
         updateSourceList();
+
+        if (oldVideoObject != null && newVideo != null) {
+            SQLiteDatabase db = VideoDb.getHolder(mContext).get();
+            long newOnlineId = (newVideo instanceof Movie) ? ((Movie) newVideo).getOnlineId()
+                    : (newVideo instanceof Episode) ? ((Episode) newVideo).getOnlineId()
+                    : -1;
+
+            long previousOnlineId = VideoInfoActivity.getPreviousOnlineId();
+            if (previousOnlineId != -1 && newOnlineId != -1) {
+                if (previousOnlineId == newOnlineId) {
+                    clearDeleteFilesTable(db); // ✅ Safe to preserve images
+                    Log.d(TAG, "Same onlineId detected (" + previousOnlineId + "), skipping deletion.");
+                } else {
+                    Log.d(TAG, "Different onlineId (" + previousOnlineId + " → " + newOnlineId + "), allow deletion.");
+                }
+                VideoInfoActivity.setPreviousOnlineId(-1); // ✅ Only reset after actual comparison
+            }
+        }
+    }
+
+    public static void clearDeleteFilesTable(SQLiteDatabase db) {
+        try {
+            db.execSQL("DELETE FROM delete_files");
+            Log.d(TAG, "delete_files table cleared.");
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to clear delete_files table", e);
+        }
     }
 
     private void updateWatchedStatus() {

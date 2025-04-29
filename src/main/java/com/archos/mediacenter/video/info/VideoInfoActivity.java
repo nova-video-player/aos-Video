@@ -77,6 +77,34 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
     private VideoInfoActivityFragment videoInfoActivityFragment;
     private boolean gestureEnabled = true; // Default to true
 
+    private static long sPreviousOnlineId = -1;
+
+    // Save when Activity is going to be destroyed (like screen rotate)
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("previous_online_id", sPreviousOnlineId);
+    }
+
+    // Restore after Activity recreation
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            sPreviousOnlineId = savedInstanceState.getLong("previous_online_id", -1);
+        }
+    }
+
+    // Setter
+    public static void setPreviousOnlineId(long id) {
+        sPreviousOnlineId = id;
+    }
+
+    // Getter
+    public static long getPreviousOnlineId() {
+        return sPreviousOnlineId;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (DBG) Log.d(TAG,"onCreate");
