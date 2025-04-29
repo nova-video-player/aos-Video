@@ -19,6 +19,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
@@ -36,10 +37,13 @@ import com.archos.mediacenter.video.browser.adapters.object.Season;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediaprovider.VideoDb;
 import com.archos.mediaprovider.video.ScraperStore;
 import com.archos.mediaprovider.video.VideoStore;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vapillon on 13/05/15.
@@ -137,6 +141,64 @@ public class DbUtils {
         delete.deleteAssociatedNfoFiles(video.getFileUri());
     }
 
+    public static void deleteScraperInfoAndImages(Context context, List<File> studioLogoFiles, Video video) {
+        // Reset the scraper fields for this item in the medialib
+        // (set them to -1 because there is no need to search it again when running the automated task)
+        // this also deletes the scraper data
+        ContentValues values = new ContentValues(2);
+        values.put(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_ID, "-1");
+        values.put(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE, "-1");
+        final String selection = VideoStore.MediaColumns._ID + "=?";
+        final String[] selectionArgs =new String[]{Long.toString(video.getId())};
+        context.getContentResolver().update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, values, selection, selectionArgs);
+        // delete nfo files and posters: no need in theory to do the API30 gazplant
+        // TODO check and provide option to disable Q way here
+        Delete delete = new Delete(null,context);
+        delete.deleteAssociatedNfoFiles(video.getFileUri());
+        SQLiteDatabase db = VideoDb.getHolder(context).get();
+        for (File logoFile : studioLogoFiles) {
+            String studioName = logoFile.getName().replace(".png", "").replace("%20", " "); // Adjust decoding if needed
+
+            if (!isStudioLogoUsedByOthers(context, studioName, video.getId())) {
+                // Studio logo is unused elsewhere, safe to delete
+                addToDeleteFilesTable(db, logoFile.getAbsolutePath());
+                Log.d("StudioLogo", "Queued for deletion: " + logoFile.getName());
+            } else {
+                removeFromDeleteFilesTable(db, logoFile.getAbsolutePath());
+                Log.d("StudioLogo", "Kept (shared by others): " + logoFile.getName());
+            }
+        }
+    }
+
+    public static void removeFromDeleteFilesTable(SQLiteDatabase db, String filePath) {
+        db.delete("delete_files", "name = ?", new String[]{filePath});
+    }
+
+    public static void addToDeleteFilesTable(SQLiteDatabase db, String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            ContentValues cv = new ContentValues();
+            cv.put("name", filePath);
+            db.insert("delete_files", null, cv);
+            Log.d("DeleteFiles", "Queued for deletion: " + filePath);
+        } else {
+            Log.d("DeleteFiles", "Skipped (file not found): " + filePath);
+        }
+    }
+
+    public static boolean isStudioLogoUsedByOthers(Context context, String studioName, long currentVideoId) {
+        Uri uri = VideoStore.Video.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {VideoStore.Video.VideoColumns._ID};
+
+        // Normalize spacing in case the DB has inconsistent formatting
+        String selection = VideoStore.Video.VideoColumns.SCRAPER_STUDIOS + " LIKE ? AND " + VideoStore.Video.Media._ID + "!=?";
+        String[] selectionArgs = new String[]{"%" + studioName.trim() + "%", Long.toString(currentVideoId)};
+
+        Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+        boolean isUsed = cursor != null && cursor.moveToFirst();
+        if (cursor != null) cursor.close();
+        return isUsed;
+    }
 
     public static void markAsHiddenByUser(Context context, Video video) {
         markHiddenValue(context, new Long[]{video.getId()}, 1);

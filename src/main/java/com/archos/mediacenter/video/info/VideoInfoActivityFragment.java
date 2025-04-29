@@ -445,6 +445,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private LinearLayout episodeSelectorContainer;
     private static final int ANIMATION_DURATION = 300;
     private static final String TAG = "VideoInfoActivityF";
+    private List<File> finalStudioLogos;
     public static VideoInfoActivityFragment getInstance(Video video, Uri path, long id, boolean forceVideoSelection){
         log.debug("VideoInfoActivityFragment for uri=" + path);
         Bundle arguments = new Bundle();
@@ -2410,7 +2411,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         VideoInfoActivity.setPreviousOnlineId(((Episode) mCurrentVideo).getOnlineId());
                     }
                     // THEN call deletion
-                    DbUtils.deleteScraperInfo(getActivity(), mCurrentVideo);
+                    DbUtils.deleteScraperInfoAndImages(getActivity(), finalStudioLogos, mCurrentVideo);
                 }
                 break;
             case R.string.info_menu_backdrop_select:
@@ -3339,6 +3340,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             availableStudioLogos.add(studioFile);
                         }
                     }
+                    finalStudioLogos = availableStudioLogos;
                     studiosSize = availableStudioLogos.size();
                     if (studiosSize == 0){
                         studios.setVisibility(View.GONE);
@@ -3538,6 +3540,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             availableStudioLogos.add(file);
                         }
                     }
+                    finalStudioLogos = availableStudioLogos;
                     studiosSize = availableStudioLogos.size();
                     if (studiosSize <= 1){
                         studios.setVisibility(View.GONE);
