@@ -141,7 +141,7 @@ public class DbUtils {
         delete.deleteAssociatedNfoFiles(video.getFileUri());
     }
 
-    public static void deleteScraperInfoAndImages(Context context, List<File> studioLogoFiles, List<File> networkLogoFiles, Video video) {
+    public static void deleteScraperInfoAndImages(Context context, List<File> actorPhotoFiles, List<File> studioLogoFiles, List<File> networkLogoFiles, Video video) {
         // Reset the scraper fields for this item in the medialib
         // (set them to -1 because there is no need to search it again when running the automated task)
         // this also deletes the scraper data
@@ -176,6 +176,19 @@ public class DbUtils {
                     addToDeleteFilesTable(db, logoFile.getAbsolutePath());
                 } else {
                     removeFromDeleteFilesTable(db, logoFile.getAbsolutePath());
+                }
+            }
+        }
+        if (actorPhotoFiles != null){
+            for (File actorFile : actorPhotoFiles) {
+                String actorFileName = actorFile.getName();
+                if (!isActorPhotoUsedByOthers(context, actorFileName, video.getId())) {
+                    // Studio logo is unused elsewhere, safe to delete
+                    addToDeleteFilesTable(db, actorFile.getAbsolutePath());
+                    Log.d("ActorPhoto", "Queued for deletion: " + actorFile.getName());
+                } else {
+                    removeFromDeleteFilesTable(db, actorFile.getAbsolutePath());
+                    Log.d("ActorPhoto", "Kept (shared by others): " + actorFile.getName());
                 }
             }
         }
@@ -218,6 +231,24 @@ public class DbUtils {
         // Normalize spacing in case the DB has inconsistent formatting
         String selection = VideoStore.Video.VideoColumns.SCRAPER_NETWORKS + " LIKE ? AND " + VideoStore.Video.Media._ID + "!=?";
         String[] selectionArgs = new String[]{"%" + networkName.trim() + "%", Long.toString(currentVideoId)};
+
+        Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+        boolean isUsed = cursor != null && cursor.moveToFirst();
+        if (cursor != null) cursor.close();
+        return isUsed;
+    }
+
+    public static boolean isActorPhotoUsedByOthers(Context context, String actorFileName, long currentVideoId) {
+        Uri uri = VideoStore.Video.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {VideoStore.Video.VideoColumns._ID};
+
+        // Actor filenames are like: yZpghhtKM2VZHDx6JGAZqAVU4PL.jpg
+        // But the JSON has: "profile_path":"\/yZpghhtKM2VZHDx6JGAZqAVU4PL.jpg"  << note "\: This backslash is only there to escape the / in the JSON string.
+        // It's not part of the actual data and it is ignored.
+        String profilePath = "/"+ actorFileName;
+
+        String selection = VideoStore.Video.VideoColumns.SCRAPER_ACTORS + " LIKE ? AND " + VideoStore.Video.Media._ID + "!=?";
+        String[] selectionArgs = new String[]{"%" + profilePath + "%", Long.toString(currentVideoId)};
 
         Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
         boolean isUsed = cursor != null && cursor.moveToFirst();

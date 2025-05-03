@@ -447,6 +447,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private static final String TAG = "VideoInfoActivityF";
     private List<File> finalStudioLogos;
     private List<File> finalNetworkLogos;
+    private List<File> finalActorPhotos;
     public static VideoInfoActivityFragment getInstance(Video video, Uri path, long id, boolean forceVideoSelection){
         log.debug("VideoInfoActivityFragment for uri=" + path);
         Bundle arguments = new Bundle();
@@ -2412,7 +2413,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         VideoInfoActivity.setPreviousOnlineId(((Episode) mCurrentVideo).getOnlineId());
                     }
                     // THEN call deletion
-                    DbUtils.deleteScraperInfoAndImages(getActivity(), finalStudioLogos, finalNetworkLogos, mCurrentVideo);
+                    DbUtils.deleteScraperInfoAndImages(getActivity(), finalActorPhotos, finalStudioLogos, finalNetworkLogos, mCurrentVideo);
                 }
                 break;
             case R.string.info_menu_backdrop_select:
@@ -3224,6 +3225,22 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mCastTextViewTitle.setVisibility(View.GONE);
                         actors.setVisibility(View.GONE);
                     }
+
+                    List<String> actorPhotoPaths = new ArrayList<>();
+                    for (int i = showTags.getActorPhotosLargeFileF().size() - 1; i>=0; i--) {
+                        String actorPhotoPath = showTags.getActorPhotosLargeFileF().get(i).getPath();
+                        actorPhotoPaths.add(actorPhotoPath);}
+                    // if no Studio file found locally hide studios
+                    List<File> availableActorPhotos = new ArrayList<>();
+                    for (int i = 0; i < actorPhotoPaths.size(); i++) {
+                        String path = actorPhotoPaths.get(i);
+                        File actorFile = new File(path);
+                        if (actorFile.exists()){
+                            availableActorPhotos.add(actorFile);
+                        }
+                    }
+                    finalActorPhotos = availableActorPhotos;
+
                     // Disable gestureDetector swiping on actors recyclerview
                     actors.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
                         @Override
@@ -3518,6 +3535,22 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         mCastTextViewTitle.setVisibility(View.GONE);
                         actors.setVisibility(View.GONE);
                     }
+
+                    List<String> actorPhotoPaths = new ArrayList<>();
+                    for (int i = tags.getActorPhotosLargeFileF().size() - 1; i>=0; i--) {
+                        String actorPhotoPath = tags.getActorPhotosLargeFileF().get(i).getPath();
+                        actorPhotoPaths.add(actorPhotoPath);}
+                    // if no Studio file found locally hide studios
+                    List<File> availableActorPhotos = new ArrayList<>();
+                    for (int i = 0; i < actorPhotoPaths.size(); i++) {
+                        String path = actorPhotoPaths.get(i);
+                        File actorFile = new File(path);
+                        if (actorFile.exists()){
+                            availableActorPhotos.add(actorFile);
+                        }
+                    }
+                    finalActorPhotos = availableActorPhotos;
+
                     // hide GuestStars
                     mGuestStarsTitle.setVisibility(View.GONE);
                     mGuestStars.setVisibility(View.GONE);
