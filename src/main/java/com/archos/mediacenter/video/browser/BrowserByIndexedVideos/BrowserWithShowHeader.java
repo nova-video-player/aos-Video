@@ -433,7 +433,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             }
 
             TextView network = mHeaderView.findViewById(R.id.network);
-            network.setText(show.getStudio());
+            network.setText(showTags.getNetworksFormatted());
             network.setTag(true);
             animateTextViewExpansionCollapse(network, 1);
 
@@ -648,18 +648,15 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 studioLogos.setVisibility(View.GONE);
             }
 
-            String studioNames = "";
-            String names = "";
-            String baseStudioPath = MediaScraper.getStudioLogoDirectory(mContext).getPath() + "/";
-            for (int i = tags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
-                names = names + tags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(baseStudioPath, "").replaceAll(".png", "") + ", ";
-                studioNames = names.substring(0, names.length() - 2);
-            }
+            String studios = "";
+            studios = showTags.getStudiosFormatted();
             TextView studio = mHeaderView.findViewById(R.id.studio);
-            studio.setText(studioNames);
             LinearLayout studioNamesContainer = mHeaderView.findViewById(R.id.studio_container);
-            if (studioNames.isEmpty())
+            if (studios.isEmpty()){
                 studioNamesContainer.setVisibility(View.GONE);
+            } else {
+                studio.setText(studios);
+            }
             studio.setTag(true);
             animateTextViewExpansionCollapse(studio, 1);
 
