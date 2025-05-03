@@ -446,6 +446,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private static final int ANIMATION_DURATION = 300;
     private static final String TAG = "VideoInfoActivityF";
     private List<File> finalStudioLogos;
+    private List<File> finalNetworkLogos;
     public static VideoInfoActivityFragment getInstance(Video video, Uri path, long id, boolean forceVideoSelection){
         log.debug("VideoInfoActivityFragment for uri=" + path);
         Bundle arguments = new Bundle();
@@ -2411,7 +2412,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         VideoInfoActivity.setPreviousOnlineId(((Episode) mCurrentVideo).getOnlineId());
                     }
                     // THEN call deletion
-                    DbUtils.deleteScraperInfoAndImages(getActivity(), finalStudioLogos, mCurrentVideo);
+                    DbUtils.deleteScraperInfoAndImages(getActivity(), finalStudioLogos, finalNetworkLogos, mCurrentVideo);
                 }
                 break;
             case R.string.info_menu_backdrop_select:
@@ -3306,6 +3307,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             availableNetworkLogos.add(file);
                         }
                     }
+                    finalNetworkLogos = availableNetworkLogos;
                     networksSize = availableNetworkLogos.size();
                     if (networksSize <= 1){
                         networks.setVisibility(View.GONE);
