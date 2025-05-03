@@ -2840,11 +2840,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             if (previousOnlineId != -1 && newOnlineId != -1) {
                 if (previousOnlineId == newOnlineId) {
                     clearDeleteFilesTable(db); // ✅ Safe to preserve images
+                    VideoInfoActivity.setPreviousOnlineId(-1); // ✅ Only reset after clearing the delete_files table
                     Log.d(TAG, "Same onlineId detected (" + previousOnlineId + "), skipping deletion.");
                 } else {
                     Log.d(TAG, "Different onlineId (" + previousOnlineId + " → " + newOnlineId + "), allow deletion.");
                 }
-                VideoInfoActivity.setPreviousOnlineId(-1); // ✅ Only reset after actual comparison
             }
         }
     }
