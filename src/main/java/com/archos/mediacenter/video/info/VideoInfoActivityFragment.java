@@ -3118,11 +3118,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     setTextOrHideContainer(mScrapProducer, showTags.getProducersFormatted(), mScrapProducer, mScrapProducerTitle);
                     animateTextViewExpansionCollapse(mScrapProducer, 1);
                     // set series studio names for episode view
-                    String names = "";
-                    for (int i = showTags.getStudioLogosLargeFileF().size() - 1; i >= 0; i--) {
-                        names = names + showTags.getStudioLogosLargeFileF().get(i).getPath().replaceAll(baseStudioPath, "").replaceAll(extension, "") + ", ";
-                        studio = names.substring(0, names.length() - 2);
-                    }
+                    studio = ((ShowTags) showTags).getStudiosFormatted();
 
                     // setting multiple series tags using JSON formatting (tagline, type, status, vote_count, popularity, runtime, original language)
                     String tagline = "";
@@ -3387,17 +3383,15 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     animateTextViewExpansionCollapse(mSpokenLanguages, 1);
                     // set network names
-                    String networkNames = "";
                     String networks = "";
-                    for (int i = 0; i < NetworkLogoPaths.size(); i++) {
-                        networks = networks + NetworkLogoPaths.get(i).replaceAll(baseNetworkPath, "").replaceAll(".png", "") + ", ";
-                        networkNames = networks.substring(0, networks.length() - 2);
-                    }
-                    if (networkNames.isEmpty()){
-                        mNetworks.setVisibility(View.GONE);
-                        mNetworksContainer.setVisibility(View.GONE);
-                    }else{
-                        mNetworks.setText(networkNames);
+                    if (showTags.getNetworksFormatted() != null){
+                        networks = showTags.getNetworksFormatted();
+                        if (networks.isEmpty()){
+                            mNetworks.setVisibility(View.GONE);
+                            mNetworksContainer.setVisibility(View.GONE);
+                        }else{
+                            mNetworks.setText(networks);
+                        }
                     }
                     animateTextViewExpansionCollapse(mNetworks, 1);
                     //hide movie Info Container
