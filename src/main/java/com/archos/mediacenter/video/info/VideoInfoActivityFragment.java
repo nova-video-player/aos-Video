@@ -3192,17 +3192,16 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     // set series actors
                     List<CastData> seriesActors = new ArrayList<>();
                     CastData castData;
-                    for (int i = 0; i < showTags.getWriters().size(); i++) {
-                        String actorTags = showTags.getWriters().get(i);
+                    for (String movieActorsJson : showTags.getActors().keySet()) {
                         try {
-                            JSONObject jsonObject = new JSONObject(actorTags);
+                            JSONObject jsonObject = new JSONObject(movieActorsJson);
                             castData = new CastData();
                             castData.setName(jsonObject.optString("name", ""));
                             castData.setCharacter(jsonObject.optString("character", ""));
                             castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + jsonObject.optString("profile_path", ""));
                             seriesActors.add(castData);
                         } catch (JSONException e) {
-                            e.printStackTrace();  // Log error to prevent app crashes
+                            Log.e("Actors", "JSON Parsing error: " + e.getMessage());
                         }
                     }
                     LinearLayoutManager actorsLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
