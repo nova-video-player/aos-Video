@@ -189,6 +189,12 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             holder.detailLineThree.setSingleLine(false);
             holder.detailLineThree.setMaxLines(4);
 
+            // Set thumbnail.
+            if (episode.getPosterUri() != null) {
+                Picasso.get().load(String.valueOf(episode.getPosterUri())).into(holder.thumbnail);
+                holder.thumbnail.clearColorFilter();
+                holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
         }else{
             params.removeRule(RelativeLayout.ABOVE); // Remove the above rule
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM); // Anchor to the bottom instead

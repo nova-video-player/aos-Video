@@ -72,6 +72,11 @@ public class VideoListPresenter extends VideoPresenter{
         if(video instanceof Episode){
             Episode episode = (Episode) video;
             name = episode.getShowName()+" S"+episode.getSeasonNumber()+"E"+episode.getEpisodeNumber()+" "+episode.getName();
+
+            if (episode.getPictureUri()!=null) {
+                Picasso.get().load(episode.getPictureUri()).fit().centerCrop().into(holder.thumbnail);
+                holder.thumbnail.setClipToOutline(true);
+            }
         }
         if (name == null) name = "";
         if (holder.name!=null) {
@@ -112,9 +117,10 @@ public class VideoListPresenter extends VideoPresenter{
         // set backdrop
         if(video instanceof Movie){
             Movie movie = (Movie) video;
-            if (movie.getBackdropPath()!= null)
+            if (movie.getBackdropPath()!= null) {
                 Picasso.get().load(new File(movie.getBackdropPath())).into(holder.thumbnail);
-            holder.thumbnail.setClipToOutline(true);
+                holder.thumbnail.setClipToOutline(true);
+            }
         }
 
         // Get the RelativeLayout view
