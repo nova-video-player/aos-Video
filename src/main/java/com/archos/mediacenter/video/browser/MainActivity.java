@@ -751,6 +751,13 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 if (category != null){
                     category.setCategoryItemSeparatorBackground();
                 }
+
+                // Ensure video list updates backgrounds live when dark mode is toggled
+                Browser browser = (Browser) getSupportFragmentManager().findFragmentById(R.id.content); // or the correct fragment ID
+                if (browser != null) {
+                    browser.notifyDataSetChanged();
+                }
+
                 setNormalMode();
                 PrivateMode.toggle();
                 setBackground();
