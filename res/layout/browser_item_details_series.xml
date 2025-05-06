@@ -70,8 +70,6 @@ for informations (duration for files, number of files for directories).
 						android:layout_height="wrap_content"
 						android:layout_alignRight="@id/thumbnail"
 						android:layout_alignTop="@id/thumbnail"
-						android:layout_marginRight="-2px"
-						android:layout_marginTop="-2px"
 						app:srcCompat="@drawable/watched_icon_corner"
 						android:visibility="gone" />
 
