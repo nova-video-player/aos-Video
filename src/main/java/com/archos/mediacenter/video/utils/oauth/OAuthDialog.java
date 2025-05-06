@@ -111,6 +111,7 @@ public class OAuthDialog extends Dialog {
 		setContentView(R.layout.oauth_dialog);
 
 		getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
 		mWebView = (NovaWebView) findViewById(R.id.webview);
 		mWebView.getSettings().setJavaScriptEnabled(true);
