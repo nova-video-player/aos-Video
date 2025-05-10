@@ -582,6 +582,14 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             return true;
         });
 
+        findPreference(getString(R.string.rescrap_all_tv_shows_prefkey)).setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(AutoScrapeService.RESCAN_SHOWS, null, getActivity(), AutoScrapeService.class);
+            intent.putExtra(AutoScrapeService.RESCAN_ONLY_DESC_NOT_FOUND, false);
+            getContext().startService(intent);
+            Toast.makeText(getActivity(), R.string.rescrap_shows_in_progress, Toast.LENGTH_SHORT).show();
+            return true;
+        });
+
         findPreference(getString(R.string.rescrap_all_collections_prefkey)).setOnPreferenceClickListener(preference -> {
             Intent intent = new Intent(AllCollectionScrapeService.INTENT_RESCRAPE_ALL_COLLECTIONS, null, getActivity(), AllCollectionScrapeService.class);
             getContext().startService(intent);

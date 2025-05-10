@@ -618,6 +618,10 @@
             android:title="@string/rescrap_all_movies_title"
             app:iconSpaceReserved="false"/>
         <Preference
+            android:key="@string/rescrap_all_tv_shows_prefkey"
+            android:title="@string/rescrap_all_tv_shows_title"
+            app:iconSpaceReserved="false"/>
+        <Preference
             android:key="@string/rescrap_all_collections_prefkey"
             android:title="@string/rescrap_all_collections_title"
             app:iconSpaceReserved="false"/>
