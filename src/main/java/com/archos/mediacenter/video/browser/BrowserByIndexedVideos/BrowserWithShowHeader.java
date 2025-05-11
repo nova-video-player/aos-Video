@@ -653,7 +653,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             studios = showTags.getStudiosFormatted();
             TextView studio = mHeaderView.findViewById(R.id.studio);
             LinearLayout studioNamesContainer = mHeaderView.findViewById(R.id.studio_container);
-            if (studios.isEmpty()){
+            if (studios ==null || studios.isEmpty()){
                 studioNamesContainer.setVisibility(View.GONE);
             } else {
                 studio.setText(studios);
