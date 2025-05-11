@@ -331,13 +331,21 @@ abstract public class BrowserCategory extends ListFragment {
         if (object instanceof ItemData) {
             ItemData item = (ItemData) object;
             if(item.text == R.string.preferences){
+                mSelectedItemId = item.id; // 999
+                mCategoryAdapter.notifyDataSetChanged(); // to apply tint
                 if(getActivity() instanceof MainActivity)
                     ((MainActivity) getActivity()).startPreference();
                 setSelection(mSelectedItemId); //restore selection
             } else if (item.text == R.string.help_faq){
                 WebUtils.openWebLink(getActivity(),getString(R.string.faq_url));
+                mSelectedItemId = item.id; // Set selected ID
+                mCategoryAdapter.notifyDataSetChanged(); // To apply tint
+                setSelection(mSelectedItemId); // Restore selection
             } else if (item.text == R.string.sponsor){
                 WebUtils.openWebLink(getActivity(),getString(R.string.sponsor_url));
+                mSelectedItemId = item.id; // Set selected ID
+                mCategoryAdapter.notifyDataSetChanged(); // To apply tint
+                setSelection(mSelectedItemId); // Restore selection
             } else if(item.text  == R.string.activate_private_mode || item.text  == R.string.deactivate_private_mode){
                 if (!PrivateMode.isActive() && PrivateMode.canShowDialog(getActivity())) {
                     PrivateMode.showDialog(getActivity());
@@ -559,10 +567,12 @@ abstract public class BrowserCategory extends ListFragment {
         ItemData itemData = new ItemData();
         itemData.icon = R.drawable.android29_ic_settings;
         itemData.text = R.string.preferences;
+        itemData.id = 999; // Or any unused constant
         mCategoryList.add(itemData);
         itemData = new ItemData();
         itemData.icon = R.drawable.android29_ic_menu_help;
         itemData.text = R.string.help_faq;
+        itemData.id = 1000; // Unique ID for help_faq
         mCategoryList.add(itemData);
         // Google Play is allergic to piggies... no donation button
         if (BuildConfig.ENABLE_SPONSOR) mEnableSponsor = mPreferences.getBoolean(VideoPreferencesCommon.KEY_ENABLE_SPONSOR, VideoPreferencesCommon.ENABLE_SPONSOR_DEFAULT);
@@ -570,6 +580,7 @@ abstract public class BrowserCategory extends ListFragment {
             itemData = new ItemData();
             itemData.icon = R.drawable.piggy_bank;
             itemData.text = R.string.sponsor;
+            itemData.id = 1001; // Unique ID for sponsor
             mCategoryList.add(itemData);
         }
     }
