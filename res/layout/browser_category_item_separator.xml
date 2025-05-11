@@ -10,7 +10,7 @@
     android:focusable="false"
     android:paddingLeft="8dip"
     android:paddingRight="8dip"
-
+    android:fontFamily="@font/nhaasgroteskdspro_55rg"
     android:textColor="@color/yellow_category_list_selector_light"
     android:singleLine="true"
      />
