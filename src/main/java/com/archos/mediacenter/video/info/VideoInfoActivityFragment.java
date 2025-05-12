@@ -110,6 +110,7 @@ import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.FileManagerService;
 import com.archos.mediacenter.video.browser.adapters.CastAdapter;
 import com.archos.mediacenter.video.browser.adapters.CastData;
+import com.archos.mediacenter.video.browser.adapters.GuestStarData;
 import com.archos.mediacenter.video.browser.adapters.HorizontalSpaceItemDecoration1;
 import com.archos.mediacenter.video.browser.adapters.HorizontalSpaceItemDecoration2;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
@@ -3034,11 +3035,35 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 });
 
                 // set Guest Stars
-                String guestStars = "";
+                List<GuestStarData> guestStars = new ArrayList<>();
+                GuestStarData guestStarData;
                 if (tags instanceof EpisodeTags) {
-                    guestStars = tags.getActorsFormatted();
+                    for (String guestStarsJson : tags.getActors().keySet()) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(guestStarsJson);
+                            guestStarData = new GuestStarData();
+                            guestStarData.setName(jsonObject.optString("name", ""));
+                            guestStarData.setCharacter(jsonObject.optString("character", ""));
+                            //guestStarData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + jsonObject.optString("profile_path", ""));
+                            guestStars.add(guestStarData);
+                        } catch (JSONException e) {
+                            Log.e("Actors", "JSON Parsing error: " + e.getMessage());
+                        }
+                    }
                 }
-                setTextOrHideContainer(mGuestStars, guestStars, mGuestStars, mGuestStarsTitle);
+                StringBuilder guestStarBuilder = new StringBuilder();
+                for (int i = 0; i < guestStars.size(); i++) {
+                    GuestStarData star = guestStars.get(i);
+                    guestStarBuilder.append(star.getName())
+                            .append(" (")
+                            .append(star.getCharacter())
+                            .append(")");
+                    if (i < guestStars.size() - 1) {
+                        guestStarBuilder.append(", ");
+                    }
+                }
+                String gueststar = guestStarBuilder.toString();
+                setTextOrHideContainer(mGuestStars, gueststar, mGuestStars, mGuestStarsTitle);
                 animateTextViewExpansionCollapse(mGuestStars, 1);
 
                 // set Director
