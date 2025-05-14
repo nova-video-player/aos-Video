@@ -3,13 +3,6 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools" >
 
-	<!-- info text & icons in the middle area -->
-
-
-	<!-- Movie   : movie name -->
-	<!-- TV show : TV show title -->
-	<!-- Other   : filename -->
-
 	<FrameLayout
 		android:id="@+id/name_info_container"
 		android:layout_width="match_parent"
@@ -27,6 +20,7 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
 			android:layout_gravity="center_vertical">
+			<!-- Episode : name -->
 			<TextView
 				android:id="@+id/name"
 				style="@style/BrowserText.Title"
@@ -34,7 +28,7 @@
 				android:textSize="20sp"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"/>
-			<!-- All : duration -->
+			<!-- Episode : duration -->
 			<TextView
 				android:id="@+id/info"
 				style="@style/BrowserText.Info.Video"
@@ -44,9 +38,7 @@
 		</LinearLayout>
 	</FrameLayout>
 
-	<!-- Movie   : director(s) -->
-	<!-- TV show : season + episode numbers -->
-	<!-- Other   : empty -->
+	<!-- Episode  : picture -->
 	<androidx.cardview.widget.CardView
 		android:id="@+id/episode_picture_cardview"
 		xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -59,6 +51,8 @@
 			android:layout_height="78dip"
 			android:scaleType="center" />
 	</androidx.cardview.widget.CardView>
+
+	<!-- Episode  : empty -->
 	<TextView
 		android:id="@+id/detail_line_one"
 		style="@style/BrowserText.Details"
@@ -67,10 +61,7 @@
 		android:layout_toRightOf="@id/left_area"
 		android:singleLine="true" />
 
-	<!-- Movie   : plot -->
-	<!-- TV show : episode name -->
-	<!-- Other   : empty -->
-
+	<!-- Episode  : empty -->
 	<TextView
 		android:id="@+id/detail_line_two"
 		style="@style/BrowserText.Details"
@@ -80,11 +71,7 @@
 		android:ellipsize="end"
 		android:textStyle="italic" />
 
-	<!-- Movie   : cast -->
-	<!-- TV show : plot -->
-	<!-- Other   : empty -->
-
-	<!-- episode plot -->
+	<!-- Episode  : plot -->
 	<TextView
 		android:id="@+id/detail_line_three"
 		style="@style/BrowserText.Details"
@@ -96,9 +83,7 @@
 		android:layout_marginTop="1dip"
 		android:ellipsize="end" />
 
-	<!-- Movie or TV show  : release date and rating -->
-	<!-- Other             : empty -->
-
+	<!-- Episode  : release date and rating -->
 	<LinearLayout
 		android:id="@+id/rating_and_date"
 		android:layout_width="fill_parent"
@@ -115,7 +100,6 @@
 			android:layout_height="wrap_content"
 			android:layout_weight="1.0"/>
 
-
 		<TextView
 			android:id="@+id/rating"
 			style="@style/BrowserText.Details"
@@ -124,7 +108,6 @@
 			android:drawableLeft="@drawable/little_star"
 			android:layout_weight="0.7"
 			android:gravity="center_vertical"/>
-
 	</LinearLayout>
 
 	<!--
@@ -215,5 +198,4 @@
 			android:clickable="false"
 			android:src="@drawable/label_network" />
 	</LinearLayout>
-
 </merge>
