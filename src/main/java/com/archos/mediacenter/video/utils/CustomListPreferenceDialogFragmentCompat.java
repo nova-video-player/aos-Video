@@ -6,11 +6,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -78,6 +80,30 @@ public class CustomListPreferenceDialogFragmentCompat extends ListPreferenceDial
             if (root != null && typeface1 != null && typeface2 != null) {
                applyFontToViewGroup(root, typeface1, typeface2);
             }
+
+            if (listView != null) {
+                for (int i = 0; i < listView.getChildCount(); i++) {
+                    Drawable original = ContextCompat.getDrawable(requireContext(), R.drawable.custom_ripple);
+                    Drawable ripple = original != null ? original.mutate().getConstantState().newDrawable().mutate() : null;
+
+                    if (ripple != null) {
+                        View item = listView.getChildAt(i);
+                        item.setBackground(ripple);
+                    }
+                }
+            }
+
+            // Add ripple to Cancel button
+            Button cancelButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            if (cancelButton != null) {
+                Drawable original = ContextCompat.getDrawable(requireContext(), R.drawable.custom_ripple);
+                Drawable ripple = original != null ? original.mutate().getConstantState().newDrawable().mutate() : null;
+
+                if (ripple != null) {
+                    cancelButton.setBackground(ripple);
+                }
+            }
+
         });
 
         return dialog;
