@@ -1085,7 +1085,7 @@
     <string name="preference_dark_blue_mode_summery">Enables a deep dark blue mode throughout the interface (Toggling will deactivate Private Mode if it is active)</string>
 
     <string name="application_backdrop_title">Transparent Backdrop</string>
-    <string name="application_backdrop_summery">Enables transparent backdrop for current movie or tv show that fills the entire information screen. Works best with dark mode enabled so it will inversely toggle dark mode</string>
+    <string name="application_backdrop_summery">Enables transparent backdrop for current movie or tv show that fills the entire information screen. When disabled, It works best with dark mode enabled so it will inversely toggle dark mode</string>
 
     <string name="poster_insideInfo_title">Poster Image</string>
     <string name="poster_insideInfo_summery">Enables poster image in the information screen.</string>
