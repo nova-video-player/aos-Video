@@ -49,7 +49,7 @@ public class CustomListPreferenceDialogFragmentCompat extends ListPreferenceDial
 
         AlertDialog.Builder builder = new AlertDialog.Builder(themedContext);
         builder.setTitle(preference.getTitle())
-                .setSingleChoiceItems(entries, selectedIndex, (dialogInterface, which) -> {
+                .setSingleChoiceItems(new CustomArrayAdapter(themedContext, entries), selectedIndex, (dialogInterface, which) -> {
                     preference.setValue(entryValues[which].toString());
                     dialogInterface.dismiss();
                 })
