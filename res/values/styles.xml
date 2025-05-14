@@ -351,4 +351,8 @@
         <item name="horizontalProgressLayout">@layout/alert_dialog_progress</item>
     </style>
 
+    <!-- Custom Preference Dialog -->
+    <style name="CustomPreferenceDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:listChoiceIndicatorSingle">@drawable/custom_radio_button</item>
+    </style>
 </resources>

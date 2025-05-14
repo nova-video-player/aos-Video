@@ -20,6 +20,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
@@ -55,5 +57,20 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mPreferencesCommon.onActivityResult(requestCode, resultCode, data);
+    }
+    @Override
+    public void onDisplayPreferenceDialog(Preference preference) {
+        if (getParentFragmentManager().findFragmentByTag("androidx.preference.PreferenceFragment.DIALOG") != null) {
+            return; // Avoid multiple dialogs
+        }
+
+        if (preference instanceof ListPreference) {
+            DialogFragment dialogFragment =
+                    CustomListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+            dialogFragment.setTargetFragment(this, 0);
+            dialogFragment.show(getParentFragmentManager(), "androidx.preference.PreferenceFragment.DIALOG");
+        } else {
+            super.onDisplayPreferenceDialog(preference);
+        }
     }
 }
