@@ -101,22 +101,24 @@
 	     NOTE: negative right margin to be go over the (i) icon despite it's large left padding
     -->
 
+    <!-- Season  : name -->
     <TextView
         android:id="@+id/name"
         style="@style/BrowserText.Name.Video"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
         android:fontFamily="@font/nhaasgroteskdspro_65md"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:layout_marginRight="18dip"
         android:layout_toLeftOf="@id/expanded"
         android:layout_toRightOf="@id/left_area" />
 
+    <!-- Season  : number of episodes -->
     <TextView
         android:id="@+id/info"
         style="@style/BrowserText.Info.Video"
         android:layout_marginTop="-5dp"
-        android:textSize="14sp"
+        android:textSize="17sp"
         android:textColor="@color/header_font"
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@id/name"
@@ -124,11 +126,13 @@
         android:layout_marginRight="3dp"
         android:layout_toRightOf="@id/left_area" />
 
+    <!-- Season  : season plot -->
     <TextView
         android:id="@+id/season_plot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:textSize="17sp"
+        android:layout_marginTop="3dp"
         android:fontFamily="@font/nhaasgroteskdspro_45lt"
         android:textColor="@color/info_text_color"
         android:layout_below="@+id/info"
@@ -138,13 +142,14 @@
         android:layout_toStartOf="@id/expanded"
         android:layout_toEndOf="@id/left_area"/>
 
+    <!-- Season  : season air date -->
     <TextView
         android:id="@+id/season_air_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/nhaasgroteskdspro_65md"
         android:textColor="@color/white_font"
-        android:textSize="14sp"
+        android:textSize="17sp"
         android:layout_alignWithParentIfMissing="true"
         android:layout_toStartOf="@id/expanded"
         android:layout_toEndOf="@id/left_area"

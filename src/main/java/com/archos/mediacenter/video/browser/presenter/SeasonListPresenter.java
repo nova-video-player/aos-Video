@@ -102,7 +102,7 @@ public class SeasonListPresenter extends SeasonPresenter{
             String seasonNumber = finalSeasonTags.get(i).getSeasonNumber();
             if (currentSeason == Integer.parseInt(seasonNumber)) {
                 holder.seasonPlot.setText(finalSeasonTags.get(i).getSeasonPlot());
-                holder.seasonPlot.setMaxLines(5);
+                holder.seasonPlot.setMaxLines(4);
                 holder.seasonAirDate.setText(finalSeasonTags.get(i).getSeasonAirdate());
                 String name = "";
                 if (finalSeasonTags.get(i).getSeasonName().isEmpty()){
