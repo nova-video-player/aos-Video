@@ -61,7 +61,7 @@ public class AnimesNShowsMapper implements CompatibleCursorMapper {
     private int mCountColumn;
     private int mPinnedColumn;
 
-    private int mIsShow, mUId, mUName, mUPoster, mUPlot, mUYear, mUStudios, mUActors;
+    private int mIsShow, mUId, mUName, mUPoster, mUPlot, mUYear, mUStudios, mUNetworks, mUActors;
 
     private int mSeasonCountColumn, mEpisodeCountColumn, mEpisodeWatchedCountColumn;
 
@@ -125,6 +125,7 @@ public class AnimesNShowsMapper implements CompatibleCursorMapper {
         mUYear = c.getColumnIndex("uYear");
         mUPlot = c.getColumnIndex("uPlot");
         mUStudios = c.getColumnIndex("uStudios");
+        mUNetworks = c.getColumnIndex("uNetworks");
         mUActors = c.getColumnIndex("uActors");
 
         mSeasonCountColumn = c.getColumnIndex("season_count");
@@ -197,6 +198,7 @@ public class AnimesNShowsMapper implements CompatibleCursorMapper {
                     VideoCursorMapper.isTraktSeenOrLibrary(c, mTraktLibraryColumn),
                     c.getString(mUPlot),
                     c.getString(mUStudios),
+                    c.getString(mUNetworks),
                     c.getString(mUActors),
                     c.getInt(mUYear),
                     c.getFloat(mRatingColumn),

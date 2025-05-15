@@ -94,7 +94,7 @@ public class TvshowDetailedPresenter extends TvshowListPresenter{
                 holder.name.setEllipsize(TextUtils.TruncateAt.END);
 
             setViewHolderVisibility(holder, View.VISIBLE);
-            holder.detailLineOne.setText(tvShow.getStudio());
+            holder.detailLineOne.setText(tvShow.getNetwork());
             holder.detailLineTwo.setText(tvShow.getPlot());
 
             holder.detailLineThree.setText(tvShow.getActors());

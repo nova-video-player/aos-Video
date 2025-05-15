@@ -44,6 +44,7 @@ SELECT
   CASE WHEN s_id IS NULL THEN m_year ELSE s_premiered END uYear,
   CASE WHEN s_id IS NULL THEN m_actors ELSE e_actors END uActors,
   CASE WHEN s_id IS NULL THEN m_studios ELSE s_studios END uStudios,
+  CASE WHEN s_id IS NULL THEN m_networks ELSE s_networks END uNetworks,
   CASE WHEN s_id IS NULL THEN '0' ELSE  COUNT(CASE bookmark WHEN -2 THEN 1 ELSE NULL END) END episode_watched_count
 FROM video
 WHERE (m_id IS NOT NULL OR s_id IS NOT NULL)
@@ -59,6 +60,7 @@ ORDER BY uName ASC
             "CASE WHEN s_id IS NULL THEN m_name ELSE s_name END uName",
             "CASE WHEN s_id IS NULL THEN m_plot ELSE s_plot END uPlot",
             "CASE WHEN s_id IS NULL THEN m_studios ELSE s_studios END uStudios",
+            "CASE WHEN s_id IS NULL THEN m_networks ELSE s_networks END uNetworks",
             "CASE WHEN s_id IS NULL THEN m_actors ELSE e_actors END uActors",
             "CASE WHEN s_id IS NULL THEN m_year ELSE s_premiered END uYear",
             "CASE WHEN s_id IS NULL THEN m_po_large_file ELSE s_po_large_file END uPoster",

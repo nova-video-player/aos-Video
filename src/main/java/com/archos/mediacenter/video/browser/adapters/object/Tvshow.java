@@ -50,8 +50,13 @@ public class Tvshow extends Base implements Serializable {
         return mStudio;
     }
 
+    public String getNetwork() {
+        return mNetwork;
+    }
+
     private final int mYear;
     private final String mStudio;
+    private final String mNetwork;
     private final String mActors;
     private final String mPlot;
     private long mTvshowId;
@@ -69,7 +74,7 @@ public class Tvshow extends Base implements Serializable {
     private ShowTags mShowTags;
 
     public Tvshow(long tvshowId, String name, Uri posterUri, int seasonCount, int episodeCount, int episodeWatchedCount, String backdropPath) {
-        this(tvshowId, name, posterUri, seasonCount, episodeCount, episodeWatchedCount, false, false, null, null,null, -1,-1, "", 0, backdropPath);
+        this(tvshowId, name, posterUri, seasonCount, episodeCount, episodeWatchedCount, false, false, null, null, null, null, -1,-1, "", 0, backdropPath);
     }
 
     public Tvshow(long tvshowId,
@@ -82,6 +87,7 @@ public class Tvshow extends Base implements Serializable {
                   boolean traktLibrary,
                   String plot,
                   String studio,
+                  String network,
                   String actors,
                   int year,
                   float rating,
@@ -96,6 +102,7 @@ public class Tvshow extends Base implements Serializable {
         mEpisodeCount = episodeCount;
         mEpisodeWatchedCount = episodeWatchedCount;
         mStudio = studio;
+        mNetwork = network;
         mPlot = plot;
         mActors = actors;
         mYear = year;

@@ -70,6 +70,7 @@ public class TvshowsSelectionLoader extends VideoLoader {
                 VideoStore.Video.VideoColumns.SCRAPER_E_SEASON,
                 VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED,
                 VideoStore.Video.VideoColumns.SCRAPER_S_STUDIOS,
+                VideoStore.Video.VideoColumns.SCRAPER_S_NETWORKS,
                 VideoStore.Video.VideoColumns.SCRAPER_S_PLOT,
                 VideoStore.Video.VideoColumns.SCRAPER_E_ACTORS,
                 VideoStore.Video.VideoColumns.SCRAPER_S_RATING,

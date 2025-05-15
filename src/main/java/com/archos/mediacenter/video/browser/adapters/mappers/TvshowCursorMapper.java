@@ -39,6 +39,7 @@ public class TvshowCursorMapper implements CompatibleCursorMapper {
     int mYearColumn;
     int mPlotColumn;
     int mStudioColumn;
+    int mNetworkColumn;
     int mRatingColumn;
     int mContentRatingColumn;
     int mPinnedColumn;
@@ -57,6 +58,7 @@ public class TvshowCursorMapper implements CompatibleCursorMapper {
         mTraktLibraryColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.ARCHOS_TRAKT_LIBRARY);
         mYearColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_PREMIERED);
         mStudioColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_STUDIOS);
+        mNetworkColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_NETWORKS);
         mPlotColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_PLOT);
         mActorsColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_E_ACTORS);
         mRatingColumn = cursor.getColumnIndexOrThrow( VideoStore.Video.VideoColumns.SCRAPER_S_RATING);
@@ -77,6 +79,7 @@ public class TvshowCursorMapper implements CompatibleCursorMapper {
                 VideoCursorMapper.isTraktSeenOrLibrary(cursor, mTraktLibraryColumn),
                 cursor.getString(mPlotColumn),
                 cursor.getString(mStudioColumn),
+                cursor.getString(mNetworkColumn),
                 cursor.getString(mActorsColumn),
                 cursor.getInt(mYearColumn),
                 cursor.getFloat(mRatingColumn),
