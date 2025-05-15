@@ -118,10 +118,10 @@ public class TvshowDetailedPresenter extends TvshowListPresenter{
         holder.release_date.setVisibility(View.GONE);
 
         holder.resume.setVisibility(View.GONE);
-            holder.detailLineTwo.setMaxLines(4);
+            holder.detailLineTwo.setMaxLines(3);
             holder.detailLineThree.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
             holder.detailLineThree.setSingleLine(false);
-            holder.detailLineThree.setMaxLines(3);
+            holder.detailLineThree.setMaxLines(3); // TV show : nothing
 
         // Set thumbnail.
         if (result == null || result.getThumbnail() == null || tvShow.getPosterUri() == null) {
