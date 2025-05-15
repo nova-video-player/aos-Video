@@ -131,7 +131,7 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
                 holder.release_date.setText(mContext.getResources().getString(R.string.scrap_year));
             }
             holder.detailLineTwo.setSingleLine(false);
-            holder.detailLineTwo.setMaxLines(4);
+            holder.detailLineTwo.setMaxLines(3);
 
             // Set thumbnail.
             if (movie.getPosterUri() != null) {
@@ -187,7 +187,7 @@ public class ScrapedVideoDetailedPresenter extends VideoListPresenter{
             }
             holder.detailLineTwo.setSingleLine(true);
             holder.detailLineThree.setSingleLine(false);
-            holder.detailLineThree.setMaxLines(4);
+            holder.detailLineThree.setMaxLines(3);
 
             // Set thumbnail.
             if (episode.getPosterUri() != null) {

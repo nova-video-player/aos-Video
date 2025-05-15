@@ -26,7 +26,7 @@
         style="@style/BrowserText.Details"
         android:fontFamily="@font/nhaasgroteskdspro_65md"
         android:textColor="@color/header_font"
-        android:textSize="15sp"
+        android:textSize="17sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dip"
@@ -49,7 +49,7 @@
         android:textColor="@color/info_text_color"
         android:layout_marginTop="3dip"
         android:layout_marginEnd="4dp"
-        android:textSize="14sp"
+        android:textSize="17sp"
         android:fontFamily="@font/nhaasgroteskdspro_45lt"
         android:layout_toRightOf="@id/left_area"
         android:ellipsize="end"/>
@@ -60,7 +60,7 @@
         style="@style/BrowserText.Info.Video"
         android:fontFamily="@font/nhaasgroteskdspro_65md"
         android:textColor="@color/header_font"
-        android:textSize="15sp"
+        android:textSize="17sp"
         android:layout_above="@+id/rating_container"
         android:layout_toRightOf="@id/left_area" />
 
@@ -73,7 +73,7 @@
         android:textColor="@color/info_text_color"
         android:layout_marginTop="3dip"
         android:layout_marginEnd="4dp"
-        android:textSize="14sp"
+        android:textSize="17sp"
         android:fontFamily="@font/nhaasgroteskdspro_45lt"
         android:ellipsize="end"
         android:layout_toRightOf="@id/left_area"/>
@@ -102,7 +102,7 @@
                 android:id="@+id/rating"
                 style="@style/BrowserText.Details"
                 android:fontFamily="@font/nhaasgroteskdspro_75bd"
-                android:textSize="15sp"
+                android:textSize="17sp"
                 android:layout_marginStart="1dp"
                 android:drawablePadding="2dip"/>
         </LinearLayout>
