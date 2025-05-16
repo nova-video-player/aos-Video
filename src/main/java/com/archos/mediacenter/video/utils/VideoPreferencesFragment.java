@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.ListPreference;
+import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
@@ -64,9 +65,15 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
             return; // Avoid multiple dialogs
         }
 
+        DialogFragment dialogFragment = null;
+
         if (preference instanceof ListPreference) {
-            DialogFragment dialogFragment =
-                    CustomListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+            dialogFragment = CustomListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+        } else if (preference instanceof MultiSelectListPreference) {
+            dialogFragment = CustomMultiSelectListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+        }
+
+        if (dialogFragment != null) {
             dialogFragment.setTargetFragment(this, 0);
             dialogFragment.show(getParentFragmentManager(), "androidx.preference.PreferenceFragment.DIALOG");
         } else {

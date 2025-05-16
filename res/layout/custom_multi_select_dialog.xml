@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_root"
+    android:orientation="vertical"
+    android:padding="14dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/custom_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgrotesktxpro_75bd"
+        android:text="Custom Title"
+        android:textSize="24sp"
+        android:textColor="@color/red"
+        android:paddingBottom="8dp" />
+
+    <!-- Message -->
+    <TextView
+        android:id="@+id/custom_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_45lt"
+        android:text="This is a test message."
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:paddingBottom="14dp" />
+
+    <!-- List -->
+    <ListView
+        android:id="@+id/custom_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:choiceMode="multipleChoice" />
+
+</LinearLayout>
