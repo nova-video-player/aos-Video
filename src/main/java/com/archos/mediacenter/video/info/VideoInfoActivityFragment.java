@@ -1857,13 +1857,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             String color2 = "10bit";
             String color3 = "12bit";
             if(Pattern.compile(Pattern.quote(color1), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mColorDepth.setImageBitmap(getBitmapFromAsset("color/8bit.png"));
+                mColorDepth.setImageBitmap(getBitmapFromAsset("colordepth/8bit.png"));
                 mColorDepth.setVisibility(View.VISIBLE);
             }else if(Pattern.compile(Pattern.quote(color2), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mColorDepth.setImageBitmap(getBitmapFromAsset("color/10bit.png"));
+                mColorDepth.setImageBitmap(getBitmapFromAsset("colordepth/10bit.png"));
                 mColorDepth.setVisibility(View.VISIBLE);
             }else if(Pattern.compile(Pattern.quote(color3), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mColorDepth.setImageBitmap(getBitmapFromAsset("color/12bit.png"));
+                mColorDepth.setImageBitmap(getBitmapFromAsset("colordepth/12bit.png"));
                 mColorDepth.setVisibility(View.VISIBLE);
             }else{
                 mColorDepth.setVisibility(View.GONE);
@@ -1874,10 +1874,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             String hdr = "hdr";
             String sdr = "sdr";
             if(Pattern.compile(Pattern.quote(hdr), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mColorRange.setImageBitmap(getBitmapFromAsset("color/hdr.png"));
+                mColorRange.setImageBitmap(getBitmapFromAsset("colordepth/hdr.png"));
                 mColorRange.setVisibility(View.VISIBLE);
             }else if(Pattern.compile(Pattern.quote(sdr), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mColorRange.setImageBitmap(getBitmapFromAsset("color/sdr.png"));
+                mColorRange.setImageBitmap(getBitmapFromAsset("colordepth/sdr.png"));
                 mColorRange.setVisibility(View.VISIBLE);
             }else{
                 mColorRange.setVisibility(View.GONE);
