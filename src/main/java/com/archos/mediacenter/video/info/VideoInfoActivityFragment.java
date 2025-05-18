@@ -3426,19 +3426,59 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     }
                     animateTextViewExpansionCollapse(mSpokenLanguages, 1);
                     // set network names
-                    String networks = "";
+                    String networknames = "";
                     if (showTags.getNetworksFormatted() != null){
-                        networks = showTags.getNetworksFormatted();
-                        if (networks.isEmpty()){
+                        networknames = showTags.getNetworksFormatted();
+                        if (networknames.isEmpty()){
                             mNetworks.setVisibility(View.GONE);
                             mNetworksContainer.setVisibility(View.GONE);
                         }else{
-                            mNetworks.setText(networks);
+                            mNetworks.setText(networknames);
                         }
                     }
                     animateTextViewExpansionCollapse(mNetworks, 1);
                     //hide movie Info Container
                     mMovieInfoContainer.setVisibility(View.GONE);
+
+                    // Disable gestureDetector swiping on networks recyclerview
+                    networks.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+                        @Override
+                        public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                            // Consume the event to prevent GestureDetector from processing it
+                            if (e.getAction() == MotionEvent.ACTION_DOWN || e.getAction() == MotionEvent.ACTION_MOVE) {
+                                ((VideoInfoActivity) requireActivity()).setGestureEnabled(false);
+                            } else if (e.getAction() == MotionEvent.ACTION_UP || e.getAction() == MotionEvent.ACTION_CANCEL) {
+                                ((VideoInfoActivity) requireActivity()).setGestureEnabled(true);
+                            }
+                            return false; // Allow RecyclerView to process its own touches
+                        }
+
+                        @Override
+                        public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {}
+
+                        @Override
+                        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
+                    });
+
+                    // Disable gestureDetector swiping on studios recyclerview
+                    studios.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+                        @Override
+                        public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                            // Consume the event to prevent GestureDetector from processing it
+                            if (e.getAction() == MotionEvent.ACTION_DOWN || e.getAction() == MotionEvent.ACTION_MOVE) {
+                                ((VideoInfoActivity) requireActivity()).setGestureEnabled(false);
+                            } else if (e.getAction() == MotionEvent.ACTION_UP || e.getAction() == MotionEvent.ACTION_CANCEL) {
+                                ((VideoInfoActivity) requireActivity()).setGestureEnabled(true);
+                            }
+                            return false; // Allow RecyclerView to process its own touches
+                        }
+
+                        @Override
+                        public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {}
+
+                        @Override
+                        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
+                    });
                 }
                 else if(tags instanceof MovieTags){
                     mIsVideoMovie = true;
