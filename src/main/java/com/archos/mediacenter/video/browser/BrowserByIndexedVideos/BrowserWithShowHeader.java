@@ -100,6 +100,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
@@ -666,13 +667,17 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             actors = mHeaderView.findViewById(R.id.actor_photos);
             List<CastData> seriesActors = new ArrayList<>();
             CastData castData;
-            for (String movieActorsJson : showTags.getActors().keySet()) {
+            for (Map.Entry<String, String> entry : showTags.getActors().entrySet()) {
+                String actorJson = entry.getKey();
+                String idJson = entry.getValue();
                 try {
-                    JSONObject jsonObject = new JSONObject(movieActorsJson);
+                    JSONObject jsonObject = new JSONObject(actorJson);
+                    JSONObject valueObject = new JSONObject(idJson);
                     castData = new CastData();
                     castData.setName(jsonObject.optString("name", ""));
                     castData.setCharacter(jsonObject.optString("character", ""));
                     castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + jsonObject.optString("profile_path", ""));
+                    castData.setId(valueObject.optInt("id", -1));
                     seriesActors.add(castData);
                 } catch (JSONException e) {
                     Log.e("Actors", "JSON Parsing error: " + e.getMessage());
@@ -683,6 +688,19 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             CastAdapter.OnItemClickListener actorCallback = new CastAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position) {
+                }
+                @Override
+                public void onItemLongClick(int position) {
+                    CastData actor = seriesActors.get(position);
+                    int actorId = actor.getId();
+                    if (actorId > 0) {
+                        String url = "https://www.themoviedb.org/person/" + actorId;
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent);
+                    } else {
+                        Toast.makeText(mContext, "Actor ID not available", Toast.LENGTH_SHORT).show();
+                    }
                 }
             };
             final CastAdapter actorAdapter = new CastAdapter(seriesActors,actorCallback);

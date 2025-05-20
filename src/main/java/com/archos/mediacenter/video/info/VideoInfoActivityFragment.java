@@ -3239,6 +3239,19 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         @Override
                         public void onItemClick(int position) {
                         }
+                        @Override
+                        public void onItemLongClick(int position) {
+                            CastData actor = seriesActors.get(position);
+                            int actorId = actor.getId();
+                            if (actorId > 0) {
+                                String url = "https://www.themoviedb.org/person/" + actorId;
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                mContext.startActivity(intent);
+                            } else {
+                                Toast.makeText(mContext, "Actor ID not available", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     };
                     final CastAdapter actorAdapter = new CastAdapter(seriesActors,actorCallback);
                     actors.setAdapter(actorAdapter);
@@ -3592,6 +3605,19 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     CastAdapter.OnItemClickListener actorCallback = new CastAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(int position) {
+                        }
+                        @Override
+                        public void onItemLongClick(int position) {
+                            CastData actor = movieActors.get(position);
+                            int actorId = actor.getId();
+                            if (actorId > 0) {
+                                String url = "https://www.themoviedb.org/person/" + actorId;
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                mContext.startActivity(intent);
+                            } else {
+                                Toast.makeText(mContext, "Actor ID not available", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     };
                     final CastAdapter actorAdapter = new CastAdapter(movieActors,actorCallback);

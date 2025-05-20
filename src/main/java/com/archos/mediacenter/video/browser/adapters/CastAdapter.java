@@ -26,6 +26,7 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastViewHolder
 
     public interface OnItemClickListener {
         void onItemClick(int position);
+        void onItemLongClick(int position);
     }
 
     private List<CastData> cast;
@@ -100,6 +101,14 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastViewHolder
                 toast.setView(layout);
                 toast.show();
                 listener.onItemClick(Index);
+            }
+        });
+
+        vh.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                listener.onItemLongClick(Index);
+                return true;
             }
         });
     }
