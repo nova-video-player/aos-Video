@@ -226,6 +226,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private static final int MENU_PREFERENCES = 305;
     private static final int MENU_AUDIO_DELAY_ID = 306;
     private static final int MENU_AUDIO_SPEED_ID = 307;
+    private static final int MENU_PLAY_PAUSE_ID = 308;
 
     // Notification types (keep in sync with res/values/arrays.xml:pref_notification_mode_entries)
     private static final int NOTIFICATION_MODE_ALL = 0;
@@ -412,6 +413,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private int mLastPosition;
     private int mForceAudioTrack = -1;
     private static boolean mLockRotation;
+    private static boolean mPlayPause;
     private static boolean mIsRotationLocked;
     private static int mLockedRotation;
     private boolean mForceSWDecoding;
@@ -869,6 +871,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
         isTVMode = TVUtils.isTV(mContext);
         mLockRotation = mPreferences.getBoolean(KEY_LOCK_ROTATION, false);
+        mPlayPause = mPreferences.getBoolean("enable_PlayPause_onTouch", false);
         mHideSubtitles = mPreferences.getBoolean(KEY_HIDE_SUBTITLES, false);
         mNetworkBookmarksEnabled = mPreferences.getBoolean(KEY_NETWORK_BOOKMARKS, true);
         mSubsFavoriteLanguage = mPreferences.getString(KEY_SUBTITLES_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
@@ -2165,6 +2168,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
             }
 
+            menuItem = menu.add(MENU_GLOBAL_ACTIONS_GROUP, MENU_PLAY_PAUSE_ID,
+                    Menu.NONE,R.string.preference_PlayPause_onTouch);
+            if (menuItem != null) {
+                menuItem.setCheckable(true);
+                menuItem.setChecked(mPlayPause);
+            }
+
             menuItem = menu.add(MENU_GLOBAL_ACTIONS_GROUP, MENU_NOTIFICATION_MANAGEMENT_ID,
                     Menu.NONE, R.string.notification_mode);
             if (menuItem != null) {
@@ -2283,6 +2293,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         mContext,
                         mLockRotation ? R.string.rotation_locked : R.string.rotation_unlocked,
                                 Toast.LENGTH_SHORT).show();
+                return true;
+            case MENU_PLAY_PAUSE_ID:
+                mPlayPause = !mPlayPause;
+                mPreferences.edit().putBoolean("enable_PlayPause_onTouch", mPlayPause).apply();
+                item.setChecked(mPlayPause);
+                mPlayerController.setTouchTogglePlaybackEnabled(mPlayPause);
                 return true;
             case MENU_NOTIFICATION_MANAGEMENT_ID: {
                 AlertDialog.Builder adb = new AlertDialog.Builder(this);

@@ -42,6 +42,7 @@ import android.os.Message;
 import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.ActionBar;
 
+import android.os.SystemClock;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -449,6 +450,47 @@ public class PlayerController implements OnTouchListener, OnGenericMotionListene
      * for split view, like side by side
      * 
      */
+
+    public void setTouchTogglePlaybackEnabled(boolean enabled) {
+        mPlayPauseOnTouchActivated = enabled;
+        updateTouchZones(); // apply change live
+    }
+
+    public void updateTouchZones() {
+        if (mControllerView == null) return;
+
+        mUpperZone = mMiddleZone = mLowerZone = false;
+
+        View.OnClickListener playPauseClickListener = v -> {
+            // Simulate a single tap event so onSingleTapConfirmed can handle it
+            MotionEvent fakeEvent = MotionEvent.obtain(
+                    SystemClock.uptimeMillis(),
+                    SystemClock.uptimeMillis(),
+                    MotionEvent.ACTION_DOWN,
+                    v.getWidth() / 2f,
+                    v.getHeight() / 2f,
+                    0
+            );
+            onSingleTapConfirmed(fakeEvent);
+            fakeEvent.recycle();
+        };
+
+        if (mPlayPauseTouchZone != null) {
+            if (mPlayPauseOnTouchActivated) {
+                mMiddleZone = true;
+                mPlayPauseTouchZone.setOnClickListener(mPlayPauseListener);
+                mPlayPauseTouchZone.setSoundEffectsEnabled(false);
+            } else {
+                mPlayPauseTouchZone.setOnClickListener(playPauseClickListener);
+            }
+        }
+
+        if (mUpperPauseTouchZone != null)
+            mUpperZone = mPlayPauseOnTouchActivated;
+
+        if (mLowerPauseTouchZone != null)
+            mLowerZone = mPlayPauseOnTouchActivated;
+    }
 
     private void initControllerView(View v, boolean isMainView) {
         // next TV menu
