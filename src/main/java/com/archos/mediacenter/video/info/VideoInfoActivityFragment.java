@@ -3217,13 +3217,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     // set series actors
                     List<CastData> seriesActors = new ArrayList<>();
                     CastData castData;
-                    for (String movieActorsJson : showTags.getActors().keySet()) {
+                    for (Map.Entry<String, String> entry : showTags.getActors().entrySet()) {
+                        String actorJson = entry.getKey();
+                        String idJson = entry.getValue();
                         try {
-                            JSONObject jsonObject = new JSONObject(movieActorsJson);
+                            JSONObject jsonObject = new JSONObject(actorJson);
+                            JSONObject valueObject = new JSONObject(idJson);
                             castData = new CastData();
                             castData.setName(jsonObject.optString("name", ""));
                             castData.setCharacter(jsonObject.optString("character", ""));
                             castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + jsonObject.optString("profile_path", ""));
+                            castData.setId(valueObject.optInt("id", -1));
                             seriesActors.add(castData);
                         } catch (JSONException e) {
                             Log.e("Actors", "JSON Parsing error: " + e.getMessage());
@@ -3567,13 +3571,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     // set movie actors
                     List<CastData> movieActors = new ArrayList<>();
                     CastData castData;
-                    for (String movieActorsJson : tags.getActors().keySet()) {  // Iterate over keys
+                    for (Map.Entry<String, String> entry : tags.getActors().entrySet()) {
+                        String actorJson = entry.getKey();
+                        String idJson = entry.getValue();
                         try {
-                            JSONObject jsonObject = new JSONObject(movieActorsJson);
+                            JSONObject jsonObject = new JSONObject(actorJson);
+                            JSONObject valueObject = new JSONObject(idJson);
                             castData = new CastData();
                             castData.setName(jsonObject.optString("name", ""));
                             castData.setCharacter(jsonObject.optString("character", ""));
                             castData.setPhotoPath(MediaScraper.getActorPhotoDirectory(mContext).getPath() + jsonObject.optString("profile_path", ""));
+                            castData.setId(valueObject.optInt("id", -1));
                             movieActors.add(castData);
                         } catch (JSONException e) {
                             Log.e("Actors", "JSON Parsing error: " + e.getMessage());
