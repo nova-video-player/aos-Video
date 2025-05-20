@@ -232,7 +232,7 @@
                             android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
                             android:gravity="center_horizontal"
-                            android:fontFamily="@font/gotham_narrow_black"
+                            android:fontFamily="@font/gothamnarrow_ultra"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="@color/black"
                             />
@@ -264,7 +264,7 @@
                             android:layout_marginLeft="3dp"
                             android:layout_marginRight="3dp"
                             android:gravity="center_horizontal"
-                            android:fontFamily="@font/gotham_narrow_black"
+                            android:fontFamily="@font/gothamnarrow_ultra"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="@color/black"
                             />
