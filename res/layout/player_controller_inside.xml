@@ -106,7 +106,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginStart="10dip"
             android:layout_marginEnd="10dip"
-            android:fontFamily="@font/gotham_narrow_bold"
+            android:fontFamily="@font/nhaasgroteskdspro_65md"
             android:textSize="18sp"
             android:textColor="@color/white"
             android:ellipsize="end"
@@ -223,7 +223,7 @@
                     android:layout_height="wrap_content"
                     android:text="8.0"
                     android:layout_gravity="bottom"
-                    android:fontFamily="@font/lato_bold"
+                    android:fontFamily="@font/nhaasgroteskdspro_65md"
                     android:textColor="@color/white"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="@dimen/video_info_medium_text"/>
