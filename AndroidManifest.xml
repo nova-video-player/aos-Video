@@ -209,7 +209,7 @@
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
             android:taskAffinity="archos.task.video"
-            android:theme="@style/ArchosThemeBlueOverlay">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
