@@ -25,7 +25,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.display.DisplayManager;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -39,6 +41,7 @@ import android.provider.Settings.SettingNotFoundException;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.DisplayCutout;
 import android.view.Gravity;
@@ -55,10 +58,15 @@ import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Checkable;
+import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -68,6 +76,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.DialogTitle;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.loader.app.LoaderManager;
@@ -2254,6 +2264,95 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         return super.onPrepareOptionsMenu(menu);
     }
 
+    private void showPlayModeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
+        builder.setTitle(R.string.pref_play_mode_title);
+
+        // Get the current play mode
+        final int currentMode = PlayerService.sPlayerService.mPlayMode;
+        final String[] items = getResources().getStringArray(R.array.pref_play_mode_entries);
+
+        // Create a custom adapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                R.layout.dialog_list_item,
+                items);
+
+        builder.setSingleChoiceItems(adapter, currentMode, (dialog, which) -> {
+            // Handle selection
+            PlayerService.sPlayerService.menuChangePlayMode(which);
+            dialog.dismiss();
+        });
+
+        AlertDialog dialog = builder.create();
+
+        ListView listView = dialog.getListView();
+
+        dialog.setOnShowListener(d -> {
+            // Load your custom font
+            Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
+
+            int titleId = mContext.getResources().getIdentifier("alertTitle", "id", mContext.getPackageName());
+            TextView titleView = dialog.findViewById(titleId);
+
+            if (titleView != null) {
+                // Set custom font
+                titleView.setTypeface(typeface);
+
+                // Set text size in SP
+                titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24); // or any size you want
+
+                // Optionally set text color
+                titleView.setTextColor(ContextCompat.getColor(mContext, R.color.red));
+            }
+
+            if (listView != null) {
+                for (int i = 0; i < listView.getChildCount(); i++) {
+                    Drawable original = ContextCompat.getDrawable(mContext, R.drawable.custom_ripple);
+                    Drawable ripple = original != null ? original.mutate().getConstantState().newDrawable().mutate() : null;
+
+                    if (ripple != null) {
+                        View item = listView.getChildAt(i);
+                        item.setBackground(ripple);
+                    }
+                }
+            }
+        });
+
+        dialog.show();
+
+        View parentPanel = dialog.findViewById(R.id.parentPanel);
+        logAllViews(parentPanel);
+    }
+
+    private void logAllViews(View view) {
+        if (view == null) return;
+
+        // Log basic view info
+        int id = view.getId();
+        String idName = (id != View.NO_ID) ? view.getResources().getResourceEntryName(id) : "no_id";
+        String idType = (id != View.NO_ID) ? view.getResources().getResourceTypeName(id) : "unknown";
+        String value = "";
+
+        if (view instanceof TextView) {
+            value = ((TextView) view).getText().toString();
+        } else if (view instanceof ImageView) {
+            value = "ImageView";
+        } else if (view instanceof ViewGroup) {
+            value = "ViewGroup";
+        }
+
+        Log.d("ViewInspector", "Name: " + idName + ", Type: " + idType + ", Value: " + value + ", Class: " + view.getClass().getSimpleName());
+
+        // Recurse if it's a ViewGroup
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                logAllViews(group.getChildAt(i));
+            }
+        }
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -2313,16 +2412,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 return true;
             }
             case MENU_PLAYMODE_ID: {
-                AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                adb.setTitle(R.string.pref_play_mode_title);
-                adb.setSingleChoiceItems(R.array.pref_play_mode_entries, PlayerService.sPlayerService.mPlayMode, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        PlayerService.sPlayerService.menuChangePlayMode(which);
-                        dialog.dismiss();
-                    }
-                });
-                adb.create().show();
-
+                showPlayModeDialog();
                 return true;
             }
             case MENU_AUDIO_FILTER_ID: {

@@ -355,4 +355,14 @@
     <style name="CustomPreferenceDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:listChoiceIndicatorSingle">@drawable/custom_radio_button</item>
     </style>
+
+    <style name="CustomDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/menu_bg</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowMinWidthMajor">85%</item>
+        <item name="android:windowMinWidthMinor">85%</item>
+    </style>
 </resources>
