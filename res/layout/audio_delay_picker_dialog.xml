@@ -5,19 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="20dip" >
+    android:padding="15dip" >
 
     <com.archos.mediacenter.video.player.AudioDelayPicker
         android:id="@+id/audioDelayPicker"
-        android:padding="5dip"
+        android:padding="2dip"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"/>
 
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/keep_setting"
+        android:fontFamily="@font/nhaasgroteskdspro_45lt"
+        android:textSize="16sp"
         android:id="@+id/save_setting"
         android:layout_gravity="center_horizontal" />
 

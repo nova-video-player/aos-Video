@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.player;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -24,8 +25,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.video.R;
@@ -51,15 +55,22 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
     private final CheckBox mSaveSettingCB;
 
     public AudioDelayPickerDialog(Context context, OnAudioDelayChangeListener callBack, int delay) {
-        super(context);
+        super(context, R.style.CustomDialogTheme);
 
         getWindow().setGravity(Gravity.TOP);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
         mCallBack = callBack;
 
-        setIcon(R.drawable.ic_menu_delay);
-        setTitle(R.string.player_pref_audio_delay_title);
+        View customTitleView = LayoutInflater.from(context)
+                .inflate(R.layout.audio_delay_dialog_title, null);
+        TextView titleTextView = customTitleView.findViewById(R.id.dialog_title);
+        Typeface customFont = ResourcesCompat.getFont(context, R.font.nhaasgrotesktxpro_75bd);
+        titleTextView.setText(R.string.player_pref_audio_delay_title);
+        titleTextView.setTypeface(customFont);
+        ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+        iconView.setImageResource(R.drawable.ic_menu_delay);
+        setCustomTitle(customTitleView);
 
         LayoutInflater inflater =
                 (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

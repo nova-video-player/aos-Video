@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:minHeight="20dp" >
 
     <Button
@@ -14,15 +13,22 @@
         android:layout_alignParentLeft="true"
         android:paddingLeft="@dimen/delai_picker_dialog_button_padding"
         android:paddingRight="@dimen/delai_picker_dialog_button_padding"
+        android:background="@drawable/rounded_button_background"
         style="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/text_delay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:paddingLeft="10dip"
-        android:paddingRight="10dip"
+        android:fontFamily="@font/nhaasgroteskdspro_55rg"
+        android:text="Time in ms"
+        android:layout_toEndOf="@+id/minus"
+        android:layout_toStartOf="@+id/plus"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:padding="0dp"
+        android:includeFontPadding="false"
+        android:layout_marginStart="-3dp"
         style="@style/textAppearanceLarge" />
 
     <Button
@@ -33,6 +39,6 @@
         android:layout_alignParentRight="true"
         android:paddingLeft="@dimen/delai_picker_dialog_button_padding"
         android:paddingRight="@dimen/delai_picker_dialog_button_padding"
+        android:background="@drawable/rounded_button_background"
         style="?android:attr/textAppearanceLarge" />
-
 </RelativeLayout>
