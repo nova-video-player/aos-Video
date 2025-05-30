@@ -2409,8 +2409,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 return true;
             }
             case MENU_AUDIO_FILTER_ID: {
-                AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                AlertDialog.Builder adb = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
                 adb.setTitle(R.string.pref_audio_parameters_title);
+                Typeface typeface1 = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
+                Typeface typeface2 = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_65md);
                 final ArrayList<RadioButton> rbs = new  ArrayList<RadioButton>();
                 adb.setAdapter(new ArrayAdapter<View>(mContext, R.layout.menu_item_layout) {
                     @Override
@@ -2418,7 +2420,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         if (position > 0) {
                             Switch tb = new Switch(mContext);
                             tb.setText(R.string.pref_audio_filt_title);
-                            tb.setPadding(20,20, 20, 20);
+                            tb.setTypeface(typeface2);
+                            tb.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                            tb.setPadding(50,35, 20, 20);
                             tb.setChecked( PlayerService.sPlayerService.mAudioFilt>0);
                             tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                                 @Override
@@ -2431,7 +2435,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         else {
                             Switch tb = new Switch(mContext);
                             tb.setText(R.string.pref_audio_filt_night_mode);
-                            tb.setPadding(20,20, 20, 20);
+                            tb.setTypeface(typeface2);
+                            tb.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                            tb.setPadding(50,20, 20, 20);
                             tb.setChecked(PlayerService.sPlayerService.mNightModeOn);
                             tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                                 @Override
@@ -2453,6 +2459,23 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 });
 
                 ad = adb.create();
+                ad.setOnShowListener(d -> {
+                    int titleId = mContext.getResources().getIdentifier("alertTitle", "id", mContext.getPackageName());
+                    TextView titleView = ad.findViewById(titleId);
+
+                    if (titleView != null) {
+                        // Set custom font
+                        titleView.setTypeface(typeface1);
+
+                        // Set text size in SP
+                        titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24); // or any size you want
+
+                        // Optionally set text color
+                        titleView.setTextColor(ContextCompat.getColor(mContext, R.color.red));
+                    }
+
+
+                });
                 ad.show();
                 return true;
             }
