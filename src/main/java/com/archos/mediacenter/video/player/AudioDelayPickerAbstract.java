@@ -59,8 +59,14 @@ public abstract class AudioDelayPickerAbstract extends FrameLayout {
     }
 
     public CharSequence getFormattedDelay() {
-        return String.format("%s %d m %d s %03d ms", mSign == 1 ? " " : "-", mMinute, mSecond, mMilliSecond);
-   }
+        String sign;
+        if (getDelay() == 0) {
+            sign = ""; // no sign for zero
+        } else {
+            sign = mSign == 1 ? "+" : "-";
+        }
+        return String.format("%s %d m %d s %03d ms", sign, mMinute, mSecond, mMilliSecond);
+    }
 
     @Override
     public void setEnabled(boolean enabled) {
