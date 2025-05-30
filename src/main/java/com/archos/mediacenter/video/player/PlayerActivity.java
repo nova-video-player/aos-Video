@@ -2264,13 +2264,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private void showPlayModeDialog() {
+    private void showCustomListPreferenceDialog(final int title, final int currentMode, final String[] items) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
-        builder.setTitle(R.string.pref_play_mode_title);
-
-        // Get the current play mode
-        final int currentMode = PlayerService.sPlayerService.mPlayMode;
-        final String[] items = getResources().getStringArray(R.array.pref_play_mode_entries);
+        builder.setTitle(title);
 
         // Create a custom adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -2279,7 +2275,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         builder.setSingleChoiceItems(adapter, currentMode, (dialog, which) -> {
             // Handle selection
-            PlayerService.sPlayerService.menuChangePlayMode(which);
+            if(title == R.string.notification_mode){
+                setNewNotificationMode(which);
+            }
+            if(title == R.string.pref_play_mode_title){
+                PlayerService.sPlayerService.menuChangePlayMode(which);
+            }
             dialog.dismiss();
         });
 
@@ -2400,19 +2401,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mPlayerController.setTouchTogglePlaybackEnabled(mPlayPause);
                 return true;
             case MENU_NOTIFICATION_MANAGEMENT_ID: {
-                AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                adb.setTitle(R.string.notification_mode);
-                adb.setSingleChoiceItems(R.array.pref_notification_mode_entries, mNotificationMode, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        setNewNotificationMode(which);
-                        dialog.dismiss();
-                    }
-                });
-                adb.create().show();
+                showCustomListPreferenceDialog(R.string.notification_mode, mNotificationMode, getResources().getStringArray(R.array.pref_notification_mode_entries));
                 return true;
             }
             case MENU_PLAYMODE_ID: {
-                showPlayModeDialog();
+                showCustomListPreferenceDialog(R.string.pref_play_mode_title, PlayerService.sPlayerService.mPlayMode, getResources().getStringArray(R.array.pref_play_mode_entries));
                 return true;
             }
             case MENU_AUDIO_FILTER_ID: {
