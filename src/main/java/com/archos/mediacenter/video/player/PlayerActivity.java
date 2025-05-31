@@ -2480,7 +2480,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                             tb.setText(R.string.pref_audio_filt_title);
                             tb.setTypeface(typeface2);
                             tb.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                            tb.setPadding(50,35, 20, 20);
+                            tb.setPadding(90,35, 80, 20);
                             tb.setChecked( PlayerService.sPlayerService.mAudioFilt>0);
                             tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                                 @Override
@@ -2495,7 +2495,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                             tb.setText(R.string.pref_audio_filt_night_mode);
                             tb.setTypeface(typeface2);
                             tb.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                            tb.setPadding(50,20, 20, 20);
+                            tb.setPadding(90,20, 80, 20);
                             tb.setChecked(PlayerService.sPlayerService.mNightModeOn);
                             tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                                 @Override
