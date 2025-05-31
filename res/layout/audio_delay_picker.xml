@@ -20,7 +20,7 @@
         android:id="@+id/text_delay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/nhaasgroteskdspro_55rg"
+        android:fontFamily="@font/nhaasgrotesktxpro_75bd"
         android:text="Time in ms"
         android:layout_toEndOf="@+id/minus"
         android:layout_toStartOf="@+id/plus"
