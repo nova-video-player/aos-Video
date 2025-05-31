@@ -2177,7 +2177,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         if (!isTVMode) {
             MenuItem menuItem;
-            Typeface typeface = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_65md);
+            Typeface typeface = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_55rg);
 
             //------------------------------------------------------------------
             // Add first the items related to the current video
@@ -2185,11 +2185,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mInfoMenuItem = menu.add(MENU_FILE_ACTIONS_GROUP, MENU_INFO_ID, Menu.NONE, R.string.menu_info);
             if (mInfoMenuItem != null) {
                 mInfoMenuItem.setIcon(R.drawable.ic_menu_info).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                applyFontToMenuItem(mInfoMenuItem, typeface);
             }
 
             mBookmarkMenuItem = menu.add(MENU_FILE_ACTIONS_GROUP, MENU_BOOKMARK_ID, Menu.NONE, R.string.menu_bookmark);
             if (mBookmarkMenuItem != null) {
                 mBookmarkMenuItem.setIcon(R.drawable.ic_menu_bookmark).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                applyFontToMenuItem(mBookmarkMenuItem, typeface);
             }
             mAudioInfoController.attachMenu(menu, R.drawable.ic_menu_languages);
             mSubtitleInfoController.attachMenu(menu, R.drawable.ic_menu_subtitles);
@@ -2206,6 +2208,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mBrightnessMenuItem = menu.add(MENU_GLOBAL_ACTIONS_GROUP, MENU_BRIGHTNESS_ID, Menu.NONE, R.string.menu_brightness_settings);
                 if (mBrightnessMenuItem != null) {
                     mBrightnessMenuItem.setIcon(R.drawable.ic_menu_brightness).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    applyFontToMenuItem(mBrightnessMenuItem, typeface);
                 }
                 if (mPlayer!=null&&mPlayer.getEffectType()==VideoEffect.EFFECT_NONE) {
                     menuItem = menu.add(MENU_GLOBAL_ACTIONS_GROUP, MENU_LOCK_ROTATION_ID,
@@ -2259,6 +2262,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_baseline_speed_24);
                 menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
+                applyFontToMenuItem(menuItem, typeface);
             }
             // disable playback speed if passthrough is enabled and Android M+ (API23+)
             menuItem.setVisible(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
@@ -2266,6 +2270,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_3d);
                 menuItem.setShowAsAction(!isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                applyFontToMenuItem(menuItem, typeface);
             }
             // Check if the brightness item can be enabled
             /*if (mBrightnessMenuItem != null) {
