@@ -70,6 +70,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Switch;
@@ -2548,86 +2549,88 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 int menuId = R.array.pref_s3d_mode_entries;
                 if (!isStereoEffectOn()) return true;
 
-                AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                AlertDialog.Builder adb = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
+                Typeface typeface1 = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
+                Typeface typeface2 = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_65md);
+
                 Switch tb = new Switch(mContext);
                 tb.setText(R.string.pref_s3d_mode_title);
+                tb.setTypeface(typeface1);
+                tb.setTextColor(ContextCompat.getColor(mContext, R.color.red));
                 tb.setTextSize(25);
-                tb.setPadding(20,20, 20, 20);
+                tb.setPadding(50, 40, 50, 20);
 
-                final int dialogInitItem = (mPlayer.getEffectMode()!=0)?Integer.numberOfTrailingZeros(mPlayer.getEffectMode()):0;
+                final int dialogInitItem = (mPlayer.getEffectMode() != 0) ? Integer.numberOfTrailingZeros(mPlayer.getEffectMode()) : 0;
                 adb.setCustomTitle(tb);
 
                 if (!isPluggedOnTv()) {
                     menuId = R.array.pref_s3d_mode_entries_dive;
                 }
-                final CharSequence[] t = mContext.getResources().getTextArray(menuId);          
-                final ArrayList<RadioButton>rbs = new  ArrayList<RadioButton>();
-                final int menuId2= menuId;
-                adb.setAdapter(new ArrayAdapter<View>(mContext, R.layout.menu_item_layout){
-                    @Override
-                    public View getView(final int position, View convertView, ViewGroup parent) {
+                final CharSequence[] t = mContext.getResources().getTextArray(menuId);
+                final ArrayList<RadioButton> rbs = new ArrayList<>();
 
-                        RadioButton rb= new RadioButton(mContext);
-                        rb.setText(t[position]);
-                        rb.setEnabled(dialogInitItem!=VideoEffect.NORMAL_2D_MODE);
-                        rbs.add(rb);
-                        rb.setPadding(20,20, 20, 20);
-                        rb.setChecked((dialogInitItem>0?dialogInitItem-1:(Integer.numberOfTrailingZeros(mSavedMode)>0?Integer.numberOfTrailingZeros(mSavedMode)-1:0))==position);
-                        rb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                // TODO Auto-generated method stub
-                                if (isChecked) {
-                                    set3DMode(position+1);
-                                    for (int i =0; i< rbs.size(); i++) {
-                                        if (buttonView!=rbs.get(i))
-                                            rbs.get(i).setChecked(false);
-                                    }
-                                    if (ad != null) {
-                                        ad.dismiss();
-                                        ad = null;
-                                    }
-                                }
+                LinearLayout container = new LinearLayout(mContext);
+                container.setOrientation(LinearLayout.VERTICAL);
+                container.setPadding(20, 20, 20, 20); // container padding if needed
+
+                for (int position = 0; position < t.length; position++) {
+                    final int index = position;
+                    RadioButton rb = new RadioButton(mContext);
+                    rb.setText(t[position]);
+                    rb.setTypeface(typeface2);
+                    rb.setEnabled(dialogInitItem != VideoEffect.NORMAL_2D_MODE);
+
+                    // Apply left margin
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    );
+                    params.setMargins(20, 15, 15, 15);
+                    rb.setLayoutParams(params);
+
+                    rb.setPadding(10, 0, 10, 0);
+
+                    rb.setChecked((dialogInitItem > 0
+                            ? dialogInitItem - 1
+                            : (Integer.numberOfTrailingZeros(mSavedMode) > 0
+                            ? Integer.numberOfTrailingZeros(mSavedMode) - 1 : 0)) == position);
+
+                    rb.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked) {
+                            set3DMode(index + 1);
+                            for (RadioButton other : rbs) {
+                                if (other != buttonView)
+                                    other.setChecked(false);
                             }
-                        });
-                        return rb;
-                    }
-                    @Override
-                    public int getCount() {
-                        return mContext.getResources().getTextArray(menuId2).length;
-                    }
+                            if (ad != null) {
+                                ad.dismiss();
+                                ad = null;
+                            }
+                        }
+                    });
+
+                    container.addView(rb);
+                    rbs.add(rb);
                 }
-                , new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });              
+                adb.setView(container);
                 ad = adb.create();
                 ad.show();
 
                 if (dialogInitItem == VideoEffect.NORMAL_2D_MODE) {
-                    ad.getListView().setEnabled(false);
+                    for (RadioButton rb : rbs) rb.setEnabled(false);
                 }
-                tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        // TODO Auto-generated method stub
-                        if (isChecked) {
-                            log.debug("onOptionsItemSelected: setEffect");
-                            setEffectForced(mSavedMode);
-                            ad.getListView().setEnabled(true);
-                            for(RadioButton rb : rbs)
-                                rb.setEnabled(true);
-                        }
-                        else {
-                            log.debug("onOptionsItemSelected: setEffect");
-                            setEffectForced(VideoEffect.NORMAL_2D_MODE, false);
-                            ad.getListView().setEnabled(false);
-                            for (RadioButton rb : rbs)
-                                rb.setEnabled(false);
-                        }
+                tb.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (isChecked) {
+                        log.debug("onOptionsItemSelected: setEffect");
+                        setEffectForced(mSavedMode);
+                        for (RadioButton rb : rbs) rb.setEnabled(true);
+                    } else {
+                        log.debug("onOptionsItemSelected: setEffect");
+                        setEffectForced(VideoEffect.NORMAL_2D_MODE, false);
+                        for (RadioButton rb : rbs) rb.setEnabled(false);
                     }
                 });
-                tb.setChecked(mPlayer.getEffectMode()!=VideoEffect.NORMAL_2D_MODE);
+                tb.setChecked(mPlayer.getEffectMode() != VideoEffect.NORMAL_2D_MODE);
                 return true;
             }
             case MENU_PREFERENCES: {
