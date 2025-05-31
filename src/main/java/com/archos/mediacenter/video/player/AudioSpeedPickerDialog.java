@@ -63,7 +63,7 @@ public class AudioSpeedPickerDialog extends AlertDialog implements OnClickListen
         mCallBack = callBack;
 
         View customTitleView = LayoutInflater.from(context)
-                .inflate(R.layout.audio_delay_dialog_title, null);
+                .inflate(R.layout.audio_speed_dialog_title, null);
         TextView titleTextView = customTitleView.findViewById(R.id.dialog_title);
         Typeface customFont = ResourcesCompat.getFont(context, R.font.nhaasgrotesktxpro_75bd);
         titleTextView.setText(R.string.player_pref_audio_speed_title);
