@@ -23,6 +23,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -38,7 +39,10 @@ import android.os.IBinder;
 import android.os.Message;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
+import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.style.TypefaceSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -2135,12 +2139,45 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
     }
 
+    public static class CustomTypefaceSpan extends TypefaceSpan {
+        private final Typeface newType;
+
+        public CustomTypefaceSpan(String family, Typeface type) {
+            super(family);
+            newType = type;
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            apply(ds);
+        }
+
+        @Override
+        public void updateMeasureState(TextPaint paint) {
+            apply(paint);
+        }
+
+        private void apply(Paint paint) {
+            paint.setTypeface(newType);
+            paint.setFlags(paint.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+        }
+    }
+
+    private void applyFontToMenuItem(MenuItem item, Typeface typeface) {
+        if (item != null && item.getTitle() != null) {
+            SpannableString spanString = new SpannableString(item.getTitle());
+            spanString.setSpan(new CustomTypefaceSpan("sans-serif", typeface), 0, spanString.length(), 0);
+            item.setTitle(spanString);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
 
         if (!isTVMode) {
             MenuItem menuItem;
+            Typeface typeface = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_65md);
 
             //------------------------------------------------------------------
             // Add first the items related to the current video
@@ -2160,7 +2197,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             // Then add the global items related to the video player
             //------------------------------------------------------------------
 
-            menu.add(MENU_GLOBAL_ACTIONS_GROUP, MENU_LOCK_ID, Menu.NONE, R.string.menu_lock_player);
+            MenuItem lockItem = menu.add(MENU_GLOBAL_ACTIONS_GROUP, MENU_LOCK_ID, Menu.NONE, R.string.menu_lock_player);
+            if (lockItem != null) {
+                applyFontToMenuItem(lockItem, typeface);
+            }
             if (!isPluggedOnTv()) {
 
                 mBrightnessMenuItem = menu.add(MENU_GLOBAL_ACTIONS_GROUP, MENU_BRIGHTNESS_ID, Menu.NONE, R.string.menu_brightness_settings);
@@ -2174,6 +2214,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         menuItem.setIcon(mLockRotation ? R.drawable.ic_menu_locked : R.drawable.ic_menu_unlocked).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                         menuItem.setCheckable(true);
                         menuItem.setChecked(!mLockRotation);
+                        applyFontToMenuItem(menuItem, typeface);
                     }
                 }
             }
@@ -2183,6 +2224,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             if (menuItem != null) {
                 menuItem.setCheckable(true);
                 menuItem.setChecked(mPlayPause);
+                applyFontToMenuItem(menuItem, typeface);
             }
 
             menuItem = menu.add(MENU_GLOBAL_ACTIONS_GROUP, MENU_NOTIFICATION_MANAGEMENT_ID,
@@ -2190,6 +2232,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_notifications);
                 menuItem.setShowAsAction(!isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                applyFontToMenuItem(menuItem, typeface);
             }
             //------------------------------------------------------------------
             // Finally add the other items (which will be available in the menu)
@@ -2198,16 +2241,19 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_playmode);
                 menuItem.setShowAsAction(!isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                applyFontToMenuItem(menuItem, typeface);
             }
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_AUDIO_FILTER_ID, Menu.NONE, R.string.pref_audio_parameters_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_audioboost);
                 menuItem.setShowAsAction(!isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                applyFontToMenuItem(menuItem, typeface);
             }
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_AUDIO_DELAY_ID, Menu.NONE, R.string.player_pref_audio_delay_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_delay);
                 menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
+                applyFontToMenuItem(menuItem, typeface);
             }
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_AUDIO_SPEED_ID, Menu.NONE, R.string.player_pref_audio_speed_title);
             if (menuItem != null) {
@@ -2233,10 +2279,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
                 mBrightnessMenuItem.setVisible(brightnessMode == 0);
             }*/
-            menu.add(MENU_OTHER_GROUP, MENU_WINDOW_MODE, Menu.NONE, R.string.player_window_mode);
+            MenuItem windowMode = menu.add(MENU_OTHER_GROUP, MENU_WINDOW_MODE, Menu.NONE, R.string.player_window_mode);
+            if (windowMode != null) {
+                applyFontToMenuItem(windowMode, typeface);
+            }
             // Always add a link to the general application preferences
-            menu.add(MENU_OTHER_GROUP, MENU_PREFERENCES, Menu.NONE, R.string.preferences)
-                    .setIcon(R.drawable.ic_menu_settings).setShowAsAction(!isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+            MenuItem preferences = menu.add(MENU_OTHER_GROUP, MENU_PREFERENCES, Menu.NONE, R.string.preferences);
+            if (preferences != null) {
+                preferences.setIcon(R.drawable.ic_menu_settings).setShowAsAction(!isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
+                applyFontToMenuItem(preferences, typeface);
+            }
         }
         return true;
     }
