@@ -40,6 +40,7 @@ import android.os.Message;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.TypefaceSpan;
@@ -2140,17 +2141,21 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
     }
 
-    public static class CustomTypefaceSpan extends TypefaceSpan {
-        private final Typeface newType;
+    public class CustomTypefaceSpan extends TypefaceSpan {
+        private final Typeface typeface;
+        private final float textSizeSp; // size in SP
+        private final int textColor;
 
-        public CustomTypefaceSpan(String family, Typeface type) {
+        public CustomTypefaceSpan(String family, Typeface typeface, float textSizeSp, int textColor) {
             super(family);
-            newType = type;
+            this.typeface = typeface;
+            this.textSizeSp = textSizeSp;
+            this.textColor = textColor;
         }
 
         @Override
-        public void updateDrawState(TextPaint ds) {
-            apply(ds);
+        public void updateDrawState(TextPaint paint) {
+            apply(paint);
         }
 
         @Override
@@ -2158,16 +2163,21 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             apply(paint);
         }
 
-        private void apply(Paint paint) {
-            paint.setTypeface(newType);
-            paint.setFlags(paint.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+        private void apply(TextPaint paint) {
+            paint.setTypeface(typeface);
+            paint.setTextSize(TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP, textSizeSp, Resources.getSystem().getDisplayMetrics()));
+            paint.setColor(textColor);
         }
     }
 
+
     private void applyFontToMenuItem(MenuItem item, Typeface typeface) {
+        int color = ContextCompat.getColor(this, android.R.color.white);
+        float textSize = 16f; // in SP
         if (item != null && item.getTitle() != null) {
             SpannableString spanString = new SpannableString(item.getTitle());
-            spanString.setSpan(new CustomTypefaceSpan("sans-serif", typeface), 0, spanString.length(), 0);
+            spanString.setSpan(new CustomTypefaceSpan("", typeface, textSize, color), 0, spanString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             item.setTitle(spanString);
         }
     }
@@ -2645,22 +2655,30 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     }
 
     private void displayFloatingWindowPermissionDialog() {
-        new AlertDialog.Builder(this).setTitle(R.string.error).setMessage(R.string.error_permission_display_over_apps).setPositiveButton(R.string.allow, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mHasAskedFloatingPermission = true;
-                Intent in = new Intent();
-                in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                in.setAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                in.putExtra("android.intent.extra.PACKAGE_NAME", getPackageName());
-                startActivity(in);
-            }
-        }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                mHasAskedFloatingPermission = false;
-            }
-        }).setNegativeButton(android.R.string.cancel, null).show();
+        int titleColor = ContextCompat.getColor(this, android.R.color.holo_red_dark);
+        int messageColor = ContextCompat.getColor(this, android.R.color.white);
+        float titleSize = 24f; // in SP
+        float messageSize = 14f; // in SP
+
+        SpannableString title = new SpannableString(getString(R.string.error));
+        SpannableString message = new SpannableString(getString(R.string.error_permission_display_over_apps));
+
+        title.setSpan(new CustomTypefaceSpan("", ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_75bd), titleSize, titleColor), 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        message.setSpan(new CustomTypefaceSpan("", ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_65md), messageSize, messageColor), 0, message.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        new AlertDialog.Builder(this, R.style.CustomDialogTheme)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(R.string.allow, (dialogInterface, i) -> {
+                    mHasAskedFloatingPermission = true;
+                    Intent in = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                    in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    in.putExtra("android.intent.extra.PACKAGE_NAME", getPackageName());
+                    startActivity(in);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .setOnDismissListener(dialogInterface -> mHasAskedFloatingPermission = false)
+                .show();
     }
 
     private void showVideoInfos() {
