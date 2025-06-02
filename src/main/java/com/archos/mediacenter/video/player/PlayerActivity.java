@@ -2173,8 +2173,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
 
     private void applyFontToMenuItem(MenuItem item, Typeface typeface) {
-        int color = ContextCompat.getColor(this, android.R.color.white);
-        float textSize = 16f; // in SP
+        int color = ContextCompat.getColor(this, android.R.color.darker_gray);
+        float textSize = 18f; // in SP
         if (item != null && item.getTitle() != null) {
             SpannableString spanString = new SpannableString(item.getTitle());
             spanString.setSpan(new CustomTypefaceSpan("", typeface, textSize, color), 0, spanString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
