@@ -20,6 +20,8 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
@@ -79,7 +81,11 @@ public class BrightnessDialog extends AlertDialog implements SeekBar.OnSeekBarCh
             (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.brightness_dialog, null);
+        view.setBackgroundResource(R.drawable.menu_bg);
+        view.setClipToOutline(true);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setView(view);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mSeekBar = (ArchosSeekBar) view.findViewById(R.id.brightness_seekbar);
         mSeekBar.setOnEnableListener(new ArchosSeekBar.OnEnableListener() {
             @Override

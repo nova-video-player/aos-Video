@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/system"
+            android:fontFamily="@font/nhaasgrotesktxpro_75bd"
             android:layout_marginLeft="10dip"
             android:layout_marginRight="10dip"
             android:id="@+id/textView2" />
