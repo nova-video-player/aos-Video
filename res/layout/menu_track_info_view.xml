@@ -14,6 +14,7 @@
         android:layout_marginRight="6dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
         android:textAppearance="?attr/textAppearanceLargePopupMenu"
         android:ellipsize="end"
         android:maxLines="2"

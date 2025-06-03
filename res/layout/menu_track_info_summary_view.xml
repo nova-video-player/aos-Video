@@ -17,6 +17,7 @@
         <TextView android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/nhaasgroteskdspro_65md"
             android:textAppearance="?attr/textAppearanceLargePopupMenu"
             android:ellipsize="end"
             android:singleLine="true"
@@ -28,6 +29,7 @@
             android:layout_alignLeft="@id/name"
             android:textAppearance="?attr/textAppearanceSmallPopupMenu"
             android:textSize="11sp"
+            android:fontFamily="@font/nhaasgroteskdspro_45lt"
             android:singleLine="true" />
     </RelativeLayout>
     <RadioButton android:id="@+id/radio"

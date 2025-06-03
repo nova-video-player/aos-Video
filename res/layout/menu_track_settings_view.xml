@@ -15,6 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/icon"
+            android:fontFamily="@font/nhaasgroteskdspro_65md"
             android:layout_marginLeft="8dip"
             android:layout_centerVertical="true"
             android:textAppearance="?attr/textAppearanceLargePopupMenu"
