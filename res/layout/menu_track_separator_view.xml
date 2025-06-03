@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<View xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="22dp">
+    <View
         android:minWidth="@dimen/track_menu_minWidth"
-        android:background="#ff303030"
+        android:background="#33E49E1D"
         android:layout_width="match_parent"
-        android:layout_height="2px" />
+        android:layout_height="1dp" />
+</LinearLayout>

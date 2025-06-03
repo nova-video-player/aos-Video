@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.ListPopupWindow;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 
 import com.archos.mediacenter.video.R;
@@ -388,6 +389,7 @@ public class TrackInfoController implements OnMenuItemClickListener, OnItemClick
         // Build and initialize a new popup
         mPopup = new ListPopupWindow(mContext, null);
         mPopup.setAdapter(mTrackInfoAdapter);
+        mPopup.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.menu_bg));
         mPopup.setAnchorView(mAnchorView);
         mPopup.setModal(true);
         mPopup.setOnItemClickListener(this);
