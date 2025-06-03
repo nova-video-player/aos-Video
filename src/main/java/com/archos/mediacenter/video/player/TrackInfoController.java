@@ -103,6 +103,7 @@ public class TrackInfoController implements OnMenuItemClickListener, OnItemClick
         public final int iconResId;
         public final int key;
         public boolean enabled = true;
+        public boolean applyTint = false;
 
         public TrackSettings(CharSequence name, int iconResId, int key) {
             super(TRACK_SETTINGS);
@@ -213,7 +214,14 @@ public class TrackInfoController implements OnMenuItemClickListener, OnItemClick
                         tv.setEnabled(trackSettings.enabled);
                     }
                     if (trackSettings.iconResId != 0) {
-                        ((ImageView)v.findViewById(R.id.icon)).setImageResource(trackSettings.iconResId);
+                        ImageView icon = v.findViewById(R.id.icon);
+                        icon.setImageResource(trackSettings.iconResId);
+                        if (trackSettings.applyTint) {
+                            //icon.setColorFilter(ContextCompat.getColor(mContext, R.color.gray_background));
+                            icon.setAlpha(0.5f); // 50% transparency
+                        } else {
+                            icon.setAlpha(1.0f);
+                        }
                     }
                     break;
                 case TRACK_SEP:
@@ -364,6 +372,21 @@ public class TrackInfoController implements OnMenuItemClickListener, OnItemClick
     public void addSettings(CharSequence name, int iconResId, int key) {
         mTrackItemList.addSettings(name, iconResId, key);
     }
+
+    public void enableIconTint(int key, boolean enabled) {
+        for (TrackItem item : mTrackItemList) {
+            if (item.type == TRACK_SETTINGS) {
+                TrackSettings setting = (TrackSettings) item;
+                if (setting.key == key) {
+                    setting.applyTint = enabled;
+                }
+            }
+        }
+        if (mPopup != null && mPopup.getListView() != null) {
+            mPopup.getListView().invalidateViews(); // Refresh UI
+        }
+    }
+
 
     public void enableSettings(int key, boolean enabled, boolean invalidate) {
         for (int i=0 ; i < mTrackItemList.size() ; i++) {

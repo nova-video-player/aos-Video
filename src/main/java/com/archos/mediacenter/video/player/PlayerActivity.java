@@ -3610,6 +3610,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     disableSubtitleDelayTVMenuItem(true);
                     disableSubtitleSettingsMenuItem(true);
                 }
+                if (mSubtitleInfoController.getTrack() != 0){
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, false);
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, false);
+                }
+                if (mSubtitleInfoController.getTrack() == 0){
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, true);
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, true);
+                }
                 refreshSubtitleTVMenu();
                 CharSequence subTrackName = mSubtitleInfoController.getTrackNameAt(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles));
                 log.debug("switchSubtitleTrack: changed track={} -> {}", mVideoInfo.subtitleTrack, subTrackName);
@@ -3737,6 +3745,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
                 if (position != 0){
                     enableSubtitleDelayandSettingsTVMenuItem();
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, false);
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, false);
+                }
+                if (position == 0){
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, true);
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, true);
                 }
             }
         }
@@ -4028,6 +4042,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 // at this point mVideoInfo.subtitleTrack is the track number to be used
                 log.debug("onSubtitleMetadataUpdated: set mSubtitleInfoController.setTrack: " + subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles));
                 mSubtitleInfoController.setTrack(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)); // +1 since none track is at position 0, for UI only
+                if (mSubtitleInfoController.getTrack() != nonePosition){
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, false);
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, false);
+                }
+                if (mSubtitleInfoController.getTrack() == nonePosition){
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, true);
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, true);
+                }
                 if (mSubtitleInfoController.getTrack() == nonePosition) {
                     log.debug("onSubtitleMetadataUpdated: disableSubtitleDelayTVMenuItem(true) because nonePosition");
                     disableSubtitleDelayTVMenuItem(true);
