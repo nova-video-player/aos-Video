@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceLargePopupMenu"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:singleLine="true"
             android:fadingEdge="horizontal" />
         <TextView android:id="@+id/summary"
             android:layout_width="wrap_content"
