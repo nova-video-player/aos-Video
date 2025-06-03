@@ -3675,6 +3675,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
     }
 
+    private void enableSubtitleDelayandSettingsTVMenuItem() {
+        mSubtitleInfoController.enableSettings(SUBTITLE_MENU_DELAY, true, true);
+        mSubtitleInfoController.enableSettings(SUBTITLE_MENU_SETTINGS, true, true);
+    }
+
     private void disableSubtitleDelayTVMenuItem(boolean disable) {
         log.debug("disableSubtitleDelayTVMenuItem: " + disable);
         mSubtitleInfoController.enableSettings(SUBTITLE_MENU_DELAY, !disable, disable);
@@ -3729,6 +3734,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     log.debug("onTrackSelected: position={}, mSubtitleInfoController.getTrackNameAt({}) mVideoInfo.subtitleTrack={}", position, trackName, mVideoInfo.subtitleTrack);
                 } else {
                     log.debug("onTrackSelected: position={}, None mVideoInfo.subtitleTrack={}", position, mVideoInfo.subtitleTrack);
+                }
+                if (position != 0){
+                    enableSubtitleDelayandSettingsTVMenuItem();
                 }
             }
         }
