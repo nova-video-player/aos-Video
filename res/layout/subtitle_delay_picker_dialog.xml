@@ -41,6 +41,7 @@
         android:text="@string/subtitle_delay_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_55rg"
         android:layout_marginTop="10dp" />
     <Spinner
         android:id="@+id/subtitle_delay_ratio_spinner"

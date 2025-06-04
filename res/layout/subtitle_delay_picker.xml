@@ -32,7 +32,11 @@
         android:id="@+id/sign"
         android:layout_width="75dip"
         android:layout_height="50dip"
-        android:layout_marginTop="70dip"
+        android:layout_gravity="center"
+        android:fontFamily="@font/nhaasgrotesktxpro_75bd"
+        android:background="@drawable/button_background"
+        android:textColor="@color/black"
+        android:textSize="26sp"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
         android:paddingLeft="30dip"
@@ -48,6 +52,7 @@
         android:layout_marginRight="5dip"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:theme="@style/CustomNumberPicker"
         />
 
     <android.widget.NumberPicker
@@ -58,6 +63,7 @@
         android:layout_marginRight="5dip"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:theme="@style/CustomNumberPicker"
         />
 
     <android.widget.NumberPicker
@@ -68,6 +74,7 @@
         android:layout_marginRight="5dip"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:theme="@style/CustomNumberPicker"
         />
 
 </LinearLayout>

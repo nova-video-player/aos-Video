@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
@@ -63,16 +64,20 @@ public class SubtitleDelayPickerDialog extends AlertDialog implements OnClickLis
  
 
     public SubtitleDelayPickerDialog(Context context, OnDelayChangeListener callBack, int delay, int ratio, boolean hasRatio) {
-        super(context);
+        super(context, R.style.SubtitleDelayDialog);
 
         getWindow().setGravity(Gravity.TOP);
-        getWindow().setBackgroundDrawable(new ColorDrawable(VideoInfoCommonClass.getAlphaColor(ContextCompat.getColor(context, R.color.background_material_dark),128)));
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
         mContext = context;
         mCallBack = callBack;
 
-        setIcon(R.drawable.ic_menu_delay);
+        View titleView = LayoutInflater.from(context).inflate(R.layout.subtitle_delay_dialog_title, null);
+        setCustomTitle(titleView);
+        TextView titleTextView = titleView.findViewById(R.id.dialog_title);
+        if (titleTextView != null) {
+            titleTextView.setText(getFormattedDelay(context, delay));
+        }
 
         LayoutInflater inflater =
                 (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -143,7 +148,10 @@ public class SubtitleDelayPickerDialog extends AlertDialog implements OnClickLis
     }
 
     private void updateTitle(int delay) {
-        setTitle(getFormattedDelay(mContext, delay));
+        TextView titleView = findViewById(R.id.dialog_title);
+        if (titleView != null) {
+            titleView.setText(getFormattedDelay(mContext, delay));
+        }
     }
 
     /* (non-Javadoc)

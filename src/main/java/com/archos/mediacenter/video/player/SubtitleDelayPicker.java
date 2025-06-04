@@ -181,7 +181,7 @@ public class SubtitleDelayPicker extends SubtitleDelayPickerAbstract{
 
 
     private void updateSpinners() {
-        mSignButton.setText(mSign == 1 ? "+" : "-");
+        mSignButton.setText(mSign == 1 ? "+" : "−"); // use proper minus sign
         mMinutePicker.setValue(mMinute);
         mSecondPicker.setValue(mSecond);
         mDeciSecondPicker.setValue(mDeciSecond);
