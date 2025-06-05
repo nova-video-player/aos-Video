@@ -50,6 +50,7 @@
         android:shadowRadius="1"
         android:text="@string/subtitle_sample_text"
         android:textColor="#ffffffff"
+        android:fontFamily="@font/nhaasgroteskdspro_95blk"
         android:textSize="22sp"
         android:textStyle="bold" />
 
@@ -57,6 +58,7 @@
         android:id="@+id/subtitle_size_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
         android:layout_margin="@dimen/subtitles_settings_dialog_margin_small"
         android:text="@string/subtitle_size_text" />
     <RelativeLayout
@@ -121,6 +123,7 @@
             android:id="@+id/subtitle_vert_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/nhaasgroteskdspro_65md"
             android:layout_margin="@dimen/subtitles_settings_dialog_margin_small"
             android:text="@string/subtitle_vert_text" />
 
@@ -166,6 +169,7 @@
             android:id="@+id/subOutline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/nhaasgroteskdspro_65md"
             android:checked="false"
             android:duplicateParentState="true"
             android:text="@string/subtitle_outline" />

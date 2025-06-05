@@ -71,7 +71,7 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     private int mColor;
 
     public SubtitleSettingsDialog(Context context, SubtitleManager subtitleManager) {
-        super(context);
+        super(context, R.style.SubtitleSettingsDialog);
         init(context, subtitleManager);
     }
 
@@ -83,7 +83,6 @@ public class SubtitleSettingsDialog extends AlertDialog implements
         setIcon(R.drawable.ic_menu_settings);
 
         getWindow().setGravity(Gravity.TOP);
-        getWindow().setBackgroundDrawable(new ColorDrawable(VideoInfoCommonClass.getAlphaColor(ContextCompat.getColor(context, R.color.background_material_dark),128)));
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
         final LayoutInflater inflater =
