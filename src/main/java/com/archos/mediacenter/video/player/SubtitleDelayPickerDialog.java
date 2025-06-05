@@ -88,11 +88,34 @@ public class SubtitleDelayPickerDialog extends AlertDialog implements OnClickLis
         // Setup Spinner
         Spinner sp = (Spinner) view.findViewById(R.id.subtitle_delay_ratio_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                mContext, R.array.subtitle_delay_ratio_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                mContext, R.array.subtitle_delay_ratio_array, R.layout.custom_spinner_item);
+        adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
         sp.setAdapter(adapter);
         sp.setSelection(ratio);
         sp.setOnItemSelectedListener(this);
+
+        // Calculate widest item width
+        int maxWidth = 0;
+        View itemView = null;
+        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        
+        for (int i = 0; i < adapter.getCount(); i++) {
+            itemView = adapter.getDropDownView(i, null, sp);
+            itemView.measure(widthMeasureSpec, heightMeasureSpec);
+            maxWidth = Math.max(maxWidth, itemView.getMeasuredWidth());
+        }
+
+        // Set dropdown position and width after layout
+        int finalMaxWidth = maxWidth;
+        sp.post(new Runnable() {
+            @Override
+            public void run() {
+                sp.setDropDownVerticalOffset(sp.getHeight());
+                sp.setDropDownHorizontalOffset(0);
+                sp.setDropDownWidth(finalMaxWidth + 32); // Add some padding
+            }
+        });
 
         updateTitle(delay);
 
