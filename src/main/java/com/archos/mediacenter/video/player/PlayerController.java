@@ -963,7 +963,7 @@ public class PlayerController implements OnTouchListener, OnGenericMotionListene
                         ((RelativeLayout.LayoutParams) mControllerView.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_TOP);
                     }
                     log.debug("CONFIG updateOrientation, rotation is 0, shifting up, margin (L,T,R,B)=(0,0,0,getNavigationBarHeight()+getGestureAreaHeight()=" + (getNavigationBarHeight() + getGestureAreaHeight()) + ")");
-                    relativeParams.setMargins(0, 0, 0, getNavigationBarHeight() + getGestureAreaHeight());
+                    relativeParams.setMargins(0, 0, 0, getNavigationBarHeight());
                     break;
                 case Surface.ROTATION_180:
                     log.debug("CONFIG updateOrientation, rotation is 180");
