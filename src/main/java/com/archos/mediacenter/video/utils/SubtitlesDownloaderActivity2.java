@@ -38,6 +38,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.PreferenceManager;
 
@@ -450,7 +451,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         private void askSubChoice(final String videoFilePath, final ArrayList<OpenSubtitlesSearchResult> searchResults, final boolean displayLang, final boolean hasSuccess) {
             View view = LayoutInflater.from(SubtitlesDownloaderActivity2.this).inflate(R.layout.subtitle_chooser_title_layout, null);
             ((TextView) view.findViewById(R.id.video_name)).setText(HtmlCompat.fromHtml(getString(R.string.select_sub_file, getFriendlyFilename(videoFilePath)), HtmlCompat.FROM_HTML_MODE_LEGACY));
-            final AlertDialog subChoiceDialog = new AlertDialog.Builder(SubtitlesDownloaderActivity2.this)
+            final AlertDialog subChoiceDialog = new AlertDialog.Builder(SubtitlesDownloaderActivity2.this, R.style.CustomDialogTheme)
                     .setCustomTitle(view)
                     .setAdapter(new BaseAdapter() {
                         @Override
@@ -475,13 +476,21 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                             }
                             ((TextView) view.findViewById(R.id.video_name)).setText(searchResults.get(i).getFileName());
                             // use bold font for subs with hash match
+                            Typeface black = ResourcesCompat.getFont(getApplicationContext(), R.font.nhaasgroteskdspro_75bd);
+                            Typeface light = ResourcesCompat.getFont(getApplicationContext(), R.font.nhaasgroteskdspro_45lt);
+                            Typeface medium = ResourcesCompat.getFont(getApplicationContext(), R.font.nhaasgroteskdspro_65md);
                             if (searchResults.get(i).getMoviehashMatch())
-                                ((TextView) view.findViewById(R.id.video_name)).setTypeface(null, Typeface.BOLD);
+                                ((TextView) view.findViewById(R.id.video_name)).setTypeface(black);
                             else
-                                ((TextView) view.findViewById(R.id.video_name)).setTypeface(null, Typeface.NORMAL);
-                            if (displayLang)
+                                ((TextView) view.findViewById(R.id.video_name)).setTypeface(light);
+                            if (displayLang) {
                                 ((TextView) view.findViewById(R.id.lang)).setText(searchResults.get(i).getLanguage());
-                            else view.findViewById(R.id.lang).setVisibility(View.GONE);
+                                if (searchResults.get(i).getMoviehashMatch()){
+                                    ((TextView) view.findViewById(R.id.lang)).setTypeface(medium);
+                                } else {
+                                    ((TextView) view.findViewById(R.id.lang)).setTypeface(light);
+                                }
+                            } else view.findViewById(R.id.lang).setVisibility(View.GONE);
                             return view;
                         }
                     }, (dialogInterface, i) -> new Thread() {
