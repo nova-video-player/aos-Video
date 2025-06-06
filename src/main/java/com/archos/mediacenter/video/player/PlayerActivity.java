@@ -2478,9 +2478,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
             case MENU_AUDIO_FILTER_ID: {
                 AlertDialog.Builder adb = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
-                adb.setTitle(R.string.pref_audio_parameters_title);
-                Typeface typeface1 = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
-                Typeface typeface2 = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_65md);
+                View customTitleView = getLayoutInflater().inflate(R.layout.audio_filter_dialog_title, null);
+                adb.setCustomTitle(customTitleView);
+                Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_55rg);
                 final ArrayList<RadioButton> rbs = new  ArrayList<RadioButton>();
                 adb.setAdapter(new ArrayAdapter<View>(mContext, R.layout.menu_item_layout) {
                     @Override
@@ -2488,10 +2488,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         if (position > 0) {
                             Switch tb = new Switch(mContext);
                             tb.setText(R.string.pref_audio_filt_title);
-                            tb.setTypeface(typeface2);
+                            tb.setTypeface(typeface);
                             tb.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                            tb.setPadding(90,35, 80, 20);
-                            tb.setChecked( PlayerService.sPlayerService.mAudioFilt>0);
+                            tb.setPadding(65,35, 35, 20);
+                            tb.setChecked(PlayerService.sPlayerService.mAudioFilt>0);
                             tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                                 @Override
                                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -2503,9 +2503,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         else {
                             Switch tb = new Switch(mContext);
                             tb.setText(R.string.pref_audio_filt_night_mode);
-                            tb.setTypeface(typeface2);
+                            tb.setTypeface(typeface);
                             tb.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                            tb.setPadding(90,20, 80, 20);
+                            tb.setPadding(65,0, 35, 20);
                             tb.setChecked(PlayerService.sPlayerService.mNightModeOn);
                             tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                                 @Override
@@ -2527,23 +2527,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 });
 
                 ad = adb.create();
-                ad.setOnShowListener(d -> {
-                    int titleId = mContext.getResources().getIdentifier("alertTitle", "id", mContext.getPackageName());
-                    TextView titleView = ad.findViewById(titleId);
-
-                    if (titleView != null) {
-                        // Set custom font
-                        titleView.setTypeface(typeface1);
-
-                        // Set text size in SP
-                        titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24); // or any size you want
-
-                        // Optionally set text color
-                        titleView.setTextColor(ContextCompat.getColor(mContext, R.color.red));
-                    }
-
-
-                });
                 ad.show();
                 return true;
             }
