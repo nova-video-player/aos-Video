@@ -714,8 +714,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     private SpannableString applyCustomFont(@StringRes int resId) {
         String family ="";
-        Typeface typeface = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_95blk);
-        int color = ContextCompat.getColor(this, android.R.color.holo_red_dark);
+        Typeface typeface = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_75bd);
+        int color = ContextCompat.getColor(this, android.R.color.white);
         float textSize = 18f; // in SP
         String text = this.getString(resId);
         SpannableString spannable = new SpannableString(text);
