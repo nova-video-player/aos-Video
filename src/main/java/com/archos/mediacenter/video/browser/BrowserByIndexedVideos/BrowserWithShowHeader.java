@@ -24,9 +24,12 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import androidx.annotation.StringRes;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.core.content.ContextCompat;
 import androidx.loader.content.Loader;
@@ -34,6 +37,8 @@ import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
@@ -61,6 +66,7 @@ import com.archos.mediacenter.video.browser.adapters.SeasonsData;
 import com.archos.mediacenter.video.browser.adapters.SeriesTags;
 import com.archos.mediacenter.video.browser.adapters.ShowNetworkAdapter;
 import com.archos.mediacenter.video.browser.adapters.StudioAdapter;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediascraper.MediaScraper;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
@@ -228,13 +234,25 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         if (mBrowserAdapter != null
                 && !mBrowserAdapter.isEmpty()) {
             mDisplayModeSubmenu.clear();
-            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, R.string.view_mode_list, 0);
-            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_grid_mode, R.string.view_mode_grid, 0);
+            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, applyCustomFont(R.string.view_mode_list), 0);
+            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_grid_mode, applyCustomFont(R.string.view_mode_grid), 0);
             mDisplayModeSubmenu.selectSubmenuItem(mViewMode == VideoUtils.VIEW_MODE_GRID
                     ? SUBMENU_ITEM_GRID_INDEX : SUBMENU_ITEM_LIST_INDEX);
         }
 
     }
+
+    private SpannableString applyCustomFont(@StringRes int resId) {
+        String family ="";
+        Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_95blk);
+        int color = ContextCompat.getColor(mContext, android.R.color.holo_red_dark);
+        float textSize = 18f; // in SP
+        String text = mContext.getString(resId);
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == Activity.RESULT_OK){

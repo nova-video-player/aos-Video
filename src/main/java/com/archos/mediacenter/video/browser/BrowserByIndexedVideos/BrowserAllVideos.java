@@ -17,13 +17,19 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -32,6 +38,7 @@ import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.Browser;
 import com.archos.mediacenter.video.browser.loader.AllVideosLoader;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediacenter.video.utils.SortOrder;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
@@ -102,15 +109,15 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 			mSortModeSubmenu.attachMenuItem(sortMenuItem);
 
 			mSortModeSubmenu.clear();
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_asc,      MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_desc,     MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_asc,      MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_desc,     MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_duration_asc,  MENU_ITEM_SORT+MENU_ITEM_DURATION+MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_duration_desc, MENU_ITEM_SORT+MENU_ITEM_DURATION+MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_rating_asc,    MENU_ITEM_SORT+MENU_ITEM_RATING  +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_added_desc,MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_added_asc, MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_ASC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_name_asc),       MENU_ITEM_SORT + MENU_ITEM_NAME     + MENU_ITEM_ASC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_name_desc),      MENU_ITEM_SORT + MENU_ITEM_NAME     + MENU_ITEM_DESC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_date_asc),       MENU_ITEM_SORT + MENU_ITEM_YEAR     + MENU_ITEM_ASC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_date_desc),      MENU_ITEM_SORT + MENU_ITEM_YEAR     + MENU_ITEM_DESC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_duration_asc),   MENU_ITEM_SORT + MENU_ITEM_DURATION + MENU_ITEM_ASC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_duration_desc),  MENU_ITEM_SORT + MENU_ITEM_DURATION + MENU_ITEM_DESC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_rating_asc),     MENU_ITEM_SORT + MENU_ITEM_RATING   + MENU_ITEM_DESC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_date_added_desc),MENU_ITEM_SORT + MENU_ITEM_ADDED    + MENU_ITEM_DESC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_date_added_asc), MENU_ITEM_SORT + MENU_ITEM_ADDED    + MENU_ITEM_ASC);
 
 			// Init with the current value
 			int initId = sortorder2itemid(mSortOrder);
@@ -128,6 +135,16 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 		}
 	}
 
+	private SpannableString applyCustomFont(@StringRes int resId) {
+		String family ="";
+		Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_95blk);
+		int color = ContextCompat.getColor(mContext, android.R.color.holo_red_dark);
+		float textSize = 18f; // in SP
+		String text = mContext.getString(resId);
+		SpannableString spannable = new SpannableString(text);
+		spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return spannable;
+	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.string.rescrap_not_found){

@@ -18,12 +18,19 @@ import com.archos.mediacenter.utils.ActionBarSubmenu;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.ThumbnailEngineVideo;
 import com.archos.mediacenter.video.browser.loader.MoviesByYearLoader;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.loader.content.Loader;
 
 public class BrowserMoviesByYear extends BrowserMoviesBy {
@@ -42,8 +49,19 @@ public class BrowserMoviesByYear extends BrowserMoviesBy {
 
 	public void addSortOptionsSubmenus(ActionBarSubmenu submenu) {
 	    // MENU_ITEM_NAME is not a typo here, because the year will be copied to the name column
-	    submenu.addSubmenuItem(0, R.string.sort_by_date_desc, MENU_ITEM_SORT+MENU_ITEM_NAME+MENU_ITEM_DESC);
-	    submenu.addSubmenuItem(0, R.string.sort_by_date_asc,  MENU_ITEM_SORT+MENU_ITEM_NAME+MENU_ITEM_ASC);
+        submenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_date_desc), MENU_ITEM_SORT + MENU_ITEM_NAME + MENU_ITEM_DESC);
+        submenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_date_asc), MENU_ITEM_SORT + MENU_ITEM_NAME + MENU_ITEM_ASC);
+    }
+
+    private SpannableString applyCustomFont(@StringRes int resId) {
+        String family ="";
+        Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_95blk);
+        int color = ContextCompat.getColor(mContext, android.R.color.holo_red_dark);
+        float textSize = 18f; // in SP
+        String text = mContext.getString(resId);
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
     }
 
     @Override

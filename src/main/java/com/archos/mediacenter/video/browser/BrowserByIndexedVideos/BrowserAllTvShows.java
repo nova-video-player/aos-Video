@@ -17,8 +17,11 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -27,6 +30,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
@@ -48,6 +54,7 @@ import com.archos.mediacenter.video.browser.presenter.TvshowDetailedPresenter;
 import com.archos.mediacenter.video.browser.presenter.TvshowGridPresenter;
 import com.archos.mediacenter.video.browser.presenter.TvshowGridShortPresenter;
 import com.archos.mediacenter.video.browser.presenter.TvshowListPresenter;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
@@ -129,12 +136,12 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 			mSortModeSubmenu.attachMenuItem(sortMenuItem);
 
 			mSortModeSubmenu.clear();
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_asc,              MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_desc,             MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_premiered_desc,   MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_premiered_asc,    MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_rating_asc,            MENU_ITEM_SORT+MENU_ITEM_RATING  +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_recently_added_episode_desc, MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_DESC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_name_asc),              MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_ASC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_name_desc),             MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_DESC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_date_premiered_desc),   MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_DESC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_date_premiered_asc),    MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_ASC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_rating_asc),            MENU_ITEM_SORT+MENU_ITEM_RATING  +MENU_ITEM_DESC);
+			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_recently_added_episode_desc), MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_DESC);
 
 			// Init with the current value
 			int initId = sortorder2itemid(mSortOrder);
@@ -149,6 +156,17 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 				mSortModeSubmenu.selectSubmenuItem(position);
 			}
 		}
+	}
+
+	private SpannableString applyCustomFont(@StringRes int resId) {
+		String family ="";
+		Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_95blk);
+		int color = ContextCompat.getColor(mContext, android.R.color.holo_red_dark);
+		float textSize = 18f; // in SP
+		String text = mContext.getString(resId);
+		SpannableString spannable = new SpannableString(text);
+		spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return spannable;
 	}
 
 	@Override

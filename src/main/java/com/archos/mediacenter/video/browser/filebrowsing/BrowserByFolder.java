@@ -22,11 +22,14 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,7 +41,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -70,6 +76,7 @@ import com.archos.mediacenter.video.browser.presenter.Metafile2GridPresenter;
 import com.archos.mediacenter.video.browser.presenter.Metafile2ListPresenter;
 import com.archos.mediacenter.video.browser.presenter.VideoPresenter;
 import com.archos.mediacenter.video.ui.NovaProgressDialog;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediacenter.video.utils.PlayUtils;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
@@ -832,12 +839,12 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             mSortModeSubmenu.attachMenuItem(sortMenuItem);
 
             mSortModeSubmenu.clear();
-            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_asc,MENU_ITEM_SORT+0);
-            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_desc,MENU_ITEM_SORT+1);
-            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_asc,MENU_ITEM_SORT+2);
-            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_desc,MENU_ITEM_SORT+3);
-            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_size_asc,MENU_ITEM_SORT+4);
-            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_size_desc,MENU_ITEM_SORT+5);
+            mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_name_asc),MENU_ITEM_SORT+0);
+            mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_name_desc),MENU_ITEM_SORT+1);
+            mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_date_asc), MENU_ITEM_SORT + 2);
+            mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_date_desc), MENU_ITEM_SORT + 3);
+            mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_size_asc), MENU_ITEM_SORT + 4);
+            mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_size_desc), MENU_ITEM_SORT + 5);
             // Init with the current value
             int initId = sortorder2itemid(mSortOrder);
             if (initId==-1) { // not found
@@ -851,6 +858,17 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                 mSortModeSubmenu.selectSubmenuItem(position);
             }
         }
+    }
+
+    private SpannableString applyCustomFont(@StringRes int resId) {
+        String family ="";
+        Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_95blk);
+        int color = ContextCompat.getColor(mContext, android.R.color.holo_red_dark);
+        float textSize = 18f; // in SP
+        String text = mContext.getString(resId);
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
     }
 
     @Override

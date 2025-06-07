@@ -18,8 +18,11 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -30,7 +33,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
@@ -44,6 +50,7 @@ import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.ThumbnailRequestVideo;
 import com.archos.mediacenter.video.browser.ThumbnailRequesterVideo;
 import com.archos.mediacenter.video.browser.adapters.GroupOfMovieAdapter;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.util.ArrayList;
@@ -199,10 +206,10 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
             mDisplayModeSubmenu.attachMenuItem(viewModeMenuItem);
 
             mDisplayModeSubmenu.clear();
-            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, R.string.view_mode_list, 0);
-            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_poster_mode, R.string.view_mode_grid, 0);
+			mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, applyCustomFont(R.string.view_mode_list), 0);
+			mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_poster_mode, applyCustomFont(R.string.view_mode_grid), 0);
 
-			mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_details_mode2, R.string.view_mode_details, 0);
+			mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_details_mode2, applyCustomFont(R.string.view_mode_details), 0);
             // no Details view mode here
             mDisplayModeSubmenu.selectSubmenuItem(getSubmenuItemIndex(mViewMode));
 
@@ -229,6 +236,17 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 				mSortModeSubmenu.selectSubmenuItem(position);
 			}
 		}
+	}
+
+	private SpannableString applyCustomFont(@StringRes int resId) {
+		String family ="";
+		Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_95blk);
+		int color = ContextCompat.getColor(mContext, android.R.color.holo_red_dark);
+		float textSize = 18f; // in SP
+		String text = mContext.getString(resId);
+		SpannableString spannable = new SpannableString(text);
+		spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return spannable;
 	}
 	
 	abstract public void addSortOptionsSubmenus(ActionBarSubmenu submenu);
