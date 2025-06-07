@@ -225,10 +225,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if(mShow!=null){
-            menu.add(0,R.string.scrap_series_change, 0, R.string.scrap_series_change);
-            menu.add(0,R.string.info_menu_series_backdrop_select, 0, R.string.info_menu_series_backdrop_select);
-            menu.add(0,R.string.info_menu_series_clearlogo_select, 0, R.string.info_menu_series_clearlogo_select);
-            menu.add(0,R.string.info_menu_series_poster_select, 0, R.string.info_menu_series_poster_select);
+            menu.add(0,R.string.scrap_series_change, 0, applyCustomFont(R.string.scrap_series_change));
+            menu.add(0,R.string.info_menu_series_backdrop_select, 0, applyCustomFont(R.string.info_menu_series_backdrop_select));
+            menu.add(0,R.string.info_menu_series_clearlogo_select, 0, applyCustomFont(R.string.info_menu_series_clearlogo_select));
+            menu.add(0,R.string.info_menu_series_poster_select, 0, applyCustomFont(R.string.info_menu_series_poster_select));
         }
         super.onCreateOptionsMenu(menu, inflater);
         if (mBrowserAdapter != null

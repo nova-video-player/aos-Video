@@ -131,7 +131,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 				}
 				mSortModeSubmenu.selectSubmenuItem(position);
 			}
-			menu.add(0,R.string.rescrap_not_found,0, R.string.rescrap_not_found).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			menu.add(0,R.string.rescrap_not_found,0, applyCustomFont(R.string.rescrap_not_found)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		}
 	}
 
