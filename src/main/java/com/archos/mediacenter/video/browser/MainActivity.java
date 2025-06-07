@@ -50,6 +50,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -75,6 +77,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
@@ -106,6 +109,7 @@ import com.archos.mediacenter.video.browser.filebrowsing.BrowserByVideoFolder;
 import com.archos.mediacenter.video.info.SingleVideoLoader;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.MiscUtils;
@@ -656,7 +660,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         if (mSearchManager == null) {
             log.error("onCreateOptionsMenu: searchManager is null");
         } else {
-            MenuItem item = menu.add(MENU_SEARCH_GROUP, MENU_SEARCH_ITEM, Menu.NONE, R.string.search_title);
+            MenuItem item = menu.add(MENU_SEARCH_GROUP, MENU_SEARCH_ITEM, Menu.NONE, applyCustomFont(R.string.search_title));
             item.setIcon(R.drawable.android29_ic_menu_search_mtrl_alpha);
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
             item.setActionView(mSearchView);
@@ -695,17 +699,28 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             mSearchItem = item;
         }
         MenuItem menuItem = menu.add(MENU_SCRAPER_GROUP, MENU_START_AUTO_SCRAPER_ACTIVITY, Menu.NONE,
-                R.string.start_auto_scraper_activity);
+                applyCustomFont(R.string.start_auto_scraper_activity));
         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         // below line removed to avoid warning W/ActionProvider(support): setVisibilityListener: Setting a new ActionProvider.VisibilityListener when one is already set. Are you reusing this NewVideosActionProvider instance while it is still in use somewhere else?
         //MenuItemCompat.setActionProvider(menuItem, mNewVideosActionProvider);
         mNewVideosActionProvider.manageVisibility(menuItem);
 
-        menuItem = menu.add(MENU_PRIVATE_MODE_GROUP, MENU_PRIVATE_MODE_ITEM, Menu.CATEGORY_SECONDARY, R.string.activate_private_mode);
+        menuItem = menu.add(MENU_PRIVATE_MODE_GROUP, MENU_PRIVATE_MODE_ITEM, Menu.CATEGORY_SECONDARY, applyCustomFont(R.string.activate_private_mode));
         menuItem.setIcon(R.drawable.ic_menu_private_mode);
         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         return ret;
+    }
+
+    private SpannableString applyCustomFont(@StringRes int resId) {
+        String family ="";
+        Typeface typeface = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_95blk);
+        int color = ContextCompat.getColor(this, android.R.color.holo_red_dark);
+        float textSize = 18f; // in SP
+        String text = this.getString(resId);
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
     }
 
     @Override
@@ -719,7 +734,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
         MenuItem item = menu.findItem(MENU_PRIVATE_MODE_ITEM);
         if (item != null) {
-            item.setTitle(PrivateMode.isActive() ? R.string.deactivate_private_mode : R.string.activate_private_mode);
+            item.setTitle(applyCustomFont(PrivateMode.isActive() ? R.string.deactivate_private_mode : R.string.activate_private_mode));
         }
 
         return super.onPrepareOptionsMenu(menu);
