@@ -33,6 +33,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -41,8 +42,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.text.style.TypefaceSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
@@ -1897,10 +1902,31 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }
     }
 
-    private void addMenu(int i, int i2, int i3, int i4) {
-        mTitleBar.getMenu().add(i, i2, i3, i4);
-      /*  if(mSecondaryTitleBar!=null)
-            mSecondaryTitleBar.getMenu().add(i, i2, i3, i4);*/
+    private void addMenu(int groupId, int itemId, int order, int titleRes) {
+        Typeface customFont = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_55rg);
+        SpannableString s = new SpannableString(getString(titleRes));
+        s.setSpan(new CustomTypefaceSpan(customFont), 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mTitleBar.getMenu().add(groupId, itemId, order, s);
+    }
+
+    public class CustomTypefaceSpan extends TypefaceSpan {
+        private final Typeface newType;
+        public CustomTypefaceSpan(Typeface type) {
+            super("");
+            newType = type;
+        }
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            applyCustomTypeFace(ds, newType);
+        }
+        @Override
+        public void updateMeasureState(TextPaint paint) {
+            applyCustomTypeFace(paint, newType);
+        }
+        private static void applyCustomTypeFace(Paint paint, Typeface tf) {
+            paint.setTypeface(tf);
+        }
     }
 
     private void getThumbnailSync(final Video video) {
