@@ -1172,7 +1172,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
         if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
             // Add the "view mode" item
-            MenuItem viewModeMenuItem = menu.add(MENU_VIEW_MODE_GROUP, MENU_VIEW_MODE, Menu.NONE, R.string.view_mode);
+            MenuItem viewModeMenuItem = menu.add(MENU_VIEW_MODE_GROUP, MENU_VIEW_MODE, Menu.NONE, applyCustomFont(R.string.view_mode));
             viewModeMenuItem.setIcon(R.drawable.ic_menu_view_mode);
             viewModeMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             mDisplayModeSubmenu.attachMenuItem(viewModeMenuItem);
