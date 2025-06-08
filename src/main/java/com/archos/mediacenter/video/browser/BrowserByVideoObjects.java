@@ -18,8 +18,11 @@ package com.archos.mediacenter.video.browser;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -28,6 +31,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import com.archos.environment.ArchosIntents;
 import com.archos.environment.ArchosSettings;
 import com.archos.filecorelibrary.FileUtils;
@@ -53,6 +59,7 @@ import com.archos.mediacenter.video.browser.presenter.VideoGridShortPresenter;
 import com.archos.mediacenter.video.browser.presenter.VideoListPresenter;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
@@ -143,10 +150,10 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
             return;
         }
         if(video instanceof Episode){
-            menu.setHeaderTitle(((Episode) video).getShowName()+": "+video.getName());
+            menu.setHeaderTitle(applyCustomFont(((Episode) video).getShowName()+": "+video.getName()));
         }
         else
-             menu.setHeaderTitle(video.getName());
+             menu.setHeaderTitle(applyCustomFont(video.getName()));
         String entryPath = video.getFilePath();
 
         final int resumePosition = video.getResumeMs();
@@ -154,37 +161,43 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         final boolean delete = !FileUtils.isSlowRemote(Uri.parse(entryPath)) && video.locationSupportsDelete();
         final boolean markAsTrakt = Trakt.isTraktV2Enabled(mContext, mPreferences);
         final boolean isNetwork = !FileUtils.isLocal(video.getFileUri());
-        menu.add(0, R.string.play_from_beginning, 0, R.string.play_selection);
+        menu.add(0, R.string.play_from_beginning, 0, applyCustomFont(R.string.play_selection));
         if (resume && resumePosition != PlayerActivity.LAST_POSITION_END) {
-            menu.findItem(R.string.play_from_beginning).setTitle(R.string.play_from_beginning);
+            menu.findItem(R.string.play_from_beginning).setTitle(applyCustomFont(R.string.play_from_beginning));
             String resumeString = mContext.getString(R.string.resume) + " (" + MediaUtils.formatTime(resumePosition) + ")";
-            menu.add(0, R.string.resume, 0, resumeString);
+            SpannableString styledResume = new SpannableString(resumeString);
+            Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
+            String family ="";
+            int color = ContextCompat.getColor(mContext, android.R.color.white);
+            float textSize = 18f; // in SP
+            styledResume.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, resumeString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            menu.add(0, R.string.resume, 0, styledResume);
         }
 
         if (delete)
-            menu.add(0, R.string.delete, 0, R.string.delete);
+            menu.add(0, R.string.delete, 0, applyCustomFont(R.string.delete));
         if (resume)
-            menu.add(0, R.string.delete_resume, 0, R.string.delete_resume);
+            menu.add(0, R.string.delete_resume, 0, applyCustomFont(R.string.delete_resume));
 
-        menu.add(0, R.string.info, 0, R.string.info);
+        menu.add(0, R.string.info, 0, applyCustomFont(R.string.info));
         if(!(video instanceof NonIndexedVideo)) {
             if (markAsTrakt) {
                 if (!video.isWatched())
-                    menu.add(0, R.string.mark_as_watched, 0, R.string.mark_as_watched);
+                    menu.add(0, R.string.mark_as_watched, 0, applyCustomFont(R.string.mark_as_watched));
                 else
-                    menu.add(0, R.string.mark_as_not_watched, 0, R.string.mark_as_not_watched);
+                    menu.add(0, R.string.mark_as_not_watched, 0, applyCustomFont(R.string.mark_as_not_watched));
             } else {
                 if (resumePosition != PlayerActivity.LAST_POSITION_END)
-                    menu.add(0, R.string.mark_as_watched, 0, R.string.mark_as_watched);
+                    menu.add(0, R.string.mark_as_watched, 0, applyCustomFont(R.string.mark_as_watched));
                 else
-                    menu.add(0, R.string.mark_as_not_watched, 0, R.string.mark_as_not_watched);
+                    menu.add(0, R.string.mark_as_not_watched, 0, applyCustomFont(R.string.mark_as_not_watched));
             }
         }
         final int f_position = position;
         final Activity activity = getActivity();
         // Subtitles wizard
         if(!isNetwork)
-            menu.add(R.string.get_subtitles_on_drive).setOnMenuItemClickListener(
+            menu.add(applyCustomFont(R.string.get_subtitles_on_drive)).setOnMenuItemClickListener(
                     new OnMenuItemClickListener() {
                         public boolean onMenuItemClick(MenuItem item) {
                             Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -197,24 +210,46 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
 
 
         // Subloader
-        menu.add(0, R.string.get_subtitles_online, 0, R.string.get_subtitles_online);
+        menu.add(0, R.string.get_subtitles_online, 0, applyCustomFont(R.string.get_subtitles_online));
 
         if(video.hasScraperData()){
-            menu.add(0, R.string.add_to_list, 0, R.string.add_to_list);
+            menu.add(0, R.string.add_to_list, 0, applyCustomFont(R.string.add_to_list));
 
         }
 
         // Propose to remove from DB the files that are indexed
         if (video.getId()>0) {
-            menu.add(0, R.string.video_browser_unindex_file, 0, R.string.video_browser_unindex_file);
+            menu.add(0, R.string.video_browser_unindex_file, 0, applyCustomFont(R.string.video_browser_unindex_file));
         }
         else
-            menu.add(0, R.string.video_browser_index_file, 0, R.string.video_browser_index_file);
+            menu.add(0, R.string.video_browser_index_file, 0, applyCustomFont(R.string.video_browser_index_file));
         if(isNetwork){
-            menu.add(0, R.string.copy_on_device, 0, R.string.copy_on_device);
+            menu.add(0, R.string.copy_on_device, 0, applyCustomFont(R.string.copy_on_device));
 
         }
     }
+
+    private SpannableString applyCustomFont(@StringRes int resId) {
+        String family ="";
+        Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
+        int color = ContextCompat.getColor(mContext, android.R.color.white);
+        float textSize = 18f; // in SP
+        String text = mContext.getString(resId);
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
+    private SpannableString applyCustomFont(String text) {
+        String family = "";
+        Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
+        int color = ContextCompat.getColor(mContext, R.color.yellow_light);
+        float textSize = 22f; // in SP
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
 
     public void startVideo(int video, int resume) {
 

@@ -187,7 +187,7 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		//menu.add(0, R.string.delete, 0, R.string.delete);
-		menu.add(0, R.string.info, 0, R.string.info);
+		menu.add(0, R.string.info, 0, applyCustomFont(R.string.info));
 		// Subloader
 		//menu.add(0, R.string.get_subtitles_online, 0, R.string.get_subtitles_online);
 		//menu.add(0, R.string.video_browser_unindex_file, 0, R.string.video_browser_unindex_file);
