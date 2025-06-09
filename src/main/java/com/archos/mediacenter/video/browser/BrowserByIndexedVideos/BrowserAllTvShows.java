@@ -227,16 +227,19 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 			cursor2.close();
 		}
 
-		if(distant)
-			menu.add(0, R.string.copy_on_device_multi, 0, R.string.copy_on_device_multi);
+		//if(distant)
+			//menu.add(0, R.string.copy_on_device_multi, 0, R.string.copy_on_device_multi);
 
-		showPowerMenu(v, tvshow, info.position);
+		showPowerMenu(v, tvshow, info.position, distant);
 	}
 
-	private void showPowerMenu(View anchor, Tvshow tvshow, int position) {
+	private void showPowerMenu(View anchor, Tvshow tvshow, int position, boolean distant) {
 		List<PowerMenuItem> menuItems = new ArrayList<>();
 		menuItems.add(new PowerMenuItem(mContext.getString(R.string.info)));
 		menuItems.add(new PowerMenuItem(mContext.getString(R.string.get_subtitles_online)));
+		if(distant){
+			menuItems.add(new PowerMenuItem(mContext.getString(R.string.copy_on_device_multi)));
+		}
 		Context themedContext = new ContextThemeWrapper(mContext, R.style.PowerMenuTheme);
 		View decorView = ((Activity) anchor.getContext()).getWindow().getDecorView();
 		int[] decorLocation = new int[2];
@@ -312,6 +315,23 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 			subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
 			subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, getRealPathUriFromPosition(position).toString());
 			getActivity().startActivity(subIntent);
+		}else if (title.equals(mContext.getString(R.string.copy_on_device_multi))){
+			ArrayList<Uri> list = new ArrayList<>();
+			Cursor cursor2 = getEpisodeForShowCursor(tvshow.getTvshowId());
+			if(cursor2!=null) {
+				if (cursor2.getCount() > 0) {
+					cursor2.moveToFirst();
+					int uriCol = cursor2.getColumnIndex(VideoStore.MediaColumns.DATA);
+					do {
+						Uri uri = Uri.parse(cursor2.getString(uriCol));
+						if (!FileUtils.isLocal(uri))
+							list.add(uri);
+					} while (cursor2.moveToNext());
+					startDownloadingVideo(list);
+
+				}
+			}
+			cursor2.close();
 		}
 	}
 
