@@ -447,6 +447,10 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     // The user clicked on an item of the list
     @Override
     public void onItemClick(AdapterView parent, View v, int position, long id) {
+        if (mIgnoreNextClick) {
+            mIgnoreNextClick = false; // reset
+            return; // ignore this click — it was actually a long-click
+        }
         if(mMultiplePositionEnabled) {
             if(mActionModeManager!=null)
                 mActionModeManager.invalidateActionBar();
@@ -557,74 +561,84 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         Object object = mFilesAdapter.getItem(info.position);
         boolean metaFile2 = object instanceof MetaFile2;
         showPowerMenu(v, object, info.position, metaFile2);
+        if(!metaFile2){
+            super.onCreateContextMenu(menu, v, menuInfo);
+        }
+    }
+
+    protected void customizePowerMenuItems(List<PowerMenuItem> items, Object object, int position) {
+        // Default: do nothing. Subclasses can override.
     }
 
     private void showPowerMenu(View anchor, Object object, int position, boolean metaFile2) {
-        List<PowerMenuItem> menuItems = new ArrayList<>();
         if (metaFile2) {
+            List<PowerMenuItem> menuItems = new ArrayList<>();
             if (((MetaFile2) object).canWrite())
                 menuItems.add(new PowerMenuItem(mContext.getString(R.string.delete)));
+
+            customizePowerMenuItems(menuItems, object, position);
+
+            Context themedContext = new ContextThemeWrapper(mContext, R.style.PowerMenuTheme);
+            View decorView = ((Activity) anchor.getContext()).getWindow().getDecorView();
+            int[] decorLocation = new int[2];
+            decorView.getLocationOnScreen(decorLocation);
+            int xOffset = mTouchX - decorLocation[0];
+            int yOffset = mTouchY - decorLocation[1];
+
+            String targetText = mContext.getString(R.string.start_auto_scraper_activity);
+            Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
+            float textSizeSp = 16f;
+            Resources res = mContext.getResources();
+            DisplayMetrics metrics = res.getDisplayMetrics();
+            Paint paint = new Paint();
+            paint.setTypeface(typeface);
+            paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSizeSp, metrics));
+            float textWidth = paint.measureText(targetText);
+            int internalPaddingPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, metrics); // 16dp start + 16dp end
+            int externalMarginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics);
+            int menuWidth = (int) (textWidth + internalPaddingPx + externalMarginPx);
+
+            PowerMenu powerMenu = new PowerMenu.Builder(themedContext)
+                    .addItemList(menuItems)
+                    .setMenuRadius(16f)
+                    .setMenuShadow(8f)
+                    .setAnimation(MenuAnimation.DROP_DOWN)
+                    .setAutoDismiss(true)
+                    .setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                    .setHeaderView(R.layout.power_menu_header)
+                    .setWidth(menuWidth) // ⬅ set width here
+                    .build();
+            ListView listView = powerMenu.getMenuListView();
+            CustomPowerMenuAdapter adapter = new CustomPowerMenuAdapter(listView);
+            adapter.addItemList(menuItems);
+            listView.setAdapter(adapter);
+
+            View header = powerMenu.getHeaderView();
+            TextView headerText = header.findViewById(R.id.header_title);
+            if (metaFile2) {
+                headerText.setText(((MetaFile2) object).getName());
+            }
+
+            View menuListView = powerMenu.getMenuListView();
+            if (menuListView != null) {
+                View parent = (View) menuListView.getParent();
+                GradientDrawable bg = new GradientDrawable();
+                bg.setColor(ContextCompat.getColor(mContext, R.color.tranparent_deep_blue));
+                float radiusPx = TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 12f, mContext.getResources().getDisplayMetrics());
+                int strokeWidthPx = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 1f, mContext.getResources().getDisplayMetrics());
+                bg.setCornerRadius(radiusPx);
+                bg.setStroke(strokeWidthPx, ContextCompat.getColor(mContext, R.color.black));
+                parent.setBackground(bg);
+            }
+
+            powerMenu.setOnMenuItemClickListener((positionClicked, item) -> {
+                String titleClicked = ((PowerMenuItem) item).title.toString();
+                handlePowerMenuClick(titleClicked, object, position);
+            });
+            powerMenu.showAtLocation(decorView, Gravity.NO_GRAVITY, xOffset, yOffset);
         }
-        Context themedContext = new ContextThemeWrapper(mContext, R.style.PowerMenuTheme);
-        View decorView = ((Activity) anchor.getContext()).getWindow().getDecorView();
-        int[] decorLocation = new int[2];
-        decorView.getLocationOnScreen(decorLocation);
-        int xOffset = mTouchX - decorLocation[0];
-        int yOffset = mTouchY - decorLocation[1];
-
-        String targetText = mContext.getString(R.string.start_auto_scraper_activity);
-        Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
-        float textSizeSp = 16f;
-        Resources res = mContext.getResources();
-        DisplayMetrics metrics = res.getDisplayMetrics();
-        Paint paint = new Paint();
-        paint.setTypeface(typeface);
-        paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSizeSp, metrics));
-        float textWidth = paint.measureText(targetText);
-        int internalPaddingPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, metrics); // 16dp start + 16dp end
-        int externalMarginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics);
-        int menuWidth = (int) (textWidth + internalPaddingPx + externalMarginPx);
-
-        PowerMenu powerMenu = new PowerMenu.Builder(themedContext)
-                .addItemList(menuItems)
-                .setMenuRadius(16f)
-                .setMenuShadow(8f)
-                .setAnimation(MenuAnimation.DROP_DOWN)
-                .setAutoDismiss(true)
-                .setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
-                .setHeaderView(R.layout.power_menu_header)
-                .setWidth(menuWidth) // ⬅ set width here
-                .build();
-        ListView listView = powerMenu.getMenuListView();
-        CustomPowerMenuAdapter adapter = new CustomPowerMenuAdapter(listView);
-        adapter.addItemList(menuItems);
-        listView.setAdapter(adapter);
-
-        View header = powerMenu.getHeaderView();
-        TextView headerText = header.findViewById(R.id.header_title);
-        if (metaFile2) {
-            headerText.setText(((MetaFile2) object).getName());
-        }
-
-        View menuListView = powerMenu.getMenuListView();
-        if (menuListView != null) {
-            View parent = (View) menuListView.getParent();
-            GradientDrawable bg = new GradientDrawable();
-            bg.setColor(ContextCompat.getColor(mContext, R.color.tranparent_deep_blue));
-            float radiusPx = TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP, 12f, mContext.getResources().getDisplayMetrics());
-            int strokeWidthPx = (int) TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP, 1f, mContext.getResources().getDisplayMetrics());
-            bg.setCornerRadius(radiusPx);
-            bg.setStroke(strokeWidthPx, ContextCompat.getColor(mContext, R.color.black));
-            parent.setBackground(bg);
-        }
-
-        powerMenu.setOnMenuItemClickListener((positionClicked, item) -> {
-            String titleClicked = ((PowerMenuItem) item).title.toString();
-            handlePowerMenuClick(titleClicked, object, position);
-        });
-        powerMenu.showAtLocation(decorView, Gravity.NO_GRAVITY, xOffset, yOffset);
     }
 
     private void handlePowerMenuClick(String title, Object object, int position) {
@@ -638,6 +652,18 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                 // We need the position for BrowserByFolder.
                 mDeletedPosition = position;
                 showConfirmDeleteDialog(false, toDelete);
+            }
+        } else if (title.equals(mContext.getString(R.string.start_auto_scraper_activity))){
+            // Search all the videos located in the selected folder or its
+            // sub-folders
+            Object obj = mFilesAdapter.getItem(position);
+            String path;
+            if(obj instanceof MetaFile2)
+                path = ((MetaFile2)obj).getUri().toString();
+            else
+                path  = ((Video)obj).getFileUri().toString();
+            if (path != null) {
+                startOnlineSearchForFolder(path);
             }
         }
     }

@@ -27,6 +27,8 @@ import com.archos.filecorelibrary.MetaFile2;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediascraper.NfoExportService;
+import com.skydoves.powermenu.PowerMenuItem;
+import java.util.List;
 
 public abstract class BrowserByLocalFolder extends BrowserByFolder {
 
@@ -44,13 +46,22 @@ public abstract class BrowserByLocalFolder extends BrowserByFolder {
         }
 
         if (info != null && getFileType(info.position) == FileExtendedInfo.FileType.Directory) {
-            menu.add(0, R.string.start_auto_scraper_activity, 0,
-                    R.string.start_auto_scraper_activity);
+            //menu.add(0, R.string.start_auto_scraper_activity, 0,
+            //        R.string.start_auto_scraper_activity);
             // TODO unhide
             // menu.add(0, R.string.nfo_export_folder, 0, R.string.nfo_export_folder);
         }
     }
 
+    @Override
+    protected void customizePowerMenuItems(List<PowerMenuItem> items, Object object, int position) {
+        if (object instanceof MetaFile2) {
+            MetaFile2 file = (MetaFile2) object;
+            if (file.isDirectory()) {
+                items.add(new PowerMenuItem(mContext.getString(R.string.start_auto_scraper_activity)));
+            }
+        }
+    }
 
 
 
