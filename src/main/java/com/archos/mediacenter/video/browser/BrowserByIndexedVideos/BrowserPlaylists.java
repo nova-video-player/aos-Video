@@ -145,4 +145,9 @@ public class BrowserPlaylists extends BrowserMoviesBy {
         }
         return true;
     }
+
+    @Override
+    public String getActionBarTitle() {
+        return getString(R.string.video_lists);
+    }
 }
