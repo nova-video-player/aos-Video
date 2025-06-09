@@ -177,6 +177,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     protected int mTouchX;
     protected int mTouchY;
     protected boolean mIsClickValid;
+    protected boolean mIgnoreNextClick = false;
     protected View mRootView;
     protected ActionBarSubmenu mDisplayModeSubmenu;
     protected ActionBarSubmenu mSortModeSubmenu;
@@ -932,8 +933,8 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             // Remember where the user clicked
-            mTouchX = (int)event.getX();
-            mTouchY = (int)event.getY();
+            mTouchX = (int) event.getRawX();
+            mTouchY = (int) event.getRawY();
         }
         return false;
     }
@@ -976,6 +977,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     }
     @Override
     public boolean onItemLongClick(AdapterView parent, View v, int position, long id) {
+        mIgnoreNextClick = true; // suppress the following click
         return mMultiplePositionEnabled; // disable context menu when multiple selection is enabled
 
     }

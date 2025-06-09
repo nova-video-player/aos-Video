@@ -17,19 +17,32 @@ package com.archos.mediacenter.video.browser;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
@@ -67,6 +80,10 @@ import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.SubtitlesWizardActivity;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
+import com.skydoves.powermenu.MenuAnimation;
+import com.skydoves.powermenu.MenuBaseAdapter;
+import com.skydoves.powermenu.PowerMenu;
+import com.skydoves.powermenu.PowerMenuItem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,8 +144,6 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
     // This will display the menu with enabled actions for the file.
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-
         AdapterContextMenuInfo info;
         try {
             info = (AdapterContextMenuInfo) menuInfo;
@@ -136,120 +151,237 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
             log.error("onCreateContextMenu: bad menuInfo", e);
             return;
         }
-        // This can be null sometimes, don't crash...
+
         if (info == null) {
-            log.error("onCreateContextMenu: bad menuInfo");
+            log.error("onCreateContextMenu: null info");
             return;
         }
 
-        final int position = info.position;
-        final Video video = mAdapterByVideoObjects.getVideoItem(position);
+        int position = info.position;
+        Video video = mAdapterByVideoObjects.getVideoItem(position);
+        if (!isItemClickable(position)) return;
 
+        showPowerMenu(v, video, position);
+    }
 
-        if (!isItemClickable(position)) {
-            return;
-        }
-        if(video instanceof Episode){
-            menu.setHeaderTitle(applyCustomFont(((Episode) video).getShowName()+": "+video.getName()));
-        }
-        else
-             menu.setHeaderTitle(applyCustomFont(video.getName()));
-        String entryPath = video.getFilePath();
+    private void showPowerMenu(View anchor, Video video, int position) {
+        List<PowerMenuItem> menuItems = new ArrayList<>();
+
+        // Optional title (non-clickable if needed)
+        String title = video instanceof Episode
+                ? ((Episode) video).getShowName() + ": " + video.getName()
+                : video.getName();
+        //menuItems.add(new PowerMenuItem(title, false)); // `false` disables click highlight
+
+        menuItems.add(new PowerMenuItem(mContext.getString(R.string.play_selection)));
 
         final int resumePosition = video.getResumeMs();
         final boolean resume = resumePosition > 0;
-        final boolean delete = !FileUtils.isSlowRemote(Uri.parse(entryPath)) && video.locationSupportsDelete();
+        final boolean delete = !FileUtils.isSlowRemote(Uri.parse(video.getFilePath())) && video.locationSupportsDelete();
         final boolean markAsTrakt = Trakt.isTraktV2Enabled(mContext, mPreferences);
         final boolean isNetwork = !FileUtils.isLocal(video.getFileUri());
-        menu.add(0, R.string.play_from_beginning, 0, applyCustomFont(R.string.play_selection));
+
         if (resume && resumePosition != PlayerActivity.LAST_POSITION_END) {
-            menu.findItem(R.string.play_from_beginning).setTitle(applyCustomFont(R.string.play_from_beginning));
-            String resumeString = mContext.getString(R.string.resume) + " (" + MediaUtils.formatTime(resumePosition) + ")";
-            SpannableString styledResume = new SpannableString(resumeString);
-            Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
-            String family ="";
-            int color = ContextCompat.getColor(mContext, android.R.color.white);
-            float textSize = 18f; // in SP
-            styledResume.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, resumeString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            menu.add(0, R.string.resume, 0, styledResume);
+            String resumeText = mContext.getString(R.string.resume) + " (" + MediaUtils.formatTime(resumePosition) + ")";
+            menuItems.add(new PowerMenuItem(resumeText));
         }
-
         if (delete)
-            menu.add(0, R.string.delete, 0, applyCustomFont(R.string.delete));
+            menuItems.add(new PowerMenuItem(mContext.getString(R.string.delete)));
         if (resume)
-            menu.add(0, R.string.delete_resume, 0, applyCustomFont(R.string.delete_resume));
+            menuItems.add(new PowerMenuItem(mContext.getString(R.string.delete_resume)));
 
-        menu.add(0, R.string.info, 0, applyCustomFont(R.string.info));
-        if(!(video instanceof NonIndexedVideo)) {
+        menuItems.add(new PowerMenuItem(mContext.getString(R.string.info)));
+
+        if (!(video instanceof NonIndexedVideo)) {
             if (markAsTrakt) {
-                if (!video.isWatched())
-                    menu.add(0, R.string.mark_as_watched, 0, applyCustomFont(R.string.mark_as_watched));
-                else
-                    menu.add(0, R.string.mark_as_not_watched, 0, applyCustomFont(R.string.mark_as_not_watched));
+                menuItems.add(new PowerMenuItem(mContext.getString(
+                        video.isWatched() ? R.string.mark_as_not_watched : R.string.mark_as_watched)));
             } else {
-                if (resumePosition != PlayerActivity.LAST_POSITION_END)
-                    menu.add(0, R.string.mark_as_watched, 0, applyCustomFont(R.string.mark_as_watched));
-                else
-                    menu.add(0, R.string.mark_as_not_watched, 0, applyCustomFont(R.string.mark_as_not_watched));
+                menuItems.add(new PowerMenuItem(mContext.getString(
+                        resumePosition != PlayerActivity.LAST_POSITION_END
+                                ? R.string.mark_as_watched : R.string.mark_as_not_watched)));
             }
         }
-        final int f_position = position;
-        final Activity activity = getActivity();
-        // Subtitles wizard
-        if(!isNetwork)
-            menu.add(applyCustomFont(R.string.get_subtitles_on_drive)).setOnMenuItemClickListener(
-                    new OnMenuItemClickListener() {
-                        public boolean onMenuItemClick(MenuItem item) {
-                            Intent intent = new Intent(Intent.ACTION_MAIN);
-                            intent.setClass(mContext, SubtitlesWizardActivity.class);
-                            intent.setData(video.getFileUri());
-                            activity.startActivity(intent);
-                            return true;
-                        }
-                    });
 
+        if (!isNetwork)
+            menuItems.add(new PowerMenuItem(mContext.getString(R.string.get_subtitles_on_drive)));
 
-        // Subloader
-        menu.add(0, R.string.get_subtitles_online, 0, applyCustomFont(R.string.get_subtitles_online));
+        menuItems.add(new PowerMenuItem(mContext.getString(R.string.get_subtitles_online)));
 
-        if(video.hasScraperData()){
-            menu.add(0, R.string.add_to_list, 0, applyCustomFont(R.string.add_to_list));
+        if (video.hasScraperData())
+            menuItems.add(new PowerMenuItem(mContext.getString(R.string.add_to_list)));
 
-        }
+        menuItems.add(new PowerMenuItem(mContext.getString(
+                video.getId() > 0 ? R.string.video_browser_unindex_file : R.string.video_browser_index_file)));
 
-        // Propose to remove from DB the files that are indexed
-        if (video.getId()>0) {
-            menu.add(0, R.string.video_browser_unindex_file, 0, applyCustomFont(R.string.video_browser_unindex_file));
-        }
-        else
-            menu.add(0, R.string.video_browser_index_file, 0, applyCustomFont(R.string.video_browser_index_file));
-        if(isNetwork){
-            menu.add(0, R.string.copy_on_device, 0, applyCustomFont(R.string.copy_on_device));
+        if (isNetwork)
+            menuItems.add(new PowerMenuItem(mContext.getString(R.string.copy_on_device)));
 
-        }
-    }
+        Context themedContext = new ContextThemeWrapper(mContext, R.style.PowerMenuTheme);
 
-    private SpannableString applyCustomFont(@StringRes int resId) {
-        String family ="";
+        View decorView = ((Activity) anchor.getContext()).getWindow().getDecorView();
+
+        int[] decorLocation = new int[2];
+        decorView.getLocationOnScreen(decorLocation);
+
+        int xOffset = mTouchX - decorLocation[0];
+        int yOffset = mTouchY - decorLocation[1];
+
+        Log.d("PowerMenu", "DecorView location: " + decorLocation[0] + "," + decorLocation[1]);
+        Log.d("PowerMenu", "Calculated offsets: " + xOffset + "," + yOffset);
+
+        String targetText = mContext.getString(R.string.get_subtitles_on_drive);
         Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
-        int color = ContextCompat.getColor(mContext, android.R.color.white);
-        float textSize = 18f; // in SP
-        String text = mContext.getString(resId);
-        SpannableString spannable = new SpannableString(text);
-        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spannable;
+        float textSizeSp = 16f;
+
+        Resources res = mContext.getResources();
+        DisplayMetrics metrics = res.getDisplayMetrics();
+
+        // Measure the text width
+        Paint paint = new Paint();
+        paint.setTypeface(typeface);
+        paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSizeSp, metrics));
+        float textWidth = paint.measureText(targetText);
+
+        // Calculate padding and margin (in pixels)
+        int internalPaddingPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, metrics); // 16dp start + 16dp end
+        int externalMarginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics);
+
+        int menuWidth = (int) (textWidth + internalPaddingPx + externalMarginPx);
+
+        PowerMenu powerMenu = new PowerMenu.Builder(themedContext)
+                .addItemList(menuItems)
+                .setMenuRadius(16f)
+                .setMenuShadow(8f)
+                .setAnimation(MenuAnimation.DROP_DOWN)
+                //.setAnimationStyle(android.R.style.Animation_Dialog)
+                .setAutoDismiss(true)
+                .setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+                .setHeaderView(R.layout.power_menu_header)
+                .setWidth(menuWidth) // ⬅ set width here
+                .build();
+        ListView listView = powerMenu.getMenuListView();
+        CustomPowerMenuAdapter adapter = new CustomPowerMenuAdapter(listView);
+        adapter.addItemList(menuItems);
+        listView.setAdapter(adapter);
+
+        View header = powerMenu.getHeaderView();
+        if (header != null) {
+            TextView headerText = header.findViewById(R.id.header_title);
+            headerText.setText(title);
+        }
+
+        View menuListView = powerMenu.getMenuListView();
+        if (menuListView != null) {
+            View parent = (View) menuListView.getParent();
+
+            // Create a drawable with corner radius and stroke
+            GradientDrawable bg = new GradientDrawable();
+            bg.setColor(ContextCompat.getColor(mContext, R.color.tranparent_deep_blue)); // Fill color
+
+            // Convert dp to pixels
+            float radiusPx = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 12f, mContext.getResources().getDisplayMetrics());
+            int strokeWidthPx = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 1f, mContext.getResources().getDisplayMetrics());
+
+            // Set radius and stroke
+            bg.setCornerRadius(radiusPx);
+            bg.setStroke(strokeWidthPx, ContextCompat.getColor(mContext, R.color.black)); // Replace with your color
+
+            parent.setBackground(bg);
+        }
+
+        powerMenu.setOnMenuItemClickListener((positionClicked, item) -> {
+            // Dismiss menu on the next message loop to avoid race conditions
+            //anchor.post(() -> powerMenu.dismiss());
+            String titleClicked = ((PowerMenuItem) item).title.toString();
+            handlePowerMenuClick(titleClicked, video, position);
+        });
+        Log.d("PowerMenu", "Anchor attached: " + anchor.isAttachedToWindow());
+        powerMenu.showAtLocation(decorView, Gravity.NO_GRAVITY, xOffset, yOffset);
     }
 
-    private SpannableString applyCustomFont(String text) {
-        String family = "";
-        Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
-        int color = ContextCompat.getColor(mContext, R.color.yellow_light);
-        float textSize = 22f; // in SP
-        SpannableString spannable = new SpannableString(text);
-        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spannable;
+    public class CustomPowerMenuAdapter extends MenuBaseAdapter<PowerMenuItem> {
+        public CustomPowerMenuAdapter(ListView listView) {
+            super(listView);
+        }
+        @Override
+        public View getView(int index, View convertView, ViewGroup parent) {
+            View view = convertView;
+            if (view == null) {
+                LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+                view = inflater.inflate(R.layout.item_power_menu, parent, false);
+            }
+            PowerMenuItem item = (PowerMenuItem) getItem(index);
+            TextView title = view.findViewById(R.id.menu_item_title);
+            title.setText(((PowerMenuItem) item).title.toString());
+            return view;
+        }
     }
 
+    private void handlePowerMenuClick(String title, Video video, int position) {
+        int resumePosition = video.getResumeMs();
+        boolean resumeAvailable = resumePosition > 0 && resumePosition != PlayerActivity.LAST_POSITION_END;
+
+        if (title.equals(mContext.getString(R.string.play_selection)) ||
+                title.equals(mContext.getString(R.string.play_from_beginning))) {
+            startVideo(video, PlayerActivity.RESUME_NO);
+        } else if (title.startsWith(mContext.getString(R.string.resume))) {
+            startVideo(video, PlayerActivity.RESUME_FROM_LAST_POS);
+        } else if (title.equals(mContext.getString(R.string.info))) {
+            displayInfo(position);
+        } else if (title.equals(mContext.getString(R.string.video_browser_index_file))) {
+            VideoStore.requestIndexing(video.getFileUri(), getActivity());
+        } else if (title.equals(mContext.getString(R.string.video_browser_unindex_file))) {
+            updateDbXml(position, UpdateDbXmlType.HIDE, 1);
+        } else if (title.equals(mContext.getString(R.string.delete_resume))) {
+            updateDbXml(position, UpdateDbXmlType.RESUME, -1);
+            if (Trakt.isTraktV2Enabled(getActivity(), mPreferences)) {
+                new TraktService.Client(mContext, null, false).watchingStop(video.getId(), 0);
+            }
+        } else if (title.equals(mContext.getString(R.string.delete))) {
+            if (ArchosSettings.isDemoModeActive(getActivity())) {
+                getActivity().startService(
+                        new Intent(ArchosIntents.ACTION_DEMO_MODE_FEATURE_DISABLED));
+            } else {
+                List<Uri> toDelete = new ArrayList<>();
+                toDelete.add(video.getFileUri());
+                mDeletedPosition = position;
+                showConfirmDeleteDialog(false, toDelete);
+            }
+        } else if (title.equals(mContext.getString(R.string.mark_as_watched))) {
+            markAsRead(position, true,
+                    mPreferences.getBoolean(BrowserByNetwork.KEY_NETWORK_BOOKMARKS, true));
+        } else if (title.equals(mContext.getString(R.string.mark_as_not_watched))) {
+            markAsNotRead(position, true,
+                    mPreferences.getBoolean(BrowserByNetwork.KEY_NETWORK_BOOKMARKS, true));
+        } else if (title.equals(mContext.getString(R.string.get_subtitles_on_drive))) {
+            Activity activity = getActivity();
+            // Subtitles wizard
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setClass(mContext, SubtitlesWizardActivity.class);
+            intent.setData(video.getFileUri());
+            activity.startActivity(intent);
+        } else if (title.equals(mContext.getString(R.string.get_subtitles_online))) {
+            Intent subIntent = new Intent(Intent.ACTION_MAIN);
+            subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
+            subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, video.getFileUri().toString());
+            getActivity().startActivity(subIntent);
+        } else if (title.equals(mContext.getString(R.string.copy_on_device))) {
+            List<Uri> toCopy = new ArrayList<>();
+            toCopy.add(video.getFileUri());
+            startDownloadingVideo(toCopy);
+        } else if (title.equals(mContext.getString(R.string.add_to_list))) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(ListDialog.EXTRA_VIDEO, video);
+            ListDialog dialog = new ListDialog();
+            dialog.setArguments(bundle);
+            dialog.show(getActivity().getSupportFragmentManager(), "list_dialog");
+        } else {
+            log.warn("Unhandled PowerMenu click: " + title);
+        }
+    }
 
     public void startVideo(int video, int resume) {
 
@@ -257,6 +389,10 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
     @Override
     public void onItemClick(AdapterView parent, View v, int position, long id) {
         super.onItemClick(parent, v, position, id);
+        if (mIgnoreNextClick) {
+            mIgnoreNextClick = false; // reset
+            return; // ignore this click — it was actually a long-click
+        }
         if (mIsClickValid) {
             Object itemData = mBrowserAdapter.getItem(position);
             if (itemData instanceof Video) {

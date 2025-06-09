@@ -405,4 +405,7 @@
         <item name="android:windowMinWidthMajor">85%</item>
         <item name="android:windowMinWidthMinor">85%</item>
     </style>
+
+    <style name="PowerMenuTheme" parent="Theme.MaterialComponents.Light">
+    </style>
 </resources>

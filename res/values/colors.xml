@@ -77,4 +77,6 @@
     <color name="light_orange">#CC9900</color>
     <color name="deep_blue">#0B1F35</color>
     <color name="ripple_orange">#33FFA500</color> <!-- translucent orange -->
+    <color name="tranparent_deep_blue">#E6041324</color>
+    <color name="deep_sky_blue">#00BFFF</color>
 </resources>

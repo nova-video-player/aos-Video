@@ -349,6 +349,7 @@ dependencies {
     implementation 'io.sentry:sentry-android:7.19.1'
     implementation 'io.sentry:sentry:7.19.1'
     implementation "androidx.dynamicanimation:dynamicanimation:1.0.0"
+    implementation "com.github.skydoves:powermenu:2.2.4"
 }
 
 configurations { // try to exclude device specific libraries interfering
