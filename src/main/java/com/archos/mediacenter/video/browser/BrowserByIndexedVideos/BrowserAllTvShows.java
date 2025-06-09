@@ -15,20 +15,31 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.ContextMenu;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
@@ -55,13 +66,18 @@ import com.archos.mediacenter.video.browser.presenter.TvshowGridPresenter;
 import com.archos.mediacenter.video.browser.presenter.TvshowGridShortPresenter;
 import com.archos.mediacenter.video.browser.presenter.TvshowListPresenter;
 import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
+import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStore.Video.VideoColumns;
+import com.skydoves.powermenu.MenuAnimation;
+import com.skydoves.powermenu.PowerMenu;
+import com.skydoves.powermenu.PowerMenuItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BrowserAllTvShows extends CursorBrowserByVideo {
 
@@ -187,7 +203,7 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		//menu.add(0, R.string.delete, 0, R.string.delete);
-		menu.add(0, R.string.info, 0, applyCustomFont(R.string.info));
+		//menu.add(0, R.string.info, 0, applyCustomFont(R.string.info));
 		// Subloader
 		//menu.add(0, R.string.get_subtitles_online, 0, R.string.get_subtitles_online);
 		//menu.add(0, R.string.video_browser_unindex_file, 0, R.string.video_browser_unindex_file);
@@ -213,7 +229,92 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 
 		if(distant)
 			menu.add(0, R.string.copy_on_device_multi, 0, R.string.copy_on_device_multi);
+
+		showPowerMenu(v, tvshow, info.position);
 	}
+
+	private void showPowerMenu(View anchor, Tvshow tvshow, int position) {
+		List<PowerMenuItem> menuItems = new ArrayList<>();
+		menuItems.add(new PowerMenuItem(mContext.getString(R.string.info)));
+		menuItems.add(new PowerMenuItem(mContext.getString(R.string.get_subtitles_online)));
+		Context themedContext = new ContextThemeWrapper(mContext, R.style.PowerMenuTheme);
+		View decorView = ((Activity) anchor.getContext()).getWindow().getDecorView();
+		int[] decorLocation = new int[2];
+		decorView.getLocationOnScreen(decorLocation);
+		int xOffset = mTouchX - decorLocation[0];
+		int yOffset = mTouchY - decorLocation[1];
+
+		String targetText = mContext.getString(R.string.get_subtitles_online);
+		Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
+		float textSizeSp = 16f;
+		Resources res = mContext.getResources();
+		DisplayMetrics metrics = res.getDisplayMetrics();
+		// Measure the text width
+		Paint paint = new Paint();
+		paint.setTypeface(typeface);
+		paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSizeSp, metrics));
+		float textWidth = paint.measureText(targetText);
+		// Calculate padding and margin (in pixels)
+		int internalPaddingPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, metrics); // 16dp start + 16dp end
+		int externalMarginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics);
+		int menuWidth = (int) (textWidth + internalPaddingPx + externalMarginPx);
+
+		PowerMenu powerMenu = new PowerMenu.Builder(themedContext)
+				.addItemList(menuItems)
+				.setMenuRadius(16f)
+				.setMenuShadow(8f)
+				.setAnimation(MenuAnimation.DROP_DOWN)
+				//.setAnimationStyle(android.R.style.Animation_Dialog)
+				.setAutoDismiss(true)
+				.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
+				.setWidth(menuWidth) // ⬅ set width here
+				.build();
+		ListView listView = powerMenu.getMenuListView();
+		CustomPowerMenuAdapter adapter = new CustomPowerMenuAdapter(listView);
+		adapter.addItemList(menuItems);
+		listView.setAdapter(adapter);
+
+		View menuListView = powerMenu.getMenuListView();
+		if (menuListView != null) {
+			View parent = (View) menuListView.getParent();
+
+			// Create a drawable with corner radius and stroke
+			GradientDrawable bg = new GradientDrawable();
+			bg.setColor(ContextCompat.getColor(mContext, R.color.tranparent_deep_blue)); // Fill color
+
+			// Convert dp to pixels
+			float radiusPx = TypedValue.applyDimension(
+					TypedValue.COMPLEX_UNIT_DIP, 12f, mContext.getResources().getDisplayMetrics());
+			int strokeWidthPx = (int) TypedValue.applyDimension(
+					TypedValue.COMPLEX_UNIT_DIP, 1f, mContext.getResources().getDisplayMetrics());
+
+			// Set radius and stroke
+			bg.setCornerRadius(radiusPx);
+			bg.setStroke(strokeWidthPx, ContextCompat.getColor(mContext, R.color.black)); // Replace with your color
+
+			parent.setBackground(bg);
+		}
+		powerMenu.setOnMenuItemClickListener((positionClicked, item) -> {
+			// Dismiss menu on the next message loop to avoid race conditions
+			//anchor.post(() -> powerMenu.dismiss());
+			String titleClicked = ((PowerMenuItem) item).title.toString();
+			handlePowerMenuClick(titleClicked, tvshow, position);
+		});
+		Log.d("PowerMenu", "Anchor attached: " + anchor.isAttachedToWindow());
+		powerMenu.showAtLocation(decorView, Gravity.NO_GRAVITY, xOffset, yOffset);
+	}
+
+	private void handlePowerMenuClick(String title, Tvshow tvshow, int position) {
+		if (title.equals(mContext.getString(R.string.info))) {
+			displayInfo(position);
+		} else if (title.equals(mContext.getString(R.string.get_subtitles_online))) {
+			Intent subIntent = new Intent(Intent.ACTION_MAIN);
+			subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
+			subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, getRealPathUriFromPosition(position).toString());
+			getActivity().startActivity(subIntent);
+		}
+	}
+
 	private Cursor getEpisodeForShowCursor(long showId){
 		String [] projection2 = new String[]{VideoStore.MediaColumns.DATA,VideoStore.Files.FileColumns._ID};
 		String []  args2 = new String[]{String.valueOf(showId)};
@@ -348,6 +449,10 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 
     @Override
     public void onItemClick(AdapterView parent, View v, int position, long id) {
+		if (mIgnoreNextClick) {
+			mIgnoreNextClick = false; // reset
+			return; // ignore this click — it was actually a long-click
+		}
     	if(mMultiplePositionEnabled){
     		super.onItemClick(parent, v, position, id);
     		return;
