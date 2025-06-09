@@ -338,6 +338,10 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 
 	@Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
+		if (mIgnoreNextClick) {
+			mIgnoreNextClick = false; // reset
+			return; // ignore this click — it was actually a long-click
+		}
 	    // Prepare the list of movies and the title, to be given to the opened fragment
         Bundle args = new Bundle(2);
         args.putString(BrowserByVideoSelection.LIST_OF_IDS, ((GroupOfMovieAdapter)mBrowserAdapter).getListOfMoviesIds(position));
