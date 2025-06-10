@@ -408,4 +408,20 @@
 
     <style name="PowerMenuTheme" parent="Theme.MaterialComponents.Light">
     </style>
+
+    <style name="MovieCategory" parent="Theme.AppCompat">
+        <item name="actionDropDownStyle">@style/Widget.MovieCategory.Spinner</item>
+        <item name="actionBarStyle">@style/Widget.MovieCategory.ActionBar</item>
+    </style>
+
+    <style name="Widget.MovieCategory.Spinner" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:popupBackground">@android:color/transparent</item>
+        <item name="android:dropDownSelector">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.MovieCategory.ActionBar" parent="Widget.AppCompat.ActionBar">
+        <item name="displayOptions">showCustom</item>
+        <item name="background">@android:color/transparent</item>
+    </style>
 </resources>

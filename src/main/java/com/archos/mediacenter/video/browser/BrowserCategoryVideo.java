@@ -24,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import android.view.ViewGroup;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserAllMovies;
@@ -175,16 +177,26 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
         else if (mSelectedItemId == ITEM_ID_MOVIES) {
             setupMovieActionBarNavigation(true);
             // refresh the category list
-
         }
         else {
             //default case is no navigation in action bar
             ((MainActivity)getActivity()).hideSeachView();
             setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            
+            // Reset action bar to default state
+            androidx.appcompat.app.ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
+            if (ab != null) {
+                ab.setDisplayShowTitleEnabled(true);
+                ab.setDisplayShowHomeEnabled(true);
+                ab.setDisplayShowCustomEnabled(false);
+                ab.setCustomView(null);
+                // Reset theme to default
+                getActivity().setTheme(R.style.AppTheme);
+            }
+            
             // and it is handled by the parent class
             super.setFragment(path);
         }
-
     }
 
     /**
@@ -193,21 +205,99 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
      */
     private void setupMovieActionBarNavigation(boolean setupTheFragmentAsWell) {
          androidx.appcompat.app.ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        // Apply custom theme
+        getActivity().setTheme(R.style.MovieCategory);
         // no title in that case
         ab.setTitle("");
-        // navigation drop-down instead
-        setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        // build the localized string list
-        String[] movieCategoriesNames = new String[MOVIE_CATEGORIES_NAMES_ID.length];
-        for (int i=0; i<MOVIE_CATEGORIES_NAMES_ID.length; i++) {
-            movieCategoriesNames[i] = getResources().getString(MOVIE_CATEGORIES_NAMES_ID[i]);
-        }
-        ab.setListNavigationCallbacks( new ArrayAdapter(getActivity(), R.layout.movie_browser_type, movieCategoriesNames), this);
+        // Hide all default ActionBar elements
+        ab.setDisplayShowTitleEnabled(false);
+        ab.setDisplayShowHomeEnabled(false);
+        ab.setDisplayShowCustomEnabled(true);
+
+        // Set up custom view with click handling
+        View customView = getLayoutInflater().inflate(R.layout.movie_category_selected_item, null);
+        TextView textView = customView.findViewById(R.id.text1);
+        // Set initial text
+        int currentPosition = PreferenceManager.getDefaultSharedPreferences(getActivity())
+            .getInt(KEY_ACTIONBAR_NAVIGATION_POSITION, KEY_ACTIONBAR_NAVIGATION_POSITION_DEFAULT);
+        textView.setText(getResources().getString(MOVIE_CATEGORIES_NAMES_ID[currentPosition]));
+        
+        // Make sure the view is clickable
+        customView.setClickable(true);
+        customView.setFocusable(true);
+        
+        customView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create and show the dropdown menu
+                android.widget.ListPopupWindow popupWindow = new android.widget.ListPopupWindow(getActivity());
+                popupWindow.setAnchorView(v);
+                popupWindow.setHeight(android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+                popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.menu_bg));
+                popupWindow.setModal(true);
+                popupWindow.setInputMethodMode(android.widget.PopupWindow.INPUT_METHOD_NOT_NEEDED);
+
+                // Create adapter with our custom layout
+                String[] movieCategoriesNames = new String[MOVIE_CATEGORIES_NAMES_ID.length];
+                for (int i = 0; i < MOVIE_CATEGORIES_NAMES_ID.length; i++) {
+                    movieCategoriesNames[i] = getResources().getString(MOVIE_CATEGORIES_NAMES_ID[i]);
+                }
+                
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                    getActivity(),
+                    R.layout.movie_category_dropdown_item,
+                    R.id.text1,
+                    movieCategoriesNames
+                ) {
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        View view = super.getView(position, convertView, parent);
+                        if (view != null) {
+                            view.setClickable(true);
+                            view.setFocusable(true);
+                            view.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int pos = (Integer) v.getTag();
+                                    TextView tv = customView.findViewById(R.id.text1);
+                                    tv.setText(getResources().getString(MOVIE_CATEGORIES_NAMES_ID[pos]));
+                                    onNavigationItemSelected(pos, pos);
+                                    popupWindow.dismiss();
+                                }
+                            });
+                            view.setTag(position);
+                        }
+                        return view;
+                    }
+                };
+
+                // Calculate the width based on the widest item
+                int maxWidth = 0;
+                android.graphics.Paint paint = new android.graphics.Paint();
+                paint.setTextSize(getResources().getDimension(R.dimen.video_info_medium_text));
+
+                for (int i = 0; i < MOVIE_CATEGORIES_NAMES_ID.length; i++) {
+                    String text = getResources().getString(MOVIE_CATEGORIES_NAMES_ID[i]);
+                    float textWidth = paint.measureText(text);
+                    // Add padding for the layout and dropdown arrow
+                    int itemWidth = (int) (textWidth + getResources().getDimension(R.dimen.help_overlay_right_offset) * 4 + 16); // 4dp for dropdown arrow
+                    maxWidth = Math.max(maxWidth, itemWidth);
+                }
+                // Set the width to the calculated max width
+                popupWindow.setWidth(maxWidth);
+                
+                popupWindow.setAdapter(adapter);
+                popupWindow.show();
+            }
+        });
+        
+        ab.setCustomView(customView);
 
         // Set default value
-        int defaultListPosition = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(KEY_ACTIONBAR_NAVIGATION_POSITION, KEY_ACTIONBAR_NAVIGATION_POSITION_DEFAULT);
-        mNavigationItemListenerActive = setupTheFragmentAsWell; // we want the listener to be called only if the fragment is not created yet
-        ab.setSelectedNavigationItem(defaultListPosition);
+        mNavigationItemListenerActive = setupTheFragmentAsWell;
+        if (setupTheFragmentAsWell) {
+            onNavigationItemSelected(currentPosition, currentPosition);
+        }
     }
 
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
