@@ -412,6 +412,7 @@
     <style name="MovieCategory" parent="Theme.AppCompat">
         <item name="actionDropDownStyle">@style/Widget.MovieCategory.Spinner</item>
         <item name="actionBarStyle">@style/Widget.MovieCategory.ActionBar</item>
+        <item name="actionOverflowMenuStyle">@style/CustomPopupMenu</item>
     </style>
 
     <style name="Widget.MovieCategory.Spinner" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">
@@ -423,5 +424,11 @@
     <style name="Widget.MovieCategory.ActionBar" parent="Widget.AppCompat.ActionBar">
         <item name="displayOptions">showCustom</item>
         <item name="background">@android:color/transparent</item>
+    </style>
+
+    <style name="CustomPopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:popupBackground">@drawable/menu_bg</item>
+        <item name="colorAccent">@color/green_accent</item>
+        <item name="android:colorAccent">@color/green_accent</item>
     </style>
 </resources>
