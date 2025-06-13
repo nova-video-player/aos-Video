@@ -134,6 +134,7 @@ import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.mediacenter.video.player.PlayerService;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.video.utils.DelayedBackgroundLoader;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
@@ -1903,30 +1904,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     }
 
     private void addMenu(int groupId, int itemId, int order, int titleRes) {
-        Typeface customFont = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_55rg);
+        String family ="";
+        Typeface customFont = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
+        float textSize = 18f; // in SP
+        int color = ContextCompat.getColor(mContext, android.R.color.white);
         SpannableString s = new SpannableString(getString(titleRes));
-        s.setSpan(new CustomTypefaceSpan(customFont), 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.setSpan(new CustomTypefaceSpan(family, customFont, textSize, color), 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         mTitleBar.getMenu().add(groupId, itemId, order, s);
-    }
-
-    public class CustomTypefaceSpan extends TypefaceSpan {
-        private final Typeface newType;
-        public CustomTypefaceSpan(Typeface type) {
-            super("");
-            newType = type;
-        }
-        @Override
-        public void updateDrawState(TextPaint ds) {
-            applyCustomTypeFace(ds, newType);
-        }
-        @Override
-        public void updateMeasureState(TextPaint paint) {
-            applyCustomTypeFace(paint, newType);
-        }
-        private static void applyCustomTypeFace(Paint paint, Typeface tf) {
-            paint.setTypeface(tf);
-        }
     }
 
     private void getThumbnailSync(final Video video) {
