@@ -1361,7 +1361,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         spinner.setDropDownWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
 
         // Strip padding and min width
-        spinner.setPadding(0, 0, 0, 0);
+        spinner.setPadding(0, 0, 0, 9);
         spinner.setMinimumWidth(0);
 
         // Fix padding inside selected item
