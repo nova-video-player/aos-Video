@@ -413,6 +413,8 @@
         <item name="actionDropDownStyle">@style/Widget.MovieCategory.Spinner</item>
         <item name="actionBarStyle">@style/Widget.MovieCategory.ActionBar</item>
         <item name="actionOverflowMenuStyle">@style/CustomPopupMenu</item>
+        <item name="colorAccent">@color/green_accent</item>
+        <item name="android:colorAccent">@color/green_accent</item>
     </style>
 
     <style name="Widget.MovieCategory.Spinner" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">
