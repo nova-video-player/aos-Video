@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser;
 
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.preference.PreferenceManager;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.ActionBar;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
+import android.widget.Spinner;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserAllMovies;
@@ -238,6 +240,24 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
             mNavigationItemListenerActive = true; // regular state is active, to get user feedback
             return true;
         }
+
+        // Save the position in the preferences
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .edit()
+                .putInt(KEY_ACTIONBAR_NAVIGATION_POSITION, itemPosition)
+                .apply();
+
+        // Get the spinner and update its width
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+            ViewGroup toolbar = (ViewGroup) activity.findViewById(R.id.main_toolbar);
+            Spinner spinner = (Spinner) toolbar.getChildAt(0);
+            if (spinner != null) {
+                spinner.setSelection(itemPosition);
+                activity.updateSpinnerWidth((AppCompatSpinner) spinner, itemPosition);
+            }
+        }
+
         BrowserCategory category = (BrowserCategory) getParentFragmentManager().findFragmentById(R.id.category);
         try {
             Fragment f = MOVIE_CATEGORIES_CLASSES[itemPosition].getConstructor().newInstance();

@@ -417,7 +417,7 @@
 
     <style name="Widget.MovieCategory.Spinner" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:dropDownVerticalOffset">28dp</item> <!-- pushes dropdown below spinner -->
+        <item name="android:dropDownVerticalOffset">32dp</item> <!-- pushes dropdown below spinner -->
         <item name="android:popupBackground">@drawable/movie_spinner_dropdown_bg</item>
         <item name="android:dropDownSelector">@android:color/transparent</item>
     </style>

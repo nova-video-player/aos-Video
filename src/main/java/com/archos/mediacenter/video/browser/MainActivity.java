@@ -16,6 +16,7 @@
 package com.archos.mediacenter.video.browser;
 
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
+import static com.archos.mediacenter.video.browser.BrowserCategoryVideo.MOVIE_CATEGORIES_NAMES_ID;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
@@ -42,6 +43,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -54,6 +56,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.DisplayCutout;
 import android.view.Gravity;
@@ -72,6 +75,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,6 +84,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -214,7 +219,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             log.error("Failed to load meta-data, NameNotFound: " + e.getMessage());
         } catch (NullPointerException e) {
             log.error("Failed to load meta-data, NullPointer: " + e.getMessage());
-        }        
+        }
     }
 
     public void setBackground() {
@@ -323,6 +328,23 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
         mToolbar = (Toolbar)findViewById(R.id.main_toolbar);
 
+        mToolbar.post(() -> {
+            ViewGroup toolbarViewGroup = (ViewGroup) mToolbar;
+            View hamburgerIcon = toolbarViewGroup.getChildAt(1); // AppCompatImageButton
+            View spinner = toolbarViewGroup.getChildAt(0); // AppCompatSpinner
+            View ActionMenuView  = toolbarViewGroup.getChildAt(2); // ActionMenuView
+
+            /***
+             2025-06-13 03:36:51.211 19310-19310 ToolbarView             org.courville.nova                   D  Child #0: androidx.appcompat.widget.AppCompatSpinner, width=597, layoutParams=androidx.appcompat.widget.Toolbar$LayoutParams
+             2025-06-13 03:36:51.211 19310-19310 ToolbarView             org.courville.nova                   D  Child #1: androidx.appcompat.widget.AppCompatImageButton, width=147, layoutParams=androidx.appcompat.widget.Toolbar$LayoutParams
+             2025-06-13 03:36:51.211 19310-19310 ToolbarView             org.courville.nova                   D  Child #2: androidx.appcompat.widget.ActionMenuView, width=0, layoutParams=androidx.appcompat.widget.Toolbar$LayoutParams
+             */
+
+            if (spinner instanceof AppCompatSpinner) {
+                setupSpinner((AppCompatSpinner) spinner);
+            }
+        });
+
         // determine if display has cutouts
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().getDecorView().setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
@@ -371,7 +393,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         	.setTitle("Trakt")
         	.setMessage(R.string.trakt_change)
         	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-        		public void onClick(DialogInterface dialog, int which) { 
+        		public void onClick(DialogInterface dialog, int which) {
         			dialog.dismiss();
         		}
         	})
@@ -1262,6 +1284,86 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         if (uiMode.equals("unset") &&
              !getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) { // no UI choice to do on actual AndroidTV devices
             new UiChoiceDialog().show(getSupportFragmentManager(), "UiChoiceDialog");
+        }
+    }
+
+    private void setupSpinner(AppCompatSpinner spinner) {
+        updateSpinnerWidth(spinner, spinner.getSelectedItemPosition());
+    }
+
+    public void updateSpinnerWidth(AppCompatSpinner spinner, int position) {
+        mToolbar.post(() -> {
+            spinner.setOnTouchListener((v, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    // Try multiple times to catch the popup early
+                    for (int i = 0; i < 5; i++) {
+                        final int attempt = i;
+                        spinner.postDelayed(() -> {
+                            try {
+                                Field popupField = AppCompatSpinner.class.getDeclaredField("mPopup");
+                                popupField.setAccessible(true);
+                                Object popupWindow = popupField.get(spinner);
+
+                                if (popupWindow != null &&
+                                        popupWindow.getClass().getName().equals("androidx.appcompat.widget.AppCompatSpinner$DropdownPopup")) {
+
+                                    Field dropDownListField = popupWindow.getClass().getSuperclass().getDeclaredField("mDropDownList");
+                                    dropDownListField.setAccessible(true);
+                                    ListView listView = (ListView) dropDownListField.get(popupWindow);
+
+                                    if (listView != null) {
+                                        listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+                                        Log.d("SpinnerHack", "Ripple removed (attempt " + attempt + ")");
+                                    }
+                                }
+                            } catch (Exception e) {
+                                Log.e("SpinnerHack", "Reflection error: " + e.getMessage());
+                            }
+                        }, i * 50); // Try at 0ms, 50ms, 100ms, 150ms, 200ms
+                    }
+                }
+                return false; // Let spinner handle click normally
+            });
+        });
+
+
+        java.util.function.IntFunction<Integer> dpToPx = dp ->
+                Math.round(dp * mToolbar.getContext().getResources().getDisplayMetrics().density);
+        int mDropDownWidth = 0;
+        int textResId = MOVIE_CATEGORIES_NAMES_ID[position];
+        String text = getString(textResId);
+
+        android.graphics.Paint paint = new android.graphics.Paint();
+        paint.setTextSize(getResources().getDimension(R.dimen.video_info_big_text));
+        paint.setTypeface(ResourcesCompat.getFont(this, R.font.gotham_bold));
+
+        float textWidth = paint.measureText(text);
+        int widthToApply = (int) (textWidth + dpToPx.apply(24)); // 24dp for dropdown icon padding
+        //mDropDownWidth = (int) textWidth  + dpToPx.apply(22);
+
+        Toolbar.LayoutParams replicatedParams = new Toolbar.LayoutParams(widthToApply,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+
+        replicatedParams.setMarginStart(0);
+        replicatedParams.setMarginEnd(0);
+        replicatedParams.gravity = Gravity.START | Gravity.CENTER_VERTICAL;
+        spinner.setTranslationX(-50); // shift right by 24px
+
+        spinner.setLayoutParams(replicatedParams);
+        spinner.setDropDownHorizontalOffset(-26);
+        spinner.setDropDownWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        // Strip padding and min width
+        spinner.setPadding(0, 0, 0, 0);
+        spinner.setMinimumWidth(0);
+
+        // Fix padding inside selected item
+        View selectedView = spinner.getSelectedView();
+        if (selectedView != null) {
+            selectedView.setPadding(0, 0, 0, 0);
+            selectedView.setMinimumWidth(0);
         }
     }
 }
