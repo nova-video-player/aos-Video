@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@color/ripple_orange"
-    android:radius="300dp"> <!-- Large radius ensures full spread -->
+    android:radius="200dp"> <!-- Large radius ensures full spread -->
 
     <!-- Mask helps define where ripple shows up -->
     <item android:id="@android:id/mask">
         <shape android:shape="rectangle">
             <solid android:color="@android:color/white" />
+            <corners android:radius="10dp" />
         </shape>
     </item>
 
