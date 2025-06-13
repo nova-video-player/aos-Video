@@ -434,4 +434,10 @@
         <item name="colorAccent">@color/green_accent</item>
         <item name="android:colorAccent">@color/green_accent</item>
     </style>
+
+    <style name="PrivateModeDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/menu_bg</item>
+        <item name="android:windowMinWidthMajor">85%</item>
+        <item name="android:windowMinWidthMinor">85%</item>
+    </style>
 </resources>

@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,9 +71,8 @@ public class PrivateMode {
 
         // Load your font
         Typeface typeface1 = ResourcesCompat.getFont(activity, R.font.nhaasgroteskdspro_95blk);
-        Typeface typeface2 = ResourcesCompat.getFont(activity, R.font.nhaasgroteskdspro_65md);
 
-        AlertDialog dialog = new AlertDialog.Builder(activity, R.style.CustomDialogTheme)
+        AlertDialog dialog = new AlertDialog.Builder(activity, R.style.PrivateModeDialogTheme)
                 .setTitle(R.string.private_mode)
                 .setView(customView)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -95,6 +95,11 @@ public class PrivateMode {
             if (positiveButton != null && typeface1 != null) {
                 positiveButton.setTypeface(typeface1);
                 positiveButton.setTextColor(ContextCompat.getColor(activity, R.color.green_accent));
+
+                // Apply custom ripple background
+                Drawable ripple = ContextCompat.getDrawable(activity, R.drawable.custom_ripple_pm);
+                positiveButton.setBackground(ripple);
+                positiveButton.setClipToOutline(true); // May help if your shape has corners
             }
         });
 
