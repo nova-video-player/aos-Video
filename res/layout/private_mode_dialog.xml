@@ -9,6 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
         android:paddingTop="20dip"
         android:paddingBottom="20dip"
         android:textAppearance="@android:style/TextAppearance.Theme.Dialog"
@@ -18,6 +19,7 @@
         android:id="@+id/dont_show_again"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_75bd"
         android:text="@string/dont_show_again" />
 
 </LinearLayout>

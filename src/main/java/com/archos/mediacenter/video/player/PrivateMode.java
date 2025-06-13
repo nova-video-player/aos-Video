@@ -18,10 +18,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.video.R;
@@ -59,19 +66,61 @@ public class PrivateMode {
 
     public static void showDialog(final Activity activity) {
         View customView = activity.getLayoutInflater().inflate(R.layout.private_mode_dialog, null);
-        final CheckBox dontShowAgain =  (CheckBox)customView.findViewById(R.id.dont_show_again);
-        new AlertDialog.Builder(activity)
+        final CheckBox dontShowAgain = customView.findViewById(R.id.dont_show_again);
+
+        // Load your font
+        Typeface typeface1 = ResourcesCompat.getFont(activity, R.font.nhaasgroteskdspro_95blk);
+        Typeface typeface2 = ResourcesCompat.getFont(activity, R.font.nhaasgroteskdspro_65md);
+
+        AlertDialog dialog = new AlertDialog.Builder(activity, R.style.CustomDialogTheme)
                 .setTitle(R.string.private_mode)
                 .setView(customView)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialogInterface, int which) {
                         if (dontShowAgain.isChecked()) {
                             dontShowDialog(activity);
                         }
                     }
                 })
-                .create().show();
+                .create();
+
+        dialog.setOnShowListener(d -> {
+            // Customize title
+            View decorView = dialog.getWindow().getDecorView();
+            applyCustomFontToDialog(decorView, typeface1, activity);
+
+            // Customize positive button
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            if (positiveButton != null && typeface1 != null) {
+                positiveButton.setTypeface(typeface1);
+                positiveButton.setTextColor(ContextCompat.getColor(activity, R.color.green_accent));
+            }
+        });
+
+        dialog.show();
+    }
+    private static void applyCustomFontToDialog(View view, Typeface typeface, Context context) {
+        if (view instanceof TextView) {
+            TextView textView = (TextView) view;
+            CharSequence text = textView.getText();
+            int id = textView.getId();
+
+            // Debug: log all text views
+            Log.d("CustomDialogFontPM", "TextView text=\"" + text + "\", id=" + id);
+
+            // Title usually has ID 2131427417 ("alertTitle")
+            if (id == R.id.alertTitle) {
+                textView.setTypeface(typeface);
+                textView.setTextSize(22);
+                textView.setTextColor(ContextCompat.getColor(context, R.color.red));
+            }
+        } else if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                applyCustomFontToDialog(group.getChildAt(i), typeface, context);
+            }
+        }
     }
 
     public static void resetDontShowDialog(Context context) {
