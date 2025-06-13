@@ -1349,7 +1349,12 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         replicatedParams.setMarginStart(0);
         replicatedParams.setMarginEnd(0);
         replicatedParams.gravity = Gravity.START | Gravity.CENTER_VERTICAL;
-        spinner.setTranslationX(-50); // shift right by 24px
+        boolean mIsPortraitMode = getApplicationContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        if (mIsPortraitMode){
+            spinner.setTranslationX(-50); // shift right by 24px
+        } else {
+            spinner.setTranslationX(0);
+        }
 
         spinner.setLayoutParams(replicatedParams);
         spinner.setDropDownHorizontalOffset(-26);
