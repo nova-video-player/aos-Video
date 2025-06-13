@@ -15,6 +15,7 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,6 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.widget.TextView;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuItemCompat;
@@ -135,7 +138,34 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
         if (mCursor != null && !mCursor.isClosed())
 	        bindAdapter();
         LoaderManager.getInstance(this).restartLoader(0, null, this);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getActionBarTitle());
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            activity.getSupportActionBar().setTitle(getActionBarTitle());
+            // Post to allow views to be laid out
+            activity.getWindow().getDecorView().post(() -> {
+                Toolbar toolbar = activity.findViewById(R.id.main_toolbar);
+                if (toolbar != null) {
+                    for (int i = 0; i < toolbar.getChildCount(); i++) {
+                        View child = toolbar.getChildAt(i);
+                        if (child instanceof TextView) {
+                            TextView titleView = (TextView) child;
+                            if (titleView.getText() != null && titleView.getText().equals(getActionBarTitle())) {
+                                boolean mIsPortraitMode = this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+                                if (mIsPortraitMode){
+                                    // 🎯 Apply your custom offsets here
+                                    titleView.setTranslationX(-50); // shift right by 24px
+                                } else {
+                                    titleView.setTranslationX(0);
+                                }
+                                //titleView.setTranslationY(2);   // shift down by 4px
+                                titleView.setPadding(0, 0, 0, 9); // optional: clear default paddings
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 
 
