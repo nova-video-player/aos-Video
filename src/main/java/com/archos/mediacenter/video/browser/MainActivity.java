@@ -1322,6 +1322,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                             }
                         }, i * 50); // Try at 0ms, 50ms, 100ms, 150ms, 200ms
                     }
+                    v.performClick(); // <-- this is the fix for accessibility
                 }
                 return false; // Let spinner handle click normally
             });
