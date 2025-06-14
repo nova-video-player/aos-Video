@@ -119,6 +119,7 @@ import com.archos.mediacenter.video.player.tvmenu.TVMenuItem;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediacenter.video.player.tvmenu.TimerDelayTVPicker;
 import com.archos.mediacenter.video.utils.CodecDiscovery;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoMetadata.AudioTrack;
@@ -2138,36 +2139,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mVideoInfo.bookmark = getBookmarkPosition();
             mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
             mPlayerController.updateBookmarkToast(mPlayer.getCurrentPosition());
-        }
-    }
-
-    public class CustomTypefaceSpan extends TypefaceSpan {
-        private final Typeface typeface;
-        private final float textSizeSp; // size in SP
-        private final int textColor;
-
-        public CustomTypefaceSpan(String family, Typeface typeface, float textSizeSp, int textColor) {
-            super(family);
-            this.typeface = typeface;
-            this.textSizeSp = textSizeSp;
-            this.textColor = textColor;
-        }
-
-        @Override
-        public void updateDrawState(TextPaint paint) {
-            apply(paint);
-        }
-
-        @Override
-        public void updateMeasureState(TextPaint paint) {
-            apply(paint);
-        }
-
-        private void apply(TextPaint paint) {
-            paint.setTypeface(typeface);
-            paint.setTextSize(TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_SP, textSizeSp, Resources.getSystem().getDisplayMetrics()));
-            paint.setColor(textColor);
         }
     }
 
