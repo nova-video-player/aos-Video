@@ -39,6 +39,7 @@ import android.os.Parcelable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -1085,7 +1086,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
      */
     public void showConfirmDeleteDialog(final boolean isParentFolder, final List<Uri> uri) {
 
-        AlertDialog.Builder b = new AlertDialog.Builder(getActivity()).setTitle("");
+        AlertDialog.Builder b = new AlertDialog.Builder(getActivity(), R.style.CustomDialogTheme);
         if(!isParentFolder)
             b.setIcon(R.drawable.filetype_new_video);
         else
@@ -1114,6 +1115,23 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                     }
                 }).create();
         mDialogDelete.show();
+
+        Button positiveButton = mDialogDelete.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button negativeButton = mDialogDelete.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+        Typeface buttonsTypeface = ResourcesCompat.getFont(getActivity(), R.font.nhaasgroteskdspro_95blk);
+        Typeface messageTypeface = ResourcesCompat.getFont(getActivity(), R.font.nhaasgroteskdspro_65md);
+        if (buttonsTypeface != null) {
+            positiveButton.setTypeface(buttonsTypeface);
+            negativeButton.setTypeface(buttonsTypeface);
+        }
+
+        TextView messageView = mDialogDelete.findViewById(android.R.id.message);
+        if (messageView != null) {
+            messageView.setTypeface(messageTypeface);
+            messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16); // or any size
+            messageView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
+        }
     }
 
     /**
