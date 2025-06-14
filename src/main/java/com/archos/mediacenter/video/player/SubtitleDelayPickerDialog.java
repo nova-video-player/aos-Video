@@ -116,6 +116,7 @@ public class SubtitleDelayPickerDialog extends AlertDialog implements OnClickLis
                 sp.setDropDownWidth(finalMaxWidth + 32); // Add some padding
             }
         });
+        sp.setMinimumHeight(100);
 
         updateTitle(delay);
 

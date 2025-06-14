@@ -22,7 +22,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="20dip">
+    android:layout_marginBottom="10dp"
+    android:paddingStart="20dip"
+    android:paddingEnd="20dip"
+    android:paddingTop="0dip"
+    android:paddingBottom="0dip">
     <com.archos.mediacenter.video.player.SubtitleDelayPicker
         android:id="@+id/subtitleDelayPicker"
         android:padding="5dip"
@@ -33,8 +37,8 @@
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="1px"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
         android:scaleType="fitXY"
         app:srcCompat="?android:attr/listDivider" />
     <TextView
@@ -42,11 +46,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/nhaasgroteskdspro_55rg"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="8dp" />
     <Spinner
         android:id="@+id/subtitle_delay_ratio_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:prompt="@string/subtitle_delay_speed"
         style="@style/CustomSpinner"/>
 </LinearLayout>
