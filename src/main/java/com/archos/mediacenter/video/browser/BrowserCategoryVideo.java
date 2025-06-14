@@ -89,6 +89,15 @@ public class BrowserCategoryVideo extends BrowserCategory {
     @Override
     public void onViewCreated(View v, Bundle save){
         super.onViewCreated(v, save);
+        Toolbar toolbar = v.findViewById(R.id.main_toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        // Ensure the ActionBar is initialized
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() == null) {
+            Log.e(TAG, "ActionBar is null. Ensure the Toolbar is properly set.");
+            return;
+        }
+
         if (save!=null) {
             int navigationMode = save.getInt(KEY_ACTIONBAR_NAVIGATION_MODE, ActionBar.NAVIGATION_MODE_STANDARD);
             if (navigationMode==ActionBar.NAVIGATION_MODE_LIST) {
@@ -98,8 +107,10 @@ public class BrowserCategoryVideo extends BrowserCategory {
             }
         }
 
-        Toolbar toolbar = v.findViewById(R.id.main_toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        // Ensure ActionBar is initialized before calling setFragment
+        if (save == null) {
+            v.post(() -> setFragment(null));
+        }
 
         // Set up navigation for the Toolbar
         //toolbar.setNavigationIcon(R.drawable.ic_navigation_icon); // Set your navigation icon
@@ -207,7 +218,11 @@ public class BrowserCategoryVideo extends BrowserCategory {
      * @param setupTheFragmentAsWell: if true, the fragment corresponding to the selected drop-down item will also be created
      */
     private void setupMovieActionBarNavigation(boolean setupTheFragmentAsWell) {
-         androidx.appcompat.app.ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        androidx.appcompat.app.ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if (ab == null) {
+            Log.e(TAG, "setupMovieActionBarNavigation: ActionBar is null");
+            return;
+        }
         // no title in that case
         ab.setTitle("");
         // navigation drop-down instead
