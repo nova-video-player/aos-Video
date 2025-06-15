@@ -29,6 +29,8 @@ import android.database.MatrixCursor;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -64,6 +66,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.archos.environment.ArchosSettings;
 import com.archos.environment.NetworkState;
@@ -411,9 +414,19 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
     public void onClick(View view) {
         if (view == mAbortButton) {
             // Ask the user whether he really wants to abort the scraper task or not
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle(R.string.scraper_notification_title)
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
+            View customTitleView = LayoutInflater.from(this).inflate(R.layout.dialog_custom_title, null);
+            TextView titleText = customTitleView.findViewById(R.id.dialog_title);
+            titleText.setText(R.string.scraper_notification_title);
+
+            ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+            iconView.setImageResource(android.R.drawable.ic_dialog_alert);
+
+            Typeface customFont = ResourcesCompat.getFont(getApplicationContext(), R.font.nhaasgroteskdspro_95blk);
+            Typeface messageTypeface = ResourcesCompat.getFont(getApplicationContext(), R.font.nhaasgroteskdspro_65md);
+
+            titleText.setTypeface(customFont);
+            builder.setCustomTitle(customTitleView)
                     .setMessage(R.string.scraper_abort_request)
                     .setCancelable(false)
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -432,6 +445,27 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                     });
             AlertDialog alert = builder.create();
             alert.show();
+            // Set font on message
+            TextView messageView = alert.findViewById(android.R.id.message);
+            if (messageView != null) {
+                messageView.setTypeface(messageTypeface);
+                messageView.setTextColor(ContextCompat.getColor(this, R.color.white));
+            }
+            // Set font & custom ripple on buttons
+            Button positiveButton = alert.getButton(AlertDialog.BUTTON_POSITIVE);
+            if (positiveButton != null) {
+                positiveButton.setTypeface(customFont);
+                Drawable ripple = ContextCompat.getDrawable(getApplicationContext(), R.drawable.custom_ripple_pm);
+                positiveButton.setBackground(ripple);
+                positiveButton.setClipToOutline(true); // May help if your shape has corners
+            }
+            Button negativeButton = alert.getButton(AlertDialog.BUTTON_NEGATIVE);
+            if (negativeButton != null) {
+                negativeButton.setTypeface(customFont);
+                Drawable ripple = ContextCompat.getDrawable(getApplicationContext(), R.drawable.custom_ripple_pm);
+                negativeButton.setBackground(ripple);
+                negativeButton.setClipToOutline(true);
+            }
         }
         else if (view == mExitButton) {
             // Processing is done, just close the current activity
@@ -816,9 +850,20 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                 String message = getResources().getString(com.archos.mediacenter.video.R.string.scrap_no_network);
                 message += " " + getResources().getString(com.archos.mediacenter.video.R.string.scrap_enable_network_first);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setIcon(android.R.drawable.ic_dialog_alert)
-                       .setTitle(R.string.mediacenterlabel)
+                View customTitleView = LayoutInflater.from(this).inflate(R.layout.dialog_custom_title, null);
+                TextView titleText = customTitleView.findViewById(R.id.dialog_title);
+                titleText.setText(R.string.mediacenterlabel);
+
+                ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+                iconView.setImageResource(android.R.drawable.ic_dialog_alert);
+
+                Typeface customFont = ResourcesCompat.getFont(getApplicationContext(), R.font.nhaasgroteskdspro_95blk);
+                Typeface messageTypeface = ResourcesCompat.getFont(getApplicationContext(), R.font.nhaasgroteskdspro_65md);
+
+                titleText.setTypeface(customFont);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
+                builder.setCustomTitle(customTitleView)
                        .setMessage(message)
                        .setCancelable(true)
                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -829,6 +874,22 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                     });
                 AlertDialog alert = builder.create();
                 alert.show();
+                // Set font on message
+                TextView messageView = alert.findViewById(android.R.id.message);
+                if (messageView != null) {
+                    messageView.setTypeface(messageTypeface);
+                    messageView.setTextColor(ContextCompat.getColor(this, R.color.white));
+                }
+                // Set font on buttons
+                Button positiveButton = alert.getButton(AlertDialog.BUTTON_POSITIVE);
+                if (positiveButton != null) {
+                    positiveButton.setTypeface(customFont);
+
+                    // Apply custom ripple background
+                    Drawable ripple = ContextCompat.getDrawable(getApplicationContext(), R.drawable.custom_ripple_pm);
+                    positiveButton.setBackground(ripple);
+                    positiveButton.setClipToOutline(true); // May help if your shape has corners
+                }
                 return;
             }
 
