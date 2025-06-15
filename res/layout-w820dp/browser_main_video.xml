@@ -21,8 +21,14 @@ category, and contents.
         android:layout_width="match_parent"
         android:background="@color/leanback_background"
         android:minHeight="?attr/actionBarSize"
-        app:titleTextAppearance="@style/ToolbarTitle"
-        />
+        app:titleTextAppearance="@style/ToolbarTitle">
+        <Spinner
+            android:id="@+id/movie_category_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:visibility="gone"/>
+    </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout
         android:id="@+id/browser_layout"

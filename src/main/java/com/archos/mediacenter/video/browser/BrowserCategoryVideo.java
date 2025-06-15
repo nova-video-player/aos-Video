@@ -24,8 +24,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.SpinnerAdapter;
+import android.widget.Spinner;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserAllMovies;
@@ -218,34 +219,40 @@ public class BrowserCategoryVideo extends BrowserCategory {
      * @param setupTheFragmentAsWell: if true, the fragment corresponding to the selected drop-down item will also be created
      */
     private void setupMovieActionBarNavigation(boolean setupTheFragmentAsWell) {
-        androidx.appcompat.app.ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        if (ab == null) {
-            Log.e(TAG, "setupMovieActionBarNavigation: ActionBar is null");
-            return;
-        }
-        // no title in that case
-        ab.setTitle("");
-        // navigation drop-down instead
-        setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        Toolbar toolbar = getActivity().findViewById(R.id.main_toolbar);
+        Spinner spinner = toolbar.findViewById(R.id.movie_category_spinner);
+
         // build the localized string list
         String[] movieCategoriesNames = new String[MOVIE_CATEGORIES_NAMES_ID.length];
         for (int i=0; i<MOVIE_CATEGORIES_NAMES_ID.length; i++) {
             movieCategoriesNames[i] = getResources().getString(MOVIE_CATEGORIES_NAMES_ID[i]);
         }
-        // TODO MARC
-        SpinnerAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, movieCategoriesNames);
-        ActionBar.OnNavigationListener listener = new ActionBar.OnNavigationListener() {
-            @Override
-            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                return BrowserCategoryVideo.this.onNavigationItemSelected(itemPosition, itemId);
-            }
-        };
-        ab.setListNavigationCallbacks(adapter, listener);
 
-        // Set default value
-        int defaultListPosition = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(KEY_ACTIONBAR_NAVIGATION_POSITION, KEY_ACTIONBAR_NAVIGATION_POSITION_DEFAULT);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, movieCategoriesNames);
+        spinner.setAdapter(adapter);
+        int defaultListPosition = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getInt(KEY_ACTIONBAR_NAVIGATION_POSITION, KEY_ACTIONBAR_NAVIGATION_POSITION_DEFAULT);
         mNavigationItemListenerActive = setupTheFragmentAsWell; // we want the listener to be called only if the fragment is not created yet
-        ab.setSelectedNavigationItem(defaultListPosition);
+        // Set default value
+        spinner.setSelection(defaultListPosition);
+        spinner.setVisibility(View.VISIBLE);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            boolean firstCall = true;
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (firstCall && !mNavigationItemListenerActive) {
+                    firstCall = false;
+                    mNavigationItemListenerActive = true;
+                    return;
+                }
+                BrowserCategoryVideo.this.onNavigationItemSelected(position, id);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("");
     }
 
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {

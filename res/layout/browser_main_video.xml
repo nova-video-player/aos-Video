@@ -23,7 +23,6 @@ category, and contents.
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/main_toolbar"
                 android:layout_alignParentTop="true"
@@ -31,10 +30,14 @@ category, and contents.
                 android:layout_width="match_parent"
                 android:background="@color/leanback_background_transparent"
                 android:minHeight="?attr/actionBarSize"
-                app:titleTextAppearance="@style/ToolbarTitle"
-                />
-
-
+                app:titleTextAppearance="@style/ToolbarTitle">
+                <Spinner
+                    android:id="@+id/movie_category_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:visibility="gone"/>
+            </androidx.appcompat.widget.Toolbar>
 
             <FrameLayout
                 android:id="@+id/content"
