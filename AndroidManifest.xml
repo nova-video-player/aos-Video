@@ -1067,7 +1067,7 @@
             android:exported="true"
             android:label="@string/scraper_notification_title"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.DialogMinWidth">
+            android:theme="@style/Theme.CustomDialogMinWidth">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

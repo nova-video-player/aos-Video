@@ -67,6 +67,7 @@
             android:id="@+id/empty_view_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/nhaasgroteskdspro_65md"
             android:clickable="false"
             android:focusable="false"
             android:gravity="center"
@@ -87,6 +88,8 @@
                 style="@android:style/Widget.Holo.Button.Borderless.Small"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/nhaasgroteskdspro_95blk"
+                android:background="@drawable/custom_button_ripple"
                 android:layout_weight="1"
                 android:text="@android:string/no" />
 
@@ -95,6 +98,8 @@
                 style="@android:style/Widget.Holo.Button.Borderless.Small"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/nhaasgroteskdspro_95blk"
+                android:background="@drawable/custom_button_ripple"
                 android:layout_weight="1"
                 android:text="@android:string/yes" />
         </LinearLayout>
