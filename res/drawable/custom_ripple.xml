@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@color/ripple_orange"
-    android:radius="200dp"> <!-- Large radius ensures full spread -->
+    > <!-- Large radius ensures full spread -->
 
     <!-- Mask helps define where ripple shows up -->
     <item android:id="@android:id/mask">

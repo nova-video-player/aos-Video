@@ -2,7 +2,9 @@
     android:id="@+id/initial_item_container"
     android:layout_width="fill_parent"
     android:layout_height="@dimen/auto_scraper_thumbnail_item_height"
-    android:background="@drawable/list_item_background"
+    android:layout_marginTop="1dp"
+    android:layout_marginBottom="1dp"
+    android:background="@drawable/custom_ripple"
     android:gravity="center_vertical" >
 
     <!-- Thumbnail on the left (with the spinbar centered on top of it) -->
@@ -12,8 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name" >
+        android:layout_alignParentTop="true">
 
         <ImageView
             android:id="@+id/initial_thumbnail"
@@ -39,6 +40,7 @@
     <TextView
         android:id="@+id/initial_name"
         style="@style/BrowserText.Name"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
         android:layout_toRightOf="@id/thumbnail_container" />
 
     <!-- Text line 2 = duration -->
@@ -46,6 +48,7 @@
     <TextView
         android:id="@+id/initial_duration"
         style="@style/BrowserText.Info.InfoBlue"
+        android:fontFamily="@font/nhaasgroteskdspro_75bd"
         android:layout_below="@id/initial_name"
         android:layout_toRightOf="@id/thumbnail_container" />
 
@@ -58,6 +61,7 @@
         android:layout_below="@id/initial_duration"
         android:layout_toRightOf="@id/thumbnail_container"
         style="@style/textAppearanceSmall"
-        android:typeface="sans" />
+        android:textColor="@color/white"
+        android:fontFamily="@font/nhaasgroteskdspro_65md" />
 
 </RelativeLayout>

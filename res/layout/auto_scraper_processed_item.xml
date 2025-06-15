@@ -1,75 +1,101 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/processed_item_container"
     android:layout_width="fill_parent"
     android:layout_height="@dimen/auto_scraper_poster_item_height"
-    android:background="@drawable/list_item_background"
-    android:gravity="center_vertical" >
+    android:layout_marginTop="1dp"
+    android:layout_marginBottom="1dp"
+    android:background="@drawable/custom_ripple"
+    android:gravity="center_vertical">
 
     <!-- Poster on the left -->
-
-    <ImageView
-        android:id="@+id/processed_poster"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/processed_poster_container"
         android:layout_width="@dimen/auto_scraper_poster_width"
         android:layout_height="@dimen/auto_scraper_poster_height"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        app:cardCornerRadius="8dp"
+        app:cardBackgroundColor="@android:color/transparent"
         android:layout_marginBottom="@dimen/auto_scraper_poster_margin_bottom"
-        android:layout_marginLeft="@dimen/auto_scraper_poster_margin_left"
-        android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"
-        android:layout_marginTop="@dimen/auto_scraper_poster_margin_top"
-        android:scaleType="center" />
+        android:layout_marginStart="@dimen/auto_scraper_poster_margin_left"
+        android:layout_marginEnd="@dimen/content_list_space_between_thumbnail_and_name"
+        android:layout_marginTop="@dimen/auto_scraper_poster_margin_top">
+        <ImageView
+            android:id="@+id/processed_poster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
 
     <!-- Text line 1 = name -->
-
     <TextView
         android:id="@+id/processed_name"
         style="@style/BrowserText.Name"
-        android:layout_toRightOf="@id/processed_poster"
-        android:paddingTop="8dip" />
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
+        android:text="Name"
+        android:textSize="22sp"
+        android:layout_toRightOf="@id/processed_poster_container"
+        android:paddingTop="4dp" />
 
-    <!-- Text line 2 = duration -->
-
-    <TextView
-        android:id="@+id/processed_duration"
-        style="@style/BrowserText.Info.InfoBlue"
-        android:layout_below="@id/processed_name"
-        android:layout_toRightOf="@id/processed_poster" />
-
-    <!-- Text line 3 = genre -->
-
+    <!-- Text line 2 = genre -->
     <TextView
         android:id="@+id/processed_genre"
         style="@style/BrowserText.Details"
-        android:layout_below="@id/processed_duration"
-        android:layout_marginTop="8dip"
-        android:layout_toRightOf="@id/processed_poster"
+        android:fontFamily="@font/nhaasgroteskdspro_55rg"
+        android:text="Genre"
+        android:textSize="16sp"
+        android:layout_below="@id/processed_name"
+        android:layout_marginTop="2dip"
+        android:layout_toRightOf="@id/processed_poster_container"
         android:ellipsize="end"
         android:singleLine="true" />
 
-    <!-- Text line 4 = release date -->
 
+    <!-- Text line 3 = release date -->
     <TextView
         android:id="@+id/processed_date"
         style="@style/BrowserText.Details"
+        android:fontFamily="@font/nhaasgroteskdspro_55rg"
+        android:layout_marginTop="2dip"
+        android:text="Date"
+        android:textSize="16sp"
         android:layout_below="@id/processed_genre"
-        android:layout_toRightOf="@id/processed_poster" />
+        android:layout_toRightOf="@id/processed_poster_container" />
 
-    <!-- Text line 5 = rating -->
-
+    <!-- Text line 4 = rating -->
     <TextView
         android:id="@+id/processed_rating"
         style="@style/BrowserText.Details"
+        android:fontFamily="@font/nhaasgroteskdspro_55rg"
+        android:layout_marginTop="2dip"
+        android:text="Rating"
+        android:textSize="16sp"
         android:layout_below="@id/processed_date"
-        android:layout_toRightOf="@id/processed_poster" />
+        android:layout_toRightOf="@id/processed_poster_container" />
+
+    <!-- Text line 5 = duration -->
+    <TextView
+        android:id="@+id/processed_duration"
+        style="@style/BrowserText.Info.InfoBlue"
+        android:fontFamily="@font/nhaasgroteskdspro_75bd"
+        android:layout_marginTop="2dip"
+        android:text="2m 20s"
+        android:layout_below="@id/processed_rating"
+        android:layout_toRightOf="@id/processed_poster_container" />
 
     <!-- Button  allowing to reject the infos retrieved -->
-
     <Button
         android:id="@+id/processed_reject_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
+        android:background="@drawable/custom_button_background"
+        android:includeFontPadding="false"
+        android:fontFamily="@font/nhaasgroteskdspro_95blk"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="3dp"
         android:text="@string/scrap_remove" />
-
 </RelativeLayout>

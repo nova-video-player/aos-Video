@@ -1045,9 +1045,11 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
 
             if (!mIsLargeScreen) {
                 vh.processed_reject_btn.setText(R.string.scrap_remove_short);
-                vh.processed_date.setVisibility(View.GONE);
-                vh.processed_rating.setVisibility(View.GONE);
+            }else{
+                vh.processed_reject_btn.setText(R.string.scrap_remove);
             }
+            vh.processed_date.setVisibility(View.VISIBLE);
+            vh.processed_rating.setVisibility(View.VISIBLE);
 
             // Allow the user to click on the reject button
             vh.processed_reject_btn.setOnClickListener(this);

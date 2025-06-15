@@ -18,6 +18,7 @@
             android:id="@+id/list_items"
             android:layout_width="match_parent"
             android:layout_height="0dip"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="10dip"
             android:layout_marginRight="10dip"
             android:layout_weight="1"
