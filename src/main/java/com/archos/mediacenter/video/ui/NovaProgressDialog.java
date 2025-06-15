@@ -22,6 +22,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -207,7 +208,7 @@ public class NovaProgressDialog extends AlertDialog {
             /* Use a separate handler to update the text views as they
              * must be updated on the same thread that created them.
              */
-            mViewUpdateHandler = new Handler() {
+            mViewUpdateHandler = new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage(Message msg) {
                     super.handleMessage(msg);
