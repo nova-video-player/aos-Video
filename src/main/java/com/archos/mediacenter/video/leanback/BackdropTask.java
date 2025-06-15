@@ -75,14 +75,7 @@ public class BackdropTask {
             Log.w(TAG, "execute: cancelling previous task");
         }
         mFuture = mExecutor.submit(() -> {
-            // TODO MARC remove
-            //if (DBG) Log.d(TAG, "execute " + objects.length + " objects " + (objects.length > 0 ? objects[0] : null));
             final File file = getBackdropFile(objects.length > 0 ? objects[0] : null);
-            if (file != null && file.exists()) {
-                if (DBG) Log.d("BackdropTask", "Backdrop file exists.");
-            } else {
-                if (DBG) Log.d("BackdropTask", "Backdrop file does not exist.");
-            }
             mContext.runOnUiThread(() -> {
                 // It is on purpose that we have the error case when file is null (like a fallback)
                 if (file != null) {
@@ -108,15 +101,15 @@ public class BackdropTask {
         if (obj instanceof Collection) {
             // when dealing with collection, it has already been scraped and backdrop downloaded
             Collection collection = (Collection) obj;
-            if (DBG) Log.d(TAG, "getBackdropFile: collection  " + collection.getBackdropUri());
+            if (DBG) Log.d(TAG, "getBackdropFile: collection " + collection.getBackdropUri());
             if (collection.getBackdropUri() == null) return null;
             return new File(collection.getBackdropUri().getPath());
         } else if (obj instanceof BaseTags) {
             tags = (BaseTags) obj;
-            if (DBG) Log.d(TAG, "getBackdropFile: basetag  " + tags.getBackdrops());
+            if (DBG) Log.d(TAG, "getBackdropFile: basetag " + tags.getBackdrops());
         } else if (obj instanceof Base) {
             tags = ((Base) obj).getFullScraperTags(mContext);
-            if (DBG) Log.d(TAG, "getBackdropFile: base  " + tags.getBackdrops());
+            if (DBG) Log.d(TAG, "getBackdropFile: base " + tags.getBackdrops());
         }
         return tags != null ? tags.downloadGetDefaultBackdropFile(mContext) : null;
     }
