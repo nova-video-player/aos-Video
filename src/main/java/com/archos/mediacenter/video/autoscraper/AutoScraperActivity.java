@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.autoscraper;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -510,7 +511,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
         menuItems.add(new PowerMenuItem(getString(R.string.info)));
 
         Context themedContext = new ContextThemeWrapper(this, R.style.PowerMenuTheme);
-        View decorView = getWindow().getDecorView();
+        View decorView = ((Activity) anchor.getContext()).getWindow().getDecorView();
         int[] decorLocation = new int[2];
         decorView.getLocationOnScreen(decorLocation);
         int xOffset = mTouchX - decorLocation[0];
