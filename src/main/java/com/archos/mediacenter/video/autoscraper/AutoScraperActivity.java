@@ -82,9 +82,11 @@ import com.archos.mediacenter.utils.imageview.ImageProcessor;
 import com.archos.mediacenter.utils.imageview.ImageViewSetter;
 import com.archos.mediacenter.utils.imageview.ImageViewSetterConfiguration;
 import com.archos.mediacenter.utils.trakt.TraktService;
+import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.MainActivity;
+import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediaprovider.video.VideoStore;
@@ -553,14 +555,56 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
         });
         powerMenu.showAtLocation(decorView, Gravity.NO_GRAVITY, xOffset, yOffset);
     }
+    public static Video createVideoFromDbInfo(File file, VideoDbInfo videoInfo) {
+        long id = videoInfo != null ? videoInfo.id : -1;
+        String filePath = file.getAbsolutePath();
+        String name = file.getName();
+        Uri posterUri = null; // You can set this if you have a poster path/uri
+        int durationMs = videoInfo != null ? videoInfo.duration : 0;
+        int resumeMs = videoInfo != null ? videoInfo.resume : 0;
+        int video3dMode = videoInfo != null ? videoInfo.videoStereo : 0;
+        int guessedDefinition = videoInfo != null ? videoInfo.videoDefinition : 0;
+        boolean traktSeen = videoInfo != null && videoInfo.traktSeen == 1;
+        boolean isTraktLibrary = videoInfo != null && videoInfo.traktLibrary == 1;
+        boolean hasSubs = videoInfo != null && videoInfo.nbSubtitles > 0;
+        boolean isUserHidden = false; // Set if you have this info
+        long lastTimePlayed = videoInfo != null ? videoInfo.lastTimePlayed : 0;
+        long size = file.length();
 
+        // The full constructor:
+        return new Video(
+                id,
+                filePath,
+                name,
+                posterUri,
+                durationMs,
+                resumeMs,
+                video3dMode,
+                guessedDefinition,
+                traktSeen,
+                isTraktLibrary,
+                hasSubs,
+                isUserHidden,
+                lastTimePlayed,
+                size
+        );
+    }
     private void handlePowerMenuClick(String title, MetaFile2 metaFile2, int position) {
         if (title.equals(getString(R.string.info))) {
-            // Ask to display the info dialog with the "online update" feature disabled
-            MetaFile2 file = new JavaFile2(new File(mContextMenuPath));
+            // Get the file path
+            String path = mContextMenuPath;
+            File file = new File(path);
+            
+            // Create a Video object with the file information
+            VideoDbInfo videoInfo = VideoDbInfo.fromUri(getContentResolver(), Uri.parse(path));
+            Video video = createVideoFromDbInfo(file, videoInfo);
+            
+            // Start VideoInfoActivity with the Video object
             Intent intent = new Intent(this, VideoInfoActivity.class);
-            intent.setData(file.getUri());
+            intent.setData(metaFile2.getUri());
+            intent.putExtra(VideoInfoActivity.EXTRA_VIDEO, video);
             intent.putExtra(VideoInfoActivity.EXTRA_NO_ONLINE_UPDATE, true);
+            intent.putExtra(VideoInfoActivity.EXTRA_VIDEO_ID, videoInfo.id);
             try {
                 startActivity(intent);
                 //success = true;
