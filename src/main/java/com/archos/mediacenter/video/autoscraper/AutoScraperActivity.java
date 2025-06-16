@@ -525,7 +525,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                 .setAutoDismiss(true)
                 .setBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
                 .setHeaderView(R.layout.power_menu_header)
-                .setWidth(500)
+                .setWidth((int) getResources().getDimension(R.dimen.context_menu_width)) // 200 dp
                 .build();
         ListView listView = powerMenu.getMenuListView();
         CustomPowerMenuAdapter adapter = new CustomPowerMenuAdapter(listView);
@@ -535,6 +535,8 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
         View header = powerMenu.getHeaderView();
         TextView headerText = header.findViewById(R.id.header_title);
         headerText.setText(metaFile2.getName());
+        headerText.setMaxLines(2);
+        headerText.setEllipsize(TextUtils.TruncateAt.END);
 
         View menuListView = powerMenu.getMenuListView();
         if (menuListView != null) {

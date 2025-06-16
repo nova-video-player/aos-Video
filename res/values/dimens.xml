@@ -95,4 +95,6 @@
     <dimen name="total_horizontal_spacing_tablet_portrait">24dp</dimen>
     <dimen name="total_horizontal_spacing_tablet_landscape">36dp</dimen>
 
+    <dimen name="context_menu_width">200dp</dimen>
+
 </resources>
