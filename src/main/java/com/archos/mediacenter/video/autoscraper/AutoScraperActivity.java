@@ -31,6 +31,7 @@ import android.graphics.BlendModeColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -39,8 +40,11 @@ import android.os.Environment;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -95,6 +99,10 @@ import com.archos.mediascraper.Scraper;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.preprocess.SearchInfo;
 import com.archos.mediascraper.preprocess.SearchPreprocessor;
+import com.skydoves.powermenu.MenuAnimation;
+import com.skydoves.powermenu.MenuBaseAdapter;
+import com.skydoves.powermenu.PowerMenu;
+import com.skydoves.powermenu.PowerMenuItem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -182,6 +190,8 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
     private Button mAbortButton;
     private Button mExitButton;
     private View mEmptyView;
+    protected int mTouchX;
+    protected int mTouchY;
 
     private boolean mIsLargeScreen;
 
@@ -486,10 +496,96 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
         menu.setHeaderTitle(file.getName());
 
         // Add the context menu items
-        menu.add(0, R.string.info, 0, R.string.info);
+        //menu.add(0, R.string.info, 0, R.string.info);
+        showPowerMenu(view, file, position);
 
         // Save the path, we will need it when an entry of the menu is selected
         mContextMenuPath = path;
+    }
+
+    private void showPowerMenu(View anchor, MetaFile2 metaFile2, int position) {
+        List<PowerMenuItem> menuItems = new ArrayList<>();
+        menuItems.add(new PowerMenuItem(getString(R.string.info)));
+
+        Context themedContext = new ContextThemeWrapper(this, R.style.PowerMenuTheme);
+        View decorView = getWindow().getDecorView();
+        int[] decorLocation = new int[2];
+        decorView.getLocationOnScreen(decorLocation);
+        int xOffset = mTouchX - decorLocation[0];
+        int yOffset = mTouchY - decorLocation[1];
+
+        PowerMenu powerMenu = new PowerMenu.Builder(themedContext)
+                .addItemList(menuItems)
+                .setMenuRadius(16f)
+                .setMenuShadow(8f)
+                .setAnimation(MenuAnimation.DROP_DOWN)
+                .setAutoDismiss(true)
+                .setBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
+                .setHeaderView(R.layout.power_menu_header)
+                .setWidth(500)
+                .build();
+        ListView listView = powerMenu.getMenuListView();
+        CustomPowerMenuAdapter adapter = new CustomPowerMenuAdapter(listView);
+        adapter.addItemList(menuItems);
+        listView.setAdapter(adapter);
+
+        View header = powerMenu.getHeaderView();
+        TextView headerText = header.findViewById(R.id.header_title);
+        headerText.setText(metaFile2.getName());
+
+        View menuListView = powerMenu.getMenuListView();
+        if (menuListView != null) {
+            View parent = (View) menuListView.getParent();
+            GradientDrawable bg = new GradientDrawable();
+            bg.setColor(ContextCompat.getColor(this, R.color.tranparent_deep_blue));
+            float radiusPx = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 12f, getResources().getDisplayMetrics());
+            int strokeWidthPx = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 1f, getResources().getDisplayMetrics());
+            bg.setCornerRadius(radiusPx);
+            bg.setStroke(strokeWidthPx, ContextCompat.getColor(this, R.color.black));
+            parent.setBackground(bg);
+        }
+
+        powerMenu.setOnMenuItemClickListener((positionClicked, item) -> {
+            String titleClicked = ((PowerMenuItem) item).title.toString();
+            handlePowerMenuClick(titleClicked, metaFile2, position);
+        });
+        powerMenu.showAtLocation(decorView, Gravity.NO_GRAVITY, xOffset, yOffset);
+    }
+
+    private void handlePowerMenuClick(String title, MetaFile2 metaFile2, int position) {
+        if (title.equals(getString(R.string.info))) {
+            // Ask to display the info dialog with the "online update" feature disabled
+            MetaFile2 file = new JavaFile2(new File(mContextMenuPath));
+            Intent intent = new Intent(this, VideoInfoActivity.class);
+            intent.setData(file.getUri());
+            intent.putExtra(VideoInfoActivity.EXTRA_NO_ONLINE_UPDATE, true);
+            try {
+                startActivity(intent);
+                //success = true;
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(this, R.string.cannot_open_video, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public class CustomPowerMenuAdapter extends MenuBaseAdapter<PowerMenuItem> {
+        public CustomPowerMenuAdapter(ListView listView) {
+            super(listView);
+        }
+        @Override
+        public View getView(int index, View convertView, ViewGroup parent) {
+            View view = convertView;
+            if (view == null) {
+                LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+                view = inflater.inflate(R.layout.item_power_menu, parent, false);
+            }
+            PowerMenuItem item = (PowerMenuItem) getItem(index);
+            TextView title = view.findViewById(R.id.menu_item_title);
+            title.setText(((PowerMenuItem) item).title.toString());
+            return view;
+        }
     }
 
     @Override
@@ -1168,6 +1264,27 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
 
             // Show or hide the search spinbar
             vh.initial_spinbar.setVisibility((status == ITEM_STATUS_BUSY) ? View.VISIBLE : View.GONE);
+
+            vh.initial_item_container.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        mTouchX = (int) event.getRawX();
+                        mTouchY = (int) event.getRawY();
+                    }
+                    return false; // Important: don't consume touch
+                }
+            });
+            vh.processed_item_container.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        mTouchX = (int) event.getRawX();
+                        mTouchY = (int) event.getRawY();
+                    }
+                    return false; // Important: don't consume touch
+                }
+            });
         }
 
         /**
