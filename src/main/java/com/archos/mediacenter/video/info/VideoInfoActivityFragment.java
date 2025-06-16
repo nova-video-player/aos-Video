@@ -67,6 +67,7 @@ import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -928,7 +929,40 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         // disable saving scroll state
         mScrollView.setSaveEnabled(false);
 
+        /** the child views of mTitleBar
+         mTitleBar has 3 children:
+         Child 0: RelativeLayout       // Likely your custom content container (holds title, subtitle, etc.)
+         Child 1: AppCompatImageButton // Probably the navigation (back) button
+         Child 2: ActionMenuView       // Holds any menu items (e.g., overflow, action icons)
+
+        */
+        // Get the first child (RelativeLayout)
+        View titleBarContent = mTitleBar.getChildAt(0);
+        if (titleBarContent instanceof RelativeLayout) {
+            titleBarContent.setTranslationX(-85); // Horizontal offset in pixels
+            //titleBarContent.setTranslationY(20); // Vertical offset in pixels
+        }
+        logTitleBarChildren();
+
         return mRoot;
+    }
+
+    private void logTitleBarChildren() {
+        if (mTitleBar == null) {
+            Log.d("mTitleBarDebug", "mTitleBar is null");
+            return;
+        }
+        int count = mTitleBar.getChildCount();
+        Log.d("mTitleBarDebug", "mTitleBar has " + count + " children:");
+        for (int i = 0; i < count; i++) {
+            View child = mTitleBar.getChildAt(i);
+            String idName = (child.getId() != View.NO_ID)
+                    ? getResources().getResourceEntryName(child.getId())
+                    : "no_id";
+            Log.d("mTitleBarDebug", "Child " + i + ": " + child.getClass().getSimpleName()
+                    + " | id: " + idName
+                    + " | layout params: " + child.getLayoutParams().getClass().getSimpleName());
+        }
     }
 
     private void smoothScrollToPosition(final int position) {
