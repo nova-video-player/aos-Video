@@ -16,6 +16,9 @@ package com.archos.mediacenter.video.info;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,10 +32,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.archos.environment.ArchosSettings;
@@ -330,14 +336,37 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
     		String message = context.getResources().getString(R.string.scrap_no_network);
     		message += " " + context.getResources().getString(R.string.scrap_enable_network_first);
 
-    		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-    		builder.setIcon(android.R.drawable.ic_dialog_alert)
-    		.setTitle(R.string.mediacenterlabel)
+    		AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomDialogTheme);
+            View customTitleView = LayoutInflater.from(context).inflate(R.layout.dialog_custom_title, null);
+            TextView titleText = customTitleView.findViewById(R.id.dialog_title);
+            titleText.setText(R.string.mediacenterlabel);
+            ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+            iconView.setImageResource(android.R.drawable.ic_dialog_alert);
+            iconView.setColorFilter(ContextCompat.getColor(context, R.color.yellow_warning));
+            Typeface customFont = ResourcesCompat.getFont(context, R.font.nhaasgroteskdspro_95blk);
+            Typeface messageTypeface = ResourcesCompat.getFont(context, R.font.nhaasgroteskdspro_65md);
+            titleText.setTypeface(customFont);
+            builder.setCustomTitle(customTitleView)
     		.setMessage(message)
     		.setCancelable(false)
     		.setPositiveButton(android.R.string.ok, null);   // just let the dialog be closed by the system when clicking on the button
     		AlertDialog alert = builder.create();
     		alert.show();
+            // Set font on message
+            TextView messageView = alert.findViewById(android.R.id.message);
+            if (messageView != null) {
+                messageView.setTypeface(messageTypeface);
+                messageView.setTextColor(ContextCompat.getColor(context, R.color.white));
+            }
+            // Set font & custom ripple on buttons
+            Button positiveButton = alert.getButton(AlertDialog.BUTTON_POSITIVE);
+            if (positiveButton != null) {
+                positiveButton.setTypeface(customFont);
+                positiveButton.setTextColor(Color.WHITE);
+                Drawable ripple = ContextCompat.getDrawable(context, R.drawable.custom_ripple_pm);
+                positiveButton.setBackground(ripple);
+                positiveButton.setClipToOutline(true); // May help if your shape has corners
+            }
     		return;
     	}
 
