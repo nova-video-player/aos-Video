@@ -13,7 +13,7 @@
         android:layout_height="26dp"
         android:layout_marginEnd="12dp"
         android:src="@android:drawable/ic_dialog_alert"
-        app:tint="@color/red" />
+        app:tint="@color/yellow_warning" />
 
     <TextView
         android:id="@+id/dialog_title"
