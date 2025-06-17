@@ -22,6 +22,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Paint;
@@ -54,6 +55,7 @@ import android.widget.Toast;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.TextViewCompat;
@@ -227,7 +229,34 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     @Override
     public void onStart() {
         super.onStart();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getActionBarTitle());
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            activity.getSupportActionBar().setTitle(getActionBarTitle());
+            // Post to allow views to be laid out
+            activity.getWindow().getDecorView().post(() -> {
+                Toolbar toolbar = activity.findViewById(R.id.main_toolbar);
+                if (toolbar != null) {
+                    for (int i = 0; i < toolbar.getChildCount(); i++) {
+                        View child = toolbar.getChildAt(i);
+                        if (child instanceof TextView) {
+                            TextView titleView = (TextView) child;
+                            if (titleView.getText() != null && titleView.getText().equals(getActionBarTitle())) {
+                                boolean mIsPortraitMode = this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+                                if (mIsPortraitMode){
+                                    // 🎯 Apply your custom offsets here
+                                    titleView.setTranslationX(-50); // shift right by 24px
+                                } else {
+                                    titleView.setTranslationX(0);
+                                }
+                                //titleView.setTranslationY(2);   // shift down by 4px
+                                titleView.setPadding(0, 0, 0, 9); // optional: clear default paddings
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 
     @Override
