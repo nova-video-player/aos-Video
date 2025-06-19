@@ -68,6 +68,7 @@ abstract public class BrowserCategory extends ListFragment {
     private static final String TAG = "BrowserCategory";
     private static final boolean DBG = false;
     private static final boolean DBG_LISTENER = false;
+    private boolean mDrawerPresent = false;
 
     private static final int[] mExternalIDs = {
             R.string.sd_card_storage, R.string.usb_host_storage, R.string.other_storage, R.string.network_shared_folders,R.string.network_shortcuts,
@@ -103,19 +104,42 @@ abstract public class BrowserCategory extends ListFragment {
     public void setCategoryItemSeparatorBackground() {
         boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
 
-        if (darkModeActive || PrivateMode.isActive()) {
+        if ( PrivateMode.isActive()){
             categoryName.setBackground(null);
             getListView().invalidateViews(); // redraw all list items
             getListView().invalidate();      // force a visual refresh
             getListView().requestLayout();   // re-calculate layout
-            categoryName.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.browser_category_item_separator_bg_dark));
+            if (mDrawerPresent){
+                categoryName.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.browser_separator_background_transparent));
+            }else{
+                categoryName.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.browser_separator_background_private));
+            }
+            ((MainActivity) getActivity()).setBackground();
+        } else if (darkModeActive) {
+            categoryName.setBackground(null);
+            getListView().invalidateViews(); // redraw all list items
+            getListView().invalidate();      // force a visual refresh
+            getListView().requestLayout();   // re-calculate layout
+            if (mDrawerPresent){
+                categoryName.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.browser_separator_background_transparent));
+            }else{
+                categoryName.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.browser_separator_background_dark));
+            }
         } else {
             categoryName.setBackground(null);
-            getListView().invalidateViews();
-            getListView().invalidate();
-            getListView().requestLayout();
-            categoryName.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.browser_category_item_separator_bg));
+            getListView().invalidateViews(); // redraw all list items
+            getListView().invalidate();      // force a visual refresh
+            getListView().requestLayout();   // re-calculate layout
+            if (mDrawerPresent){
+                categoryName.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.browser_separator_background_transparent));
+            }else{
+                categoryName.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.browser_separator_background));
+            }
         }
+    }
+
+    public void setDrawerLayuot(boolean present) {
+        mDrawerPresent = present;
     }
 
     /**
@@ -698,18 +722,37 @@ abstract public class BrowserCategory extends ListFragment {
                 if (categoryName != null) {
                     boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
 
-                    if (darkModeActive || PrivateMode.isActive()) {
+                    if (PrivateMode.isActive()){
                         categoryName.setBackground(null);
                         getListView().invalidateViews(); // redraw all list items
                         getListView().invalidate();      // force a visual refresh
                         getListView().requestLayout();   // re-calculate layout
-                        categoryName.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_category_item_separator_bg_dark));
+                        if (mDrawerPresent){
+                            categoryName.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_separator_background_transparent));
+                        }else{
+                            categoryName.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_separator_background_private));
+                        }
+                        ((MainActivity) getActivity()).setBackground();
+                    } else if (darkModeActive) {
+                        categoryName.setBackground(null);
+                        getListView().invalidateViews(); // redraw all list items
+                        getListView().invalidate();      // force a visual refresh
+                        getListView().requestLayout();   // re-calculate layout
+                        if (mDrawerPresent){
+                            categoryName.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_separator_background_transparent));
+                        }else{
+                            categoryName.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_separator_background_dark));
+                        }
                     } else {
                         categoryName.setBackground(null);
                         getListView().invalidateViews(); // redraw all list items
                         getListView().invalidate();      // force a visual refresh
                         getListView().requestLayout();   // re-calculate layout
-                        categoryName.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_category_item_separator_bg));
+                        if (mDrawerPresent){
+                            categoryName.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_separator_background_transparent));
+                        }else{
+                            categoryName.setBackground(ContextCompat.getDrawable(parent.getContext(), R.drawable.browser_separator_background));
+                        }
                     }
                 } else {
                     Log.e("CategoryAdapter", "TextView category_name is NULL! Check layout browser_category_item_separator.");

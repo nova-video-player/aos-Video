@@ -223,7 +223,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     }
 
     public void setBackground() {
-        int backgroundResId = PrivateMode.isActive() ? R.drawable.background_2014_dark : R.drawable.background_2014;
+        int backgroundResId = PrivateMode.isActive() ? R.drawable.background_2014_private : R.drawable.background_2014;
         getWindow().getDecorView().setBackgroundResource(backgroundResId);
         if(mDrawerLayout != null)
             mDrawerLayout.findViewById(R.id.category_container).setBackgroundResource(backgroundResId);
@@ -439,6 +439,11 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             setDarkMode();
         }else{
             setNormalMode();
+        }
+
+        BrowserCategory category = (BrowserCategory) getSupportFragmentManager().findFragmentById(R.id.category);
+        if (category != null && mDrawerLayout== null){
+            category.setDrawerLayuot(true);
         }
     }
 
