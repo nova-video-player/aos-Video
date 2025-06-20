@@ -8,9 +8,10 @@
     android:gravity="center_vertical"
     android:clickable="false"
     android:focusable="false"
-    android:paddingLeft="8dip"
-    android:paddingRight="8dip"
+    android:paddingLeft="4dip"
+    android:paddingRight="4dip"
     android:fontFamily="@font/nhaasgroteskdspro_55rg"
     android:textColor="@color/yellow_separator"
+    android:textSize="16sp"
     android:singleLine="true"
      />
