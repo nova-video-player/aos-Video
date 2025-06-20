@@ -22,6 +22,7 @@ import androidx.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.player.PrivateMode;
 
 public class VideoPreferencesLicencesActivity extends AppCompatActivity {
 
@@ -30,9 +31,11 @@ public class VideoPreferencesLicencesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean darkModeActive = prefs.getBoolean("dark_mode", false);
-        if(darkModeActive){
+        if (PrivateMode.isActive()){
+            setTheme(R.style.PrivateDarkBlueTheme);
+        }else if (darkModeActive) {
             setTheme(R.style.DarkBlueTheme);
-        }else{
+        } else {
             setTheme(R.style.ArchosThemeBlue);
         }
         setContentView(R.layout.preferences_licences);

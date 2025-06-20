@@ -27,6 +27,7 @@ import android.view.View;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
+import com.archos.mediacenter.video.player.PrivateMode;
 
 public class VideoPreferencesActivity extends AppCompatActivity {
 
@@ -43,6 +44,10 @@ public class VideoPreferencesActivity extends AppCompatActivity {
         return mInstanceActivity;
     }
 
+    public void setPrivateDarkMode() {
+        setTheme(R.style.PrivateDarkBlueTheme);
+    }
+
     public void setDarkMode() {
         setTheme(R.style.DarkBlueTheme);
     }
@@ -56,7 +61,9 @@ public class VideoPreferencesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean darkModeActive = prefs.getBoolean("dark_mode", false);
-        if (darkModeActive) {
+        if (PrivateMode.isActive()){
+            setPrivateDarkMode();
+        }else if (darkModeActive) {
             setDarkMode();
         } else {
             setNormalMode();
