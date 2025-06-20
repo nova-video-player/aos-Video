@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -28,6 +29,7 @@ import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.preference.PreferenceManager;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -698,15 +700,35 @@ abstract public class BrowserCategory extends ListFragment {
                 if (item.icon != -1) {
                     Drawable iconDrawable = ContextCompat.getDrawable(parent.getContext(), item.icon);
                     if (iconDrawable != null) {
+                        Context context = parent.getContext();
+                        ColorStateList tintList;
                         if (item.id == mSelectedItemId) {
-                            // Apply tint only if this is the selected item
-                            iconDrawable.setTint(ContextCompat.getColor(parent.getContext(), R.color.black));
+                            // Tint selector for selected item (pressed: black, default: black)
+                            tintList = new ColorStateList(
+                                    new int[][] {
+                                            new int[] { android.R.attr.state_pressed },
+                                            new int[] {}
+                                    },
+                                    new int[] {
+                                            ContextCompat.getColor(context, R.color.black), // pressed
+                                            ContextCompat.getColor(context, R.color.black)  // default
+                                    });
                         } else {
-                            // Default color (no tint)
-                            iconDrawable.setTint(ContextCompat.getColor(parent.getContext(), R.color.white));
+                            // Tint selector for unselected item (pressed: black, default: white)
+                            tintList = new ColorStateList(
+                                    new int[][] {
+                                            new int[] { android.R.attr.state_pressed },
+                                            new int[] {}
+                                    },
+                                    new int[] {
+                                            ContextCompat.getColor(context, R.color.black), // pressed
+                                            ContextCompat.getColor(context, R.color.white)       // default
+                                    });
                         }
-                        iconDrawable.setTintMode(PorterDuff.Mode.SRC_IN);
-                        tv.setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null);
+                        Drawable wrappedDrawable = DrawableCompat.wrap(iconDrawable.mutate());
+                        DrawableCompat.setTintList(wrappedDrawable, tintList);
+                        DrawableCompat.setTintMode(wrappedDrawable, PorterDuff.Mode.SRC_IN);
+                        tv.setCompoundDrawablesWithIntrinsicBounds(wrappedDrawable, null, null, null);
                     }
                 } else {
                     tv.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
