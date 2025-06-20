@@ -225,8 +225,16 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     public void setBackground() {
         int backgroundResId = PrivateMode.isActive() ? R.drawable.background_2014_private : R.drawable.background_2014;
         getWindow().getDecorView().setBackgroundResource(backgroundResId);
-        if(mDrawerLayout != null)
+
+        java.util.function.IntFunction<Integer> dpToPx = dp ->
+                Math.round(dp * mDrawerLayout.getContext().getResources().getDisplayMetrics().density);
+        int maxWidthPx = ItemDataWidthCalculator.getMaxItemDataWidth(this);
+        if(mDrawerLayout != null){
             mDrawerLayout.findViewById(R.id.category_container).setBackgroundResource(backgroundResId);
+            ViewGroup.LayoutParams layoutParams = mDrawerLayout.findViewById(R.id.category_container).getLayoutParams();
+            layoutParams.width = maxWidthPx + dpToPx.apply(44);
+            mDrawerLayout.findViewById(R.id.category_container).setLayoutParams(layoutParams);
+        }
     }
 
     private static MainActivity mInstanceActivity;
@@ -237,16 +245,32 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     public void setDarkMode() {
         getWindow().getDecorView().setBackgroundResource(R.color.deep_dark_blue);
-        if(mDrawerLayout != null)
+
+        java.util.function.IntFunction<Integer> dpToPx = dp ->
+                Math.round(dp * mDrawerLayout.getContext().getResources().getDisplayMetrics().density);
+        int maxWidthPx = ItemDataWidthCalculator.getMaxItemDataWidth(this);
+        if(mDrawerLayout != null){
             mDrawerLayout.findViewById(R.id.category_container).setBackgroundResource(R.color.deep_dark_blue);
+            ViewGroup.LayoutParams layoutParams = mDrawerLayout.findViewById(R.id.category_container).getLayoutParams();
+            layoutParams.width = maxWidthPx + dpToPx.apply(44);
+            mDrawerLayout.findViewById(R.id.category_container).setLayoutParams(layoutParams);
+        }
         mToolbar.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.deep_dark_blue_transparent));
     }
 
     public void setNormalMode() {
         int backgroundResId = R.drawable.background_2014;
         getWindow().getDecorView().setBackgroundResource(backgroundResId);
-        if(mDrawerLayout != null)
+
+        java.util.function.IntFunction<Integer> dpToPx = dp ->
+                Math.round(dp * mDrawerLayout.getContext().getResources().getDisplayMetrics().density);
+        int maxWidthPx = ItemDataWidthCalculator.getMaxItemDataWidth(this);
+        if(mDrawerLayout != null){
             mDrawerLayout.findViewById(R.id.category_container).setBackgroundResource(backgroundResId);
+            ViewGroup.LayoutParams layoutParams = mDrawerLayout.findViewById(R.id.category_container).getLayoutParams();
+            layoutParams.width = maxWidthPx + dpToPx.apply(44);
+            mDrawerLayout.findViewById(R.id.category_container).setLayoutParams(layoutParams);
+        }
         mToolbar.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.leanback_background_transparent));
     }
 

@@ -712,7 +712,7 @@ abstract public class BrowserCategory extends ListFragment {
                     tv.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 }
 
-                tv.setTextSize(20); // Change the value to your preferred size
+                tv.setTextSize(18); // Change the value to your preferred size
             }
             else { // This is ITEM_VIEW_TYPE_SEPARATOR
                 tv.setText((CharSequence) mCategoryList.get(position));
