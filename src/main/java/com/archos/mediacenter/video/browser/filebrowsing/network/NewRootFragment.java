@@ -15,8 +15,11 @@
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,7 +30,9 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,6 +48,7 @@ import com.archos.mediacenter.video.browser.ShortcutDb;
 import com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser.BrowserBySFTP;
 import com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser.BrowserBySmb;
 import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser.BrowserByUpnp;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediaprovider.NetworkScanner;
 import com.archos.mediaprovider.video.NetworkScannerServiceVideo;
 
@@ -165,9 +171,21 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, R.string.rescan_indexed_folders, Menu.NONE, R.string.rescan_indexed_folders).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0,  R.string.manually_create_share, Menu.NONE, R.string.manually_create_share).setShowAsAction( MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, R.string.rescan_indexed_folders, Menu.NONE, applyCustomFont(R.string.rescan_indexed_folders)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0,  R.string.manually_create_share, Menu.NONE, applyCustomFont(R.string.manually_create_share)).setShowAsAction( MenuItem.SHOW_AS_ACTION_NEVER);
     }
+
+    private SpannableString applyCustomFont(@StringRes int resId) {
+        String family ="";
+        Typeface typeface = ResourcesCompat.getFont(getActivity(), R.font.nhaasgroteskdspro_75bd);
+        int color = ContextCompat.getColor(getActivity(), android.R.color.white);
+        float textSize = 18f; // in SP
+        String text = getActivity().getString(resId);
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.string.rescan_indexed_folders) {
