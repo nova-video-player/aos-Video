@@ -17,13 +17,20 @@ package com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.FileEditorFactory;
@@ -33,6 +40,7 @@ import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpSmbCommonRootFragment;
 import com.archos.mediacenter.video.browser.filebrowsing.network.WorkgroupShortcutAndServerAdapter;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediaprovider.NetworkScanner;
 
 import org.slf4j.Logger;
@@ -78,8 +86,20 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, R.string.refresh_servers_list, Menu.NONE, R.string.refresh_servers_list).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, R.string.refresh_servers_list, Menu.NONE, applyCustomFont(R.string.refresh_servers_list)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
     }
+
+    private SpannableString applyCustomFont(@StringRes int resId) {
+        String family ="";
+        Typeface typeface = ResourcesCompat.getFont(getActivity(), R.font.nhaasgroteskdspro_75bd);
+        int color = ContextCompat.getColor(getActivity(), android.R.color.white);
+        float textSize = 18f; // in SP
+        String text = getActivity().getString(resId);
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.string.refresh_servers_list) {
