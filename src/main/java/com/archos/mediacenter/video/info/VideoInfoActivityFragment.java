@@ -930,10 +930,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mScrollView.setSaveEnabled(false);
 
         // Horizontal offset of title
+        java.util.function.IntFunction<Integer> dpToPx = dp ->
+                Math.round(dp * mContext.getResources().getDisplayMetrics().density);
         for (int i = 0; i < mTitleBar.getChildCount(); i++) {
             View child = mTitleBar.getChildAt(i);
             if (child instanceof RelativeLayout) {
-                child.setTranslationX(-85); // Horizontal offset in pixels
+                child.setTranslationX(dpToPx.apply(-18)); // Horizontal offset in pixels
                 break;
             }
         }
