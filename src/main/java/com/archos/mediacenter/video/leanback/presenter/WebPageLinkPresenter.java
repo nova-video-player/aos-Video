@@ -25,6 +25,8 @@ import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.Presenter;
 
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,9 @@ import android.webkit.WebViewClient;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by vapillon on 10/04/15.
@@ -49,7 +54,7 @@ public class WebPageLinkPresenter extends Presenter {
         View mPlaceholder;
         WebView mWebView;
         View mProgress;
-        AsyncTask mWebViewDelayedInitTask;
+        WebViewDelayedInitTask mWebViewDelayedInitTask;
         String mUrl = null;
 
         public WebPageLinkViewHolder(ViewGroup parent) {
@@ -68,7 +73,8 @@ public class WebPageLinkPresenter extends Presenter {
             mCard.addView(mPlaceholder, lp);
 
             if(DBG) Log.d(TAG, "Launching delayed creation of webview in " + mCard + " for " + this);
-            mWebViewDelayedInitTask = new WebViewDelayedInitTask(mCard, mPlaceholder).execute();
+            mWebViewDelayedInitTask = new WebViewDelayedInitTask(mCard, mPlaceholder);
+            mWebViewDelayedInitTask.execute();
         }
 
         void setUrl(String url) {
@@ -79,7 +85,8 @@ public class WebPageLinkPresenter extends Presenter {
             }
             // Relaunch webview init if not on-going (it means it has been interrupted before finishing after ViewHolder creation)
             else if (mWebViewDelayedInitTask==null) {
-                mWebViewDelayedInitTask = new WebViewDelayedInitTask(mCard, mPlaceholder).execute();
+                mWebViewDelayedInitTask = new WebViewDelayedInitTask(mCard, mPlaceholder);
+                mWebViewDelayedInitTask.execute();
             }
         }
 
@@ -91,12 +98,61 @@ public class WebPageLinkPresenter extends Presenter {
         void abortWebviewInit() {
             if (mWebViewDelayedInitTask!=null) {
                 if(DBG) Log.d(TAG, "Canceling delayed init for WebView " + this);
-                mWebViewDelayedInitTask.cancel(false);
+                mWebViewDelayedInitTask.cancel();
                 mWebViewDelayedInitTask = null; // way to remember it is over
             }
         }
 
-        private void initWebView() {
+        /**
+         * Unconventional way to use the AsyncTask: the threaded part is just a delay done with a sleep
+         * All the work need to be done on the UI thread, hence in onPostExecute()
+         */
+        class WebViewDelayedInitTask {
+            private final ViewGroup mParent;
+            private final View mPlaceholder;
+            private final Handler mHandler = new Handler(Looper.getMainLooper());
+            private final ExecutorService executor = Executors.newSingleThreadExecutor();
+            private volatile boolean isCancelled = false;
+
+            public WebViewDelayedInitTask(ViewGroup parent, View placeholder) {
+                mParent = parent;
+                mPlaceholder = placeholder;
+            }
+
+            public void execute() {
+                executor.execute(() -> {
+                    try {
+                        Thread.sleep(500); // Simulate delay
+                        if (isCancelled) return; // Check cancellation
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+
+                    mHandler.post(() -> {
+                        if (isCancelled || Thread.currentThread().isInterrupted()) {
+                            if(DBG) Log.d(TAG, "WebViewDelayedInitTask canceled");
+                            return;
+                        }
+                        if(DBG) Log.d(TAG, "starting creation of WebView in " + mParent);
+
+                        Context c = mParent.getContext();
+                        View content = LayoutInflater.from(c).inflate(R.layout.leanback_weblink_cardview_content, mParent, false);
+                        View mProgress = content.findViewById(R.id.progress);
+                        WebView mWebView = content.findViewById(R.id.webview);
+
+                        initWebView(mWebView, mProgress);
+
+                        mParent.removeView(mPlaceholder);
+                        mParent.addView(content);
+                    });
+                });
+            }
+            public void cancel() {
+                isCancelled = true;
+            }
+        }
+
+        private void initWebView(WebView webView, View progress) {
             mWebView.setFocusable(false);
             mWebView.setInitialScale(80);
             mWebView.getSettings().setJavaScriptEnabled(true);
@@ -136,51 +192,6 @@ public class WebPageLinkPresenter extends Presenter {
             userAgent = userAgent.replace("Mobile", " ");
             mWebView.getSettings().setUserAgentString(userAgent);
         }
-
-        /**
-         * Unconventional way to use the AsyncTask: the threaded part is just a delay done with a sleep
-         * All the work need to be done on the UI thread, hence in onPostExecute()
-         */
-        class WebViewDelayedInitTask extends AsyncTask<View, Void, Boolean> {
-            final ViewGroup mParent;
-            final View mPlaceholder;
-
-            public WebViewDelayedInitTask(ViewGroup parent, View placeholder) {
-                mParent = parent;
-                mPlaceholder = placeholder;
-            }
-
-            @Override
-            protected Boolean doInBackground(View... views) {
-                try { Thread.sleep(500); } catch (InterruptedException e) {}
-                return Boolean.valueOf(!isCancelled());
-            }
-
-            @Override
-            protected void onPostExecute(Boolean doit) {
-                if (!doit.booleanValue() || isCancelled()) {
-                    if(DBG) Log.d(TAG, "WebViewDelayedInitTask canceled");
-                    return;
-                }
-                if(DBG) Log.d(TAG, "starting creation of WebView in " + mParent);
-
-                Context c = mParent.getContext();
-                View content = LayoutInflater.from(c).inflate(R.layout.leanback_weblink_cardview_content, mParent, false);
-                mProgress = content.findViewById(R.id.progress);
-                mWebView = (WebView)content.findViewById(R.id.webview);
-                initWebView();
-
-                mParent.removeView(mPlaceholder);
-                mParent.addView(content);
-
-                // Load the url if it has been setup already
-                if (mUrl!=null) {
-                    mWebView.loadUrl(mUrl);
-                }
-                mWebViewDelayedInitTask = null; // way to remember it is over
-            }
-        }
-
 
     }
 

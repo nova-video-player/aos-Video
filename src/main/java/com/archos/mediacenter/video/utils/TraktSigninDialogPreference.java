@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.util.AttributeSet;
 
 import androidx.appcompat.app.AlertDialog;
@@ -39,6 +38,9 @@ import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class TraktSigninDialogPreference extends Preference {
 
@@ -94,45 +96,24 @@ public class TraktSigninDialogPreference extends Preference {
                         }
                     }
                     NovaProgressDialog mProgress = NovaProgressDialog.show(getContext(), "", getContext().getResources().getString(R.string.connecting), true, true);
-                    AsyncTask t1 = new AsyncTask() {
-                        @Override
-                        protected void onPreExecute() {
-                            log.debug("OAuthCallback.onPreExecute: show dialog");
-                            // Check again before showing the dialog
-                            if (context instanceof Activity) {
-                                Activity activity = (Activity) context;
-                                if (activity.isFinishing() || activity.isDestroyed()) {
-                                    cancel(true);
-                                    return;
-                                }
-                            }
+
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    executor.execute(() -> {
+                        try {
                             mProgress.show();
-                        }
-
-                        @Override
-                        protected Object doInBackground(Object... params) {
-                            log.debug("OAuthCallback.doInBackground: get trakt accessToken");
-                            return Trakt.getAccessToken(oa.code);
-                        }
-
-                        @Override
-                        protected void onPostExecute(Object result) {
-                            log.debug("OAuthCallback.onPostExecute: store trakt accessToken and notify change");
-                            if (mProgress.isShowing()) {
-                                mProgress.dismiss();
+                            Trakt.accessToken result = Trakt.getAccessToken(oa.code);
+                            mProgress.dismiss();
+                            if (result != null && result.access_token != null) {
+                                log.debug("onClick: trakt access token is {}", result.access_token);
+                                Trakt.setAccessToken(getSharedPreferences(), result.access_token);
+                                Trakt.setRefreshToken(getSharedPreferences(), result.refresh_token);
+                                TraktSigninDialogPreference.this.notifyChanged();
                             }
-                            if (result != null && result instanceof Trakt.accessToken) {
-                                Trakt.accessToken res = (Trakt.accessToken) result;
-                                if (res.access_token != null) {
-                                    log.debug("onClick: trakt access token is {}", res.access_token);
-                                    Trakt.setAccessToken(getSharedPreferences(), res.access_token);
-                                    Trakt.setRefreshToken(getSharedPreferences(), res.refresh_token);
-                                    TraktSigninDialogPreference.this.notifyChanged();
-                                }
-                            }
+                        } catch (Exception e) {
+                            log.error("onClick: Error during Trakt access token retrieval", e);
+                            mProgress.dismiss();
                         }
-                    };
-                    t1.execute();
+                    });
                 } else {
                     log.debug("onClick: data.code null!");
                     if (!(context instanceof Activity) || ((Activity) context).isFinishing() || ((Activity) context).isDestroyed()) {
