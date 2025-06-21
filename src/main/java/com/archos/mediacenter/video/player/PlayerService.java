@@ -876,6 +876,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mTraktError = false;
             mTraktLiveScrobblingEnabled = Trakt.isLiveScrobblingEnabled(mPreferences);
             if (mTraktLiveScrobblingEnabled) {
+                if (mVideoInfo == null) {
+                    log.error("startTrakt: mVideoInfo is null, cannot start Trakt!");
+                    return;
+                }
                 int progress = getPlayerProgress();
                 mVideoInfo.traktResume = -progress; // traktResume is set to -resume unless synced with trakt
                 mVideoInfo.duration = Player.sPlayer.getDuration();
