@@ -19,10 +19,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,7 +37,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.MetaFile2;
@@ -46,6 +52,7 @@ import com.archos.mediacenter.video.browser.ShortcutDb;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.filebrowsing.BrowserByFolder;
 import com.archos.mediacenter.video.browser.filebrowsing.ListingAdapter;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediaprovider.NetworkScanner;
 
 import org.slf4j.Logger;
@@ -211,10 +218,10 @@ public class BrowserByNetwork extends BrowserByFolder {
 
             if (id>=0) {
                 // There is already a shortcut for this folder => suggest to remove it
-                menu.add(0, R.string.remove_from_indexed_folders, 0, R.string.remove_from_indexed_folders);
+                menu.add(0, R.string.remove_from_indexed_folders, 0, applyCustomFont(R.string.remove_from_indexed_folders));
             } else {
                 // There is no shortcut for this folder yet => suggest to add one
-                menu.add(0, R.string.add_to_indexed_folders, 0, R.string.add_to_indexed_folders);
+                menu.add(0, R.string.add_to_indexed_folders, 0, applyCustomFont(R.string.add_to_indexed_folders));
             }
             // TODO unhide
             // menu.add(0, R.string.nfo_export_folder, 0, R.string.nfo_export_folder);
@@ -400,15 +407,26 @@ public class BrowserByNetwork extends BrowserByFolder {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        MenuItem IndexFolderMenuItem = menu.add(0, R.string.add_to_indexed_folders, Menu.NONE, R.string.add_to_indexed_folders);
+        MenuItem IndexFolderMenuItem = menu.add(0, R.string.add_to_indexed_folders, Menu.NONE, applyCustomFont(R.string.add_to_indexed_folders));
         IndexFolderMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
         IndexFolderMenuItem.setActionView(mIndexFolderActionView);
-        menu.add(0,R.string.add_ssh_shortcut, 0,R.string.add_ssh_shortcut);
-        menu.add(0, R.string.remove_from_indexed_folders, Menu.NONE, R.string.remove_from_indexed_folders).setIcon(R.drawable.ic_menu_video_unindex).setShowAsAction(
+        menu.add(0,R.string.add_ssh_shortcut, 0, applyCustomFont(R.string.add_ssh_shortcut));
+        menu.add(0, R.string.remove_from_indexed_folders, Menu.NONE, applyCustomFont(R.string.remove_from_indexed_folders)).setIcon(R.drawable.ic_menu_video_unindex).setShowAsAction(
                 MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0, R.string.rescan, Menu.NONE, R.string.rescan);
-        menu.add(0,R.string.remove_from_shortcuts, 0,R.string.remove_from_shortcuts).setShowAsAction(
+        menu.add(0, R.string.rescan, Menu.NONE, applyCustomFont(R.string.rescan));
+        menu.add(0,R.string.remove_from_shortcuts, 0, applyCustomFont(R.string.remove_from_shortcuts)).setShowAsAction(
                 MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+    }
+
+    private SpannableString applyCustomFont(@StringRes int resId) {
+        String family ="";
+        Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
+        int color = ContextCompat.getColor(mContext, android.R.color.white);
+        float textSize = 18f; // in SP
+        String text = mContext.getString(resId);
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
     }
 
     private boolean helpOverlayAlreadyActivated() {
