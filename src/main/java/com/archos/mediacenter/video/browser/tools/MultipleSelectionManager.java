@@ -17,14 +17,20 @@ package com.archos.mediacenter.video.browser.tools;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.StringRes;
 import androidx.appcompat.view.ActionMode;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.preference.PreferenceManager;
 
@@ -42,6 +48,7 @@ import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.filebrowsing.network.BrowserByNetwork;
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -68,14 +75,25 @@ public class MultipleSelectionManager implements ActionMode.Callback {
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        menu.add(0, R.string.delete, 0,R.string.delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(0,R.string.copy_on_device_multi, 0,R.string.copy_on_device_multi).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0, R.string.video_browser_unindex_file, 0, R.string.video_browser_unindex_file).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, R.string.video_browser_index_file, 0, R.string.video_browser_index_file).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, R.string.mark_as_watched, 0, R.string.mark_as_watched).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, R.string.mark_as_not_watched, 0, R.string.mark_as_not_watched).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, R.string.delete, 0, applyCustomFont(R.string.delete)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0,R.string.copy_on_device_multi, 0, applyCustomFont(R.string.copy_on_device_multi)).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, R.string.video_browser_unindex_file, 0, applyCustomFont(R.string.video_browser_unindex_file)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, R.string.video_browser_index_file, 0, applyCustomFont(R.string.video_browser_index_file)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, R.string.mark_as_watched, 0, applyCustomFont(R.string.mark_as_watched)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, R.string.mark_as_not_watched, 0, applyCustomFont(R.string.mark_as_not_watched)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         onPrepareActionMode(mode, menu);
         return true;
+    }
+
+    private SpannableString applyCustomFont(@StringRes int resId) {
+        String family ="";
+        Typeface typeface = ResourcesCompat.getFont(mBrowser.getActivity(), R.font.nhaasgroteskdspro_75bd);
+        int color = ContextCompat.getColor(mBrowser.getActivity(), android.R.color.white);
+        float textSize = 18f; // in SP
+        String text = mBrowser.getActivity().getString(resId);
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
     }
 
     @Override
