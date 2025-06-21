@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -36,6 +37,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -345,7 +347,30 @@ abstract public class BrowserCategory extends ListFragment {
             f.setArguments(b);
         }
         loadFragmentAfterStackReset(f);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(struc.title);
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        activity.getSupportActionBar().setTitle(struc.title);
+        activity.getWindow().getDecorView().post(() -> {
+            Toolbar toolbar = activity.findViewById(R.id.main_toolbar);
+            if (toolbar != null) {
+                for (int i = 0; i < toolbar.getChildCount(); i++) {
+                    View child = toolbar.getChildAt(i);
+                    if (child instanceof TextView) {
+                        TextView titleView = (TextView) child;
+                        CharSequence currentTitle = activity.getSupportActionBar().getTitle();
+                        if (currentTitle != null && currentTitle.equals(titleView.getText())) {
+                            boolean mIsPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+                            if (mIsPortraitMode){
+                                titleView.setTranslationX(-50);
+                            } else {
+                                titleView.setTranslationX(0);
+                            }
+                            titleView.setPadding(0, 0, 0, 9);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
