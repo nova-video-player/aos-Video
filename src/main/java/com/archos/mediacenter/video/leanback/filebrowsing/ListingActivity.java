@@ -119,8 +119,8 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
      * Also goBackOneLevel() will return false if this root Uri is the current one
      */
     protected Uri getStartingUri() {
-        Uri uri = (Uri)getIntent().getParcelableExtra(EXTRA_STARTING_URI);
-        if (uri==null) {
+        Uri uri = getIntent().getExtras().getParcelable(EXTRA_STARTING_URI);
+        if (uri == null) {
             // Default to the root
             return getRootUri();
         }
@@ -140,8 +140,8 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
      * goBackOneLevel() will return false if this root Uri is the current one
      */
     protected Uri getRootUri() {
-        Uri uri = (Uri)getIntent().getParcelableExtra(EXTRA_ROOT_URI);
-        if (uri==null) {
+        Uri uri = getIntent().getExtras().getParcelable(EXTRA_ROOT_URI);
+        if (uri == null) {
             throw new IllegalStateException("EXTRA_ROOT_URI Uri is mandatory in the fragment arguments!");
         }
         return uri;
