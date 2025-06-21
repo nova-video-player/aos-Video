@@ -1001,7 +1001,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         super.onCreateOptionsMenu(menu, inflater);
         if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
             // Add the "sort mode" item
-            MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
+            MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, applyCustomFont(R.string.sort_mode));
             sortMenuItem.setIcon(R.drawable.ic_menu_sort);
             sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             mSortModeSubmenu.attachMenuItem(sortMenuItem);
