@@ -196,7 +196,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         }
 
         mColor = ContextCompat.getColor(getActivity(), R.color.leanback_details_background);
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.getMainLooper());
         mDescriptionPresenter = new TvshowDetailsDescriptionPresenter();
         mOverviewRowPresenter = new ArchosDetailsOverviewRowPresenter(mDescriptionPresenter);
         //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus

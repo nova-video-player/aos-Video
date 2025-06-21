@@ -17,6 +17,8 @@ package com.archos.mediacenter.video.leanback.network;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.widget.Toast;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 
 import com.archos.mediacenter.video.R;
@@ -60,7 +62,16 @@ public class NetworkRootActivity extends SingleFragmentActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public void onBackPressed() { finish(); }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
+    }
 
     private int keyupCount = 0;
     private long keyupTrainStartTimeMs = 0;

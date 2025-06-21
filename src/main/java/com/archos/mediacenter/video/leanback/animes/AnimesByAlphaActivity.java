@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.animes;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 
 import com.archos.mediacenter.video.leanback.SingleFragmentActivity;
@@ -24,7 +25,14 @@ public class AnimesByAlphaActivity extends SingleFragmentActivity {
         return new AnimesByAlphaFragment();
     }
 
-    public void onBackPressed(){
-        finish();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
     }
 }

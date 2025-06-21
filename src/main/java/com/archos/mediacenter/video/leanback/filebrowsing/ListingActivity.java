@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.leanback.filebrowsing;
 import static com.archos.filecorelibrary.smbj.SmbjUtils.isSMBjEnabled;
 import static com.archos.filecorelibrary.sshj.SshjUtils.isSSHjEnabled;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -172,13 +173,19 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        MultiBackHintManager.getInstance(this).onBackPressed();
+    protected void onStart() {
+        super.onStart();
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                MultiBackHintManager.getInstance(ListingActivity.this).onBackPressed();
 
-        boolean popped = getSupportFragmentManager().popBackStackImmediate();
-        if (!popped) {
-            super.onBackPressed();
-        }
+                boolean popped = getSupportFragmentManager().popBackStackImmediate();
+                if (!popped) {
+                    finish();
+                }
+            }
+        });
     }
 
     @Override

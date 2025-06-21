@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.movies;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 
 import com.archos.mediacenter.video.leanback.SingleFragmentActivity;
@@ -24,7 +25,14 @@ public class MoviesByYearActivity extends SingleFragmentActivity {
         return new MoviesByYearFragment();
     }
 
-    public void onBackPressed(){
-        finish();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
     }
 }

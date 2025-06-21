@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 
 import com.archos.mediacenter.video.leanback.SingleFragmentActivity;
@@ -27,7 +28,14 @@ public class SeasonActivity extends SingleFragmentActivity {
         return new SeasonFragment();
     }
 
-    public void onBackPressed(){
-        finish();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
     }
 }
