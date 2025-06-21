@@ -1677,7 +1677,19 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     setTextOrHideContainer(mSecondaryEpisodeSeasonView, getContext().getString(R.string.leanback_episode_SXEX_code, episode.getSeasonNumber(), episode.getEpisodeNumber()), mSecondaryEpisodeSeasonView);
                 //set episode still image
                 Picasso.get().load(episode.getPictureUri()).into(mPictureBackdrop);
-            } else if (video instanceof Movie){
+            }else{
+                log.debug("setCurrentVideo: new video and it is NOT an episode");
+                if(video.getName()!=null)
+                    name = video.getName();
+                mEpisodeSeasonView.setVisibility(View.GONE);
+                if(mSecondaryEpisodeSeasonView!=null)
+                    mSecondaryEpisodeSeasonView.setVisibility(View.GONE);
+                mEpisodeTitleView.setVisibility(View.GONE);
+                if(mSecondaryEpisodeTitleView!=null)
+                    mSecondaryEpisodeTitleView.setVisibility(View.GONE);
+            }
+
+            if (video instanceof Movie){
                 mMovieInfoContainer.setVisibility(View.VISIBLE);
                 mMovieResolutionContainer.setVisibility(View.VISIBLE);
 
@@ -1688,7 +1700,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 mEpisodeSeasonView.setVisibility(View.GONE);
                 mEpisodeInfoContainer.setVisibility(View.GONE);
                 mEpisodeResolutionContainer.setVisibility(View.GONE);
-            } else {
+            }
+
+            if (!(video instanceof Episode ) && !(video instanceof Movie)){
                 //hide tags if not movie or episode
                 log.debug("setCurrentVideo: new video and it is NOT an episode");
                 if(video.getName()!=null)
