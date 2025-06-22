@@ -84,6 +84,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.widget.ActionMenuView;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -703,7 +705,49 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         return mSearchView;
     }
 
+    private void attachCustomTooltip(View anchorView, String message) {
+        anchorView.setOnLongClickListener(v -> {
+            Context context = v.getContext();
+            Toast toast = new Toast(context);
+
+            TextView textView = new TextView(context);
+            textView.setText(message);
+            textView.setTextColor(Color.WHITE);
+            textView.setBackgroundResource(R.drawable.menu_bg);
+            textView.setPadding(24, 16, 24, 16);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            textView.setTypeface(ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_75bd));
+            textView.setGravity(Gravity.CENTER);
+
+            // Measure the textView to get width
+            textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            int tooltipWidth = textView.getMeasuredWidth();
+
+            toast.setView(textView);
+
+            // Get location of the anchor view
+            int[] location = new int[2];
+            v.getLocationOnScreen(location);
+            int anchorX = location[0];
+            int anchorY = location[1];
+
+            int viewWidth = v.getWidth();
+            int centerX = anchorX + viewWidth / 2;
+
+            // Position toast so it's centered horizontally below the anchor
+            int xOffset = centerX - tooltipWidth / 2;
+            int yOffset = anchorY + v.getHeight() + 16; // distance below the view
+
+            toast.setGravity(Gravity.TOP | Gravity.START, xOffset, yOffset);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.show();
+
+            return true;
+        });
+    }
+
     @Override
+    @SuppressLint("RestrictedApi")
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean ret = super.onCreateOptionsMenu(menu);
         /// /setHomeButtonsetHomeButton();
@@ -715,6 +759,28 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             item.setIcon(R.drawable.android29_ic_menu_search_mtrl_alpha);
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
             item.setActionView(mSearchView);
+
+            Toolbar toolbar = findViewById(R.id.main_toolbar);
+            String expectedTitle = getString(R.string.search_title);
+            toolbar.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+                for (int i = 0; i < toolbar.getChildCount(); i++) {
+                    View child = toolbar.getChildAt(i);
+                    if (child instanceof ActionMenuView) {
+                        ActionMenuView menuView = (ActionMenuView) child;
+                        for (int j = 0; j < menuView.getChildCount(); j++) {
+                            View itemView = menuView.getChildAt(j);
+                            if (itemView instanceof ActionMenuItemView) {
+                                CharSequence title = ((ActionMenuItemView) itemView).getItemData().getTitle();
+                                if (title != null && title.toString().equalsIgnoreCase(expectedTitle)) {
+                                    attachCustomTooltip(itemView, getString(R.string.search_title));
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
             // Set custom search text and hint text
             // 1. Get the SearchAutoComplete (internal EditText)
             SearchView.SearchAutoComplete searchEditText = mSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
