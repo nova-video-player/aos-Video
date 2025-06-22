@@ -15,6 +15,8 @@
 package com.archos.mediacenter.video.leanback.collections;
 
 import android.view.KeyEvent;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 
 import com.archos.mediacenter.video.R;
@@ -47,7 +49,14 @@ public class AllCollectionsGridActivity extends SingleFragmentActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public void onBackPressed(){
-        finish();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
     }
 }
