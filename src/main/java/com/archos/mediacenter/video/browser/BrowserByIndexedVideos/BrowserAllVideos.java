@@ -160,6 +160,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 			Toolbar toolbar = requireActivity().findViewById(R.id.main_toolbar);
 			String expectedTitle = getString(R.string.sort_mode);
 			toolbar.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+				if (!isAdded()) return;
 				for (int i = 0; i < toolbar.getChildCount(); i++) {
 					View child = toolbar.getChildAt(i);
 					if (child instanceof ActionMenuView) {

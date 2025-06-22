@@ -1247,6 +1247,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             Toolbar toolbar = requireActivity().findViewById(R.id.main_toolbar);
             String expectedTitle = getString(R.string.view_mode);
             toolbar.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+                if (!isAdded()) return; // Prevent crash if fragment is detached
                 for (int i = 0; i < toolbar.getChildCount(); i++) {
                     View child = toolbar.getChildAt(i);
                     if (child instanceof ActionMenuView) {
