@@ -760,12 +760,11 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
             item.setActionView(mSearchView);
 
-            Toolbar toolbar = findViewById(R.id.main_toolbar);
             String expectedSearchTitle = getString(R.string.search_title);
             String expectedOverflowText = getString(R.string.overflow_menu_description);
-            toolbar.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-                for (int i = 0; i < toolbar.getChildCount(); i++) {
-                    View child = toolbar.getChildAt(i);
+            mToolbar.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+                for (int i = 0; i < mToolbar.getChildCount(); i++) {
+                    View child = mToolbar.getChildAt(i);
                     if (child instanceof ActionMenuView) {
                         ActionMenuView menuView = (ActionMenuView) child;
                         for (int j = 0; j < menuView.getChildCount(); j++) {
