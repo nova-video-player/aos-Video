@@ -102,6 +102,36 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+        log.debug("onActivityCreated: mSeparateAnimeFromShowMovie=" + mSeparateAnimeFromShowMovie);
+
+        mSortOrder = mPrefs.getString(getSortOrderParamKey(), mDefaultSort);
+
+        Resources r = getResources();
+        updateBackground();
+
+        setHeadersState(HEADERS_ENABLED);
+        setHeadersTransitionOnBackEnabled(true);
+
+        // set fastLane (or headers) background color
+        setBrandColor(ContextCompat.getColor(getActivity(), R.color.leanback_side));
+
+        // set search icon color
+        setSearchAffordanceColor(ContextCompat.getColor(getActivity(),R.color.lightblueA200));
+
+        setupEventListeners();
+
+        RowPresenter rowPresenter = new ListRowPresenter();
+        rowPresenter.setHeaderPresenter(new RowHeaderPresenter());
+        mRowsAdapter = new ArrayObjectAdapter(rowPresenter);
+        setAdapter(mRowsAdapter);
+
+        mTvshowPresenter = new PosterImageCardPresenter(getActivity());
+        mTvshowMapper = new CompatibleCursorMapperConverter(new TvshowCursorMapper());
+
+        LoaderManager.getInstance(this).initLoader(-1, null, this);
+
         mOverlay = new Overlay(this);
 
         SearchOrbView searchOrbView = (SearchOrbView) getView().findViewById(R.id.title_orb);
@@ -137,41 +167,6 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment implements
     public void onPause() {
         super.onPause();
         mOverlay.pause();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
-        log.debug("onActivityCreated: mSeparateAnimeFromShowMovie=" + mSeparateAnimeFromShowMovie);
-
-        mSortOrder = mPrefs.getString(getSortOrderParamKey(), mDefaultSort);
-
-        Resources r = getResources();
-        updateBackground();
-
-        setHeadersState(HEADERS_ENABLED);
-        setHeadersTransitionOnBackEnabled(true);
-
-        // set fastLane (or headers) background color
-        setBrandColor(ContextCompat.getColor(getActivity(), R.color.leanback_side));
-
-        // set search icon color
-        setSearchAffordanceColor(ContextCompat.getColor(getActivity(),R.color.lightblueA200));
-
-        setupEventListeners();
-
-        RowPresenter rowPresenter = new ListRowPresenter();
-        rowPresenter.setHeaderPresenter(new RowHeaderPresenter());
-        mRowsAdapter = new ArrayObjectAdapter(rowPresenter);
-        setAdapter(mRowsAdapter);
-
-        mTvshowPresenter = new PosterImageCardPresenter(getActivity());
-        mTvshowMapper = new CompatibleCursorMapperConverter(new TvshowCursorMapper());
-
-        LoaderManager.getInstance(this).initLoader(-1, null, this);
     }
 
     private void setupEventListeners() {

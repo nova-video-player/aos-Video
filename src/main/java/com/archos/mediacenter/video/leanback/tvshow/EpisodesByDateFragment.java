@@ -55,13 +55,13 @@ public class EpisodesByDateFragment extends VideosByFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        log.debug("onActivityCreated");
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        log.debug("onViewCreated");
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mDateView = mPrefs.getInt(VIEW_PARAM_KEY, 0);
         mSeparateAnimeFromShowMovie = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
 
-        super.onActivityCreated(savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
 
         setTitle(getString(R.string.episodes_by_date));
         SearchOrbView searchOrbView = (SearchOrbView) getView().findViewById(R.id.title_orb);

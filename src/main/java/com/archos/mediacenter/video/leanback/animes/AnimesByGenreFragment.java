@@ -19,6 +19,7 @@ import androidx.loader.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.SparseArray;
+import android.view.View;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.AnimesByGenreLoader;
@@ -43,8 +44,8 @@ public class AnimesByGenreFragment extends VideosByFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         setTitle(getString(R.string.animes_by_genre));
 

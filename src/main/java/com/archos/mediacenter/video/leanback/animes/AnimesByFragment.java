@@ -99,6 +99,35 @@ public abstract class AnimesByFragment extends BrowseSupportFragment implements 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mSortOrder = mPrefs.getString(getSortOrderParamKey(), AnimesLoader.DEFAULT_SORT);
+
+        Resources r = getResources();
+
+        updateBackground();
+
+        setHeadersState(HEADERS_ENABLED);
+        setHeadersTransitionOnBackEnabled(true);
+
+        // set fastLane (or headers) background color
+        setBrandColor(ContextCompat.getColor(getActivity(), R.color.leanback_side));
+
+        // set search icon color
+        setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.lightblueA200));
+
+        setupEventListeners();
+
+        RowPresenter rowPresenter = new ListRowPresenter();
+        rowPresenter.setHeaderPresenter(new RowHeaderPresenter());
+        mRowsAdapter = new ArrayObjectAdapter(rowPresenter);
+        setAdapter(mRowsAdapter);
+
+        mVideoPresenter = new PosterImageCardPresenter(getActivity());
+        mVideoMapper = new CompatibleCursorMapperConverter(new VideoCursorMapper());
+
+        LoaderManager.getInstance(this).initLoader(-1, null, this);
+
         mOverlay = new Overlay(this);
 
         SearchOrbView searchOrbView = (SearchOrbView) getView().findViewById(R.id.title_orb);
@@ -143,40 +172,7 @@ public abstract class AnimesByFragment extends BrowseSupportFragment implements 
         super.onPause();
         mOverlay.pause();
     }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mSortOrder = mPrefs.getString(getSortOrderParamKey(), AnimesLoader.DEFAULT_SORT);
-
-        Resources r = getResources();
-
-        updateBackground();
-
-        setHeadersState(HEADERS_ENABLED);
-        setHeadersTransitionOnBackEnabled(true);
-
-        // set fastLane (or headers) background color
-        setBrandColor(ContextCompat.getColor(getActivity(), R.color.leanback_side));
-
-        // set search icon color
-        setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.lightblueA200));
-
-        setupEventListeners();
-
-        RowPresenter rowPresenter = new ListRowPresenter();
-        rowPresenter.setHeaderPresenter(new RowHeaderPresenter());
-        mRowsAdapter = new ArrayObjectAdapter(rowPresenter);
-        setAdapter(mRowsAdapter);
-
-        mVideoPresenter = new PosterImageCardPresenter(getActivity());
-        mVideoMapper = new CompatibleCursorMapperConverter(new VideoCursorMapper());
-
-        LoaderManager.getInstance(this).initLoader(-1, null, this);
-    }
-
+    
     private void setupEventListeners() {
         setOnSearchClickedListener(new View.OnClickListener() {
             public void onClick(View view) {

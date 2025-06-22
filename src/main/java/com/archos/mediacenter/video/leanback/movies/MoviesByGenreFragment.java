@@ -21,6 +21,7 @@ import androidx.preference.PreferenceManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.SparseArray;
+import android.view.View;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.FilmsByGenreLoader;
@@ -47,8 +48,8 @@ public class MoviesByGenreFragment extends VideosByFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         setTitle(getString(R.string.movies_by_genre));
         mSortOrderEntries = MoviesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);

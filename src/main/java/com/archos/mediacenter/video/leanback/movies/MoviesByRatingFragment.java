@@ -21,6 +21,7 @@ import androidx.loader.content.Loader;
 import androidx.preference.PreferenceManager;
 
 import android.util.SparseArray;
+import android.view.View;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.FilmsByRatingLoader;
@@ -52,8 +53,8 @@ public class MoviesByRatingFragment extends VideosByFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         setTitle(getString(R.string.movies_by_rating));
 
