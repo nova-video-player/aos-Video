@@ -33,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.ActionMenuView;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -158,23 +159,39 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 			mSortModeSubmenu.attachMenuItem(sortMenuItem);
 
 			Toolbar toolbar = requireActivity().findViewById(R.id.main_toolbar);
-			String expectedTitle = getString(R.string.sort_mode);
-			toolbar.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-				if (!isAdded()) return;
-				for (int i = 0; i < toolbar.getChildCount(); i++) {
-					View child = toolbar.getChildAt(i);
-					if (child instanceof ActionMenuView) {
-						ActionMenuView menuView = (ActionMenuView) child;
-						for (int j = 0; j < menuView.getChildCount(); j++) {
-							View itemView = menuView.getChildAt(j);
-							if (itemView instanceof ActionMenuItemView) {
-								CharSequence title = ((ActionMenuItemView) itemView).getItemData().getTitle();
-								if (title != null && title.toString().equalsIgnoreCase(expectedTitle)) {
-									attachCustomTooltip(itemView, getString(R.string.sort_mode));
-									return;
+			String sortTitle = getString(R.string.sort_mode);
+
+			ViewTreeObserver observer = toolbar.getViewTreeObserver();
+			observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+				@Override
+				public void onGlobalLayout() {
+					if (!isAdded()) return;
+
+					boolean sortTooltipSet = false;
+
+					for (int i = 0; i < toolbar.getChildCount(); i++) {
+						View child = toolbar.getChildAt(i);
+						if (child instanceof ActionMenuView) {
+							ActionMenuView menuView = (ActionMenuView) child;
+							for (int j = 0; j < menuView.getChildCount(); j++) {
+								View itemView = menuView.getChildAt(j);
+								if (itemView instanceof ActionMenuItemView) {
+									CharSequence title = ((ActionMenuItemView) itemView).getItemData().getTitle();
+									if (title != null) {
+										String titleStr = title.toString();
+										if (!sortTooltipSet && titleStr.equalsIgnoreCase(sortTitle)) {
+											attachCustomTooltip(itemView, sortTitle);
+											sortTooltipSet = true;
+										}
+									}
 								}
 							}
 						}
+					}
+
+					// Once both are set, remove listener
+					if (sortTooltipSet) {
+						toolbar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 					}
 				}
 			});
