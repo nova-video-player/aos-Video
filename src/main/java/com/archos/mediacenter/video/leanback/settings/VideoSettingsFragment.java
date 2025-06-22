@@ -2,21 +2,36 @@ package com.archos.mediacenter.video.leanback.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.leanback.preference.LeanbackPreferenceFragmentCompat;
 import androidx.leanback.preference.LeanbackSettingsFragmentCompat;
 
-import com.archos.mediacenter.video.CustomApplication;
+import com.archos.mediacenter.video.utils.VideoPreferencesActivity;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
 public class VideoSettingsFragment extends LeanbackSettingsFragmentCompat {
 
     private PrefsFragment mPrefsFragment;
+    private ActivityResultLauncher<Intent> mActivityResultLauncher;
 
     @Override
     public void onPreferenceStartInitialScreen() {
+        mActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (mPrefsFragment != null && mPrefsFragment.mPreferencesCommon != null) {
+                        Intent data = result.getData();
+                        int resultCode = result.getResultCode();
+                        int requestCode = VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE;
+                        mPrefsFragment.mPreferencesCommon.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
+        );
         mPrefsFragment = new PrefsFragment();
         startPreferenceFragment(mPrefsFragment);
     }
@@ -36,17 +51,13 @@ public class VideoSettingsFragment extends LeanbackSettingsFragmentCompat {
         return true;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (mPrefsFragment != null)
-            mPrefsFragment.onActivityResult(requestCode, resultCode, data);
+    public void launchFolderPicker(Intent intent) {
+        mActivityResultLauncher.launch(intent);
     }
 
     public static class PrefsFragment extends LeanbackPreferenceFragmentCompat {
 
-        private VideoPreferencesCommon mPreferencesCommon = new VideoPreferencesCommon(this);
+        VideoPreferencesCommon mPreferencesCommon = new VideoPreferencesCommon(this);
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -65,10 +76,5 @@ public class VideoSettingsFragment extends LeanbackSettingsFragmentCompat {
             mPreferencesCommon.onSaveInstanceState(outState);
         }
 
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
-            mPreferencesCommon.onActivityResult(requestCode, resultCode, data);
-        }
     }
 }
