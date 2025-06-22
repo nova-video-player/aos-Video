@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.search;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -21,8 +22,12 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.SearchSupportFragment;
@@ -49,6 +54,9 @@ import com.archos.mediacenter.video.leanback.presenter.EmptyViewPresenter;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import androidx.leanback.widget.ShadowLessRowPresenter;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 public class VideoSearchFragment extends SearchSupportFragment implements SearchSupportFragment.SearchResultProvider {
 
     static final String TAG = "VideoSearchFragment";
@@ -56,11 +64,14 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
     private static final int SEARCH_DELAY_MS = 300;
 
     private ArrayObjectAdapter mRowsAdapter;
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler(Looper.getMainLooper());
     private SearchRunnable mDelayedLoad;
     private VideoLoader mSearchLoader;
     private String mLastQuery;
-    private static final int SEARCH_REQUEST_CODE = 1;
+
+    private final Executor mExecutor = Executors.newSingleThreadExecutor();
+    private final Handler mMainHandler = new Handler(Looper.getMainLooper());
+    private ActivityResultLauncher<Intent> mSearchResultLauncher;
 
     private class SearchRunnable implements Runnable {
         private String mQuery;
@@ -76,6 +87,16 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mSearchResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    Intent data = result.getData();
+                    if (result.getResultCode() == Activity.RESULT_OK && data != null) {
+                        setSearchQuery(data, true);
+                    }
+                }
+        );
 
         ClassPresenterSelector rowsPresenterSelector = new ClassPresenterSelector();
         rowsPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
@@ -102,21 +123,19 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
             mSearchLoader = new SearchVideoLoader(getActivity());
         }
     }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode==SEARCH_REQUEST_CODE&&data!=null){
-                setSearchQuery(data, true);
-        }
-    }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         Resources r = getResources();
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
         try {
             bgMngr.attach(getActivity().getWindow());
-        } catch (IllegalStateException e) {}
+        } catch (IllegalStateException e) {
+            // BackgroundManager.attach() can throw IllegalStateException if the window is not ready yet
+            Log.w(TAG, "BackgroundManager.attach() failed, retrying later", e);
+            // We will set the background color later in onActivityCreated()
+        }
         bgMngr.setColor(ContextCompat.getColor(getActivity(), R.color.leanback_background));
     }
 
@@ -151,47 +170,40 @@ public class VideoSearchFragment extends SearchSupportFragment implements Search
     }
 
     private void loadRows(final String query) {
-        new AsyncTask<String, Void, ListRow>() {
-            @Override
-            protected void onPreExecute() {
-                mRowsAdapter.clear();
-            }
-
-            @Override
-            protected ListRow doInBackground(String... params) {
-                if (getActivity() != null && ! getActivity().isFinishing()) {
-                    ContentResolver cr = getActivity().getContentResolver();
-                    if (mSearchLoader instanceof SearchMovieLoader) {
-                        ((SearchMovieLoader) mSearchLoader).setQuery(query);
-                    } else if (mSearchLoader instanceof SearchEpisodeLoader) {
-                        ((SearchEpisodeLoader) mSearchLoader).setQuery(query);
-                    } else if (mSearchLoader instanceof SearchNonScrapedVideoLoader) {
-                        ((SearchNonScrapedVideoLoader) mSearchLoader).setQuery(query);
-                    } else {
-                        ((SearchVideoLoader) mSearchLoader).setQuery(query);
-                    }
-                    Cursor cursor = cr.query(mSearchLoader.getUri(), mSearchLoader.getProjection(), mSearchLoader.getSelection(), mSearchLoader.getSelectionArgs(), mSearchLoader.getSortOrder());
-                    if (cursor.getCount() > 0) {
-                        CursorObjectAdapter listRowAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
-                        listRowAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
-                        listRowAdapter.changeCursor(cursor);
-                        return new ListRow(ROW_ID, new HeaderItem(getString(R.string.search_results)), listRowAdapter);
-                    } else {
-                        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new EmptyViewPresenter());
-                        listRowAdapter.add(new EmptyView(getString(R.string.no_results_found)));
-                        return new ShadowLessListRow(new HeaderItem(getString(R.string.search_results)), listRowAdapter);
-                    }
+        mRowsAdapter.clear();
+        mExecutor.execute(() -> {
+            ListRow listRow = null;
+            if (getActivity() != null && !getActivity().isFinishing()) {
+                ContentResolver cr = getActivity().getContentResolver();
+                if (mSearchLoader instanceof SearchMovieLoader) {
+                    ((SearchMovieLoader) mSearchLoader).setQuery(query);
+                } else if (mSearchLoader instanceof SearchEpisodeLoader) {
+                    ((SearchEpisodeLoader) mSearchLoader).setQuery(query);
+                } else if (mSearchLoader instanceof SearchNonScrapedVideoLoader) {
+                    ((SearchNonScrapedVideoLoader) mSearchLoader).setQuery(query);
                 } else {
-                    Log.e(TAG, "loadRows: no more activity, aborting search");
-                    return null;
+                    ((SearchVideoLoader) mSearchLoader).setQuery(query);
                 }
+                Cursor cursor = cr.query(mSearchLoader.getUri(), mSearchLoader.getProjection(), mSearchLoader.getSelection(), mSearchLoader.getSelectionArgs(), mSearchLoader.getSortOrder());
+                if (cursor != null && cursor.getCount() > 0) {
+                    CursorObjectAdapter listRowAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
+                    listRowAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
+                    listRowAdapter.changeCursor(cursor);
+                    listRow = new ListRow(ROW_ID, new HeaderItem(getString(R.string.search_results)), listRowAdapter);
+                } else {
+                    ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new EmptyViewPresenter());
+                    listRowAdapter.add(new EmptyView(getString(R.string.no_results_found)));
+                    listRow = new ShadowLessListRow(new HeaderItem(getString(R.string.search_results)), listRowAdapter);
+                }
+                if (cursor != null) cursor.close();
+            } else {
+                Log.e(TAG, "loadRows: no more activity, aborting search");
             }
-
-            @Override
-            protected void onPostExecute(ListRow listRow) {
-                if (listRow != null) mRowsAdapter.add(listRow);
-            }
-        }.execute();
+            final ListRow finalListRow = listRow;
+            mMainHandler.post(() -> {
+                if (finalListRow != null) mRowsAdapter.add(finalListRow);
+            });
+        });
     }
 
 }
