@@ -54,6 +54,7 @@ import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -1245,23 +1246,39 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             mDisplayModeSubmenu.attachMenuItem(viewModeMenuItem);
 
             Toolbar toolbar = requireActivity().findViewById(R.id.main_toolbar);
-            String expectedTitle = getString(R.string.view_mode);
-            toolbar.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-                if (!isAdded()) return; // Prevent crash if fragment is detached
-                for (int i = 0; i < toolbar.getChildCount(); i++) {
-                    View child = toolbar.getChildAt(i);
-                    if (child instanceof ActionMenuView) {
-                        ActionMenuView menuView = (ActionMenuView) child;
-                        for (int j = 0; j < menuView.getChildCount(); j++) {
-                            View itemView = menuView.getChildAt(j);
-                            if (itemView instanceof ActionMenuItemView) {
-                                CharSequence title = ((ActionMenuItemView) itemView).getItemData().getTitle();
-                                if (title != null && title.toString().equalsIgnoreCase(expectedTitle)) {
-                                    attachCustomTooltip(itemView, getString(R.string.view_mode));
-                                    return;
+            String viewModeTitle = getString(R.string.view_mode);
+
+            ViewTreeObserver observer = toolbar.getViewTreeObserver();
+            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (!isAdded()) return;
+
+                    boolean viewModeTooltipSet = false;
+
+                    for (int i = 0; i < toolbar.getChildCount(); i++) {
+                        View child = toolbar.getChildAt(i);
+                        if (child instanceof ActionMenuView) {
+                            ActionMenuView menuView = (ActionMenuView) child;
+                            for (int j = 0; j < menuView.getChildCount(); j++) {
+                                View itemView = menuView.getChildAt(j);
+                                if (itemView instanceof ActionMenuItemView) {
+                                    CharSequence title = ((ActionMenuItemView) itemView).getItemData().getTitle();
+                                    if (title != null) {
+                                        String titleStr = title.toString();
+                                        if (!viewModeTooltipSet && titleStr.equalsIgnoreCase(viewModeTitle)) {
+                                            attachCustomTooltip(itemView, viewModeTitle);
+                                            viewModeTooltipSet = true;
+                                        }
+                                    }
                                 }
                             }
                         }
+                    }
+
+                    // Once both are set, remove listener
+                    if (viewModeTooltipSet) {
+                        toolbar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                 }
             });
