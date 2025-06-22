@@ -15,9 +15,12 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,16 +28,24 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.widget.ActionMenuView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
@@ -197,6 +208,48 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
         return ""; // no title because there is the NAVIGATION_MODE_LIST list at this place instead
     }
 
+	private void attachCustomTooltip(View anchorView, String message) {
+		anchorView.setOnLongClickListener(v -> {
+			Context context = v.getContext();
+			Toast toast = new Toast(context);
+
+			TextView textView = new TextView(context);
+			textView.setText(message);
+			textView.setTextColor(Color.WHITE);
+			textView.setBackgroundResource(R.drawable.menu_bg);
+			textView.setPadding(24, 16, 24, 16);
+			textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+			textView.setTypeface(ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd));
+			textView.setGravity(Gravity.CENTER);
+
+			// Measure the textView to get width
+			textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+			int tooltipWidth = textView.getMeasuredWidth();
+
+			toast.setView(textView);
+
+			// Get location of the anchor view
+			int[] location = new int[2];
+			v.getLocationOnScreen(location);
+			int anchorX = location[0];
+			int anchorY = location[1];
+
+			int viewWidth = v.getWidth();
+			int centerX = anchorX + viewWidth / 2;
+
+			// Position toast so it's centered horizontally below the anchor
+			int xOffset = centerX - tooltipWidth / 2;
+			int yOffset = anchorY + v.getHeight() + 16; // distance below the view
+
+			toast.setGravity(Gravity.TOP | Gravity.START, xOffset, yOffset);
+			toast.setDuration(Toast.LENGTH_SHORT);
+			toast.show();
+
+			return true;
+		});
+	}
+
+	@SuppressLint("RestrictedApi")
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
             // Add the "view mode" item
@@ -219,7 +272,50 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			mSortModeSubmenu.attachMenuItem(sortMenuItem);
 
-			
+			Toolbar toolbar = requireActivity().findViewById(R.id.main_toolbar);
+			String sortTitle = getString(R.string.sort_mode);
+			String viewModeTitle = getString(R.string.view_mode);
+
+			ViewTreeObserver observer = toolbar.getViewTreeObserver();
+			observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+				@Override
+				public void onGlobalLayout() {
+					if (!isAdded()) return;
+
+					boolean sortTooltipSet = false;
+					boolean viewModeTooltipSet = false;
+
+					for (int i = 0; i < toolbar.getChildCount(); i++) {
+						View child = toolbar.getChildAt(i);
+						if (child instanceof ActionMenuView) {
+							ActionMenuView menuView = (ActionMenuView) child;
+							for (int j = 0; j < menuView.getChildCount(); j++) {
+								View itemView = menuView.getChildAt(j);
+								if (itemView instanceof ActionMenuItemView) {
+									CharSequence title = ((ActionMenuItemView) itemView).getItemData().getTitle();
+									if (title != null) {
+										String titleStr = title.toString();
+										if (!sortTooltipSet && titleStr.equalsIgnoreCase(sortTitle)) {
+											attachCustomTooltip(itemView, sortTitle);
+											sortTooltipSet = true;
+										}
+										if (!viewModeTooltipSet && titleStr.equalsIgnoreCase(viewModeTitle)) {
+											attachCustomTooltip(itemView, viewModeTitle);
+											viewModeTooltipSet = true;
+										}
+									}
+								}
+							}
+						}
+					}
+
+					// Once both are set, remove listener
+					if (sortTooltipSet && viewModeTooltipSet) {
+						toolbar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+					}
+				}
+			});
+
 			mSortModeSubmenu.clear();
 			addSortOptionsSubmenus(mSortModeSubmenu);
 
