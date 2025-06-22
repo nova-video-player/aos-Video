@@ -24,8 +24,9 @@ import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.widget.Toast;
 
@@ -58,6 +59,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFragment {
 
@@ -68,7 +71,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
 
     /** We keep a map to be able to get back the SearchResult for a given BaseTags result when saving at the end */
     HashMap<BaseTags, SearchResult> mTagsToSearchResultMap = new HashMap<>();
-    private AsyncTask<ShowTags, Integer, ShowTags> mEpisodeSaveTask;
+    private EpSaveTask mEpisodeSaveTask;
     private SearchInfo mSearchInfo;
 
     @Override
@@ -169,7 +172,8 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            new EpSaveTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, newShowTags);
+                            mEpisodeSaveTask = new EpSaveTask(getActivity());
+                            mEpisodeSaveTask.execute(newShowTags);
                         }
                     })
                     .show();
@@ -183,36 +187,46 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
     public void onStop(){
         super.onStop();
         if(mEpisodeSaveTask!=null)
-            mEpisodeSaveTask.cancel(true);
+            mEpisodeSaveTask.cancel();
     }
 
-    private class EpSaveTask extends AsyncTask<ShowTags, Integer, ShowTags> {
+    public class EpSaveTask {
 
-        final int PROGRESS_ID_MAX = -3;
-        final int PROGRESS_ID_FINALIZING = -2;
+        private final int PROGRESS_ID_MAX = -3;
+        private final int PROGRESS_ID_FINALIZING = -2;
 
-        final Context mContext;
-        NovaProgressDialog mProgressDialog;
+        private final Context mContext;
+        private NovaProgressDialog mProgressDialog;
+        private final Handler mMainHandler = new Handler(Looper.getMainLooper());
+        private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
+        private volatile boolean isCancelled = false;
 
-        public EpSaveTask() {
-            mContext = getActivity();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            // TODO with progressBar https://stackoverflow.com/questions/56627616/how-to-show-a-progressbar-example-with-percentage-in-android
-            super.onPreExecute();
+        public EpSaveTask(Context context) {
+            mContext = context;
             mProgressDialog = new NovaProgressDialog(mContext);
-            mProgressDialog.setTitle(R.string.scrap_change_title);
-            mProgressDialog.setMessage(getString(R.string.scrap_change_initializing));
-            mProgressDialog.setProgressStyle(NovaProgressDialog.STYLE_HORIZONTAL);
-            mProgressDialog.setIndeterminate(false);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.show();
         }
 
-        @Override
-        protected ShowTags doInBackground(ShowTags... params) {
+        public void execute(ShowTags showTags) {
+            mMainHandler.post(() -> {
+                mProgressDialog = new NovaProgressDialog(mContext);
+                mProgressDialog.setTitle(R.string.scrap_change_title);
+                mProgressDialog.setMessage(getString(R.string.scrap_change_initializing));
+                mProgressDialog.setProgressStyle(NovaProgressDialog.STYLE_HORIZONTAL);
+                mProgressDialog.setIndeterminate(false);
+                mProgressDialog.setCancelable(false);
+                mProgressDialog.show();
+            });
+            mExecutor.execute(() -> {
+                ShowTags result = doInBackground(showTags);
+                mMainHandler.post(() -> onPostExecute(result));
+            });
+        }
+
+        public void cancel() {
+            isCancelled = true;
+        }
+
+        private ShowTags doInBackground(ShowTags... params) {
             // step 1: find all episodes in database that belong to the old show
             List<EpisodeTags> episodeList = getEpisodeList(mShowId);
             if (log.isDebugEnabled()) {
@@ -229,8 +243,11 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             return newShow;
         }
 
-        @Override
-        protected void onProgressUpdate(Integer... values) {
+        private void publishProgress(Integer... values) {
+            mMainHandler.post(() -> onProgressUpdate(values));
+        }
+
+        private void onProgressUpdate(Integer... values) {
             if (values[0]==PROGRESS_ID_MAX) {
                 mProgressDialog.setMax(values[1]);
             }
@@ -245,8 +262,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             }
         }
 
-        @Override
-        protected void onPostExecute(ShowTags newShow) {
+        private void onPostExecute(ShowTags newShow) {
             mProgressDialog.dismiss();
             // if something went wrong newShow = null
             if (newShow != null) {
@@ -427,12 +443,16 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         }
 
         private HashMap<String, EpisodeTags> toMap(Bundle b) {
-            int size = (b!=null) ? b.size() : 0;
-            HashMap<String, EpisodeTags> result = new HashMap<String, EpisodeTags>(size);
+            int size = (b != null) ? b.size() : 0;
+            HashMap<String, EpisodeTags> result = new HashMap<>(size);
             if (b != null) {
                 b.setClassLoader(BaseTags.class.getClassLoader());
                 for (String key : b.keySet()) {
-                    result.put(key, b.<EpisodeTags>getParcelable(key));
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        result.put(key, b.getParcelable(key, EpisodeTags.class));
+                    } else {
+                        result.put(key, b.getParcelable(key));
+                    }
                 }
             }
             return result;
