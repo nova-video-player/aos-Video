@@ -15,19 +15,29 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.widget.ActionMenuView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
@@ -91,14 +101,53 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 		state.putString(SORT_PARAM_KEY, mSortOrder);
 	}
 
+	private void attachCustomTooltip(View anchorView, String message) {
+		anchorView.setOnLongClickListener(v -> {
+			Context context = v.getContext();
+			Toast toast = new Toast(context);
 
+			TextView textView = new TextView(context);
+			textView.setText(message);
+			textView.setTextColor(Color.WHITE);
+			textView.setBackgroundResource(R.drawable.menu_bg);
+			textView.setPadding(24, 16, 24, 16);
+			textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+			textView.setTypeface(ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd));
+			textView.setGravity(Gravity.CENTER);
 
+			// Measure the textView to get width
+			textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+			int tooltipWidth = textView.getMeasuredWidth();
+
+			toast.setView(textView);
+
+			// Get location of the anchor view
+			int[] location = new int[2];
+			v.getLocationOnScreen(location);
+			int anchorX = location[0];
+			int anchorY = location[1];
+
+			int viewWidth = v.getWidth();
+			int centerX = anchorX + viewWidth / 2;
+
+			// Position toast so it's centered horizontally below the anchor
+			int xOffset = centerX - tooltipWidth / 2;
+			int yOffset = anchorY + v.getHeight() + 16; // distance below the view
+
+			toast.setGravity(Gravity.TOP | Gravity.START, xOffset, yOffset);
+			toast.setDuration(Toast.LENGTH_SHORT);
+			toast.show();
+
+			return true;
+		});
+	}
 
     @Override
     protected String getActionBarTitle() {
         return getString(R.string.all_videos);
     }
 
+	@SuppressLint("RestrictedApi")
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
@@ -107,6 +156,27 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
 			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 			mSortModeSubmenu.attachMenuItem(sortMenuItem);
+
+			Toolbar toolbar = requireActivity().findViewById(R.id.main_toolbar);
+			String expectedTitle = getString(R.string.sort_mode);
+			toolbar.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+				for (int i = 0; i < toolbar.getChildCount(); i++) {
+					View child = toolbar.getChildAt(i);
+					if (child instanceof ActionMenuView) {
+						ActionMenuView menuView = (ActionMenuView) child;
+						for (int j = 0; j < menuView.getChildCount(); j++) {
+							View itemView = menuView.getChildAt(j);
+							if (itemView instanceof ActionMenuItemView) {
+								CharSequence title = ((ActionMenuItemView) itemView).getItemData().getTitle();
+								if (title != null && title.toString().equalsIgnoreCase(expectedTitle)) {
+									attachCustomTooltip(itemView, getString(R.string.sort_mode));
+									return;
+								}
+							}
+						}
+					}
+				}
+			});
 
 			mSortModeSubmenu.clear();
 			mSortModeSubmenu.addSubmenuItem(0, applyCustomFont(R.string.sort_by_name_asc),       MENU_ITEM_SORT + MENU_ITEM_NAME     + MENU_ITEM_ASC);
