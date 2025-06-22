@@ -761,7 +761,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             item.setActionView(mSearchView);
 
             Toolbar toolbar = findViewById(R.id.main_toolbar);
-            String expectedTitle = getString(R.string.search_title);
+            String expectedSearchTitle = getString(R.string.search_title);
+            String expectedOverflowText = getString(R.string.overflow_menu_description);
             toolbar.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
                 for (int i = 0; i < toolbar.getChildCount(); i++) {
                     View child = toolbar.getChildAt(i);
@@ -769,11 +770,21 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                         ActionMenuView menuView = (ActionMenuView) child;
                         for (int j = 0; j < menuView.getChildCount(); j++) {
                             View itemView = menuView.getChildAt(j);
+
+                            // Match by title for search icon
                             if (itemView instanceof ActionMenuItemView) {
                                 CharSequence title = ((ActionMenuItemView) itemView).getItemData().getTitle();
-                                if (title != null && title.toString().equalsIgnoreCase(expectedTitle)) {
-                                    attachCustomTooltip(itemView, getString(R.string.search_title));
-                                    return;
+                                if (title != null && title.toString().equalsIgnoreCase(expectedSearchTitle)) {
+                                    attachCustomTooltip(itemView, expectedSearchTitle);
+                                }
+                            }
+
+                            // Match by class name + description for overflow menu button
+                            String className = itemView.getClass().getSimpleName();
+                            if ("OverflowMenuButton".equals(className)) {
+                                CharSequence desc = itemView.getContentDescription();
+                                if (desc != null && desc.toString().equalsIgnoreCase(expectedOverflowText)) {
+                                    attachCustomTooltip(itemView, expectedOverflowText);
                                 }
                             }
                         }
