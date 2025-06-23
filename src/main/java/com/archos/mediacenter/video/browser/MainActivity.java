@@ -1407,38 +1407,52 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     public void updateSpinnerWidth(AppCompatSpinner spinner, int position) {
         mToolbar.post(() -> {
-            spinner.setOnTouchListener((v, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            spinner.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            // Let the ripple animation begin naturally
+                            v.setPressed(true);
+                            return true;
 
-                    // Try multiple times to catch the popup early
-                    for (int i = 0; i < 5; i++) {
-                        final int attempt = i;
-                        spinner.postDelayed(() -> {
-                            try {
-                                Field popupField = AppCompatSpinner.class.getDeclaredField("mPopup");
-                                popupField.setAccessible(true);
-                                Object popupWindow = popupField.get(spinner);
+                        case MotionEvent.ACTION_UP:
+                            // Let ripple finish
+                            v.setPressed(false);
 
-                                if (popupWindow != null &&
-                                        popupWindow.getClass().getName().equals("androidx.appcompat.widget.AppCompatSpinner$DropdownPopup")) {
+                            // Trigger click manually to preserve accessibility
+                            v.performClick();
 
-                                    Field dropDownListField = popupWindow.getClass().getSuperclass().getDeclaredField("mDropDownList");
-                                    dropDownListField.setAccessible(true);
-                                    ListView listView = (ListView) dropDownListField.get(popupWindow);
+                            // Delay dropdown ripple removal to avoid interfering with ripple
+                            for (int i = 0; i < 5; i++) {
+                                final int attempt = i;
+                                spinner.postDelayed(() -> {
+                                    try {
+                                        Field popupField = AppCompatSpinner.class.getDeclaredField("mPopup");
+                                        popupField.setAccessible(true);
+                                        Object popupWindow = popupField.get(spinner);
 
-                                    if (listView != null) {
-                                        listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-                                        Log.d("SpinnerHack", "Ripple removed (attempt " + attempt + ")");
+                                        if (popupWindow != null &&
+                                                popupWindow.getClass().getName().equals("androidx.appcompat.widget.AppCompatSpinner$DropdownPopup")) {
+
+                                            Field dropDownListField = popupWindow.getClass().getSuperclass().getDeclaredField("mDropDownList");
+                                            dropDownListField.setAccessible(true);
+                                            ListView listView = (ListView) dropDownListField.get(popupWindow);
+
+                                            if (listView != null) {
+                                                listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+                                                Log.d("SpinnerHack", "Dropdown ripple removed (attempt " + attempt + ")");
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        Log.e("SpinnerHack", "Reflection error: " + e.getMessage());
                                     }
-                                }
-                            } catch (Exception e) {
-                                Log.e("SpinnerHack", "Reflection error: " + e.getMessage());
+                                }, 100 + i * 50); // Start late to avoid clashing
                             }
-                        }, i * 50); // Try at 0ms, 50ms, 100ms, 150ms, 200ms
+                            return true; // We handled the touch completely
                     }
-                    v.performClick(); // <-- this is the fix for accessibility
+                    return false;
                 }
-                return false; // Let spinner handle click normally
             });
         });
 
