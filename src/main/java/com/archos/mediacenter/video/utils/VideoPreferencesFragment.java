@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.ListPreference;
 import androidx.preference.MultiSelectListPreference;
@@ -32,8 +33,22 @@ import androidx.preference.PreferenceViewHolder;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.archos.mediacenter.video.CustomApplication;
+import com.archos.mediacenter.video.R;
+
+import android.graphics.Typeface;
+import android.widget.TextView;
+import androidx.core.content.res.ResourcesCompat;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class VideoPreferencesFragment extends PreferenceFragmentCompat {
+
+    private static final Set<String> CATEGORY_TITLES = new HashSet<>(Arrays.asList(
+        "About", "Video", "User Interface", "Subtitles", "Trakt", "Shared folders (SMB)", "Posters & info", "Storage", "Torrent"
+        // Add more category titles as needed
+    ));
 
     private VideoPreferencesCommon mPreferencesCommon = new VideoPreferencesCommon(this);
 
@@ -78,6 +93,52 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
             dialogFragment.show(getParentFragmentManager(), "androidx.preference.PreferenceFragment.DIALOG");
         } else {
             super.onDisplayPreferenceDialog(preference);
+        }
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Typeface categoryTypeface = ResourcesCompat.getFont(requireContext(), R.font.nhaasgroteskdspro_95blk);
+        Typeface titleTypeface = ResourcesCompat.getFont(requireContext(), R.font.nhaasgroteskdspro_75bd);
+        Typeface descTypeface = ResourcesCompat.getFont(requireContext(), R.font.nhaasgroteskdspro_55rg);
+
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(androidx.preference.R.id.recycler_view);
+        recyclerView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(View child) {
+                setCustomFonts(child, categoryTypeface, titleTypeface, descTypeface);
+            }
+            @Override
+            public void onChildViewDetachedFromWindow(View view) {}
+        });
+    }
+
+    private void setCustomFonts(View view, Typeface categoryTypeface, Typeface titleTypeface, Typeface descTypeface) {
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                setCustomFonts(group.getChildAt(i), categoryTypeface, titleTypeface, descTypeface);
+            }
+        } else if (view instanceof TextView) {
+            TextView tv = (TextView) view;
+            int id = tv.getId();
+            if (id == android.R.id.title) {
+                if (CATEGORY_TITLES.contains(tv.getText().toString())) {
+                    tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.yellow));
+                    tv.setTextSize(20);
+                    tv.setTypeface(categoryTypeface);
+                }else{
+                    tv.setTypeface(titleTypeface);
+                    tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
+                }
+                View parent = (View) tv.getParent();
+                View grandparent = parent != null ? (View) parent.getParent() : null;
+                android.util.Log.d("PrefFont", "Title: '" + tv.getText() + "' Parent: " + (parent != null ? parent.getClass().getName() : "null") + ", Grandparent: " + (grandparent != null ? grandparent.getClass().getName() : "null"));
+            } else if (id == android.R.id.summary) {
+                tv.setTypeface(descTypeface);
+            }
         }
     }
 }
