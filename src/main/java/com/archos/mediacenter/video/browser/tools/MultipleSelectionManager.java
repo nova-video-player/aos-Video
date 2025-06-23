@@ -23,12 +23,15 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
@@ -66,6 +69,7 @@ public class MultipleSelectionManager implements ActionMode.Callback {
     private final SharedPreferences mPreferences;
     private ActionMode mActionBar;
 
+    private int originalToolbarHeight = -1;
     public MultipleSelectionManager(Browser browser, AbsListView listView, BaseAdapter browserAdapter){
         mBrowser = browser;
         mArchosGridView = listView;
@@ -75,6 +79,21 @@ public class MultipleSelectionManager implements ActionMode.Callback {
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        // Save original height once
+        Toolbar toolbar = mBrowser.getActivity().findViewById(R.id.main_toolbar);
+        if (originalToolbarHeight == -1) {
+            originalToolbarHeight = toolbar.getHeight();
+        }
+        // Set new smaller height, e.g., 56dp
+        ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+        params.height = (int) (56 * mBrowser.getActivity().getResources().getDisplayMetrics().density);
+        toolbar.setLayoutParams(params);
+
+        View cab = mBrowser.getActivity().findViewById(androidx.appcompat.R.id.action_mode_bar);
+        if (cab != null) {
+            cab.setBackgroundColor(ContextCompat.getColor(mBrowser.getActivity(), R.color.lime_green));
+        }
+
         menu.add(0, R.string.delete, 0, applyCustomFont(R.string.delete)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         menu.add(0,R.string.copy_on_device_multi, 0, applyCustomFont(R.string.copy_on_device_multi)).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(0, R.string.video_browser_unindex_file, 0, applyCustomFont(R.string.video_browser_unindex_file)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
@@ -269,6 +288,13 @@ public class MultipleSelectionManager implements ActionMode.Callback {
     }
     @Override
     public void onDestroyActionMode(ActionMode mode) {
+        // Restore original toolbar height
+        Toolbar toolbar = mBrowser.getActivity().findViewById(R.id.main_toolbar);
+        if (originalToolbarHeight != -1) {
+            ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+            params.height = originalToolbarHeight;
+            toolbar.setLayoutParams(params);
+        }
         mBrowser.disableMultiple();
         mActionBar =null;
     }
