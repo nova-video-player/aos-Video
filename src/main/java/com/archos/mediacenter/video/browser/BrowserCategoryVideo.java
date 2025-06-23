@@ -251,15 +251,29 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
         MainActivity activity = (MainActivity) getActivity();
         if (activity != null) {
             ViewGroup toolbar = (ViewGroup) activity.findViewById(R.id.main_toolbar);
+            // Recursively search for Spinner inside the Toolbar
+            Spinner foundSpinner = null;
             for (int i = 0; i < toolbar.getChildCount(); i++) {
                 View child = toolbar.getChildAt(i);
-                if (child instanceof AppCompatSpinner) {
-                    Spinner spinner = (Spinner) child;
-                    if (spinner != null) {
-                        spinner.setSelection(itemPosition);
-                        activity.updateSpinnerWidth((AppCompatSpinner) spinner, itemPosition);
+                if (child instanceof Spinner) {
+                    foundSpinner = (Spinner) child;
+                    break;
+                } else if (child instanceof ViewGroup) {
+                    ViewGroup group = (ViewGroup) child;
+                    for (int j = 0; j < group.getChildCount(); j++) {
+                        View subChild = group.getChildAt(j);
+                        if (subChild instanceof Spinner) {
+                            foundSpinner = (Spinner) subChild;
+                            break;
+                        }
                     }
                 }
+                if (foundSpinner != null) break;
+            }
+
+            if (foundSpinner != null) {
+                foundSpinner.setSelection(itemPosition);
+                activity.updateSpinnerWidth((AppCompatSpinner) foundSpinner, itemPosition);
             }
         }
 
