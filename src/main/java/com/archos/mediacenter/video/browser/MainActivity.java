@@ -77,6 +77,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -355,19 +356,27 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         mToolbar = (Toolbar)findViewById(R.id.main_toolbar);
 
         mToolbar.post(() -> {
-            ViewGroup toolbarViewGroup = (ViewGroup) mToolbar;
-            View hamburgerIcon = toolbarViewGroup.getChildAt(1); // AppCompatImageButton
-            View spinner = toolbarViewGroup.getChildAt(0); // AppCompatSpinner
-            View ActionMenuView  = toolbarViewGroup.getChildAt(2); // ActionMenuView
+            Spinner foundSpinner = null;
+            for (int i = 0; i < mToolbar.getChildCount(); i++) {
+                View child = mToolbar.getChildAt(i);
+                if (child instanceof Spinner) {
+                    foundSpinner = (Spinner) child;
+                    break;
+                } else if (child instanceof ViewGroup) {
+                    ViewGroup group = (ViewGroup) child;
+                    for (int j = 0; j < group.getChildCount(); j++) {
+                        View subChild = group.getChildAt(j);
+                        if (subChild instanceof Spinner) {
+                            foundSpinner = (Spinner) subChild;
+                            break;
+                        }
+                    }
+                }
+                if (foundSpinner != null) break;
+            }
 
-            /***
-             2025-06-13 03:36:51.211 19310-19310 ToolbarView             org.courville.nova                   D  Child #0: androidx.appcompat.widget.AppCompatSpinner, width=597, layoutParams=androidx.appcompat.widget.Toolbar$LayoutParams
-             2025-06-13 03:36:51.211 19310-19310 ToolbarView             org.courville.nova                   D  Child #1: androidx.appcompat.widget.AppCompatImageButton, width=147, layoutParams=androidx.appcompat.widget.Toolbar$LayoutParams
-             2025-06-13 03:36:51.211 19310-19310 ToolbarView             org.courville.nova                   D  Child #2: androidx.appcompat.widget.ActionMenuView, width=0, layoutParams=androidx.appcompat.widget.Toolbar$LayoutParams
-             */
-
-            if (spinner instanceof AppCompatSpinner) {
-                setupSpinner((AppCompatSpinner) spinner);
+            if (foundSpinner != null) {
+                setupSpinner((AppCompatSpinner) foundSpinner);
             }
         });
 
