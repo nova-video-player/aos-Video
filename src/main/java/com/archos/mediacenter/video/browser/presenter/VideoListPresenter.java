@@ -126,12 +126,6 @@ public class VideoListPresenter extends VideoPresenter{
         // Get the RelativeLayout view
         RelativeLayout relativeLayout = view.findViewById(R.id.relative_layout);
         RelativeLayout leftArea = view.findViewById(R.id.left_area);
-        boolean darkModeActive = mPreferences.getBoolean("dark_mode", false);
-        if (darkModeActive){
-            relativeLayout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.browser_list_dark_background));
-        }else{
-            relativeLayout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.round_semitransparent_bg));
-        }
         // Ensure the views clip correctly
         relativeLayout.setClipToOutline(true);
         leftArea.setClipToOutline(true);
