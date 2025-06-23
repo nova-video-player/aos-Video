@@ -10,6 +10,7 @@ for informations (duration for files, number of files for directories).
     android:layout_height="90dip"
     android:paddingStart="4dip"
     android:paddingEnd="4dip"
+    android:background="@drawable/list_item_background"
     android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical" >
 
