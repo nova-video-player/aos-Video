@@ -832,6 +832,35 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             params.gravity = Gravity.CENTER; // Center inside LinearLayout
             searchEditText.setLayoutParams(params);
 
+
+            LinearLayout mainContainer = mSearchView.findViewById(androidx.appcompat.R.id.search_edit_frame);
+            if (mainContainer != null) {
+                mainContainer.setPadding(10, 0, 0, 0);
+                ViewGroup.LayoutParams layoutParams = mainContainer.getLayoutParams();
+                if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+                    ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) layoutParams;
+                    marginParams.setMargins(-45, 0, 0, 0);
+                    mainContainer.setLayoutParams(marginParams);
+                }
+            }
+
+            logViewHierarchy(mSearchView, 0);
+
+            /*
+            SearchView (id: 32)
+ └─ LinearLayout (id: 2131428358)  // main container
+     ├─ AppCompatTextView (id: 2131428357)  // probably a label or something
+     ├─ AppCompatImageView (id: 2131428359) // possibly the magnifying glass icon on the left
+     └─ LinearLayout (id: 2131428361)
+          ├─ AppCompatImageView (id: 2131428363)  // maybe clear or voice icon?
+          ├─ LinearLayout (id: 2131428365)
+          │    ├─ SearchAutoComplete (id: 2131428367)  // the text input
+          │    └─ AppCompatImageView (id: 2131428360)  // maybe hint icon or something
+          └─ LinearLayout (id: 2131428482)
+               ├─ AppCompatImageView (id: 2131428362)  // other icons (voice/clear?)
+               └─ AppCompatImageView (id: 2131428368)
+             */
+
             mSearchItem = item;
         }
         MenuItem menuItem = menu.add(MENU_SCRAPER_GROUP, MENU_START_AUTO_SCRAPER_ACTIVITY, Menu.NONE,
@@ -857,6 +886,18 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         SpannableString spannable = new SpannableString(text);
         spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannable;
+    }
+    private void logViewHierarchy(View view, int depth) {
+        if (view == null) return;
+        StringBuilder indent = new StringBuilder();
+        for (int i = 0; i < depth; i++) indent.append("  ");
+        Log.d("SearchView", indent + view.getClass().getSimpleName() + " id: " + view.getId());
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                logViewHierarchy(group.getChildAt(i), depth + 1);
+            }
+        }
     }
 
     @Override
