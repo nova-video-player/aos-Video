@@ -905,7 +905,8 @@
         - Auto-indexing and auto-scrapping of played videos\n
         - Recently played\n
         - Resume point\n
-        - Trakt synchronisation</string>
+        - Trakt synchronisation\n
+        - Dark Mode</string>
     <string name="dont_show_again">Don\'t show again</string>
 
     <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Network &amp; Files</string>
