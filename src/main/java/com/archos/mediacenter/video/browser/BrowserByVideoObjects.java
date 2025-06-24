@@ -161,6 +161,11 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         Video video = mAdapterByVideoObjects.getVideoItem(position);
         if (!isItemClickable(position)) return;
 
+        // ✅ Trigger haptic feedback manually on long click anchor
+        if (v != null) {
+            v.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);
+        }
+
         showPowerMenu(v, video, position);
     }
 

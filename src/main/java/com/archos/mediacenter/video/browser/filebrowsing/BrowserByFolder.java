@@ -593,6 +593,12 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         }
         Object object = mFilesAdapter.getItem(info.position);
         boolean metaFile2 = object instanceof MetaFile2;
+
+        // ✅ Trigger haptic feedback manually on long click anchor
+        if (v != null) {
+            v.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);
+        }
+
         showPowerMenu(v, object, info.position, metaFile2);
         if(!metaFile2){
             super.onCreateContextMenu(menu, v, menuInfo);

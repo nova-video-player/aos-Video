@@ -498,6 +498,12 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
         MetaFile2 file = new JavaFile2(new File(path));
         menu.setHeaderTitle(file.getName());
 
+
+        // ✅ Trigger haptic feedback manually on long click anchor
+        if (view != null) {
+            view.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);
+        }
+
         // Add the context menu items
         //menu.add(0, R.string.info, 0, R.string.info);
         showPowerMenu(view, file, position);

@@ -318,6 +318,11 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 		//if(distant)
 			//menu.add(0, R.string.copy_on_device_multi, 0, R.string.copy_on_device_multi);
 
+		// ✅ Trigger haptic feedback manually on long click anchor
+		if (v != null) {
+			v.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);
+		}
+
 		showPowerMenu(v, tvshow, info.position, distant);
 	}
 

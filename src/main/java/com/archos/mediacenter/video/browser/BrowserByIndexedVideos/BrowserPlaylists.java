@@ -164,6 +164,12 @@ public class BrowserPlaylists extends BrowserMoviesBy {
             return;
         }
         long listId = mBrowserAdapter.getItemId(info.position);
+
+        // ✅ Trigger haptic feedback manually on long click anchor
+        if (v != null) {
+            v.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);
+        }
+
         showPowerMenu(v, listId);
     }
     private void showPowerMenu(View anchor, long listId) {
