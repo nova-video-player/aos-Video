@@ -131,9 +131,11 @@ public class TorrentBlocklistDialogPreference extends Preference {
         if (getOnPreferenceClickListener() == null) {
             Typeface editTF = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_65md);
             mCurrentDirectory = new File("/");
-            final EditText ed = new EditText(getContext());
+            View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.custom_edittext_dialog, null);
+            final EditText ed = dialogView.findViewById(android.R.id.edit);
             ed.setText(getSharedPreferences().getString(getKey(), defaultBlocklist));
             ed.setTypeface(editTF);
+            ed.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
 
             View customTitleView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_custom_title, null);
             TextView titleText = customTitleView.findViewById(R.id.dialog_title);
@@ -148,7 +150,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
             Builder b = new Builder(getContext());
             b.setCustomTitle(customTitleView);
 
-            b.setView(ed);
+            b.setView(dialogView);
             b.setNegativeButton(android.R.string.cancel, null);
             b.setPositiveButton(android.R.string.ok, new OnClickListener() {
                 @Override
