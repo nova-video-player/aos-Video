@@ -1307,33 +1307,31 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                     });
                 }
                 // change browser resume button height to 240 (smaller) when in phone and landscape mode
-                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)) {
-                    grv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240));
-                    boolean mDisplayClearLogoInPlayer = mPreferences.getBoolean("display_backdrop_global_resume", true);
-                    if (!mDisplayClearLogoInPlayer){
-                        text.setBackground(null);
-                        grv.clearImage(); // optionally remove the image
-                        grv.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.browser_resume_stroke));
-                    }
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) text.getLayoutParams();
-                    if (iconStyle == 0){
-                        params.removeRule(RelativeLayout.ALIGN_PARENT_TOP);
-                        params.removeRule(RelativeLayout.ALIGN_PARENT_START);
-                        text.setLayoutParams(params);
-                    }
-                    if (iconStyle == 1){
-                        params.addRule(RelativeLayout.ALIGN_PARENT_START);
-                        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                        // Convert 2dp to pixels
-                        int marginTopInPx = (int) TypedValue.applyDimension(
-                                TypedValue.COMPLEX_UNIT_DIP,
-                                2,
-                                text.getResources().getDisplayMetrics()
-                        );
-                        // Set the top margin
-                        params.topMargin = marginTopInPx;
-                        text.setLayoutParams(params);
-                    }
+                grv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240));
+                boolean mDisplayClearLogoInPlayer = mPreferences.getBoolean("display_backdrop_global_resume", true);
+                if (!mDisplayClearLogoInPlayer){
+                    text.setBackground(null);
+                    grv.clearImage(); // optionally remove the image
+                    grv.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.browser_resume_stroke));
+                }
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) text.getLayoutParams();
+                if (iconStyle == 0){
+                    params.removeRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    params.removeRule(RelativeLayout.ALIGN_PARENT_START);
+                    text.setLayoutParams(params);
+                }
+                if (iconStyle == 1){
+                    params.addRule(RelativeLayout.ALIGN_PARENT_START);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    // Convert 2dp to pixels
+                    int marginTopInPx = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            2,
+                            text.getResources().getDisplayMetrics()
+                    );
+                    // Set the top margin
+                    params.topMargin = marginTopInPx;
+                    text.setLayoutParams(params);
                 }
             }
         }
