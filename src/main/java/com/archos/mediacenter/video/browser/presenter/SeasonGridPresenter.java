@@ -30,6 +30,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.SeasonsBrowserData;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesGrid;
+import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesGridShow;
 import com.archos.mediacenter.video.browser.adapters.SeasonsData;
 import com.archos.mediacenter.video.browser.adapters.object.Season;
 
@@ -47,7 +48,7 @@ import java.util.List;
  */
 public class SeasonGridPresenter extends SeasonPresenter{
     public SeasonGridPresenter(Context context, ExtendedClickListener listener) {
-        this(context, AdapterDefaultValuesGrid.INSTANCE, listener);
+        this(context, AdapterDefaultValuesGridShow.INSTANCE, listener);
     }
 
     protected SeasonGridPresenter(Context context,AdapterDefaultValues defaultValues, ExtendedClickListener listener) {
@@ -172,6 +173,9 @@ public class SeasonGridPresenter extends SeasonPresenter{
         holder.ItemViewRoot.setPadding(0,0,0,bottomPadding);
 
         holder.EmptyProgress.setVisibility(View.GONE);
+
+        if(holder.network!=null)
+            holder.network.setVisibility(View.GONE);
 
         return view;
     }
