@@ -47,7 +47,7 @@ import java.util.Set;
 public class VideoPreferencesFragment extends PreferenceFragmentCompat {
 
     private static final Set<String> CATEGORY_TITLES = new HashSet<>(Arrays.asList(
-        "About", "Video", "User Interface", "Subtitles", "Trakt", "Shared folders (SMB)", "Posters & info", "Storage", "Torrent"
+        "About", "Video", "User Interface", "Subtitles", "Trakt", "Shared folders (SMB)", "Posters & info", "Storage", "Torrent", "Advanced"
         // Add more category titles as needed
     ));
 
