@@ -81,7 +81,7 @@ public class VideoPreferencesActivity extends AppCompatActivity {
         tv.setText(getTitle()); // or set your own string
         tv.setTextSize(26); // Set your desired size
         tv.setTypeface(ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_95blk)); // Set your desired font
-        tv.setTextColor(ContextCompat.getColor(this, R.color.bg_swipe_group_item_left)); // Set your desired color
+        tv.setTextColor(ContextCompat.getColor(this, R.color.green_accent)); // Set your desired color
         tv.setLayoutParams(new ActionBar.LayoutParams(
                 ActionBar.LayoutParams.WRAP_CONTENT,
                 ActionBar.LayoutParams.WRAP_CONTENT));

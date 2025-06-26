@@ -126,7 +126,7 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
             int id = tv.getId();
             if (id == android.R.id.title) {
                 if (CATEGORY_TITLES.contains(tv.getText().toString())) {
-                    tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.yellow));
+                    tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.green_accent));
                     tv.setTextSize(20);
                     tv.setTypeface(categoryTypeface);
                 }else{
