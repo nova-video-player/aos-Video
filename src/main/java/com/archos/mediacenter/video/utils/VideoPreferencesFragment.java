@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
@@ -86,6 +87,8 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
             dialogFragment = CustomListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
         } else if (preference instanceof MultiSelectListPreference) {
             dialogFragment = CustomMultiSelectListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+        } else if (preference instanceof EditTextPreference) {
+            dialogFragment = CustomEditTextPreferenceDialogFragmentCompat.newInstance(preference.getKey());
         }
 
         if (dialogFragment != null) {
