@@ -19,16 +19,24 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 
@@ -121,12 +129,24 @@ public class TorrentBlocklistDialogPreference extends Preference {
     @Override
     public void onClick() {
         if (getOnPreferenceClickListener() == null) {
-
+            Typeface editTF = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_65md);
             mCurrentDirectory = new File("/");
             final EditText ed = new EditText(getContext());
             ed.setText(getSharedPreferences().getString(getKey(), defaultBlocklist));
+            ed.setTypeface(editTF);
+
+            View customTitleView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_custom_title, null);
+            TextView titleText = customTitleView.findViewById(R.id.dialog_title);
+            titleText.setText(R.string.torrent_blocklist_url);
+            Typeface customFont = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_95blk);
+            titleText.setTypeface(customFont);
+            titleText.setTextSize(24);
+
+            ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+            iconView.setVisibility(View.GONE);
+
             Builder b = new Builder(getContext());
-            b.setTitle(R.string.torrent_blocklist_url);
+            b.setCustomTitle(customTitleView);
 
             b.setView(ed);
             b.setNegativeButton(android.R.string.cancel, null);
@@ -166,7 +186,28 @@ public class TorrentBlocklistDialogPreference extends Preference {
             });
             od = b.create();
 
+            // Set custom background for the whole dialog window
+            if (od.getWindow() != null) {
+                od.getWindow().setBackgroundDrawableResource(R.drawable.menu_bg);
+            }
+
             od.show();
+            Button positiveButton = od.getButton(AlertDialog.BUTTON_POSITIVE);
+            if (positiveButton != null) {
+                positiveButton.setTypeface(customFont);
+                Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+                positiveButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+                positiveButton.setBackground(ripple);
+                positiveButton.setClipToOutline(true);
+            }
+            Button negativeButton = od.getButton(AlertDialog.BUTTON_NEGATIVE);
+            if (negativeButton != null) {
+                negativeButton.setTypeface(customFont);
+                Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+                negativeButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+                negativeButton.setBackground(ripple);
+                negativeButton.setClipToOutline(true);
+            }
         }
     }
 
