@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="8dip"
+            android:layout_marginRight="1dip"
             android:clickable="false"
             android:src="@drawable/label_subtitles" />
 
@@ -91,6 +91,7 @@
             android:id="@+id/network_notif"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_gravity="center"
             android:clickable="false"
             android:src="@drawable/label_network" />
