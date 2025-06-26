@@ -180,7 +180,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         onBackPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (getParentFragmentManager().getBackStackEntryCount() > 0) {
+                if (isAdded() && getParentFragmentManager().getBackStackEntryCount() > 0) {
                     log.debug("onBackPressed: popping back stack");
                     getParentFragmentManager().popBackStack();
                 } else {
