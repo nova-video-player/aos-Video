@@ -29,6 +29,7 @@ import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValues;
 import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesGrid;
+import com.archos.mediacenter.video.browser.adapters.AdapterDefaultValuesGridShow;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 
 /**
@@ -36,7 +37,7 @@ import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
  */
 public class TvshowGridPresenter extends TvShowPresenter{
     public TvshowGridPresenter(Context context, ExtendedClickListener listener) {
-        this(context, AdapterDefaultValuesGrid.INSTANCE, listener);
+        this(context, AdapterDefaultValuesGridShow.INSTANCE, listener);
     }
 
     public TvshowGridPresenter(Context context, AdapterDefaultValues defaultValues, ExtendedClickListener listener) {

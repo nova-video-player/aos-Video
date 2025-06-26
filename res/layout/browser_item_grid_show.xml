@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+     The root FrameLayout is needed to have the main RelativeLayout centered in the GridView cells, without
+     having the list_item_background background in the margin
+-->
+
+
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="left"
+    card_view:cardBackgroundColor="@color/grid_item_background"
+    card_view:cardCornerRadius="8dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+    <RelativeLayout
+        android:id="@+id/itemViewRoot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:descendantFocusability="blocksDescendants"
+        android:background="@drawable/list_item_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:context=".video.browser.AdapterDefaultValuesGrid" >
+
+        <!-- thumbnail of the grid item -->
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/filetype_new_video_poster"
+            android:background="@color/default_icon_background"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/flag_3d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/thumbnail"
+            android:layout_alignRight="@id/thumbnail"
+            android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
+            android:layout_marginRight="@dimen/video_3d_label_margin_grid"
+            card_view:srcCompat="@drawable/label_3d"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/trakt_watched"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/thumbnail"
+            android:layout_alignTop="@id/thumbnail"
+            card_view:srcCompat="@drawable/watched_icon_corner"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/trakt_library"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/thumbnail"
+            android:layout_alignTop="@id/thumbnail"
+            android:layout_marginLeft="@dimen/video_trakt_library_margin_left"
+            card_view:srcCompat="@drawable/label_trakt_library"
+            android:visibility="gone" />
+        <include
+            layout="@layout/video_occurencies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/thumbnail"
+            android:layout_alignTop="@id/thumbnail"
+            android:visibility="gone" />
+
+
+        <!--
+           (i) symbol.
+        NOTE: Active area larger than the icon itself due to different left and top padding
+        -->
+
+
+        <!-- bottom area of the grid item -->
+        <ProgressBar
+            android:id="@+id/resume_notif"
+            style="@style/BrowserResumeSlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/thumbnail"
+            android:clickable="false"
+            android:indeterminate="false"
+            android:paddingLeft="0dip"
+            android:progress="70" />
+
+        <View
+            android:id="@+id/empty_progress"
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:layout_below="@id/resume_notif"
+            android:background="@color/transparent"
+            android:indeterminateOnly="false"
+            android:indeterminate="false"
+            android:orientation="horizontal"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/empty_progress"
+            android:layout_marginLeft="4dip" >
+
+            <!-- line 1 = name -->
+
+            <TextView
+                android:id="@+id/name"
+                android:fontFamily="@font/nhaasgroteskdspro_75bd"
+                android:layout_marginBottom="-4dp"
+                android:textSize="15sp"
+                android:text="The Dark Knight"
+                style="@style/BrowserTinyText.Name"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:paddingTop="0dip" />
+
+            <!-- left area = duration -->
+
+
+            <RelativeLayout
+                android:id="@+id/bottom_row"
+                android:layout_marginBottom="-3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="22dip"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/name"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/info"
+                    android:fontFamily="@font/nhaasgroteskdspro_65md"
+                    android:textColor="@color/header_font"
+                    android:text="2 Seasons"
+                    style="@style/BrowserTinyText.Info"
+                    android:layout_marginBottom="1dip"
+                    android:layout_alignParentLeft="true"/>
+
+                <com.archos.mediacenter.utils.ImageLabel
+                    android:id="@+id/bookmark_notif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4dip"
+                    android:layout_toStartOf="@+id/subtitle_notif"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="8dip"
+                    android:clickable="false"
+                    android:visibility="visible"
+                    android:src="@drawable/label_bookmark_small" />
+
+                <com.archos.mediacenter.utils.ImageLabel
+                    android:id="@+id/subtitle_notif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="4dip"
+                    android:layout_gravity="center"
+                    android:paddingTop="4dip"
+                    android:clickable="false"
+                    android:src="@drawable/label_subtitles_small" />
+
+                <com.archos.mediacenter.utils.ImageLabel
+                    android:id="@+id/network_notif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/bookmark_notif"
+                    android:paddingTop="4dip"
+                    android:layout_marginRight="8dip"
+                    android:layout_gravity="center"
+                    android:visibility="visible"
+                    android:clickable="false"
+                    android:src="@drawable/label_network_small" />
+            </RelativeLayout>
+
+            <ImageButton
+                android:id="@+id/expanded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/name"
+                android:background="@drawable/list_selector_holo_dark"
+                android:paddingBottom="2dip"
+                android:paddingLeft="4dip"
+                android:paddingRight="14dip"
+                android:paddingTop="2dip"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/label_infoarrow" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

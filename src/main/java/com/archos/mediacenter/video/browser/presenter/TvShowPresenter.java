@@ -73,6 +73,8 @@ public class TvShowPresenter extends CommonPresenter implements Presenter {
         if (holder.traktLibrary != null)
             holder.traktLibrary.setVisibility(tvShow.isTraktLibrary() ? View.VISIBLE : View.GONE);
 
+        if(holder.network!=null)
+            holder.network.setVisibility(View.GONE);
 
         return view;
     }
