@@ -565,6 +565,14 @@ public class FolderPicker extends FragmentActivity {
                     tag.mIcon.setLayoutParams(new RelativeLayout.LayoutParams(dpToPx(40), ViewGroup.LayoutParams.WRAP_CONTENT));
                 }
 
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) tag.mIcon.getLayoutParams();
+                params.setMarginStart(0); // or set left/right depending on layout
+                params.setMarginEnd(0); // or set left/right depending on layout
+                tag.mIcon.setLayoutParams(params);
+
+                tag.mName.setPadding(0, 0, dpToPx(10), 0); // 6dp padding to end
+                tag.mInfo.setPadding(0, 0, dpToPx(10), 0);
+
                 // Is item enabled ?
                 v.setEnabled(item.mEnabled);
                 v.setAlpha(item.mEnabled ? 1.0f : 0.2f);
