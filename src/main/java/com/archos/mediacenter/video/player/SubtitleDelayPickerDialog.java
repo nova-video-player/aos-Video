@@ -17,24 +17,31 @@ package com.archos.mediacenter.video.player;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.ContextCompat;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
+
+import java.lang.reflect.Field;
 
 
 /**
@@ -117,6 +124,55 @@ public class SubtitleDelayPickerDialog extends AlertDialog implements OnClickLis
             }
         });
         sp.setMinimumHeight(100);
+
+        // Disable internal spinner item ripple (MOP)
+        sp.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Let the ripple animation begin naturally
+                        v.setPressed(true);
+                        return true;
+
+                    case MotionEvent.ACTION_UP:
+                        // Let ripple finish
+                        v.setPressed(false);
+
+                        // Trigger click manually to preserve accessibility
+                        v.performClick();
+
+                        // Delay dropdown ripple removal to avoid interfering with ripple
+                        for (int i = 0; i < 5; i++) {
+                            final int attempt = i;
+                            sp.postDelayed(() -> {
+                                try {
+                                    Field popupField = AppCompatSpinner.class.getDeclaredField("mPopup");
+                                    popupField.setAccessible(true);
+                                    Object popupWindow = popupField.get(sp);
+
+                                    if (popupWindow != null &&
+                                            popupWindow.getClass().getName().equals("androidx.appcompat.widget.AppCompatSpinner$DropdownPopup")) {
+
+                                        Field dropDownListField = popupWindow.getClass().getSuperclass().getDeclaredField("mDropDownList");
+                                        dropDownListField.setAccessible(true);
+                                        ListView listView = (ListView) dropDownListField.get(popupWindow);
+
+                                        if (listView != null) {
+                                            listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+                                            Log.d("SpinnerHack", "Dropdown ripple removed (attempt " + attempt + ")");
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    Log.e("SpinnerHack", "Reflection error: " + e.getMessage());
+                                }
+                            }, 100 + i * 50); // Start late to avoid clashing
+                        }
+                        return true; // We handled the touch completely
+                }
+                return false;
+            }
+        });
 
         updateTitle(delay);
 
