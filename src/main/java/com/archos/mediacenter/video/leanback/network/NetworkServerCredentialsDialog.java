@@ -17,19 +17,27 @@ package com.archos.mediacenter.video.leanback.network;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
@@ -167,8 +175,20 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
         passwordEt.setText(mPassword);
         if (UriUtils.requiresDomain(type)) domainEt.setText(mDomain);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-        .setTitle(R.string.browse_ftp_server)
+        View customTitleView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_custom_title, null);
+        java.util.function.IntFunction<Integer> dpToPx = dp ->
+                Math.round(dp * customTitleView.getContext().getResources().getDisplayMetrics().density);
+        customTitleView.setPadding(dpToPx.apply(12),dpToPx.apply(10),dpToPx.apply(16),dpToPx.apply(4));
+        TextView titleText = customTitleView.findViewById(R.id.dialog_title);
+        titleText.setText(R.string.browse_ftp_server);
+        Typeface customFont = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_95blk);
+        titleText.setTypeface(customFont);
+        titleText.setTextSize(24);
+        ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+        iconView.setVisibility(View.GONE);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomDialogTheme)
+        .setCustomTitle(customTitleView)
         .setView(v)
         .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
@@ -267,6 +287,32 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
         return mDialog;
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (mDialog != null) {
+            Typeface customFont = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_95blk);
+            Button positiveButton = mDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            if (positiveButton != null) {
+                positiveButton.setTypeface(customFont);
+                Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+                positiveButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+                positiveButton.setBackground(ripple);
+                positiveButton.setClipToOutline(true);
+            }
+            Button negativeButton = mDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            if (negativeButton != null) {
+                negativeButton.setTypeface(customFont);
+                Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+                negativeButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+                negativeButton.setBackground(ripple);
+                negativeButton.setClipToOutline(true);
+            }
+        }
+    }
+
     public void setOnConnectClickListener(onConnectClickListener onConnectClick) {
         mOnConnectClick = onConnectClick;
     }
