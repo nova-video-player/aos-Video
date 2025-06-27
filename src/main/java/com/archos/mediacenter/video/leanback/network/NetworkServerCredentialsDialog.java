@@ -17,12 +17,16 @@ package com.archos.mediacenter.video.leanback.network;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -33,11 +37,13 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
@@ -51,6 +57,8 @@ import com.archos.mediacenter.video.R;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
 
 public class NetworkServerCredentialsDialog extends DialogFragment {
 
@@ -151,6 +159,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
             public View getDropDownView(int position, View convertView, android.view.ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 ((TextView) view).setTypeface(ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_65md));
+                view.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.spinner_item_ripple));
                 return view;
             }
         };
@@ -175,6 +184,55 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                 typeSp.setDropDownVerticalOffset(typeSp.getHeight());
                 typeSp.setDropDownHorizontalOffset(0);
                 typeSp.setDropDownWidth(finalMaxWidth); // Add some padding
+            }
+        });
+
+        // Disable internal spinner item ripple (MOP)
+        typeSp.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Let the ripple animation begin naturally
+                        v.setPressed(true);
+                        return true;
+
+                    case MotionEvent.ACTION_UP:
+                        // Let ripple finish
+                        v.setPressed(false);
+
+                        // Trigger click manually to preserve accessibility
+                        v.performClick();
+
+                        // Delay dropdown ripple removal to avoid interfering with ripple
+                        for (int i = 0; i < 5; i++) {
+                            final int attempt = i;
+                            typeSp.postDelayed(() -> {
+                                try {
+                                    Field popupField = AppCompatSpinner.class.getDeclaredField("mPopup");
+                                    popupField.setAccessible(true);
+                                    Object popupWindow = popupField.get(typeSp);
+
+                                    if (popupWindow != null &&
+                                            popupWindow.getClass().getName().equals("androidx.appcompat.widget.AppCompatSpinner$DropdownPopup")) {
+
+                                        Field dropDownListField = popupWindow.getClass().getSuperclass().getDeclaredField("mDropDownList");
+                                        dropDownListField.setAccessible(true);
+                                        ListView listView = (ListView) dropDownListField.get(popupWindow);
+
+                                        if (listView != null) {
+                                            listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+                                            Log.d("SpinnerHack", "Dropdown ripple removed (attempt " + attempt + ")");
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    Log.e("SpinnerHack", "Reflection error: " + e.getMessage());
+                                }
+                            }, 100 + i * 50); // Start late to avoid clashing
+                        }
+                        return true; // We handled the touch completely
+                }
+                return false;
             }
         });
 
