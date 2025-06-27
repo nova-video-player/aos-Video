@@ -25,7 +25,9 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -135,6 +137,46 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
         final CheckBox savePassword = (CheckBox)v.findViewById(R.id.save_password);
         final CheckBox showPassword = (CheckBox)v.findViewById(R.id.show_password_checkbox);
         v.findViewById(R.id.domain).setVisibility(View.GONE);
+
+        String[] spinnerItems = getResources().getStringArray(R.array.protocol_types); // replace with actual array
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                getContext(), R.layout.custom_spinner_item, spinnerItems) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                ((TextView) view).setTypeface(ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_65md));
+                return view;
+            }
+            @Override
+            public View getDropDownView(int position, View convertView, android.view.ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                ((TextView) view).setTypeface(ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_65md));
+                return view;
+            }
+        };
+        adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+        typeSp.setAdapter(adapter);
+
+        // Calculate widest item width
+        int maxWidth = 0;
+        View itemView = null;
+        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        for (int i = 0; i < adapter.getCount(); i++) {
+            itemView = adapter.getDropDownView(i, null, typeSp);
+            itemView.measure(widthMeasureSpec, heightMeasureSpec);
+            maxWidth = Math.max(maxWidth, itemView.getMeasuredWidth());
+        }
+        // Set dropdown position and width after layout
+        int finalMaxWidth = maxWidth;
+        typeSp.post(new Runnable() {
+            @Override
+            public void run() {
+                typeSp.setDropDownVerticalOffset(typeSp.getHeight());
+                typeSp.setDropDownHorizontalOffset(0);
+                typeSp.setDropDownWidth(finalMaxWidth); // Add some padding
+            }
+        });
 
         typeSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
