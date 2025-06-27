@@ -159,7 +159,6 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
             public View getDropDownView(int position, View convertView, android.view.ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 ((TextView) view).setTypeface(ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_65md));
-                view.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.spinner_item_ripple));
                 return view;
             }
         };
