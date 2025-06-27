@@ -35,10 +35,12 @@ import android.content.IntentFilter;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.content.ContextCompat;
@@ -57,6 +59,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class FolderPicker extends FragmentActivity {
@@ -295,12 +298,25 @@ public class FolderPicker extends FragmentActivity {
             }
 
             // Use the Builder class for convenient dialog construction
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomDialogTheme);
+
+            View customTitleView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_custom_title, null);
+            java.util.function.IntFunction<Integer> dpToPx = dp ->
+                    Math.round(dp * customTitleView.getContext().getResources().getDisplayMetrics().density);
+            customTitleView.setPadding(dpToPx.apply(8),dpToPx.apply(10),dpToPx.apply(16),dpToPx.apply(4));
+            TextView titleText = customTitleView.findViewById(R.id.dialog_title);
             if (mDialogTitle != null) {
-                builder.setTitle(mDialogTitle);
+                titleText.setText(mDialogTitle);
             } else {
-                builder.setTitle(R.string.choose_a_folder);
+                titleText.setText(R.string.choose_a_folder);
             }
+            Typeface customFont = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_95blk);
+            titleText.setTypeface(customFont);
+            titleText.setTextSize(24);
+            ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+            iconView.setVisibility(View.GONE);
+            builder.setCustomTitle(customTitleView);
+
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     getActivity().setResult(RESULT_OK, new Intent().putExtra(EXTRA_SELECTED_FOLDER, mSelectedFolder.getPath()));
@@ -337,6 +353,23 @@ public class FolderPicker extends FragmentActivity {
                     AlertDialog ad = (AlertDialog)dialog;
                     mOkButton = ad.getButton(DialogInterface.BUTTON_POSITIVE);
                     setOkButtonState(); // init its state once it is valid
+
+                    Button positiveButton = ad.getButton(AlertDialog.BUTTON_POSITIVE);
+                    if (positiveButton != null) {
+                        positiveButton.setTypeface(customFont);
+                        Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+                        positiveButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+                        positiveButton.setBackground(ripple);
+                        positiveButton.setClipToOutline(true);
+                    }
+                    Button negativeButton = ad.getButton(AlertDialog.BUTTON_NEGATIVE);
+                    if (negativeButton != null) {
+                        negativeButton.setTypeface(customFont);
+                        Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+                        negativeButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+                        negativeButton.setBackground(ripple);
+                        negativeButton.setClipToOutline(true);
+                    }
                 }
             });
 
@@ -493,6 +526,9 @@ public class FolderPicker extends FragmentActivity {
                 public TextView mInfo;
             }
 
+            public int dpToPx(int dp) {
+                return (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
+            }
 
             public FolderArrayAdapter(Context context, int textViewResourceId) {
                 super(context, textViewResourceId);
@@ -514,12 +550,19 @@ public class FolderPicker extends FragmentActivity {
                 }
                 ViewTag tag = (ViewTag)v.getTag();
                 final Item item = mListItems.get(position);
+                Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_75bd);
                 tag.mName.setText(item.getName());
                 tag.mInfo.setText(item.mUri.getPath());
+                tag.mName.setTypeface(typeface);
+                tag.mInfo.setTypeface(typeface);
+                tag.mName.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.text_color_selector_name));
+                tag.mInfo.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.text_color_selector_info));
                 if (item.mHolder == null) {
                     tag.mIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.folder));
+                    tag.mIcon.setLayoutParams(new RelativeLayout.LayoutParams(dpToPx(40), ViewGroup.LayoutParams.WRAP_CONTENT));
                 } else {
                     tag.mIcon.setImageDrawable((Drawable)item.mHolder);
+                    tag.mIcon.setLayoutParams(new RelativeLayout.LayoutParams(dpToPx(40), ViewGroup.LayoutParams.WRAP_CONTENT));
                 }
 
                 // Is item enabled ?
