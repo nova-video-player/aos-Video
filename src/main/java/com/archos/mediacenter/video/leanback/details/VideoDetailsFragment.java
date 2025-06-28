@@ -355,8 +355,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     //mOverlay.show();
                 }
             });
-            // TODO MARC should not be there?
-            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
         }
 
         mVideoList = new ArrayList<>();
@@ -398,13 +396,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mShouldLoadBackdrop = intent.getBooleanExtra(EXTRA_SHOULD_LOAD_BACKDROP, true);
         mPlayerType = intent.getIntExtra(VideoInfoActivity.EXTRA_PLAYER_TYPE, -1);
         mVideoMetadataFromPlayer = (VideoMetadata)intent.getSerializableExtra(VideoInfoActivity.EXTRA_USE_VIDEO_METADATA);
-
-        // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
-        // else it does not work later.
-        // --> This instance of BackdropTask() will not be used but it must be created here!
-        // TODO MARC REMOVE
-        //log.debug("onCreate: new BackdropTask()");
-        //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
 
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
@@ -499,8 +490,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public void onDestroy() {
         super.onDestroy();
         mHandler.removeCallbacksAndMessages(null);
-        // TODO MARC
-        if (mBackdropTask != null) mBackdropTask.cancel();
+        if (mBackdropTask != null) mBackdropTask.cancel(true);
         if (executorService != null && !executorService.isShutdown()) executorService.shutdown();
     }
 
@@ -518,10 +508,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     @Override
     public void onStop() {
-        // TODO MARC look at CollectionFragment that stops the future tasks
         // Cancel all the async tasks
         // please be aware that even after stopping, the async task continues until background task has finished
-        if (mBackdropTask != null) mBackdropTask.cancel();
+        if (mBackdropTask != null) mBackdropTask.cancel(true);
         //do not update remote resume
         log.debug("removeParseListener");
         XmlDb.getInstance().removeParseListener(mRemoteDbObserver);
@@ -540,7 +529,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public void onResume() {
         super.onResume();
         log.debug("onResume");
-        // TODO MARC try multiplethreadexecutors
         if (executorService == null || executorService.isShutdown()) {
             int numberOfThreads = ENABLE_MULTITHREAD ? Runtime.getRuntime().availableProcessors() : 1;
             executorService = Executors.newFixedThreadPool(numberOfThreads);
@@ -622,15 +610,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mResumeFromPlayer = false;
         mFirstOnResume = false;
 
+        if (mBackdropTask == null) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
         if (!mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
-            // TODO MARC reput
-            //log.debug("onResume: new mBackdropTask");
-            //if (mBackdropTask != null) {
-            //    mBackdropTask.cancel();
-            //    log.warn("onResume: mBackdropTask cancelled");
-            //}
-            //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
-            //mBackdropTask.execute(mVideo);
+            log.debug("onResume: execute mBackdropTask with mVideo " + mVideo);
+            if (!mBackdropTask.isDone()) {
+                mBackdropTask.cancel(false);
+                log.warn("onResume: mBackdropTask cancelled");
+            }
+            mBackdropTask.execute(mVideo);
         }
     }
 
@@ -1085,11 +1072,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 // this is required to remove backdrop after removal of description
                 if (needToUpdateDetailsOverview) {
                     log.debug("smoothUpdateVideo: needToUpdateDetailsOverview new mBackdropTask");
-                    if (mBackdropTask != null) {
+                    if (mBackdropTask != null && !mBackdropTask.isDone()) {
                         log.warn("smoothUpdateVideo: needToUpdateDetailsOverview cancel mBackdropTask");
-                        //mBackdropTask.cancel();
+                        mBackdropTask.cancel(false);
                     }
-                    //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+                    log.debug("smoothUpdateVideo: needToUpdateDetailsOverview execute mBackdropTask with currentVideo " + currentVideo);
                     mBackdropTask.execute(currentVideo);
                 }
 
@@ -1338,12 +1325,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 log.debug("fullyReloadVideo: mScraperFuture done");
             });
         } else {
-            if (mBackdropTask != null) {
+            if (mBackdropTask != null && !mBackdropTask.isDone()) {
                 log.warn("fullyReloadVideo: cancel mBackdropTask");
-                //mBackdropTask.cancel();
+                mBackdropTask.cancel(false);
             }
             // Backdrop must be done in non-scrap case because there may be a backdrop remaining from previous scrap data than need to be removed (when removing scrap data)
-            //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+            log.debug("fullyReloadVideo: mBackdropTask.execute");
             mBackdropTask.execute(video);
         }
 
@@ -1552,12 +1539,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         if (tags != null && !mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
             if (mShouldLoadBackdrop) {
                 // Launch backdrop task in BaseTags-as-arguments mode
-                if (mBackdropTask != null) {
-                    log.warn("handleScraperTagsResult: cancel mBackdropTask");
-                    mBackdropTask.cancel();
-                }
                 log.debug("handleScraperTagsResult: loading backdrop");
-                //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+                if (mBackdropTask != null && !mBackdropTask.isDone()) {
+                    log.warn("handleScraperTagsResult: cancel mBackdropTask");
+                    mBackdropTask.cancel(false);
+                }
                 mBackdropTask.execute(tags);
                 mShouldLoadBackdrop = false;
             } else {
@@ -1838,11 +1824,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         if (result) {
             if (!mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
                 // Update backdrop
-                if (mBackdropTask != null) {
-                    //mBackdropTask.cancel();
+                if (mBackdropTask != null && !mBackdropTask.isDone()) {
+                    mBackdropTask.cancel(false);
                     log.warn("handleBackdropResult: cancel mBackdropTask");
                 }
-                //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
                 mBackdropTask.execute(mVideo);
                 Toast.makeText(getActivity(), R.string.leanback_backdrop_changed, Toast.LENGTH_SHORT).show();
             }

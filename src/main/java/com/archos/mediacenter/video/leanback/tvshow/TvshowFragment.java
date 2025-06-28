@@ -265,12 +265,6 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         mRowsAdapter = new ArrayObjectAdapter(ps);
         mHasDetailRow = false;
 
-        // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
-        // else it does not work later.
-        // --> This instance of BackdropTask() will not be used but it must be created here!
-        // TODO MARC remove
-        //mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
-
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
@@ -371,7 +365,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     @Override
     public void onStop() {
         log.debug("onStop");
-        if (mBackdropTask != null) mBackdropTask.cancel();
+        if (mBackdropTask!=null) mBackdropTask.cancel(true);
         Arrays.asList(mDetailRowBuilderFuture, mDetailRowBuilderFuture, mRefreshTvshowBitmapFuture).forEach(this::cancelFuture);
         super.onStop();
     }
@@ -394,14 +388,14 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             log.debug("onResume: mTvshow.getShowTags()==null -> FullScraperTagsTask");
             executeFullScraperTagsTask(mTvshow);
         }
-        //if (mBackdropTask != null) {
-        //    log.debug("onResume: mBackdropTask!=null -> cancel");
-        //    mBackdropTask.cancel();
-        //}
+        if (mBackdropTask == null) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        else if (! mBackdropTask.isDone()) {
+            log.debug("onResume: mBackdropTask!=null -> cancel");
+            mBackdropTask.cancel(false);
+        }
         log.debug("onResume: new backdropTask");
-        //if (mBackdropTask == null) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
-        // TODO MARC
-        //if (mTvshow.getShowTags() != null) mBackdropTask.execute(mTvshow.getShowTags());
+        // TODO MARC I reput
+        if (mTvshow.getShowTags() != null) mBackdropTask.execute(mTvshow.getShowTags());
     }
 
     @Override
@@ -519,11 +513,10 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 executeDetailRowBuilderTask(tvshow);
 
                 // Launch backdrop task in BaseTags-as-arguments mode
-                if (mBackdropTask != null) {
+                if (mBackdropTask!=null && ! mBackdropTask.isDone()) {
                     log.warn("executeFullScraperTagsTask: mBackdropTask cancelled");
-                    mBackdropTask.cancel();
+                    mBackdropTask.cancel(false);
                 }
-                if (mBackdropTask == null) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
 
                 mBackdropTask.execute(tvshow.getShowTags());
 

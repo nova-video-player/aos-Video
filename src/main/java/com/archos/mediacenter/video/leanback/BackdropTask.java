@@ -115,10 +115,10 @@ public class BackdropTask {
         return tags != null ? tags.downloadGetDefaultBackdropFile(mContext) : null;
     }
 
-    public void cancel() {
+    public void cancel(boolean releaseBackgroundManager) {
         if (mFuture != null && !mFuture.isDone()) mFuture.cancel(true);
         Picasso.get().cancelRequest(mBackgroundTarget);
-        releaseBackgroundManager();
+        if (releaseBackgroundManager) releaseBackgroundManager();
     }
 
     private void releaseBackgroundManager() {

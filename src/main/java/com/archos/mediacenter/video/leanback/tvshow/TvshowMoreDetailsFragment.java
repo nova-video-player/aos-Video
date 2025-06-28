@@ -145,12 +145,6 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                 }
             }
         });
-
-        // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
-        // else it does not work later.
-        // --> This instance of BackdropTask() will not be used but it must be created here!
-        // TODO MARC remove
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
     }
 
     @Override
@@ -223,7 +217,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
 
     @Override
     public void onStop() {
-        if (mBackdropTask != null && !mBackdropTask.isDone()) mBackdropTask.cancel();
+        if (mBackdropTask != null) mBackdropTask.cancel(true);
         // Cancel all the async tasks
         Arrays.asList(mFullScraperTagsFuture, mBuildRowsFuture, mShowPosterSaverFuture, mBackdropSaverFuture).forEach(this::cancelFuture);
         super.onStop();
@@ -239,7 +233,6 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     public void onResume() {
         super.onResume();
         log.debug("onResume");
-        // TODO MARC adjust
         executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         mOverlay.resume();
 
@@ -247,13 +240,11 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
         if (mShowTags == null) {
             executeFullScraperTagsTask(mShowId);
         }
-
-        if (mBackdropTask!=null && mBackdropTask.isDone()) {
-            log.warn("onResume: mBackdropTask cancelled");
-            mBackdropTask.cancel();
+        if (mBackdropTask == null) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        else if (! mBackdropTask.isDone()) {
+            log.debug("onResume: mBackdropTask!=null ongoing -> cancel");
+            mBackdropTask.cancel(false);
         }
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
-        // TODO MARC
         if (mShowTags != null) mBackdropTask.execute(mShowTags);
     }
 
@@ -279,11 +270,10 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                 mShowTags = showTags;
 
                 // Launch backdrop task in BaseTags-as-arguments mode
-                if (mBackdropTask != null && mBackdropTask.isDone()) {
+                if (mBackdropTask != null && ! mBackdropTask.isDone()) {
                     log.warn("executeFullScraperTagsTask: mBackdropTask cancelled");
-                    mBackdropTask.cancel();
+                    mBackdropTask.cancel(false);
                 }
-                mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
                 if (showTags != null) mBackdropTask.execute(showTags);
 
                 // Build and load the rows
@@ -414,7 +404,6 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     }
 
     /** Saves a Poster as default poster for a show and update the current poster */
-    // TODO MARC here
     private void savePosterAsync(ScraperImage poster) {
         if (mShowPosterSaverFuture != null && !mShowPosterSaverFuture.isDone()) {
             mShowPosterSaverFuture.cancel(true);
@@ -503,11 +492,10 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
         log.debug("handleBackdropResult: mShowTags updated");
 
         // Update backdrop
-        if (mBackdropTask != null && mBackdropTask.isDone()) {
+        if (mBackdropTask != null && ! mBackdropTask.isDone()) {
             log.warn("handleBackdropResult: mBackdropTask cancelled");
-            mBackdropTask.cancel();
+            mBackdropTask.cancel(false);
         }
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
         mBackdropTask.execute(mShowTags);
         Toast.makeText(getActivity(), R.string.leanback_backdrop_changed, Toast.LENGTH_SHORT).show();
 
