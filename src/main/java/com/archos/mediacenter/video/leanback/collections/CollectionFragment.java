@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.collections;
 
+import static com.archos.mediacenter.video.utils.MiscUtils.getNumberOfThreads;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 
@@ -422,8 +424,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         super.onResume();
         mOverlay.resume();
 
-        // TODO MARC adjust
-        executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        if (executorService == null || executorService.isShutdown())
+            executorService = Executors.newFixedThreadPool(getNumberOfThreads());
 
         // Load the details view
         if (mDetailRowBuilderFuture != null && !mDetailRowBuilderFuture.isDone()) {
@@ -686,7 +688,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     }
 
     private void executeRefreshCollectionBitmapTask(Collection collection) {
-        // TODO MARC
         if (mRefreshCollectionBitmapFuture != null && !mRefreshCollectionBitmapFuture.isDone()) {
             mRefreshCollectionBitmapFuture.cancel(true);
             log.warn("executeRefreshCollectionBitmapTask: mRefreshCollectionBitmapFuture cancelled");

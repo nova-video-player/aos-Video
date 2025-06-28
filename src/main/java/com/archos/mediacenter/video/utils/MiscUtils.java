@@ -540,4 +540,18 @@ public class MiscUtils {
             }
         }
     }
+
+    private static final boolean ENABLE_MULTITHREAD_EXECUTOR = true;
+
+    public static boolean isEnableMultithreadExecutor() {
+        return ENABLE_MULTITHREAD_EXECUTOR;
+    }
+
+    public static int getNumberOfThreads() {
+        int numberOfThreads = ENABLE_MULTITHREAD_EXECUTOR ? Runtime.getRuntime().availableProcessors() : 1;
+        // limit to 4 threads
+        if (numberOfThreads > 4) numberOfThreads = 4;
+        log.debug("getNumberOfThreads: numberOfThreads={}", numberOfThreads);
+        return numberOfThreads;
+    }
 }

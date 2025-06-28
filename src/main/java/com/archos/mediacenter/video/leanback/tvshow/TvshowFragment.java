@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
+import static com.archos.mediacenter.video.utils.MiscUtils.getNumberOfThreads;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 import androidx.loader.app.LoaderManager;
@@ -380,8 +382,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     public void onResume() {
         log.debug("onResume");
         super.onResume();
-        // TODO MARC adjust
-        executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        if (executorService == null || executorService.isShutdown())
+            executorService = Executors.newFixedThreadPool(getNumberOfThreads());
         mOverlay.resume();
         // Start loading the detailed info about the show if needed
         if (mTvshow.getShowTags() == null) {
@@ -394,7 +396,6 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             mBackdropTask.cancel(false);
         }
         log.debug("onResume: new backdropTask");
-        // TODO MARC I reput
         if (mTvshow.getShowTags() != null) mBackdropTask.execute(mTvshow.getShowTags());
     }
 

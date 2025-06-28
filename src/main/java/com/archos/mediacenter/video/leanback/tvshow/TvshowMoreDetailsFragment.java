@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
+import static com.archos.mediacenter.video.utils.MiscUtils.getNumberOfThreads;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -233,7 +235,8 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     public void onResume() {
         super.onResume();
         log.debug("onResume");
-        executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        if (executorService == null || executorService.isShutdown())
+            executorService = Executors.newFixedThreadPool(getNumberOfThreads());
         mOverlay.resume();
 
         // Start loading the detailed info about the show if needed

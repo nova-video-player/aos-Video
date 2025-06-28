@@ -15,6 +15,8 @@
 
 package com.archos.mediacenter.video.leanback.details;
 
+import static com.archos.mediacenter.video.utils.MiscUtils.getNumberOfThreads;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Dialog;
@@ -161,7 +163,6 @@ import java.util.concurrent.Future;
 public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, PlayUtils.SubtitleDownloadListener, SubtitleInterface, Delete.DeleteListener, XmlDb.ResumeChangeListener, ExternalPlayerWithResultStarter {
 
     private static final Logger log = LoggerFactory.getLogger(VideoDetailsFragment.class);
-    private static final boolean ENABLE_MULTITHREAD = true;
 
     /** A serialized com.archos.mediacenter.video.leanback.adapter.object.Video */
     public static final String EXTRA_VIDEO = "VIDEO";
@@ -529,10 +530,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public void onResume() {
         super.onResume();
         log.debug("onResume");
-        if (executorService == null || executorService.isShutdown()) {
-            int numberOfThreads = ENABLE_MULTITHREAD ? Runtime.getRuntime().availableProcessors() : 1;
-            executorService = Executors.newFixedThreadPool(numberOfThreads);
-        }
+        if (executorService == null || executorService.isShutdown())
+            executorService = Executors.newFixedThreadPool(getNumberOfThreads());
 
         mShouldUpdateRemoteResume = true;
         mOverlay.resume();
