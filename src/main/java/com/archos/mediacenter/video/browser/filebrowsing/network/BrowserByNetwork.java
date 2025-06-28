@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -298,10 +300,23 @@ public class BrowserByNetwork extends BrowserByFolder {
                     //((CheckBox) v.findViewById(R.id.checkBox)).setChecked(false);
                     v.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
                 }
-                new AlertDialog.Builder(getActivity())
+
+                View customTitleView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_custom_title, null);
+                java.util.function.IntFunction<Integer> dpToPx = dp ->
+                        Math.round(dp * customTitleView.getContext().getResources().getDisplayMetrics().density);
+                customTitleView.setPadding(dpToPx.apply(12),dpToPx.apply(10),dpToPx.apply(16),dpToPx.apply(4));
+                TextView titleText = customTitleView.findViewById(R.id.dialog_title);
+                titleText.setText(R.string.ssh_shortcut_name);
+                Typeface customFont = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_95blk);
+                titleText.setTypeface(customFont);
+                titleText.setTextSize(24);
+                ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+                iconView.setVisibility(View.GONE);
+
+                AlertDialog dialog = new AlertDialog.Builder(getActivity(), R.style.CustomDialogTheme)
                         .setCancelable(false)
                         .setView(v)
-                        .setTitle(R.string.ssh_shortcut_name)
+                        .setCustomTitle(customTitleView)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.dismiss();
@@ -323,7 +338,28 @@ public class BrowserByNetwork extends BrowserByFolder {
                             public void onClick(DialogInterface dialog,int id) {
                                 dialog.cancel();
                             }
-                        }).create().show();
+                        }).create();
+                dialog.setOnShowListener(dialogInterface -> {
+                    Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_95blk);
+                    Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                    if (positiveButton != null) {
+                        positiveButton.setTypeface(typeface);
+                        Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+                        positiveButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+                        positiveButton.setBackground(ripple);
+                        positiveButton.setClipToOutline(true);
+                    }
+                    Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                    if (negativeButton != null) {
+                        negativeButton.setTypeface(typeface);
+                        Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+                        negativeButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+                        negativeButton.setBackground(ripple);
+                        negativeButton.setClipToOutline(true);
+                    }
+                });
+
+                dialog.show();
                 ret = true;
                 break;
             case R.string.manually_create_share:
