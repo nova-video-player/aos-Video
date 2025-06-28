@@ -42,7 +42,7 @@
         
     <!-- A vertical separator is needed when an action bar item has a text -->
     <ImageView
-        android:layout_width="2dp"
+        android:layout_width="wrap_content"
         android:layout_height="30dip"
         android:layout_marginLeft="5dip"
         android:scaleType="fitXY"
