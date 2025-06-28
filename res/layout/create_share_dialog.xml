@@ -7,6 +7,8 @@
         android:id="@+id/edit_sharepath"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
+        android:buttonTint="@color/checkbox_tint"
         android:hint="@string/share_path"
         android:layout_marginBottom="8dip"
         android:layout_marginLeft="16dip"

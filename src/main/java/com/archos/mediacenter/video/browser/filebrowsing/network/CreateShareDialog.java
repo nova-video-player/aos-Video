@@ -17,15 +17,22 @@ package com.archos.mediacenter.video.browser.filebrowsing.network;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.archos.filecorelibrary.FileUtils;
@@ -58,10 +65,45 @@ public class CreateShareDialog extends DialogFragment implements DialogInterface
         pathEdit = (EditText) v.findViewById(R.id.edit_sharepath);
         pathEdit.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
-        Dialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.manually_create_share)
+        View customTitleView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_custom_title, null);
+        java.util.function.IntFunction<Integer> dpToPx = dp ->
+                Math.round(dp * customTitleView.getContext().getResources().getDisplayMetrics().density);
+        customTitleView.setPadding(dpToPx.apply(12),dpToPx.apply(10),dpToPx.apply(16),dpToPx.apply(4));
+        TextView titleText = customTitleView.findViewById(R.id.dialog_title);
+        titleText.setText(R.string.manually_create_share);
+        Typeface customFont = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_95blk);
+        titleText.setTypeface(customFont);
+        titleText.setTextSize(24);
+        ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+        iconView.setVisibility(View.GONE);
+
+        Dialog dialog = new AlertDialog.Builder(getActivity(), R.style.CustomDialogTheme).setCustomTitle(customTitleView)
                 .setView(v)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.yes, this).create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                AlertDialog ad = (AlertDialog)dialog;
+                Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_95blk);
+                Button positiveButton = ad.getButton(AlertDialog.BUTTON_POSITIVE);
+                if (positiveButton != null) {
+                    positiveButton.setTypeface(typeface);
+                    Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+                    positiveButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+                    positiveButton.setBackground(ripple);
+                    positiveButton.setClipToOutline(true);
+                }
+                Button negativeButton = ad.getButton(AlertDialog.BUTTON_NEGATIVE);
+                if (negativeButton != null) {
+                    negativeButton.setTypeface(typeface);
+                    Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+                    negativeButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+                    negativeButton.setBackground(ripple);
+                    negativeButton.setClipToOutline(true);
+                }
+            }
+        });
 
         // Put the cursor at the end of "smb://"
         // This must be done after the dialog is created, else it does not work
