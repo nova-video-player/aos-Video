@@ -17,16 +17,22 @@ package com.archos.mediacenter.video.browser.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.text.format.Formatter;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.FileManagerService;
@@ -45,7 +51,7 @@ public class Paste extends AlertDialog implements FileManagerService.ServiceList
     private CheckBox mOpenFile;
 
     public Paste(Context context) {
-        super(context);
+        super(context, R.style.CustomDialogTheme);
         mContext = context;
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(com.archos.filecorelibrary.R.layout.paste, null, false);
@@ -61,7 +67,20 @@ public class Paste extends AlertDialog implements FileManagerService.ServiceList
         //mIndeterminateProgress = (ProgressBar) view.findViewById(R.id.progress_small);
         mProgressText = (TextView) view.findViewById(com.archos.filecorelibrary.R.id.progress_text);
 
-        setTitle(R.string.copying);
+
+        View customTitleView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_custom_title, null);
+        java.util.function.IntFunction<Integer> dpToPx = dp ->
+                Math.round(dp * customTitleView.getContext().getResources().getDisplayMetrics().density);
+        customTitleView.setPadding(dpToPx.apply(12),dpToPx.apply(10),dpToPx.apply(16),dpToPx.apply(4));
+        TextView titleText = customTitleView.findViewById(R.id.dialog_title);
+        titleText.setText(R.string.copying);
+        Typeface customFont = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_95blk);
+        titleText.setTypeface(customFont);
+        titleText.setTextSize(24);
+        ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+        iconView.setVisibility(View.GONE);
+
+        setCustomTitle(customTitleView);
         if(FileManagerService.fileManagerService==null) {
             if (DBG) Log.w(TAG, "Paste: FileManagerService.fileManagerService==null, it should not!");
         } else {
@@ -103,7 +122,23 @@ public class Paste extends AlertDialog implements FileManagerService.ServiceList
 
     @Override
     public void onActionStart() {
-
+        Typeface customFont = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_95blk);
+        Button positiveButton = getButton(AlertDialog.BUTTON_NEUTRAL);
+        if (positiveButton != null) {
+            positiveButton.setTypeface(customFont);
+            Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+            positiveButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+            positiveButton.setBackground(ripple);
+            positiveButton.setClipToOutline(true);
+        }
+        Button negativeButton = getButton(AlertDialog.BUTTON_NEGATIVE);
+        if (negativeButton != null) {
+            negativeButton.setTypeface(customFont);
+            Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+            negativeButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+            negativeButton.setBackground(ripple);
+            negativeButton.setClipToOutline(true);
+        }
     }
 
     @Override
