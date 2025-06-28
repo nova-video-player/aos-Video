@@ -18,7 +18,7 @@
         android:visibility="gone"
         android:scaleType="centerInside"
         android:src="@drawable/ic_menu_video_unindex"
-        app:tint="@color/red" />
+        />
 
     <TextView
         android:id="@+id/text"
