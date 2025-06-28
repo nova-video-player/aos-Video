@@ -36,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -413,9 +414,20 @@ public class BrowserByNetwork extends BrowserByFolder {
         IndexFolderMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
         IndexFolderMenuItem.setActionView(mIndexFolderActionView);
         menu.add(0,R.string.add_ssh_shortcut, 0, applyCustomFont(R.string.add_ssh_shortcut));
-        menu.add(0, R.string.remove_from_indexed_folders, Menu.NONE, applyCustomFont(R.string.remove_from_indexed_folders)).setIcon(R.drawable.ic_menu_video_unindex).setShowAsAction(
-                MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        MenuItem removeFromLibrary = menu.add(0, R.string.remove_from_indexed_folders, Menu.NONE, applyCustomFont(R.string.remove_from_indexed_folders));
+        removeFromLibrary.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.action_bar_custom_menu_item, null);
+        TextView text = view.findViewById(R.id.text);
+        ImageView imageView = view.findViewById(R.id.icon);
+        imageView.setImageResource(R.drawable.ic_menu_video_unindex);
+        imageView.setVisibility(View.VISIBLE);
+        text.setText(R.string.remove_from_indexed_folders); // if needed
+        removeFromLibrary.setActionView(view);
+        view.setOnClickListener(v -> onOptionsItemSelected(removeFromLibrary));
+
         menu.add(0, R.string.rescan, Menu.NONE, applyCustomFont(R.string.rescan));
+
         MenuItem removeShortcutItem = menu.add(0, R.string.remove_from_shortcuts, 0, applyCustomFont(R.string.remove_from_shortcuts));
         removeShortcutItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
