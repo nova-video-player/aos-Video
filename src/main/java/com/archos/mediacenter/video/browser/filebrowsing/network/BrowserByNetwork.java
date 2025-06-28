@@ -27,6 +27,7 @@ import android.os.Message;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
@@ -414,8 +416,16 @@ public class BrowserByNetwork extends BrowserByFolder {
         menu.add(0, R.string.remove_from_indexed_folders, Menu.NONE, applyCustomFont(R.string.remove_from_indexed_folders)).setIcon(R.drawable.ic_menu_video_unindex).setShowAsAction(
                 MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(0, R.string.rescan, Menu.NONE, applyCustomFont(R.string.rescan));
-        menu.add(0,R.string.remove_from_shortcuts, 0, applyCustomFont(R.string.remove_from_shortcuts)).setShowAsAction(
-                MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        MenuItem removeShortcutItem = menu.add(0, R.string.remove_from_shortcuts, 0, applyCustomFont(R.string.remove_from_shortcuts));
+        removeShortcutItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        View customView = LayoutInflater.from(getContext()).inflate(R.layout.action_bar_custom_menu_item, null);
+        TextView textView = customView.findViewById(R.id.text);
+        textView.setText(R.string.remove_from_shortcuts); // if needed
+        removeShortcutItem.setActionView(customView);
+
+        // Add click listener
+        customView.setOnClickListener(v -> onOptionsItemSelected(removeShortcutItem));
     }
 
     private SpannableString applyCustomFont(@StringRes int resId) {
