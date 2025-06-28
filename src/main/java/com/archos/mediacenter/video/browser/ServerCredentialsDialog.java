@@ -17,26 +17,34 @@ package com.archos.mediacenter.video.browser;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
@@ -49,6 +57,8 @@ import com.archos.mediacenter.video.R;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
 
 public abstract class ServerCredentialsDialog extends DialogFragment {
 
@@ -131,6 +141,97 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
         mDomainEt = (EditText)v.findViewById(R.id.domain);
 
         mTypeSp = (Spinner)v.findViewById(R.id.ssh_spinner);
+
+        // Set custom spinner
+        String[] spinnerItems = getResources().getStringArray(R.array.protocol_types); // replace with actual array
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                getContext(), R.layout.custom_spinner_item, spinnerItems) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                ((TextView) view).setTypeface(ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_65md));
+                return view;
+            }
+            @Override
+            public View getDropDownView(int position, View convertView, android.view.ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                ((TextView) view).setTypeface(ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_65md));
+                return view;
+            }
+        };
+        adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+        mTypeSp.setAdapter(adapter);
+
+        // Calculate widest item width
+        int maxWidth = 0;
+        View itemView = null;
+        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        for (int i = 0; i < adapter.getCount(); i++) {
+            itemView = adapter.getDropDownView(i, null, mTypeSp);
+            itemView.measure(widthMeasureSpec, heightMeasureSpec);
+            maxWidth = Math.max(maxWidth, itemView.getMeasuredWidth());
+        }
+        // Set dropdown position and width after layout
+        int finalMaxWidth = maxWidth;
+        mTypeSp.post(new Runnable() {
+            @Override
+            public void run() {
+                mTypeSp.setDropDownVerticalOffset(mTypeSp.getHeight());
+                mTypeSp.setDropDownHorizontalOffset(0);
+                mTypeSp.setDropDownWidth(finalMaxWidth); // Add some padding
+            }
+        });
+
+        // Disable internal spinner item ripple (MOP)
+        mTypeSp.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Let the ripple animation begin naturally
+                        v.setPressed(true);
+                        return true;
+
+                    case MotionEvent.ACTION_UP:
+                        // Let ripple finish
+                        v.setPressed(false);
+
+                        // Trigger click manually to preserve accessibility
+                        v.performClick();
+
+                        // Delay dropdown ripple removal to avoid interfering with ripple
+                        for (int i = 0; i < 5; i++) {
+                            final int attempt = i;
+                            mTypeSp.postDelayed(() -> {
+                                try {
+                                    Field popupField = AppCompatSpinner.class.getDeclaredField("mPopup");
+                                    popupField.setAccessible(true);
+                                    Object popupWindow = popupField.get(mTypeSp);
+
+                                    if (popupWindow != null &&
+                                            popupWindow.getClass().getName().equals("androidx.appcompat.widget.AppCompatSpinner$DropdownPopup")) {
+
+                                        Field dropDownListField = popupWindow.getClass().getSuperclass().getDeclaredField("mDropDownList");
+                                        dropDownListField.setAccessible(true);
+                                        ListView listView = (ListView) dropDownListField.get(popupWindow);
+
+                                        if (listView != null) {
+                                            listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+                                            Log.d("SpinnerHack", "Dropdown ripple removed (attempt " + attempt + ")");
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    Log.e("SpinnerHack", "Reflection error: " + e.getMessage());
+                                }
+                            }, 100 + i * 50); // Start late to avoid clashing
+                        }
+                        return true; // We handled the touch completely
+                }
+                return false;
+            }
+        });
+
         mTypeSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
