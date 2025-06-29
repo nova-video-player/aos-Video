@@ -183,7 +183,10 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 @Override
                 public void onTransitionStart(Transition transition) {mOverlay.hide();}
                 @Override
-                public void onTransitionEnd(Transition transition) {mOverlay.show();}
+                public void onTransitionEnd(Transition transition) {
+                    mOverlay.show();
+                    mBackdropTask.execute(mCollection);
+                }
                 @Override
                 public void onTransitionCancel(Transition transition) {}
                 @Override
@@ -401,13 +404,14 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         log.debug("onDestroyView");
         mOverlay.destroy();
         if (executorService != null && !executorService.isShutdown()) executorService.shutdown();
+        if (mBackdropTask != null) mBackdropTask.releaseBackgroundManager();
         super.onDestroyView();
     }
 
     @Override
     public void onStop() {
         log.debug("onStop");
-        if (mBackdropTask != null) mBackdropTask.cancel(true);
+        if (mBackdropTask != null) mBackdropTask.cancel(false);
         Arrays.asList(mRefreshCollectionBitmapFuture, mDetailRowBuilderFuture).forEach(this::cancelFuture);
         super.onStop();
     }
@@ -435,10 +439,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
         // Launch backdrop task in BaseTags-as-arguments mode
         if (mBackdropTask == null) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
-        else if (! mBackdropTask.isDone()) {
-            log.debug("onResume: mBackdropTask!=null -> cancel");
-            mBackdropTask.cancel(false);
-        }
         mBackdropTask.execute(mCollection);
         // Start loading the list of seasons
         LoaderManager.getInstance(CollectionFragment.this).restartLoader(COLLECTION_LOADER_ID, null, CollectionFragment.this);

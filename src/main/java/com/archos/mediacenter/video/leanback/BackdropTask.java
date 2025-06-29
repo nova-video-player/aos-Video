@@ -51,6 +51,7 @@ public class BackdropTask {
     private final ExecutorService mExecutor;
     private Future<?> mFuture;
     private final BackgroundManager mBackgroundManager;
+    private final String mActivityClassName;
 
     public BackdropTask(Activity activity, int backgroundDefaultColor) {
         log.debug("BackdropTask");
@@ -59,11 +60,12 @@ public class BackdropTask {
         mDefaultBackground = new ColorDrawable(backgroundDefaultColor);
         activity.getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
         mBackgroundManager = BackgroundManager.getInstance(activity);
+        mActivityClassName = activity.getClass().getSimpleName();
         if(!mBackgroundManager.isAttached()) {
-            log.debug("BackdropTask: backgroundManager not yet attached");
+            log.debug("BackdropTask: backgroundManager not yet attached for activity {}, attaching now", mActivityClassName);
             mBackgroundManager.attach(activity.getWindow());
         } else {
-            log.debug("BackdropTask: backgroundManager already attached");
+            log.debug("BackdropTask: backgroundManager already attached for activity {}", mActivityClassName);
         }
         mBackgroundTarget = new PicassoBackgroundManagerTarget(mBackgroundManager);
         mExecutor = Executors.newSingleThreadExecutor();
@@ -71,10 +73,8 @@ public class BackdropTask {
     }
 
     public void execute(final Object... objects) {
-        if (mFuture != null) {
-            mFuture.cancel(true);
-            log.warn("execute: cancelling previous task");
-        }
+        log.debug("execute: cancel previous task if any for activity {}", mActivityClassName);
+        cancel(false);
         mFuture = mExecutor.submit(() -> {
             final File file = getBackdropFile(objects.length > 0 ? objects[0] : null);
             mContext.runOnUiThread(() -> {
@@ -87,7 +87,7 @@ public class BackdropTask {
                             .error(mDefaultBackground)
                             .into(mBackgroundTarget);
                 } else {
-                    log.debug("execute: file is null, default background");
+                    log.debug("execute: file is null, default background for activity {}", mActivityClassName);
                     mBackgroundManager.setDrawable(mDefaultBackground);
                 }
             });
@@ -116,13 +116,22 @@ public class BackdropTask {
     }
 
     public void cancel(boolean releaseBackgroundManager) {
-        log.debug("cancel: " + releaseBackgroundManager);
-        if (mFuture != null && !mFuture.isDone()) mFuture.cancel(true);
-        Picasso.get().cancelRequest(mBackgroundTarget);
-        if (releaseBackgroundManager) releaseBackgroundManager();
+        log.debug("cancel: activity is not destroyed, proceeding with cancellation for activity {}", mActivityClassName);
+        if (mFuture != null && !mFuture.isDone()) {
+            log.debug("cancel: cancelling future");
+            mFuture.cancel(true);
+        }
+        if (mBackgroundTarget != null && mBackgroundManager.isAttached()) {
+            log.debug("cancel: cancelling Picasso request for activity {}", mActivityClassName);
+            Picasso.get().cancelRequest(mBackgroundTarget);
+        }
+        if (releaseBackgroundManager && mBackgroundManager != null && mBackgroundManager.isAttached()) {
+            log.debug("cancel: releaseBackgroundManager for activity {}", mActivityClassName);
+            mBackgroundManager.release();
+        }
     }
 
-    private void releaseBackgroundManager() {
+    public void releaseBackgroundManager() {
         if (mBackgroundManager != null && mBackgroundManager.isAttached()) {
             mBackgroundManager.release();
         }

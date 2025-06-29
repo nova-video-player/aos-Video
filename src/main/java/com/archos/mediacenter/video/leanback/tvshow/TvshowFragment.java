@@ -173,6 +173,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 @Override
                 public void onTransitionEnd(Transition transition) {
                     mOverlay.show();
+                    // this is needed to ensure backdrop is set after the transition i.e. between VideoDetailsFragment opening TvshowFragment
+                    mBackdropTask.execute(mTvshow.getShowTags());
                 }
                 @Override
                 public void onTransitionCancel(Transition transition) {
@@ -359,6 +361,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         log.debug("onDestroyView");
         mOverlay.destroy();
         if (executorService != null && !executorService.isShutdown()) executorService.shutdown();
+        if (mBackdropTask != null) mBackdropTask.releaseBackgroundManager();
         super.onDestroyView();
     }
 
@@ -367,7 +370,8 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     @Override
     public void onStop() {
         log.debug("onStop");
-        if (mBackdropTask!=null) mBackdropTask.cancel(true);
+        // Release BackgroundManager only when activity is truly destroyed (not onStop for transitions)
+        if (mBackdropTask != null) mBackdropTask.cancel(false);
         Arrays.asList(mDetailRowBuilderFuture, mDetailRowBuilderFuture, mRefreshTvshowBitmapFuture).forEach(this::cancelFuture);
         super.onStop();
     }
@@ -387,16 +391,12 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         mOverlay.resume();
         // Start loading the detailed info about the show if needed
         if (mTvshow.getShowTags() == null) {
-            log.debug("onResume: mTvshow.getShowTags()==null -> FullScraperTagsTask");
+            log.debug("onResume: mTvshow.getShowTags()==null -> executeFullScraperTagsTask");
             executeFullScraperTagsTask(mTvshow);
         }
         if (mBackdropTask == null) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
-        else if (! mBackdropTask.isDone()) {
-            log.debug("onResume: mBackdropTask!=null -> cancel");
-            mBackdropTask.cancel(false);
-        }
-        log.debug("onResume: new backdropTask");
-        if (mTvshow.getShowTags() != null) mBackdropTask.execute(mTvshow.getShowTags());
+        // this one is required when no transition is used, otherwise the backdrop is not set
+        mBackdropTask.execute(mTvshow.getShowTags());
     }
 
     @Override
@@ -450,6 +450,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             if (mFullScraperTagsFuture != null && !mFullScraperTagsFuture.isDone()) {
                 mFullScraperTagsFuture.cancel(true);
             }
+            log.debug("onActivityResult: executeFullScraperTagsTask with " + mTvshow);
             executeFullScraperTagsTask(mTvshow);
         }
         else if (requestCode == REQUEST_CODE_CHANGE_TVSHOW && resultCode == Activity.RESULT_OK) {
@@ -514,11 +515,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 executeDetailRowBuilderTask(tvshow);
 
                 // Launch backdrop task in BaseTags-as-arguments mode
-                if (mBackdropTask!=null && ! mBackdropTask.isDone()) {
-                    log.warn("executeFullScraperTagsTask: mBackdropTask cancelled");
-                    mBackdropTask.cancel(false);
-                }
-
+                log.debug("executeFullScraperTagsTask: mBackdropTask.execute with " + tvshow.getShowTags());
                 mBackdropTask.execute(tvshow.getShowTags());
 
                 // Start loading the list of seasons
@@ -566,8 +563,6 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             log.debug("executeDetailRowBuilderTask: mDetailRowBuilderFuture done");
         });
     }
-
-    //--------------------------------------------
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
@@ -760,7 +755,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                         .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
                         .centerCrop()
                         .get();
-                log.debug("------ "+bitmap.getWidth()+"x"+bitmap.getHeight()+" ---- "+posterUri);
+                log.debug("generateTvshowBitmap: " + bitmap.getWidth() + "x" + bitmap.getHeight() + " " + posterUri);
             }
         } catch (IOException e) {
             log.error("generateTvshowBitmap Picasso load exception", e);

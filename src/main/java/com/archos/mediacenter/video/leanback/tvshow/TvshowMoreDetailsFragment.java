@@ -209,6 +209,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     public void onDestroyView() {
         mOverlay.destroy();
         if (executorService != null && !executorService.isShutdown()) executorService.shutdown();
+        if (mBackdropTask != null) mBackdropTask.releaseBackgroundManager();
         super.onDestroyView();
     }
 
@@ -219,7 +220,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
 
     @Override
     public void onStop() {
-        if (mBackdropTask != null) mBackdropTask.cancel(true);
+        if (mBackdropTask != null) mBackdropTask.cancel(false);
         // Cancel all the async tasks
         Arrays.asList(mFullScraperTagsFuture, mBuildRowsFuture, mShowPosterSaverFuture, mBackdropSaverFuture).forEach(this::cancelFuture);
         super.onStop();
@@ -244,11 +245,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             executeFullScraperTagsTask(mShowId);
         }
         if (mBackdropTask == null) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
-        else if (! mBackdropTask.isDone()) {
-            log.debug("onResume: mBackdropTask!=null ongoing -> cancel");
-            mBackdropTask.cancel(false);
-        }
-        if (mShowTags != null) mBackdropTask.execute(mShowTags);
+        mBackdropTask.execute(mShowTags);
     }
 
     @Override
@@ -273,10 +270,6 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                 mShowTags = showTags;
 
                 // Launch backdrop task in BaseTags-as-arguments mode
-                if (mBackdropTask != null && ! mBackdropTask.isDone()) {
-                    log.warn("executeFullScraperTagsTask: mBackdropTask cancelled");
-                    mBackdropTask.cancel(false);
-                }
                 if (showTags != null) mBackdropTask.execute(showTags);
 
                 // Build and load the rows
@@ -495,10 +488,6 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
         log.debug("handleBackdropResult: mShowTags updated");
 
         // Update backdrop
-        if (mBackdropTask != null && ! mBackdropTask.isDone()) {
-            log.warn("handleBackdropResult: mBackdropTask cancelled");
-            mBackdropTask.cancel(false);
-        }
         mBackdropTask.execute(mShowTags);
         Toast.makeText(getActivity(), R.string.leanback_backdrop_changed, Toast.LENGTH_SHORT).show();
 
