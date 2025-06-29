@@ -22,13 +22,19 @@ import androidx.leanback.app.BackgroundManager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Picasso target for updating default_background images
  */
 public class PicassoBackgroundManagerTarget implements Target {
     BackgroundManager mBackgroundManager;
 
+    private static final Logger log = LoggerFactory.getLogger(PicassoBackgroundManagerTarget.class);
+
     public PicassoBackgroundManagerTarget(BackgroundManager backgroundManager) {
+        log.debug("PicassoBackgroundManagerTarget:  set backgroundManager {}", backgroundManager);
         this.mBackgroundManager = backgroundManager;
     }
 
@@ -39,14 +45,20 @@ public class PicassoBackgroundManagerTarget implements Target {
             Canvas canvas = new Canvas(newBitmap);
 
             canvas.drawARGB(32, 0, 0, 0);
+            log.debug("onBitmapLoaded: Setting new bitmap with size {}x{}", newBitmap.getWidth(), newBitmap.getHeight());
             this.mBackgroundManager.setBitmap(newBitmap);
+        } else {
+            log.warn("onBitmapLoaded: BackgroundManager is not attached, cannot set bitmap");
         }
     }
 
     @Override
     public void onBitmapFailed(Exception e, Drawable drawable) {
         if (this.mBackgroundManager.isAttached()) { // try to fix some cases of "java.lang.IllegalStateException: Must attach before setting background drawable"
+            log.debug("onBitmapFailed: Setting drawable as background", e);
             this.mBackgroundManager.setDrawable(drawable);
+        } else {
+            log.warn("onBitmapFailed: BackgroundManager is not attached, cannot set drawable", e);
         }
     }
 
