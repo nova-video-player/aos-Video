@@ -33,6 +33,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -80,6 +81,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.ActionMenuView;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.ToolbarWidgetWrapper;
 import androidx.cardview.widget.CardView;
@@ -939,6 +942,34 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 break;
             }
         }
+
+        String expectedOverflowText = getString(R.string.overflow_menu_description);
+        mTitleBar.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            for (int i = 0; i < mTitleBar.getChildCount(); i++) {
+                View child = mTitleBar.getChildAt(i);
+                if (child instanceof ActionMenuView) {
+                    ActionMenuView menuView = (ActionMenuView) child;
+                    for (int j = 0; j < menuView.getChildCount(); j++) {
+                        View itemView = menuView.getChildAt(j);
+
+                        // Match by class name + description for overflow menu button
+                        String className = itemView.getClass().getSimpleName();
+                        if ("OverflowMenuButton".equals(className)) {
+                            CharSequence desc = itemView.getContentDescription();
+                            if (desc != null && desc.toString().equalsIgnoreCase(expectedOverflowText)) {
+                                attachCustomTooltip(itemView, expectedOverflowText);
+                            }
+                        }
+                    }
+                }
+
+                // apply custom tooltip for draweropen and Navigate up buttons
+                if (child instanceof AppCompatImageButton) {
+                    CharSequence desc = child.getContentDescription();
+                    attachCustomTooltip(child, desc.toString());
+                }
+            }
+        });
 
         return mRoot;
     }
@@ -4135,4 +4166,44 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }
     }
 
+    private void attachCustomTooltip(View anchorView, String message) {
+        anchorView.setOnLongClickListener(v -> {
+            Context context = v.getContext();
+            Toast toast = new Toast(context);
+
+            TextView textView = new TextView(context);
+            textView.setText(message);
+            textView.setTextColor(Color.WHITE);
+            textView.setBackgroundResource(R.drawable.menu_bg);
+            textView.setPadding(24, 16, 24, 16);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            textView.setTypeface(ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd));
+            textView.setGravity(Gravity.CENTER);
+
+            // Measure the textView to get width
+            textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            int tooltipWidth = textView.getMeasuredWidth();
+
+            toast.setView(textView);
+
+            // Get location of the anchor view
+            int[] location = new int[2];
+            v.getLocationOnScreen(location);
+            int anchorX = location[0];
+            int anchorY = location[1];
+
+            int viewWidth = v.getWidth();
+            int centerX = anchorX + viewWidth / 2;
+
+            // Position toast so it's centered horizontally below the anchor
+            int xOffset = centerX - tooltipWidth / 2;
+            int yOffset = anchorY + v.getHeight() + 16; // distance below the view
+
+            toast.setGravity(Gravity.TOP | Gravity.START, xOffset, yOffset);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.show();
+
+            return true;
+        });
+    }
 }
