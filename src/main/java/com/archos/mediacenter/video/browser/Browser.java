@@ -1317,7 +1317,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
         if (item.getItemId() == MENU_VIEW_HIDE_SEEN){
             mHideWatched = !mHideWatched;
-            item.setTitle(mHideWatched ? R.string.hide_seen : R.string.show_all);
+            item.setTitle(applyCustomFont(mHideWatched ? R.string.hide_seen : R.string.show_all));
             mPreferences.edit().putBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, mHideWatched).apply();
         }
 
