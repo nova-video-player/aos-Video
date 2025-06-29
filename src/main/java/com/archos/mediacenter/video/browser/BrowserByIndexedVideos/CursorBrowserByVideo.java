@@ -18,6 +18,7 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -220,6 +221,14 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
         if (mBrowserAdapter != null && (!mBrowserAdapter.isEmpty()||mHideWatched)) {
             if (Trakt.isTraktV2Enabled(mContext, PreferenceManager.getDefaultSharedPreferences(mContext))) {
                 MenuItem hideMarkedSeen = menu.add(MENU_HIDE_WATCHED_GROUP, MENU_VIEW_HIDE_SEEN, Menu.NONE, mHideWatched ? R.string.hide_seen : R.string.show_all);
+
+                View customView = LayoutInflater.from(getContext()).inflate(R.layout.action_bar_custom_menu_item, null);
+                int titleRes = mHideWatched ? R.string.hide_seen : R.string.show_all;
+                TextView textView = customView.findViewById(R.id.text);
+                textView.setText(titleRes);
+                hideMarkedSeen.setActionView(customView);
+                customView.setOnClickListener(v -> onOptionsItemSelected(hideMarkedSeen));
+
                 hideMarkedSeen.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             }
         }
@@ -229,6 +238,14 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
         if (item.getItemId() == MENU_VIEW_HIDE_SEEN){
             mHideWatched = !mHideWatched;
             item.setTitle(mHideWatched ? R.string.hide_seen : R.string.show_all);
+
+            View customView = LayoutInflater.from(getContext()).inflate(R.layout.action_bar_custom_menu_item, null);
+            int titleRes = mHideWatched ? R.string.hide_seen : R.string.show_all;
+            TextView textView = customView.findViewById(R.id.text);
+            textView.setText(titleRes);
+            item.setActionView(customView);
+            customView.setOnClickListener(v -> onOptionsItemSelected(item));
+
             mPreferences.edit().putBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, mHideWatched).apply();
             LoaderManager.getInstance(this).restartLoader(0, null, this);
             return true;
