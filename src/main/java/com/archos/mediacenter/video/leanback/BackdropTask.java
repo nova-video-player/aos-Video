@@ -60,10 +60,10 @@ public class BackdropTask {
         activity.getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
         mBackgroundManager = BackgroundManager.getInstance(activity);
         if(!mBackgroundManager.isAttached()) {
-            log.debug("BackgroundManager not yet attached");
+            log.debug("BackdropTask: backgroundManager not yet attached");
             mBackgroundManager.attach(activity.getWindow());
         } else {
-            log.debug("BackgroundManager already attached");
+            log.debug("BackdropTask: backgroundManager already attached");
         }
         mBackgroundTarget = new PicassoBackgroundManagerTarget(mBackgroundManager);
         mExecutor = Executors.newSingleThreadExecutor();
@@ -116,6 +116,7 @@ public class BackdropTask {
     }
 
     public void cancel(boolean releaseBackgroundManager) {
+        log.debug("cancel: " + releaseBackgroundManager);
         if (mFuture != null && !mFuture.isDone()) mFuture.cancel(true);
         Picasso.get().cancelRequest(mBackgroundTarget);
         if (releaseBackgroundManager) releaseBackgroundManager();
