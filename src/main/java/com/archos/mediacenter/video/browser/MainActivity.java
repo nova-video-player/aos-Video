@@ -960,9 +960,11 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 }
 
                 // Ensure video list updates backgrounds live when dark mode is toggled
-                Browser browser = (Browser) getSupportFragmentManager().findFragmentById(R.id.content); // or the correct fragment ID
-                if (browser != null) {
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content);
+                if (fragment instanceof Browser browser) {
                     browser.notifyDataSetChanged();
+                } else {
+                    Log.w(TAG, "Active fragment is not a Browser: " + (fragment != null ? fragment.getClass().getSimpleName() : "null"));
                 }
 
                 setNormalMode();
