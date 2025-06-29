@@ -312,7 +312,8 @@ public class FolderPicker extends FragmentActivity {
             }
             Typeface customFont = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_95blk);
             titleText.setTypeface(customFont);
-            titleText.setTextSize(24);
+            titleText.setTextSize(22);
+            titleText.setMaxLines(2);
             ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
             iconView.setVisibility(View.GONE);
             builder.setCustomTitle(customTitleView);
