@@ -1890,7 +1890,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+            super.onCreateDialog(savedInstanceState);
             /*
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setCancelable(false);
