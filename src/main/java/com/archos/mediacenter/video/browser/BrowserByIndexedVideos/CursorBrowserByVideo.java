@@ -17,7 +17,10 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,9 +29,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.StringRes;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -44,6 +51,7 @@ import com.archos.mediacenter.video.browser.ThumbnailRequesterVideo;
 import com.archos.mediacenter.video.browser.adapters.CursorAdapterByVideo;
 import com.archos.mediacenter.video.browser.adapters.PresenterAdapterByCursor;
 import com.archos.mediacenter.video.browser.adapters.PresenterAdapterInterface;
+import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
 import java.io.File;
@@ -214,13 +222,23 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
         return ((PresenterAdapterByCursor)mBrowserAdapter).hasRemoteSubtitles(position);
     }
 
+    private SpannableString applyCustomFont(@StringRes int resId) {
+        String family ="";
+        Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
+        int color = ContextCompat.getColor(mContext, android.R.color.white);
+        float textSize = 18f; // in SP
+        String text = mContext.getString(resId);
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new CustomTypefaceSpan(family, typeface, textSize, color), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         if (mBrowserAdapter != null && (!mBrowserAdapter.isEmpty()||mHideWatched)) {
             if (Trakt.isTraktV2Enabled(mContext, PreferenceManager.getDefaultSharedPreferences(mContext))) {
-                MenuItem hideMarkedSeen = menu.add(MENU_HIDE_WATCHED_GROUP, MENU_VIEW_HIDE_SEEN, Menu.NONE, mHideWatched ? R.string.hide_seen : R.string.show_all);
+                MenuItem hideMarkedSeen = menu.add(MENU_HIDE_WATCHED_GROUP, MENU_VIEW_HIDE_SEEN, Menu.NONE, applyCustomFont(mHideWatched ? R.string.hide_seen : R.string.show_all));
 
                 View customView = LayoutInflater.from(getContext()).inflate(R.layout.action_bar_custom_menu_item, null);
                 int titleRes = mHideWatched ? R.string.hide_seen : R.string.show_all;
@@ -237,7 +255,7 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == MENU_VIEW_HIDE_SEEN){
             mHideWatched = !mHideWatched;
-            item.setTitle(mHideWatched ? R.string.hide_seen : R.string.show_all);
+            item.setTitle(applyCustomFont(mHideWatched ? R.string.hide_seen : R.string.show_all));
 
             View customView = LayoutInflater.from(getContext()).inflate(R.layout.action_bar_custom_menu_item, null);
             int titleRes = mHideWatched ? R.string.hide_seen : R.string.show_all;
