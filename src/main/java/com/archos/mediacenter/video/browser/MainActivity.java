@@ -63,6 +63,7 @@ import android.view.Gravity;
 import android.view.InputDevice;
 import android.view.InputEvent;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -872,6 +873,13 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         }
         MenuItem menuItem = menu.add(MENU_SCRAPER_GROUP, MENU_START_AUTO_SCRAPER_ACTIVITY, Menu.NONE,
                 applyCustomFont(R.string.start_auto_scraper_activity));
+        View customView = LayoutInflater.from(this).inflate(R.layout.action_bar_search_info_online, null);
+        //customView.setBackground(ContextCompat.getDrawable(this, R.drawable.search_info_online_ripple));
+        TextView textView = customView.findViewById(R.id.text);
+        textView.setText(R.string.start_auto_scraper_activity);
+        menuItem.setActionView(customView);
+        MenuItem finalMenuItem = menuItem;
+        customView.setOnClickListener(v -> onOptionsItemSelected(finalMenuItem));
         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         // below line removed to avoid warning W/ActionProvider(support): setVisibilityListener: Setting a new ActionProvider.VisibilityListener when one is already set. Are you reusing this NewVideosActionProvider instance while it is still in use somewhere else?
         //MenuItemCompat.setActionProvider(menuItem, mNewVideosActionProvider);
