@@ -689,6 +689,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                             }
                         }, 1000);
                     }
+                    if (mCursor != null) mCursor.close();
                 }
             }
             else if (action.getId() == VideoActionAdapter.ACTION_NEXT_EPISODE) {
