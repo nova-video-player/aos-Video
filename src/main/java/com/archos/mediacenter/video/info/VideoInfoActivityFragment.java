@@ -59,6 +59,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -287,6 +288,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private View mTVDBIcon;
     private LinearLayout mScrapTrailers;
     private LinearLayout mSourceLayout;
+    private HorizontalScrollView mSourceContainer;
     private VideoBadgePresenter mVideoBadgePresenter;
     private View mScrapDetailsCard;
     private LinearLayout mScrapTrailersContainer;
@@ -552,6 +554,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mRemoteResumeButton = (Button) mRoot.findViewById(R.id.remote_resume);
         mRemoteResumeButton.setOnClickListener(this);
         mSourceLayout = (LinearLayout)mRoot.findViewById(R.id.source_layout);
+        mSourceContainer = (HorizontalScrollView)mRoot.findViewById(R.id.source_container);
         mFileInfoContainer = (LinearLayout)mRoot.findViewById(R.id.info_file_container);
         mFilePathTextView = (TextView)mFileInfoContainer.findViewById(R.id.fullpath);
         mFileSize = (TextView)mRoot.findViewById(R.id.filesize);
@@ -3390,6 +3393,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         @Override
                         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
                     });
+
+                    // Disable gestureDetector swiping on file sources horizontal view
+                    disableGestureDetector(mSourceContainer);
+                    disableGestureDetector(mSourceLayout);
+
                     // set series genres
                     genres = showTags.getGenresFormatted();
                     if (genres == null || genres.isEmpty()){
@@ -4204,6 +4212,31 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             toast.show();
 
             return true;
+        });
+    }
+
+    private void disableGestureDetector(View view) {
+        view.setClickable(true);
+        view.setFocusable(true);
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                ViewParent parent = v.getParent();
+                if (parent != null) {
+                    // Disallow parent to intercept touch
+                    parent.requestDisallowInterceptTouchEvent(true);
+                }
+
+                int action = event.getActionMasked();
+                if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
+                    ((VideoInfoActivity) requireActivity()).setGestureEnabled(false);
+                } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                    ((VideoInfoActivity) requireActivity()).setGestureEnabled(true);
+                    v.performClick(); // for accessibility
+                }
+                return false; // keep letting scroll events pass
+            }
         });
     }
 }
