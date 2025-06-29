@@ -333,4 +333,5 @@
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->
     <!--  Nfo File parsing -->
+    <string name="overflow_menu_description">Fler alternativ</string>
 </resources>

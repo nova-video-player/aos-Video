@@ -939,4 +939,5 @@
          Aby uniknąć problemów, zdecydowanie zaleca się ponowne uruchomienie systemu od czystej instalacji. Aby poznać szczegóły, sprawdź FAQ.</string>
     <string name="networks">Sieć:</string>
     <string name="premiered">Premiera:</string>
+    <string name="overflow_menu_description">Więcej opcji</string>
 </resources>

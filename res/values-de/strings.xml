@@ -912,4 +912,5 @@
         Es wird dringend empfohlen, von einer sauberen Installation neu zu starten, um Probleme zu vermeiden. Bitte überprüfen Sie die FAQ für Details.</string>
     <string name="networks">Netzwerke:</string>
     <string name="premiered">Erstausstrahlung:</string>
+    <string name="overflow_menu_description">Weitere Optionen</string>
 </resources>

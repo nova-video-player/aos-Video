@@ -401,6 +401,7 @@
     <string name="stereo_dive_disable">إلغاء تأثيرات ستيريو</string>
     <string name="drawer_open">فتح الدرج</string>
     <string name="drawer_close">إغلاق الدرج</string>
+    <string name="overflow_menu_description">المزيد من الخيارات</string>
     <!-- Help overlay -->
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->

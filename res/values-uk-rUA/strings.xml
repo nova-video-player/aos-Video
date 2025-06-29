@@ -934,4 +934,5 @@
     <string name="v5_v6_upgrade_info">УВАГА: Це оновлення Nova вимагає пересканування всієї бібліотеки. Щоб уникнути проблем, настійно рекомендується повністю перевстановити програму. Будь ласка, ознайомтеся з FAQ.</string>
     <string name="networks">Мережі:</string>
     <string name="premiered">Прем\'єра:</string>
+    <string name="overflow_menu_description">Більше опцій</string>
 </resources>

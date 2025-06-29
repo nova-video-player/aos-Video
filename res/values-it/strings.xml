@@ -807,4 +807,5 @@ Copertina (rotolo di copertina)</string>
     <string name="sponsor">Supporta Nova</string>
     <string name="enable_sponsor_title">Abilita il sponsor link di Nova</string>
     <string name="enable_sponsor_summary">Abilita il sponsor link per le donazioni: ogni contributo aiuta.</string>
+    <string name="overflow_menu_description">Altre opzioni</string>
 </resources>

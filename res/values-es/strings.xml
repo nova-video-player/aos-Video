@@ -927,4 +927,5 @@
         Se recomienda encarecidamente reiniciar desde una instalación limpia para evitar problemas. Por favor, compruebe FAQ para más detalles.</string>
     <string name="networks">Redes:</string>
     <string name="premiered">Estrenado:</string>
+    <string name="overflow_menu_description">Más opciones</string>
 </resources>

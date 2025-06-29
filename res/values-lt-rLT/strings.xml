@@ -832,4 +832,5 @@
     <string name="sponsor">Nova rėmėjas</string>
     <string name="enable_sponsor_title">Įjungti Nova rėmėjo nuorodą</string>
     <string name="enable_sponsor_summary">Įjungti rėmėjo nuorodą: kiekvienas įnašas padeda.</string>
+    <string name="overflow_menu_description">Daugiau parinkčių</string>
 </resources>

@@ -938,4 +938,5 @@
     <string name="v5_v6_upgrade_info">ВНИМАНИЕ: Это обновление Nova потребует пересканировать всю библиотеку мультимедиа. Чтобы избежать проблем, настоятельно рекомендуется полностью переустановить программу. Пожалуйста, ознакомьтесь с FAQ для подробностей.</string>
     <string name="networks">Сети:</string>
     <string name="premiered">Премьера:</string>
+    <string name="overflow_menu_description">Дополнительные опции</string>
 </resources>

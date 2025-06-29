@@ -836,4 +836,5 @@ desteklenmiyor.</string>
     <string name="sponsor">Nova Sponsoru</string>
     <string name="enable_sponsor_title">Nova sponsor bağlantısını etkinleştir</string>
     <string name="enable_sponsor_summary">Bağışlar için sponsor bağlantısını etkinleştirin: her katkı yardımcı olur.</string>
+    <string name="overflow_menu_description">Daha fazla seçenek</string>
 </resources>

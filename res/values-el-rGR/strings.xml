@@ -819,4 +819,5 @@
         Συνιστάται να κάνετε επανεκκίνηση από μια καθαρή εγκατάσταση για να αποφύγετε προβλήματα. Παρακαλούμε ελέγξτε τις Συχνές Ερωτήσεις για λεπτομέρειες.</string>
     <string name="networks">Δίκτυα:</string>
     <string name="premiered">Πρεμιέρα:</string>
+    <string name="overflow_menu_description">Περισσότερες επιλογές</string>
 </resources>

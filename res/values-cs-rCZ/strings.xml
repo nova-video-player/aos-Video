@@ -893,4 +893,5 @@
     <string name="v5_v6_upgrade_info">VAROVÁNÍ: tato významná aktualizace aplikace vyžaduje opětovné naskenování všech videí pro opětovné získání popisných informací.         Pro vyvarování se problémů doporučujeme začít znovu s čistou instalací. Prosím přečtěte si časté otázky (FAQ) pro další detaily.</string>
     <string name="networks">Sítě:</string>
     <string name="premiered">Premiéra:</string>
+    <string name="overflow_menu_description">Další možnosti</string>
 </resources>

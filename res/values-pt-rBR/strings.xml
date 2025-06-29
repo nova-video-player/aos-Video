@@ -913,4 +913,5 @@
     <string name="v5_v6_upgrade_info">ATENÇÃO: Esta atualização do NOVA requer uma nova verificação de toda a biblioteca de mídia.        É extremamente recomendado re-começar com uma instalação limpa para evitar complicações. Por favor, consulte as perguntas frequentes (FAQ) para mais detalhes.</string>
     <string name="networks">Redes:</string>
     <string name="premiered">Estreia:</string>
+    <string name="overflow_menu_description">Mais opções</string>
 </resources>

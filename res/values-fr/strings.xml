@@ -928,4 +928,5 @@
     <string name="v5_v6_upgrade_info">ATTENTION : cette mise à jour majeure de Nova nécessite de re-scanner toute la bibliothèque de vidéos pour réacquérir les informations multimédia. Il est fortement conseillé de reinstaller complètement l\'application afin d\'éviter les problèmes. Veuillez consulter la FAQ pour plus de détails.</string>
     <string name="networks">Chaînes :</string>
     <string name="premiered">1ère diffusion :</string>
+    <string name="overflow_menu_description">Plus d\'options</string>
 </resources>

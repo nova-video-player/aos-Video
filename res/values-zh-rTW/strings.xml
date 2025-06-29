@@ -924,4 +924,5 @@
         強烈建議重新安裝後重起以避免發生問題，詳細資訊請參閱「説明 / 常見問題」。</string>
     <string name="networks">網路：</string>
     <string name="premiered">首映：</string>
+    <string name="overflow_menu_description">更多選項</string>
 </resources>

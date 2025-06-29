@@ -922,4 +922,5 @@
          A problémák elkerülése érdekében erősen ajánlott tiszta telepítésről újraindítani. Kérjük, olvassa el a GYIK-ot a részletekért.</string>
     <string name="networks">Hálózatok:</string>
     <string name="premiered">Bemutatva:</string>
+    <string name="overflow_menu_description">További beállítások</string>
 </resources>

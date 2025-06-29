@@ -939,4 +939,5 @@
         Dôrazne sa odporúča obnoviť program z čistej inštalácie, aby ste sa vyhli problémom. Podrobnosti nájdete v často kladených otázkach.</string>
     <string name="networks">Siete:</string>
     <string name="premiered">Premiéra:</string>
+    <string name="overflow_menu_description">Ďalšie možnosti</string>
 </resources>
