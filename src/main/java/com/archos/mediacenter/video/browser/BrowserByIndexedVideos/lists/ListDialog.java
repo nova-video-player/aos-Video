@@ -4,11 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -74,13 +77,21 @@ public class ListDialog extends DialogFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        // Remove ripple from the ListView inside the dialog
+        ListView listView = ((AlertDialog) getDialog()).getListView();
+        listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mVideo = (Video) getArguments().get(EXTRA_VIDEO);
         return getAlertDialog();
     }
 
     private AlertDialog getAlertDialog(){
-        return new AlertDialog.Builder(getActivity()).setAdapter(getAdapter(), getOnClickListener()).create();
+        return new AlertDialog.Builder(requireActivity(), R.style.CustomDialogTheme).setAdapter(getAdapter(), getOnClickListener()).create();
     }
 
     private DialogInterface.OnClickListener getOnClickListener() {
