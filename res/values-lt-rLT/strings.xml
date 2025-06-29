@@ -770,8 +770,8 @@
     <string name="last_rescan_occured">Paskutinį kartą nuskaityta:</string>
     <string name="error_permission_display_over_apps">Lango režimui reikia spec. leidimų, kad galėtų būti rodomas virš kitų programų. Suteikite Nova Video grotuvui šį leidimą ir perjunkite į lango režimą.</string>
     <string name="intro_overlay_text">Palieskite video transliavimui į TV</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Atidaryti stalčių</string>
+    <string name="drawer_close">Uždaryti stalčių</string>
     <string name="view_more">Daugiau</string>
     <string name="nfo_export_in_progress">Vykdomas NFO eksportas</string>
     <string name="rescrap_in_progress">Visos mediatekos atpažinimas</string>

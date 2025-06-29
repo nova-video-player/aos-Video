@@ -762,8 +762,8 @@
     <string name="rescan_when_opening_application">Επανασάρωση κατά το άνοιγμα της εφαρμογής</string>
     <string name="last_rescan_occured">Τελευταία επανασάρωση πραγματοποιήθηκε:</string>
     <string name="intro_overlay_text">Αγγίξτε για μετάδοση βίντεο στην τηλεόρασή σας</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Άνοιγμα συρταριού</string>
+    <string name="drawer_close">Κλείσιμο συρταριού</string>
     <string name="view_more">Προβολή περισσότερων</string>
     <string name="nfo_export_in_progress">Εξαγωγή NFO σε εξέλιξη</string>
     <string name="rescrap_in_progress">Ανάκτηση πληροφοριών ολόκληρης της βιβλιοθήκης</string>

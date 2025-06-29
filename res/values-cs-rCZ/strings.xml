@@ -827,8 +827,8 @@
     <string name="last_rescan_occured">Poslední skenování proběhlo:</string>
     <string name="error_permission_display_over_apps">Režim okna vyžaduje speciální oprávnění, aby bylo možné aplikaci zobrazit navrch před všemi ostatními aplikacemi. Prosím nastavte aplikaci Nova Video Player oprávnění pro přepnutí do režimu okna.</string>
     <string name="intro_overlay_text">Stiskněte pro zahájení vysílání (castování) videí do vaší TV</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Otevřít zásuvku</string>
+    <string name="drawer_close">Zavřít zásuvku</string>
     <string name="view_more">Zobrazit více</string>
     <string name="nfo_export_in_progress">Probíhá export NFO</string>
     <string name="rescrap_in_progress">Probíhá opětovné získání informací pro celou knihovnu</string>

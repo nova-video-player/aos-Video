@@ -778,8 +778,8 @@ desteklenmiyor.</string>
     <string name="last_rescan_occured">Son yeniden tarama gerçekleşti:</string>
     <string name="error_permission_display_over_apps">Pencere modu, diğer uygulamaların önünde görüntülenmek için özel izinlere ihtiyaç duyar. Lütfen Nova Video Player\'a pencere moduna geçmek için bu izni verin.</string>
     <string name="intro_overlay_text">Videoları TV\'niz de yayınlamak için dokunun</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Çekmeceyi aç</string>
+    <string name="drawer_close">Çekmeceyi kapat</string>
     <string name="view_more">Daha fazla göster</string>
     <string name="nfo_export_in_progress">NFO dışa aktarımı devam ediyor</string>
     <string name="rescrap_in_progress">Tüm kütüphaneyi yeniden kesme</string>

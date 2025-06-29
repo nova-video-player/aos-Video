@@ -864,8 +864,8 @@
     <string name="last_rescan_occured">סריקה אחרונה ב:</string>
     <string name="error_permission_display_over_apps">מצב חלון צריך הרשאה מיוחדת לצורך הצגה מעל יישומים אחרים. אנא הענק הרשאה זו ל-Nova Video Player כדי לעבור למצב חלון.</string>
     <string name="intro_overlay_text">גע כדי להקרין קבצי וידאו לטלוויזיה שלך</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">פתח מגירה</string>
+    <string name="drawer_close">סגור מגירה</string>
     <string name="view_more">ראה עוד</string>
     <string name="nfo_export_in_progress">ייצוא NFO מתבצע</string>
     <string name="rescrap_in_progress">סורק פרטי מדיה בכל הספרייה</string>

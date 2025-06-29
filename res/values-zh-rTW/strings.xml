@@ -857,8 +857,8 @@
     <string name="last_rescan_occured">上次重新掃描時間：</string>
     <string name="error_permission_display_over_apps">視窗模式需要取得顯示在其他應用程式上層的特殊權限，請允許 Nova Video Player 該項權限以切換到視窗模式。</string>
     <string name="intro_overlay_text">觸碰可將影片投放至電視</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">開啟抽屜</string>
+    <string name="drawer_close">關閉抽屜</string>
     <string name="view_more">查看更多</string>
     <string name="nfo_export_in_progress">NFO 檔案匯出中</string>
     <string name="rescrap_in_progress">正在重新抓取整個媒體庫的資料</string>

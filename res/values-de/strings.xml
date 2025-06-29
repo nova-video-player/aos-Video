@@ -845,8 +845,8 @@
     <string name="last_rescan_occured">Letzter Re-Scan:</string>
     <string name="error_permission_display_over_apps">Fenstermodus benötigt spezielle Berechtigungen, um über anderen Apps angezeigt zu werden. Bitte gewähren Sie Nova Video Player diese Berechtigung, um in den Fenstermodus zu wechseln.</string>
     <string name="intro_overlay_text">Berühre, um Videos zu Deinem Fernseher per Cast zu übertragen</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Schublade öffnen</string>
+    <string name="drawer_close">Schublade schließen</string>
     <string name="view_more">Mehr ansehen</string>
     <string name="nfo_export_in_progress">.nfo-Export wird durchgeführt</string>
     <string name="rescrap_in_progress">Rescraping der ganzen Bibliothek</string>

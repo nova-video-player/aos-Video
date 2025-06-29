@@ -872,8 +872,8 @@
     <string name="last_rescan_occured">Последнее сканирование:</string>
     <string name="error_permission_display_over_apps">В оконном режиме требуются специальные разрешения для отображения поверх других приложений. Предоставьте Nova Video Player такое разрешение для переключения в оконный режим.</string>
     <string name="intro_overlay_text">Нажмите, чтобы транслировать видео на ТВ</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Открыть ящик</string>
+    <string name="drawer_close">Закрыть ящик</string>
     <string name="view_more">Подробнее</string>
     <string name="nfo_export_in_progress">Выполняется экспорт NFO</string>
     <string name="rescrap_in_progress">Распознавание во всей библиотеке</string>

@@ -872,8 +872,8 @@
     <string name="last_rescan_occured">Posledné opätovné skenovanie sa uskutočnilo:</string>
     <string name="error_permission_display_over_apps">Režim okna potrebuje špeciálne povolenia, aby sa mohol zobrazovať pred ostatnými aplikáciami. Udeľte prehrávaču Nova Video Player toto povolenie na prepnutie do režimu okna.</string>
     <string name="intro_overlay_text">Stlačením spustíte streamovanie videí do televízora</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Otvoriť zásuvku</string>
+    <string name="drawer_close">Zatvoriť zásuvku</string>
     <string name="view_more">Zobraziť viac</string>
     <string name="nfo_export_in_progress">Prebieha export databázy NFO</string>
     <string name="rescrap_in_progress">Prebieha opätovné vyhľadávanie informácií v celej knižnici</string>

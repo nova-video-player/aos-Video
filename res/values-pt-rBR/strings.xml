@@ -847,8 +847,8 @@
     <string name="last_rescan_occured">Última verificação ocorreu:</string>
     <string name="error_permission_display_over_apps">Modo janela precisa de permissões especiais para ser exibida na frente de outros apps. Por favor, conceda a Nova Video Player esta permissão para alternar para o modo de janela.</string>
     <string name="intro_overlay_text">Toque para transmitir vídeos para sua TV</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Abrir gaveta</string>
+    <string name="drawer_close">Fechar gaveta</string>
     <string name="view_more">Ver mais</string>
     <string name="nfo_export_in_progress">Exportação NFO em andamento</string>
     <string name="rescrap_in_progress">Obtendo informações de toda a biblioteca</string>

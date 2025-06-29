@@ -872,8 +872,8 @@
     <string name="last_rescan_occured">Ostatni skan:</string>
     <string name="error_permission_display_over_apps">Tryb okna wymaga specjalnych uprawnień do wyświetlania nad innymi aplikacjami. Proszę przyznać Nova Video Player uprawnienia do wyświetlania nad innymi aplikacjami, aby przełączyć się na tryb okna.</string>
     <string name="intro_overlay_text">Dotknij, aby przesyłać do telewizora</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Otwórz szufladę</string>
+    <string name="drawer_close">Zamknij szufladę</string>
     <string name="view_more">Zobacz więcej</string>
     <string name="nfo_export_in_progress">Trwa eksportowanie NFO</string>
     <string name="rescrap_in_progress">Aktualizowanie całej biblioteki</string>

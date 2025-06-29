@@ -862,8 +862,8 @@
     <string name="last_rescan_occured">Dernier scan:</string>
     <string name="error_permission_display_over_apps">Le mode fenêtré requiert une permission spéciale pour s\'afficher par dessus d\'autres applications. Autorisez Nova Video Player pour continuer.</string>
     <string name="intro_overlay_text">Touchez pour diffuser des vidéos sur votre télé</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Ouvrir le tiroir</string>
+    <string name="drawer_close">Fermer le tiroir</string>
     <string name="view_more">Plus d\'informations</string>
     <string name="nfo_export_in_progress">Export de NFO en cours</string>
     <string name="rescrap_in_progress">Actualisation des descriptions en cours</string>

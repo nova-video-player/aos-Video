@@ -745,8 +745,8 @@ Copertina (rotolo di copertina)</string>
     <string name="last_rescan_occured">Ultima scansione avvenuta:</string>
     <string name="error_permission_display_over_apps">La Modalità a Finestra necessita di permessi speciali per sovrapporsi ad altre app. Concedi questo permesso ad Nova Video Player per passare alla Modalità a Finestra</string>
     <string name="intro_overlay_text">Trasmetti i video alla tua TV</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Apri cassetto</string>
+    <string name="drawer_close">Chiudi cassetto</string>
     <string name="view_more">Vedi altro</string>
     <string name="nfo_export_in_progress">Esportazione dei NFO in corso</string>
     <string name="rescrap_in_progress">Analisi dell\'intera libreria</string>

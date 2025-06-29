@@ -855,8 +855,8 @@
     <string name="last_rescan_occured">Utolsó újrafeldolgozás:</string>
     <string name="error_permission_display_over_apps">Az ablak módnak speciális engedélyekre van szüksége ahhoz, hogy más alkalmazások előtt megjelenjen. Kérjük, adja meg a Nova Video Playernek ezt az engedélyt, hogy ablak módba váltson.</string>
     <string name="intro_overlay_text">Érintse meg a videók továbbításához a TV-re</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Fiók megnyitása</string>
+    <string name="drawer_close">Fiók bezárása</string>
     <string name="view_more">Bővebben</string>
     <string name="nfo_export_in_progress">NFO exportálás folyamatban</string>
     <string name="rescrap_in_progress">A teljes könyvtár újrafeldolgozása folyamatban</string>

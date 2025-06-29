@@ -399,6 +399,8 @@
     <string name="format_original">الأصلي</string>
     <string name="stereo_dive_enable">تفعبي تأثيرات ستيريو</string>
     <string name="stereo_dive_disable">إلغاء تأثيرات ستيريو</string>
+    <string name="drawer_open">فتح الدرج</string>
+    <string name="drawer_close">إغلاق الدرج</string>
     <!-- Help overlay -->
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->

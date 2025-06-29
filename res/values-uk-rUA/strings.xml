@@ -868,8 +868,8 @@
     <string name="last_rescan_occured">Останнє сканування:</string>
     <string name="error_permission_display_over_apps">У віконному режимі потрібні спеціальні дозволи для відображення поверх інших додатків. Надайте Nova Video Player такий дозвіл для перемикання у віконний режим.</string>
     <string name="intro_overlay_text">Натисніть, щоб транслювати відео на ТВ</string>
-    <string name="drawer_open">draweropen</string>
-    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">Відкрити ящик</string>
+    <string name="drawer_close">Закрити ящик</string>
     <string name="view_more">Детальніше</string>
     <string name="nfo_export_in_progress">Виконується експорт NFO</string>
     <string name="rescrap_in_progress">Розпізнавання у всій бібліотеці</string>
