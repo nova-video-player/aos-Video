@@ -87,6 +87,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.ActionMenuView;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -796,6 +797,12 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                                 }
                             }
                         }
+                    }
+
+                    // apply custom tooltip for draweropen and Navigate up buttons
+                    if (child instanceof AppCompatImageButton) {
+                        CharSequence desc = child.getContentDescription();
+                        attachCustomTooltip(child, desc.toString());
                     }
                 }
             });
