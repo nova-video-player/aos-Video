@@ -238,8 +238,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private DetailsOverviewRow mDetailsOverviewRow;
     private BackdropTask mBackdropTask;
     private ExecutorService executorService;
-    // TODO MARC have same number of usages?
-    // should it be private List<Future<?>> taskFutures = new ArrayList<>();
     private Future<?> mThumbnailFuture;
     private Future<?> mSubtitleFuture;
     private Future<?> mPosterFuture;
@@ -491,7 +489,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public void onDestroy() {
         super.onDestroy();
         mHandler.removeCallbacksAndMessages(null);
-        if (mBackdropTask != null) mBackdropTask.cancel(true);
         if (executorService != null && !executorService.isShutdown()) executorService.shutdown();
     }
 
@@ -509,11 +506,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     @Override
     public void onStop() {
+        log.debug("onStop: release backgroundManager and removeParseListener");
         // Cancel all the async tasks
         // please be aware that even after stopping, the async task continues until background task has finished
         if (mBackdropTask != null) mBackdropTask.cancel(true);
         //do not update remote resume
-        log.debug("removeParseListener");
         XmlDb.getInstance().removeParseListener(mRemoteDbObserver);
         XmlDb.getInstance().removeResumeChangeListener(this);
         Arrays.asList(mThumbnailFuture, mSubtitleFuture, mPosterFuture, mBackdropFuture, mImageFuture, mVideoInfoFuture, mScraperFuture).forEach(this::cancelFuture);
@@ -937,7 +934,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             mVideo.setMetadata(alreadyComputedVideoMetadata);
         mVideoBadgePresenter.setSelectedUri(mVideo.getFileUri());
         if(!smoothUpdateVideo(mVideo, giveOldVideo ? oldVideoObject : null)||mVideoList.size()>1&&mAdapter!=null&&mAdapter.indexOf(mFileListRow)==-1) {
-            // TODO MARC why is it dead
             if (mImageFuture != null) {
                 log.warn("onLoadFinished: cancel mImageFuture");
                 mImageFuture.cancel(true);
@@ -1183,18 +1179,19 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if (result.first != null) {
                 if (mVideo.isWatched() || mIsVideoWatched)
                     bitmap = PresenterUtils.addWatchedMark(bitmap, getContext());
-                // TODO MARC why mDetailsOverviewRow != null not there before
                 if (!mAnimationIsRunning && mDetailsOverviewRow != null) {
                     mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
                     mDetailsOverviewRow.setImageScaleUpAllowed(true);
                 } else {
+                    log.warn("handleThumbnailResult: MARC mDetailsOverviewRow is null, cannot set image bitmap");
                     mThumbnail = bitmap;
                 }
             } else {
-                // TODO MARC should not be null means lifecycle nok -> first run no background backdrop
                 if (mDetailsOverviewRow != null) {
                     mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
                     mDetailsOverviewRow.setImageScaleUpAllowed(false);
+                } else {
+                    log.warn("handleThumbnailResult: MARC mDetailsOverviewRow is null, cannot set image drawable");
                 }
             }
         }
