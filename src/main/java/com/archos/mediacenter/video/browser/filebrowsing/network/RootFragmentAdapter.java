@@ -131,6 +131,7 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
         private final ImageView mRefresh;
         private ShortcutDbAdapter.Shortcut mShortcut;
         private boolean mAvailable;
+        private boolean longClickHandled = false;
 
         @SuppressLint("ClickableViewAccessibility")
         public ShortcutViewHolder(View v) {
@@ -162,11 +163,27 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
 
             // get touch x and y for NewRootFragment
             mRoot.setOnTouchListener((view, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    view.setTag(R.id.touch_x, event.getRawX());
-                    view.setTag(R.id.touch_y, event.getRawY());
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        view.setTag(R.id.touch_x, event.getRawX());
+                        view.setTag(R.id.touch_y, event.getRawY());
+                        longClickHandled = false; // reset
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        if (longClickHandled) {
+                            // Consume the event, don't let it perform click
+                            view.setPressed(false); // 👈 clear the pressed highlight
+                            return true;
+                        }
+                        break;
                 }
-                return false; // Let the event continue to propagate
+                return false; // otherwise allow click
+            });
+            v.setOnLongClickListener(v1 -> {
+                longClickHandled = true; // mark it so touch can suppress the next click
+                v1.showContextMenu();    // trigger context menu
+                return true;             // consume the long click
             });
         }
         public View getRoot() {
