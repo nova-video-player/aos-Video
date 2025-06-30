@@ -680,7 +680,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         }
     }
 
-    private void handlePowerMenuClick(String title, Object object, int position) {
+    protected void handlePowerMenuClick(String title, Object object, int position) {
         if (title.equals(mContext.getString(R.string.delete))) {
             if (ArchosSettings.isDemoModeActive(getActivity())) {
                 getActivity().startService(

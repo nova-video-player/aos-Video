@@ -59,6 +59,7 @@ import com.archos.mediacenter.video.browser.filebrowsing.BrowserByFolder;
 import com.archos.mediacenter.video.browser.filebrowsing.ListingAdapter;
 import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediaprovider.NetworkScanner;
+import com.skydoves.powermenu.PowerMenuItem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -223,13 +224,54 @@ public class BrowserByNetwork extends BrowserByFolder {
 
             if (id>=0) {
                 // There is already a shortcut for this folder => suggest to remove it
-                menu.add(0, R.string.remove_from_indexed_folders, 0, applyCustomFont(R.string.remove_from_indexed_folders));
+                //menu.add(0, R.string.remove_from_indexed_folders, 0, applyCustomFont(R.string.remove_from_indexed_folders));
             } else {
                 // There is no shortcut for this folder yet => suggest to add one
-                menu.add(0, R.string.add_to_indexed_folders, 0, applyCustomFont(R.string.add_to_indexed_folders));
+                //menu.add(0, R.string.add_to_indexed_folders, 0, applyCustomFont(R.string.add_to_indexed_folders));
             }
             // TODO unhide
             // menu.add(0, R.string.nfo_export_folder, 0, R.string.nfo_export_folder);
+        }
+    }
+
+    @Override
+    protected void customizePowerMenuItems(List<PowerMenuItem> items, Object object, int position) {
+        super.customizePowerMenuItems(items, object, position);
+
+        if (object instanceof MetaFile2) {
+            MetaFile2 file = (MetaFile2) object;
+            if (file.isDirectory() && UriUtils.isIndexable(file.getUri())) {
+                long id = ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), file.getUri().toString());
+                if (id >= 0) {
+                    items.add(new PowerMenuItem(mContext.getString(R.string.remove_from_indexed_folders)));
+                } else {
+                    items.add(new PowerMenuItem(mContext.getString(R.string.add_to_indexed_folders)));
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void handlePowerMenuClick(String title, Object object, int position) {
+        if (title.equals(mContext.getString(R.string.add_to_indexed_folders)) ||
+                title.equals(mContext.getString(R.string.remove_from_indexed_folders))) {
+
+            if (object instanceof MetaFile2) {
+                MetaFile2 file = (MetaFile2) object;
+                mShortcutPath = file.getUri().toString();
+                mShortcutName = file.getName();
+
+                if (title.equals(mContext.getString(R.string.add_to_indexed_folders))) {
+                    createShortcut(mShortcutPath, mShortcutName);  // ✅ defined in BrowserByNetwork
+                } else {
+                    removeShortcut(mShortcutPath);  // ✅ defined in BrowserByNetwork
+                }
+
+                mArchosGridView.invalidateViews();
+            }
+
+        } else {
+            super.handlePowerMenuClick(title, object, position);  // fallback to base logic
         }
     }
 
