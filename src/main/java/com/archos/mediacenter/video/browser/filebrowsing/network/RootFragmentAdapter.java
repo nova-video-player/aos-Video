@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -130,6 +132,7 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
         private ShortcutDbAdapter.Shortcut mShortcut;
         private boolean mAvailable;
 
+        @SuppressLint("ClickableViewAccessibility")
         public ShortcutViewHolder(View v) {
             super(v);
             // Define click listener for the ViewHolder's View.
@@ -157,6 +160,14 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
             mMainTv = (TextView) v.findViewById(R.id.name);
             mSecondaryTv = (TextView) v.findViewById(R.id.second);
 
+            // get touch x and y for NewRootFragment
+            mRoot.setOnTouchListener((view, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    view.setTag(R.id.touch_x, event.getRawX());
+                    view.setTag(R.id.touch_y, event.getRawY());
+                }
+                return false; // Let the event continue to propagate
+            });
         }
         public View getRoot() {
             return mRoot;

@@ -14,20 +14,30 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.ContextMenu;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
@@ -51,9 +61,16 @@ import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser.Bro
 import com.archos.mediacenter.video.utils.CustomTypefaceSpan;
 import com.archos.mediaprovider.NetworkScanner;
 import com.archos.mediaprovider.video.NetworkScannerServiceVideo;
+import com.skydoves.powermenu.MenuAnimation;
+import com.skydoves.powermenu.MenuBaseAdapter;
+import com.skydoves.powermenu.PowerMenu;
+import com.skydoves.powermenu.PowerMenuItem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class NewRootFragment extends Fragment implements WorkgroupShortcutAndServerAdapter.OnShortcutTapListener,  WorkgroupShortcutAndServerAdapter.OnRefreshClickListener, NetworkScannerServiceVideo.ScannerListener {
 
@@ -65,6 +82,8 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
     private Toast mToast;
     protected QuickAction mQuickAction;
     private ShortcutDbAdapter.Shortcut mSelectedShortcut;
+    protected int mTouchX;
+    protected int mTouchY;
 
     @Override
     public void onShortcutTap(Uri uri) {
@@ -209,11 +228,111 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, R.string.remove_from_indexed_folders, 0, R.string.remove_from_indexed_folders);
-        menu.add(0, R.string.open_indexed_folder, 0, R.string.open_indexed_folder);
-        menu.add(0, R.string.network_reindex, 0, R.string.network_reindex);
+        //menu.add(0, R.string.remove_from_indexed_folders, 0, R.string.remove_from_indexed_folders);
+        //menu.add(0, R.string.open_indexed_folder, 0, R.string.open_indexed_folder);
+        //menu.add(0, R.string.network_reindex, 0, R.string.network_reindex);
+
+        mTouchX = ((Float) v.getTag(R.id.touch_x)).intValue();
+        mTouchY = ((Float) v.getTag(R.id.touch_y)).intValue();
+
         mSelectedShortcut = ((WorkgroupShortcutAndServerAdapter.ShortcutViewHolder) v.getTag()).getShortcut();
+
+        showPowerMenu(v);
     }
+
+    private void showPowerMenu(View anchor) {
+        List<PowerMenuItem> menuItems = new ArrayList<>();
+
+        menuItems.add(new PowerMenuItem(getContext().getString(R.string.remove_from_indexed_folders)));
+        menuItems.add(new PowerMenuItem(getContext().getString(R.string.open_indexed_folder)));
+        menuItems.add(new PowerMenuItem(getContext().getString(R.string.network_reindex)));
+
+        Context themedContext = new ContextThemeWrapper(getContext(), R.style.PowerMenuTheme);
+        View decorView = ((Activity) anchor.getContext()).getWindow().getDecorView();
+        int[] decorLocation = new int[2];
+        decorView.getLocationOnScreen(decorLocation);
+        int xOffset = mTouchX - decorLocation[0];
+        int yOffset = mTouchY - decorLocation[1];
+
+        String targetText = getContext().getString(R.string.remove_from_indexed_folders);
+        Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_75bd);
+        float textSizeSp = 16f;
+        Resources res = getContext().getResources();
+        DisplayMetrics metrics = res.getDisplayMetrics();
+        Paint paint = new Paint();
+        paint.setTypeface(typeface);
+        paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSizeSp, metrics));
+        float textWidth = paint.measureText(targetText);
+        int internalPaddingPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, metrics); // 16dp start + 16dp end
+        int externalMarginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics);
+        int menuWidth = (int) (textWidth + internalPaddingPx + externalMarginPx);
+
+        PowerMenu powerMenu = new PowerMenu.Builder(themedContext)
+                .addItemList(menuItems)
+                .setMenuRadius(16f)
+                .setMenuShadow(8f)
+                .setAnimation(MenuAnimation.DROP_DOWN)
+                .setAutoDismiss(true)
+                .setBackgroundColor(ContextCompat.getColor(getContext(), R.color.transparent))
+                .setWidth(menuWidth) // ⬅ set width here
+                .build();
+        
+        // set adapter
+        ListView listView = powerMenu.getMenuListView();
+        CustomPowerMenuAdapter adapter = new CustomPowerMenuAdapter(listView);
+        adapter.addItemList(menuItems);
+        listView.setAdapter(adapter);
+
+        // set background
+        View menuListView = powerMenu.getMenuListView();
+        if (menuListView != null) {
+            View parent = (View) menuListView.getParent();
+            GradientDrawable bg = new GradientDrawable();
+            bg.setColor(ContextCompat.getColor(getContext(), R.color.tranparent_deep_blue));
+            float radiusPx = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 12f, getContext().getResources().getDisplayMetrics());
+            int strokeWidthPx = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 1f, getContext().getResources().getDisplayMetrics());
+            bg.setCornerRadius(radiusPx);
+            bg.setStroke(strokeWidthPx, ContextCompat.getColor(getContext(), R.color.black));
+            parent.setBackground(bg);
+        }
+
+        powerMenu.setOnMenuItemClickListener((positionClicked, item) -> {
+            String titleClicked = ((PowerMenuItem) item).title.toString();
+            handlePowerMenuClick(titleClicked);
+        });
+        powerMenu.showAtLocation(decorView, Gravity.NO_GRAVITY, xOffset, yOffset);
+    }
+
+    protected void handlePowerMenuClick(String title) {
+        if (title.equals(getContext().getString(R.string.remove_from_indexed_folders))) {
+            removeShortcut(mSelectedShortcut);
+        } else if (title.equals(getContext().getString(R.string.open_indexed_folder))){
+            onShortcutTap(Uri.parse(mSelectedShortcut.getUri()));
+        } else if (title.equals(getContext().getString(R.string.network_reindex))){
+            NetworkScanner.scanVideos(getActivity(), Uri.parse(mSelectedShortcut.getUri()));
+        }
+    }
+
+    public class CustomPowerMenuAdapter extends MenuBaseAdapter<PowerMenuItem> {
+        public CustomPowerMenuAdapter(ListView listView) {
+            super(listView);
+        }
+        @Override
+        public View getView(int index, View convertView, ViewGroup parent) {
+            View view = convertView;
+            if (view == null) {
+                LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+                view = inflater.inflate(R.layout.item_power_menu, parent, false);
+            }
+            PowerMenuItem item = (PowerMenuItem) getItem(index);
+            TextView title = view.findViewById(R.id.menu_item_title);
+            title.setText(((PowerMenuItem) item).title.toString());
+            return view;
+        }
+    }
+
     protected abstract void rescanAvailableShortcuts();
     @Override
     public boolean onContextItemSelected(MenuItem item) {
