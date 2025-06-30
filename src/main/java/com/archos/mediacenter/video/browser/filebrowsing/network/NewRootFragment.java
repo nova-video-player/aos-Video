@@ -237,6 +237,9 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
 
         mSelectedShortcut = ((WorkgroupShortcutAndServerAdapter.ShortcutViewHolder) v.getTag()).getShortcut();
 
+        // Trigger haptic feedback manually on long click anchor
+        v.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);
+
         showPowerMenu(v);
     }
 
