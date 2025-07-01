@@ -14,10 +14,12 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -122,7 +124,9 @@ public class ShortcutAdapter extends RootFragmentAdapter {
         private Uri mUri;
         private boolean mAvailable;
         private String mName;
+        private boolean longClickHandled = false;
 
+        @SuppressLint("ClickableViewAccessibility")
         public ShortcutViewHolder(View v) {
             super(v);
             // Define click listener for the ViewHolder's View.
@@ -149,6 +153,30 @@ public class ShortcutAdapter extends RootFragmentAdapter {
             mMainTv = (TextView) v.findViewById(R.id.name);
             mSecondaryTv = (TextView) v.findViewById(R.id.second);
 
+            // get touch x and y for ShortcutRootFragment for powermenu
+            mRoot.setOnTouchListener((view, event) -> {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        view.setTag(R.id.touch_x, event.getRawX());
+                        view.setTag(R.id.touch_y, event.getRawY());
+                        longClickHandled = false; // reset
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        if (longClickHandled) {
+                            // Consume the event, don't let it perform click
+                            view.setPressed(false); // 👈 clear the pressed highlight
+                            return true;
+                        }
+                        break;
+                }
+                return false; // otherwise allow click
+            });
+            v.setOnLongClickListener(v1 -> {
+                longClickHandled = true; // mark it so touch can suppress the next click
+                v1.showContextMenu();    // trigger context menu
+                return true;             // consume the long click
+            });
         }
         public View getRoot() {
             return mRoot;
