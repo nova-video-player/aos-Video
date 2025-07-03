@@ -300,14 +300,17 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
         // Create a new view.
 
         if (viewType == TYPE_TITLE) {
+            // separator title
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_workgroup_separator, viewGroup, false);
             return new SeparatorViewHolder(v);
         }
         else if(viewType == TYPE_INDEXED_SHORTCUT){
+            // indexed shortcut item
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.browser_indexed_item, viewGroup, false);
             return new ShortcutViewHolder(v);
         }
         else if(viewType == TYPE_TEXT){
+            // description long text
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.browser_item_list_long_text, viewGroup, false);
             return new TextViewHolder(v);
         }
@@ -320,6 +323,7 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
        if(viewHolder.getItemViewType() == TYPE_INDEXED_SHORTCUT){
+           // indexed shortcut item
             ShortcutViewHolder sViewHolder = (ShortcutViewHolder)viewHolder;
             ShortcutDbAdapter.Shortcut shortcut = (ShortcutDbAdapter.Shortcut) mData.get(position);
             sViewHolder.getMainTextView().setText(shortcut.getName());
@@ -333,11 +337,13 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
             sViewHolder.setRefreshable(available && !NetworkScannerServiceVideo.isScannerAlive());
         }
         else if(viewHolder.getItemViewType() == TYPE_TITLE){
+           // separator title
             SeparatorViewHolder wsViewHolder = (SeparatorViewHolder)viewHolder;
             wsViewHolder.getNameTextView().setText((Integer) mData.get(position));
             wsViewHolder.setProgressVisible(position == 0 && mIsLoadingShares);
         }
         else if(viewHolder.getItemViewType() == TYPE_TEXT){
+            // description long text
             TextViewHolder wsViewHolder = (TextViewHolder)viewHolder;
             Context ct  = wsViewHolder.getNameTextView().getContext();
             wsViewHolder.getNameTextView().setText((String)mData.get(position));

@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:focusable="true"
     android:layout_marginTop="5dip"
-    android:background="@drawable/recycler_item_background"
+    android:background="@drawable/network_shortcut_item_ripple"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical" >
@@ -59,10 +59,11 @@
          NOTE: negative right margin to be go over the (i) icon despite it's large left padding
     -->
     <RelativeLayout
-        android:paddingLeft="@dimen/content_list_space_between_thumbnail_and_name"
+        android:paddingLeft="2dp"
         android:layout_width="fill_parent"
         android:layout_toRightOf="@id/left_area"
         android:layout_toLeftOf="@id/refresh"
+        android:layout_marginTop="12dp"
         android:layout_height="wrap_content"
         android:descendantFocusability="blocksDescendants"
         android:gravity="center_vertical" >
@@ -71,7 +72,9 @@
         style="@style/BrowserText.Name.Video"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
+        android:paddingTop="0dp"
         android:layout_alignWithParentIfMissing="true"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
         android:singleLine="false"
         android:layout_marginRight="-30dip"
         android:text="this is"
@@ -83,6 +86,7 @@
         android:id="@+id/second"
         style="@style/BrowserText.Info.Video"
         android:layout_alignWithParentIfMissing="true"
+        android:fontFamily="@font/nhaasgroteskdspro_45lt"
         android:singleLine="false"
         android:maxLines="3"
         android:text="this is a pretty long text just for testinf purposes"
