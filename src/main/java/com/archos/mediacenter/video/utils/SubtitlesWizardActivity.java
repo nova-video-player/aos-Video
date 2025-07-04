@@ -322,6 +322,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
 
                 switch(itemType) {
                     case ITEM_VIEW_TYPE_SEPARATOR:
+                        // item separator title
                         convertView = mInflater.inflate(R.layout.subtitles_wizard_item_separator, parent, false);
                         holder.container = (LinearLayout)convertView.findViewById(R.id.separator_container);
                         holder.text = (TextView)convertView.findViewById(R.id.separator_name);
@@ -330,6 +331,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
                         break;
 
                     case ITEM_VIEW_TYPE_MESSAGE:
+                        // item message
                         convertView = mInflater.inflate(R.layout.subtitles_wizard_item_message, parent, false);
                         holder.container = (LinearLayout)convertView.findViewById(R.id.message_container);
                         holder.text = (TextView)convertView.findViewById(R.id.message_text);
@@ -339,6 +341,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
 
                     case ITEM_VIEW_TYPE_FILE:
                     default:
+                        // items
                         convertView = mInflater.inflate(R.layout.subtitles_wizard_item_file, parent, false);
                         holder.container = (LinearLayout)convertView.findViewById(R.id.file_container);
                         holder.text = (TextView)convertView.findViewById(R.id.file_name);
@@ -360,7 +363,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
             // Background bitmap
             if (holder.container != null) {
                 int resId = (itemType == ITEM_VIEW_TYPE_FILE) ? R.drawable.list_item_background : 0;
-                holder.container.setBackgroundResource(resId);
+                //holder.container.setBackgroundResource(resId);
             }
             
             // Icon

@@ -4,14 +4,15 @@
                   android:layout_height="wrap_content"
                   android:layout_marginLeft="@dimen/content_list_left_margin"
                   android:gravity="center_vertical"
-                  android:background="@drawable/list_item_background"
+                  android:background="@drawable/network_shortcut_item_ripple"
                   android:orientation="horizontal" >
 
         <ImageView android:id="@+id/file_icon"
 	               android:layout_width="@dimen/video_list_thumbnail_width"
 	               android:layout_height="@dimen/video_list_thumbnail_height"
-	               android:background="@color/default_icon_background"
+	               android:background="@drawable/rounded_icon_background"
 	               android:scaleType="center"
+			       android:paddingEnd="1dp"
 	               android:layout_marginTop="@dimen/video_list_thumbnail_margin_top"
 	               android:layout_marginBottom="@dimen/video_list_thumbnail_margin_bottom"
 	               android:layout_marginLeft="@dimen/video_list_thumbnail_margin_left"
@@ -24,9 +25,12 @@
                       android:orientation="vertical" >
 
             <TextView android:id="@+id/file_name"
+				      android:fontFamily="@font/nhaasgroteskdspro_65md"
                       style="@style/BrowserText.Name"/>
 
             <TextView android:id="@+id/file_size"
+				      android:fontFamily="@font/nhaasgroteskdspro_65md"
+				      android:textColor="@color/subtitles_wizard_item_text_size"
                       style="@style/BrowserText.Info.InfoBlue"/>
 
         </LinearLayout>
