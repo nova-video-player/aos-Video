@@ -15,8 +15,11 @@
 package com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,9 +80,13 @@ public class SmbWorkgroupShortcutAndServerAdapter extends WorkgroupShortcutAndSe
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         if(viewHolder.getItemViewType() == TYPE_WORKGROUP_SEPARATOR) {
+            // WORKGROUP SEPARATOR TYPE TITLE
             SeparatorViewHolder wsViewHolder = (SeparatorViewHolder)viewHolder;
             wsViewHolder.setProgressVisible(false);
             wsViewHolder.getNameTextView().setText((String)mData.get(position));
+            // Apply custom font
+            Typeface tf = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
+            wsViewHolder.getNameTextView().setTypeface(tf);
         }
         else
           super.onBindViewHolder(viewHolder, position);
