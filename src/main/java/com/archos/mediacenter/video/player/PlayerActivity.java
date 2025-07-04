@@ -2802,9 +2802,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 });
                 break;
             case DIALOG_ERROR:
+                titleTextView.setText(R.string.player_err_cantplayvideo);
                 if (mErrorCode == IMediaPlayer.MEDIA_ERROR_VE_VIDEO_NOT_ALLOWED) {
                     mDialog = new AlertDialog.Builder(this)
-                            .setTitle(R.string.player_err_cantplayvideo)
+                            .setCustomTitle(customTitleView)
                             .setMessage(buildErrorMessage(mErrorCode, mErrorQualCode, 0, mErrorMsg))
                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -2813,6 +2814,27 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                             })
                             .setCancelable(false)
                             .create();
+                    mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialog) {
+                            AlertDialog alertDialog = (AlertDialog)dialog;
+                            Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            if (positiveButton != null) {
+                                positiveButton.setTypeface(buttonFont);
+                                Drawable ripple = ContextCompat.getDrawable(mContext, R.drawable.custom_ripple);
+                                positiveButton.setTextColor(ContextCompat.getColor(mContext, R.color.green_accent));
+                                positiveButton.setBackground(ripple);
+                                positiveButton.setClipToOutline(true);
+                            }
+
+                            // Apply to Message Text
+                            TextView messageView = alertDialog.findViewById(android.R.id.message);
+                            if (messageView != null) {
+                                messageView.setTypeface(messageFont);
+                                messageView.setTextColor(ContextCompat.getColor(mContext, R.color.white)); // Optional
+                            }
+                        }
+                    });
                 }
                 break;
             case DIALOG_BRIGHTNESS:
