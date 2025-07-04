@@ -2711,6 +2711,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mShowingDialogId = DIALOG_NO;
             mDialog = null;
         }
+
+        View customTitleView = LayoutInflater.from(mContext)
+                .inflate(R.layout.dialog_custom_title, null);
+        TextView titleTextView = customTitleView.findViewById(R.id.dialog_title);
+        Typeface customFont = ResourcesCompat.getFont(mContext, R.font.nhaasgrotesktxpro_75bd);
+        titleTextView.setTypeface(customFont);
+        ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+        iconView.setVisibility(View.GONE);
+        Typeface buttonFont = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_95blk);
+        Typeface messageFont = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_65md);
+
         switch(id) {
             case DIALOG_SUBTITLE_DELAY:
                 SubtitleTrack track = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
@@ -2756,8 +2767,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mPlayerController.hide();
                 break;
             case DIALOG_NOT_ENOUGHT_SPACE:
-                mDialog = new AlertDialog.Builder(this)
-                        .setTitle(R.string.player_err_cantplayvideo)
+                titleTextView.setText(R.string.player_err_cantplayvideo);
+                mDialog = new AlertDialog.Builder(this, R.style.CustomDialogTheme)
+                        .setCustomTitle(customTitleView)
                         .setMessage(R.string.error_downloading_not_enough_space)
                         .setPositiveButton(android.R.string.ok,
                                 new DialogInterface.OnClickListener() {
@@ -2767,6 +2779,27 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                                 })
                         .setCancelable(false)
                         .create();
+                mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        AlertDialog alertDialog = (AlertDialog)dialog;
+                        Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                        if (positiveButton != null) {
+                            positiveButton.setTypeface(buttonFont);
+                            Drawable ripple = ContextCompat.getDrawable(mContext, R.drawable.custom_ripple);
+                            positiveButton.setTextColor(ContextCompat.getColor(mContext, R.color.green_accent));
+                            positiveButton.setBackground(ripple);
+                            positiveButton.setClipToOutline(true);
+                        }
+
+                        // Apply to Message Text
+                        TextView messageView = alertDialog.findViewById(android.R.id.message);
+                        if (messageView != null) {
+                            messageView.setTypeface(messageFont);
+                            messageView.setTextColor(ContextCompat.getColor(mContext, R.color.white)); // Optional
+                        }
+                    }
+                });
                 break;
             case DIALOG_ERROR:
                 if (mErrorCode == IMediaPlayer.MEDIA_ERROR_VE_VIDEO_NOT_ALLOWED) {
