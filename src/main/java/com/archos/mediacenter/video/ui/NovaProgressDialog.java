@@ -203,7 +203,7 @@ public class NovaProgressDialog extends AlertDialog {
         TypedArray a = mContext.obtainStyledAttributes(null,
                 R.styleable.AlertDialog,
                 R.attr.alertDialogStyle, 0);
-        if (mProgressStyle == STYLE_HORIZONTAL) {
+        if (mProgressStyle == STYLE_HORIZONTAL) { // STYLE_HORIZONTAL is for leanback
             /* Use a separate handler to update the text views as they
              * must be updated on the same thread that created them.
              */
@@ -234,7 +234,7 @@ public class NovaProgressDialog extends AlertDialog {
             };
             View view = inflater.inflate(a.getResourceId(
                     R.styleable.AlertDialog_horizontalProgressLayout,
-                    R.layout.alert_dialog_progress), null);
+                    R.layout.alert_dialog_progress), null); // for leanback
             mProgress = (ProgressBar) view.findViewById(R.id.progress);
             mProgressNumber = (TextView) view.findViewById(R.id.progress_number);
             mProgressPercent = (TextView) view.findViewById(R.id.progress_percent);
