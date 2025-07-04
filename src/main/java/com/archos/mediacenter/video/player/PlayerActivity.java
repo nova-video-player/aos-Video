@@ -2936,8 +2936,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
                 break;
             case DIALOG_WRONG_DEVICE_KINDLE:
+                titleTextView.setText("Incompatible device");
                 mDialog = new AlertDialog.Builder(this)
-                        .setTitle("Incompatible device")
+                        .setCustomTitle(customTitleView)
                         .setMessage("This application runs only on Amazon Kindle")
                         .setPositiveButton(android.R.string.ok,
                                 new DialogInterface.OnClickListener() {
@@ -2947,6 +2948,27 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                                 })
                         .setCancelable(false)
                         .create();
+                mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        AlertDialog alertDialog = (AlertDialog)dialog;
+                        Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                        if (positiveButton != null) {
+                            positiveButton.setTypeface(buttonFont);
+                            Drawable ripple = ContextCompat.getDrawable(mContext, R.drawable.custom_ripple);
+                            positiveButton.setTextColor(ContextCompat.getColor(mContext, R.color.green_accent));
+                            positiveButton.setBackground(ripple);
+                            positiveButton.setClipToOutline(true);
+                        }
+
+                        // Apply to Message Text
+                        TextView messageView = alertDialog.findViewById(android.R.id.message);
+                        if (messageView != null) {
+                            messageView.setTypeface(messageFont);
+                            messageView.setTextColor(ContextCompat.getColor(mContext, R.color.white)); // Optional
+                        }
+                    }
+                });
                 break;
             default:
                 mDialog = null;
