@@ -187,7 +187,7 @@ public class NovaProgressDialog extends AlertDialog {
     public static NovaProgressDialog show(Context context, CharSequence title,
             CharSequence message, boolean indeterminate,
             boolean cancelable, OnCancelListener cancelListener) {
-        NovaProgressDialog dialog = new NovaProgressDialog(context);
+        NovaProgressDialog dialog = new NovaProgressDialog(context, R.style.CustomDialogTheme);
         dialog.setTitle(title);
         dialog.setMessage(message);
         dialog.setIndeterminate(indeterminate);
