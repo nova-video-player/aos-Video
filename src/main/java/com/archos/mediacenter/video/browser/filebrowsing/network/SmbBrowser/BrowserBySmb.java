@@ -14,17 +14,21 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser;
 
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
+import android.text.style.MetricAffectingSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.TextViewCompat;
 
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
@@ -47,7 +51,7 @@ public class BrowserBySmb extends BrowserByNetwork {
         super.onViewCreated(view, savedInstanceState);
         getConnectionUser();
         mButton = (TextView) mRootView.findViewById(R.id.connection_button);
-        mButton.setBackgroundResource(R.drawable.big_button);
+        mButton.setBackgroundResource(R.drawable.big_button_ripple);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +113,28 @@ public class BrowserBySmb extends BrowserByNetwork {
         }
     }
 
+    public class CustomTypefaceSpan extends MetricAffectingSpan {
+        private final Typeface typeface;
+
+        public CustomTypefaceSpan(Typeface typeface) {
+            this.typeface = typeface;
+        }
+
+        @Override
+        public void updateDrawState(TextPaint paint) {
+            apply(paint);
+        }
+
+        @Override
+        public void updateMeasureState(TextPaint paint) {
+            apply(paint);
+        }
+
+        private void apply(Paint paint) {
+            paint.setTypeface(typeface);
+        }
+    }
+
     private void displayConnectionDescription() {
         final String description = getString(R.string.network_connected_as, mUser);
         final int userStart = description.indexOf(mUser);
@@ -116,11 +142,12 @@ public class BrowserBySmb extends BrowserByNetwork {
             Log.e("BrowserBySmb", "displayConnectionDescription: user string not found in description");
             return;
         }
+        Typeface regularFont = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_55rg);
+        Typeface boldFont = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_96blkit);
         final int userEnd = userStart + mUser.length();
         final SpannableStringBuilder sb = new SpannableStringBuilder(description);
-        sb.setSpan(new TypefaceSpan("sans-serif-light"), 0, description.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        sb.setSpan(new TypefaceSpan("sans-serif"), userStart, userEnd, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        sb.setSpan(new StyleSpan(Typeface.BOLD), userStart, userEnd, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        sb.setSpan(new CustomTypefaceSpan(regularFont), 0, description.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        sb.setSpan(new CustomTypefaceSpan(boldFont), userStart, userEnd, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         mButton.setText(sb);
     }
 
