@@ -4114,7 +4114,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mSubtitleInfoController.setTrack(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)); // +1 since none track is at position 0, for UI only
                 if (mSubtitleInfoController.getTrack() != nonePosition){
                     mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, false);
-                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, false);
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, true);
                 }
                 if (mSubtitleInfoController.getTrack() == nonePosition){
                     mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, true);
