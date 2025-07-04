@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:minWidth="@dimen/track_menu_minWidth"
         android:paddingLeft="@dimen/track_menu_padding"
-        android:paddingRight="@dimen/track_menu_padding"
+        android:paddingRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/track_menu_layout_width" >
     <ImageView android:id="@+id/icon"
