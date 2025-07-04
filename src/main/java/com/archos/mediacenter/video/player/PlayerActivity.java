@@ -2845,7 +2845,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 String msg;
                 int storeStringId;
                 int notSupportedId;
-
+                titleTextView.setText(mErrorCode == IMediaPlayer.MEDIA_ERROR_VE_VIDEO_NOT_SUPPORTED ?
+                        R.string.player_err_cantplayvideo : R.string.player_err_cantplaysound);
                 // First check if there are already codecs needing an update
                 mDialog = getPluginNeedUpdateDialog();
                 // If no update needed display the regular codec upselling dialog
@@ -2875,8 +2876,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         }
                     };
                     mDialog = new AlertDialog.Builder(this)
-                            .setTitle(mErrorCode == IMediaPlayer.MEDIA_ERROR_VE_VIDEO_NOT_SUPPORTED ?
-                                    R.string.player_err_cantplayvideo : R.string.player_err_cantplaysound)
+                            .setCustomTitle(customTitleView)
                             .setMessage(msg)
                             .setNegativeButton(android.R.string.cancel, onCancelButtonClick)
                             .setPositiveButton(storeStringId, onPositiveButtonClick)
@@ -2894,6 +2894,45 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                             })
                             .setCancelable(true)
                             .create();
+                    mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialog) {
+                            AlertDialog alertDialog = (AlertDialog)dialog;
+                            Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            if (positiveButton != null) {
+                                positiveButton.setTypeface(buttonFont);
+                                Drawable ripple = ContextCompat.getDrawable(mContext, R.drawable.custom_ripple);
+                                positiveButton.setTextColor(ContextCompat.getColor(mContext, R.color.green_accent));
+                                positiveButton.setBackground(ripple);
+                                positiveButton.setClipToOutline(true);
+                            }
+
+                            Button negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                            if (negativeButton != null) {
+                                negativeButton.setTypeface(buttonFont);
+                                Drawable ripple = ContextCompat.getDrawable(mContext, R.drawable.custom_ripple);
+                                negativeButton.setTextColor(ContextCompat.getColor(mContext, R.color.green_accent));
+                                negativeButton.setBackground(ripple);
+                                negativeButton.setClipToOutline(true);
+                            }
+
+                            Button learnMore = alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+                            if (learnMore != null) {
+                                learnMore.setTypeface(buttonFont);
+                                Drawable ripple = ContextCompat.getDrawable(mContext, R.drawable.custom_ripple);
+                                learnMore.setTextColor(ContextCompat.getColor(mContext, R.color.green_accent));
+                                learnMore.setBackground(ripple);
+                                learnMore.setClipToOutline(true);
+                            }
+
+                            // Apply to Message Text
+                            TextView messageView = alertDialog.findViewById(android.R.id.message);
+                            if (messageView != null) {
+                                messageView.setTypeface(messageFont);
+                                messageView.setTextColor(ContextCompat.getColor(mContext, R.color.white)); // Optional
+                            }
+                        }
+                    });
                 }
                 break;
             case DIALOG_WRONG_DEVICE_KINDLE:
