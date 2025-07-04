@@ -8,9 +8,10 @@
 
     <TextView style="?android:attr/textAppearanceMedium"
               android:id="@+id/help_message_header"
+              android:fontFamily="@font/nhaasgroteskdspro_65md"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="#44000000"
+              android:background="@drawable/subtitle_wizard_help_message_bg"
               android:padding="8dip" />
 
     <ListView android:id="@+id/list_items"

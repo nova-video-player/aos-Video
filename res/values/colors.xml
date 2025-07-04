@@ -86,4 +86,5 @@
     <color name="lime_green">#73A600</color>
     <color name="search_info_online">#8C2F11</color>
     <color name="browser_network_share">#07B8A7</color>
+    <color name="subtitles_wizard_text">#C7D6DDE2</color>
 </resources>

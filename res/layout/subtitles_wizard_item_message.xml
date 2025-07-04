@@ -9,6 +9,8 @@
         android:id="@+id/message_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_65md"
+        android:textColor="@color/subtitles_wizard_text"
         android:layout_marginLeft="40dip"
         android:layout_marginRight="40dip"
         android:gravity="center"
