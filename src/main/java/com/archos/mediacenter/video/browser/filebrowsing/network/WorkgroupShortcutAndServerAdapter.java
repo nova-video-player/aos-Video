@@ -156,6 +156,7 @@ public abstract class WorkgroupShortcutAndServerAdapter extends RootFragmentAdap
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view.
         if (viewType == TYPE_SHARE) {
+            // smb workgroup item layout
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.browser_smb_worgroup_item, viewGroup, false);
             return new ShareViewHolder(v);
         }

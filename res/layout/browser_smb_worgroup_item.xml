@@ -12,7 +12,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="false"
-    android:background="@drawable/recycler_item_background"
+    android:background="@drawable/network_shortcut_item_ripple"
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal" >
@@ -20,11 +20,12 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:background="@color/default_icon_background"
+        android:background="@drawable/rounded_icon_background"
         android:layout_marginBottom="@dimen/video_list_thumbnail_margin_bottom"
         android:layout_marginLeft="@dimen/video_list_thumbnail_margin_left"
         android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"
         android:layout_marginTop="@dimen/video_list_thumbnail_margin_top"
+        android:paddingEnd="1dp"
         android:layout_width="70dip"
         android:layout_height="70dip"
         android:layout_gravity="center_vertical"
@@ -46,22 +47,21 @@
             android:id="@+id/name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/nhaasgroteskdspro_75bd"
             android:ellipsize="end"
             android:maxLines="3"
             android:singleLine="false"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold"
-            android:typeface="sans" />
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <TextView
             android:id="@+id/info"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/nhaasgroteskdspro_65md"
             android:ellipsize="end"
             android:maxLines="3"
             android:singleLine="false"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:typeface="sans" />
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
     </LinearLayout>
 
 </LinearLayout>
