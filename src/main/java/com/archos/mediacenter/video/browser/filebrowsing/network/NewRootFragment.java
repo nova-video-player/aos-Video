@@ -425,9 +425,37 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        log.debug("onStart");
+        // Update the title when the fragment starts
+        androidx.appcompat.app.AppCompatActivity activity = (androidx.appcompat.app.AppCompatActivity) getActivity();
+        if (activity != null) {
+            String titleToSet = getActionBarTitle();
+            log.debug("onStart: setting title to " + titleToSet);
+            android.util.Log.d("NewRootFragment", "onStart: setting title to " + titleToSet);
+            activity.getSupportActionBar().setTitle(titleToSet);
+        } else {
+            log.debug("onStart: activity is null");
+            android.util.Log.d("NewRootFragment", "onStart: activity is null");
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         log.debug("onResume");
+        // Update the title when the fragment becomes visible
+        androidx.appcompat.app.AppCompatActivity activity = (androidx.appcompat.app.AppCompatActivity) getActivity();
+        if (activity != null) {
+            String newTitle = getActionBarTitle();
+            log.debug("onResume: setting title to " + newTitle);
+            android.util.Log.d("NewRootFragment", "onResume: setting title to " + newTitle);
+            activity.getSupportActionBar().setTitle(newTitle);
+        } else {
+            log.debug("onResume: activity is null");
+            android.util.Log.d("NewRootFragment", "onResume: activity is null");
+        }
         loadIndexedShortcuts();
     }
 
@@ -439,4 +467,5 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
         log.debug("onPause");
     }
 
+    protected abstract String getActionBarTitle();
 }

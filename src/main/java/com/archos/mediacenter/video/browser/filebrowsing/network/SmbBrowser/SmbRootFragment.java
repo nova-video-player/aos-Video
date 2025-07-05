@@ -252,4 +252,9 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
         mAdapter.notifyDataSetChanged();
         checkShortcutAvailability();
     }
+
+    @Override
+    protected String getActionBarTitle() {
+        return getString(R.string.network_shared_folders);
+    }
 }

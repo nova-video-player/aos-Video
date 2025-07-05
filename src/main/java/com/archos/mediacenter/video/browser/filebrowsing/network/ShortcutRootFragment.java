@@ -353,4 +353,9 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
             }
         });
     }
+
+    @Override
+    protected String getActionBarTitle() {
+        return getString(R.string.network_shortcuts);
+    }
 }

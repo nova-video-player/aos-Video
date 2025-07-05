@@ -23,6 +23,7 @@ import android.view.View;
 
 import com.archos.mediacenter.filecoreextension.upnp2.UpnpServiceManager;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
+import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpSmbCommonRootFragment;
 import com.archos.mediacenter.video.browser.filebrowsing.network.WorkgroupShortcutAndServerAdapter;
 import com.archos.mediaprovider.NetworkScanner;
@@ -152,6 +153,8 @@ public class UpnpRootFragment extends UpnpSmbCommonRootFragment implements UpnpS
         cursor.close();
     }
 
-
-
+    @Override
+    protected String getActionBarTitle() {
+        return getString(R.string.network_media_servers);
+    }
 }

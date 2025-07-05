@@ -118,6 +118,11 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    protected String getActionBarTitle() {
+        return "";
+    }
+
 
     @Override
     public void onClick(View view) {
