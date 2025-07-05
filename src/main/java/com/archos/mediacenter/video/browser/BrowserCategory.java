@@ -264,7 +264,62 @@ abstract public class BrowserCategory extends ListFragment {
         if (getActivity() != null) {
             String finalLastPath = lastPath;
             getActivity().getWindow().getDecorView().post(() -> {
-                setFragment(finalLastPath);
+                // Only call setFragment if there's no existing fragment or if it's a fresh start
+                // This prevents going back to root when user is already browsing a subfolder
+                FragmentManager fm = getParentFragmentManager();
+                Fragment currentFragment = fm.findFragmentById(R.id.content);
+                
+                if (currentFragment == null || savedInstanceState == null) {
+                    // No existing fragment or fresh start - safe to call setFragment
+                    setFragment(finalLastPath);
+                } else {
+                    // Fragment exists and we're restoring from state - check if we need to set category title
+                    // The fragment will restore its own state (like current directory) automatically
+                    AppCompatActivity activity = (AppCompatActivity)getActivity();
+                    if (activity != null && activity.getSupportActionBar() != null) {
+                        // Check if we're in the root network category or in a subfolder
+                        // If we're in root category, set the category title
+                        // If we're in a subfolder, let the fragment keep its own title
+                        FragmentTitleStruc struc = getContentFragmentAndTitle(mSelectedItemId);
+                        String currentTitle = activity.getSupportActionBar().getTitle().toString();
+                        String categoryTitle = getString(struc.title);
+                        
+                        // If the current title is the same as the category title, we're in root
+                        // If it's different, we're in a subfolder and should preserve it
+                        if (currentTitle.equals(categoryTitle) || currentTitle.equals(getString(R.string.nova))) {
+                            // We're in root category or title is default - set the category title
+                            activity.getSupportActionBar().setTitle(struc.title);
+                        }
+                        // Otherwise, preserve the fragment's own title (like "Movies")
+                        
+                        // Apply title translation with a delay to ensure the toolbar is fully laid out
+                        activity.getWindow().getDecorView().post(() -> {
+                            // Add a small delay to ensure the title is properly set
+                            activity.getWindow().getDecorView().post(() -> {
+                                Toolbar toolbar = activity.findViewById(R.id.main_toolbar);
+                                if (toolbar != null) {
+                                    for (int i = 0; i < toolbar.getChildCount(); i++) {
+                                        View child = toolbar.getChildAt(i);
+                                        if (child instanceof TextView) {
+                                            TextView titleView = (TextView) child;
+                                            CharSequence charSequence = activity.getSupportActionBar().getTitle();
+                                            if (charSequence != null && charSequence.equals(titleView.getText())) {
+                                                boolean mIsPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+                                                if (mIsPortraitMode){
+                                                    titleView.setTranslationX(-50);
+                                                } else {
+                                                    titleView.setTranslationX(0);
+                                                }
+                                                titleView.setPadding(0, 0, 0, 9);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    }
+                }
             });
         }
 
