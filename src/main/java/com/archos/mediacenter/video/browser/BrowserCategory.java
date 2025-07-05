@@ -256,8 +256,17 @@ abstract public class BrowserCategory extends ListFragment {
         if(mSelectedItemId == ITEM_ID_BROWSER && lastPath == null)
             mSelectedItemId = BrowserCategoryVideo.ITEM_ID_RECENTLY_ADDED;
 
-        if(savedInstanceState==null) //restore only when starting from scratch
-            setFragment(lastPath);
+        // Always restore the fragment and title, whether it's a fresh start or orientation change
+        // Get the last path from preferences to restore the correct title
+        lastPath = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(PREFERENCE_LAST_PATH, null);
+        
+        // Defer the fragment restoration to avoid FragmentManager transaction conflicts during activity creation
+        if (getActivity() != null) {
+            String finalLastPath = lastPath;
+            getActivity().getWindow().getDecorView().post(() -> {
+                setFragment(finalLastPath);
+            });
+        }
 
         if(getActivity() instanceof BrowserActivity)
             ((MainActivity)getActivity()).updateHomeIcon(getParentFragmentManager().getBackStackEntryCount()>1);
@@ -349,27 +358,32 @@ abstract public class BrowserCategory extends ListFragment {
         loadFragmentAfterStackReset(f);
         AppCompatActivity activity = (AppCompatActivity)getActivity();
         activity.getSupportActionBar().setTitle(struc.title);
+        
+        // Apply title translation with a delay to ensure the toolbar is fully laid out
         activity.getWindow().getDecorView().post(() -> {
-            Toolbar toolbar = activity.findViewById(R.id.main_toolbar);
-            if (toolbar != null) {
-                for (int i = 0; i < toolbar.getChildCount(); i++) {
-                    View child = toolbar.getChildAt(i);
-                    if (child instanceof TextView) {
-                        TextView titleView = (TextView) child;
-                        CharSequence currentTitle = activity.getSupportActionBar().getTitle();
-                        if (currentTitle != null && currentTitle.equals(titleView.getText())) {
-                            boolean mIsPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-                            if (mIsPortraitMode){
-                                titleView.setTranslationX(-50);
-                            } else {
-                                titleView.setTranslationX(0);
+            // Add a small delay to ensure the title is properly set
+            activity.getWindow().getDecorView().post(() -> {
+                Toolbar toolbar = activity.findViewById(R.id.main_toolbar);
+                if (toolbar != null) {
+                    for (int i = 0; i < toolbar.getChildCount(); i++) {
+                        View child = toolbar.getChildAt(i);
+                        if (child instanceof TextView) {
+                            TextView titleView = (TextView) child;
+                            CharSequence currentTitle = activity.getSupportActionBar().getTitle();
+                            if (currentTitle != null && currentTitle.equals(titleView.getText())) {
+                                boolean mIsPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+                                if (mIsPortraitMode){
+                                    titleView.setTranslationX(-50);
+                                } else {
+                                    titleView.setTranslationX(0);
+                                }
+                                titleView.setPadding(0, 0, 0, 9);
+                                break;
                             }
-                            titleView.setPadding(0, 0, 0, 9);
-                            break;
                         }
                     }
                 }
-            }
+            });
         });
     }
 
@@ -434,9 +448,15 @@ abstract public class BrowserCategory extends ListFragment {
 
     public void loadFragmentAfterStackReset(Fragment f) {
         FragmentManager fm = getParentFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
+        if (fm != null && !fm.isStateSaved() && fm.getBackStackEntryCount() > 0) {
             // Clear the back stack as a new category is started.
-            fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            // Use commitAllowingStateLoss to avoid state conflicts
+            try {
+                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            } catch (IllegalStateException e) {
+                // If FragmentManager is busy, just continue without clearing the back stack
+                if (DBG) Log.d(TAG, "loadFragmentAfterStackReset: FragmentManager busy, skipping back stack clear");
+            }
         }
 
         // Update the content of the fragment corresponding to the selected category
@@ -465,16 +485,21 @@ abstract public class BrowserCategory extends ListFragment {
     private void updateCategoryContent(Fragment fragment, String tag) {
         // Update the content of the fragment corresponding to the current category
         FragmentManager fm = getParentFragmentManager();
-        if (fm != null) {
-            FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.browser_content_enter,
-                R.anim.browser_content_exit, R.anim.browser_content_pop_enter,
-                R.anim.browser_content_pop_exit);
-            ft.replace(R.id.content, fragment, tag);
-            ft.addToBackStack(null);
-            ft.commitAllowingStateLoss();
-            if(getActivity() instanceof BrowserActivity)
-                ((MainActivity)getActivity()).updateHomeIcon(getParentFragmentManager().getBackStackEntryCount()>0);
+        if (fm != null && !fm.isStateSaved()) {
+            try {
+                FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.browser_content_enter,
+                    R.anim.browser_content_exit, R.anim.browser_content_pop_enter,
+                    R.anim.browser_content_pop_exit);
+                ft.replace(R.id.content, fragment, tag);
+                ft.addToBackStack(null);
+                ft.commitAllowingStateLoss();
+                if(getActivity() instanceof BrowserActivity)
+                    ((MainActivity)getActivity()).updateHomeIcon(getParentFragmentManager().getBackStackEntryCount()>0);
+            } catch (IllegalStateException e) {
+                // If FragmentManager is busy, skip this transaction
+                if (DBG) Log.d(TAG, "updateCategoryContent: FragmentManager busy, skipping transaction");
+            }
         }
     }
 
