@@ -133,7 +133,7 @@
                         android:id="@+id/title_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/nhaasgroteskdspro_65md"
+                        android:fontFamily="@font/nhaasgroteskdspro_95blk"
                         android:textColor="@color/white_font"
                         android:singleLine="true"
                         android:textSize="22sp" />
