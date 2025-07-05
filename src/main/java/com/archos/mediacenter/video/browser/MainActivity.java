@@ -74,6 +74,7 @@ import android.view.Window;
 import android.view.WindowInsets;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -425,18 +426,50 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         globalLayout.addView(mGlobalBackdrop, 0);
         if(Trakt.isTraktV1Enabled(this,PreferenceManager.getDefaultSharedPreferences(this)))
         {
-        	Trakt.wipePreferences(PreferenceManager.getDefaultSharedPreferences(MainActivity.this),false);
-        	new AlertDialog.Builder(this)
-        	.setTitle("Trakt")
-        	.setMessage(R.string.trakt_change)
-        	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-        		public void onClick(DialogInterface dialog, int which) {
-        			dialog.dismiss();
-        		}
-        	})
+            View customTitleView = LayoutInflater.from(this)
+                    .inflate(R.layout.dialog_custom_title, null);
+            TextView textView = customTitleView.findViewById(R.id.dialog_title);
+            Typeface customFont = ResourcesCompat.getFont(this, R.font.nhaasgrotesktxpro_75bd);
+            textView.setText("Trakt");
+            textView.setTypeface(customFont);
+            ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+            iconView.setImageResource(android.R.drawable.ic_dialog_alert);
+            iconView.setColorFilter(ContextCompat.getColor(this, R.color.yellow_warning));
+            Typeface buttonFont = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_95blk);
+            Typeface messageFont = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_65md);
 
-        	.setIcon(android.R.drawable.ic_dialog_alert)
-        	.show();
+            Trakt.wipePreferences(PreferenceManager.getDefaultSharedPreferences(MainActivity.this),false);
+            AlertDialog dialog =new AlertDialog.Builder(this, R.style.CustomDialogTheme)
+                    .setCustomTitle(customTitleView)
+                    .setMessage(R.string.trakt_change)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
+                    AlertDialog alertDialog = (AlertDialog)dialog;
+                    Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                    if (positiveButton != null) {
+                        positiveButton.setTypeface(buttonFont);
+                        Drawable ripple = ContextCompat.getDrawable(getApplicationContext(), R.drawable.custom_ripple);
+                        positiveButton.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green_accent));
+                        positiveButton.setBackground(ripple);
+                        positiveButton.setClipToOutline(true);
+                    }
+
+                    // Apply to Message Text
+                    TextView messageView = alertDialog.findViewById(android.R.id.message);
+                    if (messageView != null) {
+                        messageView.setTypeface(messageFont);
+                        messageView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white)); // Optional
+                    }
+                }
+            });
+            dialog.show();
         }
 
         //in case we need to re-log in trakt
