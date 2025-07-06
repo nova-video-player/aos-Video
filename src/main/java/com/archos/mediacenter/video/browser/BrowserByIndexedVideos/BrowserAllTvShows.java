@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -365,6 +366,7 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 				.setAnimation(MenuAnimation.DROP_DOWN)
 				//.setAnimationStyle(android.R.style.Animation_Dialog)
 				.setAutoDismiss(true)
+				.setHeaderView(R.layout.power_menu_header)
 				.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent))
 				.setWidth(menuWidth) // ⬅ set width here
 				.build();
@@ -372,6 +374,14 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 		CustomPowerMenuAdapter adapter = new CustomPowerMenuAdapter(listView);
 		adapter.addItemList(menuItems);
 		listView.setAdapter(adapter);
+
+		View header = powerMenu.getHeaderView();
+		if (header != null) {
+			TextView headerText = header.findViewById(R.id.header_title);
+			headerText.setText(tvshow.getName());
+			headerText.setMaxLines(2);
+			headerText.setEllipsize(TextUtils.TruncateAt.END);
+		}
 
 		View menuListView = powerMenu.getMenuListView();
 		if (menuListView != null) {
