@@ -105,6 +105,30 @@ public class Paste extends AlertDialog implements FileManagerService.ServiceList
             }
         });
         setCanceledOnTouchOutside(false);
+        setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                AlertDialog alertDialog = (AlertDialog)dialog;
+                Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+                Typeface buttonFont = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_95blk);
+                if (positiveButton != null) {
+                    positiveButton.setTypeface(buttonFont);
+                    Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+                    positiveButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+                    positiveButton.setBackground(ripple);
+                    positiveButton.setClipToOutline(true);
+                }
+
+                Button negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                if (negativeButton != null) {
+                    negativeButton.setTypeface(customFont);
+                    Drawable ripple = ContextCompat.getDrawable(getContext(), R.drawable.custom_ripple);
+                    negativeButton.setTextColor(ContextCompat.getColor(getContext(), R.color.green_accent));
+                    negativeButton.setBackground(ripple);
+                    negativeButton.setClipToOutline(true);
+                }
+            }
+        });
 
     }
     @Override
