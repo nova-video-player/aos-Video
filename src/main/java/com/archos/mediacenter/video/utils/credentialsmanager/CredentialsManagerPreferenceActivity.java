@@ -16,10 +16,15 @@ package com.archos.mediacenter.video.utils.credentialsmanager;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceManager;
 
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.player.PrivateMode;
@@ -43,6 +48,20 @@ public class CredentialsManagerPreferenceActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportFragmentManager().beginTransaction().add(R.id.root,new CredentialsManagerPreferencesFragment()).commit();
+
+
+        // Custom ActionBar title
+        TextView tv = new TextView(this);
+        tv.setText(getTitle()); // or set your own string
+        tv.setTextSize(24); // Set your desired size
+        tv.setTypeface(ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_95blk)); // Set your desired font
+        tv.setTextColor(ContextCompat.getColor(this, R.color.green_accent)); // Set your desired color
+        tv.setLayoutParams(new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.WRAP_CONTENT));
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(tv);
     }
     
     @Override
