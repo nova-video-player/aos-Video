@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -273,6 +274,8 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         if (header != null) {
             TextView headerText = header.findViewById(R.id.header_title);
             headerText.setText(title);
+            headerText.setMaxLines(2);
+            headerText.setEllipsize(TextUtils.TruncateAt.END);
         }
 
         View menuListView = powerMenu.getMenuListView();
