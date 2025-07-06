@@ -89,6 +89,11 @@ public class VideoPreferencesActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(tv);
 
+        // Horizontal offset of title
+        java.util.function.IntFunction<Integer> dpToPx = dp ->
+                Math.round(dp * getApplicationContext().getResources().getDisplayMetrics().density);
+        tv.setTranslationX(dpToPx.apply(-16));
+
         mInstanceActivity = this;
     }
 
