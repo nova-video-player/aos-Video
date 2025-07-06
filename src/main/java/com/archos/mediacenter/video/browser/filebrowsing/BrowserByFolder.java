@@ -36,6 +36,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -656,6 +657,8 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             TextView headerText = header.findViewById(R.id.header_title);
             if (metaFile2) {
                 headerText.setText(((MetaFile2) object).getName());
+                headerText.setMaxLines(1);
+                headerText.setEllipsize(TextUtils.TruncateAt.END);
             }
 
             View menuListView = powerMenu.getMenuListView();
