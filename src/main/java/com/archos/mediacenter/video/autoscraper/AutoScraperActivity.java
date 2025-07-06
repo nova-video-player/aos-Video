@@ -541,7 +541,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
         View header = powerMenu.getHeaderView();
         TextView headerText = header.findViewById(R.id.header_title);
         headerText.setText(metaFile2.getName());
-        headerText.setMaxLines(2);
+        headerText.setMaxLines(1);
         headerText.setEllipsize(TextUtils.TruncateAt.END);
 
         View menuListView = powerMenu.getMenuListView();
