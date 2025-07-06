@@ -128,18 +128,23 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
         int xOffset = mTouchX - decorLocation[0];
         int yOffset = mTouchY - decorLocation[1];
 
-        String targetText = getContext().getString(R.string.remove_from_indexed_folders);
         Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_75bd);
+        if (typeface == null) typeface = Typeface.DEFAULT;
         float textSizeSp = 16f;
-        Resources res = getContext().getResources();
-        DisplayMetrics metrics = res.getDisplayMetrics();
+        DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
         Paint paint = new Paint();
         paint.setTypeface(typeface);
         paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSizeSp, metrics));
-        float textWidth = paint.measureText(targetText);
-        int internalPaddingPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, metrics); // 16dp start + 16dp end
-        int externalMarginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics);
-        int menuWidth = (int) (textWidth + internalPaddingPx + externalMarginPx);
+        // Find the widest item
+        float maxTextWidth = 0;
+        for (PowerMenuItem item : menuItems) {
+            float width = paint.measureText(item.title.toString());
+            if (width > maxTextWidth) maxTextWidth = width;
+        }
+        // Calculate total width: max text + padding + margin
+        int internalPaddingPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, metrics); // start + end padding
+        int externalMarginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics); // optional
+        int menuWidth = (int) (maxTextWidth + internalPaddingPx + externalMarginPx);
 
         PowerMenu powerMenu = new PowerMenu.Builder(themedContext)
                 .addItemList(menuItems)
