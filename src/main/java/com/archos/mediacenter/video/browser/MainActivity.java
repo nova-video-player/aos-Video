@@ -478,9 +478,20 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             @Override
             public void onReceive(Context context, Intent intent) {
                 if( System.currentTimeMillis() - Trakt.sLastTraktRefreshToken > Trakt.ASK_RELOG_FREQUENCY&&(mTraktRelogAlertDialog==null||!mTraktRelogAlertDialog.isShowing())) {
+                    View customTitleView = LayoutInflater.from(MainActivity.this)
+                            .inflate(R.layout.dialog_custom_title, null);
+                    TextView textView = customTitleView.findViewById(R.id.dialog_title);
+                    Typeface customFont = ResourcesCompat.getFont(MainActivity.this, R.font.nhaasgrotesktxpro_75bd);
+                    textView.setText(R.string.trakt_signin_summary_logged_error);
+                    textView.setTypeface(customFont);
+                    ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+                    iconView.setVisibility(View.GONE);
+                    Typeface buttonFont = ResourcesCompat.getFont(MainActivity.this, R.font.nhaasgroteskdspro_95blk);
+                    Typeface messageFont = ResourcesCompat.getFont(MainActivity.this, R.font.nhaasgroteskdspro_65md);
+
                     Trakt.sLastTraktRefreshToken = System.currentTimeMillis();
-                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                    alert.setTitle(R.string.trakt_signin_summary_logged_error)
+                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this, R.style.CustomDialogTheme);
+                    alert.setCustomTitle(customTitleView)
                             .setMessage(R.string.trakt_relog_description)
                             .setPositiveButton(R.string.trakt_signin, new DialogInterface.OnClickListener() {
                                 @Override
@@ -491,6 +502,36 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                             })
                             .setNegativeButton(android.R.string.cancel, null);
                     mTraktRelogAlertDialog = alert.create();
+                    mTraktRelogAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialog) {
+                            AlertDialog alertDialog = (AlertDialog)dialog;
+                            Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            if (positiveButton != null) {
+                                positiveButton.setTypeface(buttonFont);
+                                Drawable ripple = ContextCompat.getDrawable(getApplicationContext(), R.drawable.custom_ripple);
+                                positiveButton.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green_accent));
+                                positiveButton.setBackground(ripple);
+                                positiveButton.setClipToOutline(true);
+                            }
+
+                            Button negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                            if (negativeButton != null) {
+                                negativeButton.setTypeface(customFont);
+                                Drawable ripple = ContextCompat.getDrawable(getApplicationContext(), R.drawable.custom_ripple);
+                                negativeButton.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green_accent));
+                                negativeButton.setBackground(ripple);
+                                negativeButton.setClipToOutline(true);
+                            }
+
+                            // Apply to Message Text
+                            TextView messageView = alertDialog.findViewById(android.R.id.message);
+                            if (messageView != null) {
+                                messageView.setTypeface(messageFont);
+                                messageView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white)); // Optional
+                            }
+                        }
+                    });
                     mTraktRelogAlertDialog.show();
                 }
             }
