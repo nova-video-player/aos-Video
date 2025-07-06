@@ -62,6 +62,11 @@ public class CredentialsManagerPreferenceActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(tv);
+
+        // Horizontal offset of title
+        java.util.function.IntFunction<Integer> dpToPx = dp ->
+                Math.round(dp * getApplicationContext().getResources().getDisplayMetrics().density);
+        tv.setTranslationX(dpToPx.apply(-16));
     }
     
     @Override
