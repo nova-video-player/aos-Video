@@ -15,16 +15,32 @@
 package com.archos.mediacenter.video;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 //import android.app.AlertDialog;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceManager;
+
+import java.util.Arrays;
 
 /**
  * Created by vapillon on 01/07/15.
@@ -144,11 +160,41 @@ public class DensityTweak {
     }
 
     private void showDialog() {
+        View customTitleView = LayoutInflater.from(mActivity)
+                .inflate(R.layout.dialog_custom_title, null);
+        TextView textView = customTitleView.findViewById(R.id.dialog_title);
+        Typeface customFont = ResourcesCompat.getFont(mActivity, R.font.nhaasgrotesktxpro_75bd);
+        textView.setText(R.string.interface_size);
+        textView.setTypeface(customFont);
+        ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+        iconView.setVisibility(View.GONE);
+        Typeface buttonFont = ResourcesCompat.getFont(mActivity, R.font.nhaasgroteskdspro_95blk);
+
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
+                mActivity,
+                R.layout.dialog_list_item,
+                Arrays.asList(DensityChoices)
+        ) {
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = view.findViewById(android.R.id.text1);
+
+                Typeface customFont = ResourcesCompat.getFont(mActivity, R.font.nhaasgrotesktxpro_75bd);
+                textView.setTypeface(customFont);
+                textView.setTextSize(16);
+                textView.setTextColor(Color.WHITE); // optional
+
+                return view;
+            }
+        };
+
         int currentSelection = getSelectedItemFromDensity(getTargetDensity());
-        new AlertDialog.Builder(mActivity)
-                .setTitle(R.string.interface_size)
+        AlertDialog alertDialog = new AlertDialog.Builder(mActivity)
+                .setCustomTitle(customTitleView)
                         //.setMessage("This TV interface was originally made for Android TV devices.\nYou may want to change the scale of the application on your device.")
-                .setSingleChoiceItems(DensityChoices, currentSelection, (dialog, which) -> {
+                .setSingleChoiceItems(adapter, currentSelection, (dialog, which) -> {
                     int density = getDensityFromSelectedItem(which);
                     // Change user density
                     PreferenceManager.getDefaultSharedPreferences(mActivity).edit()
@@ -163,7 +209,28 @@ public class DensityTweak {
                         .apply()
                 )
                 .setCancelable(false) // user is forced to use the OK button to validate the choice
-                .show();
+                .create();
+
+        // apply background menu_bg
+        alertDialog.getWindow().setBackgroundDrawable(
+                ContextCompat.getDrawable(mActivity, R.drawable.menu_bg)
+        );
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                AlertDialog alertDialog = (AlertDialog)dialog;
+                Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                if (positiveButton != null) {
+                    positiveButton.setTypeface(buttonFont);
+                    Drawable ripple = ContextCompat.getDrawable(mActivity, R.drawable.custom_ripple);
+                    positiveButton.setTextColor(ContextCompat.getColor(mActivity, R.color.green_accent));
+                    positiveButton.setBackground(ripple);
+                    positiveButton.setClipToOutline(true);
+                }
+            }
+        });
+        alertDialog.show();
     }
 
     /**
