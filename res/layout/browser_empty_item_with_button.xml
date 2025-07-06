@@ -9,6 +9,7 @@
     <ProgressBar android:id="@+id/loading"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_gravity="center"
+                android:indeterminateTint="@color/green_accent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -16,6 +17,7 @@
         android:id="@+id/empty_view_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_75bd"
         style="@style/textAppearanceLarge"
         android:gravity="center"
         android:singleLine="false"
