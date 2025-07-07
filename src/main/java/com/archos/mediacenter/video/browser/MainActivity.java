@@ -357,7 +357,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         }
 
         mToolbar = (Toolbar)findViewById(R.id.main_toolbar);
-
+        mToolbar.setPopupTheme(R.style.CustomOverFlowMenu);
         mToolbar.post(() -> {
             Spinner foundSpinner = null;
             for (int i = 0; i < mToolbar.getChildCount(); i++) {
