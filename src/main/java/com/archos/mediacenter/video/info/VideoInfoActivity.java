@@ -107,6 +107,7 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(R.anim.slide_in_right_fade, R.anim.slide_out_left_fade);
         if (DBG) Log.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         ViewGroup globalLayout = (ViewGroup) getWindow().getDecorView();
@@ -328,5 +329,11 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
         if (mViewPager.getAdapter() != null) {
             mViewPager.getAdapter().notifyDataSetChanged();  // Force ViewPager to refresh its fragments
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_right_fade, R.anim.slide_out_left_fade);
     }
 }
