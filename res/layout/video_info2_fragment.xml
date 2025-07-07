@@ -26,6 +26,7 @@
             android:id="@+id/titlebar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:popupTheme="@style/CustomOverFlowMenu"
             app:contentInsetLeft="0dp"
             app:contentInsetStart="0dp"
             android:layout_margin="0dp"

@@ -435,6 +435,15 @@
         <item name="android:colorAccent">@color/green_accent</item>
     </style>
 
+    <style name="CustomOverFlowMenu" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:popupBackground">@drawable/menu_bg</item>
+        <item name="colorAccent">@color/green_accent</item>
+        <item name="android:colorAccent">@color/green_accent</item>
+        <item name="itemBackground">@drawable/list_item_ripple</item>
+        <item name="android:itemBackground">@drawable/overflow_menu_item_ripple</item>
+        <item name="android:listSelector">@drawable/overflow_menu_item_ripple</item>
+    </style>
+
     <style name="PrivateModeDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/menu_bg</item>
         <item name="android:windowMinWidthMajor">85%</item>
