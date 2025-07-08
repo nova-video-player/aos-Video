@@ -175,7 +175,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
 
         // Optional title (non-clickable if needed)
         String title = video instanceof Episode
-                ? ((Episode) video).getShowName() + ": " + video.getName()
+                ? ((Episode) video).getShowName() + ": S" + ((Episode) video).getSeasonNumber() + "E"+ ((Episode) video).getEpisodeNumber() + ": " + video.getName()
                 : video.getName();
         //menuItems.add(new PowerMenuItem(title, false)); // `false` disables click highlight
 
