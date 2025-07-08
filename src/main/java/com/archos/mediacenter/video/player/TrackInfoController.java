@@ -16,7 +16,9 @@ package com.archos.mediacenter.video.player;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -302,6 +304,15 @@ public class TrackInfoController implements OnMenuItemClickListener, OnItemClick
 
             mAnchorView.setY(actionBarHeight + statusbarHeight);
             mPopup.show();
+
+            // 💡 Delay to ensure ListView is initialized before modifying it
+            mAnchorView.post(() -> {
+                if (mPopup != null && mPopup.getListView() != null) {
+                    mPopup.getListView().setSelector(new ColorDrawable(Color.TRANSPARENT));
+                    mPopup.getListView().setBackground(null); // Also removes ripple
+                }
+            });
+
             return true;
         }
         return false;
