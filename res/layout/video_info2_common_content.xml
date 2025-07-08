@@ -32,33 +32,56 @@
             android:layout_marginTop="@dimen/video_info_margin_half"
             android:layout_below="@+id/poster_action_container"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:background="@color/transparent"
             card_view:cardCornerRadius="@dimen/video_info_cardview_corner"
             card_view:cardElevation="@dimen/video_info_cardview_elevation"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:orientation="vertical">
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:text="@string/leanback_scrap"
-                android:id="@+id/scrap_button"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentStart="false"
-                android:background="@drawable/transparent_ripple"
-                android:visibility="visible" />
-            <Button
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:text="@string/video_browser_index_file"
-                android:id="@+id/index_button"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/video_info_button_background">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nhaasgroteskdspro_95blk"
+                    android:textColor="@color/menu_item_text_color"
+                    android:textSize="18sp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:text="@string/leanback_scrap"
+                    android:id="@+id/scrap_button"
+                    android:background="@drawable/video_info_button_ripple"
+                    android:visibility="visible" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentStart="false"
-                android:background="@drawable/transparent_ripple"
-                />
-
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/video_info_button_background">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/nhaasgroteskdspro_95blk"
+                    android:textColor="@color/menu_item_text_color"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="@string/video_browser_index_file"
+                    android:id="@+id/index_button"
+                    android:background="@drawable/video_info_button_ripple"
+                    />
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <include

@@ -1642,7 +1642,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     }
 
     private void setBackground() {
-        mButtonsContainer.setCardBackgroundColor(mColor);
+        mButtonsContainer.setCardBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+        mButtonsContainer.setCardElevation(0f);
         //mFileInfoContainer.setCardBackgroundColor(mColor);
         //mSubtitleContainer.setCardBackgroundColor(mColor);
         //((CardView) mScrapDetailsCard).setCardBackgroundColor(mColor);
