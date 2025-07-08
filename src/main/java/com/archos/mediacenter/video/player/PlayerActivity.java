@@ -2408,7 +2408,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         AlertDialog dialog = builder.create();
 
         ListView listView = dialog.getListView();
-
+        listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         dialog.setOnShowListener(d -> {
             // Load your custom font
             Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
