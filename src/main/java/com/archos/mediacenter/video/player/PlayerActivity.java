@@ -2387,7 +2387,15 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     private void showCustomListPreferenceDialog(final int title, final int currentMode, final String[] items) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
-        builder.setTitle(title);
+        View customTitleView = LayoutInflater.from(mContext)
+                .inflate(R.layout.dialog_custom_title, null);
+        TextView textView = customTitleView.findViewById(R.id.dialog_title);
+        Typeface customFont = ResourcesCompat.getFont(mContext, R.font.nhaasgrotesktxpro_75bd);
+        textView.setText(title);
+        textView.setTypeface(customFont);
+        ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+        iconView.setVisibility(View.GONE);
+        builder.setCustomTitle(customTitleView);
 
         // Create a custom adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -2410,23 +2418,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         ListView listView = dialog.getListView();
         listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         dialog.setOnShowListener(d -> {
-            // Load your custom font
-            Typeface typeface = ResourcesCompat.getFont(mContext, R.font.nhaasgroteskdspro_75bd);
-
-            int titleId = mContext.getResources().getIdentifier("alertTitle", "id", mContext.getPackageName());
-            TextView titleView = dialog.findViewById(titleId);
-
-            if (titleView != null) {
-                // Set custom font
-                titleView.setTypeface(typeface);
-
-                // Set text size in SP
-                titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24); // or any size you want
-
-                // Optionally set text color
-                titleView.setTextColor(ContextCompat.getColor(mContext, R.color.red));
-            }
-
             if (listView != null) {
                 for (int i = 0; i < listView.getChildCount(); i++) {
                     Drawable original = ContextCompat.getDrawable(mContext, R.drawable.custom_ripple);
