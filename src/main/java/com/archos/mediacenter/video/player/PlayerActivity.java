@@ -3755,15 +3755,25 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     log.debug("switchSubtitleTrack: disableSubtitleDelayTVMenuItem(true) because nonePosition");
                     disableSubtitleDelayTVMenuItem(true);
                     disableSubtitleSettingsMenuItem(true);
-                }
-                if (mSubtitleInfoController.getTrack() != 0){
-                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, false);
-                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, false);
-                }
-                if (mSubtitleInfoController.getTrack() == 0){
                     mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, true);
                     mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, true);
                 }
+                if (mSubtitleInfoController.getTrack() != 0){
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, false);
+
+                    VideoMetadata.SubtitleTrack subtitleTrack = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
+                    int vpos = mPreferences.getInt(KEY_SUBTITLE_VPOS, mSubtitleVPosDefault);
+                    if (subtitleTrack != null && subtitleTrack.isGfx) {
+                        mSubtitleManager.setVerticalPosition(0);
+                        disableSubtitleSettingsMenuItem(true);
+                        mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, true);
+                    } else {
+                        mSubtitleManager.setVerticalPosition(vpos);
+                        disableSubtitleSettingsMenuItem(false);
+                        mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, false);
+                    }
+                }
+
                 refreshSubtitleTVMenu();
                 CharSequence subTrackName = mSubtitleInfoController.getTrackNameAt(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles));
                 log.debug("switchSubtitleTrack: changed track={} -> {}", mVideoInfo.subtitleTrack, subTrackName);
@@ -3822,10 +3832,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             log.debug(caller + ": set vpos to 0, mVideoInfo=" + ((mVideoInfo == null) ? "null" : "noNull" + ", subtitleTrack=" + ((mVideoInfo == null) ? "null" : mVideoInfo.subtitleTrack)));
             mSubtitleManager.setVerticalPosition(0);
             disableSubtitleSettingsMenuItem(true);
+            mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, true);
         } else {
             log.debug(caller + ": set vpos to " + vpos + ", subtitleTrack=" + mVideoInfo.subtitleTrack);
             mSubtitleManager.setVerticalPosition(vpos);
             disableSubtitleSettingsMenuItem(false);
+            mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, false);
         }
     }
 
@@ -3892,7 +3904,18 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (position != 0){
                     enableSubtitleDelayandSettingsTVMenuItem();
                     mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, false);
-                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, false);
+
+                    VideoMetadata.SubtitleTrack subtitleTrack = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
+                    int vpos = mPreferences.getInt(KEY_SUBTITLE_VPOS, mSubtitleVPosDefault);
+                    if (subtitleTrack != null && subtitleTrack.isGfx) {
+                        mSubtitleManager.setVerticalPosition(0);
+                        disableSubtitleSettingsMenuItem(true);
+                        mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, true);
+                    } else {
+                        mSubtitleManager.setVerticalPosition(vpos);
+                        disableSubtitleSettingsMenuItem(false);
+                        mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, false);
+                    }
                 }
                 if (position == 0){
                     mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, true);
@@ -4190,16 +4213,24 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mSubtitleInfoController.setTrack(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)); // +1 since none track is at position 0, for UI only
                 if (mSubtitleInfoController.getTrack() != nonePosition){
                     mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, false);
-                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, false);
-                }
-                if (mSubtitleInfoController.getTrack() == nonePosition){
-                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, true);
-                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, true);
+
+                    VideoMetadata.SubtitleTrack subtitleTrack = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
+                    if (subtitleTrack != null && subtitleTrack.isGfx) {
+                        mSubtitleManager.setVerticalPosition(0);
+                        disableSubtitleSettingsMenuItem(true);
+                        mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, true);
+                    } else {
+                        mSubtitleManager.setVerticalPosition(vpos);
+                        disableSubtitleSettingsMenuItem(false);
+                        mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, false);
+                    }
                 }
                 if (mSubtitleInfoController.getTrack() == nonePosition) {
                     log.debug("onSubtitleMetadataUpdated: disableSubtitleDelayTVMenuItem(true) because nonePosition");
                     disableSubtitleDelayTVMenuItem(true);
                     disableSubtitleSettingsMenuItem(true);
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_DELAY, true);
+                    mSubtitleInfoController.enableIconTint(SUBTITLE_MENU_SETTINGS, true);
                 }
             }
 
