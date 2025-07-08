@@ -2146,7 +2146,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
 
     private void applyFontToMenuItem(MenuItem item, Typeface typeface) {
-        int color = ContextCompat.getColor(this, android.R.color.darker_gray);
+        int color = ContextCompat.getColor(this, R.color.white);
         float textSize = 18f; // in SP
         if (item != null && item.getTitle() != null) {
             SpannableString spanString = new SpannableString(item.getTitle());
@@ -2161,7 +2161,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         if (!isTVMode) {
             MenuItem menuItem;
-            Typeface typeface = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_55rg);
+            Typeface typeface = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_65md);
 
             //------------------------------------------------------------------
             // Add first the items related to the current video
