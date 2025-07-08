@@ -36,6 +36,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
@@ -141,6 +142,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -2301,6 +2303,83 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         /*if(menu.findItem(MENU_WINDOW_MODE)!=null)
             menu.findItem(MENU_WINDOW_MODE).setVisible(mPreferences.getBoolean(KEY_ADVANCED_VIDEO_ENABLED, false));*/
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            try {
+                Class<?> wmClass = Class.forName("android.view.WindowManagerGlobal");
+                Method getInstance = wmClass.getMethod("getInstance");
+                Object windowManager = getInstance.invoke(null);
+
+                Method getViewRootNames = wmClass.getMethod("getViewRootNames");
+                String[] rootNames = (String[]) getViewRootNames.invoke(windowManager);
+
+                Method getRootView = wmClass.getMethod("getRootView", String.class);
+                for (String name : rootNames) {
+                    View rootView = (View) getRootView.invoke(windowManager, name);
+                    if (rootView != null && rootView.getClass().getName().contains("PopupDecorView")) {
+                        hookRippleOverride(rootView);
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("OverflowDebug", "Reflection error", e);
+            }
+        }, 300);
+
+        return super.onMenuOpened(featureId, menu);
+    }
+
+    private void hookRippleOverride(View view) {
+        if (view == null) return;
+
+        if (view.getClass().getName().contains("MenuDropDownListView") && view instanceof ListView) {
+            ListView listView = (ListView) view;
+
+            Log.d("OverflowDebug", "✅ Found MenuDropDownListView: " + view.getClass().getName());
+
+            // Remove selector (ripple)
+            listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+
+            for (int i = 0; i < listView.getChildCount(); i++) {
+                View child = listView.getChildAt(i);
+                if (child != null) {
+                    removeRippleRecursive(child);
+                }
+            }
+        }
+
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                hookRippleOverride(group.getChildAt(i));
+            }
+        }
+    }
+
+    private void removeRippleRecursive(View view) {
+        if (view == null) return;
+
+        // Remove background and foreground
+        view.setBackground(new ColorDrawable(Color.TRANSPARENT));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            view.setForeground(null); // just in case
+        }
+
+        // Clear clickable & pressed effects
+        view.setClickable(false);
+        view.setPressed(false);
+        view.setFocusable(false);
+
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                removeRippleRecursive(group.getChildAt(i)); // recurse
+            }
+        }
     }
 
     private void showCustomListPreferenceDialog(final int title, final int currentMode, final String[] items) {
