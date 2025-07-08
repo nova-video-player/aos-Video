@@ -2420,6 +2420,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         dialog.setOnShowListener(d -> {
             if (listView != null) {
+                listView.setPadding(0, 0, 0, 0); // Remove padding
+                listView.setClipToPadding(false);
                 for (int i = 0; i < listView.getChildCount(); i++) {
                     Drawable original = ContextCompat.getDrawable(mContext, R.drawable.custom_ripple);
                     Drawable ripple = original != null ? original.mutate().getConstantState().newDrawable().mutate() : null;
