@@ -2392,6 +2392,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         TextView textView = customTitleView.findViewById(R.id.dialog_title);
         Typeface customFont = ResourcesCompat.getFont(mContext, R.font.nhaasgrotesktxpro_75bd);
         textView.setText(title);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
         textView.setTypeface(customFont);
         ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
         iconView.setVisibility(View.GONE);
