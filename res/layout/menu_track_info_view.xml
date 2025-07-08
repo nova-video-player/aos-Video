@@ -5,6 +5,7 @@
     android:minWidth="@dimen/track_menu_minWidth"
     android:paddingLeft="@dimen/track_menu_padding"
     android:paddingRight="10dp"
+    android:background="@drawable/overflow_menu_item_ripple"
     android:layout_width="match_parent"
     android:layout_height="@dimen/track_menu_layout_width" >
     <TextView android:id="@+id/name"
