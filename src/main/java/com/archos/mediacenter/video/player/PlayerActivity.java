@@ -2366,14 +2366,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         // Remove background and foreground
         view.setBackground(new ColorDrawable(Color.TRANSPARENT));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            view.setForeground(null); // just in case
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && view.getForeground() != null) {
+            view.setForeground(null);
         }
 
-        // Clear clickable & pressed effects
-        view.setClickable(false);
-        view.setPressed(false);
-        view.setFocusable(false);
+        if (view.isClickable()) {
+            // Clear clickable & pressed effects
+            view.setClickable(false);
+            view.setPressed(false);
+            view.setFocusable(false);
+        }
 
         if (view instanceof ViewGroup) {
             ViewGroup group = (ViewGroup) view;
