@@ -74,6 +74,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -83,6 +84,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.DialogTitle;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -2177,8 +2179,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mBookmarkMenuItem.setIcon(R.drawable.ic_menu_bookmark).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 applyFontToMenuItem(mBookmarkMenuItem, typeface);
             }
-            mAudioInfoController.attachMenu(menu, R.drawable.ic_menu_languages);
-            mSubtitleInfoController.attachMenu(menu, R.drawable.ic_menu_subtitles);
+            mAudioInfoController.attachMenu(menu, R.drawable.ic_menu_languages, getString(R.string.menu_audio));
+            mSubtitleInfoController.attachMenu(menu, R.drawable.ic_menu_subtitles, getString(R.string.menu_subtitles));
             //------------------------------------------------------------------
             // Then add the global items related to the video player
             //------------------------------------------------------------------
@@ -2278,8 +2280,127 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 preferences.setIcon(R.drawable.ic_menu_settings).setShowAsAction(!isPluggedOnTv()? MenuItem.SHOW_AS_ACTION_NEVER:MenuItem.SHOW_AS_ACTION_ALWAYS);
                 applyFontToMenuItem(preferences, typeface);
             }
+
+            // Add global layout listener to hook into the real view
+            getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+                attachTooltipToMenuItem(getString(R.string.menu_brightness_settings)); // Use string that matches title
+                attachTooltipToMenuItem(getString(R.string.menu_info));
+                attachTooltipToMenuItem(getString(R.string.menu_audio));
+                attachTooltipToMenuItem(getString(R.string.menu_subtitles));
+            });
+
+
+            getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+                ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+
+                // Recursively find the overflow menu button by class name
+                findOverflowButton(decorView);
+            });
         }
         return true;
+    }
+
+    private void attachTooltipToMenuItem(String expectedTitle) {
+        ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+        findMenuItemView(decorView, expectedTitle);
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void findMenuItemView(ViewGroup parent, String expectedTitle) {
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            View child = parent.getChildAt(i);
+            if (child instanceof ViewGroup) {
+                findMenuItemView((ViewGroup) child, expectedTitle);
+            } else if (child instanceof androidx.appcompat.view.menu.ActionMenuItemView) {
+                ActionMenuItemView itemView = (ActionMenuItemView) child;
+                CharSequence title = itemView.getItemData().getTitle();
+                if (title != null && title.toString().equalsIgnoreCase(expectedTitle)) {
+                    itemView.setLongClickable(false);
+                    itemView.setOnLongClickListener(v -> {
+                        showCustomTooltip(v, expectedTitle);
+                        return true;
+                    });
+                }
+            }
+        }
+    }
+
+    private void findOverflowButton(ViewGroup parent) {
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            View child = parent.getChildAt(i);
+            if (child instanceof ViewGroup) {
+                findOverflowButton((ViewGroup) child);
+            } else {
+                String className = child.getClass().getSimpleName();
+                CharSequence contentDesc = child.getContentDescription();
+                String expectedOverflowText = getString(R.string.overflow_menu_description);
+
+                if ("OverflowMenuButton".equals(className)
+                        && contentDesc != null
+                        && contentDesc.toString().equalsIgnoreCase(expectedOverflowText)) {
+
+                    // Remove default long-click tooltip
+                    child.setLongClickable(false);
+
+                    // Set your custom styled tooltip
+                    child.setOnLongClickListener(v -> {
+                        showCustomTooltip(v, expectedOverflowText);
+                        return true;
+                    });
+                    return;
+                }
+            }
+        }
+    }
+
+    private void showCustomTooltip(View anchorView, String text) {
+        Context context = anchorView.getContext();
+
+        // Create styled tooltip view
+        TextView textView = new TextView(context);
+        textView.setText(text);
+        textView.setTextColor(Color.WHITE);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        textView.setTypeface(ResourcesCompat.getFont(context, R.font.nhaasgroteskdspro_75bd));
+        textView.setBackgroundResource(R.drawable.menu_bg);
+        textView.setPadding(24, 16, 24, 16);
+        textView.setGravity(Gravity.CENTER);
+
+        // Create PopupWindow
+        PopupWindow popupWindow = new PopupWindow(
+                textView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(false);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        // Get icon position and size
+        anchorView.post(() -> {
+            int[] location = new int[2];
+            anchorView.getLocationOnScreen(location);
+            int anchorX = location[0];
+            int anchorY = location[1];
+            int anchorWidth = anchorView.getWidth();
+            int anchorHeight = anchorView.getHeight();
+
+            // Measure tooltip width
+            textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            int tooltipWidth = textView.getMeasuredWidth();
+
+            float density = context.getResources().getDisplayMetrics().density;
+            int yOffset = (int)(10 * density);
+
+            // Center horizontally below the icon
+            int x = anchorX + (anchorWidth - tooltipWidth) / 2;
+            int y = anchorY + anchorHeight + yOffset;
+
+            popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, x, y);
+
+            // Auto dismiss after 1.5s
+            anchorView.postDelayed(popupWindow::dismiss, 1500);
+        });
     }
 
     @Override

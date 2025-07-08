@@ -280,11 +280,16 @@ public class TrackInfoController implements OnMenuItemClickListener, OnItemClick
         mActionBar = actionBar;
     }
 
-    public void attachMenu(Menu menu, int resId) {
+    public void attachMenu(Menu menu, int resId, CharSequence tooltipText) {
         mMenuItem = menu.add(null);
         mMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         mMenuItem.setIcon(resId);
         mMenuItem.setOnMenuItemClickListener(this);
+
+        // Set title/tooltip so it can be matched
+        mMenuItem.setTitle(tooltipText); // this acts as the tooltip text
+        MenuItemCompat.setContentDescription(mMenuItem, tooltipText); // for good measure
+
         setVisible();
     }
 
