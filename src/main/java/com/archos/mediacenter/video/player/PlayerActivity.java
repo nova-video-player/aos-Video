@@ -2347,6 +2347,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 View child = listView.getChildAt(i);
                 if (child != null) {
                     removeRippleRecursive(child);
+                    child.setBackground(ContextCompat.getDrawable(child.getContext(), R.drawable.overflow_menu_item_ripple)); // apply custom ripple
                 }
             }
         }
