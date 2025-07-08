@@ -429,7 +429,7 @@
         <item name="background">@android:color/transparent</item>
     </style>
 
-    <style name="CustomPopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+    <style name="CustomPopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow"><!-- player is one of use cases -->
         <item name="android:popupBackground">@drawable/menu_bg</item>
         <item name="colorAccent">@color/green_accent</item>
         <item name="android:colorAccent">@color/green_accent</item>
