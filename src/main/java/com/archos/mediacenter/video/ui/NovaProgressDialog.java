@@ -100,7 +100,7 @@ public class NovaProgressDialog extends AlertDialog {
      * @param context the parent context
      */
     public NovaProgressDialog(Context context) {
-        super(context);
+        super(context, R.style.CustomDialogTheme);
         mContext = context;
         initFormats();
     }

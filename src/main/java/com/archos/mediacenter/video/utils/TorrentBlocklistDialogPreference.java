@@ -97,7 +97,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
 
     private void setup() {
 
-        mProgress = new NovaProgressDialog(getContext());
+        mProgress = new NovaProgressDialog(getContext()); // theme applied
         mProgress.setMessage(getContext().getResources().getString(R.string.loading));
         mProgress.setIndeterminate(true);
         mProgress.setCancelable(true);
