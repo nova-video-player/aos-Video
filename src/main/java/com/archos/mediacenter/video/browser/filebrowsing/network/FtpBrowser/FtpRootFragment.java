@@ -14,16 +14,31 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
+
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.ContextMenu;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.archos.mediacenter.utils.ActionItem;
 import com.archos.mediacenter.video.browser.BrowserCategory;
@@ -33,7 +48,15 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.filebrowsing.network.NewRootFragment;
 import com.archos.mediacenter.video.browser.filebrowsing.network.RootFragmentAdapter;
 import com.archos.mediacenter.video.browser.ShortcutDb;
+import com.archos.mediacenter.video.browser.filebrowsing.network.ShortcutAdapter;
 import com.archos.mediaprovider.NetworkScanner;
+import com.skydoves.powermenu.MenuAnimation;
+import com.skydoves.powermenu.MenuBaseAdapter;
+import com.skydoves.powermenu.PowerMenu;
+import com.skydoves.powermenu.PowerMenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by alexandre on 28/05/15.
@@ -71,14 +94,124 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
         if(v.getTag() instanceof FtpShortcutAdapter.FtpShortcutViewHolder){
             mSelectedUri =((FtpShortcutAdapter.FtpShortcutViewHolder) v.getTag()).getUri();
             mSelectedName =((FtpShortcutAdapter.FtpShortcutViewHolder) v.getTag()).getName();
-            menu.add(0, R.string.remove_from_shortcuts, 0, R.string.remove_from_shortcuts);
-            menu.add(0, R.string.open_indexed_folder, 0, R.string.open_indexed_folder);
-            if(ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), mSelectedUri.toString())<0)
-                menu.add(0, R.string.add_to_library, 0, R.string.add_to_library);
+            //menu.add(0, R.string.remove_from_shortcuts, 0, R.string.remove_from_shortcuts);
+            //menu.add(0, R.string.open_indexed_folder, 0, R.string.open_indexed_folder);
+            //if(ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), mSelectedUri.toString())<0)
+            //menu.add(0, R.string.add_to_library, 0, R.string.add_to_library);
+
+            mTouchX = ((Float) v.getTag(R.id.touch_x)).intValue();
+            mTouchY = ((Float) v.getTag(R.id.touch_y)).intValue();
+            // Trigger haptic feedback manually on long click anchor
+            v.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);
+            showPowerMenu(v);
         }
         else super.onCreateContextMenu(menu, v, menuInfo);
 
     }
+
+    private void showPowerMenu(View anchor) {
+        List<PowerMenuItem> menuItems = new ArrayList<>();
+
+        menuItems.add(new PowerMenuItem(getContext().getString(R.string.remove_from_shortcuts)));
+        menuItems.add(new PowerMenuItem(getContext().getString(R.string.open_indexed_folder)));
+        if(ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), mSelectedUri.toString())<0)
+            menuItems.add(new PowerMenuItem(getContext().getString(R.string.add_to_library)));
+
+        Context themedContext = new ContextThemeWrapper(getContext(), R.style.PowerMenuTheme);
+        View decorView = ((Activity) anchor.getContext()).getWindow().getDecorView();
+        int[] decorLocation = new int[2];
+        decorView.getLocationOnScreen(decorLocation);
+        int xOffset = mTouchX - decorLocation[0];
+        int yOffset = mTouchY - decorLocation[1];
+
+        Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.nhaasgroteskdspro_75bd);
+        if (typeface == null) typeface = Typeface.DEFAULT;
+        float textSizeSp = 16f;
+        DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
+        Paint paint = new Paint();
+        paint.setTypeface(typeface);
+        paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSizeSp, metrics));
+        // Find the widest item
+        float maxTextWidth = 0;
+        for (PowerMenuItem item : menuItems) {
+            float width = paint.measureText(item.title.toString());
+            if (width > maxTextWidth) maxTextWidth = width;
+        }
+        // Calculate total width: max text + padding + margin
+        int internalPaddingPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, metrics); // start + end padding
+        int externalMarginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics); // optional
+        int menuWidth = (int) (maxTextWidth + internalPaddingPx + externalMarginPx);
+
+        PowerMenu powerMenu = new PowerMenu.Builder(themedContext)
+                .addItemList(menuItems)
+                .setMenuRadius(16f)
+                .setMenuShadow(8f)
+                .setAnimation(MenuAnimation.DROP_DOWN)
+                .setAutoDismiss(true)
+                .setBackgroundColor(ContextCompat.getColor(getContext(), R.color.transparent))
+                .setWidth(menuWidth) // ⬅ set width here
+                .build();
+
+        // set adapter
+        ListView listView = powerMenu.getMenuListView();
+        CustomPowerMenuAdapter adapter = new CustomPowerMenuAdapter(listView);
+        adapter.addItemList(menuItems);
+        listView.setAdapter(adapter);
+
+        // set background
+        View menuListView = powerMenu.getMenuListView();
+        if (menuListView != null) {
+            View parent = (View) menuListView.getParent();
+            GradientDrawable bg = new GradientDrawable();
+            bg.setColor(ContextCompat.getColor(getContext(), R.color.tranparent_deep_blue));
+            float radiusPx = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 12f, getContext().getResources().getDisplayMetrics());
+            int strokeWidthPx = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 1f, getContext().getResources().getDisplayMetrics());
+            bg.setCornerRadius(radiusPx);
+            bg.setStroke(strokeWidthPx, ContextCompat.getColor(getContext(), R.color.black));
+            parent.setBackground(bg);
+        }
+
+        powerMenu.setOnMenuItemClickListener((positionClicked, item) -> {
+            String titleClicked = ((PowerMenuItem) item).title.toString();
+            handlePowerMenuClick(titleClicked);
+        });
+        powerMenu.showAtLocation(decorView, Gravity.NO_GRAVITY, xOffset, yOffset);
+    }
+
+    protected void handlePowerMenuClick(String title) {
+        if (title.equals(getContext().getString(R.string.remove_from_shortcuts))) {
+            ShortcutDb.STATIC.removeShortcut(getContext(), mSelectedUri);
+            ((ShortcutAdapter)mAdapter).updateShortcuts(ShortcutDb.STATIC.getAllShortcuts(getActivity()));
+            loadIndexedShortcuts();
+        } else if (title.equals(getContext().getString(R.string.open_indexed_folder))){
+            onShortcutTap(mSelectedUri);
+        } else if (title.equals(getContext().getString(R.string.add_to_library))){
+            addToIndexed(mSelectedUri, mSelectedName);
+        } else {
+            super.handlePowerMenuClick(title);  // fallback to base logic
+        }
+    }
+
+    public class CustomPowerMenuAdapter extends MenuBaseAdapter<PowerMenuItem> {
+        public CustomPowerMenuAdapter(ListView listView) {
+            super(listView);
+        }
+        @Override
+        public View getView(int index, View convertView, ViewGroup parent) {
+            View view = convertView;
+            if (view == null) {
+                LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+                view = inflater.inflate(R.layout.item_power_menu, parent, false);
+            }
+            PowerMenuItem item = (PowerMenuItem) getItem(index);
+            TextView title = view.findViewById(R.id.menu_item_title);
+            title.setText(((PowerMenuItem) item).title.toString());
+            return view;
+        }
+    }
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         int itemId = item.getItemId();
