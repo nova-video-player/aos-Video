@@ -9,6 +9,7 @@
         android:id="@+id/header_message"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_75bd"
         android:layout_marginBottom="0dip"
         android:layout_marginLeft="@dimen/video_info_margin_half"
         android:layout_marginRight="@dimen/video_info_margin_half"
@@ -29,8 +30,10 @@
             android:id="@+id/custom_search_edittext"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/nhaasgroteskdspro_65md"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:textSize="20sp"
             android:imeOptions="actionSearch"
             android:inputType="textNoSuggestions" />
 
@@ -40,16 +43,39 @@
             android:layout_below="@id/custom_search_edittext"
             android:gravity="center_horizontal"
             android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/cancel"
-                style="@style/VideoInfoButton"
-                android:text="@android:string/cancel" />
-
-            <Button
-                android:id="@+id/search"
-                style="@style/VideoInfoButton"
-                android:text="@android:string/search_go" />
+            <LinearLayout
+                android:id="@+id/cancel_container"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_marginEnd="6dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/video_info_search_button_background">
+                <Button
+                    android:id="@+id/cancel"
+                    android:fontFamily="@font/nhaasgroteskdspro_95blk"
+                    android:textColor="@color/menu_item_text_color"
+                    android:textSize="16sp"
+                    android:background="@drawable/video_info_button_ripple"
+                    style="@style/VideoInfoButton"
+                    android:text="@android:string/cancel" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_marginStart="6dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/video_info_search_button_background">
+                <Button
+                    android:id="@+id/search"
+                    android:fontFamily="@font/nhaasgroteskdspro_95blk"
+                    android:textColor="@color/menu_item_text_color"
+                    android:textSize="16sp"
+                    android:background="@drawable/video_info_button_ripple"
+                    style="@style/VideoInfoButton"
+                    android:text="@android:string/search_go" />
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 

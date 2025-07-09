@@ -189,6 +189,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
     	// No cancel button in this case
     	mCancelButton = (Button)mView.findViewById(R.id.cancel);
     	mCancelButton.setVisibility(View.GONE);
+        mView.findViewById(R.id.cancel_container).setVisibility(View.GONE);
 
     	mHeaderMessage = (TextView) mView.findViewById(R.id.header_message);
     	mMessage = (TextView)mView.findViewById(R.id.message);
