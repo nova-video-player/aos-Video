@@ -7,11 +7,13 @@
 
     <ImageView
         android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/video_list_thumbnail_height"
-        android:background="@drawable/list_selector_holo_dark"
-        android:paddingRight="5dip"
-        android:paddingLeft="5dip"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/custom_ripple"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
         app:srcCompat="@drawable/label_refresh" />
 
 </LinearLayout>
