@@ -120,7 +120,7 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
 
     @Override
     protected String getActionBarTitle() {
-        return "";
+        return getString(R.string.ftp_shortcuts);
     }
 
 
