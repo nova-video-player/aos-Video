@@ -125,8 +125,8 @@
         android:id="@+id/search_results_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/video_info_margin_half"
-        android:layout_marginRight="@dimen/video_info_margin_half"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone" >
@@ -136,8 +136,9 @@
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
+            android:listSelector="@color/transparent"
             android:divider="@null"
-            android:dividerHeight="@dimen/content_list_vertical_spacing_between_items"
+            android:dividerHeight="4dp"
             android:drawSelectorOnTop="false"
             android:fastScrollEnabled="false"
             android:scrollbarStyle="outsideOverlay" />
