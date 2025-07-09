@@ -83,6 +83,7 @@
         android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_75bd"
         android:layout_marginBottom="@dimen/video_info_margin_double"
         android:layout_marginLeft="@dimen/video_info_margin_half"
         android:layout_marginRight="@dimen/video_info_margin_half"
