@@ -107,12 +107,14 @@
             android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:indeterminateTint="@color/green_accent"
             android:indeterminate="true"
             android:paddingRight="10dip" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/nhaasgroteskdspro_65md"
             android:layout_gravity="center_vertical"
             android:text="@string/scrap_processing"
             style="@style/textAppearanceMedium" />
