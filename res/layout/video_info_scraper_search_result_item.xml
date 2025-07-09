@@ -20,7 +20,7 @@
             app:cardBackgroundColor="@android:color/transparent"
             android:layout_marginBottom="1dp"
             android:layout_marginStart="1dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="1dp"
             android:layout_marginTop="1dp">
             <ImageView
                 android:id="@+id/poster"
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="14dp"
-        android:layout_marginStart="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
         android:paddingLeft="1dip" >
 
