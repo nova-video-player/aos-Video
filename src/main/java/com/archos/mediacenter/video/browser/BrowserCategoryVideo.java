@@ -42,6 +42,7 @@ import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserNeverP
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserPlaylists;
 import com.archos.mediacenter.video.browser.filebrowsing.BrowserByExtStorage;
 import com.archos.mediacenter.video.browser.filebrowsing.BrowserByVideoFolder;
+import com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser.FtpRootFragment;
 import com.archos.mediacenter.video.browser.filebrowsing.network.ShortcutRootFragment;
 import com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser.SmbRootFragment;
 import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser.UpnpRootFragment;
@@ -311,6 +312,10 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
             case ITEM_ID_UPNP:
                 fragmentClass = UpnpRootFragment.class;
                 struc.title = R.string.network_media_servers;
+                break;
+            case ITEM_ID_FTP:
+                fragmentClass = FtpRootFragment.class;
+                struc.title = R.string.ftp_shortcuts;
                 break;
             case ITEM_ID_RECENTLY_ADDED:
                 fragmentClass = BrowserLastAdded.class;

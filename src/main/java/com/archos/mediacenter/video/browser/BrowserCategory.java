@@ -75,7 +75,7 @@ abstract public class BrowserCategory extends ListFragment {
     private boolean mDrawerPresent = false;
 
     private static final int[] mExternalIDs = {
-            R.string.sd_card_storage, R.string.usb_host_storage, R.string.other_storage, R.string.network_shared_folders,R.string.network_shortcuts,
+            R.string.sd_card_storage, R.string.usb_host_storage, R.string.other_storage, R.string.network_shared_folders,R.string.network_shortcuts, R.string.ftp_shortcuts,
             R.string.network_media_servers, R.string.network_jcifs, R.string.network_cling,R.string.preferences
     };
     private static final String PREFERENCE_LAST_FRAGMENT = "preference_last_selected_fragment";
@@ -648,6 +648,14 @@ abstract public class BrowserCategory extends ListFragment {
                 itemData.icon = R.drawable.category_common_network;
                 itemData.text = R.string.network_shortcuts;
                 itemData.id = ITEM_ID_NETWORK;
+                mCategoryList.add(itemData);
+            }
+            // Add FTP browser entry to the external/network section
+            if (NetworkState.isNetworkConnected(getActivity())) {
+                ItemData itemData = new ItemData();
+                itemData.icon = R.drawable.category_common_network;
+                itemData.text = R.string.ftp_shortcuts;
+                itemData.id = ITEM_ID_FTP;
                 mCategoryList.add(itemData);
             }
         }
