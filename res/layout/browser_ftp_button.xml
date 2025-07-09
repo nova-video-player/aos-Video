@@ -2,12 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:background="@color/transparent"
     android:layout_marginTop="10dip">
-
-    <Button
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_ssh_server"
-        android:id="@+id/button"
-        android:layout_gravity="center_horizontal" />
+        android:background="@drawable/browser_network_share_button_bg">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/add_ssh_server"
+            android:id="@+id/button"
+            android:fontFamily="@font/nhaasgroteskdspro_95blk"
+            android:textColor="@color/menu_item_text_color"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:background="@drawable/browser_network_share_ripple"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
 </LinearLayout>
