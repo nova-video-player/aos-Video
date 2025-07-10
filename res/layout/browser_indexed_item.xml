@@ -46,7 +46,7 @@
         android:layout_centerVertical="true"
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
-        android:background="@drawable/list_selector_holo_dark"
+        android:background="@drawable/custom_ripple"
         app:srcCompat="@drawable/label_refresh" />
 
     <!--
