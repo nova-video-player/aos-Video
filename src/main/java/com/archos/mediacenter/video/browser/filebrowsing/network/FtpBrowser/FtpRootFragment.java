@@ -183,7 +183,17 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
     protected void handlePowerMenuClick(String title) {
         if (title.equals(getContext().getString(R.string.remove_from_shortcuts))) {
             ShortcutDb.STATIC.removeShortcut(getContext(), mSelectedUri);
-            ((ShortcutAdapter)mAdapter).updateShortcuts(ShortcutDb.STATIC.getAllShortcuts(getActivity()));
+            
+            // Filter shortcuts to only include FTP ones
+            List<ShortcutDb.Shortcut> allShortcuts = ShortcutDb.STATIC.getAllShortcuts(getActivity());
+            List<ShortcutDb.Shortcut> ftpShortcuts = new ArrayList<>();
+            for (ShortcutDb.Shortcut shortcut : allShortcuts) {
+                if (shortcut.uri != null && shortcut.uri.toLowerCase().contains("ftp://")) {
+                    ftpShortcuts.add(shortcut);
+                }
+            }
+            
+            ((ShortcutAdapter)mAdapter).updateShortcuts(ftpShortcuts);
             loadIndexedShortcuts();
         } else if (title.equals(getContext().getString(R.string.open_indexed_folder))){
             onShortcutTap(mSelectedUri);
@@ -222,7 +232,17 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
                 return true;
             case R.string.remove_from_shortcuts:
                 ShortcutDb.STATIC.removeShortcut(getContext(), mSelectedUri);
-                ((FtpShortcutAdapter)mAdapter).updateShortcuts(ShortcutDb.STATIC.getAllShortcuts(getActivity()));
+                
+                // Filter shortcuts to only include FTP ones
+                List<ShortcutDb.Shortcut> allShortcuts = ShortcutDb.STATIC.getAllShortcuts(getActivity());
+                List<ShortcutDb.Shortcut> ftpShortcuts = new ArrayList<>();
+                for (ShortcutDb.Shortcut shortcut : allShortcuts) {
+                    if (shortcut.uri != null && shortcut.uri.toLowerCase().contains("ftp://")) {
+                        ftpShortcuts.add(shortcut);
+                    }
+                }
+                
+                ((FtpShortcutAdapter)mAdapter).updateShortcuts(ftpShortcuts);
                 return true;
         }
 
@@ -243,7 +263,17 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
     @Override
     protected void loadIndexedShortcuts() {
         Cursor cursor = ShortcutDbAdapter.VIDEO.getAllShortcuts(getActivity(), ShortcutDbAdapter.KEY_PATH+" LIKE ?",new String[]{"%ftp%://%"});
-        ((FtpShortcutAdapter)mAdapter).updateShortcuts(ShortcutDb.STATIC.getAllShortcuts(getActivity()));
+        
+        // Filter shortcuts to only include FTP ones
+        List<ShortcutDb.Shortcut> allShortcuts = ShortcutDb.STATIC.getAllShortcuts(getActivity());
+        List<ShortcutDb.Shortcut> ftpShortcuts = new ArrayList<>();
+        for (ShortcutDb.Shortcut shortcut : allShortcuts) {
+            if (shortcut.uri != null && shortcut.uri.toLowerCase().contains("ftp://")) {
+                ftpShortcuts.add(shortcut);
+            }
+        }
+        
+        ((FtpShortcutAdapter)mAdapter).updateShortcuts(ftpShortcuts);
         mAdapter.updateIndexedShortcuts(cursor);
         if (cursor != null) {
             cursor.close();
