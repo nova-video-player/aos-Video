@@ -30,6 +30,7 @@ import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.filebrowsing.network.RootFragmentAdapter;
 import com.archos.mediacenter.video.browser.ShortcutDb;
+import com.archos.mediacenter.video.utils.VideoUtils;
 
 import java.util.List;
 
@@ -188,6 +189,7 @@ public class FtpShortcutAdapter extends RootFragmentAdapter {
         }
         public void setUri(Uri uri) {
             mUri = uri;
+            mIcon.setImageResource(VideoUtils.getShortcutImage(mUri));
         }
         public void setName(String name) {
             mName  = name;
