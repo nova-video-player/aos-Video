@@ -69,7 +69,7 @@ public class FTPServerCredentialsDialog extends ServerCredentialsDialog {
             if(port == -1)
                 uriB.authority(address);
             else
-                uriB.authority(address + ":" + port);
+                uriB.encodedAuthority(address + ":" + port);
         }
 
         uriB.path(path);
