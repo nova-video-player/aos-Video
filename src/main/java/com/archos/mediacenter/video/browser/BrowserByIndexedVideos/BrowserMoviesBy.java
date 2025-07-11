@@ -446,13 +446,29 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 		completeNewFragmentBundle(args, position);
         //Load fragment
         BrowserCategory category = (BrowserCategory) getParentFragmentManager().findFragmentById(R.id.category);
-        Fragment newfragment = new BrowserAllMovies();
+        Fragment newfragment;
+        String fragmentClassName = getBrowserNameToInstantiate();
+        if (BrowserVideosInPlaylist.class.getName().equals(fragmentClassName)) {
+            newfragment = new BrowserVideosInPlaylist();
+        } else if (BrowserAllMovies.class.getName().equals(fragmentClassName)) {
+            newfragment = new BrowserAllMovies();
+        } else {
+            try {
+                newfragment = (Fragment) Class.forName(fragmentClassName).newInstance();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
         newfragment.setArguments(args);
         category.startContent(newfragment);
         
         // Remove the navigation drop down from the actionbar when opening a child fragment
 		((MainActivity)getActivity()).setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     }
+
+	protected String getBrowserNameToInstantiate() {
+		return BrowserAllMovies.class.getName();
+	}
 
 	protected void completeNewFragmentBundle(Bundle args, int pos) {
 
