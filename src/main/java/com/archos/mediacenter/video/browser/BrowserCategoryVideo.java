@@ -198,7 +198,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
     private void setupMovieActionBarNavigation(boolean setupTheFragmentAsWell) {
          androidx.appcompat.app.ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
         // Apply custom theme
-        getActivity().setTheme(R.style.MovieCategory);
+        // getActivity().setTheme(R.style.MovieCategory); // Now part of MainActivity theme "ArchosThemeBlueNoActionBar"
         // no title in that case
         ab.setTitle("");
         // navigation drop-down instead
