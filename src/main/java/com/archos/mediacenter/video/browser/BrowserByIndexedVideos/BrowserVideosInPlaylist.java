@@ -20,6 +20,7 @@ import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
+import com.skydoves.powermenu.PowerMenuItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,7 +96,45 @@ public class BrowserVideosInPlaylist extends BrowserByVideoSelection {
 
 		final int position = info.position;
 
-		menu.add(0, R.string.remove_from_list, 0, R.string.remove_from_list);
+		//menu.add(0, R.string.remove_from_list, 0, R.string.remove_from_list);
+	}
+
+	@Override
+	protected void customizePowerMenuItems(List<PowerMenuItem> items, Video video, int position) {
+		super.customizePowerMenuItems(items, video, position);
+		items.add(new PowerMenuItem(mContext.getString(R.string.remove_from_list)));
+	}
+
+	@Override
+	protected void handlePowerMenuClick(String title, Video video, int position) {
+		if (title.equals(mContext.getString(R.string.remove_from_list))) {
+			BaseTags metadata = video.getFullScraperTags(getContext());
+			boolean isEpisode = metadata instanceof EpisodeTags;
+			VideoStore.VideoList.VideoItem videoItem  = new VideoStore.VideoList.VideoItem(-1,!isEpisode?(int)metadata.getOnlineId():-1, isEpisode?(int)metadata.getOnlineId():-1, VideoStore.List.SyncStatus.STATUS_DELETED);
+			getContext().getContentResolver().update(VideoStore.List.getListUri(getArguments().getLong(EXTRA_PLAYLIST_ID)), videoItem.toContentValues(),  videoItem.getDBWhereString(), videoItem.getDBWhereArgs());
+			//manually remove id
+			String ids = getArguments().getString(BrowserByVideoSelection.LIST_OF_IDS);
+			if(isEpisode){
+				for(String itemId : mEpisodesMap.get(""+metadata.getOnlineId())){
+					//remove all indexes
+					ids = ids.replace(","+itemId,"");
+					ids = ids.replace(itemId+",","");
+					ids = ids.replace(itemId,"");
+				}
+			} else{
+				for(String itemId : mMoviesMap.get(""+metadata.getOnlineId())){
+					//remove all indexes
+					ids = ids.replace(","+itemId,"");
+					ids = ids.replace(itemId+",","");
+					ids = ids.replace(itemId,"");
+				}
+			}
+			getArguments().putString(BrowserByVideoSelection.LIST_OF_IDS, ids);
+			LoaderManager.getInstance(this).restartLoader(0, null, this);
+			TraktService.sync(ArchosUtils.getGlobalContext(), TraktService.FLAG_SYNC_AUTO);
+		} else {
+			super.handlePowerMenuClick(title, video, position);  // fallback to base logic
+		}
 	}
 
 	@Override

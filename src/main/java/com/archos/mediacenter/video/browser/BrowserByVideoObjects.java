@@ -170,6 +170,10 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         showPowerMenu(v, video, position);
     }
 
+    protected void customizePowerMenuItems(List<PowerMenuItem> items, Video video, int position) {
+        // Default: do nothing. Subclasses can override.
+    }
+
     private void showPowerMenu(View anchor, Video video, int position) {
         List<PowerMenuItem> menuItems = new ArrayList<>();
 
@@ -222,6 +226,8 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
 
         if (isNetwork)
             menuItems.add(new PowerMenuItem(mContext.getString(R.string.copy_on_device)));
+
+        customizePowerMenuItems(menuItems, video, position);
 
         Context themedContext = new ContextThemeWrapper(mContext, R.style.PowerMenuTheme);
 
@@ -327,7 +333,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         }
     }
 
-    private void handlePowerMenuClick(String title, Video video, int position) {
+    protected void handlePowerMenuClick(String title, Video video, int position) {
         int resumePosition = video.getResumeMs();
         boolean resumeAvailable = resumePosition > 0 && resumePosition != PlayerActivity.LAST_POSITION_END;
 
