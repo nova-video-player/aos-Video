@@ -193,7 +193,7 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
                 }
             }
             
-            ((ShortcutAdapter)mAdapter).updateShortcuts(ftpShortcuts);
+            ((FtpShortcutAdapter)mAdapter).updateShortcuts(ftpShortcuts);
             loadIndexedShortcuts();
         } else if (title.equals(getContext().getString(R.string.open_indexed_folder))){
             onShortcutTap(mSelectedUri);
