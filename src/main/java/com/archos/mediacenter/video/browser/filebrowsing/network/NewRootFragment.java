@@ -133,7 +133,7 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
 
         ActionItem rescanAction = new ActionItem();
         rescanAction.setTitle(getString(R.string.network_reindex));
-        rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_menu_refresh));
+        rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_refresh_icon));
         rescanAction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Rescan the contents of the folder

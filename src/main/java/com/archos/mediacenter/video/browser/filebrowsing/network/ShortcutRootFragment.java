@@ -340,7 +340,7 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
         mQuickAction = new QuickAction(v);
         ActionItem rescanAction = new ActionItem();
         rescanAction.setTitle(getString(R.string.add_to_library));
-        rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_menu_refresh));
+        rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_plus));
         rescanAction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 addToIndexed(uri, name);
