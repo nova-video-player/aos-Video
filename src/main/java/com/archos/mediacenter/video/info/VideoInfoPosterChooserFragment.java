@@ -17,9 +17,14 @@ package com.archos.mediacenter.video.info;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +41,7 @@ import com.archos.mediacenter.utils.imageview.LoadResult.Status;
 import com.archos.mediacenter.utils.imageview.LoadTaskItem;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Base;
+import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Movie;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
@@ -44,9 +50,7 @@ import com.archos.mediascraper.ScraperImage;
 import java.util.Collections;
 import java.util.List;
 
-public class VideoInfoPosterChooserFragment extends Fragment implements
-        AdapterView.OnItemClickListener,
-        View.OnClickListener {
+public class VideoInfoPosterChooserFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = VideoInfoPosterChooserFragment.class.getSimpleName();
     private static final boolean DBG = false;
     // debug fragment lifecycle
@@ -54,13 +58,13 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
 
     public static final String MSG_SHOW_MODE = "showmode";
 
-    private GridView mGrid;
     private PosterAdapter mAdapter;
     private BaseTags mTag;
 
     private boolean mShowMode;
     private View mView;
     private long mOnlineId = -1;
+    private int mSeason;
 
     public VideoInfoPosterChooserFragment() {
     }
@@ -102,10 +106,57 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
         // cancel button
         view.findViewById(R.id.cancel).setOnClickListener(this);
 
-        // image grid
-        mGrid = (GridView) view.findViewById(R.id.list);
-        mGrid.setAdapter(mAdapter);
-        mGrid.setOnItemClickListener(this);
+        mView.findViewById(R.id.cancel).setOnClickListener(this);
+
+        RecyclerView recyclerView = mView.findViewById(R.id.list);
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        int screenWidthPx = dm.widthPixels;
+        int itemWidthPx = getResources().getDimensionPixelSize(R.dimen.video_info_poster_chooser_width);
+
+        // Step 1: compute max number of columns that can fit
+        int spanCount = screenWidthPx / itemWidthPx;
+        if (spanCount < 1) spanCount = 1;
+
+        // Step 2: compute remaining space and spacing
+        int totalItemWidth = spanCount * itemWidthPx;
+        int spacingPx = (screenWidthPx - totalItemWidth) / (spanCount + 1); // <<< spacing between and around
+
+        // Step 3: Setup RecyclerView
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
+        recyclerView.setAdapter(mAdapter);
+
+        // Set padding instead of decorating left/right
+        recyclerView.setPadding(spacingPx, spacingPx, spacingPx, spacingPx);
+        recyclerView.setClipToPadding(false);
+        recyclerView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+
+        // Only add spacing between columns (not left/right)
+        int finalSpanCount = spanCount;
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                int position = parent.getChildAdapterPosition(view);
+                int column = position % finalSpanCount;
+
+                // spacing between columns
+                outRect.left = column * spacingPx / finalSpanCount;
+                outRect.right = spacingPx - (column + 1) * spacingPx / finalSpanCount;
+
+                // Apply top spacing only if NOT in first row
+                if (position >= finalSpanCount) {
+                    outRect.top = spacingPx;
+                } else {
+                    outRect.top = 0; // no top spacing for first row
+                }
+            }
+        });
+
+        mAdapter = new PosterAdapter(getContext(), image -> {
+            new VideoInfoPosterChooserFragment.PosterSaver(getActivity(), VideoInfoPosterChooserFragment.this, mSeason, mOnlineId).execute(image);
+        });
+
+        recyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -147,8 +198,6 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
     public void onDestroyView() {
         if (DBG_LC) Log.d(TAG, "onDestroyView");
         super.onDestroyView();
-        // no more view = no more grid.
-        mGrid = null;
     }
 
     @Override
@@ -172,8 +221,17 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
         if (DBG) Log.d(TAG, "setInfoItem");
         BaseTags tags = video.getFullScraperTags(getActivity());
         mOnlineId = -1;
+        mSeason = -1;
         if(video instanceof Movie)
             mOnlineId = ((Movie) video).getOnlineId();
+
+        if (video instanceof Episode) {
+            Episode episode =
+                    (Episode) video;
+            mSeason = episode.getSeasonNumber(); // You may need to adapt this if it's fetched differently
+            mOnlineId = episode.getOnlineId();
+        }
+
         if (mShowMode && tags instanceof EpisodeTags) {
             mTag = ((EpisodeTags) tags).getShowTags();
         } else {
@@ -190,15 +248,6 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
     public void onClick(View v) {
         if (DBG) Log.d(TAG, "onClick - cancel");
         stop();
-    }
-
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (DBG) Log.d(TAG, "onItemClick - " + position);
-        ScraperImage clickedImage = (ScraperImage) mAdapter.getItem(position);
-        int season = -1;
-        if (mTag instanceof EpisodeTags)
-            season = ((EpisodeTags) mTag).getSeason();
-        new PosterSaver(getActivity(), this, season, mOnlineId).execute(clickedImage);
     }
 
     // ---------------------- INTERNAL UTILITY METHODS ---------------------- //
@@ -270,125 +319,45 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
         }
     }
 
-    /** Adapter showing & loading images */
-    static class PosterAdapter extends BaseAdapter {
-        private List<ScraperImage> mList;
-        private final LayoutInflater mInflater;
-        private final ImageViewSetter mSetter;
-        private final ScraperImageProcessor mLoader;
+    protected static class ScraperImageProcessor extends ImageProcessor {
+        private final Context mContext;
 
-        public PosterAdapter(Context context, List<ScraperImage> list) {
-            mList = list != null ? list : Collections.<ScraperImage> emptyList();
-
-            mInflater = LayoutInflater.from(context);
-            mSetter = new ImageViewSetter(context, null);
-            mLoader = new ScraperImageProcessor(context);
+        public ScraperImageProcessor(Context context) {
+            mContext = context;
         }
 
-        public void setList(List<ScraperImage> list) {
-            Log.d(TAG, "setList");
-
-            mList = list != null ? list : Collections.<ScraperImage> emptyList();
-            notifyDataSetChanged();
-        }
-
-        /** stops setter from further setting images async */
-        public void stopLoading() {
-            mSetter.stopLoadingAll();
-        }
-
-        /** stops all tasks and clears the caches etc */
-        public void cleanup() {
-            mSetter.stopLoadingAll();
-            mSetter.clearCache();
-            mList = Collections.<ScraperImage> emptyList();
-            notifyDataSetChanged();
-        }
-
-        public int getCount() {
-            if (DBG) Log.d(TAG, "getCount = " + mList.size());
-            return mList.size();
-        }
-
-        public Object getItem(int position) {
-            if (DBG) Log.d(TAG, "getItem " + position);
-            return mList.get(position);
-        }
-
-        public long getItemId(int position) {
-            if (DBG) Log.d(TAG, "getItemId " + position);
-            return position;
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (DBG) Log.d(TAG, "getView " + position);
-
-            View view;
-            ViewHolder holder;
-
-            view = convertView;
-            if (view == null) {
-                view = mInflater.inflate(R.layout.video_info_poster_chooser_list_item, parent,
-                        false);
-                holder = new ViewHolder();
-                holder.image = (ImageView) view.findViewById(R.id.image);
-                holder.image.setScaleType(ScaleType.CENTER_CROP);
-                view.setTag(holder);
+        @Override
+        public void loadBitmap(LoadTaskItem taskItem) {
+            if (taskItem.loadObject instanceof ScraperImage) {
+                ScraperImage image = (ScraperImage) taskItem.loadObject;
+                String file = image.getLargeFile();
+                if (file != null) {
+                    image.download(mContext);
+                    taskItem.result.bitmap = BitmapFactory.decodeFile(file);
+                }
+                taskItem.result.status = taskItem.result.bitmap != null ?
+                        Status.LOAD_OK : Status.LOAD_ERROR;
             } else {
-                holder = (ViewHolder) view.getTag();
+                taskItem.result.status = Status.LOAD_BAD_OBJECT;
             }
-            mSetter.set(holder.image, mLoader, mList.get(position));
-
-            return view;
         }
 
-        private static class ViewHolder {
-            public ViewHolder() { /* empty */ }
-
-            ImageView image;
+        @Override
+        public boolean canHandle(Object loadObject) {
+            return loadObject instanceof ScraperImage;
         }
 
-        private static class ScraperImageProcessor extends ImageProcessor {
-            private final Context mContext;
-
-            public ScraperImageProcessor(Context context) {
-                mContext = context;
+        @Override
+        public String getKey(Object loadObject) {
+            if (loadObject instanceof ScraperImage) {
+                ScraperImage image = (ScraperImage) loadObject;
+                // using the url here since images from same url may be used
+                // as
+                // different files. But for cache reasons urls are a better
+                // key
+                return image.getLargeUrl();
             }
-
-            @Override
-            public void loadBitmap(LoadTaskItem taskItem) {
-                if (taskItem.loadObject instanceof ScraperImage) {
-                    ScraperImage image = (ScraperImage) taskItem.loadObject;
-                    String file = image.getLargeFile();
-                    if (file != null) {
-                        image.download(mContext);
-                        taskItem.result.bitmap = BitmapFactory.decodeFile(file);
-                    }
-                    taskItem.result.status = taskItem.result.bitmap != null ?
-                            Status.LOAD_OK : Status.LOAD_ERROR;
-                } else {
-                    taskItem.result.status = Status.LOAD_BAD_OBJECT;
-                }
-            }
-
-            @Override
-            public boolean canHandle(Object loadObject) {
-                return loadObject instanceof ScraperImage;
-            }
-
-            @Override
-            public String getKey(Object loadObject) {
-                if (loadObject instanceof ScraperImage) {
-                    ScraperImage image = (ScraperImage) loadObject;
-                    // using the url here since images from same url may be used
-                    // as
-                    // different files. But for cache reasons urls are a better
-                    // key
-                    return image.getLargeUrl();
-                }
-                return null;
-            }
+            return null;
         }
     }
-
 }
