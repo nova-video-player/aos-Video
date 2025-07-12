@@ -1079,25 +1079,35 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private void collapseTextView(int maxLines, int lineHeight) {
         ViewGroup.LayoutParams layoutParams = mPlotTextView.getLayoutParams();
-        // Collapse only to the number of lines visible
-        mPlotTextView.setMaxLines(maxLines);
 
-        // Calculate the target height based on the lines we want to display
-        int targetHeight = Math.min(mPlotTextView.getLineCount(), maxLines) * lineHeight + 10;
+        // Calculate the target height based on line height
+        int targetHeight = maxLines * lineHeight + 10;
 
-        // Ensure the height matches the collapsed version, no extra space
+        // Animate from current height to collapsed height
         ValueAnimator animation = ValueAnimator.ofInt(mPlotTextView.getHeight(), targetHeight);
         animation.addUpdateListener(valueAnimator -> {
             layoutParams.height = (int) valueAnimator.getAnimatedValue();
-            mPlotTextView.requestLayout();  // Trigger layout update
+            mPlotTextView.requestLayout();  // Update layout during animation
         });
+
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
+            public void onAnimationStart(Animator animation) {
+                // Keep full text until animation finishes
+                mPlotTextView.setEllipsize(null);
+                mPlotTextView.setMaxLines(Integer.MAX_VALUE);
+            }
+
+            @Override
             public void onAnimationEnd(Animator animation) {
+                // Then apply collapsed state
                 mPlotTextView.setEllipsize(TextUtils.TruncateAt.END);
-                mPlotTextView.setMaxLines(maxLines);  // Ensure we only show 4 lines when collapsed
+                mPlotTextView.setMaxLines(maxLines);
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT; // Reset height
+                mPlotTextView.setLayoutParams(layoutParams);
             }
         });
+
         animation.setDuration(300);
         animation.start();
     }
