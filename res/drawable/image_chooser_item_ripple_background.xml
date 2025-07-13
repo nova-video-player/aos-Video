@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/ripple_orange"
+    > <!-- Large radius ensures full spread -->
+
+    <!-- Mask helps define where ripple shows up -->
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/white" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+
+    <!-- Optional: Use this to force background fill -->
+    <item>
+        <inset
+            android:insetLeft="1dp"
+            android:insetTop="1dp"
+            android:insetRight="1dp"
+            android:insetBottom="1dp">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/video_info_list_item_background" />
+                <corners android:radius="9dp" /> <!-- Slightly reduced to compensate inset -->
+            </shape>
+        </inset>
+    </item>
+</ripple>

@@ -2,12 +2,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/video_info_poster_chooser_width"
     android:layout_height="@dimen/video_info_poster_chooser_height"
-    android:foreground="@drawable/custom_ripple"
+    android:foreground="@drawable/image_chooser_item_ripple_background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.cardview.widget.CardView
         android:id="@+id/processed_poster_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="0dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:useCompatPadding="false"
+        android:elevation="0dp"
         app:cardCornerRadius="9dp"
         android:layout_margin="1dp"
         app:cardBackgroundColor="@android:color/transparent"
