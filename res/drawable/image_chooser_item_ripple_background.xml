@@ -19,10 +19,8 @@
             android:insetRight="1dp"
             android:insetBottom="1dp">
             <shape android:shape="rectangle">
-                <stroke
-                    android:width="2dp"
-                    android:color="@color/video_info_list_item_background" />
-                <corners android:radius="9dp" />
+                <solid android:color="@color/video_info_list_item_background" />
+                <corners android:radius="9dp" /> <!-- Slightly reduced to compensate inset -->
             </shape>
         </inset>
     </item>
