@@ -868,7 +868,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     @Override
                     public void onItemClick(int position) {
                         EpisodeModel selectedEpisode = episodeModels.get(position);
-                        updateEpisodeUI(episodeModels.get(position));
+                        mAnimatePlot(episodeModels.get(position).getEpisodePlot());
                         mCurrentPosition = position;
                         episodesAdapter.setSelectedIndex(position);
                         episodesAdapter.notifyItemChanged(position);
@@ -889,7 +889,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     @Override
                     public void onItemClick(int position) {
                         EpisodeModel selectedEpisode = episodeModels.get(position);
-                        updateEpisodeUI(episodeModels.get(position));
+                        mAnimatePlot(episodeModels.get(position).getEpisodePlot());
                         mCurrentPosition = position;
                         episodeNumbersAdapter.setSelectedIndex(position);
                         episodeNumbersAdapter.notifyItemChanged(position);
@@ -994,14 +994,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         episodesRecyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
     }
 
-    private void updateEpisodeUI(EpisodeModel episodeModel) {
+    private void mAnimatePlot(String plot) {
         // Reset previous click listener and properties
         mPlotTextView.setOnClickListener(null);
         mPlotTextView.setEllipsize(null);
         mPlotTextView.setMaxLines(Integer.MAX_VALUE); // Temporarily set no limit
-
-        String plot = episodeModel.getEpisodePlot();
-        Log.d("EpisodePlot", "Setting plot text: " + plot);
 
         // Set text or hide container if empty
         if (plot == null || plot.isEmpty()) {
@@ -1142,7 +1139,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         episodesRecyclerView.smoothScrollToPosition(mCurrentPosition);
 
         // Update UI
-        updateEpisodeUI(episodeModels.get(mCurrentPosition));
+        mAnimatePlot(episodeModels.get(mCurrentPosition).getEpisodePlot());
         updateEpisodeUI(direction);
         updateFragment(episodeModels.get(mCurrentPosition));
         updateUI();
@@ -1407,76 +1404,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 }
             });
         });
-    }
-
-    public static void setupAnimatedPlotExpansion(TextView textView, int collapsedLines) {
-        // Local inline dpToPx converter
-        java.util.function.IntFunction<Integer> dpToPx = dp ->
-                Math.round(dp * mContext.getResources().getDisplayMetrics().density);
-
-        int expectedWidthOfTextView = textView.getResources().getDisplayMetrics().widthPixels - dpToPx.apply(8); // minus 4dp left and 4dp right padding of parent view (scroll_content)
-        int originalMaxLines = textView.getMaxLines();
-
-        if (originalMaxLines < 0 || originalMaxLines == Integer.MAX_VALUE) {
-            Log.d("PlotAnim", "Already unbounded maxLines");
-        } else {
-            textView.setMaxLines(Integer.MAX_VALUE);
-            textView.measure(
-                    View.MeasureSpec.makeMeasureSpec(expectedWidthOfTextView, View.MeasureSpec.AT_MOST),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-            );
-
-            int measuredLineCount = textView.getLineCount();
-            int measuredTargetHeight = textView.getMeasuredHeight();
-            int lineHeight = textView.getLineHeight();
-
-            Log.d("PlotAnim", "Lines: " + measuredLineCount + "/" + originalMaxLines);
-
-            textView.setEllipsize(TextUtils.TruncateAt.END);
-            textView.setMaxLines(collapsedLines);
-
-            if (measuredLineCount <= originalMaxLines) {
-                Log.d("PlotAnim", "Text fits within original maxLines");
-            } else {
-                Log.d("PlotAnim", "Text exceeds original maxLines");
-                textView.setTag(true); // collapsed
-
-                textView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        boolean isCollapsed = (Boolean) textView.getTag();
-                        ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
-
-                        if (isCollapsed) {
-                            textView.setMaxLines(Integer.MAX_VALUE);
-                            ValueAnimator animation = ValueAnimator.ofInt(textView.getHeight(), measuredTargetHeight);
-                            animation.addUpdateListener(valueAnimator -> {
-                                layoutParams.height = (int) valueAnimator.getAnimatedValue();
-                                textView.requestLayout();
-                            });
-                            animation.start();
-                            layoutParams.height = textView.getHeight();
-                            textView.setTag(false);
-                        } else {
-                            ValueAnimator animation = ValueAnimator.ofInt(textView.getHeight(), lineHeight * collapsedLines + 10);
-                            animation.addUpdateListener(valueAnimator -> {
-                                layoutParams.height = (int) valueAnimator.getAnimatedValue();
-                                textView.requestLayout();
-                            });
-                            animation.addListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    textView.setMaxLines(collapsedLines);
-                                }
-                            });
-                            animation.start();
-                            layoutParams.height = textView.getHeight();
-                            textView.setTag(true);
-                        }
-                    }
-                });
-            }
-        }
     }
 
     private void updateGenericButtonAction() {
@@ -3085,7 +3012,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 // set plot
                 setTextOrHideContainer(mPlotTextView, plot, mPlotTextView);
                 // set plot animation
-                setupAnimatedPlotExpansion(mPlotTextView, 4);
+                mAnimatePlot(plot);
                 // Movie Cast
                 StringBuilder sb = new StringBuilder();
                 boolean firstTime = true;
