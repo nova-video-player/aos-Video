@@ -310,12 +310,13 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
         }
     }
     public void addToIndexed(Uri uri, String name){
-        NetworkScanner.scanVideos(getActivity(), uri);
+        ShortcutDb.STATIC.removeShortcut(getActivity(), uri);
         if (ShortcutDbAdapter.VIDEO.isShortcut(getActivity(), uri.toString()) < 0) {
             //if not a shortcut, add as shortcut
             ShortcutDbAdapter.VIDEO.addShortcut(getActivity(), new ShortcutDbAdapter.Shortcut(name, uri.toString()));
-            loadIndexedShortcuts();
+            NetworkScanner.scanVideos(getActivity(), uri);
         }
+        loadIndexedShortcuts();
     }
     @Override
     public void onFtpShortcutAdd(View v, final Uri uri, final String name) {
