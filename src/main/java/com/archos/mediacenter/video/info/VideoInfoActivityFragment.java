@@ -1875,10 +1875,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/bluray.png"));
                 mMediaType.setVisibility(View.VISIBLE);
             }else if(Pattern.compile(Pattern.quote(w1), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
-                    Pattern.compile(Pattern.quote(w2), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
-                    Pattern.compile(Pattern.quote(w3), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(w2), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/webdl.png"));
+                mMediaType.setVisibility(View.VISIBLE);
+            }else if(Pattern.compile(Pattern.quote(w3), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
                     Pattern.compile(Pattern.quote(w4), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/webtv.png"));
+                mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/webrip.png"));
                 mMediaType.setVisibility(View.VISIBLE);
             }else if(Pattern.compile(Pattern.quote(d), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
                 mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/dvd.png"));
