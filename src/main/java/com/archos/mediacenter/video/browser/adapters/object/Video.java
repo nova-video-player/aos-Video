@@ -204,6 +204,29 @@ public class Video extends Base implements Serializable {
 
     }
 
+    public int getFineSdResolution() {
+        int w = mCalculatedWidth;
+        int h = mCalculatedHeight;
+        if(getMetadata()!=null){
+            w = getMetadata().getVideoWidth();
+            h = getMetadata().getVideoHeight();
+        }
+        if(w>0&&h>0) {
+            if (w >= 720 || h >= 480) {
+                return VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_480P;
+            } else if (w >= 640 || h >= 360) {
+                return VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_360P;
+            } else if (w >= 426 || h >= 240) {
+                return VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_240P;
+            } else if (w >= 256 || h >= 144) {
+                return VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_144P;
+            } else {
+                return VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_UNKNOWN;
+            }
+        }
+        return getGuessedDefinition();
+    }
+
     public boolean isWatched() {
         return mIsTraktSeen;
     }

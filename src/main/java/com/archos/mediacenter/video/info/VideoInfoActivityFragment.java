@@ -1784,19 +1784,38 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             switch (definition) {
                 // definition is 720p
                 case 1:
-                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/720.png"));
+                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/720p.png"));
                     break;
                 // definition is 1080p
                 case 2:
-                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/1080.png"));
+                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/1080p.png"));
                     break;
                 // definition is 4K/2160p
                 case 3:
-                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/4k_new.png"));
+                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/2160p.png"));
                     break;
                 // definition is SD
                 case 4:
-                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/sd.png"));
+                    // set video sd definition flags
+                    int sdDefinition = video.getFineSdResolution();
+                    switch (sdDefinition) {
+                        // definition is SD/480p
+                        case 5:
+                            mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/480p.png"));
+                            break;
+                        // definition is SD/360p
+                        case 6:
+                            mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/360p.png"));
+                            break;
+                        // definition is SD/240p
+                        case 7:
+                            mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/240p.png"));
+                            break;
+                        // definition is SD/144p
+                        case 8:
+                            mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/144p.png"));
+                            break;
+                    }
                     break;
                 // definition is not known
                 case 0:
