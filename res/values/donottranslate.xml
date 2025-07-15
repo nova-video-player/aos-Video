@@ -35,7 +35,7 @@
 
     <string name="nova">Nova Video Player</string>
 
-    <string name="resolution_4k">4k</string>
+    <string name="resolution_4k">4K</string>
     // do not say p since it can be i too
     <string name="resolution_1080p">1080</string>
     <string name="resolution_720p">720</string>
