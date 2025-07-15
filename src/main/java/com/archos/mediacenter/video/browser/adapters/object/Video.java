@@ -212,13 +212,13 @@ public class Video extends Base implements Serializable {
             h = getMetadata().getVideoHeight();
         }
         if(w>0&&h>0) {
-            if (w >= 720 || h >= 480) {
+            if (w >= 720 && h >= 480) {
                 return VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_480P;
-            } else if (w >= 640 || h >= 360) {
+            } else if (w >= 640 && h >= 360) {
                 return VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_360P;
-            } else if (w >= 426 || h >= 240) {
+            } else if (w >= 426 && h >= 240) {
                 return VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_240P;
-            } else if (w >= 256 || h >= 144) {
+            } else if (w >= 256 && h >= 144) {
                 return VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_144P;
             } else {
                 return VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_UNKNOWN;
