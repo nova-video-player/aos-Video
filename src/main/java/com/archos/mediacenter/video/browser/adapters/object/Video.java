@@ -196,7 +196,7 @@ public class Video extends Base implements Serializable {
             // normally you would expect w>=1280 || h>=720 but based on collection empirical observation we need to include a margin to detect hd video resolution
             else if (w >= 1200 || h >= 720) {
                 return  VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_720P;
-            } else if (w > 0 && h > 0) {
+            } else {
                 return  VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_SD;
             }
         }
