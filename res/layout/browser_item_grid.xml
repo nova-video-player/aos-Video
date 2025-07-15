@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/thumbnail"
             android:layout_alignTop="@id/thumbnail"
-            card_view:srcCompat="@drawable/watched_icon_corner"
+            card_view:srcCompat="@drawable/trakt_watched_new"
             android:visibility="gone" />
 
         <ImageView
