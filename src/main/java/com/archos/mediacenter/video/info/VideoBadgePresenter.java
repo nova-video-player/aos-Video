@@ -15,6 +15,9 @@
 package com.archos.mediacenter.video.info;
 
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import androidx.core.content.ContextCompat;
@@ -37,6 +40,9 @@ import com.archos.mediaprovider.video.VideoStore;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Display a video, a movie, an episode (Poster or Thumbnail) or a TvShow (Poster)
@@ -109,29 +115,62 @@ public class VideoBadgePresenter implements Presenter {
             return mRootView;
         }
 
-        public void setResolution(int res,boolean is3d){
+        public void setResolution(int res,boolean is3d, int resSD){
             m3dImageView.setVisibility(is3d?View.VISIBLE:View.GONE);
             if(is3d){
-                m3dImageView.setImageResource(R.drawable.badge_3d);
+                m3dImageView.setImageBitmap(getBitmapFromAsset("videocodec/3dbd.png"));
             }
             else
                 m3dImageView.setImageResource(R.drawable.badge_2d);
 
             switch (res){
                 case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_4K):
-                    mResImageView.setImageResource(R.drawable.badge_4k);
+                    mResImageView.setImageBitmap(getBitmapFromAsset("resolution/2160p.png"));
                     break;
                 case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_1080P):
-                    mResImageView.setImageResource(R.drawable.badge_1080);
+                    mResImageView.setImageBitmap(getBitmapFromAsset("resolution/1080p.png"));
                     break;
                 case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_720P):
-                    mResImageView.setImageResource(R.drawable.badge_720);
+                    mResImageView.setImageBitmap(getBitmapFromAsset("resolution/720p.png"));
+                    break;
+                // definition is SD
+                case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_SD):
+                    // set video sd definition flags
+                    switch (resSD) {
+                        // definition is SD/480p
+                        case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_480P):
+                            mResImageView.setImageBitmap(getBitmapFromAsset("resolution/480p.png"));
+                            break;
+                        // definition is SD/360p
+                        case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_360P):
+                            mResImageView.setImageBitmap(getBitmapFromAsset("resolution/360p.png"));
+                            break;
+                        // definition is SD/240p
+                        case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_240P):
+                            mResImageView.setImageBitmap(getBitmapFromAsset("resolution/240p.png"));
+                            break;
+                        // definition is SD/144p
+                        case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_144P):
+                            mResImageView.setImageBitmap(getBitmapFromAsset("resolution/144p.png"));
+                            break;
+                    }
                     break;
 
                 default:{
                     mResImageView.setImageResource(R.drawable.badge_sd);
                 }
             }
+        }
+
+        private Bitmap getBitmapFromAsset(String MediaFlag){
+            AssetManager assetManager = mContext.getAssets();
+            InputStream inputStream = null;
+            try {
+                inputStream = assetManager.open(MediaFlag);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return BitmapFactory.decodeStream(inputStream);
         }
 
         public void setSource(Uri source){
@@ -175,7 +214,7 @@ public class VideoBadgePresenter implements Presenter {
                             iv.setVisibility(View.INVISIBLE);
                         else
                             iv.setVisibility(View.VISIBLE);
-                        iv.setImageResource(channel.startsWith("5") ? R.drawable.badge_5_1 : R.drawable.badge_stereo_wide);
+                        iv.setImageBitmap(channel.startsWith("5") ? getBitmapFromAsset("audiochannels/6.png") : getBitmapFromAsset("audiochannels/2.png"));
                     }
                     mAudioFormatContainer.addView(v);
 
@@ -216,7 +255,7 @@ public class VideoBadgePresenter implements Presenter {
         vh.setAudioFormat(video.getCalculatedBestAudioFormat() != null && !video.getCalculatedBestAudioFormat().isEmpty() ? video.getCalculatedBestAudioFormat() :
                 "{audiotracks:[{format:" + JSONObject.quote(video.getGuessedAudioFormat()) + ",channels: \"unknown\"}]}");
         vh.setAudioBadge(video.getCalculatedBestAudiotrack());
-        vh.setResolution(video.getNormalizedDefinition(), video.is3D());
+        vh.setResolution(video.getNormalizedDefinition(), video.is3D(), video.getFineSdResolution());
         vh.setSource(video.getFileUri());
         vh.setSize(video.getSize());
     }

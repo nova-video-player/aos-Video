@@ -13,10 +13,10 @@
 
     <ImageView
         android:id="@+id/audio_label"
-        android:layout_width="58dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dip"
-        android:scaleType="center"
+        android:layout_width="60dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="-10dip"
+        android:scaleType="centerInside"
         app:srcCompat="@drawable/badge_5_1"
         />
 
