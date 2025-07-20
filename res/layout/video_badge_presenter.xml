@@ -12,6 +12,7 @@
     app:useCompatPadding="false"
     android:elevation="0dp"
     card_view:cardCornerRadius="10dp"
+    android:foreground="@drawable/video_badge_selector"
     android:layout_below="@+id/short_scrap_plot"
     android:layout_marginRight="@dimen/video_info_margin_simple"
     android:layout_marginTop="6dp"
