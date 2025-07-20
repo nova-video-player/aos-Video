@@ -180,7 +180,7 @@
                     <TextView
                         android:id="@+id/remote_resume_location"
                         android:text="28M 00S"
-                        android:textColor="@color/white"
+                        android:textColor="@color/resume_location_color"
                         android:includeFontPadding="false"
                         android:layout_marginTop="-2dp"
                         android:padding="0dp"
