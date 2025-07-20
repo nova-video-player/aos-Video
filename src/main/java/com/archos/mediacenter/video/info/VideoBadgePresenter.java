@@ -110,7 +110,7 @@ public class VideoBadgePresenter implements Presenter {
         }
 
         public void setResolution(int res,boolean is3d){
-            m3dImageView.setVisibility(mDisplay3dBadge?View.VISIBLE:View.GONE);
+            m3dImageView.setVisibility(is3d?View.VISIBLE:View.GONE);
             if(is3d){
                 m3dImageView.setImageResource(R.drawable.badge_3d);
             }
