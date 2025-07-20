@@ -2801,6 +2801,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         setSelectedSource(video);
                     }
                 });
+                mVideoBadgePresenter.setDisplay3dBadge(!video.is3D());
             }
         }
     }
