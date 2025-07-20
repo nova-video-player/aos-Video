@@ -22,6 +22,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/nhaasgroteskdspro_75bd"
         android:textSize="@dimen/video_info_medium_text"
         android:text="Small Text"
         android:id="@+id/audio_format" />
