@@ -52,40 +52,149 @@
                 android:gravity="center"
                 />
 
-            <Button
-                android:id="@+id/resume"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dip"
-                android:drawableStart="@drawable/button_icon_resume"
-                android:paddingBottom="10dip"
-                android:paddingStart="10dip"
-                android:paddingEnd="10dip"
-                android:background="@drawable/transparent_ripple"
-                android:gravity="center"
-                android:text="@string/resume"
+            <LinearLayout
+                android:id="@+id/resume_button"
+                android:orientation="horizontal"
+                android:background="@drawable/resume_ripple"
+                android:translationZ="2dp"
+                android:paddingTop="1dp"
+                android:paddingBottom="1dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="2dp"
                 android:visibility="visible"
-                android:layout_width="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
                 android:layout_alignBottom="@id/picture_backdrop_cardview"
                 android:layout_alignEnd="@id/picture_backdrop_cardview"
-                android:layout_marginEnd="0dp"
-                />
-            <Button
-                android:id="@+id/remote_resume"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/button_icon_network"
-                android:paddingTop="10dip"
-                android:paddingBottom="10dip"
-                android:paddingStart="10dip"
-                android:paddingEnd="10dip"
-                android:background="@drawable/transparent_ripple"
-                android:gravity="center"
-                android:text="@string/remote_resume"
-                android:visibility="visible"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/customButton"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="2dp"
+                    android:layout_gravity="center"
+                    android:gravity="start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/resume_text"
+                        android:text="@string/resume"
+                        android:textColor="@color/resume_text_color"
+                        android:includeFontPadding="false"
+                        android:padding="0dp"
+                        android:textAllCaps="true"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/nhaasgroteskdspro_65md"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/resume_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-3dp"
+                        android:fontFamily="@font/nhaasgroteskdspro_75bd"
+                        android:includeFontPadding="false"
+                        android:padding="0dp"
+                        android:text="28M 00S"
+                        android:textColor="@color/resume_location_color"
+                        android:textSize="10sp" />
+                </LinearLayout>
+                <ImageView
+                    android:src="@drawable/resume_icon"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:tint="@color/resume_icon_tint" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/remote_resume_button"
+                android:orientation="horizontal"
+                android:background="@drawable/resume_ripple"
+                android:translationZ="2dp"
+                android:paddingTop="1dp"
+                android:paddingBottom="1dp"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
+                android:visibility="visible"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="2dp"
                 android:layout_alignBottom="@id/picture_backdrop_cardview"
                 android:layout_alignStart="@id/picture_backdrop_cardview"
-                android:layout_marginStart="0dp"
-                />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginTop="0.8dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/button_icon_network222"
+                        android:layout_width="24dp"
+                        android:layout_height="18dp"
+                        android:scaleType="fitCenter"
+                        app:tint="@color/resume_icon_tint" />
+                    <TextView
+                        android:text="@string/remote"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/resume_text_color"
+                        android:layout_marginTop="0.5dp"
+                        android:includeFontPadding="false"
+                        android:padding="0dp"
+                        android:textAllCaps="true"
+                        android:textSize="5.8sp"
+                        android:fontFamily="@font/nhaasgroteskdspro_75bd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/remote_customButton"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/resume"
+                        android:textColor="@color/resume_text_color"
+                        android:includeFontPadding="false"
+                        android:padding="0dp"
+                        android:layout_marginTop="0dp"
+                        android:textAllCaps="true"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/nhaasgroteskdspro_65md"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/remote_resume_location"
+                        android:text="28M 00S"
+                        android:textColor="@color/white"
+                        android:includeFontPadding="false"
+                        android:layout_marginTop="-2dp"
+                        android:padding="0dp"
+                        android:textSize="10sp"
+                        android:fontFamily="@font/nhaasgroteskdspro_75bd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <ImageView
+                    android:src="@drawable/resume_icon"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:tint="@color/resume_icon_tint" />
+            </LinearLayout>
         </RelativeLayout>
 
         <LinearLayout

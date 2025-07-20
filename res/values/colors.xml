@@ -89,4 +89,5 @@
     <color name="subtitles_wizard_text">#C7D6DDE2</color>
     <color name="subtitles_wizard_item_text_size">#2D87C7</color>
     <color name="video_info_button">#036259</color>
+    <color name="resume_location">#DBE4E4</color>
 </resources>

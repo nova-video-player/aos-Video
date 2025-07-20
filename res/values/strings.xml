@@ -167,6 +167,7 @@
     <string name="file_deleted">The file was deleted</string>
     <string name="resume">Resume</string>
     <string name="remote_resume">Remote resume</string>
+    <string name="remote">Remote</string>
     <string name="bookmark">Bookmark</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete_short">Confirm deletion</string>

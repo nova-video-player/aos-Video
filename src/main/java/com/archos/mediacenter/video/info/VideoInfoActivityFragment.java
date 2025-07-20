@@ -336,9 +336,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     //play buttons and poster
 
     private LinearLayout mActionButtonsContainer;
-    private Button mRemoteResumeButton;
+    private LinearLayout mRemoteResumeButton;
     private FloatingActionButton mGenericPlayButton;
-    private Button mResumeLocalButton;
+    private LinearLayout mResumeLocalButton;
+    private TextView mResumeLocation;
+    private TextView mRemoteResumeLocation;
     private Button mPlayButton;
     private ImageView mPosterImageView;
 
@@ -538,7 +540,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mSubtitleContainer  =  (LinearLayout)mRoot.findViewById(R.id.subtitles_container);
         mSubtitleDownloadButton = mRoot.findViewById(R.id.subtitles_online);
         mSubtitleDownloadButton.setOnClickListener(this);
-        mResumeLocalButton = (Button) mRoot.findViewById(R.id.resume);
+        mResumeLocalButton = (LinearLayout) mRoot.findViewById(R.id.resume_button);
+        mResumeLocation = (TextView) mRoot.findViewById(R.id.resume_location);
         mPlayButton = (Button) mRoot.findViewById(R.id.play);
         //mActionButtonsContainer = (LinearLayout) mRoot.findViewById(R.id.action_buttons_container);
         mResumeLocalButton.setOnClickListener(this);
@@ -551,7 +554,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
         });
 
-        mRemoteResumeButton = (Button) mRoot.findViewById(R.id.remote_resume);
+        mRemoteResumeButton = (LinearLayout) mRoot.findViewById(R.id.remote_resume_button);
+        mRemoteResumeLocation = (TextView) mRoot.findViewById(R.id.remote_resume_location);
         mRemoteResumeButton.setOnClickListener(this);
         mSourceLayout = (LinearLayout)mRoot.findViewById(R.id.source_layout);
         mSourceContainer = (HorizontalScrollView)mRoot.findViewById(R.id.source_container);
@@ -1553,13 +1557,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         log.debug("updateActionButtons: RemoteResumeMs=" + mCurrentVideo.getRemoteResumeMs() + ", getResumeMs=" + mCurrentVideo.getResumeMs());
         if(mCurrentVideo.getRemoteResumeMs()>0&&mCurrentVideo.getResumeMs()!=mCurrentVideo.getRemoteResumeMs()) {
             mRemoteResumeButton.setVisibility(View.VISIBLE);
-            mRemoteResumeButton.setText(getResources().getString(R.string.remote_resume)+" "+MediaUtils.formatTime(mCurrentVideo.getRemoteResumeMs()));
+            mRemoteResumeLocation.setText(MediaUtils.formatTime(mCurrentVideo.getRemoteResumeMs()));
         }
         else mRemoteResumeButton.setVisibility(View.GONE);
 
         if(mCurrentVideo.getResumeMs()>0) {
             mResumeLocalButton.setVisibility(View.VISIBLE);
-            mResumeLocalButton.setText(getResources().getString(R.string.resume) + " " + MediaUtils.formatTime(mCurrentVideo.getResumeMs()));
+            mResumeLocation.setText(MediaUtils.formatTime(mCurrentVideo.getResumeMs()));
         }
         else mResumeLocalButton.setVisibility(View.GONE);
         updateGenericButtonAction();
