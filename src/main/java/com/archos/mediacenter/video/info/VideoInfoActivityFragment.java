@@ -1215,7 +1215,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     }
 
     private View.OnClickListener createFlagClickListener(String flagName) {
-        return v -> Toast.makeText(requireContext(), flagName + " clicked", Toast.LENGTH_SHORT).show();
+        return v -> Toast.makeText(requireContext(), flagName, Toast.LENGTH_SHORT).show();
     }
 
     private void smoothScrollToPosition(final int position) {
