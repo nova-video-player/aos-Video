@@ -1012,22 +1012,22 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             String color2 = "10bit";
             String color3 = "12bit";
             if(Pattern.compile(Pattern.quote(color1), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mediaFlags.add(new MediaFlag("colordepth/8bit.png", createFlagClickListener("color1")));
+                mediaFlags.add(new MediaFlag("colordepth/8bit.png", createFlagClickListener(color1)));
             }else if(Pattern.compile(Pattern.quote(color2), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mediaFlags.add(new MediaFlag("colordepth/10bit.png", createFlagClickListener("color2")));
+                mediaFlags.add(new MediaFlag("colordepth/10bit.png", createFlagClickListener(color2)));
             }else if(Pattern.compile(Pattern.quote(color3), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mediaFlags.add(new MediaFlag("colordepth/12bit.png", createFlagClickListener("color3")));
+                mediaFlags.add(new MediaFlag("colordepth/12bit.png", createFlagClickListener(color3)));
             }else{
                 Log.d("MediaFlags", "No color depth found in filename: " + filePath);
             }
 
             // set Media Color dynamic range (hdr, sdr)
-            String hdr = "hdr";
-            String sdr = "sdr";
+            String hdr = "HDR";
+            String sdr = "SDR";
             if(Pattern.compile(Pattern.quote(hdr), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mediaFlags.add(new MediaFlag("colordepth/hdr.png", createFlagClickListener("hdr")));
+                mediaFlags.add(new MediaFlag("colordepth/hdr.png", createFlagClickListener(hdr)));
             }else if(Pattern.compile(Pattern.quote(sdr), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mediaFlags.add(new MediaFlag("colordepth/sdr.png", createFlagClickListener("sdr")));
+                mediaFlags.add(new MediaFlag("colordepth/sdr.png", createFlagClickListener(sdr)));
             }else{
                 Log.d("MediaFlags", "No Color dynamic range found in filename: " + filePath);
             }
@@ -1079,7 +1079,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 break;
             // definition is 1080p
             case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_1080P):
-                mediaFlags.add(new MediaFlag("resolution/1080p.png", createFlagClickListener("Full HD 1080p")));
+                mediaFlags.add(new MediaFlag("resolution/1080p.png", createFlagClickListener("HD 1080p")));
                 break;
             // definition is 720p
             case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_720P):
