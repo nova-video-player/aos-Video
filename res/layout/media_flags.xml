@@ -1,83 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/media_flags_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/video_info_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:columnCount="6"
-    android:rowCount="2"
-    android:orientation="horizontal" >
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/media_type"
-        android:layout_width="60dp"
-        android:layout_height="48dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/transparent_ripple"
-        android:scaleType="centerInside"/>
-
-    <ImageView
-        android:id="@+id/video_codec"
-        android:layout_width="60dp"
-        android:layout_height="48dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/transparent_ripple"
-        android:scaleType="centerInside"/>
-
-    <ImageView
-        android:id="@+id/video_resolution"
-        android:layout_width="60dp"
-        android:layout_height="48dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/transparent_ripple"
-        android:scaleType="centerInside"/>
-
-    <ImageView
-        android:id="@+id/audio_codec"
-        android:layout_width="60dp"
-        android:layout_height="48dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/transparent_ripple"
-        android:scaleType="centerInside"/>
-
-    <ImageView
-        android:id="@+id/audio_channels"
-        android:layout_width="60dp"
-        android:layout_height="48dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/transparent_ripple"
-        android:scaleType="centerInside"/>
-
-    <ImageView
-        android:id="@+id/color_depth"
-        android:layout_width="60dp"
-        android:layout_height="48dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/transparent_ripple"
-        android:scaleType="centerInside"/>
-
-    <ImageView
-        android:id="@+id/color_range"
-        android:layout_width="60dp"
-        android:layout_height="48dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/transparent_ripple"
-        android:scaleType="centerInside"/>
-
-    <ImageView
-        android:id="@+id/flag_3d"
-        android:layout_width="60dp"
-        android:layout_height="48dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/transparent_ripple"
-        android:scaleType="centerInside"/>
-
-</GridLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/media_flags_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-4dp"
+        android:layout_marginEnd="-4dp"
+        android:padding="0dp"
+        android:clipToPadding="false"
+        android:scrollbars="none" />
+</LinearLayout>

@@ -29,12 +29,14 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -100,6 +102,7 @@ import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 import androidx.palette.graphics.Palette;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
@@ -393,14 +396,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private CoordinatorLayout mCoordinatorLayout;
     private TextView mNetworks;
     private View mNetworksContainer;
-    private ImageView mVideoCodec;
-    private ImageView mVideoResolution;
-    private ImageView mAudioCodec;
-    private ImageView mAudioChannels;
-    private ImageView m3Dflag;
-    private ImageView mMediaType;
-    private ImageView mColorDepth;
-    private ImageView mColorRange;
     private TextView mEpisodeResolution;
     private View mEpisodeResolutionContainer;
     private TextView mMovieResolution;
@@ -642,14 +637,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mCoordinatorLayout = mRoot.findViewById(R.id.coordinator_layout);
         mNetworks = mRoot.findViewById(R.id.networks);
         mNetworksContainer = mRoot.findViewById(R.id.network_container);
-        mVideoCodec = mRoot.findViewById(R.id.video_codec);
-        mVideoResolution = mRoot.findViewById(R.id.video_resolution);
-        mAudioCodec = mRoot.findViewById(R.id.audio_codec);
-        mAudioChannels = mRoot.findViewById(R.id.audio_channels);
-        m3Dflag = mRoot.findViewById(R.id.flag_3d);
-        mMediaType = mRoot.findViewById(R.id.media_type);
-        mColorDepth = mRoot.findViewById(R.id.color_depth);
-        mColorRange = mRoot.findViewById(R.id.color_range);
         mEpisodeResolution = mRoot.findViewById(R.id.episode_resolution);
         mEpisodeResolutionContainer = mRoot.findViewById(R.id.episode_resolution_container);
         mMovieResolution = mRoot.findViewById(R.id.movie_resolution);
@@ -981,6 +968,281 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         return mRoot;
     }
 
+    private void displayMediaFlags(VideoMetadata videoMetadata) {
+        List<MediaFlag> mediaFlags = new ArrayList<>();
+
+        if (videoMetadata != null && videoMetadata.getVideoTrack() != null) {
+            String format = videoMetadata.getVideoTrack().format;
+            if (format != null) {
+                switch (format.toUpperCase()) {
+                    case "H.264":
+                    case "H264":
+                        mediaFlags.add(new MediaFlag("videocodec/h264.png", createFlagClickListener("H.264")));
+                        break;
+                    case "HEVC":
+                    case "HEVC/H.265":
+                    case "H.265":
+                        mediaFlags.add(new MediaFlag("videocodec/hevc.png", createFlagClickListener("H.265")));
+                        break;
+                    case "MPEG-2":
+                        mediaFlags.add(new MediaFlag("videocodec/mpeg2.png", createFlagClickListener("MPEG-2")));
+                        break;
+                    case "MPEG-4":
+                        mediaFlags.add(new MediaFlag("videocodec/mpeg4.png", createFlagClickListener("MPEG-4")));
+                        break;
+                    case "mpeg1video":
+                        mediaFlags.add(new MediaFlag("videocodec/mpeg1video.png", createFlagClickListener("mpeg1video")));
+                        break;
+                    case "AV1":
+                        mediaFlags.add(new MediaFlag("videocodec/av1.png", createFlagClickListener("AV1")));
+                        break;
+                    case "wmv2":
+                        mediaFlags.add(new MediaFlag("videocodec/wmv2.png", createFlagClickListener("wmv2")));
+                        break;
+                    // Add more as needed...
+                }
+            }
+        }
+
+        if (videoMetadata != null) {
+            String filePath = videoMetadata.getFile().getPath();
+
+            // set Media Color depth (10bit, 8bit, 12bit)
+            String color1 = "8bit";
+            String color2 = "10bit";
+            String color3 = "12bit";
+            if(Pattern.compile(Pattern.quote(color1), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mediaFlags.add(new MediaFlag("colordepth/8bit.png", createFlagClickListener("color1")));
+            }else if(Pattern.compile(Pattern.quote(color2), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mediaFlags.add(new MediaFlag("colordepth/10bit.png", createFlagClickListener("color2")));
+            }else if(Pattern.compile(Pattern.quote(color3), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mediaFlags.add(new MediaFlag("colordepth/12bit.png", createFlagClickListener("color3")));
+            }else{
+                Log.d("MediaFlags", "No color depth found in filename: " + filePath);
+            }
+
+            // set Media Color dynamic range (hdr, sdr)
+            String hdr = "hdr";
+            String sdr = "sdr";
+            if(Pattern.compile(Pattern.quote(hdr), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mediaFlags.add(new MediaFlag("colordepth/hdr.png", createFlagClickListener("hdr")));
+            }else if(Pattern.compile(Pattern.quote(sdr), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mediaFlags.add(new MediaFlag("colordepth/sdr.png", createFlagClickListener("sdr")));
+            }else{
+                Log.d("MediaFlags", "No Color dynamic range found in filename: " + filePath);
+            }
+
+            // set Media Type flag
+            String b1 = "bluray";
+            String b2 = "blu ray";
+            String b3 = "blu-ray";
+            String b4 = "brrip";
+            String b5 = "bdrip";
+            String w1 = "webdl";
+            String w2 = "web-dl";
+            String w3 = "webrip";
+            String w4 = "web-rip";
+            String d = "dvd";
+            if(Pattern.compile(Pattern.quote(b1), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(b2), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(b3), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(b4), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(b5), Pattern.CASE_INSENSITIVE).matcher(filePath).find()) {
+                mediaFlags.add(new MediaFlag("videocodec/bluray.png", createFlagClickListener("Blu-ray")));
+            }else if(Pattern.compile(Pattern.quote(w1), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(w2), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mediaFlags.add(new MediaFlag("videocodec/webdl.png", createFlagClickListener("WEB-DL")));
+            }else if(Pattern.compile(Pattern.quote(w3), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
+                    Pattern.compile(Pattern.quote(w4), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mediaFlags.add(new MediaFlag("videocodec/webrip.png", createFlagClickListener("WEBRip")));
+            }else if(Pattern.compile(Pattern.quote(d), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mediaFlags.add(new MediaFlag("videocodec/dvd.png", createFlagClickListener("DVD")));
+            }else{
+                Log.d("MediaFlags", "No Media Type flag found in filename: " + filePath);
+            }
+
+            // set 3D video flag
+            if(Pattern.compile(Pattern.quote("3d"), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
+                mediaFlags.add(new MediaFlag("videocodec/3dbd.png", createFlagClickListener("3D")));
+            }else{
+                Log.d("MediaFlags", "No 3D video flag found in filename: " + filePath);
+            }
+        }
+
+        // set video definition flags
+        int definition = mCurrentVideo.getNormalizedDefinition();
+        int definitionSD = mCurrentVideo.getFineSdResolution();
+        switch (definition){
+            // definition is 4K/2160p
+            case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_4K):
+                mediaFlags.add(new MediaFlag("resolution/2160p.png", createFlagClickListener("4K 2160p")));
+                break;
+            // definition is 1080p
+            case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_1080P):
+                mediaFlags.add(new MediaFlag("resolution/1080p.png", createFlagClickListener("Full HD 1080p")));
+                break;
+            // definition is 720p
+            case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_720P):
+                mediaFlags.add(new MediaFlag("resolution/720p.png", createFlagClickListener("HD 720p")));
+                break;
+            // definition is SD
+            case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_SD):
+                // set video sd definition flags
+                switch (definitionSD) {
+                    // definition is SD/480p
+                    case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_480P):
+                        mediaFlags.add(new MediaFlag("resolution/480p.png", createFlagClickListener("SD 480p")));
+                        break;
+                    // definition is SD/360p
+                    case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_360P):
+                        mediaFlags.add(new MediaFlag("resolution/360p.png", createFlagClickListener("SD 360p")));
+                        break;
+                    // definition is SD/240p
+                    case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_240P):
+                        mediaFlags.add(new MediaFlag("resolution/240p.png", createFlagClickListener("SD 240p")));
+                        break;
+                    // definition is SD/144p
+                    case (VideoStore.Video.VideoColumns.ARCHOS_DEFINITION_144P):
+                        mediaFlags.add(new MediaFlag("resolution/144p.png", createFlagClickListener("SD 144p")));
+                        break;
+                }
+                break;
+            // definition is not known
+            case 0:
+            default:
+                mediaFlags.add(new MediaFlag("resolution/144p.png", createFlagClickListener("SD 144p")));
+                break;
+        }
+
+        // set audio codec flags
+        if (videoMetadata.getAudioTrackNb() != 0) {
+            String audioTrackFormat = "";
+            audioTrackFormat = videoMetadata.getAudioTrack(0).format;
+            if (audioTrackFormat.equalsIgnoreCase("Digital")) {
+                mediaFlags.add(new MediaFlag("audiocodec/dts.png", createFlagClickListener("DTS")));
+            }else if (audioTrackFormat.equalsIgnoreCase("AC3")) {
+                mediaFlags.add(new MediaFlag("audiocodec/ac3.png", createFlagClickListener("AC3")));
+            }else if (audioTrackFormat.equalsIgnoreCase("EAC3")) {
+                mediaFlags.add(new MediaFlag("audiocodec/eac3.png", createFlagClickListener("EAC3")));
+            }else if (audioTrackFormat.equalsIgnoreCase("AAC")) {
+                mediaFlags.add(new MediaFlag("audiocodec/aac.png", createFlagClickListener("AAC")));
+            }else if (audioTrackFormat.equalsIgnoreCase("MP3")) {
+                mediaFlags.add(new MediaFlag("audiocodec/mp3.png", createFlagClickListener("MP3")));
+            }else if (audioTrackFormat.equalsIgnoreCase("FLAC")) {
+                mediaFlags.add(new MediaFlag("audiocodec/flac.png", createFlagClickListener("FLAC")));
+            }else if (audioTrackFormat.equalsIgnoreCase("ALAC")) {
+                mediaFlags.add(new MediaFlag("audiocodec/alac.png", createFlagClickListener("ALAC")));
+            }else if (audioTrackFormat.equalsIgnoreCase("MP2")) {
+                mediaFlags.add(new MediaFlag("audiocodec/mp2.png", createFlagClickListener("MP2")));
+            }else if (audioTrackFormat.contains("Vorbis")) {
+                mediaFlags.add(new MediaFlag("audiocodec/vorbis.png", createFlagClickListener("Vorbis")));
+            }else if (audioTrackFormat.equalsIgnoreCase("WMA")) {
+                mediaFlags.add(new MediaFlag("audiocodec/wma.png", createFlagClickListener("WMA")));
+            }else if (audioTrackFormat.equalsIgnoreCase("wmav1")) {
+                mediaFlags.add(new MediaFlag("audiocodec/wma.png", createFlagClickListener("wmav1")));
+            }else{
+                Log.d("MediaFlags", "No audio codec flag found in filename: " + videoMetadata.getFile().getPath());
+            }
+
+            String audioTrackChannels = "";
+            audioTrackChannels = videoMetadata.getAudioTrack(0).channels;
+            if (audioTrackChannels.equalsIgnoreCase("Mono")) {
+                mediaFlags.add(new MediaFlag("audiochannels/1.png", createFlagClickListener("Mono")));
+            }else if (audioTrackChannels.equalsIgnoreCase("Stereo")) {
+                mediaFlags.add(new MediaFlag("audiochannels/2.png", createFlagClickListener("Stereo")));
+            }else if (audioTrackChannels.equalsIgnoreCase("5.1")) {
+                mediaFlags.add(new MediaFlag("audiochannels/6.png", createFlagClickListener("5.1")));
+            }else if (audioTrackChannels.equalsIgnoreCase("7.1")) {
+                mediaFlags.add(new MediaFlag("audiochannels/8.png", createFlagClickListener("7.1")));
+            }else{
+                Log.d("MediaFlags", "No audio Track Channels flag found in filename: " + videoMetadata.getFile().getPath());
+            }
+        }
+
+        if (!mediaFlags.isEmpty()) {
+            RecyclerView mediaFlagsRv = mRoot.findViewById(R.id.media_flags_rv);
+
+            DisplayMetrics dm = getResources().getDisplayMetrics();
+            int screenWidthPx = dm.widthPixels;
+            int itemWidthPx = getResources().getDimensionPixelSize(R.dimen.media_flag_width);
+
+            // Step 1: compute max number of columns that can fit
+            int spanCount = screenWidthPx / itemWidthPx;
+            if (spanCount < 1) spanCount = 1;
+
+            // Step 2: compute remaining space and spacing
+            int totalItemWidth = spanCount * itemWidthPx;
+            int spacingPx = (screenWidthPx - totalItemWidth) / (spanCount + 1); // <<< spacing between and around
+
+            // Step 3: Setup RecyclerView
+            mediaFlagsRv.setLayoutManager(new GridLayoutManager(mContext, spanCount));
+
+            // Set padding instead of decorating left/right
+            mediaFlagsRv.setPadding(spacingPx, spacingPx, spacingPx, spacingPx);
+            mediaFlagsRv.setClipToPadding(false);
+
+            // Only add spacing between columns (not left/right)
+            int finalSpanCount = spanCount;
+
+            // Remove all previous item decorations
+            while (mediaFlagsRv.getItemDecorationCount() > 0) {
+                mediaFlagsRv.removeItemDecorationAt(0);
+            }
+
+            mediaFlagsRv.addItemDecoration(new RecyclerView.ItemDecoration() {
+                @Override
+                public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                    int position = parent.getChildAdapterPosition(view);
+                    int column = position % finalSpanCount;
+
+                    // spacing between columns
+                    outRect.left = column * spacingPx / finalSpanCount;
+                    outRect.right = spacingPx - (column + 1) * spacingPx / finalSpanCount;
+
+                    // Apply top spacing only if NOT in first row
+                    if (position >= finalSpanCount) {
+                        outRect.top = spacingPx;
+                    } else {
+                        outRect.top = 0; // no top spacing for first row
+                    }
+                }
+            });
+
+            mediaFlagsRv.setAdapter(new MediaFlagsAdapter(mContext, mediaFlags));
+        } else {
+            Log.d("MediaFlags", "No media flags available.");
+        }
+    }
+
+    private void applyMediaFlagSpacing(RecyclerView rv, int itemWidthDp, int spanCount) {
+        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        int itemWidthPx = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, itemWidthDp, rv.getResources().getDisplayMetrics());
+
+        int totalItemWidth = spanCount * itemWidthPx;
+        int remainingSpace = screenWidth - totalItemWidth;
+        int spacing = Math.max(0, remainingSpace / (spanCount + 1));
+
+        // Remove old decorations
+        while (rv.getItemDecorationCount() > 0) {
+            rv.removeItemDecorationAt(0);
+        }
+
+        rv.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, true));
+    }
+
+
+
+    private View.OnClickListener createFlagClickListener(String flagName) {
+        return v -> Toast.makeText(requireContext(), flagName + " clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    private int calculateSpanCount() {
+        int itemWidth = getResources().getDimensionPixelSize(R.dimen.media_flag_width);
+        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        return Math.max(1, screenWidth / itemWidth);
+    }
+
     private void smoothScrollToPosition(final int position) {
         RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(mContext) {
             @Override
@@ -1155,7 +1417,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         LinearLayout infoPart2 = mRoot.findViewById(R.id.info_part2);  // Example additional view
         FrameLayout PosterActionContainer = mRoot.findViewById(R.id.poster_action_container); // Another view to animate
         LinearLayout fileInfoContent = mRoot.findViewById(R.id.info_file_container);
-        GridLayout MediaFlags = mRoot.findViewById(R.id.media_flags_container);
+        LinearLayout MediaFlags = mRoot.findViewById(R.id.media_flags_container);
         LinearLayout subtitle = mRoot.findViewById(R.id.subtitles_container);
         LinearLayout scraper = mRoot.findViewById(R.id.scraper_container);
         HorizontalScrollView source = mRoot.findViewById(R.id.source_container);
@@ -1783,50 +2045,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             if(!mIsLaunchFromPlayer && mCurrentVideo.locationSupportsDelete())
                 addMenu(0, R.string.delete, DELETE_GROUP, R.string.delete);
 
-            // set video definition flags
             int definition = video.getNormalizedDefinition();
-            switch (definition) {
-                // definition is 720p
-                case 1:
-                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/720p.png"));
-                    break;
-                // definition is 1080p
-                case 2:
-                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/1080p.png"));
-                    break;
-                // definition is 4K/2160p
-                case 3:
-                    mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/2160p.png"));
-                    break;
-                // definition is SD
-                case 4:
-                    // set video sd definition flags
-                    int sdDefinition = video.getFineSdResolution();
-                    switch (sdDefinition) {
-                        // definition is SD/480p
-                        case 5:
-                            mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/480p.png"));
-                            break;
-                        // definition is SD/360p
-                        case 6:
-                            mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/360p.png"));
-                            break;
-                        // definition is SD/240p
-                        case 7:
-                            mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/240p.png"));
-                            break;
-                        // definition is SD/144p
-                        case 8:
-                            mVideoResolution.setImageBitmap(getBitmapFromAsset("resolution/144p.png"));
-                            break;
-                    }
-                    break;
-                // definition is not known
-                case 0:
-                default:
-                    mVideoResolution.setVisibility(View.GONE);
-                    break;
-            }
 
             // set definition text
             if(video instanceof Episode){
@@ -1868,79 +2087,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }else{
                 mEpisodeResolutionContainer.setVisibility(View.GONE);
                 mMovieResolutionContainer.setVisibility(View.GONE);
-            }
-
-            // set 3D video flag
-            String filePath = video.getFilePath();
-            if(Pattern.compile(Pattern.quote("3d"), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                m3Dflag.setImageBitmap(getBitmapFromAsset("videocodec/3dbd.png"));
-                m3Dflag.setVisibility(View.VISIBLE);
-            }else{
-                m3Dflag.setVisibility(View.GONE);
-            }
-
-            // set Media Type flag
-            String b1 = "bluray";
-            String b2 = "blu ray";
-            String b3 = "blu-ray";
-            String b4 = "brrip";
-            String b5 = "bdrip";
-            String w1 = "webdl";
-            String w2 = "web-dl";
-            String w3 = "webrip";
-            String w4 = "web-rip";
-            String d = "dvd";
-            if(Pattern.compile(Pattern.quote(b1), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
-                    Pattern.compile(Pattern.quote(b2), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
-                    Pattern.compile(Pattern.quote(b3), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
-                    Pattern.compile(Pattern.quote(b4), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
-                    Pattern.compile(Pattern.quote(b5), Pattern.CASE_INSENSITIVE).matcher(filePath).find()) {
-                mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/bluray.png"));
-                mMediaType.setVisibility(View.VISIBLE);
-            }else if(Pattern.compile(Pattern.quote(w1), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
-                    Pattern.compile(Pattern.quote(w2), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/webdl.png"));
-                mMediaType.setVisibility(View.VISIBLE);
-            }else if(Pattern.compile(Pattern.quote(w3), Pattern.CASE_INSENSITIVE).matcher(filePath).find() ||
-                    Pattern.compile(Pattern.quote(w4), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/webrip.png"));
-                mMediaType.setVisibility(View.VISIBLE);
-            }else if(Pattern.compile(Pattern.quote(d), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mMediaType.setImageBitmap(getBitmapFromAsset("videocodec/dvd.png"));
-                mMediaType.setVisibility(View.VISIBLE);
-            }else{
-                mMediaType.setVisibility(View.GONE);
-            }
-
-            // set Media Color depth (10bit, 8bit, 12bit)
-            String color1 = "8bit";
-            String color2 = "10bit";
-            String color3 = "12bit";
-            if(Pattern.compile(Pattern.quote(color1), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mColorDepth.setImageBitmap(getBitmapFromAsset("colordepth/8bit.png"));
-                mColorDepth.setVisibility(View.VISIBLE);
-            }else if(Pattern.compile(Pattern.quote(color2), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mColorDepth.setImageBitmap(getBitmapFromAsset("colordepth/10bit.png"));
-                mColorDepth.setVisibility(View.VISIBLE);
-            }else if(Pattern.compile(Pattern.quote(color3), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mColorDepth.setImageBitmap(getBitmapFromAsset("colordepth/12bit.png"));
-                mColorDepth.setVisibility(View.VISIBLE);
-            }else{
-                mColorDepth.setVisibility(View.GONE);
-            }
-
-
-            // set Media Color dynamic range (hdr, sdr)
-            String hdr = "hdr";
-            String sdr = "sdr";
-            if(Pattern.compile(Pattern.quote(hdr), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mColorRange.setImageBitmap(getBitmapFromAsset("colordepth/hdr.png"));
-                mColorRange.setVisibility(View.VISIBLE);
-            }else if(Pattern.compile(Pattern.quote(sdr), Pattern.CASE_INSENSITIVE).matcher(filePath).find()){
-                mColorRange.setImageBitmap(getBitmapFromAsset("colordepth/sdr.png"));
-                mColorRange.setVisibility(View.VISIBLE);
-            }else{
-                mColorRange.setVisibility(View.GONE);
             }
         } else {
             log.debug("setCurrentVideo: should not change video");
@@ -2143,90 +2289,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if (videoMetadata.getVideoTrack() != null) {
                     mVideoTrackTextView.setText(VideoInfoCommonClass.getVideoTrackString(videoMetadata, getResources()));
                 }
-                // set video codec flags
-                if(videoMetadata.getVideoTrack() != null) {
-                    String format = videoMetadata.getVideoTrack().format;
-                    if (format != null) {
-                        mVideoCodec.setVisibility(View.VISIBLE);
-                        switch (format) {
-                            case "H.264":
-                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/h264.png"));
-                                break;
-                            case "HEVC/H.265":
-                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/hevc.png"));
-                                break;
-                            case "MPEG-2":
-                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg2.png"));
-                                break;
-                            case "MPEG-4":
-                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg4.png"));
-                                break;
-                            case "mpeg1video":
-                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/mpeg1video.png"));
-                                break;
-                            case "AV1":
-                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/av1.png"));
-                                break;
-                            case "wmv2":
-                                mVideoCodec.setImageBitmap(getBitmapFromAsset("videocodec/wmv2.png"));
-                                break;
-                            default:
-                                mVideoCodec.setVisibility(View.GONE);
-                                break;
-                        }
-                    }
-                }
 
-                // set audio codec flags
-                if (videoMetadata.getAudioTrackNb() != 0) {
-                    mAudioCodec.setVisibility(View.VISIBLE);
-                    mAudioChannels.setVisibility(View.VISIBLE);
-                    String audioTrackFormat = "";
-                    audioTrackFormat = videoMetadata.getAudioTrack(0).format;
-                    if (audioTrackFormat.equalsIgnoreCase("Digital")) {
-                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/dts.png"));
-                    }else if (audioTrackFormat.equalsIgnoreCase("AC3")) {
-                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/ac3.png"));
-                    }else if (audioTrackFormat.equalsIgnoreCase("EAC3")) {
-                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/eac3.png"));
-                    }else if (audioTrackFormat.equalsIgnoreCase("AAC")) {
-                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/aac.png"));
-                    }else if (audioTrackFormat.equalsIgnoreCase("MP3")) {
-                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/mp3.png"));
-                    }else if (audioTrackFormat.equalsIgnoreCase("FLAC")) {
-                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/flac.png"));
-                    }else if (audioTrackFormat.equalsIgnoreCase("ALAC")) {
-                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/alac.png"));
-                    }else if (audioTrackFormat.equalsIgnoreCase("MP2")) {
-                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/mp2.png"));
-                    }else if (audioTrackFormat.contains("Vorbis")) {
-                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/vorbis.png"));
-                    }else if (audioTrackFormat.equalsIgnoreCase("WMA")) {
-                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/wma.png"));
-                    }else if (audioTrackFormat.equalsIgnoreCase("wmav1")) {
-                        mAudioCodec.setImageBitmap(getBitmapFromAsset("audiocodec/wma.png"));
-                    }else{
-                        mAudioCodec.setVisibility(View.GONE);
-                    }
 
-                    String audioTrackChannels = "";
-                    audioTrackChannels = videoMetadata.getAudioTrack(0).channels;
-                    if (audioTrackChannels.equalsIgnoreCase("Mono")) {
-                        mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/1.png"));
-                    }else if (audioTrackChannels.equalsIgnoreCase("Stereo")) {
-                        mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/2.png"));
-                    }else if (audioTrackChannels.equalsIgnoreCase("5.1")) {
-                        mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/6.png"));
-                    }else if (audioTrackChannels.equalsIgnoreCase("7.1")) {
-                        mAudioChannels.setImageBitmap(getBitmapFromAsset("audiochannels/8.png"));
-                    }else{
-                        mAudioChannels.setVisibility(View.GONE);
-                    }
-                }
-                if (videoMetadata.getAudioTrackNb() == 0) {
-                    mAudioCodec.setVisibility(View.GONE);
-                    mAudioChannels.setVisibility(View.GONE);
-                }
                 mFileInfoAudioVideoContainer.setVisibility(View.VISIBLE);
                 mFileInfoContainerLoading.setVisibility(View.GONE);
                 mDuration.setVisibility(View.VISIBLE);
@@ -2693,6 +2757,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 mCurrentVideo.setMetadata(videoInfo);
 
             setFileInfo(videoInfo);
+            displayMediaFlags(videoInfo);
         }
     }
 

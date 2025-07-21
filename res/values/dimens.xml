@@ -96,5 +96,5 @@
     <dimen name="total_horizontal_spacing_tablet_landscape">36dp</dimen>
 
     <dimen name="context_menu_width">200dp</dimen>
-
+    <dimen name="media_flag_width">60dp</dimen>
 </resources>
