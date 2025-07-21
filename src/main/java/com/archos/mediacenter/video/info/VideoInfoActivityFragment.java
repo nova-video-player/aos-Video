@@ -1214,33 +1214,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }
     }
 
-    private void applyMediaFlagSpacing(RecyclerView rv, int itemWidthDp, int spanCount) {
-        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-        int itemWidthPx = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, itemWidthDp, rv.getResources().getDisplayMetrics());
-
-        int totalItemWidth = spanCount * itemWidthPx;
-        int remainingSpace = screenWidth - totalItemWidth;
-        int spacing = Math.max(0, remainingSpace / (spanCount + 1));
-
-        // Remove old decorations
-        while (rv.getItemDecorationCount() > 0) {
-            rv.removeItemDecorationAt(0);
-        }
-
-        rv.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, true));
-    }
-
-
-
     private View.OnClickListener createFlagClickListener(String flagName) {
         return v -> Toast.makeText(requireContext(), flagName + " clicked", Toast.LENGTH_SHORT).show();
-    }
-
-    private int calculateSpanCount() {
-        int itemWidth = getResources().getDimensionPixelSize(R.dimen.media_flag_width);
-        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-        return Math.max(1, screenWidth / itemWidth);
     }
 
     private void smoothScrollToPosition(final int position) {
