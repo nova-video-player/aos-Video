@@ -28,5 +28,5 @@
         android:textStyle="bold"
         android:textColor="@color/red"
         android:ellipsize="end"
-        android:maxLines="1"/>
+        android:maxLines="2"/>
 </LinearLayout>
