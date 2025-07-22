@@ -974,7 +974,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if (videoMetadata != null && videoMetadata.getVideoTrack() != null) {
             String format = videoMetadata.getVideoTrack().format;
             if (format != null) {
-                switch (format.toUpperCase()) {
+                switch (format) {
                     case "H.264":
                     case "H264":
                         mediaFlags.add(new MediaFlag("videocodec/h264.png", createFlagClickListener("H.264")));
