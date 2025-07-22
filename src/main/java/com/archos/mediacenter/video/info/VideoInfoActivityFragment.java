@@ -1110,7 +1110,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             // definition is not known
             case 0:
             default:
-                mediaFlags.add(new MediaFlag("resolution/144p.png", createFlagClickListener("SD 144p")));
+                Log.d("MediaFlags", "Video definition is unknown");
                 break;
         }
 
