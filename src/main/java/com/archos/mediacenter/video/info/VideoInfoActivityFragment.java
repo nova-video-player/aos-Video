@@ -1004,7 +1004,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             }
         }
 
-        if (videoMetadata != null) {
+        if (videoMetadata != null && videoMetadata.getFile() != null) {
             String filePath = videoMetadata.getFile().getPath();
 
             // set Media Color depth (10bit, 8bit, 12bit)
