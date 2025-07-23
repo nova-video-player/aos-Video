@@ -40,6 +40,7 @@
 
             <ProgressBar android:id="@android:id/progress"
                 style="?android:attr/progressBarStyleLarge"
+                android:indeterminateTint="@color/green_accent"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -53,6 +54,7 @@
                 <TextView android:paddingTop="5dip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/nhaasgroteskdspro_75bd"
                     android:text="@string/player_loading_video" android:textSize="14sp"
                     android:textColor="#ffffffff" />
 
@@ -60,6 +62,7 @@
                     android:paddingTop="5dip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/nhaasgroteskdspro_75bd"
                     android:textSize="14sp"
                     android:textColor="#ffffffff" />
             </LinearLayout>
@@ -69,6 +72,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/nhaasgroteskdspro_75bd"
                 android:visibility="gone"
                 android:textSize="14sp"
                 android:textColor="#ffffffff" />
@@ -169,7 +173,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:textSize="20dp"
+        android:textSize="18sp"
+        android:fontFamily="@font/nhaasgroteskdspro_75bd"
         android:gravity="center"
         android:layout_alignParentTop="true"
         android:textColor="@color/white"
