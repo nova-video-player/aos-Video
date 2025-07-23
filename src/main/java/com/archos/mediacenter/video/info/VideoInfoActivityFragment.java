@@ -1144,18 +1144,76 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 Log.d("MediaFlags", "No audio codec flag found in filename: " + videoMetadata.getFile().getPath());
             }
 
-            String audioTrackChannels = "";
-            audioTrackChannels = videoMetadata.getAudioTrack(0).channels;
-            if (audioTrackChannels.equalsIgnoreCase("Mono")) {
-                mediaFlags.add(new MediaFlag("audiochannels/1.png", createFlagClickListener("Mono")));
-            }else if (audioTrackChannels.equalsIgnoreCase("Stereo")) {
-                mediaFlags.add(new MediaFlag("audiochannels/2.png", createFlagClickListener("Stereo")));
-            }else if (audioTrackChannels.equalsIgnoreCase("5.1")) {
-                mediaFlags.add(new MediaFlag("audiochannels/6.png", createFlagClickListener("5.1")));
-            }else if (audioTrackChannels.equalsIgnoreCase("7.1")) {
-                mediaFlags.add(new MediaFlag("audiochannels/8.png", createFlagClickListener("7.1")));
-            }else{
-                Log.d("MediaFlags", "No audio Track Channels flag found in filename: " + videoMetadata.getFile().getPath());
+            // Load correct channel icon based on mapped channel count
+            Map<String, Integer> audioChannelMap = new HashMap<String, Integer>() {{
+                // Mono (1 channel)
+                put("mono", 1);
+                put("1", 1);
+                put("1ch", 1);
+                put("1.0", 1);
+                put("1.0ch", 1);
+                put("1-channel", 1);
+                put("channel 1", 1);
+                put("monaural", 1);
+                put("mono audio", 1);
+
+                // Stereo (2 channels)
+                put("stereo", 2);
+                put("2", 2);
+                put("2ch", 2);
+                put("2.0", 2);
+                put("2.0ch", 2);
+                put("2-channel", 2);
+                put("channel 2", 2);
+                put("dual", 2);
+                put("dual mono", 2);
+
+                // 3.0 (3 channels)
+                put("3", 3);
+                put("3ch", 3);
+                put("3.0", 3);
+                put("3.0ch", 3);
+
+                // Quadraphonic / 4.0
+                put("4", 4);
+                put("4ch", 4);
+                put("4.0", 4);
+                put("4.0ch", 4);
+                put("quad", 4);
+
+                // 5.1 (6 channels)
+                put("5.1", 6);
+                put("5.1ch", 6);
+                put("6ch", 6);
+                put("6", 6);
+                put("5ch", 6);
+                put("5", 6);
+                put("5.1-channel", 6);
+                put("surround 5.1", 6);
+
+                // 6.1 (7 channels)
+                put("6.1", 7);
+                put("6.1ch", 7);
+                put("7", 7);
+                put("7ch", 7);
+                put("6.1-channel", 7);
+
+                // 7.1 (8 channels)
+                put("7.1", 8);
+                put("7.1ch", 8);
+                put("8", 8);
+                put("8ch", 8);
+                put("7.1-channel", 8);
+                put("surround 7.1", 8);
+            }};
+
+            String audioTrackChannels = videoMetadata.getAudioTrack(0).channels;
+            String normalized = audioTrackChannels == null ? "" : audioTrackChannels.toLowerCase(Locale.ROOT).trim();
+            int channelCount = audioChannelMap.getOrDefault(normalized, 2); // fallback to stereo
+            String channelLabel = normalized.isEmpty() ? "Stereo" : audioTrackChannels;
+            mediaFlags.add(new MediaFlag("audiochannels/" + channelCount + ".png", createFlagClickListener(channelLabel)));
+            if (!audioChannelMap.containsKey(normalized)) {
+                Log.d("MediaFlags", "Unknown audio channel format: " + audioTrackChannels + " in file: " + videoMetadata.getFile().getPath());
             }
         }
 
