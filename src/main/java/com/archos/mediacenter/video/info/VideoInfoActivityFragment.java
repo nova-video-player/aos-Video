@@ -1207,14 +1207,29 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 put("surround 7.1", 8);
             }};
 
-            String audioTrackChannels = videoMetadata.getAudioTrack(0).channels;
-            String normalized = audioTrackChannels == null ? "" : audioTrackChannels.toLowerCase(Locale.ROOT).trim();
-            int channelCount = audioChannelMap.getOrDefault(normalized, 2); // fallback to stereo
-            String channelLabel = normalized.isEmpty() ? "Stereo" : audioTrackChannels;
-            mediaFlags.add(new MediaFlag("audiochannels/" + channelCount + ".png", createFlagClickListener(channelLabel)));
-            if (!audioChannelMap.containsKey(normalized)) {
-                Log.d("MediaFlags", "Unknown audio channel format: " + audioTrackChannels + " in file: " + videoMetadata.getFile().getPath());
+            int maxChannels = 2; // fallback default is stereo
+            String bestLabel = "Stereo";
+            String bestFlagPath = "audiochannels/2.png";
+
+            for (int i = 0; i < videoMetadata.getAudioTrackNb(); i++) {
+                String ch = videoMetadata.getAudioTrack(i).channels;
+                if (ch == null) continue;
+
+                String normalized = ch.toLowerCase(Locale.ROOT).trim();
+                int count = audioChannelMap.getOrDefault(normalized, -1); // -1 means unrecognized
+
+                if (count > maxChannels) {
+                    maxChannels = count;
+                    bestLabel = ch;
+                    bestFlagPath = "audiochannels/" + count + ".png";
+                }
+
+                if (!audioChannelMap.containsKey(normalized)) {
+                    Log.d("MediaFlags", "Unknown audio channel format: " + ch + " in file: " + videoMetadata.getFile().getPath());
+                }
             }
+            // Add best flag to mediaFlags
+            mediaFlags.add(new MediaFlag(bestFlagPath, createFlagClickListener(bestLabel)));
         }
 
         if (!mediaFlags.isEmpty()) {
