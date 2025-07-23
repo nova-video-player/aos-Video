@@ -43,6 +43,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Display a video, a movie, an episode (Poster or Thumbnail) or a TvShow (Poster)
@@ -197,6 +200,67 @@ public class VideoBadgePresenter implements Presenter {
             mVideoFormat.setText(videoFormat);
         }
         public void setAudioFormat(String audioFormat) {
+            Map<String, Integer> audioChannelMap = new HashMap<String, Integer>() {{
+                // Mono (1 channel)
+                put("mono", 1);
+                put("1", 1);
+                put("1ch", 1);
+                put("1.0", 1);
+                put("1.0ch", 1);
+                put("1-channel", 1);
+                put("channel 1", 1);
+                put("monaural", 1);
+                put("mono audio", 1);
+
+                // Stereo (2 channels)
+                put("stereo", 2);
+                put("2", 2);
+                put("2ch", 2);
+                put("2.0", 2);
+                put("2.0ch", 2);
+                put("2-channel", 2);
+                put("channel 2", 2);
+                put("dual", 2);
+                put("dual mono", 2);
+
+                // 3.0 (3 channels)
+                put("3", 3);
+                put("3ch", 3);
+                put("3.0", 3);
+                put("3.0ch", 3);
+
+                // Quadraphonic / 4.0
+                put("4", 4);
+                put("4ch", 4);
+                put("4.0", 4);
+                put("4.0ch", 4);
+                put("quad", 4);
+
+                // 5.1 (6 channels)
+                put("5.1", 6);
+                put("5.1ch", 6);
+                put("6ch", 6);
+                put("6", 6);
+                put("5ch", 6);
+                put("5", 6);
+                put("5.1-channel", 6);
+                put("surround 5.1", 6);
+
+                // 6.1 (7 channels)
+                put("6.1", 7);
+                put("6.1ch", 7);
+                put("7", 7);
+                put("7ch", 7);
+                put("6.1-channel", 7);
+
+                // 7.1 (8 channels)
+                put("7.1", 8);
+                put("7.1ch", 8);
+                put("8", 8);
+                put("8ch", 8);
+                put("7.1-channel", 8);
+                put("surround 7.1", 8);
+            }};
 
             try {
                 mAudioFormatContainer.removeAllViews();
@@ -214,7 +278,9 @@ public class VideoBadgePresenter implements Presenter {
                             iv.setVisibility(View.INVISIBLE);
                         else
                             iv.setVisibility(View.VISIBLE);
-                        iv.setImageBitmap(channel.startsWith("5") ? getBitmapFromAsset("audiochannels/6.png") : getBitmapFromAsset("audiochannels/2.png"));
+                        String rawChannel = channel.toLowerCase(Locale.ROOT).trim();
+                        Integer count = audioChannelMap.getOrDefault(rawChannel, 2); // fallback to stereo
+                        iv.setImageBitmap(getBitmapFromAsset("audiochannels/" + count + ".png"));
                     }
                     mAudioFormatContainer.addView(v);
 
