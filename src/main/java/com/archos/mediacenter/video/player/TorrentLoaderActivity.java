@@ -22,16 +22,29 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceManager;
 
 import com.archos.filecorelibrary.CopyCutEngine;
@@ -100,31 +113,77 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
                     }
                     if(mFiles.size()>1){
                         isDialogDisplayed = true;
-                        new AlertDialog.Builder(TorrentLoaderActivity.this).setTitle(R.string.torrent_file_to_play)
-                        .setOnCancelListener(new OnCancelListener() {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(TorrentLoaderActivity.this, R.style.CustomDialogTheme);
+
+                        View customTitleView = LayoutInflater.from(getApplicationContext())
+                                .inflate(R.layout.dialog_custom_title, null);
+                        TextView textView = customTitleView.findViewById(R.id.dialog_title);
+                        Typeface customFont = ResourcesCompat.getFont(getApplicationContext(), R.font.nhaasgrotesktxpro_75bd);
+                        textView.setText(R.string.torrent_file_to_play);
+                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                        textView.setTypeface(customFont);
+                        ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+                        iconView.setVisibility(View.GONE);
+                        builder.setCustomTitle(customTitleView);
+
+                        builder.setOnCancelListener(new OnCancelListener() {
 
                             @Override
                             public void onCancel(DialogInterface dialog) {
                                 TorrentLoaderActivity.this.finish();
                                 isDialogDisplayed =false;
                             }
-                        })
-                        .setItems(mFiles.keySet().toArray(new CharSequence[mFiles.size()]), new OnClickListener() {
+                        });
+                        final String[] items = mFiles.keySet().toArray(new String[0]);
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                TorrentLoaderActivity.this,
+                                R.layout.dialog_custom_item,  // your custom layout
+                                items
+                        ) {
+                            @NonNull
+                            @Override
+                            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                                View view = super.getView(position, convertView, parent);
+                                TextView textView = view.findViewById(android.R.id.text1);
+                                Typeface font = ResourcesCompat.getFont(getContext(), R.font.nhaasgrotesktxpro_75bd);
+                                textView.setTypeface(font);
+                                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18); // optional
+                                return view;
+                            }
+                        };
+
+                        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                startPlayerActivity(mFiles.keySet().toArray(new String[mFiles.size()])[which]);
+                                startPlayerActivity(items[which]);
                                 isDialogDisplayed = false;
-
                             }
-                        })
-                        .setNegativeButton(android.R.string.no, new OnClickListener() {
+                        });
+
+
+                        builder.setNegativeButton(android.R.string.no, new OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 TorrentLoaderActivity.this.finish();
                             }
-                        })
-                        .create().show();
+                        });
+
+                        builder.create();
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                        // Customize negative button font
+                        Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                        if (negativeButton != null) {
+                            negativeButton.setTypeface(customFont);
+                            Drawable ripple = ContextCompat.getDrawable(getApplicationContext(), R.drawable.custom_ripple);
+                            negativeButton.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green_accent));
+                            negativeButton.setBackground(ripple);
+                            negativeButton.setClipToOutline(true);
+                        }
                     }
                     else{
                         startPlayerActivity(mFiles.keySet().toArray(new String[mFiles.size()])[0]);
