@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.PorterDuff;
@@ -90,6 +91,7 @@ import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
+import com.archos.mediaprovider.VideoDb;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStore.MediaColumns;
 import com.archos.mediaprovider.video.VideoStore.Video.VideoColumns;
@@ -1400,6 +1402,10 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
 
                 int typeId = -1;
 
+                List<String> filesToPreserve;
+                SQLiteDatabase db = VideoDb.getHolder(AutoScraperActivity.this).get();
+                filesToPreserve = getFilesFromDeleteFilesTable(db);
+
                 if (tags != null) {
                     // Use the retrieved tags to update the item properties
                     if (tags instanceof MovieTags) {
@@ -1476,6 +1482,9 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                         // Valid tags => update the scraper database
                         // Note: This will do the updateScraperInfoInMediaLib stuff for us
                         tags.save(AutoScraperActivity.this, itemProperties.id);
+                        if (!filesToPreserve.isEmpty()) {
+                            clearDeleteFilesTable(db);
+                        }
 
                         // TODO make this nicer.
                         if (exportContext != null) {
@@ -1516,6 +1525,38 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
 
             log.debug("ScraperResultTask : all files processed");
             return Integer.valueOf(1);
+        }
+
+        public static List<String> getFilesFromDeleteFilesTable(SQLiteDatabase db) {
+            List<String> files = new ArrayList<>();
+            Cursor cursor = null;
+            try {
+                cursor = db.rawQuery("SELECT name FROM delete_files", null);
+                if (cursor != null) {
+                    Log.d("DBnova", "Rows: " + cursor.getCount());
+                    if (cursor.moveToFirst()) {
+                        do {
+                            String path = cursor.getString(0);
+                            Log.d("DBnova", "Read file: " + path);
+                            if (path != null) {
+                                files.add(path);
+                            }
+                        } while (cursor.moveToNext());
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("DBnova", "Error reading delete_files", e);
+            } finally {
+                if (cursor != null) cursor.close();
+            }
+            return files;
+        }
+
+        public static void clearDeleteFilesTable(SQLiteDatabase db) {
+            try {
+                db.execSQL("DELETE FROM delete_files");
+            } catch (Exception ignored) {
+            }
         }
 
         @Override
