@@ -52,6 +52,18 @@
 			android:scaleType="center" />
 	</androidx.cardview.widget.CardView>
 
+	<ImageView
+		android:id="@+id/flag_3d"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:translationZ="4dp"
+		android:layout_alignBottom="@id/episode_picture_cardview"
+		android:layout_alignRight="@id/episode_picture_cardview"
+		android:layout_marginBottom="@dimen/video_3d_label_margin_list"
+		android:layout_marginRight="@dimen/video_3d_label_margin_list"
+		app:srcCompat="@drawable/label_3d_small"
+		android:visibility="visible" />
+
 	<!-- Episode  : empty -->
 	<TextView
 		android:id="@+id/detail_line_one"

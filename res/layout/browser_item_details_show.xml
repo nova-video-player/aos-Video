@@ -40,17 +40,6 @@ for informations (duration for files, number of files for directories).
                 android:layout_height="match_parent" />
 
             <ImageView
-                android:id="@+id/flag_3d"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/number"
-                android:layout_alignRight="@id/number"
-                android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
-                android:layout_marginRight="@dimen/video_3d_label_margin_grid"
-                app:srcCompat="@drawable/label_3d"
-                android:visibility="gone" />
-
-            <ImageView
                 android:id="@+id/trakt_library"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
