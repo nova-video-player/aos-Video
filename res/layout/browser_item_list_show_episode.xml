@@ -48,7 +48,7 @@ for informations (duration for files, number of files for directories).
             android:layout_marginBottom="@dimen/video_3d_label_margin_list"
             android:layout_marginRight="@dimen/video_3d_label_margin_list"
             app:srcCompat="@drawable/label_3d_small"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/left_area"

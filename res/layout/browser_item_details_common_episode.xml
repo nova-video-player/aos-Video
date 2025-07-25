@@ -62,7 +62,7 @@
 		android:layout_marginBottom="@dimen/video_3d_label_margin_list"
 		android:layout_marginRight="@dimen/video_3d_label_margin_list"
 		app:srcCompat="@drawable/label_3d_small"
-		android:visibility="visible" />
+		android:visibility="gone" />
 
 	<!-- Episode  : empty -->
 	<TextView
