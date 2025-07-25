@@ -24,7 +24,7 @@
                 app:strokeWidth="0dp"
                 app:useCompatPadding="false"
                 android:elevation="0dp"
-                card_view:cardBackgroundColor="@color/leanback_details_background"
+                app:cardBackgroundColor="@color/leanback_details_background"
                 android:layout_marginBottom="4dp"
                 android:layout_gravity="center_horizontal"	>
                 <RelativeLayout
