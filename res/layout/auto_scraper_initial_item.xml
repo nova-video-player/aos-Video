@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/initial_item_container"
     android:layout_width="fill_parent"
-    android:layout_height="@dimen/auto_scraper_thumbnail_item_height"
+    android:layout_height="wrap_content"
     android:layout_marginTop="1dp"
     android:layout_marginBottom="1dp"
     android:background="@drawable/custom_ripple"
@@ -23,7 +23,7 @@
             android:layout_marginBottom="@dimen/auto_scraper_thumbnail_margin_bottom"
             android:layout_marginLeft="@dimen/auto_scraper_thumbnail_margin_left"
             android:layout_marginTop="@dimen/auto_scraper_thumbnail_margin_top"
-            android:scaleType="center" />
+            android:scaleType="centerCrop" />
 
         <ProgressBar
             android:id="@+id/initial_spinbar"
