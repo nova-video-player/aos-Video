@@ -22,15 +22,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.video.CustomApplication;
@@ -311,7 +320,21 @@ public class PermissionChecker {
         }
         if (! isGranted) {
             // launch activity dialog to request
-            new AlertDialog.Builder(mActivity).setTitle(R.string.error).setMessage(errorMessage).setPositiveButton(R.string.allow, new DialogInterface.OnClickListener() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.CustomDialogTheme);
+
+            View customTitleView = LayoutInflater.from(mActivity)
+                    .inflate(R.layout.dialog_custom_title, null);
+            TextView textView = customTitleView.findViewById(R.id.dialog_title);
+            Typeface customFont = ResourcesCompat.getFont(mActivity, R.font.nhaasgrotesktxpro_75bd);
+            Typeface messageTypeface = ResourcesCompat.getFont(mActivity, R.font.nhaasgroteskdspro_65md);
+            textView.setText(R.string.error);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+            textView.setTypeface(customFont);
+            ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+            iconView.setVisibility(View.GONE);
+            builder.setCustomTitle(customTitleView);
+
+            builder.setMessage(errorMessage).setPositiveButton(R.string.allow, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             // finish();
@@ -361,7 +384,35 @@ public class PermissionChecker {
                             android.os.Process.killProcess(android.os.Process.myPid());
                         }
                     }
-            ).setCancelable(false).show();
+            );
+            AlertDialog dialog = builder.create();
+            builder.setCancelable(false);
+            dialog.show();
+
+            // Set font on message
+            TextView messageView = dialog.findViewById(android.R.id.message);
+            if (messageView != null) {
+                messageView.setTypeface(messageTypeface);
+                messageView.setTextColor(ContextCompat.getColor(mActivity, R.color.white));
+            }
+
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            if (positiveButton != null) {
+                positiveButton.setTypeface(customFont);
+                Drawable ripple = ContextCompat.getDrawable(mActivity, R.drawable.custom_ripple);
+                positiveButton.setTextColor(ContextCompat.getColor(mActivity, R.color.green_accent));
+                positiveButton.setBackground(ripple);
+                positiveButton.setClipToOutline(true);
+            }
+
+            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            if (negativeButton != null) {
+                negativeButton.setTypeface(customFont);
+                Drawable ripple = ContextCompat.getDrawable(mActivity, R.drawable.custom_ripple);
+                negativeButton.setTextColor(ContextCompat.getColor(mActivity, R.color.green_accent));
+                negativeButton.setBackground(ripple);
+                negativeButton.setClipToOutline(true);
+            }
         } else {
             log.debug("onRequestPermissionsResult: permission granted, launch scan");
             launchScan();
