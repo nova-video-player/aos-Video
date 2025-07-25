@@ -38,6 +38,18 @@ for informations (duration for files, number of files for directories).
                 android:scaleType="center" />
         </androidx.cardview.widget.CardView>
 
+        <ImageView
+            android:id="@+id/flag_3d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:translationZ="4dp"
+            android:layout_alignBottom="@id/episode_picture_cardview"
+            android:layout_alignRight="@id/episode_picture_cardview"
+            android:layout_marginBottom="@dimen/video_3d_label_margin_list"
+            android:layout_marginRight="@dimen/video_3d_label_margin_list"
+            app:srcCompat="@drawable/label_3d_small"
+            android:visibility="visible" />
+
         <RelativeLayout
             android:id="@+id/left_area"
             android:layout_marginLeft="138dip"
@@ -54,15 +66,6 @@ for informations (duration for files, number of files for directories).
                 android:layout_width="@dimen/video_list_number_width"
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/content_list_show_space_between_thumbnail_and_name" />
-
-            <ImageView
-                android:id="@+id/flag_3d"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
-                android:layout_marginRight="@dimen/video_3d_label_margin_grid"
-                app:srcCompat="@drawable/label_3d"
-                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/trakt_library"
