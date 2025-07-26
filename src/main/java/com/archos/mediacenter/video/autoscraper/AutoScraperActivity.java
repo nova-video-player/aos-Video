@@ -95,6 +95,7 @@ import com.archos.mediaprovider.VideoDb;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStore.MediaColumns;
 import com.archos.mediaprovider.video.VideoStore.Video.VideoColumns;
+import com.archos.mediascraper.AutoScrapeService;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.EpisodeTags;
 import com.archos.mediascraper.MovieTags;
@@ -1044,10 +1045,27 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                 return;
             }
 
-            // Start scraping
-            mResultTask = new ScraperResultTask(AutoScraperActivity.this);
-            mResultTask.execute();
+            // stop auto scraping if already running before starting manual scrape
+            if (AutoScrapeService.isRunning()) {
+                new AlertDialog.Builder(this, R.style.CustomDialogTheme)
+                        .setTitle("Auto Scraping is Running")
+                        .setMessage("Auto scraping is currently in progress. Do you want to stop it and start manual scraping instead?")
+                        .setPositiveButton("Stop Auto & Scrape Manually", (dialog, which) -> {
+                            AutoScrapeService.stopAutoScraping(getApplicationContext());
+                            startManualScraping();
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+            } else {
+                startManualScraping();
+            }
         }
+    }
+
+    private void startManualScraping() {
+        // Start scraping
+        mResultTask = new ScraperResultTask(AutoScraperActivity.this);
+        mResultTask.execute();
     }
 
     private void rejectScraperInfos(int position) {
