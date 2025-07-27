@@ -101,6 +101,7 @@ import com.archos.mediascraper.EpisodeTags;
 import com.archos.mediascraper.MovieTags;
 import com.archos.mediascraper.NfoWriter;
 import com.archos.mediascraper.ScrapeDetailResult;
+import com.archos.mediascraper.ScrapeState;
 import com.archos.mediascraper.Scraper;
 import com.archos.mediascraper.ShowTags;
 import com.archos.mediascraper.preprocess.SearchInfo;
@@ -369,6 +370,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
         // Notify the application that the activity is destroyed
         CustomApplication app = (CustomApplication)getApplication();
         app.setAutoScraperActive(false);
+        ScrapeState.setManualScrapingRunning(false); // ⚠ only as a fallback
 
         super.onDestroy();
     }
@@ -1064,6 +1066,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
 
     private void startManualScraping() {
         // Start scraping
+        ScrapeState.setManualScrapingRunning(true);  // ✅ set flag to true
         mResultTask = new ScraperResultTask(AutoScraperActivity.this);
         mResultTask.execute();
     }
@@ -1684,6 +1687,12 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                 // The activity is visible => update the control buttons
                 updateControlButtons(true);
             }
+            ScrapeState.setManualScrapingRunning(false);  // ✅ reset flag
+        }
+
+        @Override
+        protected void onCancelled() {
+            ScrapeState.setManualScrapingRunning(false);  // ✅ reset flag
         }
     }
 }
