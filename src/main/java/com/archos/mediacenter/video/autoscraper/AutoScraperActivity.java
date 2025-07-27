@@ -144,6 +144,8 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
     private static final String mNotifChannelName = "AutoScraperActivity";
     private static final String mNotifChannelDescr = "AutoScraperActivity";
     private static final int NOTIFICATION_ID = 2; // MediaPlaybackService is using the default ID 1, see #94
+    private static boolean sWasAutoScrapingRunning = false;
+    private static final String TAG = "AutoScraperActivity";
 
     // The contents of this cursor is modified each time scraper info are
     // found for a file => to be used only when creating the activity
@@ -371,6 +373,9 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
         CustomApplication app = (CustomApplication)getApplication();
         app.setAutoScraperActive(false);
         ScrapeState.setManualScrapingRunning(false); // ⚠ only as a fallback
+
+        // Resume auto-scraping if it was previously running
+        resumeAutoScrapingIfNeeded();
 
         super.onDestroy();
     }
@@ -1049,6 +1054,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
 
             // stop auto scraping if already running before starting manual scrape
             if (AutoScrapeService.isRunning()) {
+                sWasAutoScrapingRunning = true;
                 new AlertDialog.Builder(this, R.style.CustomDialogTheme)
                         .setTitle("Auto Scraping is Running")
                         .setMessage("Auto scraping is currently in progress. Do you want to stop it and start manual scraping instead?")
@@ -1688,11 +1694,26 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                 updateControlButtons(true);
             }
             ScrapeState.setManualScrapingRunning(false);  // ✅ reset flag
+
+            // Resume auto-scraping if it was previously running
+            resumeAutoScrapingIfNeeded();
         }
 
         @Override
         protected void onCancelled() {
             ScrapeState.setManualScrapingRunning(false);  // ✅ reset flag
+
+            // Resume auto-scraping if it was previously running
+            resumeAutoScrapingIfNeeded();
+        }
+    }
+
+    // Resume auto-scraping if it was previously running
+    private void resumeAutoScrapingIfNeeded() {
+        if (sWasAutoScrapingRunning) {
+            Log.d(TAG, "Restarting AutoScrapeService after manual scrape");
+            AutoScrapeService.startAutoScraping(getApplicationContext());
+            sWasAutoScrapingRunning = false;
         }
     }
 }
