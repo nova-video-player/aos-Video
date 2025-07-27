@@ -1055,15 +1055,55 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
             // stop auto scraping if already running before starting manual scrape
             if (AutoScrapeService.isRunning()) {
                 sWasAutoScrapingRunning = true;
-                new AlertDialog.Builder(this, R.style.CustomDialogTheme)
-                        .setTitle("Auto Scraping is Running")
-                        .setMessage("Auto scraping is currently in progress. Do you want to stop it and start manual scraping instead?")
-                        .setPositiveButton("Stop Auto & Scrape Manually", (dialog, which) -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
+
+                View customTitleView = LayoutInflater.from(this)
+                        .inflate(R.layout.dialog_custom_title, null);
+                TextView textView = customTitleView.findViewById(R.id.dialog_title);
+                Typeface customFont = ResourcesCompat.getFont(this, R.font.nhaasgrotesktxpro_75bd);
+                Typeface messageTypeface = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_65md);
+                textView.setText(R.string.auto_scrape_running);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                textView.setTypeface(customFont);
+                ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+                iconView.setVisibility(View.GONE);
+                builder.setCustomTitle(customTitleView)
+                        .setMessage(R.string.auto_scrape_running_message)
+                        .setPositiveButton(R.string.stop_auto_and_scrape_manually, (dialog, which) -> {
                             AutoScrapeService.stopAutoScraping(getApplicationContext());
                             startManualScraping();
                         })
-                        .setNegativeButton("Cancel", null)
-                        .show();
+                        .setNegativeButton(R.string.cancel, null)
+                        .create();
+
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                // Set font on message
+                TextView messageView = dialog.findViewById(android.R.id.message);
+                if (messageView != null) {
+                    messageView.setTypeface(messageTypeface);
+                    messageView.setTextColor(ContextCompat.getColor(this, R.color.white));
+                }
+
+                Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                if (positiveButton != null) {
+                    positiveButton.setTypeface(customFont);
+                    Drawable ripple = ContextCompat.getDrawable(this, R.drawable.custom_ripple);
+                    positiveButton.setTextColor(ContextCompat.getColor(this, R.color.green_accent));
+                    positiveButton.setBackground(ripple);
+                    positiveButton.setClipToOutline(true);
+                }
+
+                Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                if (negativeButton != null) {
+                    negativeButton.setTypeface(customFont);
+                    Drawable ripple = ContextCompat.getDrawable(this, R.drawable.custom_ripple);
+                    negativeButton.setTextColor(ContextCompat.getColor(this, R.color.green_accent));
+                    negativeButton.setBackground(ripple);
+                    negativeButton.setClipToOutline(true);
+                }
             } else {
                 startManualScraping();
             }
