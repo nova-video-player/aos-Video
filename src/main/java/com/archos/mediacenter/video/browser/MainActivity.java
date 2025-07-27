@@ -1003,6 +1003,21 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             item.setTitle(applyCustomFont(PrivateMode.isActive() ? R.string.deactivate_private_mode : R.string.activate_private_mode));
         }
 
+        MenuItem searchItem = menu.findItem(MENU_SEARCH_ITEM);
+        MenuItem scraperItem = menu.findItem(MENU_START_AUTO_SCRAPER_ACTIVITY);
+
+        boolean isPortrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
+        if (searchItem != null) {
+            if (isPortrait && scraperItem != null && scraperItem.isVisible()) {
+                // Portrait mode + "search info online" visible → push search icon to overflow
+                searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            } else {
+                // Otherwise allow search icon to appear in action bar
+                searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            }
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
