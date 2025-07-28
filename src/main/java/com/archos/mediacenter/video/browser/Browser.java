@@ -138,6 +138,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     protected static final int MENU_VIEW_MODE_DETAILS = 13;
     protected static final int MENU_VIEW_MODE = 14;
     protected static final int MENU_VIEW_HIDE_SEEN = 15;
+    protected static final int MENU_SORT_MODE = 16;
 
     private final static int SUBMENU_ITEM_LIST_INDEX = 0;
     private final static int SUBMENU_ITEM_GRID_INDEX = 1;

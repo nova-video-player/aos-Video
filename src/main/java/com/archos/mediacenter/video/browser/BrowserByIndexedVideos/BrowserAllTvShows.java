@@ -15,11 +15,13 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
+import static com.archos.mediacenter.video.browser.MainActivity.MENU_START_AUTO_SCRAPER_ACTIVITY;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -192,12 +194,26 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 		});
 	}
 
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		// Manage sort mode menu item visibility according to search info online (scrape button) visibility in portrait mode
+		MenuItem sortMenuItem = menu.findItem(Browser.MENU_SORT_MODE);
+		MenuItem scraperItem = menu.findItem(MENU_START_AUTO_SCRAPER_ACTIVITY);
+		boolean isPortrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+		if (scraperItem != null && scraperItem.isVisible() && isPortrait) {
+			if (sortMenuItem != null) sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		} else {
+			if (sortMenuItem != null) sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		}
+	}
+
 	@SuppressLint("RestrictedApi")
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
 			// Add the "sort mode" item
-			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, applyCustomFont(R.string.sort_mode));
+			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_SORT_MODE, Menu.NONE, applyCustomFont(R.string.sort_mode));
 			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
 			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			mSortModeSubmenu.attachMenuItem(sortMenuItem);
