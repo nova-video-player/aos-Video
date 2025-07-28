@@ -16,6 +16,8 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing;
 
+import static com.archos.mediacenter.video.browser.MainActivity.MENU_START_AUTO_SCRAPER_ACTIVITY;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -1063,7 +1065,20 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             // Add the "sort mode" item
             MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, applyCustomFont(R.string.sort_mode));
             sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-            sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            // manage view mode group (sort mode and view mode) menu items visibility according to
+            // search info online(scrape button) visibility in portrait mode
+            MenuItem scraperItem = menu.findItem(MENU_START_AUTO_SCRAPER_ACTIVITY);
+            MenuItem viewModeGroup = menu.findItem(Browser.MENU_VIEW_MODE_GROUP);
+            boolean isPortrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+            if (viewModeGroup != null) {
+                if (isPortrait && scraperItem != null && scraperItem.isVisible()) {
+                    // Portrait mode + "search info online" visible → push search icon to overflow
+                    viewModeGroup.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                } else {
+                    // Otherwise allow search icon to appear in action bar
+                    viewModeGroup.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                }
+            }
             mSortModeSubmenu.attachMenuItem(sortMenuItem);
 
             Toolbar toolbar = requireActivity().findViewById(R.id.main_toolbar);

@@ -154,7 +154,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     public final static int DIALOG_DELETING = 2;
     public final static int MENU_SCRAPER_GROUP = 1;
 
-    private final static int MENU_START_AUTO_SCRAPER_ACTIVITY = 0;
+    public final static int MENU_START_AUTO_SCRAPER_ACTIVITY = 0;
     private final static int MENU_SCRAPER_SETTINGS = 1;
 
     private final static int MENU_PREFERENCES_GROUP = 5;
