@@ -151,6 +151,8 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     static final public String DEFAULT_SORT = SORT_BY_NAME_ASC;
     static final String SORT_PARAM_KEY = BrowserByFolder.class.getSimpleName() + "_SORT";
     private String mSortOrder = DEFAULT_SORT;
+    private final static int SUBMENU_ITEM_LIST_INDEX = 0;
+    private final static int SUBMENU_ITEM_GRID_INDEX = 1;
 
     /**
      * Synchronization between the CursorLoader (thread) and the FileManagerCore
@@ -1134,6 +1136,13 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
                 }
                 mSortModeSubmenu.selectSubmenuItem(position);
             }
+
+            mDisplayModeSubmenu.clear();
+            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, applyCustomFont(R.string.view_mode_list), 1);
+            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_poster_mode, applyCustomFont(R.string.view_mode_grid), 2);
+
+            mDisplayModeSubmenu.selectSubmenuItem(mViewMode == VideoUtils.VIEW_MODE_GRID
+                    ? SUBMENU_ITEM_GRID_INDEX : SUBMENU_ITEM_LIST_INDEX);
         }
     }
 
