@@ -272,7 +272,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:layout_marginBottom="3dp"
-            android:fontFamily="@font/nhaasgroteskdspro_65md"
+            android:fontFamily="@font/fivo_sans_medium"
             android:textColor="@color/white_font"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/video_info_medium_text_new" />
