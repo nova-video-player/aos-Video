@@ -300,13 +300,15 @@
 
                             <TextView
                                 android:id="@+id/episode_resolution"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="3dp"
-                                android:layout_marginRight="3dp"
-                                android:gravity="center_horizontal"
-                                android:fontFamily="@font/gotham_narrow_black"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
+                                android:textAllCaps="true"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/gothamnarrow_ultra"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:textColor="@color/black"
                                 />
@@ -387,14 +389,16 @@
                                 android:id="@+id/movie_resolution"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="3dp"
-                                android:layout_marginRight="3dp"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
                                 android:text="HD"
-                                android:fontFamily="@font/gotham_narrow_black"
-                                android:gravity="center_horizontal"
+                                android:textAllCaps="true"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/gothamnarrow_ultra"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:textColor="@color/black"
-                                android:textSize="14sp" />
+                                android:textSize="16sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
