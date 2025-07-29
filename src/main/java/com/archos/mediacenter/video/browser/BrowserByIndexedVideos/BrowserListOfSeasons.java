@@ -90,8 +90,8 @@ public class BrowserListOfSeasons extends BrowserWithShowHeader  {
         if (mBrowserAdapter != null
                 && !mBrowserAdapter.isEmpty()) {
             mDisplayModeSubmenu.clear();
-            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, applyCustomFont(R.string.view_mode_list), 0);
-            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_grid_mode, applyCustomFont(R.string.view_mode_grid), 0);
+            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, applyCustomFont(R.string.view_mode_list), 1);
+            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_grid_mode, applyCustomFont(R.string.view_mode_grid), 2);
             mDisplayModeSubmenu.selectSubmenuItem(mViewMode == VideoUtils.VIEW_MODE_GRID
                     ? SUBMENU_ITEM_GRID_INDEX : SUBMENU_ITEM_LIST_INDEX);
         }

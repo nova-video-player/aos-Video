@@ -216,8 +216,8 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
 
         if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
             mDisplayModeSubmenu.clear();
-            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, applyCustomFont(R.string.view_mode_list), 0);
-            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_details_mode2, applyCustomFont(R.string.view_mode_details), 0);
+            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, applyCustomFont(R.string.view_mode_list), 1);
+            mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_details_mode2, applyCustomFont(R.string.view_mode_details), 2);
             mDisplayModeSubmenu.selectSubmenuItem(mViewMode == VideoUtils.VIEW_MODE_DETAILS
                                                 ? SUBMENU_ITEM_DETAILS_INDEX : SUBMENU_ITEM_LIST_INDEX);
         }

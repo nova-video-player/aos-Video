@@ -279,10 +279,10 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
             mDisplayModeSubmenu.attachMenuItem(viewModeMenuItem);
 
             mDisplayModeSubmenu.clear();
-			mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, applyCustomFont(R.string.view_mode_list), 0);
-			mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_poster_mode, applyCustomFont(R.string.view_mode_grid), 0);
+			mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_list_mode2, applyCustomFont(R.string.view_mode_list), 1);
+			mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_poster_mode, applyCustomFont(R.string.view_mode_grid), 2);
 
-			mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_details_mode2, applyCustomFont(R.string.view_mode_details), 0);
+			mDisplayModeSubmenu.addSubmenuItem(R.drawable.ic_menu_details_mode2, applyCustomFont(R.string.view_mode_details), 3);
             // no Details view mode here
             mDisplayModeSubmenu.selectSubmenuItem(getSubmenuItemIndex(mViewMode));
 
