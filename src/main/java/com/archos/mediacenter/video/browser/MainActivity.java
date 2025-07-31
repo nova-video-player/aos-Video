@@ -35,6 +35,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -1405,7 +1406,9 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                                 text.setTextColor(Color.WHITE);
                                 resumeIcon.clearColorFilter();
                                 timestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.yellow_light));
-                                resumeText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.resume_text_tint));
+                                // on release, restore from selector
+                                ColorStateList resumeTextColor = ContextCompat.getColorStateList(getApplicationContext(), R.color.resume_text_tint);
+                                resumeText.setTextColor(resumeTextColor);
                                 globalResumeButton.clearColorFilter();
                             }
                             return false;
