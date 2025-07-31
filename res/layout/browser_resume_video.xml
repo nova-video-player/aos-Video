@@ -7,6 +7,7 @@ access to last video played. -->
     android:id="@+id/global_resume"
     android:layout_width="match_parent"
     android:layout_height="@dimen/global_resume_video_height"
+    android:background="@color/accent"
     android:focusable="true">
 
     <include layout="@layout/nowplaying_header" />
@@ -25,7 +26,7 @@ access to last video played. -->
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/global_resume_icon_padding_left"
         android:layout_marginEnd="@dimen/global_resume_icon_padding_right"
-        app:srcCompat="@drawable/resume"/>
+        app:srcCompat="@drawable/resume_icon"/>
 
     <TextView
         android:id="@+id/global_resume_text"
@@ -78,22 +79,28 @@ access to last video played. -->
                 android:gravity="center_horizontal">
 
                 <!-- Resume Text -->
-                <ImageView
+                <TextView
                     android:id="@+id/resume_text"
-                    android:layout_gravity="center"
-                    android:layout_width="75dp"
-                    android:layout_height="17dp"
-                    android:layout_marginTop="1dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/resume_text"
-                    app:tint="@color/play_button_tint"
-                    app:tintMode="src_atop"/>
+                    android:text="@string/resume"
+                    android:textColor="@color/resume_text_tint"
+                    android:includeFontPadding="false"
+                    android:padding="0dp"
+                    android:layout_marginTop="-1dp"
+                    android:shadowColor="#AA000000"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:textAllCaps="true"
+                    android:textSize="17sp"
+                    android:fontFamily="@font/nhaasgroteskdspro_65md"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <!-- Timestamp Text -->
                 <TextView
                     android:id="@+id/timestamp_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-2dp"
+                    android:layout_marginTop="-4dp"
                     android:text="00:00"
                     android:textColor="@android:color/white"
                     android:fontFamily="@font/nhaasgroteskdspro_75bd"
@@ -114,7 +121,7 @@ access to last video played. -->
                 android:scaleType="centerInside"
                 android:layout_alignBaseline="@id/resume_container"
                 android:layout_toEndOf="@+id/resume_container"
-                android:src="@drawable/resume"
+                android:src="@drawable/resume_icon"
                 app:tint="@color/play_button_tint"
                 app:tintMode="src_atop"/>
         </RelativeLayout>
