@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.Spinner;
+import android.os.Handler;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserAllMovies;
@@ -48,6 +49,8 @@ import com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser.SmbR
 import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser.UpnpRootFragment;
 
 import java.util.ArrayList;
+import androidx.fragment.app.FragmentManager;
+import android.content.res.Configuration;
 
 public class BrowserCategoryVideo extends BrowserCategory implements androidx.appcompat.app.ActionBar.OnNavigationListener {
     static final String TAG = "BrowserCategoryVideo";
@@ -80,6 +83,13 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
     private static final int ITEM_ID_RECENTLY_PLAYED = ITEM_ID_OFFSET +5;
     private static final int ITEM_ID_LISTS = ITEM_ID_OFFSET +6;
 
+    // Add this field to track the previous back stack count
+    private int mPreviousBackStackCount = -1;
+
+    // Handler and Runnable for debouncing spinner restoration
+    private final Handler mHandler = new Handler();
+    private Runnable mRestoreSpinnerRunnable;
+
     public void setNavigationMode(int navigationMode){
         ((MainActivity)getActivity()).setNavigationMode(navigationMode);
     }
@@ -88,6 +98,29 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_ACTIONBAR_NAVIGATION_MODE, ((MainActivity) getActivity()).getNavigationMode());
         // No need to save the position in the navigation drop-down here, it is saved in the Preferences already.
+    }
+
+    // Remove the back stack listener completely and replace with a simpler approach
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Only restore spinner if we're in the Movies category and at root level
+        if (mSelectedItemId == ITEM_ID_MOVIES) {
+            FragmentManager fm = getParentFragmentManager();
+            int backStackCount = fm.getBackStackEntryCount();
+            boolean isAtRootLevel = backStackCount <= 1;
+
+            if (isAtRootLevel) {
+                // We're at root level, ensure spinner is visible
+                androidx.appcompat.app.ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
+                if (ab.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
+                    setupMovieActionBarNavigation(false, true);
+                }
+            } else {
+                // We're in a subfolder, ensure spinner is hidden
+                setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            }
+        }
     }
 
     @Override
@@ -101,7 +134,87 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
                 setNavigationMode(navigationMode);
             }
         }
+        // Initialize the back stack count
+        mPreviousBackStackCount = getParentFragmentManager().getBackStackEntryCount();
+        getParentFragmentManager().addOnBackStackChangedListener(backStackChangedListener);
     }
+
+    private final FragmentManager.OnBackStackChangedListener backStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
+        @Override
+        public void onBackStackChanged() {
+            if (mSelectedItemId == ITEM_ID_MOVIES) {
+                FragmentManager fm = getParentFragmentManager();
+                int currentBackStackCount = fm.getBackStackEntryCount();
+                boolean isAtRootLevel = currentBackStackCount <= 1;
+
+                // Remove any pending spinner restoration
+                if (mRestoreSpinnerRunnable != null) {
+                    mHandler.removeCallbacks(mRestoreSpinnerRunnable);
+                }
+
+                if (isAtRootLevel) {
+                    mRestoreSpinnerRunnable = () -> {
+                        Log.d(TAG, "Restoring spinner at root level (debounced)");
+                        setupMovieActionBarNavigation(false, true);
+
+                        // Apply spinner translation after spinner is restored
+                        AppCompatActivity activity = (AppCompatActivity)getActivity();
+                        if (activity != null) {
+                            activity.getWindow().getDecorView().post(() -> {
+                                ViewGroup toolbar = (ViewGroup) activity.findViewById(R.id.main_toolbar);
+                                if (toolbar != null) {
+                                    Spinner foundSpinner = null;
+                                    for (int i = 0; i < toolbar.getChildCount(); i++) {
+                                        View child = toolbar.getChildAt(i);
+                                        if (child instanceof Spinner) {
+                                            foundSpinner = (Spinner) child;
+                                            break;
+                                        } else if (child instanceof ViewGroup) {
+                                            ViewGroup group = (ViewGroup) child;
+                                            for (int j = 0; j < group.getChildCount(); j++) {
+                                                View subChild = group.getChildAt(j);
+                                                if (subChild instanceof Spinner) {
+                                                    foundSpinner = (Spinner) subChild;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        if (foundSpinner != null) break;
+                                    }
+                                    if (foundSpinner != null) {
+                                        foundSpinner.setPadding(0, 0, 0, 9);
+                                        boolean mIsPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+                                        if (mIsPortraitMode){
+                                            foundSpinner.setTranslationX(-50);
+                                        } else {
+                                            foundSpinner.setTranslationX(0);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    };
+                    // Post with a small delay to allow the back stack to settle
+                    mHandler.postDelayed(mRestoreSpinnerRunnable, 100);
+                } else {
+                    // Hide spinner, show standard navigation
+                    setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                }
+                mPreviousBackStackCount = currentBackStackCount;
+            }
+        }
+    };
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getParentFragmentManager().removeOnBackStackChangedListener(backStackChangedListener);
+        if (mRestoreSpinnerRunnable != null) {
+            mHandler.removeCallbacks(mRestoreSpinnerRunnable);
+        }
+    }
+
+    @Override
     public void onViewCreated(View v, Bundle save){
         super.onViewCreated(v, save);
     }
@@ -196,42 +309,51 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
      * @param setupTheFragmentAsWell: if true, the fragment corresponding to the selected drop-down item will also be created
      */
     private void setupMovieActionBarNavigation(boolean setupTheFragmentAsWell) {
-         androidx.appcompat.app.ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        // Apply custom theme
-        // getActivity().setTheme(R.style.MovieCategory); // Now part of MainActivity theme "ArchosThemeBlueNoActionBar"
-        // no title in that case
-        ab.setTitle("");
-        // navigation drop-down instead
-        setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        // build the localized string list
-        String[] movieCategoriesNames = new String[MOVIE_CATEGORIES_NAMES_ID.length];
-        for (int i=0; i<MOVIE_CATEGORIES_NAMES_ID.length; i++) {
-            movieCategoriesNames[i] = getResources().getString(MOVIE_CATEGORIES_NAMES_ID[i]);
-        }
+        setupMovieActionBarNavigation(setupTheFragmentAsWell, true);
+    }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                getActivity(),
-                R.layout.movie_category_selected_item,        // selected item layout
-                R.id.text1,
-                movieCategoriesNames
-        ) {
-            @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                // Inflate dropdown item layout for dropdown
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                View view = inflater.inflate(R.layout.movie_category_dropdown_item, parent, false);
+    private void setupMovieActionBarNavigation(boolean setupTheFragmentAsWell, boolean setTitle) {
+        androidx.appcompat.app.ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
 
-                CheckedTextView textView = view.findViewById(android.R.id.text1);
-                textView.setText(getItem(position));
-
-                return view;
+        if (setTitle) {
+            // We're at root level, show the spinner
+            ab.setTitle("");
+            // navigation drop-down instead
+            setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+            // build the localized string list
+            String[] movieCategoriesNames = new String[MOVIE_CATEGORIES_NAMES_ID.length];
+            for (int i=0; i<MOVIE_CATEGORIES_NAMES_ID.length; i++) {
+                movieCategoriesNames[i] = getResources().getString(MOVIE_CATEGORIES_NAMES_ID[i]);
             }
-        };
-        ab.setListNavigationCallbacks(adapter, this);
-        // Set default value
-        int defaultListPosition = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(KEY_ACTIONBAR_NAVIGATION_POSITION, KEY_ACTIONBAR_NAVIGATION_POSITION_DEFAULT);
-        mNavigationItemListenerActive = setupTheFragmentAsWell; // we want the listener to be called only if the fragment is not created yet
-        ab.setSelectedNavigationItem(defaultListPosition);
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                    getActivity(),
+                    R.layout.movie_category_selected_item,        // selected item layout
+                    R.id.text1,
+                    movieCategoriesNames
+            ) {
+                @Override
+                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                    // Inflate dropdown item layout for dropdown
+                    LayoutInflater inflater = LayoutInflater.from(getContext());
+                    View view = inflater.inflate(R.layout.movie_category_dropdown_item, parent, false);
+
+                    CheckedTextView textView = view.findViewById(android.R.id.text1);
+                    textView.setText(getItem(position));
+
+                    return view;
+                }
+            };
+            ab.setListNavigationCallbacks(adapter, this);
+            // Set default value
+            int defaultListPosition = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(KEY_ACTIONBAR_NAVIGATION_POSITION, KEY_ACTIONBAR_NAVIGATION_POSITION_DEFAULT);
+            mNavigationItemListenerActive = setupTheFragmentAsWell; // we want the listener to be called only if the fragment is not created yet
+            ab.setSelectedNavigationItem(defaultListPosition);
+        } else {
+            // We're in a subfolder, don't show the spinner at all
+            // Just ensure we're in standard navigation mode so the child fragment can set its own title
+            setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        }
     }
 
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
