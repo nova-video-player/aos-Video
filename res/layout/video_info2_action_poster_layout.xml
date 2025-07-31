@@ -100,6 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="-3dp"
+                        android:layout_marginStart="1dp"
                         android:fontFamily="@font/nhaasgroteskdspro_75bd"
                         android:includeFontPadding="false"
                         android:padding="0dp"
