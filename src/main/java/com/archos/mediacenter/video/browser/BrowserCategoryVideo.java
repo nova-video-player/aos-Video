@@ -142,7 +142,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
     private final FragmentManager.OnBackStackChangedListener backStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         @Override
         public void onBackStackChanged() {
-            if (mSelectedItemId == ITEM_ID_MOVIES || mSelectedItemId == 999 || mSelectedItemId == 1000 || mSelectedItemId == 1001) {  // 999 = preferences | 1000 = help_faq | 1001 = sponsor
+            if (mSelectedItemId == ITEM_ID_MOVIES) {
                 FragmentManager fm = getParentFragmentManager();
                 int currentBackStackCount = fm.getBackStackEntryCount();
                 boolean isAtRootLevel = currentBackStackCount <= 1;

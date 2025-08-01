@@ -92,6 +92,8 @@ abstract public class BrowserCategory extends ListFragment {
 
     private int mLibrarySize;
     protected int mSelectedItemId;
+    private static final String KEY_LAST_REAL_SELECTED_ID = "last_real_selected_id";
+    private int mLastRealSelectedItemId = -1;
     private int mSelectedItemTop;
     protected ArrayList<Object> mCategoryList;
     private CategoryAdapter mCategoryAdapter;
@@ -211,12 +213,16 @@ abstract public class BrowserCategory extends ListFragment {
         if (mSelectedItemId != 0) {
             outState.putInt(SELECTED_ID, mSelectedItemId);
             outState.putInt(SELECTED_TOP, mSelectedItemTop);
+            outState.putInt(KEY_LAST_REAL_SELECTED_ID, mLastRealSelectedItemId);
         }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ListView categoryView = (ListView) inflater.inflate(R.layout.browser_category, container, false);
         categoryView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        if (savedInstanceState != null) {
+            mLastRealSelectedItemId = savedInstanceState.getInt("last_real_selected_id", -1);
+        }
         return categoryView;
     }
 
@@ -360,6 +366,11 @@ abstract public class BrowserCategory extends ListFragment {
     }
 
     public void onResume() {
+        if (mLastRealSelectedItemId != -1) {
+            mSelectedItemId = mLastRealSelectedItemId;
+            mCategoryAdapter.notifyDataSetChanged();
+            setSelection(mSelectedItemId);
+        }
         if (DBG) Log.d(TAG, "onResume");
         super.onResume();
         // Listen (un)mount sdcard/usb host/samba/upnp events.
@@ -436,17 +447,20 @@ abstract public class BrowserCategory extends ListFragment {
         if (object instanceof ItemData) {
             ItemData item = (ItemData) object;
             if(item.text == R.string.preferences){
+                mLastRealSelectedItemId = mSelectedItemId; // Save real selection
                 mSelectedItemId = item.id; // 999
                 mCategoryAdapter.notifyDataSetChanged(); // to apply tint
                 if(getActivity() instanceof MainActivity)
                     ((MainActivity) getActivity()).startPreference();
                 setSelection(mSelectedItemId); //restore selection
             } else if (item.text == R.string.help_faq){
+                mLastRealSelectedItemId = mSelectedItemId; // Save real selection
                 WebUtils.openWebLink(getActivity(),getString(R.string.faq_url));
                 mSelectedItemId = item.id; // Set selected ID
                 mCategoryAdapter.notifyDataSetChanged(); // To apply tint
                 setSelection(mSelectedItemId); // Restore selection
             } else if (item.text == R.string.sponsor){
+                mLastRealSelectedItemId = mSelectedItemId; // Save real selection
                 WebUtils.openWebLink(getActivity(),getString(R.string.sponsor_url));
                 mSelectedItemId = item.id; // Set selected ID
                 mCategoryAdapter.notifyDataSetChanged(); // To apply tint
