@@ -2897,7 +2897,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if (darkModeActive) {
             mVideoBadgePresenter.setSelectedBackgroundColor(mContext.getResources().getColor(R.color.dark_blue));
         } else {
-            mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
+            mVideoBadgePresenter.setSelectedBackgroundColor(mContext.getResources().getColor(R.color.light_blue));
         }
         log.debug("updateSourceList, mCurrentVideo.getFileUri()=" + mCurrentVideo.getFileUri());
         mVideoBadgePresenter.setSelectedUri(mCurrentVideo.getFileUri());
