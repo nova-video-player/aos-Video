@@ -15,6 +15,7 @@
         <ProgressBar android:id="@+id/progress"
             android:layout_width="30dip"
             android:layout_height="30dip"
+            android:indeterminateTint="@color/green_accent"
             style="@style/Base.Widget.AppCompat.ProgressBar"
             android:paddingRight="10dip"
             android:indeterminate="true" />
