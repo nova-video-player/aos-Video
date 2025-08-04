@@ -27,10 +27,12 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +40,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.PreferenceManager;
@@ -141,12 +144,22 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             } else {
                 log.debug("onStart: no network");
                 Builder dialogNoNetwork;
-                dialogNoNetwork = new AlertDialog.Builder(this);
+                dialogNoNetwork = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
                 dialogNoNetwork.setCancelable(true);
                 dialogNoNetwork.setOnCancelListener(dialog ->
                         finish()
                 );
-                dialogNoNetwork.setTitle(R.string.dialog_subloader_nonetwork_title);
+                View customTitleView = LayoutInflater.from(this)
+                        .inflate(R.layout.dialog_custom_title, null);
+                TextView textView = customTitleView.findViewById(R.id.dialog_title);
+                Typeface customFont = ResourcesCompat.getFont(this, R.font.nhaasgrotesktxpro_75bd);
+                Typeface messageTypeface = ResourcesCompat.getFont(this, R.font.nhaasgroteskdspro_65md);
+                textView.setText(R.string.dialog_subloader_nonetwork_title);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                textView.setTypeface(customFont);
+                ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+                iconView.setVisibility(View.GONE);
+                dialogNoNetwork.setCustomTitle(customTitleView);
                 dialogNoNetwork.setMessage(getString(R.string.dialog_subloader_nonetwork_message));
                 Dialog d = dialogNoNetwork.create();
                 d.setOnDismissListener(dialog -> {
@@ -155,6 +168,12 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                     mDoNotFinish = false;
                 });
                 d.show();
+                // Set font on message
+                TextView messageView = d.findViewById(android.R.id.message);
+                if (messageView != null) {
+                    messageView.setTypeface(messageTypeface);
+                    messageView.setTextColor(ContextCompat.getColor(this, R.color.white));
+                }
             }
         }
     }
