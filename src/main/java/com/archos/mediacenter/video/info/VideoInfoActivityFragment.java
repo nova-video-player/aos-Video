@@ -1865,13 +1865,13 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private void updateActionButtons(){
         log.debug("updateActionButtons: RemoteResumeMs=" + mCurrentVideo.getRemoteResumeMs() + ", getResumeMs=" + mCurrentVideo.getResumeMs());
-        if(mCurrentVideo.getRemoteResumeMs()>0&&mCurrentVideo.getResumeMs()!=mCurrentVideo.getRemoteResumeMs()) {
+        if(mCurrentVideo.getRemoteResumeMs()>0&&mCurrentVideo.getResumeMs()!=mCurrentVideo.getRemoteResumeMs()  && !mIsLaunchFromPlayer) {
             mRemoteResumeButton.setVisibility(View.VISIBLE);
             mRemoteResumeLocation.setText(MediaUtils.formatTime(mCurrentVideo.getRemoteResumeMs()));
         }
         else mRemoteResumeButton.setVisibility(View.GONE);
 
-        if(mCurrentVideo.getResumeMs()>0) {
+        if(mCurrentVideo.getResumeMs()>0 && !mIsLaunchFromPlayer) {
             mResumeLocalButton.setVisibility(View.VISIBLE);
             mResumeLocation.setText(MediaUtils.formatTime(mCurrentVideo.getResumeMs()));
         }
