@@ -189,6 +189,9 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
                                         } else {
                                             foundSpinner.setTranslationX(0);
                                         }
+                                        int position = foundSpinner.getSelectedItemPosition();
+                                        MainActivity mainActivity = (MainActivity) getActivity();
+                                        mainActivity.updateSpinnerWidth((AppCompatSpinner) foundSpinner, position);
                                     }
                                 }
                             });
