@@ -141,6 +141,7 @@
     <string name="file_deleted">Soubor byl odstraněn</string>
     <string name="resume">Pokračovat</string>
     <string name="remote_resume">Obnovení pozice na síti</string>
+    <string name="remote">Vzdálený</string>
     <string name="bookmark">Záložka</string>
     <string name="delete">Odstranit</string>
     <string name="confirm_delete_short">Potvrdit odstranění</string>

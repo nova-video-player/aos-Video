@@ -136,6 +136,7 @@
     <string name="file_deleted">Het bestand is verwijderd</string>
     <string name="resume">Hervatten</string>
     <string name="remote_resume">Hervatten op afstand</string>
+    <string name="remote">Afstand</string>
     <string name="bookmark">Bladwijzer</string>
     <string name="delete">Verwijderen</string>
     <string name="confirm_delete_short">Bevestig verwijderen</string>

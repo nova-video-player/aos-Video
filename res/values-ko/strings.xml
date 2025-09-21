@@ -109,6 +109,7 @@
     <string name="player_plugin_video_audio_msg">이 파일은<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="video">%1$s</g>비디오 포맷과<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="audio">%2$s</g>오디오 포맷을 포함합니다. </string>
     <string name="player_plugin_purchase_msg">You need to purchase the<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="plugin">%1$s</g></string>
     <string name="player_plugin_purchase">스토어로 이동합니다.</string>
+    <string name="remote">원격</string>
     <!-- Subtitles wizard -->
     <string name="subtitles_wizard_no_files">자막 파일을 찾을 수 없습니다.</string>
     <string name="subtitles_wizard_current_files">최근 사용한 자막 파일:</string>

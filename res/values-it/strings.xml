@@ -132,6 +132,7 @@ Copertina (rotolo di copertina)</string>
     <string name="file_deleted">Il file è stato cancellato</string>
     <string name="resume">Riprendi</string>
     <string name="remote_resume">Riprendi da remoto</string>
+    <string name="remote">Remoto</string>
     <string name="bookmark">Segnalibro</string>
     <string name="delete">Cancella</string>
     <string name="confirm_delete_short">Conferma eliminazione</string>

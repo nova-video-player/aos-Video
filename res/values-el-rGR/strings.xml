@@ -141,6 +141,7 @@
     <string name="file_deleted">Το αρχείο διαγράφηκε</string>
     <string name="resume">Συνέχιση</string>
     <string name="remote_resume">Απομακρυσμένη συνέχιση</string>
+    <string name="remote">Απομακρυσμένο</string>
     <string name="bookmark">Σελιδοδείκτης</string>
     <string name="delete">Διαγραφή</string>
     <string name="confirm_delete_short">Επιβεβαίωση διαγραφής</string>

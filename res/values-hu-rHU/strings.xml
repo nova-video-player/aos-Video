@@ -145,6 +145,7 @@
     <string name="file_deleted">Fájl törölve</string>
     <string name="resume">Folytatás</string>
     <string name="remote_resume">Távoli folytatás</string>
+    <string name="remote">Távoli</string>
     <string name="bookmark">Könyvjelző</string>
     <string name="delete">Törlés</string>
     <string name="confirm_delete_short">Törlés megerősítése</string>

@@ -145,6 +145,7 @@
     <string name="file_deleted">Die Datei wurde gelöscht</string>
     <string name="resume">Fortsetzen</string>
     <string name="remote_resume">Remote fortsetzen</string>
+    <string name="remote">Remote</string>
     <string name="bookmark">Lesezeichen</string>
     <string name="delete">Löschen</string>
     <string name="confirm_delete_short">Löschen bestätigen</string>

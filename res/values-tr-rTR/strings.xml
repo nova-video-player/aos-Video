@@ -141,6 +141,7 @@
     <string name="file_deleted">Dosya silindi</string>
     <string name="resume">Devam et</string>
     <string name="remote_resume">Uzaktan devam et</string>
+    <string name="remote">Uzak</string>
     <string name="bookmark">Yer imi</string>
     <string name="delete">Sil</string>
     <string name="confirm_delete_short">Silmeyi onayla</string>

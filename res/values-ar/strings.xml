@@ -124,6 +124,7 @@
     <string name="file_deleted">تم حذف الملف</string>
     <string name="resume">إعادة</string>
     <string name="remote_resume">المتابعة من اخر مشاهدة</string>
+    <string name="remote">بعيد</string>
     <string name="bookmark">المؤشر</string>
     <string name="delete">حذف</string>
     <string name="confirm_delete_short">تأكيد الحذف</string>

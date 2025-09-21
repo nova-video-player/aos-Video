@@ -144,6 +144,7 @@
     <string name="file_deleted">Tập tin đã xóa</string>
     <string name="resume">Tiếp tục</string>
     <string name="remote_resume">Tiếp tục từ xa</string>
+    <string name="remote">Từ xa</string>
     <string name="bookmark">Đánh dấu</string>
     <string name="delete">Xóa</string>
     <string name="confirm_delete_short">Xác nhận xóa</string>

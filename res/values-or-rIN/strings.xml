@@ -85,6 +85,7 @@
     <string name="date_view_year">ଵର୍ଷ</string>
     <string name="mark_as_watched">ଦେଖିସାରିଥିବା ପରି ଚିହ୍ନିତ କର</string>
     <string name="mark_as_not_watched">ଦେଖିନଥିବା ପରି ଚିହ୍ନିତ କର</string>
+    <string name="remote">ଦୂରସ୍ଥ</string>
     <!-- for small screens -->
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">ନିର୍ଦେଶକ</string>

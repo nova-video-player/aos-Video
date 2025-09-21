@@ -144,6 +144,7 @@
     <string name="file_deleted">文件已删除</string>
     <string name="resume">恢复播放</string>
     <string name="remote_resume">远程恢复播放</string>
+    <string name="remote">远程</string>
     <string name="bookmark">书签</string>
     <string name="delete">删除</string>
     <string name="confirm_delete_short">确认删除</string>

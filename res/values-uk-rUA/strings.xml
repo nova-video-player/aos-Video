@@ -147,6 +147,7 @@
     <string name="file_deleted">Файл видалено</string>
     <string name="resume">Продовжити</string>
     <string name="remote_resume">Подовжити перегляд з іншого пристрою</string>
+    <string name="remote">Віддалений</string>
     <string name="bookmark">Закладка</string>
     <string name="delete">Видалити</string>
     <string name="confirm_delete_short">Підтвердити видалення</string>

@@ -145,6 +145,7 @@
     <string name="file_deleted">Le fichier a été supprimé</string>
     <string name="resume">Reprendre</string>
     <string name="remote_resume">Reprise réseau</string>
+    <string name="remote">Réseau</string>
     <string name="bookmark">Marque-page</string>
     <string name="delete">Supprimer</string>
     <string name="confirm_delete_short">Confirmer suppression</string>

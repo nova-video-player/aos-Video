@@ -147,6 +147,7 @@
     <string name="file_deleted">Súbor bol odstránený</string>
     <string name="resume">Pokračovať</string>
     <string name="remote_resume">Pokračovať (na sieti)</string>
+    <string name="remote">Síť</string>
     <string name="bookmark">Záložka</string>
     <string name="delete">Odstrániť</string>
     <string name="confirm_delete_short">Potvrdenie odstránenia</string>

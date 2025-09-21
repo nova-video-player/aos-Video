@@ -119,6 +119,7 @@
     <string name="file_deleted">Filen har tagits bort</string>
     <string name="resume">Återuppta</string>
     <string name="remote_resume">Fjärråteruppta</string>
+    <string name="remote">Fjärr</string>
     <string name="bookmark">Bokmärk</string>
     <string name="delete">Radera</string>
     <string name="confirm_delete_short">Bekräfta radering</string>

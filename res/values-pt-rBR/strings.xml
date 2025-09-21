@@ -145,6 +145,7 @@
     <string name="file_deleted">O arquivo foi excluído</string>
     <string name="resume">Continuar</string>
     <string name="remote_resume">Continuar (remoto)</string>
+    <string name="remote">Remoto</string>
     <string name="bookmark">Marcador</string>
     <string name="delete">Excluir</string>
     <string name="confirm_delete_short">Confirmar exclusão</string>

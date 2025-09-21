@@ -145,6 +145,7 @@
     <string name="file_deleted">فایل حذف شد</string>
     <string name="resume">ادامه</string>
     <string name="remote_resume">ادامه از راه دور</string>
+    <string name="remote">راه دور</string>
     <string name="bookmark">نشانک</string>
     <string name="delete">هذف</string>
     <string name="confirm_delete_short">پذیرش هذف</string>

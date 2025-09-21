@@ -122,6 +122,7 @@
     <string name="file_deleted">O ficheiro foi eliminado</string>
     <string name="resume">Continuar</string>
     <string name="remote_resume">Continuar remotamente</string>
+    <string name="remote">Remoto</string>
     <string name="bookmark">Marcador</string>
     <string name="delete">Eliminar</string>
     <string name="scrap_remove_short">Remover</string>

@@ -147,6 +147,7 @@
     <string name="file_deleted">הקובץ נמחק</string>
     <string name="resume">המשך</string>
     <string name="remote_resume">המשך מרוחק</string>
+    <string name="remote">מרוחק</string>
     <string name="bookmark">סימניה</string>
     <string name="delete">מחק</string>
     <string name="confirm_delete_short">אשר מחיקה</string>

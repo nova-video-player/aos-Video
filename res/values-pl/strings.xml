@@ -147,6 +147,7 @@
     <string name="file_deleted">Plik został usunięty</string>
     <string name="resume">Wznów</string>
     <string name="remote_resume">Zdalne wznawianie</string>
+    <string name="remote">Zdalne</string>
     <string name="bookmark">Zakładka</string>
     <string name="delete">Usuń</string>
     <string name="confirm_delete_short">Potwierdź usunięcie</string>
