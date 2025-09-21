@@ -96,6 +96,8 @@
     <string name="all_tv_shows">டிவி நிகழ்ச்சிகள்</string>
     <string name="all_tvshows">அனைத்து டிவி நிகழ்ச்சிகள்</string>
     <string name="resume">தொடரவும்</string>
+    <string name="remote_resume">தொலைவில் தொடரவும்</string>
+    <string name="use_remote_resume">நெட்வொர்க் தொடரும் நிலையைப் பயன்படுத்தவா?</string>
     <string name="remote">தொலைவில்</string>
     <string name="bookmark">புத்தகக்குறிகள்</string>
     <string name="delete">நீக்கு</string>

@@ -64,6 +64,8 @@
     <string name="date_view_month">Ay</string>
     <string name="date_view_year">Jıl</string>
     <string name="resume">Dawam etiw</string>
+    <string name="remote_resume">Uzakta dawam etiw</string>
+    <string name="use_remote_resume">Tarmaq pozitsiyasınan dawam etilsin mi?</string>
     <string name="remote">Uzakta</string>
     <string name="bookmark">Saylandı</string>
     <string name="delete">Óshiriw</string>

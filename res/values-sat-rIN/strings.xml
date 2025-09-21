@@ -67,5 +67,7 @@
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->
     <!--  Nfo File parsing -->
+    <string name="remote_resume">ᱨᱤᱢᱳᱴ ᱨᱤᱡᱩᱢ</string>
+    <string name="use_remote_resume">ᱱᱮᱴᱣᱟᱨᱠ ᱨᱤᱡᱩᱢ ᱴᱷᱟᱶ ᱵᱮᱵᱷᱟᱨ ᱠᱟᱱᱟ?</string>
     <string name="remote">ᱨᱤᱢᱳᱴ</string>
 </resources>
