@@ -411,4 +411,5 @@
     <string name="preference_display_backdrop_global_resume_summary">يعرض الخلفية في زر الاستئناف العام عند وضع الهاتف وبوضع أفقي.</string>
     <string name="preference_display_backdrop_global_resume_title">عرض الخلفية في الاستئناف العام</string>
     <string name="preference_display_clearlogo_player_summary">يعرض شعار الفيلم أو الحلقة للفيديو الجاري تشغيله على شاشة التشغيل.</string>
+    <string name="preference_display_clearlogo_player_title">عرض الشعار في مشغل الفيديو</string>
 </resources>

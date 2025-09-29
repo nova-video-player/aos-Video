@@ -812,4 +812,5 @@ Copertina (rotolo di copertina)</string>
     <string name="preference_display_backdrop_global_resume_summary">Mostra lo sfondo nel pulsante Ripresa globale quando in modalità telefono e in orizzontale.</string>
     <string name="preference_display_backdrop_global_resume_title">Mostra sfondo in Ripresa globale</string>
     <string name="preference_display_clearlogo_player_summary">Mostra il logo del film o dell’episodio del video in riproduzione nella schermata di riproduzione.</string>
+    <string name="preference_display_clearlogo_player_title">Mostra logo nel lettore video</string>
 </resources>

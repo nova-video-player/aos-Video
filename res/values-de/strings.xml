@@ -917,4 +917,5 @@
     <string name="preference_display_backdrop_global_resume_summary">Zeigt den Backdrop im Globalen-Fortsetzen-Button an, wenn sich das Gerät im Telefonmodus und Querformat befindet.</string>
     <string name="preference_display_backdrop_global_resume_title">Backdrop in "Global fortsetzen" anzeigen</string>
     <string name="preference_display_clearlogo_player_summary">Zeigt das Film- oder Episodenlogo des aktuell wiedergegebenen Videos im Wiedergabebildschirm an.</string>
+    <string name="preference_display_clearlogo_player_title">Logo im Videoplayer anzeigen</string>
 </resources>
