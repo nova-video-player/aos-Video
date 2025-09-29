@@ -687,6 +687,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     public void onResume() {
         super.onResume();
         ((CustomApplication) getApplication()).loadLocale();
+        CustomApplication.loadLocale(getResources());
 
         mPermissionChecker.checkAndRequestPermission(this);
 
