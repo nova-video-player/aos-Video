@@ -243,4 +243,5 @@
     <string name="drawer_close">Fechar gaveta</string>
     <string name="overflow_menu_description">Mais opções</string>
     <string name="preference_display_backdrop_global_resume_summary">Mostra a imagem de fundo no botão Retomar global quando em modo telefone e em orientação horizontal.</string>
+    <string name="preference_display_backdrop_global_resume_title">Mostrar fundo em Retomar global</string>
 </resources>

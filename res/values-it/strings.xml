@@ -810,4 +810,5 @@ Copertina (rotolo di copertina)</string>
     <string name="enable_sponsor_summary">Abilita il sponsor link per le donazioni: ogni contributo aiuta.</string>
     <string name="overflow_menu_description">Altre opzioni</string>
     <string name="preference_display_backdrop_global_resume_summary">Mostra lo sfondo nel pulsante Ripresa globale quando in modalità telefono e in orizzontale.</string>
+    <string name="preference_display_backdrop_global_resume_title">Mostra sfondo in Ripresa globale</string>
 </resources>

@@ -931,4 +931,5 @@
     <string name="premiered">1ère diffusion :</string>
     <string name="overflow_menu_description">Plus d\'options</string>
     <string name="preference_display_backdrop_global_resume_summary">Affiche l’arrière-plan dans le bouton Reprise globale en mode téléphone et en orientation paysage.</string>
+    <string name="preference_display_backdrop_global_resume_title">Afficher l’arrière‑plan dans Reprise globale</string>
 </resources>

@@ -916,4 +916,5 @@
     <string name="premiered">Estreia:</string>
     <string name="overflow_menu_description">Mais opções</string>
     <string name="preference_display_backdrop_global_resume_summary">Mostra o plano de fundo no botão Retomar global quando em modo telefone e na orientação paisagem.</string>
+    <string name="preference_display_backdrop_global_resume_title">Mostrar fundo no Retomar global</string>
 </resources>
