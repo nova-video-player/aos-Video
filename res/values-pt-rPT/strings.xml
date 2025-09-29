@@ -246,4 +246,5 @@
     <string name="preference_display_backdrop_global_resume_title">Mostrar fundo em Retomar global</string>
     <string name="preference_display_clearlogo_player_summary">Mostra o logótipo do filme ou do episódio do vídeo em reprodução no ecrã de reprodução.</string>
     <string name="preference_display_clearlogo_player_title">Mostrar logótipo no leitor de vídeo</string>
+    <string name="preference_display_poster_player_summary">Mostra o cartaz do filme ou do episódio do vídeo em reprodução no ecrã de reprodução em orientação horizontal.</string>
 </resources>

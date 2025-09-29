@@ -609,4 +609,5 @@
     <string name="preference_display_backdrop_global_resume_title">Achtergrond tonen in Globaal hervatten</string>
     <string name="preference_display_clearlogo_player_summary">Toont het logo van de film of aflevering van de huidige video op het afspeelscherm.</string>
     <string name="preference_display_clearlogo_player_title">Logo tonen in videospeler</string>
+    <string name="preference_display_poster_player_summary">Toont de posterafbeelding van de film of aflevering van de huidige video op het afspeelscherm in liggende stand.</string>
 </resources>
