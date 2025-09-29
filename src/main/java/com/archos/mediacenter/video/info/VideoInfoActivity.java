@@ -35,6 +35,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
+import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -107,6 +108,7 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        CustomApplication.loadLocale(getResources());
         overridePendingTransition(R.anim.slide_in_right_fade, R.anim.slide_out_left_fade);
         if (DBG) Log.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
@@ -326,6 +328,7 @@ public class VideoInfoActivity extends AppCompatActivity  implements VideoInfoAc
     @Override
     protected void onResume() {
         super.onResume();
+        CustomApplication.loadLocale(getResources());
         if (mViewPager.getAdapter() != null) {
             mViewPager.getAdapter().notifyDataSetChanged();  // Force ViewPager to refresh its fragments
         }
