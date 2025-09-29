@@ -607,4 +607,5 @@
     <string name="file_access_error">Kon het bestand niet openen</string>
     <string name="preference_display_backdrop_global_resume_summary">Toont de achtergrond in de knop Globaal hervatten wanneer in telefoonmodus en liggende stand.</string>
     <string name="preference_display_backdrop_global_resume_title">Achtergrond tonen in Globaal hervatten</string>
+    <string name="preference_display_clearlogo_player_summary">Toont het logo van de film of aflevering van de huidige video op het afspeelscherm.</string>
 </resources>

@@ -931,4 +931,5 @@
     <string name="overflow_menu_description">Más opciones</string>
     <string name="preference_display_backdrop_global_resume_summary">Muestra el fondo en el botón de Reanudación global cuando está en modo teléfono y en orientación horizontal.</string>
     <string name="preference_display_backdrop_global_resume_title">Mostrar fondo en Reanudación global</string>
+    <string name="preference_display_clearlogo_player_summary">Muestra el logotipo de la película o episodio del video en reproducción en la pantalla de reproducción.</string>
 </resources>

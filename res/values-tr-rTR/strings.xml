@@ -840,4 +840,5 @@ desteklenmiyor.</string>
     <string name="overflow_menu_description">Daha fazla seçenek</string>
     <string name="preference_display_backdrop_global_resume_summary">Telefon modunda ve yatay yönde iken Global Devam düğmesinde arka planı gösterir.</string>
     <string name="preference_display_backdrop_global_resume_title">Global Devam’da arka planı göster</string>
+    <string name="preference_display_clearlogo_player_summary">Oynatma ekranında, o anda oynatılan videonun film veya bölüm logosunu gösterir.</string>
 </resources>
