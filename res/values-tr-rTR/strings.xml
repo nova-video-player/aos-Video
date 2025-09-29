@@ -838,4 +838,5 @@ desteklenmiyor.</string>
     <string name="enable_sponsor_title">Nova sponsor bağlantısını etkinleştir</string>
     <string name="enable_sponsor_summary">Bağışlar için sponsor bağlantısını etkinleştirin: her katkı yardımcı olur.</string>
     <string name="overflow_menu_description">Daha fazla seçenek</string>
+    <string name="preference_display_backdrop_global_resume_summary">Telefon modunda ve yatay yönde iken Global Devam düğmesinde arka planı gösterir.</string>
 </resources>

@@ -408,4 +408,5 @@
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->
     <!--  Nfo File parsing -->
+    <string name="preference_display_backdrop_global_resume_summary">يعرض الخلفية في زر الاستئناف العام عند وضع الهاتف وبوضع أفقي.</string>
 </resources>
