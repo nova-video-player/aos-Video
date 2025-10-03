@@ -91,6 +91,11 @@
             <action
                 android:name="android.speech.RecognitionService" />
         </intent>
+
+        <intent>
+            <action android:name="org.courville.supernova.AdditionalService" />
+        </intent>
+	<package android:name="org.courville.supernova" />
     </queries>
 
     <application

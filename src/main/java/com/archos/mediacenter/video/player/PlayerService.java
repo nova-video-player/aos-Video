@@ -64,6 +64,7 @@ import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.utils.VideoMetadata;
+import com.archos.mediacenter.video.utils.AdditionalServiceSingleton;
 import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
@@ -388,6 +389,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     @Override
     public void onCreate() {
         super.onCreate();
+
+	AdditionalServiceSingleton.getInstance().bindToService(getApplicationContext());
         log.debug("onCreate()");
         sPlayerService = this;
         mHandler = new Handler();

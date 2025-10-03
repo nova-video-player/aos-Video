@@ -323,6 +323,9 @@ android {
             includeInBundle = false
         }
     }
+    buildFeatures {
+	aidl = true
+    }
 }
 
 dependencies {

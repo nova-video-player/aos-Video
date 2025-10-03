@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.RemoteException;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.text.TextUtils;
@@ -58,6 +59,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.Switch;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,6 +100,7 @@ import com.archos.mediacenter.video.player.tvmenu.TVMenuAdapter;
 import com.archos.mediacenter.video.player.tvmenu.TVMenuItem;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 import com.archos.mediacenter.video.player.tvmenu.TimerDelayTVPicker;
+import com.archos.mediacenter.video.utils.AdditionalServiceSingleton;
 import com.archos.mediacenter.video.utils.CodecDiscovery;
 import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
@@ -481,6 +484,27 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     protected void onCreate(Bundle icicle) {
         log.debug("onCreate");
 
+        AdditionalServiceSingleton.getInstance().bindToService(
+                getApplicationContext(),
+                () -> {
+                    LibAvos.setAudioTransformer(new LibAvos.AudioTransformer() {
+                        @Override
+                        public float[] transformAudio(float[] samples) {
+                            var svc = AdditionalServiceSingleton.getService();
+                            if (svc == null) return samples;
+                            try {
+                                samples = svc.transformAudio(samples);
+                            } catch(RemoteException e) {
+                                log.error("transformAudio failed", e);
+                            }
+                            return samples;
+                        }
+                        });
+                },
+                () -> {
+                    LibAvos.setAudioTransformer(null);
+                }
+        );
         mContext = this;
 
         // Detect if we're being used as an external player
@@ -750,6 +774,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         setLockRotation(mLockRotation);
         mSurfaceController.setVideoFormat(Integer.parseInt(mPreferences.getString(KEY_PLAYER_FORMAT, "-1")),
                 Integer.parseInt(mPreferences.getString(KEY_PLAYER_AUTO_FORMAT, "-1")));
+        log.debug("onStart: Setting audio transformer");
         if (LibAvos.isAvailable()) {
             VideoPreferencesCommon.resetPassthroughPref(mPreferences); // note this resets the audio_speed if in passthrough to 1.0f in prefs
             // enable passthrough only if HDMI is connected and enabled in options
@@ -2226,7 +2251,29 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 adb.setAdapter(new ArrayAdapter<View>(mContext, R.layout.menu_item_layout) {
                     @Override
                     public View getView(final int position, View convertView, ViewGroup parent) {
-                        if (position > 0) {
+                        if (position == 2) {
+				SeekBar sb = new SeekBar(mContext);
+				sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+					@Override
+					public void onStartTrackingTouch(SeekBar sb) {}
+					@Override
+					public void onStopTrackingTouch(SeekBar sb) {}
+					@Override
+					public void onProgressChanged(SeekBar sb, int progress, boolean fromUser) {
+						float control = (progress - 50) / 50.0f;
+						android.util.Log.d("PHH", "progress changed " + progress);
+						var svc = AdditionalServiceSingleton.getService();
+						if (svc != null) {
+							try {
+								svc.setControl(control);
+							} catch(RemoteException e) {
+						android.util.Log.d("PHH", "failed changing progress", e);
+							}
+						}
+					}
+				});
+				return sb;
+			} else if (position == 1) {
                             Switch tb = new Switch(mContext);
                             tb.setText(R.string.pref_audio_filt_title);
                             tb.setPadding(20,20, 20, 20);
@@ -2255,7 +2302,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                     @Override
                     public int getCount() {
-                        return 2;
+			// Display the seekbar only if SuperNOVA is available
+			if (AdditionalServiceSingleton.getService() != null)
+				return 3;
+			return 2;
                     }
                 }
                 , new DialogInterface.OnClickListener() {
