@@ -354,8 +354,8 @@ dependencies {
     implementation 'androidx.tvprovider:tvprovider:1.1.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:5.1.0'
     implementation 'com.github.tony19:logback-android:3.0.0'
-    implementation 'io.sentry:sentry-android:8.22.0'
-    implementation 'io.sentry:sentry:8.22.0'
+    implementation 'io.sentry:sentry-android:8.23.0'
+    implementation 'io.sentry:sentry:8.23.0'
 }
 
 configurations { // try to exclude device specific libraries interfering
