@@ -258,15 +258,19 @@ android {
                          'jcifs2/**',
                          'kotlin/**',
                          'okhttp3/**',
-                         'org/**']
+                         'org/**',
+                         "**/libc++_shared.so"
+                        ]
+                         
             pickFirsts += ['lib/x86/libnvpnativehelper.so',
                            'lib/x86_64/libnvpnativehelper.so',
                            'lib/armeabi-v7a/libnvpnativehelper.so',
                            'lib/arm64-v8a/libnvpnativehelper.so',
-                           'lib/x86/libc++_shared.so',
-                           'lib/x86_64/libc++_shared.so',
-                           'lib/armeabi-v7a/libc++_shared.so',
-                           'lib/arm64-v8a/libc++_shared.so']
+                           //'lib/x86/libc++_shared.so',
+                           //'lib/x86_64/libc++_shared.so',
+                           //'lib/armeabi-v7a/libc++_shared.so',
+                           //'lib/arm64-v8a/libc++_shared.so'
+                           ]
         }
         resources {
             excludes += ['META-INF/*.kotlin_module',
