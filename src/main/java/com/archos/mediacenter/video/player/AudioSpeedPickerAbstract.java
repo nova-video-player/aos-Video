@@ -25,7 +25,7 @@ public abstract class AudioSpeedPickerAbstract extends FrameLayout {
 
     // audio speed granularity of 0.05f because IMHO 1.15x is the best speed mitigating gain of speed and brain strain (subjective)
     protected float mStep = 0.05f;
-    protected float mMin = 0.25f;
+    protected float mMin = 0.50f;
     protected float mMax = 2.0f;
     protected boolean hasMin = true;
     protected boolean hasMax = true;

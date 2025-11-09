@@ -1782,7 +1782,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     protected float mAudioSpeedStep = 0.05f;
-    protected float mAudioSpeedMin = 0.25f;
+    protected float mAudioSpeedMin = 0.50f;
     protected float mAudioSpeedMax = 2.0f;
     private final float epsilon = 1e-5f;
 
@@ -1806,7 +1806,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         boolean speedChanged = speed != mAudioSpeed || force;
         if (speedChanged &&
                 (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) &&
-                speed > 0.20f && speed < 2.05f) { // min granularity is 0.05
+                speed > 0.45f && speed < 2.05f) { // min granularity is 0.05
             log.debug("setAudioSpeed: audio speed changed from {} to {}", mAudioSpeed, speed);
             mAudioSpeed = speed;
             if ((AUDIO_SPEED_ON_THE_FLY && mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false)) || force) {
