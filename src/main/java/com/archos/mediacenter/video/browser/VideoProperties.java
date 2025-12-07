@@ -31,11 +31,11 @@ public class VideoProperties {
         return bookmark;
     }
 
-    public int getBookmarkPosition() {
+    public long getBookmarkPosition() {
         return bookmarkPosition;
     }
 
-    public int getResumePosition() {
+    public long getResumePosition() {
         return resumePosition;
     }
 
@@ -43,7 +43,7 @@ public class VideoProperties {
         return subtitles;
     }
 
-    public int getDuration() {
+    public long getDuration() {
         return duration;
     }
 
@@ -109,7 +109,7 @@ public class VideoProperties {
         this.bookmark = bookmark;
     }
 
-    public void setBookmarkPosition(int bookmarkPosition) {
+    public void setBookmarkPosition(long bookmarkPosition) {
         this.bookmarkPosition = bookmarkPosition;
     }
 
@@ -117,7 +117,7 @@ public class VideoProperties {
         this.resume = resume;
     }
 
-    public void setResumePosition(int resumePosition) {
+    public void setResumePosition(long resumePosition) {
         this.resumePosition = resumePosition;
     }
 
@@ -125,7 +125,7 @@ public class VideoProperties {
         this.subtitles = subtitles;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 
@@ -184,11 +184,11 @@ public class VideoProperties {
     public void setNameList(String nameList) {
         this.nameList = nameList;
     }
-    public int bookmarkPosition;
+    public long bookmarkPosition;
     public boolean resume;
-    public int resumePosition;
+    public long resumePosition;
     public boolean subtitles;
-    public int duration;
+    public long duration;
     public int id;
     public int scraperType;
     public float rating;
@@ -200,8 +200,8 @@ public class VideoProperties {
     public String detailLineOne, detailLineTwo, detailLineThree;
     public String name, nameGrid, nameList;
 
-    public VideoProperties(int id, int duration, boolean bookmark, int bookmarkPosition,
-                           boolean resume, int resumePosition, boolean subtitles,
+    public VideoProperties(int id, long duration, boolean bookmark, long bookmarkPosition,
+                           boolean resume, long resumePosition, boolean subtitles,
                            int scraperType, String name, String nameGrid, String nameList,
                            float rating, String detailLineOne, String detailLineTwo,
                            String detailLineThree, String coverPath, long date, int traktSeen,

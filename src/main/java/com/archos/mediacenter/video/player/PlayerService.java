@@ -482,9 +482,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mExplicitPosition = intent.getIntExtra("floating_player_position", -1);
             if (log.isDebugEnabled()) log.debug("PlayerService.onStart: Found floating_player_position={}", mExplicitPosition);
         } else if (intent.hasExtra("position")) {
-            int position = intent.getIntExtra("position", -1);
+            long position = intent.getIntExtra("position", -1);
             if (position > 0) {
-                mExplicitPosition = position;
+                mExplicitPosition = (int)position;
                 if (log.isDebugEnabled()) log.debug("PlayerService.onStart: Found position extra={}", mExplicitPosition);
             }
         }
@@ -890,8 +890,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private int getBookmarkPosition() {
         if (mPlayer.getDuration() != 0) {
             /* resume a little before */
-            int position = mPlayer.getCurrentPosition();
-            return position > 3000 ? position - 1000 : 0;
+            long position = mPlayer.getCurrentPosition();
+            return (int)(position > 3000 ? position - 1000 : 0);
         } else {
             return mPlayer.getRelativePosition();
         }
@@ -912,9 +912,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 }
                 if (mVideoInfo != null && !PrivateMode.isActive()) {
                     mVideoInfo.resume = mLastPosition;
-                    int duration = mPlayer.getDuration();
+                    long duration = mPlayer.getDuration();
                     if (duration > 0)
-                        mVideoInfo.duration = duration;
+                        mVideoInfo.duration = (int)duration;
                     long utcSeconds = System.currentTimeMillis() / 1000L;
                     // Save UTC seconds only if the video has been scraped (has media information)
                     if (mVideoInfo.scraperTitle != null && !mVideoInfo.scraperTitle.isEmpty()) {
@@ -1005,8 +1005,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (mLastPosition == LAST_POSITION_END)
             return 100;
         int progress = 0;
-        int position = Player.sPlayer.getCurrentPosition();
-        int duration = mVideoInfo.duration;
+        long position = Player.sPlayer.getCurrentPosition();
+        long duration = mVideoInfo.duration;
         if (duration <= 0) {
             duration = Player.sPlayer.getDuration();
         }

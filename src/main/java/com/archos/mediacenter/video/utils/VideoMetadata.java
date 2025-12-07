@@ -47,7 +47,7 @@ public class VideoMetadata implements Serializable {
     private VideoTrack mVideoTrack;
     private AudioTrack[] mAudioTrackList;
     private SubtitleTrack[] mSubtitleTrackList;
-    private int mDuration;
+    private long mDuration;  // Changed from int to long to support videos longer than 24.8 days
     private int mVideoWidth;
     private int mVideoHeight;
     private long mFileSize;
@@ -224,7 +224,7 @@ public class VideoMetadata implements Serializable {
         if (data.has(IMediaPlayer.METADATA_KEY_FILE_SIZE))
             mFileSize = data.getLong(IMediaPlayer.METADATA_KEY_FILE_SIZE);
 	    if (data.has(IMediaPlayer.METADATA_KEY_DURATION))
-            mDuration = data.getInt(IMediaPlayer.METADATA_KEY_DURATION);
+            mDuration = data.getLong(IMediaPlayer.METADATA_KEY_DURATION);
         if (data.has(IMediaPlayer.METADATA_KEY_VIDEO_WIDTH))
             mVideoWidth = data.getInt(IMediaPlayer.METADATA_KEY_VIDEO_WIDTH);
         if (data.has(IMediaPlayer.METADATA_KEY_VIDEO_HEIGHT))
@@ -275,7 +275,7 @@ public class VideoMetadata implements Serializable {
             }
             mVideoWidth = getMetadataRetrieverInt(retriever, IMediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
             mVideoHeight = getMetadataRetrieverInt(retriever, IMediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
-            mDuration = getMetadataRetrieverInt(retriever, IMediaMetadataRetriever.METADATA_KEY_DURATION);
+            mDuration = getMetadataRetrieverLong(retriever, IMediaMetadataRetriever.METADATA_KEY_DURATION);
         } catch (Exception ex) {
         }
         retriever.release();
@@ -303,10 +303,10 @@ public class VideoMetadata implements Serializable {
     public int getVideoHeight() {
         return mVideoHeight;
     }
-    public void setDuration(int duration) {
+    public void setDuration(long duration) {
         mDuration = duration;
     }
-    public int getDuration() {
+    public long getDuration() {
         return mDuration;
     }
     public long getFileSize() {

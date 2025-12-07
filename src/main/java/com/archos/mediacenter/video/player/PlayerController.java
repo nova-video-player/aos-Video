@@ -1175,11 +1175,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if (mIsStopped) {
             return 0;
         }
-        int position = mNextSeek == -1 ? Player.sPlayer.getCurrentPosition() : mNextSeek;
+        long position = mNextSeek == -1 ? Player.sPlayer.getCurrentPosition() : mNextSeek;
         if (position < 0) {
             position = 0;
         }
-        int duration = Player.sPlayer.getDuration();
+        long duration = Player.sPlayer.getDuration();
         if (log.isDebugEnabled()) log.debug("setProgress player position/duration={}/{}", position, duration);
         CharSequence endText = "";
         CharSequence currentText = "";

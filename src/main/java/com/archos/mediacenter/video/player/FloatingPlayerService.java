@@ -800,11 +800,11 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     };
 
     private void setProgress() {
-        int position = mNextSeek == -1 ? Player.sPlayer.getCurrentPosition() : mNextSeek;
+        long position = mNextSeek == -1 ? Player.sPlayer.getCurrentPosition() : mNextSeek;
         if (position < 0) {
             position = 0;
         }
-        int duration = Player.sPlayer.getDuration();
+        long duration = Player.sPlayer.getDuration();
 
         if (mProgress != null) {
             if (duration > 0) {

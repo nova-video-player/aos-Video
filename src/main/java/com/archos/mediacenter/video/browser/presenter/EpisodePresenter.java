@@ -58,10 +58,10 @@ public class EpisodePresenter extends VideoPresenter implements Presenter {
         if(name == null ||  name.isEmpty())
             name = episode.getShowName()+ " "+ mContext.getString(R.string.leanback_episode_SXEX_code, episode.getSeasonNumber(), episode.getEpisodeNumber());
         holder.name.setText(name);
-        int resumePosition = episode.getRemoteResumeMs()>0?episode.getRemoteResumeMs():episode.getResumeMs();
+        long resumePosition = episode.getRemoteResumeMs()>0?episode.getRemoteResumeMs():episode.getResumeMs();
         boolean resume = resumePosition>0 || resumePosition == PlayerActivity.LAST_POSITION_END;
         if (resume&&holder.resume!=null) {
-            int duration = episode.getDurationMs();
+            long duration = episode.getDurationMs();
 
             duration = duration > 0 ? duration : resumePosition>0&&resumePosition<=100? 100 : 0;//resume can now be a percentage
 

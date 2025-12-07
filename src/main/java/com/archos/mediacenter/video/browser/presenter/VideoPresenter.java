@@ -135,7 +135,7 @@ public class VideoPresenter extends CommonPresenter{
         }
         return view;
     }
-    public void setResume(boolean display, int max, int resumePosition, ProgressBar resume){
+    public void setResume(boolean display, long max, long resumePosition, ProgressBar resume){
         if (display) {
             resume.setMax(max);
             resume.setProgress(resumePosition == PlayerActivity.LAST_POSITION_END ? max : resumePosition);

@@ -52,10 +52,10 @@ public class Video extends Base implements Serializable {
     private boolean mHasSubs;
     String mFriendlyPath; // sometimes we will want a more beautiful uri (for example in upnp, with real server name)
     final String mFilenameWithExtension;
-    /** Duration in milliseconds. May equals PlayerActivity.LAST_POSITION_UNKNOWN or PlayerActivity.LAST_POSITION_END */
-    int mDurationMs;
-    int mResumeMs;
-    int mRemoteResume =-1;
+    /** Duration in milliseconds (changed to long to support videos >24.8 days). May equals PlayerActivity.LAST_POSITION_UNKNOWN or PlayerActivity.LAST_POSITION_END */
+    long mDurationMs;
+    long mResumeMs;
+    long mRemoteResume =-1;
 
     final int mVideo3dMode; // one of ARCHOS_STEREO_2D, ARCHOS_STEREO_3D_UNKNOWN, ARCHOS_STEREO_3D_SBS, ARCHOS_STEREO_3D_TB, ARCHOS_STEREO_3D_ANAGLYPH
     final int mGuessedDefinition; // one of ARCHOS_DEFINITION_UNKNOWN, ARCHOS_DEFINITION_720P, ARCHOS_DEFINITION_1080P
@@ -66,13 +66,13 @@ public class Video extends Base implements Serializable {
     private VideoMetadata mMetaData;
     private String mStreamingUri;
 
-    public Video(long id, String filePath, String name, Uri posterUri, int durationMs, int resumeMs,
+    public Video(long id, String filePath, String name, Uri posterUri, long durationMs, long resumeMs,
                  int video3dMode, int guessedDefinition, boolean traktSeen, boolean isTraktLibrary, boolean hasSubs, boolean isUserHidden, long lastTimePlayed, long size) {
         this(id, filePath, name, posterUri, durationMs, resumeMs,
         video3dMode, guessedDefinition, traktSeen, isTraktLibrary, hasSubs, isUserHidden, lastTimePlayed,-1, -1, null, null, null, null, -1,1,size);
     }
 
-    public Video(long id, String filePath, String name, Uri posterUri, int durationMs, int resumeMs,
+    public Video(long id, String filePath, String name, Uri posterUri, long durationMs, long resumeMs,
                  int video3dMode, int guessedDefinition, boolean traktSeen, boolean isTraktLibrary,
                  boolean hasSubs,
                  boolean isUserHidden,
@@ -145,14 +145,14 @@ public class Video extends Base implements Serializable {
         return mFilePath;
     }
 
-    public int getDurationMs() { return mDurationMs; }
+    public long getDurationMs() { return mDurationMs; }
 
-    public int getResumeMs() { return mResumeMs; }
+    public long getResumeMs() { return mResumeMs; }
 
     public long getSize(){return mSize;}
 
-    public void setResumeMs(int resumeMs) { mResumeMs = resumeMs; }
-    public void setRemoteResumeMs(int resumeMs) { mRemoteResume = resumeMs; }
+    public void setResumeMs(long resumeMs) { mResumeMs = resumeMs; }
+    public void setRemoteResumeMs(long resumeMs) { mRemoteResume = resumeMs; }
     public boolean is3D() {
         return (mVideo3dMode > VideoStore.Video.VideoColumns.ARCHOS_STEREO_2D);
     }
@@ -311,11 +311,11 @@ public class Video extends Base implements Serializable {
         else return getFilePath();
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(long duration) {
         mDurationMs = duration;
     }
 
-    public int getRemoteResumeMs() {
+    public long getRemoteResumeMs() {
         return mRemoteResume;
     }
 

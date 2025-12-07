@@ -93,7 +93,7 @@ public class Player implements IPlayerControl,
     private Uri         mUri;
     private Uri         mSaveUri;
     private Map<String, String> mExtraMap;
-    private int         mDuration;
+    private long        mDuration;
 
     // all possible internal states
     private static final int STATE_ERROR              = -1;
@@ -160,8 +160,8 @@ public class Player implements IPlayerControl,
     private boolean     mIsBusy;
     private int         mBufferPosition;
     private int         mRelativePosition;
-    private int         mStopPosition;
-    private int         mSaveStopPosition;
+    private long        mStopPosition;
+    private long        mSaveStopPosition;
     private boolean     mUpdateMetadata;
 
     private Handler     mHandler = new Handler();
@@ -243,7 +243,7 @@ public class Player implements IPlayerControl,
 
 
     private class ResumeCtx {
-        private int     mSeek;
+        private long    mSeek;
         private int     mSubtitleTrack;
         private int     mSubtitleDelay;
         private int     mSubtitleRatioN;
@@ -289,10 +289,10 @@ public class Player implements IPlayerControl,
                 mMediaPlayer.setAudioTrack(mAudioTrack);
             reset();
         }
-        public void setSeek(int seek) {
+        public void setSeek(long seek) {
             mSeek = seek;
         }
-        public int getSeek() {
+        public long getSeek() {
             return mSeek;
         }
         public void setSubtitleTrack(int subtitleTrack) {
@@ -754,16 +754,16 @@ public class Player implements IPlayerControl,
     }
 
     // cache duration as mDuration for faster access
-    public int getDuration() {
+    public long getDuration() {
         if (isInPlaybackState()) {
             mDuration = mMediaPlayer.getDuration();
         }
         return mDuration;
     }
 
-    public int getCurrentPosition() {
+    public long getCurrentPosition() {
         if (isInPlaybackState()) {
-            int currentPos = mMediaPlayer.getCurrentPosition();
+            long currentPos = mMediaPlayer.getCurrentPosition();
             if (log.isDebugEnabled()) log.debug("getCurrentPosition: {}", currentPos);
             return currentPos;
         } else if (mStopPosition != -1) {
@@ -780,7 +780,7 @@ public class Player implements IPlayerControl,
         return mRelativePosition;
     }
     
-    public void seekTo(int msec) {
+    public void seekTo(long msec) {
         if (log.isDebugEnabled()) log.debug("seekTo: {} ms", msec);
         if (isInPlaybackState()) {
             if (mPlayerListener != null) {
@@ -1310,7 +1310,7 @@ public class Player implements IPlayerControl,
         void onPrepared();
         void onCompletion();
         boolean onError( int errorCode, int errorQualCode, String msg);
-        void onSeekStart(int pos);
+        void onSeekStart(long pos);
         void onSeekComplete();
         void onAllSeekComplete();
         void onPlay(int state);
