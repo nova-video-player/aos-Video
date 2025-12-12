@@ -10,14 +10,13 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical|center_horizontal"
         android:baselineAligned="false"
-        android:paddingStart="1dip"
-        android:paddingEnd="1dip"
+        android:padding="1dp"
         tools:ignore="UselessParent"
         >
 
         <com.archos.mediacenter.video.utils.NovaWebView android:id="@id/webview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scrollbars="none" />
     </LinearLayout>
 </FrameLayout>
