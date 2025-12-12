@@ -19,11 +19,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
@@ -38,6 +46,7 @@ import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 public class TraktSigninDialogPreference extends Preference {
+    private AlertDialog networkDialog; // class-level
 
     private final static boolean DBG = false;
     private static final String TAG = TraktSigninDialogPreference.class.getSimpleName();
@@ -127,11 +136,44 @@ public class TraktSigninDialogPreference extends Preference {
                     if (!(context instanceof Activity) || ((Activity) context).isFinishing() || ((Activity) context).isDestroyed()) {
                         return;
                     }
-                    new AlertDialog.Builder(getContext())
-                            .setNegativeButton(android.R.string.ok, null)
-                            .setMessage(R.string.dialog_subloader_nonetwork_title)
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+
+                    //no internet dialog
+                    if (networkDialog != null && networkDialog.isShowing()) {
+                        return; // already showing, skip creating a new one
+                    }
+                    View customTitleView = LayoutInflater.from(context)
+                            .inflate(R.layout.dialog_custom_title, null);
+                    TextView textView = customTitleView.findViewById(R.id.dialog_title);
+                    textView.setText(R.string.dialog_subloader_nonetwork_title);
+                    ImageView iconView = customTitleView.findViewById(R.id.dialog_icon);
+                    iconView.setImageResource(android.R.drawable.ic_dialog_alert);
+                    Typeface messageTypeface = ResourcesCompat.getFont(context, R.font.nhaasgroteskdspro_65md);
+
+                    AlertDialog.Builder dialogNoNetwork =
+                            new AlertDialog.Builder(context, R.style.CustomDialogTheme);
+                    dialogNoNetwork.setCustomTitle(customTitleView);
+                    dialogNoNetwork.setMessage(R.string.dialog_subloader_nonetwork_title);
+                    dialogNoNetwork.setNegativeButton(android.R.string.ok, null);
+
+                    // Create dialog
+                    networkDialog = dialogNoNetwork.create();
+                    networkDialog.show();
+
+                    TextView messageView = networkDialog.findViewById(android.R.id.message);
+                    if (messageView != null) {
+                        messageView.setTypeface(messageTypeface);
+                        messageView.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    }
+
+                    Button negativeButton = networkDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                    if (negativeButton != null) {
+                        negativeButton.setText(android.R.string.ok);
+                        negativeButton.setTypeface(ResourcesCompat.getFont(context, R.font.nhaasgrotesktxpro_75bd));
+                        negativeButton.setTextColor(ContextCompat.getColor(context, R.color.green_accent));
+                        negativeButton.setBackground(ContextCompat.getDrawable(context, R.drawable.custom_ripple));
+                        negativeButton.setClipToOutline(true);
+                        negativeButton.setOnClickListener(v -> networkDialog.dismiss());
+                    }
                 }
             };
 
