@@ -2983,7 +2983,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
             // get resume position only if video was played
             mLastPosition = getLastPosition(mVideoInfo, mResume);
-            if (!mCling) {
+            if (!mCling && mVideoInfo.title != null) {
                 mTitle = mVideoInfo.title;
             }
             mMovieOrShowName = null;
