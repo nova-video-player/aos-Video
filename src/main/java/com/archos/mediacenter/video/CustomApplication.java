@@ -1284,7 +1284,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         // if nova is upgraded from 6.4.22 and below disable force_passthrough and android frame timing
         if ((novaPreviousVersionArray[0] < 6) ||
             (novaPreviousVersionArray[0] == 6 && novaPreviousVersionArray[1] < 4) ||
-            (novaPreviousVersionArray[0] == 6 && novaPreviousVersionArray[1] == 4 && novaPreviousVersionArray[2] <= 28)) {
+            (novaPreviousVersionArray[0] == 6 && novaPreviousVersionArray[1] == 4 && novaPreviousVersionArray[2] <= 36)) {
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit()
                     .putBoolean(VideoPreferencesCommon.KEY_FORCE_AUDIO_PASSTHROUGH, false)
@@ -1297,6 +1297,11 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                     .edit()
                     .putBoolean(VideoPreferencesCommon.KEY_PLAYBACK_SPEED, true)
                     .apply();
+            // disable smbj since it is now no longer faster than jcfis-ng
+            PreferenceManager.getDefaultSharedPreferences(context)
+                    .edit()
+                    .putBoolean(VideoPreferencesCommon.KEY_SMBJ, false)
+                    .apply();
         }
         // do not replace lastPlayed row with watchingUpNext one since it is still a little slow on shield
         /*
@@ -1305,11 +1310,11 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit()
                     .putBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, true)
-                    .commit();
+                    .apply();
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit()
                     .putBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_PLAYED_ROW, false)
-                    .commit();
+                    .apply();
         }
          */
 
