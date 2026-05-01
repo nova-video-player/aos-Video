@@ -13,7 +13,7 @@ buildscript {
 
 plugins {
     id "com.github.triplet.play" version "3.13.0" apply false
-    id "io.sentry.android.gradle" version "6.1.0" apply false
+    id "io.sentry.android.gradle" version "6.5.0" apply false
     //id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
@@ -154,8 +154,8 @@ android {
         // below version tracks the one from F-Droid or universal package when generated with ./gradlew -Puniversal
         // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
         // amazon apk is generated with ./gradlew -Poneapk
-        versionCode = 6040035
-        versionName = '6.4.35'
+        versionCode = 6040036
+        versionName = '6.4.36'
         def novaVersionName = versionName
         if (! project.hasProperty("universal")) {
             // override versionName and versionCode to get it dependent on the date
@@ -364,7 +364,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:5.3.2'
     implementation 'com.github.tony19:logback-android:3.0.0'
     implementation 'io.sentry:sentry-android:8.37.1'
-    implementation 'io.sentry:sentry:8.37.1'
+    implementation 'io.sentry:sentry:8.40.0'
 }
 
 configurations { // try to exclude device specific libraries interfering
