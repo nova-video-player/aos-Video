@@ -577,8 +577,6 @@
     <string name="network_thumbnails">Δημιουργία απομακρυσμένων μικρογραφιών</string>
     <string name="network_thumbnails_summary">Δημιουργία μικρογραφιών από απομακρυσμένα βίντεο όταν δεν υπάρχει διαθέσιμη αφίσα</string>
     <string name="network_bookmarks_summary">Αποθήκευση και έλεγχος για συνέχιση σημείου και θέσης σελιδοδεικτών στο δίκτυο όταν είναι εφικτό</string>
-    <string name="share_folders_smbj">Χρήση γρηγορότερης υλοποίησης SMB (SMB2+)</string>
-    <string name="share_folders_smbj_summary">Ενεργοποιεί ταχύτερο ρυθμό μετάδοσης SMB, αλλά περιορίζει στη χρήση πρωτοκόλλου άνω της έκδοσης 2</string>
     <string name="share_folders_sshj">Χρήση νεότερης υλοποίησης SFTP</string>
     <string name="share_folders_sshj_summary">Ενεργοποίηση νέας υλοποίησης SFTP για συνδέσμους SFTP</string>
     <string name="share_folders_smbv2">Ενεργοποίηση υποστήριξης SMBv2</string>

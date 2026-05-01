@@ -558,6 +558,8 @@
     <string name="preferences_tv_refreshrate_switch_disabled">Désactivé</string>
     <string name="preferences_tv_refreshrate_switch_mode_selection">Sélection du mode d\'affichage correspondant aux fps de la vidéo</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">Fonctionnalité d\'Android 12+ d\'adaptation à la fréquence d\'images de la vidéo</string>
+    <string name="preference_dolby_vision_mode">Mode Dolby Vision</string>
+    <string name="preference_force_dolby_vision">Forcer Dolby Vision</string>
     <string name="preference_remove_dolby_vision">Désactiver dolby vision</string>
     <string name="preference_remove_dolby_vision_summary">Utilisez des codecs vidéo standards plutôt que dolby vision</string>
     <string name="preference_cutout_short_edges">Vidéo plein écran même en présence d\'encoche</string>
@@ -655,8 +657,8 @@
     <string name="network_thumbnails">Miniatures des stockages distants</string>
     <string name="network_thumbnails_summary">Créer les miniatures des stockages distants</string>
     <string name="network_bookmarks_summary">Sauvegarde et lit les points de reprise et marque-pages sur le réseau lorsque cela est possible</string>
-    <string name="share_folders_smbj">Utiliser une implémentation SMB plus rapide (SMB2+)</string>
-    <string name="share_folders_smbj_summary">Active un débit SMB plus rapide, mais limite la prise en charge à un protocole supérieur à la version 2.</string>
+    <string name="share_folders_smbj">Utiliser une implémentation SMB alternative (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Activer l\'implémentation SMB alternative limitant le support au protocole supérieur à la version 2. Attention : peut être plus lent sur certains appareils.</string>
     <string name="share_folders_sshj">Utiliser une implémentation SFTP plus récente</string>
     <string name="share_folders_sshj_summary">Activer la nouvelle implémentation SFTP pour les liens SFTP</string>
     <string name="share_folders_smbv2">Activer le support SMBv2</string>
@@ -733,7 +735,6 @@
     <string name="audio_interface_any">Logique par défaut</string>
     <string name="mediacodec_audio_capabilities">Capacités audio MediaCodec</string>
     <string name="spatialization_capabilities">Spatialisation système</string>
-    <string name="technical_information">Informations techniques</string>
     <string name="status_unsupported_api">non pris en charge (API %1$d)</string>
     <string name="status_not_supported">non supporté</string>
     <string name="status_supported">supporté</string>

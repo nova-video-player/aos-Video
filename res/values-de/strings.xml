@@ -654,8 +654,6 @@
     <string name="network_thumbnails">Remote-Thumbnails erstellen</string>
     <string name="network_thumbnails_summary">Erstellen Sie Thumbnails von Remote-Videos, wenn kein Poster zur Verfügung steht</string>
     <string name="network_bookmarks_summary">Wenn möglich Fortsetzungspunkte und Lesezeichen auf Netzwerkfreigaben speichern</string>
-    <string name="share_folders_smbj">Schnellere SMB-Implementierung verwenden (SMB2+)</string>
-    <string name="share_folders_smbj_summary">Schnelleren SMB-Durchsatz aktivieren, aber begrenzt die Unterstützung auf Protokoll oberhalb der Version 2.</string>
     <string name="share_folders_sshj">Neuere SFTP-Implementierung verwenden</string>
     <string name="share_folders_sshj_summary">Neue SFTP-Implementierung für SFTP-Links aktivieren</string>
     <string name="share_folders_smbv2">SMBv2 Unterstützung aktivieren</string>

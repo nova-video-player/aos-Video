@@ -657,8 +657,6 @@ desteklenmiyor.</string>
     <string name="network_thumbnails">Küçük resimler oluştur</string>
     <string name="network_thumbnails_summary">Poster yokken uzak videolardan küçük resimler oluşturun</string>
     <string name="network_bookmarks_summary">Mümkün olduğunda ağdaki devam noktası ve konum yer işaretlerini kaydedin ve kontrol edin</string>
-    <string name="share_folders_smbj">Daha hızlı SMB entegrasyonu (SMB2+) kullan</string>
-    <string name="share_folders_smbj_summary">SMB veri aktarım hızını artırır, ancak desteği protokolün 2. sürümünün üstündeki sürümlerle sınırlar</string>
     <string name="share_folders_sshj">Daha yeni bir SFTP entegrasyonu kullan</string>
     <string name="share_folders_sshj_summary">SFTP bağlantıları için yeni SFTP kullanımını etkinleştir</string>
     <string name="share_folders_smbv2">SMBv2 desteğini etkinleştir</string>
@@ -735,7 +733,6 @@ desteklenmiyor.</string>
     <string name="audio_interface_any">Varsayılan mantık</string>
     <string name="mediacodec_audio_capabilities">MediaCodec ses özellikleri</string>
     <string name="spatialization_capabilities">Platformun yerselleştirilmesi</string>
-    <string name="technical_information">Teknik bilgi</string>
     <string name="status_unsupported_api">desteklenmiyor (API %1$d)</string>
     <string name="status_not_supported">desteklenmiyor</string>
     <string name="status_supported">destekleniyor</string>

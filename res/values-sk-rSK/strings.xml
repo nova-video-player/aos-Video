@@ -665,8 +665,6 @@
     <string name="network_thumbnails">Vytvorenie vzdialených náhľadov</string>
     <string name="network_thumbnails_summary">Vytvorenie náhľadov zo vzdialených videí, keď nie je k dispozícii žiadny plagát</string>
     <string name="network_bookmarks_summary">Uloženie a kontrola bodu obnovenia a polohy záložiek v sieti, ak je to možné</string>
-    <string name="share_folders_smbj">Použitie rýchlejšej implementácie SMB (SMB2+)</string>
-    <string name="share_folders_smbj_summary">Umožňuje rýchlejšiu priepustnosť SMB, ale obmedzuje podporu protokolu nad verziou 2</string>
     <string name="share_folders_sshj">Použitie novšej implementácie SFTP</string>
     <string name="share_folders_sshj_summary">Povolenie novej implementácie SFTP pre odkazy SFTP</string>
     <string name="share_folders_smbv2">Zapnutie podpory SMBv2</string>
@@ -743,7 +741,6 @@
     <string name="audio_interface_any">Predvolené správanie</string>
     <string name="mediacodec_audio_capabilities">MediaCodec funkcie zvuku</string>
     <string name="spatialization_capabilities">Priestorová platforma</string>
-    <string name="technical_information">Technické informácie</string>
     <string name="status_unsupported_api">nepodporované (API %1$d)</string>
     <string name="status_not_supported">nie je podporované</string>
     <string name="status_supported">podporované</string>

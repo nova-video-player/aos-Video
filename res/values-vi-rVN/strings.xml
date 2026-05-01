@@ -623,8 +623,6 @@
     <string name="network_thumbnails">Tạo hình thu nhỏ từ xa</string>
     <string name="network_thumbnails_summary">Tạo hình thu nhỏ từ các cuộn phim từ xa khi không có áp phích</string>
     <string name="network_bookmarks_summary">Lưu và kiểm tra điểm tiếp tục và vị trí đánh dấu trên mạng khi có thể</string>
-    <string name="share_folders_smbj">Sử dụng triển khai SMB nhanh hơn (SMB2+)</string>
-    <string name="share_folders_smbj_summary">Bật thông lượng SMB nhanh hơn nhưng giới hạn hỗ trợ đối với giao thức cao hơn phiên bản 2</string>
     <string name="share_folders_sshj">Sử dụng cách triển khai SFTP mới hơn</string>
     <string name="share_folders_sshj_summary">Bật triển khai SFTP mới cho các liên kết SFTP</string>
     <string name="share_folders_smbv2">Bật hỗ trợ SMBv2</string>

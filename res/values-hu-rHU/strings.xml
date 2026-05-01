@@ -654,8 +654,6 @@
     <string name="network_thumbnails">Távoli miniatűrök létrehozása</string>
     <string name="network_thumbnails_summary">Hozzon létre miniatűröket távoli videókból, ha nincs elérhető plakát</string>
     <string name="network_bookmarks_summary">Mentse és ellenőrizze a folytatási pontokat és a helyzetjelzőket a hálózaton, amennyiben lehetséges</string>
-    <string name="share_folders_smbj">Gyorsabb SMB alkalmazás használata (SMB2+)</string>
-    <string name="share_folders_smbj_summary">Gyorsabb SMB átvitelt engedélyez, viszont a legrégebbi használható protokolverzíót 2-re korlátozza</string>
     <string name="share_folders_sshj">Újabb SFTP alkalmazások használata</string>
     <string name="share_folders_sshj_summary">Az új SFTP alkalmazások használata SFTP hivatkozásoknál</string>
     <string name="share_folders_smbv2">SMBv2 támogatás engedélyezése</string>

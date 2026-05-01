@@ -650,8 +650,6 @@
     <string name="network_thumbnails">创建远程缩略图</string>
     <string name="network_thumbnails_summary">在没有海报可用时从远程视频创建缩略图</string>
     <string name="network_bookmarks_summary">尽可能在网络上保存并检查播放进度和位置书签</string>
-    <string name="share_folders_smbj">使用更快的 SMB 实现方式 (SMB2+)</string>
-    <string name="share_folders_smbj_summary">启用更快的 SMB 吞吐，但将支持限制为SMB 2以上的协议。</string>
     <string name="share_folders_sshj">使用较新的 SFTP 实现方式</string>
     <string name="share_folders_sshj_summary">为 SFTP 链接启用新的 SFTP 实现方式</string>
     <string name="share_folders_smbv2">启用 SMBv2 支持</string>
@@ -728,7 +726,6 @@
     <string name="audio_interface_any">默认逻辑</string>
     <string name="mediacodec_audio_capabilities">MediaCodec 音频功能</string>
     <string name="spatialization_capabilities">平台空间化</string>
-    <string name="technical_information">技术信息</string>
     <string name="status_unsupported_api">不受支持（API %1$d）</string>
     <string name="status_not_supported">不支持</string>
     <string name="status_supported">支持</string>

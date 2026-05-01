@@ -65,6 +65,10 @@
     <string name="recently_added_videos">Добавленные</string>
     <string name="recently_played">Просмотренные</string>
     <string name="recently_played_videos">Просмотренные</string>
+    <string name="new_and_unwatched">Новые видео</string>
+    <string name="new_and_unwatched_videos">Новые видео</string>
+    <string name="keep_watching">Продолжить просмотр</string>
+    <string name="keep_watching_videos">Продолжить просмотр</string>
     <string name="video_lists">Плейлисты</string>
     <!-- The string used in main storage list -->
     <string name="external_storage">Внешн.</string>
@@ -592,6 +596,8 @@
     <string name="tv_scraper">Сериалы</string>
     <string name="movie_scraper">Фильмы</string>
     <string name="enable_auto_scrap">Автоматически получать информацию для новых видео</string>
+    <string name="enable_scrape_from_db_title">Использовать уже загруженную информацию</string>
+    <string name="enable_scrape_from_db_summary">Для дублирующихся видео будет использована уже загруженная информация. Отключите чтобы первое распознавание библиотеки было быстрее!</string>
     <string name="enable_adult_scrap_title">Распознавание видео для взрослых</string>
     <string name="enable_adult_scrap_summary">Включить поиск информации о фильмах для взрослых (по умолчанию: выкл)</string>
     <string name="locale">Язык системы</string>
@@ -639,8 +645,6 @@
     <string name="network_thumbnails">Эскизы видео на сетевых источниках</string>
     <string name="network_thumbnails_summary">Cоздавать эскизы для видео на сетевых источниках, когда недоступен постер</string>
     <string name="network_bookmarks_summary">Сохранять точки возобновления просмотра и позиции закладок по сети, когда доступно</string>
-    <string name="share_folders_smbj">Использовать ускоренную реализацию SMB (SMB2+)</string>
-    <string name="share_folders_smbj_summary">Включает более быструю пропускную способность SMB, но поддерживает только протокол выше 2 версии.</string>
     <string name="share_folders_sshj">Использовать новую реализацию SFTP</string>
     <string name="share_folders_sshj_summary">Включает новую реализацию SFTP для SFTP ссылок</string>
     <string name="share_folders_smbv2">Включить поддержку SMBv2</string>
