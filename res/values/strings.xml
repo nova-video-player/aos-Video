@@ -727,8 +727,8 @@
     <string name="network_thumbnails">Create remote thumbnails</string>
     <string name="network_thumbnails_summary">Create thumbnails from remote videos when no poster available</string>
     <string name="network_bookmarks_summary">Save and check for resume point and position bookmarks on network when possible</string>
-    <string name="share_folders_smbj">Use faster SMB implementation (SMB2+)</string>
-    <string name="share_folders_smbj_summary">Enable faster SMB throughput but limits support to protocol above version 2</string>
+    <string name="share_folders_smbj">Use alternate SMB implementation (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Enable alternate SMB implementation limiting support to protocol above version 2. Warning: can be slower on some devices.</string>
     <string name="share_folders_sshj">Use newer SFTP implementation</string>
     <string name="share_folders_sshj_summary">Enable new SFTP implementation for SFTP links</string>
     <string name="share_folders_smbv2">Enable SMBv2 support</string>
