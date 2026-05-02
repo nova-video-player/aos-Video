@@ -558,6 +558,8 @@
     <string name="preferences_tv_refreshrate_switch_disabled">Desativado</string>
     <string name="preferences_tv_refreshrate_switch_mode_selection">Seleção do modo de exibição conforme o fps do vídeo</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">Recurso de correspondência de taxa de quadros do Android 12+</string>
+    <string name="preference_dolby_vision_mode">Modo Dolby Vision</string>
+    <string name="preference_force_dolby_vision">Forçar Visão Dolby</string>
     <string name="preference_remove_dolby_vision">Desativar Dolby Vision</string>
     <string name="preference_remove_dolby_vision_summary">Usar codecs de vídeo padrão em vez de Dolby Vision</string>
     <string name="preference_cutout_short_edges">Vídeo em tela cheia com recortes de tela</string>
@@ -655,6 +657,8 @@
     <string name="network_thumbnails">Criar miniaturas remotas</string>
     <string name="network_thumbnails_summary">Criar miniaturas de vídeos remotos quando um cartaz não estiver disponível</string>
     <string name="network_bookmarks_summary">Salvar e verificar pontos de retomada e marcadores de posição na rede quando possível</string>
+    <string name="share_folders_smbj">Usar implementação SMB mais rápida (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Ativar a implementação SMB alternativa que limita o suporte ao protocolo acima da versão 2. Aviso: pode ser mais lento em alguns dispositivos.</string>
     <string name="share_folders_sshj">Usar implementação mais recente de SFTP</string>
     <string name="share_folders_sshj_summary">Ativar nova implementação SFTP para links SFTP</string>
     <string name="share_folders_smbv2">Ativar suporte a SMBv2</string>
