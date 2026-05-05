@@ -128,13 +128,26 @@ public class PosterImageCardPresenter extends Presenter {
             if(!(mImageCardViewTarget.getLastUri()!=null&&mImageCardViewTarget.getLastUri().equals(imageUri) && mImageCardViewTarget.isLastStateError())) {
 
                 mImageCardViewTarget.setLastUri(imageUri);
-                mCardView.setMainImageDimensions(getWidth(mContext, isLarge), getHeight(mContext, isLarge));
+                int width = getWidth(mContext, isLarge);
+                int height = getHeight(mContext, isLarge);
+                mCardView.setMainImageDimensions(width, height);
                 mImageCardViewTarget.setVideoId(videoId);
+
+                // Safe Fidelity Target: request 1.6x resize during decode.
+                // This ensures Picasso doesn't use inSampleSize=2 for w780 sources (780/416 = 1.87 ratio),
+                // preserving full detail for our high-quality software filter.
+                int decodeWidth = (int) (width * 1.6f);
+                int decodeHeight = (int) (height * 1.6f);
+
                 Picasso.get()
                         // must use an Uri here, does not work with path only
                         .load(imageUri)
-                        .resize(getWidth(mContext, isLarge), getHeight(mContext, isLarge))
+                        .config(Bitmap.Config.ARGB_8888)
+                        .resize(decodeWidth, decodeHeight)
                         .centerCrop()
+                        .onlyScaleDown()
+                        .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(width, height))
+                        .noFade()
                         .error(mErrorDrawable)
                         .into(mImageCardViewTarget);
             }

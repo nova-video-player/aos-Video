@@ -291,8 +291,10 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                         bitmap = Picasso.get()
                                 .load(file)
                                 .noFade() // no fade since we are using activity transition anyway
-                                .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
-                                .centerCrop()
+                                .config(Bitmap.Config.ARGB_8888)
+                                .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(
+                                        getResources().getDimensionPixelSize(R.dimen.details_poster_width),
+                                        getResources().getDimensionPixelSize(R.dimen.details_poster_height)))
                                 .get();
                     }
                 }
@@ -413,11 +415,16 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             // Update the bitmap
             Bitmap bitmap=null;
             try {
+                int width = getResources().getDimensionPixelSize(R.dimen.details_poster_width);
+                int height = getResources().getDimensionPixelSize(R.dimen.details_poster_height);
                 bitmap = Picasso.get()
                         .load(poster.getLargeFileF())
                         .noFade()
-                        .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
+                        .config(Bitmap.Config.ARGB_8888)
+                        .resize((int)(width * 2.0f), (int)(height * 2.0f))
                         .centerCrop()
+                        .onlyScaleDown()
+                        .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(width, height))
                         .get();
 
             } catch (IOException e) {

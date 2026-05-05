@@ -1159,10 +1159,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     if (imageUri!=null) {
                         bitmap = Picasso.get()
                                 .load(imageUri)
-                                .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
-                                .centerCrop()
+                                .config(Bitmap.Config.ARGB_8888)
+                                .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(
+                                        getResources().getDimensionPixelSize(R.dimen.details_poster_width),
+                                        getResources().getDimensionPixelSize(R.dimen.details_poster_height)))
+                                .noFade()
                                 .get();
                     }
+
                 }
                 catch (IOException e) {
                     log.error("DetailsOverviewRow Picasso load exception", e);
@@ -1351,10 +1355,15 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             }
             if(imageUri != null){
                 try {
+                    int width = getResources().getDimensionPixelSize(R.dimen.details_poster_width);
+                    int height = getResources().getDimensionPixelSize(R.dimen.details_poster_height);
                     Bitmap bitmap  = Picasso.get().load(imageUri)
                             .noFade() // no fade since we are using activity transition anyway
-                            .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
+                            .config(Bitmap.Config.ARGB_8888)
+                            .resize((int)(width * 2.0f), (int)(height * 2.0f))
                             .centerCrop()
+                            .onlyScaleDown()
+                            .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(width, height))
                             .get();
                     if(bitmap!=null) {
                         return bitmap;
