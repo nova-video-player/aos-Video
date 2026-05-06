@@ -135,6 +135,16 @@ public class Subtitle3DTextView extends LinearLayout {
         mSecondaryTV.setOutlineState(outline);
     }
 
+    public void setBackgroundState(boolean show) {
+        mPrimaryTV.setBackgroundState(show);
+        mSecondaryTV.setBackgroundState(show);
+    }
+
+    public void setBackgroundOpacity(int opacity) {
+        mPrimaryTV.setBackgroundOpacity(opacity);
+        mSecondaryTV.setBackgroundOpacity(opacity);
+    }
+    
     public void setTextSize(float v) {
         mPrimaryTV.setTextSize(v);
         mSecondaryTV.setTextSize(v);

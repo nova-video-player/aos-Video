@@ -18,6 +18,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.text.TextPaint;
@@ -33,9 +34,31 @@ public class SubtitleTextView extends AppCompatTextView {
     private Surface mExternalSurface = null;
 
     private static boolean mOutline = false;
-   
+    private final Paint mBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private boolean mShowBackground = false;
+    private int mBgOpacity = 128;
+
+    // Reused objects to prevent memory allocation during onDraw
+    private Rect r = new Rect();
+    private int[] location = new int[2];
+    private final RectF mBgRect = new RectF();
+
     public SubtitleTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mBgPaint.setStyle(Paint.Style.FILL);
+        mBgPaint.setColor(android.graphics.Color.argb(128, 0, 0, 0)); // 50% black
+        setLineSpacing(0f, 1.15f);
+    }
+
+    public void setBackgroundState(boolean show) { 
+        mShowBackground = show; 
+        invalidate(); 
+    }
+
+    public void setBackgroundOpacity(int opacity) { 
+        mBgOpacity = opacity;
+        mBgPaint.setAlpha(mBgOpacity); // Updates the Paint opacity dynamically
+        invalidate(); 
     }
 
     public void setOutlineState(boolean outline) { mOutline = outline; }
@@ -59,9 +82,6 @@ public class SubtitleTextView extends AppCompatTextView {
         mExternalSurface = s;
     }
 
-    private Rect r = new Rect();
-    private int[] location = new int[2];
-
     @Override
     protected void onDraw(Canvas canvas) {
         Canvas c = canvas;
@@ -78,6 +98,51 @@ public class SubtitleTextView extends AppCompatTextView {
             } catch (Exception ignored) {
             }
         }
+        
+        // Draw black background behind subtitle text line-by-line
+        if (mShowBackground && getLayout() != null) {
+            android.text.Layout layout = getLayout();
+            
+            float padX = getTextSize() * 0.25f;
+            float padY = getTextSize() * 0.02f;
+            float radius = getTextSize() * 0.15f;
+            float gapY = getTextSize() * 0.08f;
+            
+            float offsetX = getTotalPaddingLeft() + getScrollX();
+            float offsetY = getTotalPaddingTop() + getScrollY();
+
+            // Find the last line that actually contains text
+            int lastTextLine = -1;
+            for (int i = 0; i < layout.getLineCount(); i++) {
+                if (layout.getLineRight(i) > layout.getLineLeft(i)) {
+                    lastTextLine = i;
+                }
+            }
+
+            for (int i = 0; i < layout.getLineCount(); i++) {
+                float left = layout.getLineLeft(i);
+                float right = layout.getLineRight(i);
+                
+                if (right > left) {
+                    float top = layout.getLineTop(i);
+                    float bottom = layout.getLineBottom(i);
+                    
+                    // Reduce the bottom of all lines EXCEPT the last one
+                    if (i < lastTextLine) {
+                        bottom -= gapY; 
+                    }
+                    mBgRect.set(
+                        left + offsetX - padX,
+                        top + offsetY - padY,
+                        right + offsetX + padX,
+                        bottom + offsetY + padY
+                    );
+
+                    c.drawRoundRect(mBgRect, radius, radius, mBgPaint); 
+                }
+            }
+        }
+
         // disable for now nice outline since it is too slow on lowend CPU/GPU (e.g. RK3128)
         if (mOutline) {
             TextPaint paint = getPaint();

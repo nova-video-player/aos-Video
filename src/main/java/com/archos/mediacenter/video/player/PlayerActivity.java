@@ -174,6 +174,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private static final int DIALOG_AUDIO_SPEED = 10;
 
     // accessed from SubtitleSettingsDialog
+    public static final String KEY_SUBTITLE_BACKGROUND = "subtitle_background";
+    public static final String KEY_SUBTITLE_BG_OPACITY = "subtitle_bg_opacity";
     /* package */ public static final String KEY_SUBTITLE_SIZE = "pref_play_subtitle_size_key";
     /* package */ public static final String KEY_SUBTITLE_VPOS = "pref_play_subtitle_vpos_key";
     public static final String KEY_SUBTITLE_OUTLINE = "pref_play_subtitle_outline_key";
@@ -1739,6 +1741,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 tvPicker2.postDelayed(r, 200);
             }
         });
+        
 
         tvmenu.createAndAddSeparator();
         final TVMenuItem tvm = tvmenu.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.subtitle_outline), mSubtitleManager.getOutlineState());
@@ -1751,6 +1754,53 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
         });
 
+        // [START] Subtitle Background Toggle
+        final TVMenuItem tvmBg = tvmenu.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.subtitle_background_text), mSubtitleManager.getBackgroundState()); // Make sure to add string resource or use literal "Subtitle Background"
+        tvmBg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean bg = mSubtitleManager.getBackgroundState();
+                tvmBg.setChecked(!bg);
+                mSubtitleManager.setBackgroundState(!bg);
+            }
+        });
+        // [END] Subtitle Background Toggle
+
+        // [START] Subtitle Background Opacity Picker
+        tvmenu.createAndAddTVMenuItem(getResources().getString(R.string.subtitle_bg_opacity_text), false);
+
+        final SubtitleDelayTVPicker tvPickerOpacity = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
+                .inflate(R.layout.subtitle_delay_tv_picker, null);
+        // Use a step of 1. Internally it becomes 100.
+        tvPickerOpacity.setStep(1); 
+        tvPickerOpacity.setMin(0);
+        // Max is 255. Internally it expects this multiplied by 100
+        tvPickerOpacity.setMax(255 * 100); 
+        tvmenu.addTVMenuItem(tvPickerOpacity);
+        tvPickerOpacity.setTextViewWidth((int) pickerWidth);
+        
+        // Stop it from formatting the time string "0s"
+        tvPickerOpacity.setUpdateText(false);
+        // Set the initial text
+        tvPickerOpacity.setText(String.valueOf(mSubtitleManager.getBackgroundOpacity()));
+
+        // Initialize with the current opacity * 100
+        tvPickerOpacity.init(mSubtitleManager.getBackgroundOpacity() * 100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
+            @Override
+            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
+                // The delay comes back multiplied by 100
+                int opacity = delay / 100;
+                // Keep bounds
+                if (opacity < 0) opacity = 0;
+                if (opacity > 255) opacity = 255;
+
+                mSubtitleManager.setBackgroundOpacity(opacity);
+                // Manually update the text
+                tvPickerOpacity.setText(String.valueOf(opacity));
+            }
+        });
+        // [END] Subtitle Background Opacity Picker
+
         ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).addOtherView(tvmenu);
         ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {     
             @Override
@@ -1759,6 +1809,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleManager.getVerticalPosition()).apply();
                 mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_COLOR, mSubtitleManager.getColor()).apply();
                 mPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mSubtitleManager.getOutlineState()).apply();
+                mPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_BACKGROUND, mSubtitleManager.getBackgroundState()).apply();
+                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_BG_OPACITY, mSubtitleManager.getBackgroundOpacity()).apply();
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
                 mSubtitleManager.fadeSubtitlePositionHint(false);
             }
@@ -4163,6 +4215,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mSubtitleManager.setColor(color);
                 setSubtitleVpos(vpos, "onSubtitleMetadataUpdated");
                 mSubtitleManager.setOutlineState(outline);
+                boolean background = preferences.getBoolean(KEY_SUBTITLE_BACKGROUND, false);
+                int bgOpacity = preferences.getInt(KEY_SUBTITLE_BG_OPACITY, 128);
+                mSubtitleManager.setBackgroundState(background);
+                mSubtitleManager.setBackgroundOpacity(bgOpacity);
                 // mVideoInfo.subtitleTrack is the track number with the none track 0<=mVideoInfo.subtitleTrack<=nbTrack, nbTrack for none track
                 // but mSubtitleInfoController is the track number with the none track (i.e. nbTrack + 1) at position 0
                 // at this point mVideoInfo.subtitleTrack is the track number to be used
