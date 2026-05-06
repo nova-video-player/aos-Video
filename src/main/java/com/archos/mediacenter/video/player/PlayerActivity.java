@@ -1741,7 +1741,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 tvPicker2.postDelayed(r, 200);
             }
         });
-        
 
         tvmenu.createAndAddSeparator();
         final TVMenuItem tvm = tvmenu.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.subtitle_outline), mSubtitleManager.getOutlineState());
@@ -1754,7 +1753,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
         });
 
-        // [START] Subtitle Background Toggle
         final TVMenuItem tvmBg = tvmenu.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.subtitle_background_text), mSubtitleManager.getBackgroundState()); // Make sure to add string resource or use literal "Subtitle Background"
         tvmBg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1764,42 +1762,28 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mSubtitleManager.setBackgroundState(!bg);
             }
         });
-        // [END] Subtitle Background Toggle
 
-        // [START] Subtitle Background Opacity Picker
         tvmenu.createAndAddTVMenuItem(getResources().getString(R.string.subtitle_bg_opacity_text), false);
 
         final SubtitleDelayTVPicker tvPickerOpacity = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
                 .inflate(R.layout.subtitle_delay_tv_picker, null);
-        // Use a step of 1. Internally it becomes 100.
         tvPickerOpacity.setStep(1); 
         tvPickerOpacity.setMin(0);
-        // Max is 255. Internally it expects this multiplied by 100
         tvPickerOpacity.setMax(255 * 100); 
         tvmenu.addTVMenuItem(tvPickerOpacity);
         tvPickerOpacity.setTextViewWidth((int) pickerWidth);
-        
-        // Stop it from formatting the time string "0s"
         tvPickerOpacity.setUpdateText(false);
-        // Set the initial text
         tvPickerOpacity.setText(String.valueOf(mSubtitleManager.getBackgroundOpacity()));
-
-        // Initialize with the current opacity * 100
         tvPickerOpacity.init(mSubtitleManager.getBackgroundOpacity() * 100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
             @Override
             public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
-                // The delay comes back multiplied by 100
                 int opacity = delay / 100;
-                // Keep bounds
                 if (opacity < 0) opacity = 0;
                 if (opacity > 255) opacity = 255;
-
                 mSubtitleManager.setBackgroundOpacity(opacity);
-                // Manually update the text
                 tvPickerOpacity.setText(String.valueOf(opacity));
             }
         });
-        // [END] Subtitle Background Opacity Picker
 
         ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).addOtherView(tvmenu);
         ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {     

@@ -277,8 +277,8 @@ public class SubtitleManager {
 
     private int mColor;
     private boolean mOutline;
-    private boolean mBackground = false; // Add this
-    private int mBgOpacity = 128;        // Add this (default 50%)
+    private boolean mBackground;
+    private int mBgOpacity;
     private int mUiMode;
 
     private void removeSubtitle(Subtitle subtitle) {
@@ -394,7 +394,7 @@ public class SubtitleManager {
     public void setBackgroundState(boolean background) {
         mBackground = background;
         if (mSubtitleTxtView != null) {
-            mSubtitleTxtView.setBackgroundState(background); // Passes state to the View
+            mSubtitleTxtView.setBackgroundState(background);
         }
     }
 
@@ -405,7 +405,7 @@ public class SubtitleManager {
     public void setBackgroundOpacity(int opacity) {
         mBgOpacity = opacity;
         if (mSubtitleTxtView != null) {
-            mSubtitleTxtView.setBackgroundOpacity(opacity); // Passes opacity to the View
+            mSubtitleTxtView.setBackgroundOpacity(opacity); 
         }
     }
 

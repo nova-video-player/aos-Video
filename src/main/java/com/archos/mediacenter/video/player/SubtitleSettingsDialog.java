@@ -71,8 +71,8 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     private int mColor;
     private CheckBox mSubBackgroundCheckBox;
     private SeekBar mBgOpacitySeekBar;
-    private boolean mBackground = false;
-    private int mBgOpacity = 128; // Default 50% opacity
+    private boolean mBackground;
+    private int mBgOpacity;
 
     public SubtitleSettingsDialog(Context context, SubtitleManager subtitleManager) {
         super(context);
@@ -129,10 +129,10 @@ public class SubtitleSettingsDialog extends AlertDialog implements
             }
         });
 
-        // Background Toggle
         mSubBackgroundCheckBox = view.findViewById(R.id.subBackground);
-        mBackground = mSubtitleManager.getBackgroundState(); // You'll need to create this getter in SubtitleManager
+        mBackground = mSubtitleManager.getBackgroundState();
         mSubBackgroundCheckBox.setChecked(mBackground);
+        mBgOpacity = mSubtitleManager.getBackgroundOpacity();
         mSubBackgroundCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,9 +141,8 @@ public class SubtitleSettingsDialog extends AlertDialog implements
             }
         });
 
-        // Opacity Slider
         mBgOpacitySeekBar = (SeekBar) view.findViewById(R.id.subtitle_bg_opacity_seekbar);
-        mBgOpacitySeekBar.setMax(255); // Alpha range is 0-255
+        mBgOpacitySeekBar.setMax(255);
         mBgOpacitySeekBar.setOnSeekBarChangeListener(this);
 
         setCancelable(true);

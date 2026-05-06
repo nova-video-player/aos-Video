@@ -35,10 +35,9 @@ public class SubtitleTextView extends AppCompatTextView {
 
     private static boolean mOutline = false;
     private final Paint mBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private boolean mShowBackground = false;
-    private int mBgOpacity = 128;
+    private boolean mShowBackground;
+    private int mBgOpacity;
 
-    // Reused objects to prevent memory allocation during onDraw
     private Rect r = new Rect();
     private int[] location = new int[2];
     private final RectF mBgRect = new RectF();
@@ -46,7 +45,7 @@ public class SubtitleTextView extends AppCompatTextView {
     public SubtitleTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mBgPaint.setStyle(Paint.Style.FILL);
-        mBgPaint.setColor(android.graphics.Color.argb(128, 0, 0, 0)); // 50% black
+        mBgPaint.setColor(android.graphics.Color.argb(128, 0, 0, 0));
         setLineSpacing(0f, 1.15f);
     }
 
@@ -57,7 +56,7 @@ public class SubtitleTextView extends AppCompatTextView {
 
     public void setBackgroundOpacity(int opacity) { 
         mBgOpacity = opacity;
-        mBgPaint.setAlpha(mBgOpacity); // Updates the Paint opacity dynamically
+        mBgPaint.setAlpha(mBgOpacity);
         invalidate(); 
     }
 
@@ -107,11 +106,9 @@ public class SubtitleTextView extends AppCompatTextView {
             float padY = getTextSize() * 0.02f;
             float radius = getTextSize() * 0.15f;
             float gapY = getTextSize() * 0.08f;
-            
             float offsetX = getTotalPaddingLeft() + getScrollX();
             float offsetY = getTotalPaddingTop() + getScrollY();
 
-            // Find the last line that actually contains text
             int lastTextLine = -1;
             for (int i = 0; i < layout.getLineCount(); i++) {
                 if (layout.getLineRight(i) > layout.getLineLeft(i)) {
@@ -126,7 +123,6 @@ public class SubtitleTextView extends AppCompatTextView {
                 if (right > left) {
                     float top = layout.getLineTop(i);
                     float bottom = layout.getLineBottom(i);
-                    
                     // Reduce the bottom of all lines EXCEPT the last one
                     if (i < lastTextLine) {
                         bottom -= gapY; 
