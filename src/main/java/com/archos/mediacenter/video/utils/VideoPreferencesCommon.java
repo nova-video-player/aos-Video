@@ -463,14 +463,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
      */
     private void updateDynamicAudioDelayState(boolean passthroughEnabled, boolean frameTimingEnabled) {
         if (passthroughEnabled) {
-            // Passthrough takes precedence - disable and turn off dynamic audio delay
-            if (mEnableDynamicAudioDelay.isChecked()) {
-                mEnableDynamicAudioDelay.setChecked(false);
-                mSharedPreferences.edit().putBoolean(KEY_ENABLE_DYNAMIC_AUDIO_DELAY, false).apply();
-                if (log.isDebugEnabled()) {
-                    log.debug("updateDynamicAudioDelayState: passthrough enabled, turning off dynamic audio delay");
-                }
-            }
+            // Passthrough takes precedence - disable dynamic audio delay in UI
+            // but keep its state so it's restored when passthrough is disabled
             mEnableDynamicAudioDelay.setEnabled(false);
             mEnableDynamicAudioDelay.setSelectable(false);
         } else {

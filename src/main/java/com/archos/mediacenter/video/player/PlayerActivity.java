@@ -887,7 +887,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             LibAvos.setMaxPcmChannels(maxPcmChannels);
             log.info("onStart: Set max PCM channels to {}", maxPcmChannels);
             LibAvos.setPcmChannelMasks(CustomApplication.getHdmiChannelMasks());
-            LibAvos.setPassthrough(CustomApplication.isPassthroughSupported() ? Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0") ) : 0);
+            int passthroughMode = CustomApplication.isPassthroughSupported() ? Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0") ) : 0;
+            LibAvos.setPassthrough(passthroughMode);
             if (mPreferences.getBoolean(VideoPreferencesCommon.KEY_FORCE_AUDIO_PASSTHROUGH, false)) {
                 long forcedFlags = CustomApplication.allHdmiAudioCodecs;
                 if (!CustomApplication.isIecEncapsulationCapable()) {
@@ -906,7 +907,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             // note enable_downmix_androidtv and disable_downmix are the opposite same settings but only one applies to androidTV
             // this is done on purpose to respect logic of presentation and default value
             float audioSpeed;
-            if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+            if (passthroughMode == 0) {
                 audioSpeed = mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f);
                 if (log.isDebugEnabled()) log.debug("onStart: {}", audioSpeed);
             } else {
@@ -931,7 +932,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             LibAvos.enableAudioSpeed(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false));
             LibAvos.disableAtempoFilter(mPreferences.getBoolean(VideoPreferencesCommon.KEY_AUDIO_SPEED_AUDIOTRACK, false));
             LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback (does nothing if audio speed not enabled)
-            LibAvos.setDynamicAudioDelay(mPreferences.getBoolean(VideoPreferencesCommon.KEY_ENABLE_DYNAMIC_AUDIO_DELAY, true)); // set dynamic audio delay estimation (default enabled)
+            LibAvos.setDynamicAudioDelay(passthroughMode == 0 && mPreferences.getBoolean(VideoPreferencesCommon.KEY_ENABLE_DYNAMIC_AUDIO_DELAY, true)); // set dynamic audio delay estimation (default enabled)
             LibAvos.parserSyncMode(Integer.parseInt(mPreferences.getString(KEY_PARSER_SYNC_MODE,"0"))); // set lavc parser sync mode (0: PTS, 1 samples)
             applyDownmixPreferenceToAvos();
         }
