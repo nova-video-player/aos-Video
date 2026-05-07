@@ -69,6 +69,10 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     };
     private View mTouchedView;
     private int mColor;
+    private CheckBox mSubBackgroundCheckBox;
+    private SeekBar mBgOpacitySeekBar;
+    private boolean mBackground;
+    private int mBgOpacity;
 
     public SubtitleSettingsDialog(Context context, SubtitleManager subtitleManager) {
         super(context);
@@ -125,6 +129,22 @@ public class SubtitleSettingsDialog extends AlertDialog implements
             }
         });
 
+        mSubBackgroundCheckBox = view.findViewById(R.id.subBackground);
+        mBackground = mSubtitleManager.getBackgroundState();
+        mSubBackgroundCheckBox.setChecked(mBackground);
+        mBgOpacity = mSubtitleManager.getBackgroundOpacity();
+        mSubBackgroundCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBackground = mSubBackgroundCheckBox.isChecked();
+                mSubtitleManager.setBackgroundState(mBackground); 
+            }
+        });
+
+        mBgOpacitySeekBar = (SeekBar) view.findViewById(R.id.subtitle_bg_opacity_seekbar);
+        mBgOpacitySeekBar.setMax(255);
+        mBgOpacitySeekBar.setOnSeekBarChangeListener(this);
+
         setCancelable(true);
         setCanceledOnTouchOutside(true);
 
@@ -156,6 +176,11 @@ public class SubtitleSettingsDialog extends AlertDialog implements
                 }
                 mSubtitleManager.setVerticalPosition(progress);
             }
+        } else if (seekBar == mBgOpacitySeekBar) {
+            mBgOpacity = progress;
+            if (mSubtitleManager != null) {
+                mSubtitleManager.setBackgroundOpacity(progress);
+            }
         } else {
             // wtf
         }
@@ -184,6 +209,8 @@ public class SubtitleSettingsDialog extends AlertDialog implements
         mSharedPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_VPOS, mVPos).apply();
         mSharedPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mOutline).apply();
         mSubtitleManager.fadeSubtitlePositionHint(false);
+        mSharedPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_BACKGROUND, mBackground).apply();
+        mSharedPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_BG_OPACITY, mBgOpacity).apply();
         super.onDetachedFromWindow();
     }
 
@@ -200,6 +227,8 @@ public class SubtitleSettingsDialog extends AlertDialog implements
 
         // Force the initial focus on the size slider
         mSizeSeekBar.requestFocus();
+        mSubBackgroundCheckBox.setChecked(mSubtitleManager.getBackgroundState());
+        mBgOpacitySeekBar.setProgress(mSubtitleManager.getBackgroundOpacity());
     }
 
     public void onAction(View view) {

@@ -109,7 +109,7 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
         updateCurrentFocusIndex();
         if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
             int nextIndex = current + 1;
-            while (nextIndex < ti.size() && (!ti.get(nextIndex).isEnabled() || isSeparator(ti.get(nextIndex)))) {
+            while (nextIndex < ti.size() && (!ti.get(nextIndex).isEnabled() || !ti.get(nextIndex).isFocusable() || isSeparator(ti.get(nextIndex)))) {
                 nextIndex++;
             }
             if (nextIndex < ti.size()) {
@@ -119,7 +119,7 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
             }
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
             int prevIndex = current - 1;
-            while (prevIndex >= 0 && (!ti.get(prevIndex).isEnabled() || isSeparator(ti.get(prevIndex)))) {
+            while (prevIndex >= 0 && (!ti.get(prevIndex).isEnabled() || !ti.get(prevIndex).isFocusable() || isSeparator(ti.get(prevIndex)))) {
                 prevIndex--;
             }
             if (prevIndex >= 0) {

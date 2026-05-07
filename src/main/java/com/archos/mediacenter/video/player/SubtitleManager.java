@@ -277,6 +277,8 @@ public class SubtitleManager {
 
     private int mColor;
     private boolean mOutline;
+    private boolean mBackground;
+    private int mBgOpacity;
     private int mUiMode;
 
     private void removeSubtitle(Subtitle subtitle) {
@@ -382,6 +384,28 @@ public class SubtitleManager {
         mOutline = outline;
         if (mSubtitleTxtView != null) {
             mSubtitleTxtView.setOutlineState(outline);
+        }
+    }
+
+    public boolean getBackgroundState() { 
+        return mBackground; 
+    }
+
+    public void setBackgroundState(boolean background) {
+        mBackground = background;
+        if (mSubtitleTxtView != null) {
+            mSubtitleTxtView.setBackgroundState(background);
+        }
+    }
+
+    public int getBackgroundOpacity() { 
+        return mBgOpacity; 
+    }
+
+    public void setBackgroundOpacity(int opacity) {
+        mBgOpacity = opacity;
+        if (mSubtitleTxtView != null) {
+            mSubtitleTxtView.setBackgroundOpacity(opacity); 
         }
     }
 
@@ -629,6 +653,8 @@ public class SubtitleManager {
         if (mSubtitleSpacer == null || mSubtitleGfxView == null || mSubtitleTxtView == null) return;
         mSubtitleTxtView.setScreenSize(mScreenWidth, mScreenHeight);
         mSubtitleTxtView.setUIMode(mUiMode);
+        mSubtitleTxtView.setBackgroundState(mBackground);
+        mSubtitleTxtView.setBackgroundOpacity(mBgOpacity);
         mSubtitleSpacerParams = mSubtitleSpacer.getLayoutParams();
         if (log.isDebugEnabled()) log.debug("attachWindow: mSubtitleSpacerParams.height={}", mSubtitleSpacerParams.height);
         mSubtitleSpacerParams.height = mSubtitleEvadedVPos;
