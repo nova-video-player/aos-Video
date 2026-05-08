@@ -210,20 +210,18 @@ public class NewVideosActionProvider extends ActionProvider implements
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.new_videos_action_button:
-                mPopup = getPopopWindow(v);
-                mPopup.show();
-                break;
-            case R.id.new_videos_go_button:
+        int viewId = v.getId();
+        if (viewId == R.id.new_videos_action_button) {
+            mPopup = getPopopWindow(v);
+            mPopup.show();
+        } else {
+            if (viewId == R.id.new_videos_go_button) {
                 onPerformDefaultAction();
-                //$FALL-THROUGH$
-            default:
-                if (mPopup != null && mPopup.isShowing()) {
-                    mPopup.dismiss();
-                    mPopup = null;
-                }
-                break;
+            }
+            if (mPopup != null && mPopup.isShowing()) {
+                mPopup.dismiss();
+                mPopup = null;
+            }
         }
     }
 

@@ -83,14 +83,13 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
     public boolean onContextItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        switch (itemId) {
-            case R.string.add_to_library:
-                addToIndexed(mSelectedUri, mSelectedName);
-                return true;
-            case R.string.remove_from_shortcuts:
-                ShortcutDb.STATIC.removeShortcut(getContext(), mSelectedUri);
-                ((FtpShortcutAdapter)mAdapter).updateShortcuts(ShortcutDb.STATIC.getAllShortcuts(getActivity()));
-                return true;
+        if (itemId == R.string.add_to_library) {
+            addToIndexed(mSelectedUri, mSelectedName);
+            return true;
+        } else if (itemId == R.string.remove_from_shortcuts) {
+            ShortcutDb.STATIC.removeShortcut(getContext(), mSelectedUri);
+            ((FtpShortcutAdapter)mAdapter).updateShortcuts(ShortcutDb.STATIC.getAllShortcuts(getActivity()));
+            return true;
         }
 
         return super.onContextItemSelected(item);

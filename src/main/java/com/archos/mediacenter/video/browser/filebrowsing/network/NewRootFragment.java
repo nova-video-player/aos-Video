@@ -201,25 +201,18 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
     public boolean onContextItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        switch (itemId) {
-            case R.string.remove_from_indexed_folders:
-                //If we are scraping, we need to stop that.
-                if (LoaderUtils.getScrapeInProgress()) {
-                    //Stop the scrape.
-                    LoaderUtils.setScrapeInProgress(false);
-                }
-
-                removeShortcut(mSelectedShortcut);
-                return true;
-
-            case R.string.open_indexed_folder:
-                onShortcutTap(Uri.parse(mSelectedShortcut.getUri()));
-                return true;
-
-            case R.string.network_reindex:
-                // Make as if the user had clicked on the refresh icon and validated the "re-scan content" item
-                NetworkScanner.scanVideos(getActivity(), Uri.parse(mSelectedShortcut.getUri()));
-                return true;
+        if (itemId == R.string.remove_from_indexed_folders) {
+            if (LoaderUtils.getScrapeInProgress()) {
+                LoaderUtils.setScrapeInProgress(false);
+            }
+            removeShortcut(mSelectedShortcut);
+            return true;
+        } else if (itemId == R.string.open_indexed_folder) {
+            onShortcutTap(Uri.parse(mSelectedShortcut.getUri()));
+            return true;
+        } else if (itemId == R.string.network_reindex) {
+            NetworkScanner.scanVideos(getActivity(), Uri.parse(mSelectedShortcut.getUri()));
+            return true;
         }
 
         return super.onContextItemSelected(item);

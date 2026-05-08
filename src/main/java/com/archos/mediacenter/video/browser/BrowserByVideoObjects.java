@@ -266,85 +266,54 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
         int index = item.getItemId();
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
         Video video = mAdapterByVideoObjects.getVideoItem(info.position);
-        switch (index) {
-
-            case R.string.play_from_beginning:
-                // play action
-                startVideo(video, PlayerActivity.RESUME_NO);
-                break;
-
-            case R.string.resume:
-                // resume action
-                startVideo(video, PlayerActivity.RESUME_FROM_LAST_POS);
-                break;
-
-            case R.string.info:
-                displayInfo(info.position);
-                break;
-
-            case R.string.video_browser_index_file:
-                VideoStore.requestIndexing(video.getFileUri(), getActivity());
-                break;
-
-            case R.string.delete_resume:
-                updateDbXml(info.position, UpdateDbXmlType.RESUME, -1);
-                if(Trakt.isTraktV2Enabled(getActivity(), mPreferences)){
-                    // TODO: not sure it is the right call
-                    new TraktService.Client(mContext, null, false).watchingStop(video.getId(), 0);
-                }
-                break;
-
-            case R.string.delete:
-                // delete action
-                // Forbid deleting in DemoMode
-                if (ArchosSettings.isDemoModeActive(getActivity())) {
-                    getActivity().startService(
-                            new Intent(ArchosIntents.ACTION_DEMO_MODE_FEATURE_DISABLED));
-                } else {
-                    List<Uri> toDelete = new ArrayList<>();
-                    toDelete.add(getRealPathUriFromPosition(info.position));
-                    // We need the position for BrowserByFolder.
-                    mDeletedPosition = info.position;
-                    showConfirmDeleteDialog(false, toDelete);
-                }
-                break;
-            case R.string.mark_as_watched:
-                markAsRead(info.position, true, mPreferences.getBoolean(BrowserByNetwork.KEY_NETWORK_BOOKMARKS, true));
-                break;
-
-            case R.string.mark_as_not_watched:
-                markAsNotRead(info.position, true, mPreferences.getBoolean(BrowserByNetwork.KEY_NETWORK_BOOKMARKS, true));
-                break;
-
-            case R.string.get_subtitles_online:
-                Intent subIntent = new Intent(Intent.ACTION_MAIN);
-                if (log.isDebugEnabled()) log.debug("onContextItemSelected: get_subtitles_online for {}", getRealPathUriFromPosition(info.position));
-                subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
-                subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, getRealPathUriFromPosition(info.position).toString());
-                getActivity().startActivity(subIntent);
-                break;
-
-            case R.string.video_browser_unindex_file:
-                updateDbXml(info.position, UpdateDbXmlType.HIDE, 1);
-
-                break;
-
-            case R.string.copy_on_device:
-                List<Uri> toCopy = new ArrayList<>();
-                toCopy.add(video.getFileUri());
-                startDownloadingVideo(toCopy);
-
-                break;
-            case R.string.add_to_list:
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(ListDialog.EXTRA_VIDEO, video);
-                ListDialog dialog = new ListDialog();
-                dialog.setArguments(bundle);
-                dialog.show(getActivity().getSupportFragmentManager(), "list_dialog");
-                break;
-            default:
-                ret = super.onContextItemSelected(item);
-                log.error("onContextItemSelected: unexpected default case! {}", index);
+        if (index == R.string.play_from_beginning) {
+            startVideo(video, PlayerActivity.RESUME_NO);
+        } else if (index == R.string.resume) {
+            startVideo(video, PlayerActivity.RESUME_FROM_LAST_POS);
+        } else if (index == R.string.info) {
+            displayInfo(info.position);
+        } else if (index == R.string.video_browser_index_file) {
+            VideoStore.requestIndexing(video.getFileUri(), getActivity());
+        } else if (index == R.string.delete_resume) {
+            updateDbXml(info.position, UpdateDbXmlType.RESUME, -1);
+            if(Trakt.isTraktV2Enabled(getActivity(), mPreferences)){
+                new TraktService.Client(mContext, null, false).watchingStop(video.getId(), 0);
+            }
+        } else if (index == R.string.delete) {
+            if (ArchosSettings.isDemoModeActive(getActivity())) {
+                getActivity().startService(
+                        new Intent(ArchosIntents.ACTION_DEMO_MODE_FEATURE_DISABLED));
+            } else {
+                List<Uri> toDelete = new ArrayList<>();
+                toDelete.add(getRealPathUriFromPosition(info.position));
+                mDeletedPosition = info.position;
+                showConfirmDeleteDialog(false, toDelete);
+            }
+        } else if (index == R.string.mark_as_watched) {
+            markAsRead(info.position, true, mPreferences.getBoolean(BrowserByNetwork.KEY_NETWORK_BOOKMARKS, true));
+        } else if (index == R.string.mark_as_not_watched) {
+            markAsNotRead(info.position, true, mPreferences.getBoolean(BrowserByNetwork.KEY_NETWORK_BOOKMARKS, true));
+        } else if (index == R.string.get_subtitles_online) {
+            Intent subIntent = new Intent(Intent.ACTION_MAIN);
+            if (log.isDebugEnabled()) log.debug("onContextItemSelected: get_subtitles_online for {}", getRealPathUriFromPosition(info.position));
+            subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
+            subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, getRealPathUriFromPosition(info.position).toString());
+            getActivity().startActivity(subIntent);
+        } else if (index == R.string.video_browser_unindex_file) {
+            updateDbXml(info.position, UpdateDbXmlType.HIDE, 1);
+        } else if (index == R.string.copy_on_device) {
+            List<Uri> toCopy = new ArrayList<>();
+            toCopy.add(video.getFileUri());
+            startDownloadingVideo(toCopy);
+        } else if (index == R.string.add_to_list) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(ListDialog.EXTRA_VIDEO, video);
+            ListDialog dialog = new ListDialog();
+            dialog.setArguments(bundle);
+            dialog.show(getActivity().getSupportFragmentManager(), "list_dialog");
+        } else {
+            ret = super.onContextItemSelected(item);
+            log.error("onContextItemSelected: unexpected default case! {}", index);
         }
 
         return ret;

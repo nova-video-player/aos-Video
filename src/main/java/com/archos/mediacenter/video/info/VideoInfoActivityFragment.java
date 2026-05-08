@@ -1339,42 +1339,34 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (log.isDebugEnabled()) log.debug("onMenuItemClick: {}", item.getItemId());
-        switch(item.getItemId()){
-            case R.string.video_browser_unindex_file :
-                DbUtils.markAsHiddenByUser(getActivity(), mCurrentVideo);
-                break;
-            case R.string.scrap_remove:
-                DbUtils.deleteScraperInfo(getActivity(), mCurrentVideo);
-                break;
-            case R.string.info_menu_backdrop_select:
-                Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
-                intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
-                intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_BACKDROP, true);
-                startActivityForResult(intent, REQUEST_BACKDROP_ACTIVITY);
-                break;
-            case R.string.delete:
-                deleteFile_async(mCurrentVideo);
-                if (log.isDebugEnabled()) log.debug("onMenuItemClick: deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
-                break;
-            case R.string.nfo_export_button:
-                NfoWriter.ExportContext exportContext = new NfoWriter.ExportContext();
-                try {
-                    NfoWriter.export(mCurrentVideo.getFileUri(), mTags, exportContext);
-                    Toast.makeText(getActivity(),R.string.nfo_export_exporting, Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case R.string.info_menu_poster_select:
-                selectNewPoster();
-                break;
-            case R.string.mark_as_not_watched:
-                DbUtils.markAsNotRead(getActivity(), mCurrentVideo);
-                break;
-            case R.string.mark_as_watched:
-                DbUtils.markAsRead(getActivity(), mCurrentVideo);
-                break;
-            case R.string.copy_on_device:
+        int menuItemId = item.getItemId();
+        if (menuItemId == R.string.video_browser_unindex_file) {
+            DbUtils.markAsHiddenByUser(getActivity(), mCurrentVideo);
+        } else if (menuItemId == R.string.scrap_remove) {
+            DbUtils.deleteScraperInfo(getActivity(), mCurrentVideo);
+        } else if (menuItemId == R.string.info_menu_backdrop_select) {
+            Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+            intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
+            intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_BACKDROP, true);
+            startActivityForResult(intent, REQUEST_BACKDROP_ACTIVITY);
+        } else if (menuItemId == R.string.delete) {
+            deleteFile_async(mCurrentVideo);
+            if (log.isDebugEnabled()) log.debug("onMenuItemClick: deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
+        } else if (menuItemId == R.string.nfo_export_button) {
+            NfoWriter.ExportContext exportContext = new NfoWriter.ExportContext();
+            try {
+                NfoWriter.export(mCurrentVideo.getFileUri(), mTags, exportContext);
+                Toast.makeText(getActivity(),R.string.nfo_export_exporting, Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (menuItemId == R.string.info_menu_poster_select) {
+            selectNewPoster();
+        } else if (menuItemId == R.string.mark_as_not_watched) {
+            DbUtils.markAsNotRead(getActivity(), mCurrentVideo);
+        } else if (menuItemId == R.string.mark_as_watched) {
+            DbUtils.markAsRead(getActivity(), mCurrentVideo);
+        } else if (menuItemId == R.string.copy_on_device) {
 
                 List<Uri> list = new ArrayList<Uri>();
                 list.add(mCurrentVideo.getFileUri());
@@ -1399,7 +1391,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mPasteDialog = new Paste(getActivity());
                     mPasteDialog.show();
                 }
-                break;
         }
 
         return true;

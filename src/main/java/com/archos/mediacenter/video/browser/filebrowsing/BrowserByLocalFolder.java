@@ -60,34 +60,25 @@ public abstract class BrowserByLocalFolder extends BrowserByFolder {
         boolean ret = true;
         int index = item.getItemId();
 
-        switch (index) {
-            case R.string.start_auto_scraper_activity: {
-                // Search all the videos located in the selected folder or its
-                // sub-folders
-                AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-                Object obj = mFilesAdapter.getItem(info.position);
-                String path;
-                if(obj instanceof MetaFile2)
-                    path = ((MetaFile2)obj).getUri().toString();
-                else
-                    path  = ((Video)obj).getFileUri().toString();
-                if (path != null) {
-                    startOnlineSearchForFolder(path);
-                }
-                break;
+        if (index == R.string.start_auto_scraper_activity) {
+            AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+            Object obj = mFilesAdapter.getItem(info.position);
+            String path;
+            if(obj instanceof MetaFile2)
+                path = ((MetaFile2)obj).getUri().toString();
+            else
+                path  = ((Video)obj).getFileUri().toString();
+            if (path != null) {
+                startOnlineSearchForFolder(path);
             }
-
-            case R.string.nfo_export_folder: {
-                AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-                Object obj = mFilesAdapter.getItem(info.position);
-                if (obj instanceof MetaFile2) {
-                    NfoExportService.exportDirectory(getActivity(), ((MetaFile2)obj).getUri());
-                }
-                break;
+        } else if (index == R.string.nfo_export_folder) {
+            AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+            Object obj = mFilesAdapter.getItem(info.position);
+            if (obj instanceof MetaFile2) {
+                NfoExportService.exportDirectory(getActivity(), ((MetaFile2)obj).getUri());
             }
-            default:
-                ret = super.onContextItemSelected(item);
-                break;
+        } else {
+            ret = super.onContextItemSelected(item);
         }
 
         return ret;

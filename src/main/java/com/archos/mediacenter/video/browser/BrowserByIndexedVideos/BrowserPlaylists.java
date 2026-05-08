@@ -120,10 +120,8 @@ public class BrowserPlaylists extends BrowserMoviesBy {
         int index = item.getItemId();
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         long listId = mBrowserAdapter.getItemId(info.position);
-        switch (index) {
-            case R.string.delete:
-                getActivity().getContentResolver().delete(VideoStore.List.LIST_CONTENT_URI, VideoStore.List.Columns.ID +" = ?", new String[]{listId+""});
-                break;
+        if (index == R.string.delete) {
+            getActivity().getContentResolver().delete(VideoStore.List.LIST_CONTENT_URI, VideoStore.List.Columns.ID +" = ?", new String[]{listId+""});
         }
         return true;
     }

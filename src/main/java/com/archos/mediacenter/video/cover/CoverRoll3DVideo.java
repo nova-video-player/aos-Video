@@ -138,14 +138,10 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 
 		if(DBG) Log.d(TAG, "getDefaultArtwork, labelId="+labelId);
 
-		switch (labelId) {
-			case R.string.movies:
-			case R.string.all_tv_shows:
-				return MovieCover.getDefaultArtwork(factory);
-			case R.string.all_videos:
-			case R.string.recently_added_videos:
-			default:
-				return VideoCover.getDefaultArtwork(factory);
+		if (labelId == R.string.movies || labelId == R.string.all_tv_shows) {
+			return MovieCover.getDefaultArtwork(factory);
+		} else {
+			return VideoCover.getDefaultArtwork(factory);
 		}
 	}
 
@@ -224,13 +220,11 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 			mLabelId = labelId;
 		}
 		public CoverProvider getCoverProvider(Context context) {
-			switch (mLabelId) {
-			case R.string.all_videos: return new AllVideosProvider(context);
-			case R.string.recently_added_videos: return new RecentlyAddedVideosProvider(context);
-			case R.string.movies: return new AllMoviesProvider(context);
-			case R.string.all_tv_shows: return new AllTVShowsProvider(context);
-			default: return null; // should not happen
-			}
+			if (mLabelId == R.string.all_videos) return new AllVideosProvider(context);
+			if (mLabelId == R.string.recently_added_videos) return new RecentlyAddedVideosProvider(context);
+			if (mLabelId == R.string.movies) return new AllMoviesProvider(context);
+			if (mLabelId == R.string.all_tv_shows) return new AllTVShowsProvider(context);
+			return null; // should not happen
 		}
 		// weird (but convenient) functions using the final array ROLL_CONTENT as argument...
 		final public CoverRollVideoContent getNextContentType(CoverRollVideoContent[] roll_content) {

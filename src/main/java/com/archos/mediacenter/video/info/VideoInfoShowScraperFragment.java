@@ -280,19 +280,16 @@ public class VideoInfoShowScraperFragment extends Fragment implements
     public void onClick(View v) {
         if (log.isDebugEnabled()) log.debug("onClick");
 
-        switch (v.getId()) {
-            case R.id.cancel:
-                hideSoftKbd();
-                cancelCurrentTask();
-                getActivity().finish();
-                break;
-            case R.id.search:
-                hideSoftKbd();
-                startSearch();
-                break;
-            default:
-                log.error("Click on {} not supported.", v);
-                break;
+        int viewId = v.getId();
+        if (viewId == R.id.cancel) {
+            hideSoftKbd();
+            cancelCurrentTask();
+            getActivity().finish();
+        } else if (viewId == R.id.search) {
+            hideSoftKbd();
+            startSearch();
+        } else {
+            log.error("Click on {} not supported.", v);
         }
     }
 

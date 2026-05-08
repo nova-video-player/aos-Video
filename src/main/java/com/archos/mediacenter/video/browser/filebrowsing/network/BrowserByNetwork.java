@@ -236,27 +236,20 @@ public class BrowserByNetwork extends BrowserByFolder {
         else if(item instanceof MetaFile2) {
             metaFile2 = (MetaFile2) item;
         }
-        switch (itemId) {
-            case R.string.add_to_indexed_folders:
-            case R.string.remove_from_indexed_folders:
-                //If we are scraping, we need to stop that.
-                if (LoaderUtils.getScrapeInProgress()) {
-                    //Stop the scrape.
-                    LoaderUtils.setScrapeInProgress(false);
-                }
-
-                mShortcutPath = metaFile2.getUri().toString();
-                mShortcutName = metaFile2.getName();
-                if (log.isDebugEnabled()) log.debug("onContextItemSelected: mShortcutPath={}, mShortcutName={}", mShortcutPath, mShortcutName);
-                if (itemId == R.string.add_to_indexed_folders) {
-                    createShortcut(mShortcutPath, mShortcutName);
-                } else {
-                    removeShortcut(mShortcutPath);
-                }
-                // The indexed status of the selected folder has changed => redraw the list
-                // in order to update the indexed symbol
-                mArchosGridView.invalidateViews();
-                return true;
+        if (itemId == R.string.add_to_indexed_folders || itemId == R.string.remove_from_indexed_folders) {
+            if (LoaderUtils.getScrapeInProgress()) {
+                LoaderUtils.setScrapeInProgress(false);
+            }
+            mShortcutPath = metaFile2.getUri().toString();
+            mShortcutName = metaFile2.getName();
+            if (log.isDebugEnabled()) log.debug("onContextItemSelected: mShortcutPath={}, mShortcutName={}", mShortcutPath, mShortcutName);
+            if (itemId == R.string.add_to_indexed_folders) {
+                createShortcut(mShortcutPath, mShortcutName);
+            } else {
+                removeShortcut(mShortcutPath);
+            }
+            mArchosGridView.invalidateViews();
+            return true;
         }
         return super.onContextItemSelected(menuItem);
     }
@@ -265,74 +258,65 @@ public class BrowserByNetwork extends BrowserByFolder {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (log.isDebugEnabled()) log.debug("onOptionsItemSelected");
         boolean ret;
-        switch (item.getItemId()) {
-            case R.string.add_to_indexed_folders:
-                // Handle this item when it is in the options menu
-                mShortcutPath = mCurrentDirectory.toString();
-                mShortcutName = FileUtils.getName(mCurrentDirectory);
-                if (log.isDebugEnabled()) log.debug("onOptionsItemSelected: index folder mShortcutPath={}, mShortcutName={}", mShortcutPath, mShortcutName);
-                createShortcut(mShortcutPath, mShortcutName);
-                ret = true;
-                break;
-            case R.string.remove_from_indexed_folders:
-            case R.string.remove_from_shortcuts:
-                removeShortcut(mCurrentDirectory.toString());
-                ret = true;
-                break;
-            case R.string.add_ssh_shortcut:
-                mShortcutPath = mCurrentDirectory.toString();
-                mShortcutName = getActionBarTitle();
-                if (log.isDebugEnabled()) log.debug("onOptionsItemSelected: add as shortcut mShortcutPath={}, mShortcutName={}", mShortcutPath, mShortcutName);
-                // have a dialog where shortcut name can be specified and add to library option too
-                final View v = getActivity().getLayoutInflater().inflate(R.layout.ssh_shortcut_dialog_layout, null);
-                ((EditText)v.findViewById(R.id.shortcut_name)).setText(Uri.parse(getFriendlyUri()).getLastPathSegment());
-                boolean isCurrentDirectoryIndexed = ShortcutDbAdapter.VIDEO.isHimselfOrAncestorShortcut(getActivity(), mCurrentDirectory.toString());
-                // if current folder is already indexed do not propose to index it in the dialog
-                if (isCurrentDirectoryIndexed) {
-                    v.findViewById(R.id.checkBox).setVisibility(View.INVISIBLE);
-                } else {
-                    // by default propose indexing
-                    //((CheckBox) v.findViewById(R.id.checkBox)).setChecked(false);
-                    v.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
-                }
-                new AlertDialog.Builder(getActivity())
-                        .setCancelable(false)
-                        .setView(v)
-                        .setTitle(R.string.ssh_shortcut_name)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                                if (((CheckBox) v.findViewById(R.id.checkBox)).isChecked()) {
-                                    NetworkScanner.scanVideos(getActivity(), mCurrentDirectory);
-                                    addIndexedFolder(mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
-                                } else {
-                                    ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString(), getFriendlyUri());
-                                }
-                                getActivity().invalidateOptionsMenu();
+        int optionId = item.getItemId();
+        if (optionId == R.string.add_to_indexed_folders) {
+            mShortcutPath = mCurrentDirectory.toString();
+            mShortcutName = FileUtils.getName(mCurrentDirectory);
+            if (log.isDebugEnabled()) log.debug("onOptionsItemSelected: index folder mShortcutPath={}, mShortcutName={}", mShortcutPath, mShortcutName);
+            createShortcut(mShortcutPath, mShortcutName);
+            ret = true;
+        } else if (optionId == R.string.remove_from_indexed_folders || optionId == R.string.remove_from_shortcuts) {
+            removeShortcut(mCurrentDirectory.toString());
+            ret = true;
+        } else if (optionId == R.string.add_ssh_shortcut) {
+            mShortcutPath = mCurrentDirectory.toString();
+            mShortcutName = getActionBarTitle();
+            if (log.isDebugEnabled()) log.debug("onOptionsItemSelected: add as shortcut mShortcutPath={}, mShortcutName={}", mShortcutPath, mShortcutName);
+            final View v = getActivity().getLayoutInflater().inflate(R.layout.ssh_shortcut_dialog_layout, null);
+            ((EditText)v.findViewById(R.id.shortcut_name)).setText(Uri.parse(getFriendlyUri()).getLastPathSegment());
+            boolean isCurrentDirectoryIndexed = ShortcutDbAdapter.VIDEO.isHimselfOrAncestorShortcut(getActivity(), mCurrentDirectory.toString());
+            if (isCurrentDirectoryIndexed) {
+                v.findViewById(R.id.checkBox).setVisibility(View.INVISIBLE);
+            } else {
+                v.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
+            }
+            new AlertDialog.Builder(getActivity())
+                    .setCancelable(false)
+                    .setView(v)
+                    .setTitle(R.string.ssh_shortcut_name)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                            if (((CheckBox) v.findViewById(R.id.checkBox)).isChecked()) {
+                                NetworkScanner.scanVideos(getActivity(), mCurrentDirectory);
+                                addIndexedFolder(mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
+                            } else {
+                                ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString(), getFriendlyUri());
                             }
-                        })
-                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel,new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                dialog.cancel();
-                            }
-                        }).create().show();
-                ret = true;
-                break;
-            case R.string.manually_create_share:
+                            getActivity().invalidateOptionsMenu();
+                        }
+                    })
+                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel,new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            dialog.cancel();
+                        }
+                    }).create().show();
+            ret = true;
+        } else if (optionId == R.string.manually_create_share || optionId == R.string.rescan) {
+            if (optionId == R.string.manually_create_share) {
                 CreateShareDialog shareDialog = new CreateShareDialog();
-                shareDialog.setRetainInstance(true); // the dialog is dismissed at screen rotation, that's better than a crash...
+                shareDialog.setRetainInstance(true);
                 shareDialog.show(getParentFragmentManager(), "CreateShareDialog");
-            case R.string.rescan:
-                NetworkScanner.scanVideos(mContext, mCurrentDirectory);
-                return true;
-            default:
-                ret = super.onOptionsItemSelected(item);
-                break;
+            }
+            NetworkScanner.scanVideos(mContext, mCurrentDirectory);
+            return true;
+        } else {
+            ret = super.onOptionsItemSelected(item);
         }
         return ret;
     }
