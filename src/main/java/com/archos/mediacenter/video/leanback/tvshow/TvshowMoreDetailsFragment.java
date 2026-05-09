@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import androidx.leanback.app.DetailsFragmentWithLessTopOffset;
 import androidx.leanback.widget.ArrayObjectAdapter;
 import androidx.leanback.widget.ClassPresenterSelector;
@@ -112,7 +113,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
         mShowId = intent.getLongExtra(EXTRA_TVSHOW_ID, -1);
         mShowWatched = intent.getBooleanExtra(EXTRA_TVSHOW_WATCHED, false);
         mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.getMainLooper());
         mDescriptionPresenter = new TvshowMoreDetailsDescriptionPresenter(mShowWatched);
         mOverviewRowPresenter = new ArchosDetailsOverviewRowPresenter(mDescriptionPresenter, true);
         //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus

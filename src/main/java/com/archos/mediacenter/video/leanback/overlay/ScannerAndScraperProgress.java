@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback.overlay;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,7 +43,7 @@ public class ScannerAndScraperProgress {
     final private ProgressBar mProgressWheel;
     final private TextView mCount;
     final private String mInitialScanMessage;
-    final Handler mRepeatHandler = new Handler();
+    final Handler mRepeatHandler = new Handler(Looper.getMainLooper());
 
 
     /** the visibility due to the general state of the fragment */

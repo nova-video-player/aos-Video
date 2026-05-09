@@ -34,6 +34,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -413,7 +414,7 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
     ****************************************************************************************/
     private class CursorContentObserver extends ContentObserver {
         public CursorContentObserver() {
-            super(new Handler());
+            super(new Handler(Looper.getMainLooper()));
         }
 
         public boolean deliverSelfNotifications() {

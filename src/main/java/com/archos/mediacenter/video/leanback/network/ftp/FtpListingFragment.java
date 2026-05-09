@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.leanback.network.ftp;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 
@@ -40,7 +41,7 @@ public class FtpListingFragment extends NetworkListingFragment {
 
     private static final String TAG = "FtpListingFragment";
     private static final int LONG_CONNECTION = 1;
-    protected final Handler mHandler = new Handler() {
+    protected final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
