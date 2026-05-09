@@ -17,8 +17,9 @@ package com.archos.mediacenter.video.utils;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -37,6 +38,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class OpenSubtitlesCredentialsDialog extends DialogFragment {
 
@@ -108,10 +111,12 @@ public class OpenSubtitlesCredentialsDialog extends DialogFragment {
         mPreferences.edit().putString(OPENSUBTITLES_PASSWORD, password).apply();
     }
 
-    private class ValidateCredentialsTask extends AsyncTask<Void, Void, Boolean> {
+    private class ValidateCredentialsTask {
         private final String apiKey;
         private final String username;
         private final String password;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
 
         ValidateCredentialsTask(String apiKey, String username, String password) {
             this.apiKey = apiKey;
@@ -119,26 +124,26 @@ public class OpenSubtitlesCredentialsDialog extends DialogFragment {
             this.password = password;
         }
 
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            try {
-                return OpenSubtitlesApiHelper.login(apiKey, username, password);
-            } catch (IOException e) {
-                log.error("ValidateCredentialsTask: caught IOException");
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean credentialsValid) {
-            if (credentialsValid) {
-                // Store new values to preferences
-                storeCredentials(username, password);
-            } else {
-                // Clear preferences
-                storeCredentials("", "");
-                Toast.makeText(CustomApplication.getAppContext(), R.string.toast_subloader_login_failed, Toast.LENGTH_SHORT).show();
-            }
+        void execute() {
+            executor.execute(() -> {
+                boolean credentialsValid;
+                try {
+                    credentialsValid = OpenSubtitlesApiHelper.login(apiKey, username, password);
+                } catch (IOException e) {
+                    log.error("ValidateCredentialsTask: caught IOException");
+                    credentialsValid = false;
+                }
+                final boolean valid = credentialsValid;
+                handler.post(() -> {
+                    if (valid) {
+                        storeCredentials(username, password);
+                    } else {
+                        storeCredentials("", "");
+                        Toast.makeText(CustomApplication.getAppContext(), R.string.toast_subloader_login_failed, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                executor.shutdown();
+            });
         }
     }
 

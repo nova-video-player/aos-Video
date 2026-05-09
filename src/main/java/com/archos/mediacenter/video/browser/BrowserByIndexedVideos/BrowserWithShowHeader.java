@@ -20,8 +20,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.loader.app.LoaderManager;
 import androidx.core.content.ContextCompat;
 import androidx.loader.content.Loader;
@@ -54,7 +55,6 @@ import com.archos.mediacenter.video.info.VideoInfoPosterBackdropActivity;
 import com.archos.mediacenter.video.info.VideoInfoScraperActivity;
 import com.archos.mediacenter.video.info.VideoInfoShowScraperFragment;
 import com.archos.mediacenter.video.utils.DelayedBackgroundLoader;
-import com.archos.mediacenter.video.utils.SerialExecutor;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.BaseTags;
@@ -66,6 +66,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -82,14 +84,13 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     private View mHeaderView;
     protected Tvshow mShow;
     protected int SHOW_LOADER_ID = 1;
-    private AsyncTask<Object, Void, TvShowAsyncTask.Result> mTvShowAsyncTask;
+    private TvShowAsyncTask mTvShowAsyncTask;
     private final static int SCRAPER_REQUEST = 0;
     private int mCurrentPlotLines = 5;
 
     private ImageViewSetter mBackgroundSetter;
     private ImageProcessor mBackgroundLoader;
     private ImageView mApplicationBackdrop;
-    private SerialExecutor mSerialExecutor;
     private int mColor;
     protected View mApplicationFrameLayout;
     private boolean mPlotIsFullyDisplayed;
@@ -113,7 +114,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHideOption = false;
-        mSerialExecutor = new SerialExecutor();
         //be aware that argument can be changed in activityresult
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -265,13 +265,14 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
                 mShow = newShow;
                 getArguments().putSerializable(EXTRA_SHOW_ITEM, mShow); //saving in arguments
                 if (mTvShowAsyncTask != null)
-                    mTvShowAsyncTask.cancel(true);
+                    mTvShowAsyncTask.cancel();
                 // FIXME: for some unexplained reason when doing BrowserAllTvShows->BrowserListOfSeasons->BrowserAllMovies->open movie
                 // calls at the end BrowserWithShowHeaders for no apparent reason (tried to determine code path)
                 // since this happens when getActivity() == null avoid doing UI stuff hides the issue that still remains to be fixed properly
                 if (getActivity() != null) {
                     if (log.isDebugEnabled()) log.debug("onLoadFinished: activity not null");
-                    mTvShowAsyncTask = new TvShowAsyncTask().executeOnExecutor(mSerialExecutor,getPosterUri(),mShow);
+                    mTvShowAsyncTask = new TvShowAsyncTask(getPosterUri(), mShow);
+                    mTvShowAsyncTask.execute();
                     getActivity().invalidateOptionsMenu();
                 } else {
                     if (log.isDebugEnabled()) log.debug("onLoadFinished: FIXME onLoadFinished getActivity is null");
@@ -293,129 +294,153 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     @Override
     public void onStop(){
         super.onStop();
-        if(mTvShowAsyncTask!=null)
-            mTvShowAsyncTask.cancel(true);
+        if (mTvShowAsyncTask != null)
+            mTvShowAsyncTask.cancel();
         mBackgroundSetter.stopLoading(mApplicationBackdrop);
         mApplicationBackdrop.animate().cancel();
         mApplicationBackdrop.setAlpha(0f);
     }
 
-    private  class TvShowAsyncTask extends AsyncTask<Object, Void,TvShowAsyncTask.Result>{
-        public class Result{
+    private class TvShowAsyncTask {
+        public class Result {
             public Bitmap bitmap;
             public Tvshow show;
             public ShowTags tags;
-            public Result(Tvshow show, Bitmap bitmap, ShowTags tags){
+            public int color;
+            public Result(Tvshow show, Bitmap bitmap, ShowTags tags, int color) {
                 this.show = show;
                 this.bitmap = bitmap;
                 this.tags = tags;
+                this.color = color;
             }
         }
-        @Override
-        protected TvShowAsyncTask.Result doInBackground(Object... postersUri) {
-            Tvshow show = (Tvshow) postersUri[1];
-            Uri posterUri = (Uri) postersUri[0];
-            Bitmap bitmap = null;
-            try {
-                if (log.isDebugEnabled()) log.debug("TvShowAsyncTask.Result show {} postersUri {}", show.getName(), posterUri);
-                if (posterUri != null) {
-                    bitmap = Picasso.get()
-                            .load(posterUri)
-                            .resizeDimen(R.dimen.video_details_poster_width,R.dimen.video_details_poster_height)
-                            .noFade() // no fade since we are using activity transition anyway
-                            .get();
-                    if (log.isDebugEnabled()) log.debug("TvShowAsyncTask.Result: {}x{} ---- {}", bitmap.getWidth(), bitmap.getHeight(), posterUri);
-                    if(bitmap!=null) {
-                        Palette palette = Palette.from(bitmap).generate();
-                        mColor = palette.getDarkVibrantColor(ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor());
+
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
+        private final Uri posterUri;
+        private final Tvshow show;
+
+        TvShowAsyncTask(Uri posterUri, Tvshow show) {
+            this.posterUri = posterUri;
+            this.show = show;
+        }
+
+        void execute() {
+            executor.execute(() -> {
+                Activity activity = getActivity();
+                if (activity == null || isCancelled) {
+                    executor.shutdown();
+                    return;
+                }
+                Bitmap bitmap = null;
+                int color = 0;
+                ShowTags showTags = null;
+                try {
+                    color = ThemeManager.getInstance(activity).getDetailsPrimaryColor();
+                    showTags = (ShowTags) show.getFullScraperTags(activity);
+                    if (log.isDebugEnabled()) log.debug("TvShowAsyncTask show {} postersUri {}", show.getName(), posterUri);
+                    if (posterUri != null) {
+                        bitmap = Picasso.get()
+                                .load(posterUri)
+                                .resizeDimen(R.dimen.video_details_poster_width, R.dimen.video_details_poster_height)
+                                .noFade()
+                                .get();
+                        if (log.isDebugEnabled()) log.debug("TvShowAsyncTask: {}x{} ---- {}", bitmap.getWidth(), bitmap.getHeight(), posterUri);
+                        if (bitmap != null) {
+                            Palette palette = Palette.from(bitmap).generate();
+                            color = palette.getDarkVibrantColor(color);
+                        }
                     }
+                } catch (IOException e) {
+                    log.error("DetailsOverviewRow: caught IOException, Picasso load exception", e);
+                } catch (NullPointerException e) {
+                    log.error("DetailsOverviewRow: caught NullPointerException doInBackground exception", e);
+                } finally {
+                    executor.shutdown();
                 }
-            }
-            catch (IOException e) {
-                log.error("DetailsOverviewRow: caught IOException, Picasso load exception", e);
-            }
-            catch (NullPointerException e) { // getDefaultPoster() may return null (seen once at least)
-                log.error("DetailsOverviewRow: caught NullPointerException doInBackground exception", e);
-            }
+                final Result result = new Result(show, bitmap, showTags, color);
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    mColor = result.color;
+                    BaseTags tags = result.tags;
+                    final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.plot);
+                    mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
 
-            return new TvShowAsyncTask.Result(show, bitmap,(ShowTags) show.getFullScraperTags(getActivity()));
-        }
-        protected void onPostExecute(TvShowAsyncTask.Result result) {
-            Tvshow show = result.show;
-            BaseTags tags = result.tags;
-            ShowTags showTags = result.tags;
-            final TextView plotTv = (TextView) mHeaderView.findViewById(R.id.plot);
-            mHeaderView.findViewById(R.id.loading).setVisibility(View.GONE);
-
-            TextView tvpg = (TextView) mHeaderView.findViewById(R.id.content_rating);
-            View tvpgContainer = (View) mHeaderView.findViewById(R.id.content_rating_container);
-            if (tags == null || tags.getContentRating() == null || tags.getContentRating().isEmpty()) {
-                tvpg.setVisibility(View.GONE);
-                tvpgContainer.setVisibility(View.GONE);
-            } else {
-                tvpg.setText(tags.getContentRating());
-            }
-
-            TextView network = (TextView) mHeaderView.findViewById(R.id.network);
-            network.setText(show.getStudio());
-
-            TextView Premiered = (TextView) mHeaderView.findViewById(R.id.premiered);
-            String pattern = "yyyy-MM-dd";
-            DateFormat df = new SimpleDateFormat(pattern);
-            String todayAsString = "";
-            Date today = null;
-            if (showTags != null) {
-                today = showTags.getPremiered();
-                todayAsString = df.format(today);
-            } else {
-                Premiered.setVisibility(View.INVISIBLE);
-            }
-            Premiered.setText(todayAsString);
-
-            ImageView posterView = ((ImageView)mHeaderView.findViewById(R.id.thumbnail));
-            posterView.setImageBitmap(result.bitmap);
-            posterView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onPosterClick();
-                }
-            });
-
-            setColor(mColor);
-            ((TextView)mHeaderView.findViewById(R.id.name)).setText(show.getName());
-            plotTv.setText(show.getPlot());
-            plotTv.setMaxLines(Integer.MAX_VALUE);
-
-            setSeason((TextView)mHeaderView.findViewById(R.id.number));
-            plotTv.setVisibility(View.VISIBLE);
-                if(!mPlotIsFullyDisplayed)
-                mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height);
-            else
-                mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            mHeaderView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    View viewMore = mHeaderView.findViewById(R.id.view_more);
-                    if (viewMore.getVisibility() == View.VISIBLE) {
-                        plotTv.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        viewMore.setVisibility(View.GONE);
-                        mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        setContentInfoVisibility(true);
-                        mPlotIsFullyDisplayed = true;
+                    TextView tvpg = (TextView) mHeaderView.findViewById(R.id.content_rating);
+                    View tvpgContainer = (View) mHeaderView.findViewById(R.id.content_rating_container);
+                    if (tags == null || tags.getContentRating() == null || tags.getContentRating().isEmpty()) {
+                        tvpg.setVisibility(View.GONE);
+                        tvpgContainer.setVisibility(View.GONE);
                     } else {
-                        plotTv.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-                        viewMore.setVisibility(View.VISIBLE);
-                        mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height);
-                        setContentInfoVisibility(false);
-                        mPlotIsFullyDisplayed = false;
+                        tvpg.setText(tags.getContentRating());
                     }
-                    mBrowserAdapter.notifyDataSetChanged();
-                }
+
+                    TextView network = (TextView) mHeaderView.findViewById(R.id.network);
+                    network.setText(result.show.getStudio());
+
+                    TextView Premiered = (TextView) mHeaderView.findViewById(R.id.premiered);
+                    String pattern = "yyyy-MM-dd";
+                    DateFormat df = new SimpleDateFormat(pattern);
+                    String todayAsString = "";
+                    if (result.tags != null) {
+                        Date today = result.tags.getPremiered();
+                        todayAsString = df.format(today);
+                    } else {
+                        Premiered.setVisibility(View.INVISIBLE);
+                    }
+                    Premiered.setText(todayAsString);
+
+                    ImageView posterView = ((ImageView) mHeaderView.findViewById(R.id.thumbnail));
+                    posterView.setImageBitmap(result.bitmap);
+                    posterView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onPosterClick();
+                        }
+                    });
+
+                    setColor(mColor);
+                    ((TextView) mHeaderView.findViewById(R.id.name)).setText(result.show.getName());
+                    plotTv.setText(result.show.getPlot());
+                    plotTv.setMaxLines(Integer.MAX_VALUE);
+
+                    setSeason((TextView) mHeaderView.findViewById(R.id.number));
+                    plotTv.setVisibility(View.VISIBLE);
+                    if (!mPlotIsFullyDisplayed)
+                        mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height);
+                    else
+                        mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    mHeaderView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            View viewMore = mHeaderView.findViewById(R.id.view_more);
+                            if (viewMore.getVisibility() == View.VISIBLE) {
+                                plotTv.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                                viewMore.setVisibility(View.GONE);
+                                mHeaderView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                                setContentInfoVisibility(true);
+                                mPlotIsFullyDisplayed = true;
+                            } else {
+                                plotTv.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+                                viewMore.setVisibility(View.VISIBLE);
+                                mHeaderView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.video_details_item_height);
+                                setContentInfoVisibility(false);
+                                mPlotIsFullyDisplayed = false;
+                            }
+                            mBrowserAdapter.notifyDataSetChanged();
+                        }
+                    });
+
+                    if (result.tags != null && result.tags.getDefaultBackdrop() != null)
+                        mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, result.tags.getDefaultBackdrop());
+                });
             });
+        }
 
-            if(result.tags!=null&&result.tags.getDefaultBackdrop()!=null)
-                mBackgroundSetter.set(mApplicationBackdrop, mBackgroundLoader, result.tags.getDefaultBackdrop());
-
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
@@ -465,9 +490,10 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         else {
             if (mShow != null) {
                 if (mTvShowAsyncTask != null)
-                    mTvShowAsyncTask.cancel(true);
+                    mTvShowAsyncTask.cancel();
 
-                mTvShowAsyncTask = new TvShowAsyncTask().executeOnExecutor(mSerialExecutor, getPosterUri(), mShow);
+                mTvShowAsyncTask = new TvShowAsyncTask(getPosterUri(), mShow);
+                mTvShowAsyncTask.execute();
             }
             LoaderManager.getInstance(this).restartLoader(SHOW_LOADER_ID, null, this);
         }

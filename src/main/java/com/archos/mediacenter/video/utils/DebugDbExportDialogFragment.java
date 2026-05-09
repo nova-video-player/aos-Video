@@ -19,8 +19,9 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,6 +35,8 @@ import com.archos.mediacenter.video.ui.NovaProgressDialog;
 import com.archos.mediaprovider.video.VideoOpenHelper;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by vapillon on 13/08/15.
@@ -44,7 +47,7 @@ public class DebugDbExportDialogFragment extends DialogFragment {
     private final static String TAG = "DebugDbExport";
 
     NovaProgressDialog mDialog = null;
-    AsyncTask mExportTask = null;
+    DbExportTask mExportTask = null;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -67,8 +70,8 @@ public class DebugDbExportDialogFragment extends DialogFragment {
         if (DBG) Log.d(TAG, "onResume");
         super.onResume();
 
-        if (mExportTask !=null) {
-            mExportTask.cancel(true); // should not happen
+        if (mExportTask != null) {
+            mExportTask.cancel(); // should not happen
         }
         mExportTask = new DbExportTask();
         mExportTask.execute();
@@ -79,8 +82,8 @@ public class DebugDbExportDialogFragment extends DialogFragment {
         if (DBG) Log.d(TAG, "onDismiss");
         super.onDismiss(dialog);
 
-        if (mExportTask !=null) {
-            mExportTask.cancel(true);
+        if (mExportTask != null) {
+            mExportTask.cancel();
             mExportTask = null;
         }
     }
@@ -95,66 +98,61 @@ public class DebugDbExportDialogFragment extends DialogFragment {
         dismiss();
     }
 
-    private class DbExportTask extends AsyncTask<Object, Void, File> {
+    private class DbExportTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected void onPreExecute() {
-            if (DBG) Log.d(TAG, "onPreExecute ");
-            super.onPreExecute();
-        }
-
-        @Override
-        protected File doInBackground(Object... params) {
-            if (DBG) Log.d(TAG, "doInBackground");
-            File libFile = VideoOpenHelper.getDatabaseFile(getActivity());
-            if (!libFile.exists()) {
-                Toast.makeText(getActivity(), R.string.error_file_not_found, Toast.LENGTH_SHORT).show();
-                return null;
-            }
-            // Build zipped File
-            File zipFileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            zipFileDir.mkdir(); // make the dir if it does not exist (very unlikely)
-            File zipFile = new File(zipFileDir.getAbsolutePath()+"/video_db.zip");
-            if (DBG) Log.d(TAG, "zipFile = "+zipFile);
-
-            // Erase zipped library if there is already one
-            if (zipFile.exists()) {
-                zipFile.delete();
-            }
-
-            // Zip it!
-            boolean zipSuccess = ZipUtils.compressFile(libFile, zipFile);
-            if (DBG) Log.d(TAG, "Size uncompressed: " + libFile.length());
-            if (DBG) Log.d(TAG, "Size compressed:   " + zipFile.length());
-            return zipSuccess ? zipFile : null;
-        }
-
-        @Override
-        protected void onPostExecute(File zipFile) {
-            if (DBG) Log.d(TAG, "onPostExecute "+zipFile);
-            if (zipFile!=null) {
-                // Build and send the intent
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                emailIntent.setType("text/plain");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"software+video_db@courville.org"});
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.zipped_library_mail_subject));
-                emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.zipped_library_mail_text));
-                emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(zipFile));
-                emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                try {
-                    startActivity(emailIntent);
-                } catch (ActivityNotFoundException ex) {
-                    Toast.makeText(getActivity(), R.string.no_email_installed, Toast.LENGTH_SHORT).show();
+        void execute() {
+            executor.execute(() -> {
+                if (isCancelled) return;
+                if (DBG) Log.d(TAG, "doInBackground");
+                File zipFile = null;
+                if (getActivity() != null) {
+                    File libFile = VideoOpenHelper.getDatabaseFile(getActivity());
+                    if (libFile.exists()) {
+                        File zipFileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                        zipFileDir.mkdir();
+                        zipFile = new File(zipFileDir.getAbsolutePath() + "/video_db.zip");
+                        if (DBG) Log.d(TAG, "zipFile = " + zipFile);
+                        if (zipFile.exists()) zipFile.delete();
+                        boolean zipSuccess = ZipUtils.compressFile(libFile, zipFile);
+                        if (DBG) Log.d(TAG, "Size uncompressed: " + libFile.length());
+                        if (DBG) Log.d(TAG, "Size compressed:   " + zipFile.length());
+                        if (!zipSuccess) zipFile = null;
+                    }
                 }
-            }
-            else {
-                // Error
-                new AlertDialog.Builder(getActivity())
-                        .setMessage(R.string.error)
-                        .show();
-            }
+                final File finalZipFile = zipFile;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    if (DBG) Log.d(TAG, "onPostExecute " + finalZipFile);
+                    if (finalZipFile != null) {
+                        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                        emailIntent.setType("text/plain");
+                        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"software+video_db@courville.org"});
+                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.zipped_library_mail_subject));
+                        emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.zipped_library_mail_text));
+                        emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(finalZipFile));
+                        emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        try {
+                            startActivity(emailIntent);
+                        } catch (ActivityNotFoundException ex) {
+                            if (getActivity() != null)
+                                Toast.makeText(getActivity(), R.string.no_email_installed, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if (getActivity() != null)
+                            new AlertDialog.Builder(getActivity()).setMessage(R.string.error).show();
+                    }
+                    mDialog.dismiss();
+                });
+                executor.shutdown();
+            });
+        }
 
-            mDialog.dismiss();
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 

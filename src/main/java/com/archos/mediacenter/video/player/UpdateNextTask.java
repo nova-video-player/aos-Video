@@ -17,7 +17,8 @@ package com.archos.mediacenter.video.player;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.BaseColumns;
 
 import androidx.loader.content.CursorLoader;
@@ -47,6 +48,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -54,7 +59,7 @@ import java.util.List;
 /**
  * Created by alexandre on 24/04/15.
  */
-public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.Result> {
+public class UpdateNextTask {
 
     private static final Logger log = LoggerFactory.getLogger(UpdateNextTask.class);
 
@@ -65,6 +70,10 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
     private final Video mVideo;
     private Uri mUri;
     private Listener mListener;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private volatile boolean isCancelled = false;
+    private Future<Result> mFuture;
     protected static class Result {
         public final Uri uri;
         public final long id;
@@ -377,26 +386,44 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
         return null;
     }
 
-    @Override
-    protected UpdateNextTask.Result doInBackground(Boolean... params) {
-        if (params.length < 1)
-            return null;
-        return run(params[0], params[1]);
+    public void execute(boolean repeatFolder, boolean binge) {
+        mFuture = executor.submit(() -> run(repeatFolder, binge));
+        executor.execute(() -> {
+            try {
+                Result result = mFuture.get();
+                if (!isCancelled) {
+                    handler.post(() -> {
+                        if (isCancelled) return;
+                        if (log.isDebugEnabled()) log.debug("onPostExecute: result={}, mListener={}", (result != null ? result.uri : "null"), (mListener != null ? "set" : "null"));
+                        if (mListener != null) {
+                            if (result != null) {
+                                if (log.isDebugEnabled()) log.debug("onPostExecute: calling mListener.onResult with uri={}, id={}", result.uri, result.id);
+                                mListener.onResult(result.uri, result.id);
+                            } else {
+                                if (log.isDebugEnabled()) log.debug("onPostExecute: calling mListener.onResult with null uri");
+                                mListener.onResult(null, -1);
+                            }
+                        } else {
+                            if (log.isDebugEnabled()) log.debug("onPostExecute: mListener is null, cannot call onResult");
+                        }
+                    });
+                }
+            } catch (ExecutionException | InterruptedException e) {
+                if (!isCancelled) log.error("UpdateNextTask error", e);
+            } finally {
+                executor.shutdown();
+            }
+        });
     }
 
-    @Override
-    protected void onPostExecute(Result result) {
-        if (log.isDebugEnabled()) log.debug("onPostExecute: result={}, mListener={}", (result != null ? result.uri : "null"), (mListener != null ? "set" : "null"));
-        if (mListener != null) {
-            if (result != null) {
-                if (log.isDebugEnabled()) log.debug("onPostExecute: calling mListener.onResult with uri={}, id={}", result.uri, result.id);
-                mListener.onResult(result.uri, result.id);
-            } else {
-                if (log.isDebugEnabled()) log.debug("onPostExecute: calling mListener.onResult with null uri");
-                mListener.onResult(null, -1);
-            }
-        } else {
-            if (log.isDebugEnabled()) log.debug("onPostExecute: mListener is null, cannot call onResult");
-        }
+    public void cancel(boolean mayInterruptIfRunning) {
+        isCancelled = true;
+        if (mFuture != null) mFuture.cancel(mayInterruptIfRunning);
+        if (mayInterruptIfRunning) executor.shutdownNow();
+        else executor.shutdown();
+    }
+
+    public Result get() throws ExecutionException, InterruptedException {
+        return mFuture != null ? mFuture.get() : null;
     }
 }
