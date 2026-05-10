@@ -23,8 +23,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +73,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
@@ -163,7 +165,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         if (log.isDebugEnabled()) log.debug("onStop");
         if (mOpenSubtitlesTask != null) {
             if (log.isDebugEnabled()) log.debug("mOpenSubtitlesTask.cancel");
-            mOpenSubtitlesTask.cancel(false);
+            mOpenSubtitlesTask.cancel();
             mOpenSubtitlesTask = null;
         }
         logOut();
@@ -233,35 +235,47 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         return languageList;
     }
 
-    private class OpenSubtitlesTask extends AsyncTask<ArrayList<String>, Integer, Void>{
+    private class OpenSubtitlesTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
         ArrayList<OpenSubtitlesSearchResult> searchResults = null;
-        @Override
-        protected void onPreExecute() {
+
+        void execute(ArrayList<String> fileUrls, ArrayList<String> languages) {
             if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPreExecute");
             setInitDialog();
+
+            executor.execute(() -> {
+                try {
+                    String fileUrl = fileUrls.get(0);
+                    if (logIn()) {
+                        getSubtitle(fileUrl, languages);
+                    }
+                } catch (Exception e) {
+                    log.error("OpenSubtitlesTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                handler.post(() -> {
+                    // Close the progress dialog
+                    if (mDialog != null) {
+                        mDoNotFinish = mDoNotFinish &&
+                                searchResults != null &&
+                                !searchResults.isEmpty() &&
+                                (OpenSubtitlesApiHelper.getLastQueryResult() == OpenSubtitlesApiHelper.RESULT_CODE_OK);
+                        if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPostExecute: mDoNotFinish={}", mDoNotFinish);
+                        if (searchResults != null) if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPostExecute: found {} subs", searchResults.size());
+                        else if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPostExecute: searchResults=null");
+                        mDialog.dismiss();
+                    }
+                });
+            });
         }
-        @Override
-        protected Void doInBackground(ArrayList<String>... params) {
-            String fileUrl =  params[0].get(0);
-            ArrayList<String> languages = params[1];
-            if (logIn()){
-                getSubtitle(fileUrl, languages);
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            // Close the progress dialog
-            if (mDialog != null) {
-                mDoNotFinish = mDoNotFinish &&
-                        searchResults != null &&
-                        !searchResults.isEmpty() &&
-                        (OpenSubtitlesApiHelper.getLastQueryResult() == OpenSubtitlesApiHelper.RESULT_CODE_OK);
-                if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPostExecute: mDoNotFinish={}", mDoNotFinish);
-                if (searchResults != null) if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPostExecute: found {} subs", searchResults.size());
-                else if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPostExecute: searchResults=null");
-                mDialog.dismiss();
-            }
+
+        void cancel() {
+            isCancelled = true;
+            executor.shutdown(); // mayInterruptIfRunning was false in original call
         }
 
         /**************************************************
@@ -338,7 +352,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 return;
             }
             MediaUtils.removeLastSubs(SubtitlesDownloaderActivity2.this);
-            if (!isCancelled() && !searchResults.isEmpty()) setResult(AppCompatActivity.RESULT_OK);
+            if (!isCancelled && !searchResults.isEmpty()) setResult(AppCompatActivity.RESULT_OK);
         }
 
         private void getSub(String fileUrl, OpenSubtitlesSearchResult searchResult) {
@@ -665,12 +679,14 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             mHandler.post(() -> {
                 mDialog = NovaProgressDialog.show(SubtitlesDownloaderActivity2.this, "", getString(R.string.dialog_subloader_connecting), true, true, dialog -> {
                     dialog.cancel();
+                    if (mOpenSubtitlesTask != null) mOpenSubtitlesTask.cancel();
                     finish();
                 });
                 mDialog.setCanceledOnTouchOutside(false); // to not cancel when tapping the screen out of dialog zone
                 mDialog.setOnDismissListener(dialog -> {
                     if(!mDoNotFinish) {
                         dialog.cancel();
+                        if (mOpenSubtitlesTask != null) mOpenSubtitlesTask.cancel();
                         finish();
                     }
                     mDoNotFinish = false;
