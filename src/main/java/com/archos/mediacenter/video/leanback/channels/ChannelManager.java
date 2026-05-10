@@ -12,8 +12,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.core.content.ContextCompat;
 import androidx.tvprovider.media.tv.Channel;
@@ -59,6 +60,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ChannelManager {
 
@@ -108,7 +111,7 @@ public class ChannelManager {
     
     private void prepareEmptyPoster() {
         if (mPrepareEmptyPosterTask != null)
-            mPrepareEmptyPosterTask.cancel(true);
+            mPrepareEmptyPosterTask.cancel();
 
         mPrepareEmptyPosterTask = new PrepareEmptyPosterTask();
 
@@ -117,7 +120,7 @@ public class ChannelManager {
 
     private void prepareChannels() {
         if (mPrepareChannelsTask != null)
-            mPrepareChannelsTask.cancel(true);
+            mPrepareChannelsTask.cancel();
 
         mPrepareChannelsTask = new PrepareChannelsTask();
 
@@ -144,7 +147,7 @@ public class ChannelManager {
         CreateChannelTask oldTask = mCreateChannelTasks.get(channel.getName());
 
         if (oldTask != null)
-            oldTask.cancel(true);
+            oldTask.cancel();
 
         CreateChannelTask newTask = new CreateChannelTask();
 
@@ -163,24 +166,36 @@ public class ChannelManager {
         RefreshChannelTask oldTask = mRefreshChannelTasks.get(channel.getName());
 
         if (oldTask != null)
-            oldTask.cancel(true);
-        
+            oldTask.cancel();
+
         RefreshChannelTask newTask = new RefreshChannelTask();
 
         mRefreshChannelTasks.put(channel.getName(), newTask);
         newTask.execute(channel);
     }
 
-    private class PrepareEmptyPosterTask extends AsyncTask<Void, Void, Void> {
+    private class PrepareEmptyPosterTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            String path = new File(getExternalCacheDir(mContext), "empty_poster.png").getAbsolutePath();
+        void execute() {
+            executor.execute(() -> {
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    String path = new File(getExternalCacheDir(mContext), "empty_poster.png").getAbsolutePath();
+                    createEmptyPosterFile(path);
+                    createEmptyPosterRow(path);
+                } catch (Exception e) {
+                    Log.e(TAG, "PrepareEmptyPosterTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+            });
+        }
 
-            createEmptyPosterFile(path);
-            createEmptyPosterRow(path);
-
-            return null;
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
 
         private void createEmptyPosterFile(String path) {
@@ -228,27 +243,37 @@ public class ChannelManager {
         }
     }
 
-    private class PrepareChannelsTask extends AsyncTask<Void, Void, Void> {
+    private class PrepareChannelsTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
         private VideosByListLoader mListLoader;
 
-        @Override
-        protected void onPreExecute() {
-            mListLoader = new VideosByListLoader(mContext);
+        void execute() {
+            mListLoader = new VideosByListLoader(mContext); // onPreExecute equivalent
+            executor.execute(() -> {
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    addInternalChannels();
+                    deleteNotExistingChannels();
+                } catch (Exception e) {
+                    Log.e(TAG, "PrepareChannelsTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    initInternalChannels();
+                    onChannelsPrepared();
+                });
+            });
         }
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            addInternalChannels();
-            deleteNotExistingChannels();
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            initInternalChannels();
-            onChannelsPrepared();
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
 
         private void addInternalChannels() {
@@ -338,32 +363,41 @@ public class ChannelManager {
         }
     }
 
-    private class CreateChannelTask extends AsyncTask<ChannelData, Void, Void> {
+    private class CreateChannelTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected Void doInBackground(ChannelData... params) {
-            ChannelData channel = params[0];
-
-            long channelId = getChannelId(channel);
-
-            if (channelId == -1) {
+        void execute(ChannelData channel) {
+            executor.execute(() -> {
                 try {
-                    channelId = createChannel(channel);
-                    channel.setId(channelId);
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    long channelId = getChannelId(channel);
+                    if (channelId == -1) {
+                        try {
+                            channelId = createChannel(channel);
+                            channel.setId(channelId);
+                        } catch (Exception e) {
+                            if (DBG) Log.e(TAG, "CreateChannelTask: caught exception (HarmonyOS?)", e);
+                        }
+                    } else {
+                        try {
+                            channel.setId(channelId);
+                            updateChannel(channel);
+                        } catch (Exception e) {
+                            if (DBG) Log.e(TAG, "CreateChannelTask: caught exception (HarmonyOS?)", e);
+                        }
+                    }
                 } catch (Exception e) {
-                    if (DBG) Log.e(TAG, "CreateChannelTask:doInBackground: caught exception (HarmonyOS?)", e);
+                    Log.e(TAG, "CreateChannelTask failed", e);
+                } finally {
+                    executor.shutdown();
                 }
-            }
-            else {
-                try {
-                    channel.setId(channelId);
-                    updateChannel(channel);
-                } catch (Exception e) {
-                    if (DBG) Log.e(TAG, "CreateChannelTask:doInBackground: caught exception (HarmonyOS?)", e);
-                }
-            }
-            
-            return null;
+            });
+        }
+
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
 
         private long getChannelId(ChannelData internalChannel) {
@@ -418,20 +452,36 @@ public class ChannelManager {
         }
     }
 
-    private class RefreshChannelTask extends AsyncTask<ChannelData, Void, Void> {
+    private class RefreshChannelTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected Void doInBackground(ChannelData... params) {
-            ChannelData channel = params[0];
+        void execute(ChannelData channel) {
+            executor.execute(() -> {
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    doRefresh(channel);
+                } catch (Exception e) {
+                    Log.e(TAG, "RefreshChannelTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+            });
+        }
 
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
+        }
+
+        private void doRefresh(ChannelData channel) {
             if (DBG) Log.d(TAG, "Refreshing " + channel.getName());
 
             boolean isVisible = isChannelVisible(channel);
 
             if (!isVisible) {
                 deletePrograms(channel);
-
-                return null;
+                return;
             }
 
             Cursor cursor = channel.getLoader().loadInBackground();
@@ -444,8 +494,7 @@ public class ChannelManager {
 
                 if (newVideoOrTvShowIds.equals(oldVideoOrTvShowIds) && newPosterIds.equals(oldPosterIds)) {
                     cursor.close();
-
-                    return null;
+                    return;
                 }
 
                 deletePrograms(channel);
@@ -591,8 +640,6 @@ public class ChannelManager {
             finally {
                 cursor.close();
             }
-
-            return null;
         }
 
         private boolean isChannelVisible(ChannelData internalChannel) {
