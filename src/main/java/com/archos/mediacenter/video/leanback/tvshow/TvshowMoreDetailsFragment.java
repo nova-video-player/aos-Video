@@ -17,7 +17,6 @@ package com.archos.mediacenter.video.leanback.tvshow;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -64,6 +63,8 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset {
@@ -89,11 +90,11 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     private ListRow mWebLinksRow;
     private ArrayObjectAdapter mRowsAdapter;
 
-    private AsyncTask mBackdropTask;
-    private AsyncTask mFullScraperTagsTask;
-    private AsyncTask mBuildRowsTask;
-    private AsyncTask mShowPosterSaverTask;
-    private AsyncTask mBackdropSaverTask;
+    private BackdropTask mBackdropTask;
+    private FullScraperTagsTask mFullScraperTagsTask;
+    private BuildRowsTask mBuildRowsTask;
+    private ShowPosterSaverTask mShowPosterSaverTask;
+    private BackdropSaverTask mBackdropSaverTask;
 
     private Overlay mOverlay;
     private ArchosDetailsOverviewRowPresenter mOverviewRowPresenter;
@@ -128,10 +129,12 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
                 if (item instanceof ScraperImage) {
                     if (row == mPostersRow) {
-                        mShowPosterSaverTask = new ShowPosterSaverTask().execute((ScraperImage) item);
+                        mShowPosterSaverTask = new ShowPosterSaverTask();
+                    mShowPosterSaverTask.execute((ScraperImage) item);
                     }
                     else if (row == mBackdropsRow) {
-                        mBackdropSaverTask = new BackdropSaverTask().execute((ScraperImage) item);
+                        mBackdropSaverTask = new BackdropSaverTask();
+                        mBackdropSaverTask.execute((ScraperImage) item);
                     }
                 }
                 else if (item instanceof WebPageLink) {
@@ -217,11 +220,11 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     @Override
     public void onStop() {
         // Cancel all the async tasks
-        for (AsyncTask task : new AsyncTask[] { mBackdropTask, mFullScraperTagsTask, mBuildRowsTask, mShowPosterSaverTask, mBackdropSaverTask}) {
-            if (task!=null) {
-                task.cancel(true);
-            }
-        }
+        if (mBackdropTask != null) mBackdropTask.cancel();
+        if (mFullScraperTagsTask != null) mFullScraperTagsTask.cancel();
+        if (mBuildRowsTask != null) mBuildRowsTask.cancel();
+        if (mShowPosterSaverTask != null) mShowPosterSaverTask.cancel();
+        if (mBackdropSaverTask != null) mBackdropSaverTask.cancel();
         super.onStop();
     }
 
@@ -232,11 +235,12 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
 
         // Start loading the detailed info about the show if needed
         if (mShowTags==null) {
-            mFullScraperTagsTask = new FullScraperTagsTask().execute(mShowId);
+            mFullScraperTagsTask = new FullScraperTagsTask();
+            mFullScraperTagsTask.execute(mShowId);
         }
 
         if (mBackdropTask!=null) {
-            mBackdropTask.cancel(true);
+            mBackdropTask.cancel();
         }
         mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mShowTags);
     }
@@ -250,256 +254,313 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     //--------------------------------------------
 
     /** Get the ShowTags */
-    private class FullScraperTagsTask extends AsyncTask<Long, Void, ShowTags> {
+    private class FullScraperTagsTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected ShowTags doInBackground(Long... ids) {
-            final long showId = ids[0];
-            return TagsFactory.buildShowTags(getActivity(), showId);
+        void execute(long showId) {
+            executor.execute(() -> {
+                ShowTags result = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    result = TagsFactory.buildShowTags(getActivity(), showId);
+                } catch (Exception e) {
+                    Log.e(TAG, "FullScraperTagsTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                final ShowTags finalResult = result;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    mShowTags = finalResult;
+
+                    // Launch backdrop task in BaseTags-as-arguments mode
+                    if (mBackdropTask != null) {
+                        mBackdropTask.cancel();
+                    }
+                    mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(finalResult);
+
+                    // Build and load the rows
+                    if (mBuildRowsTask != null) {
+                        mBuildRowsTask.cancel();
+                    }
+                    mBuildRowsTask = new BuildRowsTask();
+                    mBuildRowsTask.execute(mShowTags);
+                });
+            });
         }
 
-        protected void onPostExecute(ShowTags showTags) {
-            mShowTags = showTags;
-
-            // Launch backdrop task in BaseTags-as-arguments mode
-            if (mBackdropTask!=null) {
-                mBackdropTask.cancel(true);
-            }
-            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(showTags);
-
-            // Build and load the rows
-            if (mBuildRowsTask != null) {
-                mBuildRowsTask.cancel(true);
-            }
-            mBuildRowsTask = new BuildRowsTask().execute(mShowTags);
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
-    private class BuildRowsTask extends AsyncTask<ShowTags, Void, Void> {
+    private class BuildRowsTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected Void doInBackground(ShowTags... showTagsArray) {
-            ShowTags tags = showTagsArray[0];
+        void execute(ShowTags showTags) {
+            executor.execute(() -> {
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    ShowTags tags = showTags;
 
-            // Details ---------------
-            mDetailsRow = new DetailsOverviewRow(tags);
-            Bitmap bitmap = null;
-            try {
-                if (tags.getDefaultPoster() != null) {
-                    // Poster
-                    File file = tags.getDefaultPoster().getLargeFileF();
-                    if (file != null) {
-                        bitmap = Picasso.get()
-                                .load(file)
-                                .noFade() // no fade since we are using activity transition anyway
-                                .config(Bitmap.Config.ARGB_8888)
-                                .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(
-                                        getResources().getDimensionPixelSize(R.dimen.details_poster_width),
-                                        getResources().getDimensionPixelSize(R.dimen.details_poster_height)))
-                                .get();
+                    // Details ---------------
+                    mDetailsRow = new DetailsOverviewRow(tags);
+                    Bitmap bitmap = null;
+                    try {
+                        if (tags.getDefaultPoster() != null) {
+                            // Poster
+                            File file = tags.getDefaultPoster().getLargeFileF();
+                            if (file != null) {
+                                bitmap = Picasso.get()
+                                        .load(file)
+                                        .noFade() // no fade since we are using activity transition anyway
+                                        .config(Bitmap.Config.ARGB_8888)
+                                        .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(
+                                                getResources().getDimensionPixelSize(R.dimen.details_poster_width),
+                                                getResources().getDimensionPixelSize(R.dimen.details_poster_height)))
+                                        .get();
+                            }
+                        }
+                    } catch (IOException e) {
+                        Log.d(TAG, "TvshowMoreDetailsFragment Picasso load exception", e);
+                    } catch (NullPointerException e) { // getDefaultPoster() may return null (seen once at least)
+                        Log.d(TAG, "TvshowMoreDetailsFragment doInBackground exception", e);
+                    } finally {
+                        if (bitmap != null) {
+                            Palette palette = Palette.from(bitmap).generate();
+                            if (palette.getDarkVibrantSwatch() != null)
+                                mColor = palette.getDarkVibrantSwatch().getRgb();
+                            else if (palette.getDarkMutedSwatch() != null)
+                                mColor = palette.getDarkMutedSwatch().getRgb();
+                            else
+                                mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
+                            dominantColor = mColor;
+                            mDetailsRow.setImageBitmap(getActivity(), bitmap);
+                            mDetailsRow.setImageScaleUpAllowed(true);
+                        }
+                        else {
+                            mDetailsRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
+                            mDetailsRow.setImageScaleUpAllowed(false);
+                        }
                     }
+
+                    // Plot and cast
+                    if (tags.getPlot()!=null) {
+                        mPlotAndGenresRow = new PlotAndGenresRow(getString(R.string.scrap_plot), tags.getPlot(), tags.getGenresFormatted());
+                    } else {
+                        mPlotAndGenresRow = null;
+                    }
+
+                    if (tags.getActorsFormatted()!=null) {
+                        mCastRow = new CastRow(getString(R.string.scrap_cast), tags, "");
+                    }
+                    else {
+                        mCastRow = null;
+                    }
+
+                    if (isCancelled) return;
+
+                    // Posters
+                    List<ScraperImage> posters = tags.getAllPostersInDb(getActivity());
+                    if (!posters.isEmpty()) {
+                        ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new ScraperImagePosterPresenter());
+                        postersRowAdapter.addAll(0, posters);
+                        mPostersRow = new ListRow( new HeaderItem(getString(R.string.leanback_posters_header)), postersRowAdapter);
+                    } else {
+                        mPostersRow = null;
+                    }
+
+                    if (isCancelled) return;
+
+                    // Backdrops
+                    List<ScraperImage> backdrops = tags.getAllBackdropsInDb(getActivity());
+                    if (!backdrops.isEmpty()) {
+                        ArrayObjectAdapter backdropsRowAdapter = new ArrayObjectAdapter(new ScraperImageBackdropPresenter());
+                        backdropsRowAdapter.addAll(0, backdrops);
+                        mBackdropsRow = new ListRow( new HeaderItem(getString(R.string.leanback_backdrops_header)), backdropsRowAdapter);
+                    } else {
+                        mBackdropsRow = null;
+                    }
+
+                    // Web links
+                    /*
+                    final String imdbId = tags.getImdbId();
+                    if ((imdbId!=null) && (imdbId.length()>0)) {
+                        final String imdbUrl = getResources().getString(R.string.imdb_title_url) + imdbId;
+                        ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebPageLinkPresenter());
+                        rowAdapter.add(new WebPageLink(imdbUrl));
+                        mWebLinksRow = new ListRow( new HeaderItem(getString(R.string.leanback_weblinks_header)), rowAdapter);
+                    } else {
+                        mWebLinksRow = null;
+                    }*/
+                    mWebLinksRow = null; // No web links for now to be sure to get "leanback certification"
+                } catch (Exception e) {
+                    Log.e(TAG, "BuildRowsTask failed", e);
+                } finally {
+                    executor.shutdown();
                 }
-            } catch (IOException e) {
-                Log.d(TAG, "TvshowMoreDetailsFragment Picasso load exception", e);
-            } catch (NullPointerException e) { // getDefaultPoster() may return null (seen once at least)
-                Log.d(TAG, "TvshowMoreDetailsFragment doInBackground exception", e);
-            } finally {
-                if (bitmap != null) {
-                    Palette palette = Palette.from(bitmap).generate();
-                    if (palette.getDarkVibrantSwatch() != null)
-                        mColor = palette.getDarkVibrantSwatch().getRgb();
-                    else if (palette.getDarkMutedSwatch() != null)
-                        mColor = palette.getDarkMutedSwatch().getRgb();
-                    else
-                        mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
-                    dominantColor = mColor;
-                    mDetailsRow.setImageBitmap(getActivity(), bitmap);
-                    mDetailsRow.setImageScaleUpAllowed(true);
-                }
-                else {
-                    mDetailsRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
-                    mDetailsRow.setImageScaleUpAllowed(false);
-                }
-            }
-
-            // Plot and cast
-            if (tags.getPlot()!=null) {
-                mPlotAndGenresRow = new PlotAndGenresRow(getString(R.string.scrap_plot), tags.getPlot(), tags.getGenresFormatted());
-            } else {
-                mPlotAndGenresRow = null;
-            }
-
-            if (tags.getActorsFormatted()!=null) {
-                mCastRow = new CastRow(getString(R.string.scrap_cast), tags, "");
-            }
-            else {
-                mCastRow = null;
-            }
-
-            if (isCancelled()) {
-                return null;
-            }
-
-            // Posters
-            List<ScraperImage> posters = tags.getAllPostersInDb(getActivity());
-            if (!posters.isEmpty()) {
-                ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new ScraperImagePosterPresenter());
-                postersRowAdapter.addAll(0, posters);
-                mPostersRow = new ListRow( new HeaderItem(getString(R.string.leanback_posters_header)), postersRowAdapter);
-            } else {
-                mPostersRow = null;
-            }
-
-
-            if (isCancelled()) {
-                return null;
-            }
-
-            // Backdrops
-            List<ScraperImage> backdrops = tags.getAllBackdropsInDb(getActivity());
-            if (!backdrops.isEmpty()) {
-                ArrayObjectAdapter backdropsRowAdapter = new ArrayObjectAdapter(new ScraperImageBackdropPresenter());
-                backdropsRowAdapter.addAll(0, backdrops);
-                mBackdropsRow = new ListRow( new HeaderItem(getString(R.string.leanback_backdrops_header)), backdropsRowAdapter);
-            } else {
-                mBackdropsRow = null;
-            }
-
-            // Web links
-            /*
-            final String imdbId = tags.getImdbId();
-            if ((imdbId!=null) && (imdbId.length()>0)) {
-                final String imdbUrl = getResources().getString(R.string.imdb_title_url) + imdbId;
-                ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebPageLinkPresenter());
-                rowAdapter.add(new WebPageLink(imdbUrl));
-                mWebLinksRow = new ListRow( new HeaderItem(getString(R.string.leanback_weblinks_header)), rowAdapter);
-            } else {
-                mWebLinksRow = null;
-            }*/
-            mWebLinksRow = null; // No web links for now to be sure to get "leanback certification"
-
-            return null;
+                if (isCancelled) return;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    ClassPresenterSelector ps = new ClassPresenterSelector();
+                    ps.addClassPresenter(DetailsOverviewRow.class, mOverviewRowPresenter);
+                    ps.addClassPresenter(PlotAndGenresRow.class, new PlotAndGenresRowPresenter(14,mColor)); // 14 lines max to fit on screen
+                    ps.addClassPresenter(CastRow.class, new CastRowPresenter(17,mColor)); // 17 lines max to fit on screen
+                    ps.addClassPresenter(ListRow.class, new ListRowPresenter());
+                    mOverviewRowPresenter.updateBackgroundColor(mColor);
+                    mRowsAdapter = new ArrayObjectAdapter(ps);
+                    mRowsAdapter.clear();
+                    // Add all the non-null rows
+                    for (Row row : new Row[] {mDetailsRow, mPlotAndGenresRow, mCastRow, mPostersRow, mBackdropsRow, mWebLinksRow}) {
+                        if (row!=null) {
+                            mRowsAdapter.add(row);
+                        }
+                    }
+                    setAdapter(mRowsAdapter);
+                });
+            });
         }
 
-        @Override
-        protected void onPostExecute(Void avoid) {
-            ClassPresenterSelector ps = new ClassPresenterSelector();
-            ps.addClassPresenter(DetailsOverviewRow.class, mOverviewRowPresenter);
-            ps.addClassPresenter(PlotAndGenresRow.class, new PlotAndGenresRowPresenter(14,mColor)); // 14 lines max to fit on screen
-            ps.addClassPresenter(CastRow.class, new CastRowPresenter(17,mColor)); // 17 lines max to fit on screen
-            ps.addClassPresenter(ListRow.class, new ListRowPresenter());
-            mOverviewRowPresenter.updateBackgroundColor(mColor);
-            mRowsAdapter = new ArrayObjectAdapter(ps);
-            mRowsAdapter.clear();
-            // Add all the non-null rows
-            for (Row row : new Row[] {mDetailsRow, mPlotAndGenresRow, mCastRow, mPostersRow, mBackdropsRow, mWebLinksRow}) {
-                if (row!=null) {
-                    mRowsAdapter.add(row);
-                }
-            }
-            setAdapter(mRowsAdapter);
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
 
     /** Saves a Poster as default poster for a show and update the current poster */
-    private class ShowPosterSaverTask extends AsyncTask<ScraperImage, Void, Bitmap> {
+    private class ShowPosterSaverTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected Bitmap doInBackground(ScraperImage... params) {
-            ScraperImage poster = params[0];
+        void execute(ScraperImage poster) {
+            executor.execute(() -> {
+                Bitmap result = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    // Save in DB and download
+                    if (poster.setAsDefault(getActivity(), -1)) { // -1 means for the whole show (not for a given season)
+                        poster.download(getActivity());
+                    }
+                    // Update the bitmap
+                    int width = getResources().getDimensionPixelSize(R.dimen.details_poster_width);
+                    int height = getResources().getDimensionPixelSize(R.dimen.details_poster_height);
+                    try {
+                        result = Picasso.get()
+                                .load(poster.getLargeFileF())
+                                .noFade()
+                                .config(Bitmap.Config.ARGB_8888)
+                                .resize((int)(width * 2.0f), (int)(height * 2.0f))
+                                .centerCrop()
+                                .onlyScaleDown()
+                                .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(width, height))
+                                .get();
+                    } catch (IOException e) {
+                        Log.d(TAG, "ShowPosterSaverTask Picasso load exception", e);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "ShowPosterSaverTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                final Bitmap finalResult = result;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    if (finalResult != null) {
+                        mDetailsRow.setImageBitmap(getActivity(), finalResult);
+                        mDetailsRow.setImageScaleUpAllowed(true);
 
-            // Save in DB and download
-            if (poster.setAsDefault(getActivity(), -1)) { // -1 means for the whole show (not for a given season)
-                poster.download(getActivity());
-            }
-            // Update the bitmap
-            Bitmap bitmap=null;
-            try {
-                int width = getResources().getDimensionPixelSize(R.dimen.details_poster_width);
-                int height = getResources().getDimensionPixelSize(R.dimen.details_poster_height);
-                bitmap = Picasso.get()
-                        .load(poster.getLargeFileF())
-                        .noFade()
-                        .config(Bitmap.Config.ARGB_8888)
-                        .resize((int)(width * 2.0f), (int)(height * 2.0f))
-                        .centerCrop()
-                        .onlyScaleDown()
-                        .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(width, height))
-                        .get();
+                        Palette palette = Palette.from(finalResult).generate();
+                        int color;
 
-            } catch (IOException e) {
-                Log.d(TAG, "ShowPosterSaverTask Picasso load exception", e);
-            }
+                        if (palette.getDarkVibrantSwatch() != null)
+                            color = palette.getDarkVibrantSwatch().getRgb();
+                        else if (palette.getDarkMutedSwatch() != null)
+                            color = palette.getDarkMutedSwatch().getRgb();
+                        else
+                            color = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
 
-            return bitmap;
+                        if (color != mColor) {
+                            mColor = color;
+
+                            mOverviewRowPresenter.updateBackgroundColor(color);
+
+                            for (Presenter pres : mRowsAdapter.getPresenterSelector().getPresenters()){
+                                if (pres instanceof BackgroundColorPresenter)
+                                    ((BackgroundColorPresenter) pres).setBackgroundColor(color);
+                            }
+                        }
+
+                        Toast.makeText(getActivity(), R.string.leanback_poster_changed, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    // The activity result is set to OK if the poster or backdrop is changed
+                    getActivity().setResult(Activity.RESULT_OK);
+                });
+            });
         }
 
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if (result != null) {
-                mDetailsRow.setImageBitmap(getActivity(), result);
-                mDetailsRow.setImageScaleUpAllowed(true);
-
-                Palette palette = Palette.from(result).generate();
-                int color;
-                
-                if (palette.getDarkVibrantSwatch() != null)
-                    color = palette.getDarkVibrantSwatch().getRgb();
-                else if (palette.getDarkMutedSwatch() != null)
-                    color = palette.getDarkMutedSwatch().getRgb();
-                else
-                    color = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
-
-                if (color != mColor) {
-                    mColor = color;
-
-                    mOverviewRowPresenter.updateBackgroundColor(color);
-
-                    for (Presenter pres : mRowsAdapter.getPresenterSelector().getPresenters()){
-                        if (pres instanceof BackgroundColorPresenter)
-                            ((BackgroundColorPresenter) pres).setBackgroundColor(color);
-                    }
-                }
-
-                Toast.makeText(getActivity(), R.string.leanback_poster_changed, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
-            }
-
-            // The activity result is set to OK if the poster or backdrop is changed
-            getActivity().setResult(Activity.RESULT_OK);
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
     /** Saves a Backdrop as default for a video and update the current backdrop */
-    private class BackdropSaverTask extends AsyncTask<ScraperImage, Void, ShowTags> {
+    private class BackdropSaverTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected ShowTags doInBackground(ScraperImage... params) {
-            ScraperImage backdrop = params[0];
-            // Save in DB and download
-            if (backdrop.setAsDefault(getActivity())) {
-                backdrop.download(getActivity());
-            }
-            // Simplier to rebuild the full ShowTags here in order for the BackdropTask to get the new backdrop in it
-            return TagsFactory.buildShowTags(getActivity(), mShowId);
+        void execute(ScraperImage backdrop) {
+            executor.execute(() -> {
+                ShowTags result = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    // Save in DB and download
+                    if (backdrop.setAsDefault(getActivity())) {
+                        backdrop.download(getActivity());
+                    }
+                    // Simplier to rebuild the full ShowTags here in order for the BackdropTask to get the new backdrop in it
+                    result = TagsFactory.buildShowTags(getActivity(), mShowId);
+                } catch (Exception e) {
+                    Log.e(TAG, "BackdropSaverTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                final ShowTags finalResult = result;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    mShowTags = finalResult;
+
+                    // Update backdrop
+                    if (mBackdropTask != null) {
+                        mBackdropTask.cancel();
+                    }
+                    mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mShowTags);
+                    Toast.makeText(getActivity(), R.string.leanback_backdrop_changed, Toast.LENGTH_SHORT).show();
+
+                    // The activity result is set to OK if the poster or backdrop is changed
+                    getActivity().setResult(Activity.RESULT_OK);
+                });
+            });
         }
 
-        @Override
-        protected void onPostExecute(ShowTags result) {
-            mShowTags = result;
-
-            // Update backdrop
-            if (mBackdropTask!=null) {
-                mBackdropTask.cancel(true);
-            }
-            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mShowTags);
-            Toast.makeText(getActivity(), R.string.leanback_backdrop_changed, Toast.LENGTH_SHORT).show();
-
-            // The activity result is set to OK if the poster or backdrop is changed
-            getActivity().setResult(Activity.RESULT_OK);
-       }
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
+        }
     }
 
     public static int getDominantColor() {

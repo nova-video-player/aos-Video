@@ -29,7 +29,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -156,6 +155,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, PlayUtils.SubtitleDownloadListener, SubtitleInterface, Delete.DeleteListener, XmlDb.ResumeChangeListener, ExternalPlayerWithResultStarter {
 
@@ -234,14 +235,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     private DetailsOverviewRow mDetailsOverviewRow;
 
-    private AsyncTask mDetailRowBuilderTask;
-    private AsyncTask mBackdropTask;
-    private AsyncTask mVideoInfoTask;
-    private AsyncTask mFullScraperTagsTask;
-    private AsyncTask mSubtitleFilesListerTask;
-    private AsyncTask mPosterSaverTask;
-    private AsyncTask mBackdropSaverTask;
-    private AsyncTask mRefreshVideoBitmapTask;
+    private DetailRowBuilderTask mDetailRowBuilderTask;
+    private BackdropTask mBackdropTask;
+    private VideoInfoTask mVideoInfoTask;
+    private FullScraperTagsTask mFullScraperTagsTask;
+    private SubtitleFilesListerTask mSubtitleFilesListerTask;
+    private PosterSaverTask mPosterSaverTask;
+    private BackdropSaverTask mBackdropSaverTask;
     private DialogRetrieveSubtitles mDialogRetrieveSubtitles;
     private boolean mDownloadingSubs;
 
@@ -253,7 +253,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private boolean mHasRetrievedDetails;
     private Handler mHandler;
     private ListRow mTrailersRow;
-    private AsyncTask<Video, Void, Pair<Bitmap,Video>> mThumbnailAsyncTask;
+    private ThumbnailAsyncTask mThumbnailAsyncTask;
     private Bitmap mThumbnail;
     private boolean mAnimationIsRunning;
 
@@ -339,7 +339,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
 
         mVideoList = new ArrayList<>();
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.getMainLooper());
         setTopOffsetRatio(0.5f);
         XmlDb.getInstance().addResumeChangeListener(this);
         mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
@@ -427,9 +427,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         if (mVideo instanceof Episode) {
                             season = ((Episode) mVideo).getSeasonNumber();
                         }
-                        mPosterSaverTask = new PosterSaverTask(getActivity(),season).execute((ScraperImage) item);
+                        mPosterSaverTask = new PosterSaverTask(getActivity(), season);
+                        mPosterSaverTask.execute((ScraperImage) item);
                     } else if (row == mBackdropsRow) {
-                        mBackdropSaverTask = new BackdropSaverTask(getActivity()).execute((ScraperImage) item);
+                        mBackdropSaverTask = new BackdropSaverTask(getActivity());
+                        mBackdropSaverTask.execute((ScraperImage) item);
                     }
                 }
 
@@ -442,7 +444,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         if(!smoothUpdateVideo(mVideo, old)){
                             // Full update if this is not a smooth update case
                             if (mDetailRowBuilderTask != null) {
-                                mDetailRowBuilderTask.cancel(true);
+                                mDetailRowBuilderTask.cancel();
                             }
 
                             fullyReloadVideo(mVideo,mPoster);
@@ -527,12 +529,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public void onStop() {
         // Cancel all the async tasks
         // please be aware that even after stopping, the async task continues until background task has finished
-        for (AsyncTask task : new AsyncTask[] { mDetailRowBuilderTask, mBackdropTask, mVideoInfoTask, mFullScraperTagsTask,
-                mSubtitleFilesListerTask, mPosterSaverTask, mBackdropSaverTask, mThumbnailAsyncTask}) {
-            if (task!=null) {
-                task.cancel(true);
-            }
-        }
+        if (mDetailRowBuilderTask != null) mDetailRowBuilderTask.cancel();
+        if (mBackdropTask != null) mBackdropTask.cancel();
+        if (mVideoInfoTask != null) mVideoInfoTask.cancel();
+        if (mFullScraperTagsTask != null) mFullScraperTagsTask.cancel();
+        if (mSubtitleFilesListerTask != null) mSubtitleFilesListerTask.cancel();
+        if (mPosterSaverTask != null) mPosterSaverTask.cancel();
+        if (mBackdropSaverTask != null) mBackdropSaverTask.cancel();
+        if (mThumbnailAsyncTask != null) mThumbnailAsyncTask.cancel();
         //do not update remote resume
         if (log.isDebugEnabled()) log.debug("removeParseListener");
         XmlDb.getInstance().removeParseListener(mRemoteDbObserver);
@@ -588,7 +592,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if (log.isDebugEnabled()) log.debug("onResume: mFirstOnResume");
             if (mVideo!=null) {
                 if(mThumbnailAsyncTask!=null)
-                    mThumbnailAsyncTask.cancel(true);
+                    mThumbnailAsyncTask.cancel();
             }
             // We start the loader in all cases to get DB updates that will trigger details update if need be
             LoaderManager.getInstance(this).restartLoader(1, null, this);
@@ -599,9 +603,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             LoaderManager.getInstance(this).restartLoader(1, null, this);
 
             if (mSubtitleFilesListerTask !=null) {
-                mSubtitleFilesListerTask.cancel(true);
+                mSubtitleFilesListerTask.cancel();
             }
-            mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mVideo);
+            mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity());
+            mSubtitleFilesListerTask.execute(mVideo);
         }
 
         // reset flags
@@ -609,7 +614,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mFirstOnResume = false;
 
         if (mBackdropTask!=null) {
-            mBackdropTask.cancel(true);
+            mBackdropTask.cancel();
         }
         if (!mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
             mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mVideo);
@@ -939,11 +944,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         if(!smoothUpdateVideo(mVideo, giveOldVideo ? oldVideoObject : null)||mVideoList.size()>1&&mAdapter!=null&&mAdapter.indexOf(mFileListRow)==-1) {
 
             if (mDetailRowBuilderTask != null) {
-                mDetailRowBuilderTask.cancel(true);
+                mDetailRowBuilderTask.cancel();
             }
             if (mThumbnailAsyncTask != null)
-                mThumbnailAsyncTask.cancel(true);
-            mDetailRowBuilderTask = new DetailRowBuilderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mVideo);
+                mThumbnailAsyncTask.cancel();
+            mDetailRowBuilderTask = new DetailRowBuilderTask();
+            mDetailRowBuilderTask.execute(mVideo);
         }
 
         giveOldVideo = true;
@@ -1138,14 +1144,17 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     //putting in thread to avoid async tasks to be locked
 
-    private class ThumbnailAsyncTask extends AsyncTask<Video, Void, Pair<Bitmap,Video>> {
+    private class ThumbnailAsyncTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
-            @Override
-            protected Pair<Bitmap,Video> doInBackground(Video... videos) {
-                Video video = videos[0];
-
-                Bitmap bitmap = null;
+        void execute(Video video) {
+            executor.execute(() -> {
+                Pair<Bitmap, Video> result = null;
                 try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    Bitmap bitmap = null;
                     Uri imageUri = null;
                     if (video.isIndexed()) {
                         // First try to get poster
@@ -1166,36 +1175,43 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                                 .noFade()
                                 .get();
                     }
-
-                }
-                catch (IOException e) {
+                    result = new Pair<>(bitmap, video);
+                } catch (IOException e) {
                     log.error("DetailsOverviewRow Picasso load exception", e);
+                } catch (Exception e) {
+                    log.error("ThumbnailAsyncTask failed", e);
+                } finally {
+                    executor.shutdown();
                 }
-                return new Pair<>(bitmap, video);
-            }
-
-            @Override
-            protected void onPostExecute(Pair<Bitmap,Video> result) {
-                if(isCancelled())
-                    return;
-                if(mVideo.getPosterUri()==null||mVideo.getPosterUri().equals(result.second.getPosterUri())) {
-                    Bitmap bitmap = result.first;
-                    if (result.first != null) {
-                        if (mVideo.isWatched() || mIsVideoWatched)
-                            bitmap = PresenterUtils.addWatchedMark(bitmap, getContext());
-                        if(!mAnimationIsRunning) {
-                            mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
-                            mDetailsOverviewRow.setImageScaleUpAllowed(true);
+                if (isCancelled) return;
+                final Pair<Bitmap, Video> finalResult = result;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    if (finalResult == null) return;
+                    if(mVideo.getPosterUri()==null||mVideo.getPosterUri().equals(finalResult.second.getPosterUri())) {
+                        Bitmap bitmap = finalResult.first;
+                        if (finalResult.first != null) {
+                            if (mVideo.isWatched() || mIsVideoWatched)
+                                bitmap = PresenterUtils.addWatchedMark(bitmap, getContext());
+                            if(!mAnimationIsRunning) {
+                                mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
+                                mDetailsOverviewRow.setImageScaleUpAllowed(true);
+                            }
+                            else
+                                mThumbnail = bitmap;
+                        } else {
+                            mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
+                            mDetailsOverviewRow.setImageScaleUpAllowed(false);
                         }
-                        else
-                            mThumbnail = bitmap;
-                    } else {
-                        mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
-                        mDetailsOverviewRow.setImageScaleUpAllowed(false);
                     }
-                }
+                });
+            });
+        }
 
-            }
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
+        }
     }
 
     /**
@@ -1288,9 +1304,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         // Start the scraper related task (backdrop, poster list, backdrop list, web links)
 
         if (video.hasScraperData()) {
-            if(mFullScraperTagsTask!=null&&!mFullScraperTagsTask.isCancelled())
-                mFullScraperTagsTask.cancel(true);
-            mFullScraperTagsTask = new FullScraperTagsTask(getActivity()).execute(video);
+            if (mFullScraperTagsTask != null)
+                mFullScraperTagsTask.cancel();
+            mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
+            mFullScraperTagsTask.execute(video);
         }
         else {
             // Backdrop must be done in non-scrap case because there may be a backdrop remaining from previous scrap data than need to be removed (when removing scrap data)
@@ -1298,9 +1315,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
 
         // Check subtitles. Better to do it before VideoInfoTask because it should be quicker and it is displayed higher in the Fragment
-        if(mSubtitleListCache.get(video.getFileUri())==null)
-             mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity()).execute(video);
-        else {
+        if(mSubtitleListCache.get(video.getFileUri())==null) {
+            mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity());
+            mSubtitleFilesListerTask.execute(video);
+        } else {
             updateSubtitleRowWhenReady();
         }
 
@@ -1308,7 +1326,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         // special case : for upnp:// we need the streaming uri (http)
         String path = video.getFilePath();
         if(mVideoInfoTask!=null)
-            mVideoInfoTask.cancel(true);
+            mVideoInfoTask.cancel();
         if(mVideoMetadateCache.containsKey(path)){
             video.setMetadata(mVideoMetadateCache.get(path));
             updateMetadataWhenReady();
@@ -1316,17 +1334,21 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         }
         //do not execute file info task when torrent file
-        if(video.getFileUri() == null || mLaunchedFromPlayer) // avoid NPE on .getLastPathSegment()
-            mVideoInfoTask = new VideoInfoTask().execute(video);
-        else if(!FileUtils.getName(video.getFileUri()).endsWith("torrent"))
-            mVideoInfoTask = new VideoInfoTask().execute(video);
+        if(video.getFileUri() == null || mLaunchedFromPlayer) { // avoid NPE on .getLastPathSegment()
+            mVideoInfoTask = new VideoInfoTask();
+            mVideoInfoTask.execute(video);
+        } else if(!FileUtils.getName(video.getFileUri()).endsWith("torrent")) {
+            mVideoInfoTask = new VideoInfoTask();
+            mVideoInfoTask.execute(video);
+        }
 
         if (poster == null) {
             if (log.isDebugEnabled()) log.debug("fullyReloadVideo: no poster, generate it");
 
             mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
             mDetailsOverviewRow.setImageScaleUpAllowed(false);
-            mThumbnailAsyncTask = new ThumbnailAsyncTask().execute(mVideo);
+            mThumbnailAsyncTask = new ThumbnailAsyncTask();
+            mThumbnailAsyncTask.execute(mVideo);
         }else{
             if (log.isDebugEnabled()) log.debug("fullyReloadVideo: should put watched mark on poster {}", (mVideo.isWatched() || mIsVideoWatched));
             if (mVideo.isWatched() || mIsVideoWatched)
@@ -1338,108 +1360,140 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     }
 
     //--------- ------------------------------------------
-    private class DetailRowBuilderTask extends AsyncTask<Video, Integer, Bitmap> {
+    private class DetailRowBuilderTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected Bitmap doInBackground(Video... videos) {
-            Video video = videos[0];
-            mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
-            mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
-
-            Uri imageUri = null;
-            if (video.getPosterUri()!=null) {
-                imageUri = video.getPosterUri();
-            }
-            else if (video.isIndexed()) {
-                imageUri = ThumbnailRequestHandler.buildUriNoThumbCreation(video.getId()); // Thumbnail
-            }
-            if(imageUri != null){
+        void execute(Video video) {
+            executor.execute(() -> {
+                Bitmap result = null;
                 try {
-                    int width = getResources().getDimensionPixelSize(R.dimen.details_poster_width);
-                    int height = getResources().getDimensionPixelSize(R.dimen.details_poster_height);
-                    Bitmap bitmap  = Picasso.get().load(imageUri)
-                            .noFade() // no fade since we are using activity transition anyway
-                            .config(Bitmap.Config.ARGB_8888)
-                            .resize((int)(width * 2.0f), (int)(height * 2.0f))
-                            .centerCrop()
-                            .onlyScaleDown()
-                            .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(width, height))
-                            .get();
-                    if(bitmap!=null) {
-                        return bitmap;
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
+                    mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
+
+                    Uri imageUri = null;
+                    if (video.getPosterUri()!=null) {
+                        imageUri = video.getPosterUri();
                     }
-                } catch (IOException e) {
+                    else if (video.isIndexed()) {
+                        imageUri = ThumbnailRequestHandler.buildUriNoThumbCreation(video.getId()); // Thumbnail
+                    }
+                    if(imageUri != null){
+                        int width = getResources().getDimensionPixelSize(R.dimen.details_poster_width);
+                        int height = getResources().getDimensionPixelSize(R.dimen.details_poster_height);
+                        try {
+                            Bitmap bitmap = Picasso.get().load(imageUri)
+                                    .noFade() // no fade since we are using activity transition anyway
+                                    .config(Bitmap.Config.ARGB_8888)
+                                    .resize((int)(width * 2.0f), (int)(height * 2.0f))
+                                    .centerCrop()
+                                    .onlyScaleDown()
+                                    .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(width, height))
+                                    .get();
+                            if(bitmap!=null) {
+                                result = bitmap;
+                            }
+                        } catch (IOException e) {
+                            log.error("DetailRowBuilderTask Picasso load exception", e);
+                        }
+                    }
+                } catch (Exception e) {
+                    log.error("DetailRowBuilderTask failed", e);
+                } finally {
+                    executor.shutdown();
                 }
-            }
-            return null;
+                if (isCancelled) return;
+                final Bitmap finalResult = result;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    mPoster = finalResult;
+                    if(finalResult!=null) {
+                        Palette palette = Palette.from(finalResult).generate();
+                        if (palette.getDarkVibrantSwatch() != null)
+                            mColor = palette.getDarkVibrantSwatch().getRgb();
+                        else if (palette.getDarkMutedSwatch() != null)
+                            mColor = palette.getDarkMutedSwatch().getRgb();
+                        else
+                            mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
+                        dominantColor = mColor;
+                        mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
+                        mOverviewRowPresenter.updateBackgroundColor(mColor);
+                        mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
+                    }
+                    fullyReloadVideo(mVideo, finalResult);
+                });
+            });
         }
 
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if(isCancelled())
-                return;
-            mPoster = result;
-            if(result!=null) {
-                Palette palette = Palette.from(result).generate();
-                if (palette.getDarkVibrantSwatch() != null)
-                    mColor = palette.getDarkVibrantSwatch().getRgb();
-                else if (palette.getDarkMutedSwatch() != null)
-                    mColor = palette.getDarkMutedSwatch().getRgb();
-                else
-        mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
-                dominantColor = mColor;
-                mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
-                mOverviewRowPresenter.updateBackgroundColor(mColor);
-                mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
-            }
-            fullyReloadVideo(mVideo,result);
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
-    private class VideoInfoTask extends AsyncTask<Video, Integer, VideoMetadata> {
-        @Override
-        protected VideoMetadata doInBackground(Video... videos) {
-            Video video = videos[0];
-            String startingPath= video.getFilePath();
-            if(mLaunchedFromPlayer && mVideoMetadataFromPlayer!=null && mVideoMetadataFromPlayer.getVideoTrack()!=null)
-                return mVideoMetadataFromPlayer;
-            else if(mVideoMetadateCache.containsKey(startingPath)){
-                if (log.isDebugEnabled()) log.debug("metadata retrieved from cache {}", startingPath);
-                return mVideoMetadateCache.get(startingPath);
-            }
-            else {
-                // Pick up any HTTP headers forwarded from the external player intent (e.g. Stremio/debrid)
-                android.os.Bundle headersBundle = getActivity() != null
-                        ? getActivity().getIntent().getBundleExtra("headers") : null;
-                java.util.Map<String, String> headers = null;
-                if (headersBundle != null && !headersBundle.isEmpty()) {
-                    headers = new java.util.HashMap<>();
-                    for (String key : headersBundle.keySet()) {
-                        Object val = headersBundle.get(key);
-                        if (val instanceof String) headers.put(key, (String) val);
+    private class VideoInfoTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
+
+        void execute(Video video) {
+            executor.execute(() -> {
+                VideoMetadata result = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    String startingPath = video.getFilePath();
+                    if(mLaunchedFromPlayer && mVideoMetadataFromPlayer!=null && mVideoMetadataFromPlayer.getVideoTrack()!=null)
+                        result = mVideoMetadataFromPlayer;
+                    else if(mVideoMetadateCache.containsKey(startingPath)){
+                        if (log.isDebugEnabled()) log.debug("metadata retrieved from cache {}", startingPath);
+                        result = mVideoMetadateCache.get(startingPath);
                     }
-                    if (log.isDebugEnabled()) log.debug("VideoInfoTask: using {} HTTP headers from intent", headers.size());
-                } else {
-                    if (log.isDebugEnabled()) log.debug("VideoInfoTask: no HTTP headers in activity intent");
+                    else {
+                        // Pick up any HTTP headers forwarded from the external player intent (e.g. Stremio/debrid)
+                        android.os.Bundle headersBundle = getActivity() != null
+                                ? getActivity().getIntent().getBundleExtra("headers") : null;
+                        java.util.Map<String, String> headers = null;
+                        if (headersBundle != null && !headersBundle.isEmpty()) {
+                            headers = new java.util.HashMap<>();
+                            for (String key : headersBundle.keySet()) {
+                                Object val = headersBundle.get(key);
+                                if (val instanceof String) headers.put(key, (String) val);
+                            }
+                            if (log.isDebugEnabled()) log.debug("VideoInfoTask: using {} HTTP headers from intent", headers.size());
+                        } else {
+                            if (log.isDebugEnabled()) log.debug("VideoInfoTask: no HTTP headers in activity intent");
+                        }
+                        VideoMetadata videoMetaData = VideoInfoCommonClass.retrieveMetadata(video, getActivity(), headers);
+                        if(video!=null&&video.isIndexed())
+                            videoMetaData.save(getActivity(), startingPath);
+                        mVideoMetadateCache.put(startingPath, videoMetaData);
+                        result = videoMetaData;
+                    }
+                } catch (Exception e) {
+                    log.error("VideoInfoTask failed", e);
+                } finally {
+                    executor.shutdown();
                 }
-                VideoMetadata videoMetaData = VideoInfoCommonClass.retrieveMetadata(video, getActivity(), headers);
-                if(video!=null&&video.isIndexed())
-                    videoMetaData.save(getActivity(), startingPath);
-                mVideoMetadateCache.put(startingPath, videoMetaData);
-                return videoMetaData;
-            }
+                if (isCancelled) return;
+                final VideoMetadata finalResult = result;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    // Update the video object with the computed metadata
+                    if(mVideo!=null)
+                        mVideo.setMetadata(finalResult);
+
+                    // Integrated subtitle list is in the metadata
+                    updateSubtitleRowWhenReady();
+                    updateMetadataWhenReady();
+                });
+            });
         }
 
-        protected void onPostExecute(VideoMetadata videoInfo) {
-            if(isCancelled())
-                return;
-            // Update the video object with the computed metadata
-            if(mVideo!=null)
-                mVideo.setMetadata(videoInfo);
-
-            // Integrated subtitle list is in the metadata
-            updateSubtitleRowWhenReady();
-            updateMetadataWhenReady();
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
@@ -1454,10 +1508,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
     }
 
-    private class FullScraperTagsTask extends AsyncTask<Video, Void, BaseTags> {
+    private class FullScraperTagsTask {
         private final Activity mActivity;
-        List<ScraperImage> mPosters;
-        List<ScraperImage> mBackdrops;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
+        private List<ScraperImage> mPosters;
+        private List<ScraperImage> mBackdrops;
         private List<ScraperTrailer> mTrailers;
 
         public FullScraperTagsTask(Activity activity){
@@ -1466,152 +1523,171 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         private Activity getActivity(){
             return mActivity;
         }
-        @Override
-        protected BaseTags doInBackground(Video... videos) {
-            Video video = videos[0];
-            BaseTags tags = video.getFullScraperTags(getActivity());
 
-            // Posters
-            if (tags!=null && !isCancelled()) {
-                mPosters = tags.getAllPostersInDb(getActivity());
-            } else {
-                mPosters = null;
-            }
-            // Backdrops
-            if (tags!=null && !isCancelled()) {
-                mBackdrops = tags.getAllBackdropsInDb(getActivity());
-            } else {
-                mBackdrops = null;
-            }
-            if (tags!=null && !isCancelled())
-                mTrailers = tags.getAllTrailersInDb(getActivity());
-            else
-                mTrailers = null;
-            // Check if we have the next episode
-            if (tags instanceof EpisodeTags) {
-                // Using a CursorLoader but outside of the LoaderManager : need to make sure the Looper is ready
-                if (Looper.myLooper()==null) Looper.prepare();
-                CursorLoader loader = new NextEpisodeLoader(getActivity(), (EpisodeTags)tags);
-                Cursor c = loader.loadInBackground();
-                if (c.getCount()>0) {
-                    c.moveToFirst();
-                    mNextEpisode = (Episode)new CompatibleCursorMapperConverter(new VideoCursorMapper()).convert(c);
+        void execute(Video video) {
+            executor.execute(() -> {
+                BaseTags result = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    BaseTags tags = video.getFullScraperTags(getActivity());
+
+                    // Posters
+                    if (tags!=null && !isCancelled) {
+                        mPosters = tags.getAllPostersInDb(getActivity());
+                    } else {
+                        mPosters = null;
+                    }
+                    // Backdrops
+                    if (tags!=null && !isCancelled) {
+                        mBackdrops = tags.getAllBackdropsInDb(getActivity());
+                    } else {
+                        mBackdrops = null;
+                    }
+                    if (tags!=null && !isCancelled)
+                        mTrailers = tags.getAllTrailersInDb(getActivity());
+                    else
+                        mTrailers = null;
+                    // Check if we have the next episode
+                    if (tags instanceof EpisodeTags) {
+                        // Using a CursorLoader but outside of the LoaderManager : need to make sure the Looper is ready
+                        if (Looper.myLooper()==null) Looper.prepare();
+                        CursorLoader loader = new NextEpisodeLoader(getActivity(), (EpisodeTags)tags);
+                        Cursor c = loader.loadInBackground();
+                        if (c.getCount()>0) {
+                            c.moveToFirst();
+                            mNextEpisode = (Episode)new CompatibleCursorMapperConverter(new VideoCursorMapper()).convert(c);
+                        }
+                        c.close();
+                    }
+                    result = tags;
+                } catch (Exception e) {
+                    log.error("FullScraperTagsTask failed", e);
+                } finally {
+                    executor.shutdown();
                 }
-                c.close();
-            }
+                if (isCancelled) return;
+                final BaseTags finalTags = result;
+                final List<ScraperImage> finalPosters = mPosters;
+                final List<ScraperImage> finalBackdrops = mBackdrops;
+                final List<ScraperTrailer> finalTrailers = mTrailers;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    if (log.isDebugEnabled()) log.debug("onPostExecute");
+                    if(getActivity().isDestroyed())
+                        return;
+                    // Update the action adapter if there is a next episode
+                    ((VideoActionAdapter) mDetailsOverviewRow.getActionsAdapter()).setNextEpisodeStatus(mNextEpisode != null);
+                    ((VideoActionAdapter) mDetailsOverviewRow.getActionsAdapter()).setListEpisodesStatus(mIsTvEpisode);
+                    // Launch backdrop task in BaseTags-as-arguments mode
+                    if (mBackdropTask!=null) {
+                        mBackdropTask.cancel();
+                    }
+                    if (finalTags!=null && !mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
+                        if(mShouldLoadBackdrop) {
+                            if (log.isDebugEnabled()) log.debug("onPostExecute: loading backdrop");
+                            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(finalTags);
+                            mShouldLoadBackdrop = false;
+                        } else {
+                            if (log.isDebugEnabled()) log.debug("onPostExecute: should not load backdrop");
+                        }
+                    }
+                    if (finalTags!=null) {
+                        // Plot & Genres
+                        final String plot = finalTags.getPlot();
+                        String genres = null;
+                        if (finalTags instanceof VideoTags) {
+                            genres = ((VideoTags) finalTags).getGenresFormatted();
+                        }
+                        // Keep it simple: we do not display the row if plot==null && genres!=null (very unlikely and not a big deal)
+                        if (plot != null && !plot.isEmpty()) {
+                            if(mPlotAndGenresRow!=null&&mAdapter.indexOf(mPlotAndGenresRow)!=-1)
+                                mAdapter.remove(mPlotAndGenresRow);
 
-            return tags;
+                            mPlotAndGenresRow = new PlotAndGenresRow(getString(R.string.scrap_plot), plot, genres);
+                            mAdapter.add(mPlotAndGenresRow);
+                        }
+
+                        // Cast
+                        BaseTags castTags = finalTags;
+                        // If cast is null and this is an episode, get the cast of the Show
+                        if (finalTags.getActorsFormatted() == null && finalTags instanceof EpisodeTags) {
+                            ShowTags showTags = ((EpisodeTags) finalTags).getShowTags();
+                            if (showTags != null && showTags.getActorsFormatted() != null)
+                                castTags = showTags;
+                        }
+                        // Keep it simple: we do not display the row if cast==null && directors!=null (very unlikely and not a big deal)
+                        if (castTags.getActorsFormatted() != null && !castTags.getActorsFormatted().isEmpty()) {
+                            if(mCastRow!=null&&mAdapter.indexOf(mCastRow)!=-1)
+                                mAdapter.remove(mCastRow);
+                            mCastRow = new CastRow(getString(R.string.scrap_cast), castTags, finalTags.getDirectorsFormatted());
+                            mAdapter.add(mCastRow);
+                        }
+                    }
+
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    boolean hideTrailerRow = prefs.getBoolean(VideoPreferencesCommon.KEY_HIDE_TRAILER_ROW, VideoPreferencesCommon.HIDE_TRAILER_ROW_DEFAULT);
+
+                    if(finalTrailers!=null&&finalTrailers.size()>0 && !hideTrailerRow){
+                        ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new TrailerPresenter(getActivity()));
+                        postersRowAdapter.addAll(0, finalTrailers);
+
+                        if(mTrailersRow!=null&&mAdapter.indexOf(mTrailersRow)!=-1)
+                            mAdapter.remove(mTrailersRow);
+                        mTrailersRow = new ListRow(
+                                new HeaderItem(getString(R.string.scrap_trailer)),
+                                postersRowAdapter);
+                        mAdapter.add(mTrailersRow);
+                    }
+                    // Posters
+                    if (finalPosters!=null && !finalPosters.isEmpty()) {
+                        ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new ScraperImagePosterPresenter());
+                        postersRowAdapter.addAll(0, finalPosters);
+                        if(mPostersRow!=null&&mAdapter.indexOf(mPostersRow)!=-1)
+                            mAdapter.remove(mPostersRow);
+                        mPostersRow = new ListRow(
+                                new HeaderItem(getString(!mIsTvEpisode ? R.string.leanback_posters_header : R.string.leanback_season_posters_header)),
+                                postersRowAdapter);
+                        mAdapter.add(mPostersRow);
+                    }
+
+                    // Backdrops
+                    if (finalBackdrops!=null && !finalBackdrops.isEmpty()) {
+                        ArrayObjectAdapter backdropsRowAdapter = new ArrayObjectAdapter(new ScraperImageBackdropPresenter());
+                        backdropsRowAdapter.addAll(0, finalBackdrops);
+                        if(mBackdropsRow!=null&&mAdapter.indexOf(mBackdropsRow)!=-1)
+                            mAdapter.remove(mBackdropsRow);
+                        mBackdropsRow = new ListRow(
+                                new HeaderItem(getString(!mIsTvEpisode ? R.string.leanback_backdrops_header : R.string.leanback_tvshow_backdrops_header)),
+                                backdropsRowAdapter);
+                        mAdapter.add(mBackdropsRow);
+                    }
+
+                    // Web links
+                    List<String> links = getWebLinks(finalTags);
+                    if (links.size()>0) {
+                        // less bling bling
+                        //ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebPageLinkPresenter());
+                        ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebLinkPresenter(mColor));
+                        for (String link : links) {
+                            rowAdapter.add(new WebPageLink(link));
+                        }
+                        mAdapter.add(new ListRow( new HeaderItem(getString(R.string.leanback_weblinks_header)), rowAdapter));
+                    }
+                });
+            });
         }
 
-        protected void onPostExecute(BaseTags tags) {
-            if (log.isDebugEnabled()) log.debug("onPostExecute");
-            if(isCancelled()||getActivity().isDestroyed())
-                return;
-            // Update the action adapter if there is a next episode
-            ((VideoActionAdapter) mDetailsOverviewRow.getActionsAdapter()).setNextEpisodeStatus(mNextEpisode != null);
-            ((VideoActionAdapter) mDetailsOverviewRow.getActionsAdapter()).setListEpisodesStatus(mIsTvEpisode);
-            // Launch backdrop task in BaseTags-as-arguments mode
-            if (mBackdropTask!=null) {
-                mBackdropTask.cancel(true);
-            }
-            if (tags!=null && !mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
-                if(mShouldLoadBackdrop) {
-                    if (log.isDebugEnabled()) log.debug("onPostExecute: loading backdrop");
-                    mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,tags);
-                    mShouldLoadBackdrop = false;
-                } else {
-                    if (log.isDebugEnabled()) log.debug("onPostExecute: should not load backdrop");
-                }
-            }
-            if (tags!=null) {
-                // Plot & Genres
-                final String plot = tags.getPlot();
-                String genres = null;
-                if (tags instanceof VideoTags) {
-                    genres = ((VideoTags) tags).getGenresFormatted();
-                }
-                // Keep it simple: we do not display the row if plot==null && genres!=null (very unlikely and not a big deal)
-                if (plot != null && !plot.isEmpty()) {
-                    if(mPlotAndGenresRow!=null&&mAdapter.indexOf(mPlotAndGenresRow)!=-1)
-                        mAdapter.remove(mPlotAndGenresRow);
-
-                    mPlotAndGenresRow = new PlotAndGenresRow(getString(R.string.scrap_plot), plot, genres);
-                    mAdapter.add(mPlotAndGenresRow);
-                }
-
-                // Cast
-                BaseTags castTags = tags;
-                // If cast is null and this is an episode, get the cast of the Show
-                if (tags.getActorsFormatted() == null && tags instanceof EpisodeTags) {
-                    ShowTags showTags = ((EpisodeTags) tags).getShowTags();
-                    if (showTags != null && showTags.getActorsFormatted() != null)
-                        castTags = showTags;
-                }
-                // Keep it simple: we do not display the row if cast==null && directors!=null (very unlikely and not a big deal)
-                if (castTags.getActorsFormatted() != null && !castTags.getActorsFormatted().isEmpty()) {
-                    if(mCastRow!=null&&mAdapter.indexOf(mCastRow)!=-1)
-                        mAdapter.remove(mCastRow);
-                    mCastRow = new CastRow(getString(R.string.scrap_cast), castTags, tags.getDirectorsFormatted());
-                    mAdapter.add(mCastRow);
-                }
-            }
-            
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            boolean hideTrailerRow = prefs.getBoolean(VideoPreferencesCommon.KEY_HIDE_TRAILER_ROW, VideoPreferencesCommon.HIDE_TRAILER_ROW_DEFAULT);
-
-            if(mTrailers!=null&&mTrailers.size()>0 && !hideTrailerRow){
-                ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new TrailerPresenter(getActivity()));
-                postersRowAdapter.addAll(0, mTrailers);
-
-                if(mTrailersRow!=null&&mAdapter.indexOf(mTrailersRow)!=-1)
-                    mAdapter.remove(mTrailersRow);
-                mTrailersRow = new ListRow(
-                        new HeaderItem(getString(R.string.scrap_trailer)),
-                        postersRowAdapter);
-                mAdapter.add(mTrailersRow);
-
-            }
-            // Posters
-            if (mPosters!=null && !mPosters.isEmpty()) {
-                ArrayObjectAdapter postersRowAdapter = new ArrayObjectAdapter(new ScraperImagePosterPresenter());
-                postersRowAdapter.addAll(0, mPosters);
-                if(mPostersRow!=null&&mAdapter.indexOf(mPostersRow)!=-1)
-                    mAdapter.remove(mPostersRow);
-                mPostersRow = new ListRow(
-                        new HeaderItem(getString(!mIsTvEpisode ? R.string.leanback_posters_header : R.string.leanback_season_posters_header)),
-                        postersRowAdapter);
-                mAdapter.add(mPostersRow);
-            }
-
-            // Backdrops
-            if (mBackdrops!=null && !mBackdrops.isEmpty()) {
-                ArrayObjectAdapter backdropsRowAdapter = new ArrayObjectAdapter(new ScraperImageBackdropPresenter());
-                backdropsRowAdapter.addAll(0, mBackdrops);
-                if(mBackdropsRow!=null&&mAdapter.indexOf(mBackdropsRow)!=-1)
-                    mAdapter.remove(mBackdropsRow);
-                mBackdropsRow = new ListRow(
-                        new HeaderItem(getString(!mIsTvEpisode ? R.string.leanback_backdrops_header : R.string.leanback_tvshow_backdrops_header)),
-                        backdropsRowAdapter);
-                mAdapter.add(mBackdropsRow);
-            }
-
-            // Web links
-            List<String> links = getWebLinks(tags);
-            if (links.size()>0) {
-                // less bling bling
-                //ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebPageLinkPresenter());
-                ArrayObjectAdapter rowAdapter = new ArrayObjectAdapter(new WebLinkPresenter(mColor));
-                for (String link : links) {
-                    rowAdapter.add(new WebPageLink(link));
-                }
-                mAdapter.add(new ListRow( new HeaderItem(getString(R.string.leanback_weblinks_header)), rowAdapter));
-            }
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
-    private class SubtitleFilesListerTask extends AsyncTask<Video, Void, List<SubtitleManager.SubtitleFile>> {
-
+    private class SubtitleFilesListerTask {
         private final Activity mActivity;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
         public SubtitleFilesListerTask(Activity activity){
             mActivity = activity;
@@ -1621,47 +1697,55 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             return mActivity;
         }
 
-        @Override
-        protected List<SubtitleManager.SubtitleFile> doInBackground(Video... videos) {
-            Video video = videos[0];
-            if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground starting for: {}", video.getFileUri());
-            if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground file name: {}", FileUtils.getName(video.getFileUri()));
+        void execute(Video video) {
+            executor.execute(() -> {
+                List<SubtitleManager.SubtitleFile> result = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground starting for: {}", video.getFileUri());
+                    if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground file name: {}", FileUtils.getName(video.getFileUri()));
+                    SubtitleManager lister = new SubtitleManager(getActivity(), null);
+                    if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground calling listLocalAndRemotesSubtitles");
+                    List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(video.getFileUri(), true);
+                    if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground completed, found {} subtitles", (list != null ? list.size() : 0));
+                    mSubtitleListCache.put(video.getFileUri(), list);
+                    result = list;
+                } catch (Exception e) {
+                    log.error("SubtitleFilesListerTask:doInBackground exception", e);
+                    result = new ArrayList<>();
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) {
+                    if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask: cancelled before post");
+                    return;
+                }
+                final List<SubtitleManager.SubtitleFile> finalResult = result;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask: onPostExecute with {} subtitles", (finalResult != null ? finalResult.size() : 0));
+                    mExternalSubtitles = finalResult;
 
-            try {
-                SubtitleManager lister = new SubtitleManager(getActivity(),null );
-                if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground calling listLocalAndRemotesSubtitles");
-                List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(video.getFileUri(), true);
-                if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground completed, found {} subtitles", (list != null ? list.size() : 0));
-                mSubtitleListCache.put(video.getFileUri(), list);
-                return list;
-            } catch (Exception e) {
-                log.error("SubtitleFilesListerTask:doInBackground exception", e);
-                return new ArrayList<>();
-            }
+                    // Cache the subtitle files for this video to avoid re-enumeration on playback
+                    // Only cache for local files - remote files (SMB, FTP, etc.) require local copying during playback
+                    // Cache is invalidated when exiting this fragment
+                    // See: https://github.com/nova-video-player/aos-AVP/issues/1605
+                    if (finalResult != null && mVideo != null && FileUtils.isLocal(mVideo.getFileUri())) {
+                        SubtitleManager.cacheSubtitleFiles(mVideo.getFileUri(), finalResult);
+                        if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask: cached {} subtitles for local file {}", finalResult.size(), mVideo.getFileUri());
+                    } else if (finalResult != null && mVideo != null) {
+                        if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask: skipping cache for remote file (requires local copy): {}", mVideo.getFileUri());
+                    }
+
+                    if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask: onPostExecute calling updateSubtitleRowWhenReady");
+                    updateSubtitleRowWhenReady();
+                });
+            });
         }
 
-        @Override
-        protected void onPostExecute(List<SubtitleManager.SubtitleFile> subtitleFiles) {
-            if(isCancelled()) {
-                if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask: onPostExecute cancelled");
-                return;
-            }
-            if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask: onPostExecute with {} subtitles", (subtitleFiles != null ? subtitleFiles.size() : 0));
-            mExternalSubtitles = subtitleFiles;
-
-            // Cache the subtitle files for this video to avoid re-enumeration on playback
-            // Only cache for local files - remote files (SMB, FTP, etc.) require local copying during playback
-            // Cache is invalidated when exiting this fragment
-            // See: https://github.com/nova-video-player/aos-AVP/issues/1605
-            if (subtitleFiles != null && mVideo != null && FileUtils.isLocal(mVideo.getFileUri())) {
-                SubtitleManager.cacheSubtitleFiles(mVideo.getFileUri(), subtitleFiles);
-                if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask: cached {} subtitles for local file {}", subtitleFiles.size(), mVideo.getFileUri());
-            } else if (subtitleFiles != null && mVideo != null) {
-                if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask: skipping cache for remote file (requires local copy): {}", mVideo.getFileUri());
-            }
-
-            if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask: onPostExecute calling updateSubtitleRowWhenReady");
-            updateSubtitleRowWhenReady();
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
@@ -1736,9 +1820,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if (log.isDebugEnabled()) log.debug("Get RESULT_OK from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
             // Update the subtitle row
             if (mSubtitleFilesListerTask !=null) {
-                mSubtitleFilesListerTask.cancel(true);
+                mSubtitleFilesListerTask.cancel();
             }
-            mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mVideo);
+            mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity());
+            mSubtitleFilesListerTask.execute(mVideo);
         }
         else if(requestCode == PLAY_ACTIVITY_REQUEST_CODE){
             ExternalPlayerResultListener.getInstance().onActivityResult(requestCode,resultCode,data);
@@ -1747,9 +1832,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     }
 
     /** Saves a Poster as default poster for a video and update the current poster */
-    private class PosterSaverTask extends AsyncTask<ScraperImage, Void, Bitmap> {
+    private class PosterSaverTask {
         private final int mSeason;
         private final Activity mActivity;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
         public PosterSaverTask(Activity activity, int season){
             mActivity = activity;
@@ -1760,82 +1848,93 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             return mActivity;
         }
 
-        @Override
-        protected Bitmap doInBackground(ScraperImage... params) {
-            ScraperImage poster = params[0];
-            if(mVideo instanceof Movie) {
-                poster.setOnlineId(((Movie)mVideo).getOnlineId());
-            }
-            else if(mVideo instanceof Episode){
-                poster.setOnlineId(((Episode)mVideo).getOnlineId());
-            }
-            // Save in DB and download
-            if (poster.download(getActivity())) {
-                poster.setAsDefault(getActivity(), mSeason);
-            }
-            // Update the bitmap
-            Bitmap bitmap=null;
-            try {
-                bitmap = Picasso.get()
-                        .load(poster.getLargeFileF())
-                        .noFade()
-                        .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
-                        .centerCrop()
-                        .get();
+        void execute(ScraperImage poster) {
+            executor.execute(() -> {
+                Bitmap result = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    if(mVideo instanceof Movie) {
+                        poster.setOnlineId(((Movie)mVideo).getOnlineId());
+                    }
+                    else if(mVideo instanceof Episode){
+                        poster.setOnlineId(((Episode)mVideo).getOnlineId());
+                    }
+                    // Save in DB and download
+                    if (poster.download(getActivity())) {
+                        poster.setAsDefault(getActivity(), mSeason);
+                    }
+                    // Update the bitmap
+                    try {
+                        result = Picasso.get()
+                                .load(poster.getLargeFileF())
+                                .noFade()
+                                .resize(getResources().getDimensionPixelSize(R.dimen.poster_width), getResources().getDimensionPixelSize(R.dimen.poster_height))
+                                .centerCrop()
+                                .get();
+                    } catch (IOException e) {
+                        log.error("PosterSaverTask Picasso load exception", e);
+                    }
+                } catch (Exception e) {
+                    log.error("PosterSaverTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                final Bitmap finalResult = result;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    if (finalResult != null) {
+                        mPoster = finalResult;
 
-            } catch (IOException e) {
-                log.error("PosterSaverTask Picasso load exception", e);
-            }
+                        Palette palette = Palette.from(finalResult).generate();
+                        int color;
 
-            return bitmap;
+                        Bitmap displayBitmap = finalResult;
+                        if (mVideo.isWatched() || mIsVideoWatched)
+                            displayBitmap = PresenterUtils.addWatchedMark(finalResult, getContext());
+                        mDetailsOverviewRow.setImageBitmap(getActivity(), displayBitmap);
+                        mDetailsOverviewRow.setImageScaleUpAllowed(true);
+
+                        if (palette.getDarkVibrantSwatch() != null)
+                            color = palette.getDarkVibrantSwatch().getRgb();
+                        else if (palette.getDarkMutedSwatch() != null)
+                            color = palette.getDarkMutedSwatch().getRgb();
+                        else
+                            color = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
+
+                        if (color != mColor) {
+                            mColor = color;
+
+                            mVideoBadgePresenter.setSelectedBackgroundColor(color);
+                            mOverviewRowPresenter.updateBackgroundColor(color);
+                            mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(color));
+
+                            for (Presenter pres : mAdapter.getPresenterSelector().getPresenters()){
+                                if (pres instanceof BackgroundColorPresenter)
+                                    ((BackgroundColorPresenter) pres).setBackgroundColor(color);
+                            }
+                        }
+
+                        Toast.makeText(getActivity(), R.string.leanback_poster_changed, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
         }
 
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if(isCancelled())
-                return;
-            if (result != null) {
-                mPoster = result;
-
-                Palette palette = Palette.from(result).generate();
-                int color;
-
-                if (mVideo.isWatched() || mIsVideoWatched)
-                    result = PresenterUtils.addWatchedMark(result, getContext());
-                mDetailsOverviewRow.setImageBitmap(getActivity(), result);
-                mDetailsOverviewRow.setImageScaleUpAllowed(true);
-
-                if (palette.getDarkVibrantSwatch() != null)
-                    color = palette.getDarkVibrantSwatch().getRgb();
-                else if (palette.getDarkMutedSwatch() != null)
-                    color = palette.getDarkMutedSwatch().getRgb();
-                else
-                    color = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
-
-                if (color != mColor) {
-                    mColor = color;
-
-                    mVideoBadgePresenter.setSelectedBackgroundColor(color);
-                    mOverviewRowPresenter.updateBackgroundColor(color);
-                    mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(color));
-
-                    for (Presenter pres : mAdapter.getPresenterSelector().getPresenters()){
-                        if (pres instanceof BackgroundColorPresenter)
-                            ((BackgroundColorPresenter) pres).setBackgroundColor(color);
-                    }
-                }
-
-                Toast.makeText(getActivity(), R.string.leanback_poster_changed, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
-            }
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
     /** Saves a Backdrop as default for a video and update the current backdrop */
-    private class BackdropSaverTask extends AsyncTask<ScraperImage, Void, Void> {
-
+    private class BackdropSaverTask {
         private final Activity mActivity;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
         public BackdropSaverTask(Activity activity){
             mActivity = activity;
@@ -1845,29 +1944,38 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             return mActivity;
         }
 
-        @Override
-        protected Void doInBackground(ScraperImage... params) {
-            ScraperImage backdrop = params[0];
-            // Save in DB and download
-            if (backdrop.setAsDefault(getActivity())) {
-                backdrop.download(getActivity());
-            }
-            return null;
+        void execute(ScraperImage backdrop) {
+            executor.execute(() -> {
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    // Save in DB and download
+                    if (backdrop.setAsDefault(getActivity())) {
+                        backdrop.download(getActivity());
+                    }
+                } catch (Exception e) {
+                    log.error("BackdropSaverTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    // Update backdrop
+                    if (mBackdropTask!=null) {
+                        mBackdropTask.cancel();
+                    }
+                    if (!mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
+                        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mVideo);
+                    }
+                    Toast.makeText(getActivity(), R.string.leanback_backdrop_changed, Toast.LENGTH_SHORT).show();
+                    getActivity().setResult(Activity.RESULT_OK);
+                });
+            });
         }
 
-        @Override
-        protected void onPostExecute(Void result) {
-            if(isCancelled())
-                return;
-            // Update backdrop
-            if (mBackdropTask!=null) {
-                mBackdropTask.cancel(true);
-            }
-            if (!mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
-                mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mVideo);
-            }
-            Toast.makeText(getActivity(), R.string.leanback_backdrop_changed, Toast.LENGTH_SHORT).show();
-            getActivity().setResult(Activity.RESULT_OK);
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
