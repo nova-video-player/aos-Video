@@ -24,8 +24,9 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,6 +122,9 @@ import com.archos.mediaprovider.ImportState;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.AutoScrapeService;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -226,12 +230,12 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private BackgroundManager bgMngr;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
-    private AsyncTask mBuildAllMoviesBoxTask;
-    private AsyncTask mBuildAllAnimesBoxTask;
-    private AsyncTask mBuildAllTvshowsBoxTask;
-    private AsyncTask mBuildAllCollectionsBoxTask;
-    private AsyncTask mBuildAllAnimeCollectionsBoxTask;
-    private AsyncTask mBuildAllAnimeShowsBoxTask;
+    private BuildBoxIconTask mBuildAllMoviesBoxTask;
+    private BuildBoxIconTask mBuildAllAnimesBoxTask;
+    private BuildBoxIconTask mBuildAllTvshowsBoxTask;
+    private BuildBoxIconTask mBuildAllCollectionsBoxTask;
+    private BuildBoxIconTask mBuildAllAnimeCollectionsBoxTask;
+    private BuildBoxIconTask mBuildAllAnimeShowsBoxTask;
 
     private Activity mActivity;
 
@@ -357,25 +361,12 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     @Override
     public void onDestroyView() {
         if (log.isDebugEnabled()) log.debug("onDestroyView");
-        // Cancel all AsyncTasks
-        if (mBuildAllMoviesBoxTask != null) {
-            mBuildAllMoviesBoxTask.cancel(true);
-        }
-        if (mBuildAllAnimesBoxTask != null) {
-            mBuildAllAnimesBoxTask.cancel(true);
-        }
-        if (mBuildAllTvshowsBoxTask != null) {
-            mBuildAllTvshowsBoxTask.cancel(true);
-        }
-        if (mBuildAllCollectionsBoxTask != null) {
-            mBuildAllCollectionsBoxTask.cancel(true);
-        }
-        if (mBuildAllAnimeCollectionsBoxTask != null) {
-            mBuildAllAnimeCollectionsBoxTask.cancel(true);
-        }
-        if (mBuildAllAnimeShowsBoxTask != null) {
-            mBuildAllAnimeShowsBoxTask.cancel(true);
-        }
+        if (mBuildAllMoviesBoxTask != null) mBuildAllMoviesBoxTask.cancel();
+        if (mBuildAllAnimesBoxTask != null) mBuildAllAnimesBoxTask.cancel();
+        if (mBuildAllTvshowsBoxTask != null) mBuildAllTvshowsBoxTask.cancel();
+        if (mBuildAllCollectionsBoxTask != null) mBuildAllCollectionsBoxTask.cancel();
+        if (mBuildAllAnimeCollectionsBoxTask != null) mBuildAllAnimeCollectionsBoxTask.cancel();
+        if (mBuildAllAnimeShowsBoxTask != null) mBuildAllAnimeShowsBoxTask.cancel();
 
         if (mOverlay != null) {
             mOverlay.destroy();
@@ -856,26 +847,16 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void refreshAllMoviesBox() {
         if (log.isDebugEnabled()) log.debug("refreshAllMoviesBox");
         if (! mShowMoviesRow) {
-            if (mBuildAllMoviesBoxTask != null) mBuildAllMoviesBoxTask.cancel(true);
-            mBuildAllMoviesBoxTask = new buildAllMoviesBoxTask().execute();
-        }
-    }
-
-    private class buildAllMoviesBoxTask extends AsyncTask<Void, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            Bitmap iconBitmap;
-            if (mSeparateAnimeFromShowMovie) iconBitmap = new AllFilmsIconBuilder(mActivity).buildNewBitmap();
-            else iconBitmap = new AllMoviesIconBuilder(mActivity).buildNewBitmap();
-            return iconBitmap;
-        }
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap == null || mAllMoviesBox == null || mMovieRow == null) {
-                return;
-            }
-            mAllMoviesBox.setBitmap(bitmap);
-            ((ArrayObjectAdapter)mMovieRow.getAdapter()).replace(0, mAllMoviesBox);
+            if (mBuildAllMoviesBoxTask != null) mBuildAllMoviesBoxTask.cancel();
+            mBuildAllMoviesBoxTask = new BuildBoxIconTask();
+            mBuildAllMoviesBoxTask.execute(
+                () -> mSeparateAnimeFromShowMovie ? new AllFilmsIconBuilder(mActivity).buildNewBitmap()
+                                                 : new AllMoviesIconBuilder(mActivity).buildNewBitmap(),
+                bitmap -> {
+                    if (bitmap == null || mAllMoviesBox == null || mMovieRow == null) return;
+                    mAllMoviesBox.setBitmap(bitmap);
+                    ((ArrayObjectAdapter) mMovieRow.getAdapter()).replace(0, mAllMoviesBox);
+                });
         }
     }
 
@@ -888,26 +869,16 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void refreshAllCollectionsBox() {
         if (log.isDebugEnabled()) log.debug("refreshAllCollectionsBox");
         if (! mShowMoviesRow) {
-            if (mBuildAllCollectionsBoxTask != null) mBuildAllCollectionsBoxTask.cancel(true);
-            mBuildAllCollectionsBoxTask = new buildAllCollectionsBoxTask().execute();
-        }
-    }
-
-    private class buildAllCollectionsBoxTask extends AsyncTask<Void, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            Bitmap iconBitmap;
-            if (mSeparateAnimeFromShowMovie) iconBitmap = new CollectionsIconBuilder(mActivity).buildNewBitmap();
-            else iconBitmap = new CollectionsMoviesIconBuilder(mActivity).buildNewBitmap();
-            return iconBitmap;
-        }
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap == null || mAllCollectionsBox == null || mMovieRow == null) {
-                return;
-            }
-            mAllCollectionsBox.setBitmap(bitmap);
-            ((ArrayObjectAdapter)mMovieRow.getAdapter()).replace(3, mAllCollectionsBox);
+            if (mBuildAllCollectionsBoxTask != null) mBuildAllCollectionsBoxTask.cancel();
+            mBuildAllCollectionsBoxTask = new BuildBoxIconTask();
+            mBuildAllCollectionsBoxTask.execute(
+                () -> mSeparateAnimeFromShowMovie ? new CollectionsIconBuilder(mActivity).buildNewBitmap()
+                                                 : new CollectionsMoviesIconBuilder(mActivity).buildNewBitmap(),
+                bitmap -> {
+                    if (bitmap == null || mAllCollectionsBox == null || mMovieRow == null) return;
+                    mAllCollectionsBox.setBitmap(bitmap);
+                    ((ArrayObjectAdapter) mMovieRow.getAdapter()).replace(3, mAllCollectionsBox);
+                });
         }
     }
 
@@ -920,22 +891,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void refreshAllAnimeCollectionsBox() {
         if (log.isDebugEnabled()) log.debug("refreshAllAnimeCollectionsBox");
         if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) {
-            if (mBuildAllAnimeCollectionsBoxTask != null)
-                mBuildAllAnimeCollectionsBoxTask.cancel(true);
-            mBuildAllAnimeCollectionsBoxTask = new buildAllAnimeCollectionsBoxTask().execute();
-        }
-    }
-
-    private class buildAllAnimeCollectionsBoxTask extends AsyncTask<Void, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            return new AnimeCollectionsIconBuilder(mActivity).buildNewBitmap();
-        }
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap == null || mAllAnimeCollectionsBox == null || mAnimeRow == null) return;
-            mAllAnimeCollectionsBox.setBitmap(bitmap);
-            ((ArrayObjectAdapter)mAnimeRow.getAdapter()).replace(4, mAllAnimeCollectionsBox);
+            if (mBuildAllAnimeCollectionsBoxTask != null) mBuildAllAnimeCollectionsBoxTask.cancel();
+            mBuildAllAnimeCollectionsBoxTask = new BuildBoxIconTask();
+            mBuildAllAnimeCollectionsBoxTask.execute(
+                () -> new AnimeCollectionsIconBuilder(mActivity).buildNewBitmap(),
+                bitmap -> {
+                    if (bitmap == null || mAllAnimeCollectionsBox == null || mAnimeRow == null) return;
+                    mAllAnimeCollectionsBox.setBitmap(bitmap);
+                    ((ArrayObjectAdapter) mAnimeRow.getAdapter()).replace(4, mAllAnimeCollectionsBox);
+                });
         }
     }
 
@@ -948,21 +912,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void refreshAllAnimesBox() {
         if (log.isDebugEnabled()) log.debug("refreshAllAnimesBox");
         if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) {
-            if (mBuildAllAnimesBoxTask != null) mBuildAllAnimesBoxTask.cancel(true);
-            mBuildAllAnimesBoxTask = new buildAllAnimesBoxTask().execute();
-        }
-    }
-
-    private class buildAllAnimesBoxTask extends AsyncTask<Void, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            return new AllAnimesIconBuilder(mActivity).buildNewBitmap();
-        }
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap == null || mAllAnimesBox == null || mAnimeRow == null) return;
-            mAllAnimesBox.setBitmap(bitmap);
-            ((ArrayObjectAdapter)mAnimeRow.getAdapter()).replace(0, mAllAnimesBox);
+            if (mBuildAllAnimesBoxTask != null) mBuildAllAnimesBoxTask.cancel();
+            mBuildAllAnimesBoxTask = new BuildBoxIconTask();
+            mBuildAllAnimesBoxTask.execute(
+                () -> new AllAnimesIconBuilder(mActivity).buildNewBitmap(),
+                bitmap -> {
+                    if (bitmap == null || mAllAnimesBox == null || mAnimeRow == null) return;
+                    mAllAnimesBox.setBitmap(bitmap);
+                    ((ArrayObjectAdapter) mAnimeRow.getAdapter()).replace(0, mAllAnimesBox);
+                });
         }
     }
 
@@ -975,21 +933,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void refreshAllAnimeShowsBox() {
         if (log.isDebugEnabled()) log.debug("refreshAllAnimeShowsBox");
         if (mSeparateAnimeFromShowMovie && ! mShowAnimesRow) {
-            if (mBuildAllAnimeShowsBoxTask != null) mBuildAllAnimeShowsBoxTask.cancel(true);
-            mBuildAllAnimeShowsBoxTask = new buildAllAnimeShowsBoxTask().execute();
-        }
-    }
-
-    private class buildAllAnimeShowsBoxTask extends AsyncTask<Void, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            return new AllAnimeShowsIconBuilder(mActivity).buildNewBitmap();
-        }
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap == null || mAllAnimeShowsBox == null || mAnimeRow == null) return;
-            mAllAnimeShowsBox.setBitmap(bitmap);
-            ((ArrayObjectAdapter)mAnimeRow.getAdapter()).replace(3, mAllAnimeShowsBox);
+            if (mBuildAllAnimeShowsBoxTask != null) mBuildAllAnimeShowsBoxTask.cancel();
+            mBuildAllAnimeShowsBoxTask = new BuildBoxIconTask();
+            mBuildAllAnimeShowsBoxTask.execute(
+                () -> new AllAnimeShowsIconBuilder(mActivity).buildNewBitmap(),
+                bitmap -> {
+                    if (bitmap == null || mAllAnimeShowsBox == null || mAnimeRow == null) return;
+                    mAllAnimeShowsBox.setBitmap(bitmap);
+                    ((ArrayObjectAdapter) mAnimeRow.getAdapter()).replace(3, mAllAnimeShowsBox);
+                });
         }
     }
 
@@ -1002,24 +954,50 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private void refreshAllTvshowsBox() {
         if (log.isDebugEnabled()) log.debug("refreshAllTvshowsBox");
         if (! mShowTvshowsRow) {
-            if (mBuildAllTvshowsBoxTask != null) mBuildAllTvshowsBoxTask.cancel(true);
-            mBuildAllTvshowsBoxTask = new buildAllTvshowsBoxTask().execute();
+            if (mBuildAllTvshowsBoxTask != null) mBuildAllTvshowsBoxTask.cancel();
+            mBuildAllTvshowsBoxTask = new BuildBoxIconTask();
+            mBuildAllTvshowsBoxTask.execute(
+                () -> mSeparateAnimeFromShowMovie ? new AllTvshowNoAmimeIconBuilder(mActivity).buildNewBitmap()
+                                                 : new AllTvshowsIconBuilder(mActivity).buildNewBitmap(),
+                bitmap -> {
+                    if (bitmap == null || mAllTvshowsBox == null || mTvshowRow == null) return;
+                    mAllTvshowsBox.setBitmap(bitmap);
+                    ((ArrayObjectAdapter) mTvshowRow.getAdapter()).replace(0, mAllTvshowsBox);
+                });
         }
     }
 
-    private class buildAllTvshowsBoxTask extends AsyncTask<Void, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            Bitmap iconBitmap;
-            if (mSeparateAnimeFromShowMovie) iconBitmap = new AllTvshowNoAmimeIconBuilder(mActivity).buildNewBitmap();
-            else iconBitmap = new AllTvshowsIconBuilder(mActivity).buildNewBitmap();
-            return iconBitmap;
+    private class BuildBoxIconTask {
+        interface Work { Bitmap run(); }
+        interface Done { void run(Bitmap bitmap); }
+
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
+
+        void execute(Work work, Done done) {
+            executor.execute(() -> {
+                Bitmap result = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    result = work.run();
+                } catch (Exception e) {
+                    log.error("BuildBoxIconTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                final Bitmap finalResult = result;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    done.run(finalResult);
+                });
+            });
         }
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap == null || mAllTvshowsBox == null || mTvshowRow == null) return;
-            mAllTvshowsBox.setBitmap(bitmap);
-            ((ArrayObjectAdapter)mTvshowRow.getAdapter()).replace(0, mAllTvshowsBox);
+
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
