@@ -41,10 +41,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.DisplayCutout;
 import android.view.InputDevice;
 import android.view.InputEvent;
@@ -111,6 +111,8 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /*
  * This is the launch class for the video browser.
@@ -831,10 +833,15 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         return mGlobalResumeView;
     }
 
-    private class GlobalResumeTask extends AsyncTask<Void, Void, Map> {
-        protected Map doInBackground(Void... anything) {
-            Map<String, Object> result;
-            ContentResolver contentResolver = getContentResolver();
+    private class GlobalResumeTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+
+        void execute() {
+            executor.execute(() -> {
+                try {
+                Map<String, Object> result;
+                ContentResolver contentResolver = getContentResolver();
             Cursor c = contentResolver.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, CURSORS,
                     VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "!=0" + (LoaderUtils.mustHideUserHiddenObjects() ? " AND " + LoaderUtils.HIDE_USER_HIDDEN_FILTER : ""), null,
                     VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + " DESC LIMIT 1");
@@ -907,19 +914,16 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 result = new HashMap<>(0);
             }
 
-            if (c != null)
-                c.close();
+                if (c != null)
+                    c.close();
 
-            return result;
-        }
-
-        protected void onPostExecute(Map result) {
-
-            if (!result.isEmpty()) {
+                final Map<String, Object> finalResult = result;
+                handler.post(() -> {
+                    if (!finalResult.isEmpty()) {
                 GlobalResumeView grv = getGlobalResumeView();
                 grv.resetOpenAnimation();
                 TextView text = (TextView) grv.findViewById(R.id.global_resume_text);
-                text.setText((CharSequence) result.get("name"));
+                text.setText((CharSequence) finalResult.get("name"));
                 View tint = grv.findViewById(R.id.tint);
 
                 // it seems to be possible that tint is null. Prevent crash and
@@ -927,7 +931,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 // the regular lifecycle.
                 if (tint == null) return;
 
-                Bitmap thumbnail = (Bitmap) result.get("thumbnail");
+                Bitmap thumbnail = (Bitmap) finalResult.get("thumbnail");
                 grv.setImage(thumbnail);
                 if (thumbnail != null) {
                     tint.setVisibility(View.VISIBLE);
@@ -935,7 +939,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                     tint.setVisibility(View.GONE);
                 }
 
-                if ((Boolean) result.get("setListener")) {
+                if ((Boolean) finalResult.get("setListener")) {
                     final GlobalResumeView f_grv = grv;
 
                     // Handle clicks on the "resume global" area
@@ -993,7 +997,12 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                         }
                     });
                 }
-            }
+                    }
+                });
+                } finally {
+                    executor.shutdown();
+                }
+            });
         }
     }
 

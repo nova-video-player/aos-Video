@@ -24,8 +24,9 @@ import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.widget.Toast;
 
@@ -58,6 +59,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFragment {
 
@@ -68,7 +71,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
 
     /** We keep a map to be able to get back the SearchResult for a given BaseTags result when saving at the end */
     HashMap<BaseTags, SearchResult> mTagsToSearchResultMap = new HashMap<>();
-    private AsyncTask<ShowTags, Integer, ShowTags> mEpisodeSaveTask;
+    private EpSaveTask mEpisodeSaveTask;
     private SearchInfo mSearchInfo;
 
     @Override
@@ -169,7 +172,8 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            new EpSaveTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, newShowTags);
+                            mEpisodeSaveTask = new EpSaveTask();
+                            mEpisodeSaveTask.execute(newShowTags);
                         }
                     })
                     .show();
@@ -182,26 +186,28 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
     @Override
     public void onStop(){
         super.onStop();
-        if(mEpisodeSaveTask!=null)
-            mEpisodeSaveTask.cancel(true);
+        if (mEpisodeSaveTask != null)
+            mEpisodeSaveTask.cancel();
     }
 
-    private class EpSaveTask extends AsyncTask<ShowTags, Integer, ShowTags> {
+    private class EpSaveTask {
 
         final int PROGRESS_ID_MAX = -3;
         final int PROGRESS_ID_FINALIZING = -2;
 
         final Context mContext;
         NovaProgressDialog mProgressDialog;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
         public EpSaveTask() {
             mContext = getActivity();
         }
 
-        @Override
-        protected void onPreExecute() {
+        void execute(ShowTags showTags) {
+            // onPreExecute equivalent — runs on main thread before background work
             // TODO with progressBar https://stackoverflow.com/questions/56627616/how-to-show-a-progressbar-example-with-percentage-in-android
-            super.onPreExecute();
             mProgressDialog = new NovaProgressDialog(mContext);
             mProgressDialog.setTitle(R.string.scrap_change_title);
             mProgressDialog.setMessage(getString(R.string.scrap_change_initializing));
@@ -209,55 +215,62 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             mProgressDialog.setIndeterminate(false);
             mProgressDialog.setCancelable(false);
             mProgressDialog.show();
-        }
 
-        @Override
-        protected ShowTags doInBackground(ShowTags... params) {
-            // step 1: find all episodes in database that belong to the old show
-            List<EpisodeTags> episodeList = getEpisodeList(mShowId);
-            if (log.isDebugEnabled()) {
-                log.debug("--------------------\nAll episodes in database that belong to the old show:");
-                for (EpisodeTags et : episodeList) {
-                    if (log.isDebugEnabled()) log.debug("      S{} E{} {}", et.getSeason(), et.getEpisode(), et.getTitle());
+            executor.execute(() -> {
+                ShowTags newShow = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    // step 1: find all episodes in database that belong to the old show
+                    List<EpisodeTags> episodeList = getEpisodeList(mShowId);
+                    if (log.isDebugEnabled()) {
+                        log.debug("--------------------\nAll episodes in database that belong to the old show:");
+                        for (EpisodeTags et : episodeList) {
+                            if (log.isDebugEnabled()) log.debug("      S{} E{} {}", et.getSeason(), et.getEpisode(), et.getTitle());
+                        }
+                        if (log.isDebugEnabled()) log.debug("--------------------");
+                    }
+                    // step 2: save new show / episode info for those
+                    newShow = handleSave(showTags, episodeList);
+                    if (log.isDebugEnabled()) log.debug("save finished");
+                } catch (Exception e) {
+                    log.error("EpSaveTask failed", e);
+                } finally {
+                    executor.shutdown();
                 }
-                if (log.isDebugEnabled()) log.debug("--------------------");
-
-            }
-            // step 2: save new show / episode info for those
-            ShowTags newShow = handleSave(params[0], episodeList);
-            if (log.isDebugEnabled()) log.debug("save finished");
-            return newShow;
+                if (isCancelled) return;
+                final ShowTags finalNewShow = newShow;
+                handler.post(() -> {
+                    mProgressDialog.dismiss();
+                    if (finalNewShow != null) {
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, finalNewShow.getId());
+                        resultIntent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME, finalNewShow.getTitle());
+                        getActivity().setResult(Activity.RESULT_OK, resultIntent);
+                    } else {
+                        Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
+                    }
+                    getActivity().finish();
+                });
+            });
         }
 
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            if (values[0]==PROGRESS_ID_MAX) {
-                mProgressDialog.setMax(values[1]);
-            }
-            else if (values[0]==PROGRESS_ID_FINALIZING) {
-                mProgressDialog.setMessage(getString(R.string.scrap_change_finalizing));
-            }
-            else {
-                mProgressDialog.setProgress(values[0]);
-                int season = values[1];
-                int episode = values[2];
-                mProgressDialog.setMessage(getString(R.string.episode_identification, season, episode));
-            }
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
 
-        @Override
-        protected void onPostExecute(ShowTags newShow) {
-            mProgressDialog.dismiss();
-            // if something went wrong newShow = null
-            if (newShow != null) {
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, newShow.getId());
-                resultIntent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME, newShow.getTitle());
-                getActivity().setResult(Activity.RESULT_OK, resultIntent);
-            } else {
-                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
-            }
-            getActivity().finish();
+        private void updateProgress(int... values) {
+            handler.post(() -> {
+                if (isCancelled) return;
+                if (values[0] == PROGRESS_ID_MAX) {
+                    mProgressDialog.setMax(values[1]);
+                } else if (values[0] == PROGRESS_ID_FINALIZING) {
+                    mProgressDialog.setMessage(getString(R.string.scrap_change_finalizing));
+                } else {
+                    mProgressDialog.setProgress(values[0]);
+                    mProgressDialog.setMessage(getString(R.string.episode_identification, values[1], values[2]));
+                }
+            });
         }
 
         /**
@@ -296,7 +309,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
          * @return the new show with its ID set up
          */
         private ShowTags handleSave(ShowTags newShow, List<EpisodeTags> targetEpisodesList) {
-            publishProgress(PROGRESS_ID_MAX, targetEpisodesList.size());
+            updateProgress(PROGRESS_ID_MAX, targetEpisodesList.size());
 
             // TODO make this nicer
             NfoWriter.ExportContext exportContext = null;
@@ -340,6 +353,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             ArrayList<ContentProviderOperation> opList = new ArrayList<ContentProviderOperation>();
             Map<String, Long> poster2IdMap = createPosterIdMap(mContext, newShowId);
             for (EpisodeTags oldEpisodeTag : targetEpisodesList) {
+                if (isCancelled || Thread.currentThread().isInterrupted()) return null;
                 log.info("Saving " + (i++) + " of " + size + " episodes.");
                 EpisodeTags newEpisodeTag = getEpisode(epMap, oldEpisodeTag.getEpisode(), oldEpisodeTag.getSeason(), newShow);
                 newEpisodeTag.setVideoId(oldEpisodeTag.getVideoId());
@@ -359,10 +373,11 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
                         }
                     }
                 }
-                publishProgress(i, newEpisodeTag.getSeason(), newEpisodeTag.getEpisode());
+                updateProgress(i, newEpisodeTag.getSeason(), newEpisodeTag.getEpisode());
             }
-            publishProgress(PROGRESS_ID_FINALIZING);
+            updateProgress(PROGRESS_ID_FINALIZING);
             log.info("preparations took:" + t.step());
+            if (isCancelled || Thread.currentThread().isInterrupted()) return null;
             if (opList.size() > 0) {
                 try {
                     mContext.getContentResolver().applyBatch(ScraperStore.AUTHORITY, opList);

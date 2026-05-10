@@ -17,8 +17,9 @@ package com.archos.mediacenter.video.info;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,8 @@ import com.archos.mediascraper.ScraperImage;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class VideoInfoBackdropChooserFragment extends Fragment implements
         AdapterView.OnItemClickListener,
@@ -196,59 +199,62 @@ public class VideoInfoBackdropChooserFragment extends Fragment implements
 
     private void startLoadingIfReady() {
         if (mTag != null && getActivity() != null && mAdapter != null) {
-            new BackdropListLoader(getActivity(), mAdapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mTag);
+            new BackdropListLoader(getActivity(), mAdapter).execute(mTag);
         }
     }
 
     // ---------------------- INTERNALLY USED CLASSES ----------------------- //
 
     /** Loads a List<ScraperImage> from the database and sets it to a BackdropAdapter */
-    private static class BackdropListLoader extends AsyncTask<BaseTags, Void, List<ScraperImage>> {
+    private static class BackdropListLoader {
         private final Context mContext;
         private final BackdropAdapter mTargetAdapter;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
 
         public BackdropListLoader(Context context, BackdropAdapter target) {
             mContext = context;
             mTargetAdapter = target;
         }
 
-        @Override
-        protected List<ScraperImage> doInBackground(BaseTags... params) {
-            if (params != null && params.length > 0) {
-                return params[0].getAllBackdropsInDb(mContext);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<ScraperImage> result) {
-            if (mTargetAdapter != null)
-                mTargetAdapter.setList(result);
+        void execute(BaseTags tag) {
+            executor.execute(() -> {
+                try {
+                    List<ScraperImage> result = (tag != null) ? tag.getAllBackdropsInDb(mContext) : null;
+                    handler.post(() -> {
+                        if (mTargetAdapter != null)
+                            mTargetAdapter.setList(result);
+                    });
+                } finally {
+                    executor.shutdown();
+                }
+            });
         }
     }
 
     /** Saves a Backdrop as default for a video and stops the hosting fragment */
-    private static class BackdropSaver extends AsyncTask<ScraperImage, Void, Void> {
+    private static class BackdropSaver {
         private final Context mContext;
         private final VideoInfoBackdropChooserFragment mHost;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
 
         public BackdropSaver(Context context, VideoInfoBackdropChooserFragment host) {
             mContext = context;
             mHost = host;
         }
 
-        @Override
-        protected Void doInBackground(ScraperImage... params) {
-            if (params != null && params.length > 0) {
-                params[0].setAsDefault(mContext);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            if (mHost != null)
-                mHost.stop(true);
+        void execute(ScraperImage image) {
+            executor.execute(() -> {
+                try {
+                    if (image != null) image.setAsDefault(mContext);
+                    handler.post(() -> {
+                        if (mHost != null) mHost.stop(true);
+                    });
+                } finally {
+                    executor.shutdown();
+                }
+            });
         }
     }
 

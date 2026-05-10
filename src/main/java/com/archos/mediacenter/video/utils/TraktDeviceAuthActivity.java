@@ -14,9 +14,9 @@
 
 package com.archos.mediacenter.video.utils;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +36,9 @@ import com.archos.mediacenter.video.utils.oauth.OAuthDialog;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class TraktDeviceAuthActivity extends AppCompatActivity {
 
@@ -119,7 +122,7 @@ public class TraktDeviceAuthActivity extends AppCompatActivity {
 
         mIsPolling = true;
         mExpirationTime = System.currentTimeMillis() + (mDeviceCode.expires_in * 1000L);
-        mPollHandler = new Handler();
+        mPollHandler = new Handler(Looper.getMainLooper());
 
         mPollRunnable = new Runnable() {
             @Override
@@ -169,7 +172,7 @@ public class TraktDeviceAuthActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.GONE);
 
         // Finish activity after short delay
-        new Handler().postDelayed(() -> {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
             setResult(RESULT_OK);
             finish();
         }, 1500);
@@ -231,158 +234,152 @@ public class TraktDeviceAuthActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * AsyncTask to generate device code in background
-     */
-    private class GenerateDeviceCodeTask extends AsyncTask<Void, Void, Trakt.deviceCode> {
+    private class GenerateDeviceCodeTask {
         private boolean mAccountLocked = false;
         private boolean mForbidden = false;
         private boolean mServiceUnavailable = false;
         private boolean mMalformedResponse = false;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
 
-        @Override
-        protected Trakt.deviceCode doInBackground(Void... params) {
-            try {
-                return Trakt.generateDeviceCode();
-            } catch (Trakt.AccountLockedError e) {
-                mAccountLocked = true;
-                return null;
-            } catch (Trakt.ForbiddenError e) {
-                mForbidden = true;
-                return null;
-            } catch (Trakt.ServiceUnavailableError e) {
-                mServiceUnavailable = true;
-                return null;
-            } catch (Trakt.InvalidDeviceCodeResponseError e) {
-                mMalformedResponse = true;
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Trakt.deviceCode result) {
-            if (result != null) {
-                mDeviceCode = result;
-                if (log.isDebugEnabled()) log.debug("Device code generated: user_code={}", result.user_code);
-
-                // Update UI with codes
-                mVerificationUrlText.setText(result.verification_url);
-                mUserCodeText.setText(result.user_code);
-
-                // Start polling
-                startPolling();
-            } else {
-                resetDeviceCodeViews();
-                log.error("Failed to generate device code");
-                if (mAccountLocked) {
-                    onAuthenticationFailed(getString(R.string.trakt_account_locked));
-                } else if (mForbidden) {
-                    onAuthenticationFailed("HTTP Error 403 - Forbidden");
-                } else if (mServiceUnavailable) {
-                    onAuthenticationFailed("HTTP Error 503 - Service Unavailable (Trakt down?)");
-                } else if (mMalformedResponse) {
-                    onAuthenticationFailed(getString(R.string.trakt_device_auth_invalid_code));
-                } else {
-                    onAuthenticationFailed(getString(R.string.trakt_device_auth_error));
+        void execute() {
+            executor.execute(() -> {
+                try {
+                    Trakt.deviceCode result = null;
+                    try {
+                        result = Trakt.generateDeviceCode();
+                    } catch (Trakt.AccountLockedError e) {
+                        mAccountLocked = true;
+                    } catch (Trakt.ForbiddenError e) {
+                        mForbidden = true;
+                    } catch (Trakt.ServiceUnavailableError e) {
+                        mServiceUnavailable = true;
+                    } catch (Trakt.InvalidDeviceCodeResponseError e) {
+                        mMalformedResponse = true;
+                    }
+                    final Trakt.deviceCode finalResult = result;
+                    handler.post(() -> {
+                        if (finalResult != null) {
+                            mDeviceCode = finalResult;
+                            if (log.isDebugEnabled()) log.debug("Device code generated: user_code={}", finalResult.user_code);
+                            mVerificationUrlText.setText(finalResult.verification_url);
+                            mUserCodeText.setText(finalResult.user_code);
+                            startPolling();
+                        } else {
+                            resetDeviceCodeViews();
+                            log.error("Failed to generate device code");
+                            if (mAccountLocked) {
+                                onAuthenticationFailed(getString(R.string.trakt_account_locked));
+                            } else if (mForbidden) {
+                                onAuthenticationFailed("HTTP Error 403 - Forbidden");
+                            } else if (mServiceUnavailable) {
+                                onAuthenticationFailed("HTTP Error 503 - Service Unavailable (Trakt down?)");
+                            } else if (mMalformedResponse) {
+                                onAuthenticationFailed(getString(R.string.trakt_device_auth_invalid_code));
+                            } else {
+                                onAuthenticationFailed(getString(R.string.trakt_device_auth_error));
+                            }
+                        }
+                    });
+                } finally {
+                    executor.shutdown();
                 }
-            }
+            });
         }
     }
 
-    /**
-     * AsyncTask to exchange device code for access token
-     */
-    private class ExchangeDeviceCodeTask extends AsyncTask<String, Void, Trakt.accessToken> {
+    private class ExchangeDeviceCodeTask {
         private boolean mAccountLocked = false;
         private boolean mForbidden = false;
         private boolean mServiceUnavailable = false;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
 
-        @Override
-        protected Trakt.accessToken doInBackground(String... params) {
-            String deviceCode = params[0];
-            try {
-                return Trakt.exchangeDeviceCodeForAccessToken(deviceCode);
-            } catch (Trakt.AccountLockedError e) {
-                mAccountLocked = true;
-                return null;
-            } catch (Trakt.ForbiddenError e) {
-                mForbidden = true;
-                return null;
-            } catch (Trakt.ServiceUnavailableError e) {
-                mServiceUnavailable = true;
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Trakt.accessToken result) {
-            if (result != null) {
-                // Success! User authorized
-                if (log.isDebugEnabled()) log.debug("Access token received");
-                onAuthenticationSuccess(result);
-            } else {
-                // Still pending or error - continue polling if not expired
-                if (mAccountLocked) {
-                    onAuthenticationFailed(getString(R.string.trakt_account_locked));
-                } else if (mForbidden) {
-                    onAuthenticationFailed("HTTP Error 403 - Forbidden");
-                } else if (mServiceUnavailable) {
-                    onAuthenticationFailed("HTTP Error 503 - Service Unavailable (Trakt down?)");
-                } else if (mIsPolling && System.currentTimeMillis() < mExpirationTime) {
-                    mPollHandler.postDelayed(mPollRunnable, mDeviceCode.interval * 1000L);
-                } else if (!mIsPolling) {
-                    if (log.isDebugEnabled()) log.debug("Polling stopped");
-                } else {
-                    if (log.isDebugEnabled()) log.debug("Code expired during polling");
-                    onAuthenticationFailed(getString(R.string.trakt_device_auth_timeout));
+        void execute(String deviceCode) {
+            executor.execute(() -> {
+                try {
+                    Trakt.accessToken result = null;
+                    try {
+                        result = Trakt.exchangeDeviceCodeForAccessToken(deviceCode);
+                    } catch (Trakt.AccountLockedError e) {
+                        mAccountLocked = true;
+                    } catch (Trakt.ForbiddenError e) {
+                        mForbidden = true;
+                    } catch (Trakt.ServiceUnavailableError e) {
+                        mServiceUnavailable = true;
+                    }
+                    final Trakt.accessToken finalResult = result;
+                    handler.post(() -> {
+                        if (finalResult != null) {
+                            if (log.isDebugEnabled()) log.debug("Access token received");
+                            onAuthenticationSuccess(finalResult);
+                        } else {
+                            if (mAccountLocked) {
+                                onAuthenticationFailed(getString(R.string.trakt_account_locked));
+                            } else if (mForbidden) {
+                                onAuthenticationFailed("HTTP Error 403 - Forbidden");
+                            } else if (mServiceUnavailable) {
+                                onAuthenticationFailed("HTTP Error 503 - Service Unavailable (Trakt down?)");
+                            } else if (mIsPolling && System.currentTimeMillis() < mExpirationTime) {
+                                mPollHandler.postDelayed(mPollRunnable, mDeviceCode.interval * 1000L);
+                            } else if (!mIsPolling) {
+                                if (log.isDebugEnabled()) log.debug("Polling stopped");
+                            } else {
+                                if (log.isDebugEnabled()) log.debug("Code expired during polling");
+                                onAuthenticationFailed(getString(R.string.trakt_device_auth_timeout));
+                            }
+                        }
+                    });
+                } finally {
+                    executor.shutdown();
                 }
-            }
+            });
         }
     }
 
-    /**
-     * AsyncTask to exchange OAuth authorization code (phone/tablet flow)
-     */
-    private class ExchangeAuthCodeTask extends AsyncTask<String, Void, Trakt.accessToken> {
+    private class ExchangeAuthCodeTask {
         private boolean mAccountLocked = false;
         private boolean mForbidden = false;
         private boolean mServiceUnavailable = false;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
 
-        @Override
-        protected Trakt.accessToken doInBackground(String... params) {
-            String code = params[0];
-            try {
-                return Trakt.getAccessToken(code);
-            } catch (Trakt.AccountLockedError e) {
-                mAccountLocked = true;
-                return null;
-            } catch (Trakt.ForbiddenError e) {
-                mForbidden = true;
-                return null;
-            } catch (Trakt.ServiceUnavailableError e) {
-                mServiceUnavailable = true;
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Trakt.accessToken result) {
-            if (result != null) {
-                if (log.isDebugEnabled()) log.debug("ExchangeAuthCodeTask: access token received");
-                onAuthenticationSuccess(result);
-            } else {
-                log.warn("ExchangeAuthCodeTask: token exchange failed");
-                if (mAccountLocked) {
-                    Toast.makeText(TraktDeviceAuthActivity.this, R.string.trakt_account_locked, Toast.LENGTH_LONG).show();
-                } else if (mForbidden) {
-                    Toast.makeText(TraktDeviceAuthActivity.this, "HTTP Error 403 - Forbidden", Toast.LENGTH_LONG).show();
-                } else if (mServiceUnavailable) {
-                    Toast.makeText(TraktDeviceAuthActivity.this, "HTTP Error 503 - Service Unavailable (Trakt down?)", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(TraktDeviceAuthActivity.this, R.string.trakt_device_auth_error, Toast.LENGTH_LONG).show();
+        void execute(String code) {
+            executor.execute(() -> {
+                try {
+                    Trakt.accessToken result = null;
+                    try {
+                        result = Trakt.getAccessToken(code);
+                    } catch (Trakt.AccountLockedError e) {
+                        mAccountLocked = true;
+                    } catch (Trakt.ForbiddenError e) {
+                        mForbidden = true;
+                    } catch (Trakt.ServiceUnavailableError e) {
+                        mServiceUnavailable = true;
+                    }
+                    final Trakt.accessToken finalResult = result;
+                    handler.post(() -> {
+                        if (finalResult != null) {
+                            if (log.isDebugEnabled()) log.debug("ExchangeAuthCodeTask: access token received");
+                            onAuthenticationSuccess(finalResult);
+                        } else {
+                            log.warn("ExchangeAuthCodeTask: token exchange failed");
+                            if (mAccountLocked) {
+                                Toast.makeText(TraktDeviceAuthActivity.this, R.string.trakt_account_locked, Toast.LENGTH_LONG).show();
+                            } else if (mForbidden) {
+                                Toast.makeText(TraktDeviceAuthActivity.this, "HTTP Error 403 - Forbidden", Toast.LENGTH_LONG).show();
+                            } else if (mServiceUnavailable) {
+                                Toast.makeText(TraktDeviceAuthActivity.this, "HTTP Error 503 - Service Unavailable (Trakt down?)", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(TraktDeviceAuthActivity.this, R.string.trakt_device_auth_error, Toast.LENGTH_LONG).show();
+                            }
+                            finish();
+                        }
+                    });
+                } finally {
+                    executor.shutdown();
                 }
-                finish();
-            }
+            });
         }
     }
 }
