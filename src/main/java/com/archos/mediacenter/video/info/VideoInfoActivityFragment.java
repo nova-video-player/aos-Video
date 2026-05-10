@@ -2122,26 +2122,30 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if (mCurrentVideo != null) if (log.isDebugEnabled()) log.debug("onResume: current mCurrentVideo {}({}), playerVideo {}({}), mVideoIdFromPlayer {}, mVideoFromPlayer {}({})", mCurrentVideo.getFileUri(), mCurrentVideo.getId(), playerVideoUri, playerVideoId, mVideoIdFromPlayer, mVideoPathFromPlayer, mVideoIdFromPlayer);
         else if (log.isDebugEnabled()) log.debug("onResume: current mVideo is null");
 
-        if ((playerVideoId != -42 && mCurrentVideo.getId() != playerVideoId) ||
-                (playerVideoUri != null && ! mCurrentVideo.getFileUri().equals(playerVideoUri))) {
+        if (mCurrentVideo != null && ((playerVideoId >= 0 && mCurrentVideo.getId() != playerVideoId) ||
+                (playerVideoUri != null && !mCurrentVideo.getFileUri().equals(playerVideoUri)))) {
             Video mNewVideo;
-            mVideoPathFromPlayer = playerVideoUri.toString();
+            mVideoPathFromPlayer = playerVideoUri != null ? playerVideoUri.toString() : null;
             mVideoIdFromPlayer = playerVideoId;
             if (log.isDebugEnabled()) log.debug("onResume: not the same video than before (repeat mode?) target is {}", mVideoPathFromPlayer);
             // get mVideo set to new video
-            CursorLoader loader = new MultipleVideoLoader(getActivity(), mVideoPathFromPlayer);
+            CursorLoader loader = playerVideoUri != null
+                    ? new MultipleVideoLoader(getActivity(), mVideoPathFromPlayer)
+                    : new MultipleVideoLoader(getActivity(), playerVideoId);
             Cursor c = loader.loadInBackground();
-            if (c.getCount()>0) {
-                c.moveToFirst();
-                mNewVideo = (Video) new CompatibleCursorMapperConverter(new VideoCursorMapper()).convert(c);
-                if (log.isDebugEnabled()) log.debug("onResume: yay we get a new video {}", mNewVideo.getFilePath());
-                setSelectedSource(mNewVideo);
+            if (c != null && c.getCount()>0) {
+                mNewVideo = findPlayedVideoInCursor(c, playerVideoId, playerVideoUri);
+                if (mNewVideo != null) {
+                    if (log.isDebugEnabled()) log.debug("onResume: yay we get a new video {}", mNewVideo.getFilePath());
+                    setSelectedSource(mNewVideo);
+                }
                 //setCurrentVideo(mNewVideo);
                 //updateSourceList();
             } else {
                 if (log.isDebugEnabled()) log.debug("onResume: oops no video found");
             }
-            c.close();
+            if (c != null)
+                c.close();
             // TODO: refresh overall UI and preserve below?
             //LoaderManager.getInstance(this).restartLoader(1, null, this);
             //mFirstOnResume = true; // trigger reload of the info
@@ -2157,6 +2161,31 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         } else {
             if (log.isDebugEnabled()) log.debug("onResume: mCurrentVideo=null");
         }
+    }
+
+    private Video findPlayedVideoInCursor(Cursor cursor, long playerVideoId, Uri playerVideoUri) {
+        if (cursor == null || !cursor.moveToFirst())
+            return null;
+        CompatibleCursorMapperConverter mapper = new CompatibleCursorMapperConverter(new VideoCursorMapper());
+        Video fallback = null;
+        do {
+            Video video = (Video) mapper.convert(cursor);
+            if (fallback == null)
+                fallback = video;
+            if (isPlayedVideo(video, playerVideoId, playerVideoUri))
+                return video;
+        } while (cursor.moveToNext());
+        return fallback;
+    }
+
+    private boolean isPlayedVideo(Video video, long playerVideoId, Uri playerVideoUri) {
+        if (video == null)
+            return false;
+        if (playerVideoId >= 0 && video.getId() == playerVideoId)
+            return true;
+        Uri videoUri = video.getFileUri();
+        return playerVideoUri != null && videoUri != null
+                && (playerVideoUri.equals(videoUri) || playerVideoUri.toString().equals(videoUri.toString()));
     }
 
     @Override
