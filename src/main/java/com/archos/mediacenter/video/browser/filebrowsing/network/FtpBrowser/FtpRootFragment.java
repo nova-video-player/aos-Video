@@ -47,8 +47,8 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
         super();
     }
     @Override
-    public void onViewCreated (View v, Bundle saved){
-
+    public void onViewCreated(View v, Bundle saved) {
+        super.onViewCreated(v, saved);
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -57,13 +57,10 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
     }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

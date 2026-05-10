@@ -65,6 +65,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.os.BundleCompat;
 import androidx.core.widget.TextViewCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
@@ -231,7 +232,59 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             mCopyLength = bundle.getLong(COPY_LENGTH);
             mCopyDialogID = bundle.getInt(COPY_DIALOG);
         }
-        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+                if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
+                    MenuItem viewModeMenuItem = menu.add(MENU_VIEW_MODE_GROUP, MENU_VIEW_MODE, Menu.NONE, R.string.view_mode);
+                    viewModeMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                }
+                if (shouldEnableMultiSelection())
+                    menu.add(0, R.string.multiple_selection, 0, R.string.multiple_selection);
+            }
+            @Override
+            public void onPrepareMenu(Menu menu) {
+                menu.setGroupVisible(MENU_HIDE_WATCHED_GROUP, mHideOption);
+                MenuItem item = menu.findItem(MENU_VIEW_MODE);
+                if (item != null) {
+                    if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
+                        item.setIcon(R.drawable.ic_menu_poster_mode);
+                    } else if (mViewMode == VideoUtils.VIEW_MODE_GRID) {
+                        item.setIcon(R.drawable.ic_menu_details_mode2);
+                    } else if (mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
+                        item.setIcon(R.drawable.ic_menu_list_mode2);
+                    }
+                }
+            }
+            @Override
+            public boolean onMenuItemSelected(MenuItem item) {
+                if (item.getItemId() == MENU_VIEW_HIDE_SEEN) {
+                    mHideWatched = !mHideWatched;
+                    item.setTitle(mHideWatched ? R.string.hide_seen : R.string.show_all);
+                    mPreferences.edit().putBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, mHideWatched).apply();
+                    return true;
+                } else if (item.getItemId() == R.string.multiple_selection) {
+                    enableMultiple(0, false);
+                    return true;
+                } else if (item.getItemId() == MENU_VIEW_MODE) {
+                    if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
+                        applySelectedViewMode(VideoUtils.VIEW_MODE_GRID);
+                    } else if (mViewMode == VideoUtils.VIEW_MODE_GRID) {
+                        applySelectedViewMode(VideoUtils.VIEW_MODE_DETAILS);
+                    } else if (mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
+                        applySelectedViewMode(VideoUtils.VIEW_MODE_LIST);
+                    }
+                    invalidateOptionsMenu(getActivity());
+                    return true;
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner());
     }
 
     @Override
@@ -1048,62 +1101,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     }
 
     protected MultipleSelectionManager mActionModeManager ;
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
-            // Add the "view mode" item
-            MenuItem viewModeMenuItem = menu.add(MENU_VIEW_MODE_GROUP, MENU_VIEW_MODE, Menu.NONE, R.string.view_mode);
-            viewModeMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            // Details view is only proposed on tablets, not on phones
-            
-        }
-        if(shouldEnableMultiSelection())
-            menu.add(0, R.string.multiple_selection, 0, R.string.multiple_selection);
-    }
-
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        menu.setGroupVisible(MENU_HIDE_WATCHED_GROUP, mHideOption);
-        
-        //Draw the Current Selection for Display Mode
-        MenuItem item = menu.findItem(MENU_VIEW_MODE);
-        if (item != null){
-            if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
-                item.setIcon(R.drawable.ic_menu_poster_mode);
-            } else if (mViewMode == VideoUtils.VIEW_MODE_GRID) {
-                item.setIcon(R.drawable.ic_menu_details_mode2);
-            } else if (mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
-                item.setIcon(R.drawable.ic_menu_list_mode2);
-            }
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // NOTE: ignore the MENU_VIEW_MODE item which is
-        // already handled internally in ActionBarSubmenu
-
-        if (item.getItemId() == MENU_VIEW_HIDE_SEEN){
-            mHideWatched = !mHideWatched;
-            item.setTitle(mHideWatched ? R.string.hide_seen : R.string.show_all);
-            mPreferences.edit().putBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, mHideWatched).apply();
-        } else if (item.getItemId()==R.string.multiple_selection){
-            enableMultiple(0, false);
-        } else if (item.getItemId() == MENU_VIEW_MODE){
-            if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
-                applySelectedViewMode(VideoUtils.VIEW_MODE_GRID);
-            } else if (mViewMode == VideoUtils.VIEW_MODE_GRID) {
-                applySelectedViewMode(VideoUtils.VIEW_MODE_DETAILS);
-            } else if (mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
-                applySelectedViewMode(VideoUtils.VIEW_MODE_LIST);
-            }
-            invalidateOptionsMenu(getActivity());
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     public void onSubmenuItemSelected(ActionBarSubmenu submenu, int position, long itemId) {
         switch (position) {

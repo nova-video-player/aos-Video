@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -79,32 +78,31 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        super.onCreateOptionsMenu(menu, inflater);
+    protected void onContributeMenu(Menu menu) {
         menu.add(0, R.string.refresh_servers_list, Menu.NONE, R.string.refresh_servers_list).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
     }
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    protected boolean onHandleMenuItem(MenuItem item) {
         if (item.getItemId() == R.string.refresh_servers_list) {
-            // restart the discovery (if there is connectivity and not already discovering)
-            if (NetworkState.isNetworkConnected(getActivity())&&!mSambaDiscovery.isRunning()) {
+            if (NetworkState.isNetworkConnected(getActivity()) && !mSambaDiscovery.isRunning()) {
                 mSambaDiscovery.start();
                 checkShortcutAvailability();
             }
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     @Override
-    public void onViewCreated (View v, Bundle saved){
-        if (saved!=null) {
+    public void onViewCreated(View v, Bundle saved) {
+        super.onViewCreated(v, saved);
+        if (saved != null) {
             // Restart the discovery if it was running when saving the instance
             if (saved.getBoolean("isRunning")) {
                 mSambaDiscovery.start();
             }
-        }
-        else {
+        } else {
             // First initialization, start the discovery (if there is connectivity)
             if (NetworkState.isNetworkConnected(getActivity())) {
                 mSambaDiscovery.start();
@@ -129,7 +127,6 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         mSambaDiscovery.addListener(this);
     }
 

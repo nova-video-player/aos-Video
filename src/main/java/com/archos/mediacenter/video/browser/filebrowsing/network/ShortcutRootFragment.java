@@ -53,7 +53,9 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
     }
 
     @Override
-    public void onViewCreated (View v, Bundle saved){}
+    public void onViewCreated(View v, Bundle saved) {
+        super.onViewCreated(v, saved);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -68,7 +70,6 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     @Override

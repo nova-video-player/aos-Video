@@ -44,8 +44,8 @@ public class UpnpRootFragment extends UpnpSmbCommonRootFragment implements UpnpS
         super();
     }
     @Override
-    public void onViewCreated (View v, Bundle saved){
-
+    public void onViewCreated(View v, Bundle saved) {
+        super.onViewCreated(v, saved);
         // First initialization, start the discovery (if there is connectivity)
         if (NetworkState.isNetworkConnected(getActivity())) {
             startDiscovery();
@@ -70,7 +70,6 @@ public class UpnpRootFragment extends UpnpSmbCommonRootFragment implements UpnpS
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         UpnpServiceManager
                 .startServiceIfNeeded(getActivity())
                 .addListener(this);
