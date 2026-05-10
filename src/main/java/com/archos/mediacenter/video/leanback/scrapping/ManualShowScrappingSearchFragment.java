@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -447,7 +448,9 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             if (b != null) {
                 b.setClassLoader(BaseTags.class.getClassLoader());
                 for (String key : b.keySet()) {
-                    result.put(key, b.<EpisodeTags>getParcelable(key));
+                    result.put(key, Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                            ? b.getParcelable(key, EpisodeTags.class)
+                            : b.<EpisodeTags>getParcelable(key));
                 }
             }
             return result;

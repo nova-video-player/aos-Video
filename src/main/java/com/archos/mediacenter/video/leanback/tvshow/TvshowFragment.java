@@ -26,6 +26,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -178,7 +179,9 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         setTopOffsetRatio(0.6f);
 
         Intent intent = getActivity().getIntent();
-        mTvshow = (Tvshow) intent.getSerializableExtra(EXTRA_TVSHOW);
+        mTvshow = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? intent.getSerializableExtra(EXTRA_TVSHOW, Tvshow.class)
+                : (Tvshow) intent.getSerializableExtra(EXTRA_TVSHOW);
 
         if (mTvshow == null) {
             long tvShowId = intent.getLongExtra(EXTRA_TV_SHOW_ID, -1);

@@ -42,6 +42,7 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ServiceCompat;
+import androidx.core.content.IntentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
 
@@ -315,7 +316,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mUpdateNextTask.cancel(false);
             mUpdateNextTask.setListener(null);
         }
-        mUpdateNextTask = new UpdateNextTask(getContentResolver(),(Video)mIntent.getSerializableExtra(VIDEO), mUri, null, -1, mIntent.getLongExtra(PLAYLIST_ID, -1));
+        mUpdateNextTask = new UpdateNextTask(getContentResolver(),
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                        ? mIntent.getSerializableExtra(VIDEO, Video.class)
+                        : (Video) mIntent.getSerializableExtra(VIDEO),
+                mUri, null, -1, mIntent.getLongExtra(PLAYLIST_ID, -1));
         if (!sync) { // seems to be always the case in the calls
             mUpdateNextTask.setListener(new UpdateNextTask.Listener() {
                 @Override
@@ -496,7 +501,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
         mUri = Uri.parse(removeFileSlashSlash(mUri.toString())); // we need to remove "file://"
         if (log.isDebugEnabled()) log.debug("onStart() {}", mUri);
-        mStreamingUri = intent.getParcelableExtra(KEY_STREAMING_URI);
+        mStreamingUri = IntentCompat.getParcelableExtra(intent, KEY_STREAMING_URI, Uri.class);
         if(mPlayerFrontend!=null)
             mPlayerFrontend.setUri(mUri, mStreamingUri);
         mVideoId = intent.getIntExtra("id", -1);
@@ -1118,7 +1123,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private final TraktService.Client.Listener mTraktListener = new TraktService.Client.Listener() {
         @Override
         public void onResult(Bundle bundle) {
-            Trakt.Status status = (Trakt.Status) bundle.get("status");
+            Trakt.Status status = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? bundle.getSerializable("status", Trakt.Status.class)
+                    : (Trakt.Status) bundle.getSerializable("status");
             if (status == Trakt.Status.ERROR) {
                 mTraktWatching = false;
                 mTraktError = true;

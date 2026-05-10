@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.info;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -79,9 +80,13 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
 
         // in case we get recreated restore the tag, may be null anyways.
         if (savedInstanceState != null)
-            mTag = savedInstanceState.getParcelable(TAG);
-        if(mTag==null)
-            setVideo((Base)getActivity().getIntent().getSerializableExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO));
+            mTag = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? savedInstanceState.getParcelable(TAG, BaseTags.class)
+                    : (BaseTags) savedInstanceState.getParcelable(TAG);
+        if (mTag == null)
+            setVideo(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? getActivity().getIntent().getSerializableExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, Base.class)
+                    : (Base) getActivity().getIntent().getSerializableExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO));
         // we'd like to keep this instance when rotating
        // setRetainInstance(VideoInfoActivity2.KEEP_FRAGMENT_INSTANCE);
 

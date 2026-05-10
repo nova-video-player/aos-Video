@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.leanback.scrapping;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.archos.mediacenter.utils.trakt.TraktService;
@@ -54,7 +55,9 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
         super.onCreate(savedInstanceState);
 
         // Get input file and init the SearchInfo ASAP
-        mVideo = (Video) getActivity().getIntent().getSerializableExtra(ManualVideoScrappingActivity.EXTRA_VIDEO);
+        mVideo = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? getActivity().getIntent().getSerializableExtra(ManualVideoScrappingActivity.EXTRA_VIDEO, Video.class)
+                : (Video) getActivity().getIntent().getSerializableExtra(ManualVideoScrappingActivity.EXTRA_VIDEO);
         mSearchInfo = SearchPreprocessor.instance().parseFileBased(mVideo.getUri(), mVideo.getName()!=null&&!mVideo.getName().isEmpty()? Uri.parse("/"+mVideo.getName()):mVideo.getUri());
 
         // Start a search using the search suggestion. It makes it easy for the user to edit it for typo if needed

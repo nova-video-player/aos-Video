@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.leanback.filebrowsing;
 import static com.archos.filecorelibrary.smbj.SmbjUtils.isSMBjEnabled;
 import static com.archos.filecorelibrary.sshj.SshjUtils.isSSHjEnabled;
 
+import androidx.core.content.IntentCompat;
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -118,7 +119,7 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
      * Also goBackOneLevel() will return false if this root Uri is the current one
      */
     protected Uri getStartingUri() {
-        Uri uri = (Uri)getIntent().getParcelableExtra(EXTRA_STARTING_URI);
+        Uri uri = IntentCompat.getParcelableExtra(getIntent(), EXTRA_STARTING_URI, Uri.class);
         if (uri==null) {
             // Default to the root
             return getRootUri();
@@ -139,7 +140,7 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
      * goBackOneLevel() will return false if this root Uri is the current one
      */
     protected Uri getRootUri() {
-        Uri uri = (Uri)getIntent().getParcelableExtra(EXTRA_ROOT_URI);
+        Uri uri = IntentCompat.getParcelableExtra(getIntent(), EXTRA_ROOT_URI, Uri.class);
         if (uri==null) {
             throw new IllegalStateException("EXTRA_ROOT_URI Uri is mandatory in the fragment arguments!");
         }

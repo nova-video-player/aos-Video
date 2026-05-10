@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -97,7 +98,9 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
         int backgroundColor = ThemeManager.getInstance(getActivity()).getLeanbackBackgroundColor();
         bgMngr.setColor(backgroundColor);
 
-        mShortcut = (Shortcut)getActivity().getIntent().getSerializableExtra(EXTRA_SHORTCUT);
+        mShortcut = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? getActivity().getIntent().getSerializableExtra(EXTRA_SHORTCUT, Shortcut.class)
+                : (Shortcut) getActivity().getIntent().getSerializableExtra(EXTRA_SHORTCUT);
 
         DetailsOverviewRow detailRow = new DetailsOverviewRow(mShortcut);
         detailRow.setImageScaleUpAllowed(false);

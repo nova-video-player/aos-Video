@@ -3,6 +3,7 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,9 @@ public class NewListDialog extends DialogFragment {
                 EditText text = (EditText)mView.findViewById(R.id.list_title);
                 VideoStore.List.ListObj list = new VideoStore.List.ListObj(text.getText().toString(), -1, VideoStore.List.SyncStatus.STATUS_NOT_SYNC);
                 Uri uri = getActivity().getContentResolver().insert(VideoStore.List.LIST_CONTENT_URI, list.toContentValues());
-                Video video = (Video) getArguments().getSerializable(ListDialog.EXTRA_VIDEO);
+                Video video = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                        ? getArguments().getSerializable(ListDialog.EXTRA_VIDEO, Video.class)
+                        : (Video) getArguments().getSerializable(ListDialog.EXTRA_VIDEO);
                 BaseTags metadata = video.getFullScraperTags(getActivity());
                 boolean isEpisode = metadata instanceof EpisodeTags;
                 VideoStore.VideoList.VideoItem videoItem  =

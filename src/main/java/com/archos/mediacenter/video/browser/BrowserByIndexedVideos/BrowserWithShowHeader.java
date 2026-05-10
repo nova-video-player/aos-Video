@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -118,7 +119,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         Bundle bundle = getArguments();
         if (bundle != null) {
             mShowId = getArguments().getLong(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID, 0);
-            mShow = (Tvshow) getArguments().getSerializable(EXTRA_SHOW_ITEM);
+            mShow = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? getArguments().getSerializable(EXTRA_SHOW_ITEM, Tvshow.class)
+                    : (Tvshow) getArguments().getSerializable(EXTRA_SHOW_ITEM);
         } else {
             mShowId = 0;
             mShow = null;

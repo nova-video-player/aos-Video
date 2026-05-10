@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser.filebrowsing.network;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
@@ -262,8 +263,12 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
      */
     @SuppressWarnings("unchecked")
     public void onRestoreInstanceState(Bundle inState) {
-        mAvailableShares = (List<String>) inState.getSerializable("mAvailableShares");
-        mIndexedShortcuts = (ArrayList<ShortcutDbAdapter.Shortcut>) inState.getSerializable("mIndexedShortcuts");
+        mAvailableShares = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? (List<String>) inState.getSerializable("mAvailableShares", ArrayList.class)
+                : (List<String>) inState.getSerializable("mAvailableShares");
+        mIndexedShortcuts = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? (ArrayList<ShortcutDbAdapter.Shortcut>) inState.getSerializable("mIndexedShortcuts", ArrayList.class)
+                : (ArrayList<ShortcutDbAdapter.Shortcut>) inState.getSerializable("mIndexedShortcuts");
     }
 
     // Create new views (invoked by the layout manager)

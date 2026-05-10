@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.archos.mediacenter.video.utils.ThemeManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.os.BundleCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -164,7 +165,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         super.onCreate(bundle);
         Bundle b = bundle == null ? getArguments() : bundle;
         if (b != null) {
-            mCurrentDirectory = b.getParcelable(CURRENT_DIRECTORY);
+            mCurrentDirectory = BundleCompat.getParcelable(b, CURRENT_DIRECTORY, Uri.class);
             mTitle = b.getString(TITLE, null);
             mShortcutSelected = b.getBoolean(SHORTCUT_SELECTED);
         }

@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.utils.credentialsmanager;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -45,10 +46,10 @@ public class CredentialsEditorDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle arg = getArguments();
-        if(arg.getSerializable(CREDENTIAL )!=null){
-            mCredential = (NetworkCredentialsDatabase.Credential)arg.getSerializable(CREDENTIAL);
-        }
-        else
+        mCredential = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? arg.getSerializable(CREDENTIAL, NetworkCredentialsDatabase.Credential.class)
+                : (NetworkCredentialsDatabase.Credential) arg.getSerializable(CREDENTIAL);
+        if (mCredential == null)
             throw new IllegalArgumentException(this.getClass().getCanonicalName()+" needs a "+NetworkCredentialsDatabase.Credential.class.getName()+" as argument");
 
         LayoutInflater factory = LayoutInflater.from(getActivity());

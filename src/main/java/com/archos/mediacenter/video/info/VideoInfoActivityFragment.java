@@ -506,7 +506,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mFileInfoContainerLoading.setVisibility(View.VISIBLE);
         if(getActivity().getIntent()!=null){
             mPlayerType = getActivity().getIntent().getIntExtra(VideoInfoActivity.EXTRA_PLAYER_TYPE,-1);
-            mVideoMetadataFromPlayer = (VideoMetadata)getActivity().getIntent().getSerializableExtra(VideoInfoActivity.EXTRA_USE_VIDEO_METADATA);
+            mVideoMetadataFromPlayer = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? getActivity().getIntent().getSerializableExtra(VideoInfoActivity.EXTRA_USE_VIDEO_METADATA, VideoMetadata.class)
+                    : (VideoMetadata) getActivity().getIntent().getSerializableExtra(VideoInfoActivity.EXTRA_USE_VIDEO_METADATA);
 
         }
         Bundle bundle = null;
@@ -515,22 +517,27 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         else if(getArguments()!=null)
             bundle = getArguments();
         if(bundle!=null) {
-            if(bundle.getSerializable(EXTRA_METADATA_CACHE)!=null){
-                mVideoMetadateCache = (HashMap<String, VideoMetadata>) savedInstanceState.getSerializable(EXTRA_METADATA_CACHE);
-            }
-            else
+            if (bundle.containsKey(EXTRA_METADATA_CACHE)) {
+                mVideoMetadateCache = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                        ? (HashMap<String, VideoMetadata>) bundle.getSerializable(EXTRA_METADATA_CACHE, HashMap.class)
+                        : (HashMap<String, VideoMetadata>) bundle.getSerializable(EXTRA_METADATA_CACHE);
+            } else
                 mVideoMetadateCache = new HashMap<>();
 
-            if(bundle.getSerializable(EXTRA_SUBTITLE_CACHE)!=null){
-                mSubtitleListCache = (HashMap<String, List<SubtitleManager.SubtitleFile>>) savedInstanceState.getSerializable(EXTRA_SUBTITLE_CACHE);
+            if (bundle.containsKey(EXTRA_SUBTITLE_CACHE)) {
+                mSubtitleListCache = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                        ? (HashMap<String, List<SubtitleManager.SubtitleFile>>) bundle.getSerializable(EXTRA_SUBTITLE_CACHE, HashMap.class)
+                        : (HashMap<String, List<SubtitleManager.SubtitleFile>>) bundle.getSerializable(EXTRA_SUBTITLE_CACHE);
             }
             else
-                mVideoMetadateCache = new HashMap<>();
+                mSubtitleListCache = new HashMap<>();
             mSelectCurrentVideo = bundle.getBoolean(EXTRA_FORCE_VIDEO_SELECTION,false);
             Bundle intentExtras = getActivity().getIntent().getExtras();
             mIsLaunchFromPlayer = intentExtras != null && intentExtras.getBoolean(EXTRA_LAUNCHED_FROM_PLAYER, false);
             updateTechnicalInfoVisibility();
-            Video video = (Video) bundle.get(EXTRA_VIDEO);
+            Video video = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? bundle.getSerializable(EXTRA_VIDEO, Video.class)
+                    : (Video) bundle.getSerializable(EXTRA_VIDEO);
             if(video == null){
 
                 mVideoIdFromPlayer = bundle.getLong(EXTRA_VIDEO_ID, -1);

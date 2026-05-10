@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback.filebrowsing;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.os.BundleCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.loader.app.LoaderManager;
 
@@ -169,7 +170,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         updateBackground();
 
         setTitle(getArguments().getString(ARG_TITLE));
-        mUri = getArguments().getParcelable(ARG_URI);
+        mUri = BundleCompat.getParcelable(getArguments(), ARG_URI, Uri.class);
         mIsRoot = getArguments().getBoolean(ARG_IS_ROOT, false);
 
         setupEventListeners();

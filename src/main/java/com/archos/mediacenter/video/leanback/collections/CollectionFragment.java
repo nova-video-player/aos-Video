@@ -195,7 +195,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         setTopOffsetRatio(0.6f);
 
         Intent intent = getActivity().getIntent();
-        mCollection = (Collection) intent.getSerializableExtra(EXTRA_COLLECTION);
+        mCollection = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? intent.getSerializableExtra(EXTRA_COLLECTION, Collection.class)
+                : (Collection) intent.getSerializableExtra(EXTRA_COLLECTION);
         if (mCollection != null) mCollectionId = mCollection.getCollectionId();
         else mCollectionId = intent.getLongExtra(EXTRA_COLLECTION_ID, -1);
 

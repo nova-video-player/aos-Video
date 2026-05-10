@@ -63,6 +63,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.os.BundleCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -223,7 +224,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             mFirstVisiblePosition = posBundle.getInt(FIRST_VISIBLE_POSITION);
             mSelectedPosition = posBundle.getInt(SELECTED_POSITION);
             mScroll = posBundle.getInt(CURRENT_SCROLL);
-            mListState= posBundle.getParcelable(LIST_STATE_KEY);
+            mListState = BundleCompat.getParcelable(posBundle, LIST_STATE_KEY, Parcelable.class);
         }
         if (bundle != null) {
             mCopyName = bundle.getString(COPY_NAME);

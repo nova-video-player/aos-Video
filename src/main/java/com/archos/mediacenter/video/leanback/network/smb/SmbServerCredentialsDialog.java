@@ -19,6 +19,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import androidx.core.os.BundleCompat;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -66,7 +67,7 @@ public class SmbServerCredentialsDialog extends DialogFragment {
         if(args != null){
             mUsername = args.getString(USERNAME,"");
             mPassword = args.getString(PASSWORD,"");
-            mUri = args.getParcelable(URI);
+            mUri = BundleCompat.getParcelable(args, URI, Uri.class);
         }
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         // Get latest values from preference

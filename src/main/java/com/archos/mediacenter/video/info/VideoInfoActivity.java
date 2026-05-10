@@ -78,7 +78,9 @@ public class VideoInfoActivity extends AppCompatActivity {
         ViewGroup globalLayout = (ViewGroup) getWindow().getDecorView();
 
         if(getIntent().hasExtra(EXTRA_VIDEO_PATHS))
-            mPaths = (ArrayList)getIntent().getSerializableExtra(EXTRA_VIDEO_PATHS);
+            mPaths = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? getIntent().getSerializableExtra(EXTRA_VIDEO_PATHS, ArrayList.class)
+                    : (ArrayList) getIntent().getSerializableExtra(EXTRA_VIDEO_PATHS);
         if(mPaths==null) {
             mPaths = new ArrayList<>();
             if(getIntent().getData()!=null)
@@ -87,7 +89,9 @@ public class VideoInfoActivity extends AppCompatActivity {
         mId = getIntent().getLongExtra(EXTRA_VIDEO_ID, -1);
         mCurrentPosition = getIntent().getIntExtra(EXTRA_CURRENT_POSITION, 0);
         if(getIntent().hasExtra(EXTRA_VIDEO))
-            mCurrentVideo = (Video) getIntent().getSerializableExtra(EXTRA_VIDEO);
+            mCurrentVideo = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? getIntent().getSerializableExtra(EXTRA_VIDEO, Video.class)
+                    : (Video) getIntent().getSerializableExtra(EXTRA_VIDEO);
 
         mForceCurrentPosition = getIntent().getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false);
         mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, null);

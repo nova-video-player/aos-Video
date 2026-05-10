@@ -378,7 +378,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mSelectCurrentVideo = intent.getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false) ;
 
         // Easiest case when called from the leanback browser
-        mVideo = (Video)intent.getSerializableExtra(EXTRA_VIDEO);
+        mVideo = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? intent.getSerializableExtra(EXTRA_VIDEO, Video.class)
+                : (Video) intent.getSerializableExtra(EXTRA_VIDEO);
 
         // When called from the player we don't have the Video object, but we may have the video id if it is indexed
         if (mVideo==null) {
@@ -394,7 +396,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mLaunchedFromPlayer = intent.getBooleanExtra(EXTRA_LAUNCHED_FROM_PLAYER, false);
         mShouldLoadBackdrop = intent.getBooleanExtra(EXTRA_SHOULD_LOAD_BACKDROP, true);
         mPlayerType = intent.getIntExtra(VideoInfoActivity.EXTRA_PLAYER_TYPE, -1);
-        mVideoMetadataFromPlayer = (VideoMetadata)intent.getSerializableExtra(VideoInfoActivity.EXTRA_USE_VIDEO_METADATA);
+        mVideoMetadataFromPlayer = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? intent.getSerializableExtra(VideoInfoActivity.EXTRA_USE_VIDEO_METADATA, VideoMetadata.class)
+                : (VideoMetadata) intent.getSerializableExtra(VideoInfoActivity.EXTRA_USE_VIDEO_METADATA);
         
         // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
         // else it does not work later.

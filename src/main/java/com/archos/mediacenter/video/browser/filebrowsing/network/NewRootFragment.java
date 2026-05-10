@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser.filebrowsing.network;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.os.BundleCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -270,7 +272,7 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
         mDiscoveryList.setFocusable(false);
         if (savedInstanceState!=null) {
             mAdapter.onRestoreInstanceState(savedInstanceState); // Restore the adapter "saved instance" parameters
-            mLayoutManager.onRestoreInstanceState(savedInstanceState.getParcelable("mLayoutManager")); // Restore the layout manager state
+            mLayoutManager.onRestoreInstanceState(BundleCompat.getParcelable(savedInstanceState, "mLayoutManager", Parcelable.class)); // Restore the layout manager state
         }
 
         loadIndexedShortcuts();

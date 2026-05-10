@@ -29,6 +29,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import androidx.core.os.BundleCompat;
 import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.view.View;
@@ -90,7 +91,7 @@ public class VideoPicker extends ListActivity implements AdapterView.OnItemClick
 
         if (icicle != null) {
             // Restore former activity state
-            mListState = icicle.getParcelable(LIST_STATE_KEY);
+            mListState = BundleCompat.getParcelable(icicle, LIST_STATE_KEY, Parcelable.class);
             mListHasFocus = icicle.getBoolean(FOCUS_KEY);
         }
         

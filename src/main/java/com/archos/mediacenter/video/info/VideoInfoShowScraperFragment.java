@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -161,7 +162,9 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         // limit the way the window is adjusted when softkeyboard is opened
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        setInfoItem((Base)getActivity().getIntent().getSerializableExtra(VideoInfoScraperActivity.EXTRA_SHOW));
+        setInfoItem(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? getActivity().getIntent().getSerializableExtra(VideoInfoScraperActivity.EXTRA_SHOW, Base.class)
+                : (Base) getActivity().getIntent().getSerializableExtra(VideoInfoScraperActivity.EXTRA_SHOW));
 
         // restore display state
         setDisplayState(mDisplayState);
@@ -601,7 +604,9 @@ public class VideoInfoShowScraperFragment extends Fragment implements
             if (b != null) {
                 b.setClassLoader(BaseTags.class.getClassLoader());
                 for (String key : b.keySet()) {
-                    result.put(key, b.<EpisodeTags>getParcelable(key));
+                    result.put(key, Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                            ? b.getParcelable(key, EpisodeTags.class)
+                            : b.<EpisodeTags>getParcelable(key));
                 }
             }
             return result;

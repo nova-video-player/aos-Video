@@ -36,7 +36,7 @@ public class VideoInfoScraperActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_info_posterandbackdrop);
         Fragment frag;
-        if(getIntent().getSerializableExtra(EXTRA_VIDEO)!=null) {
+        if (getIntent().hasExtra(EXTRA_VIDEO)) {
             if (DBG) Log.d(TAG, "onCreate: detected video");
             frag = new VideoInfoScraperSearchFragment();
         } else {

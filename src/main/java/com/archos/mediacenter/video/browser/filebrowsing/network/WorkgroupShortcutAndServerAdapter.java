@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -141,7 +142,9 @@ public abstract class WorkgroupShortcutAndServerAdapter extends RootFragmentAdap
      */
     @SuppressWarnings("unchecked")
     public void onRestoreInstanceState(Bundle inState) {
-        mShares = (ArrayList<GenericShare>) inState.getSerializable("mShares");
+        mShares = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? (ArrayList<GenericShare>) inState.getSerializable("mShares", ArrayList.class)
+                : (ArrayList<GenericShare>) inState.getSerializable("mShares");
         for (GenericShare s : mShares) {
             if(s!=null)
                 mAvailableShares.add(s.getName());
