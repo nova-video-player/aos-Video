@@ -384,7 +384,14 @@ public class MiscUtils {
         left = top = right = bottom = 0;
         int systemBarLeft, systemBarTop, systemBarRight, systemBarBottom;
         boolean navAreaPresentOnBottom = (isGestureAreaShowing || (isNavBarOnBottom && navigationBarShowing));
-        int rotation = (PlayerActivity.isRotationLocked() ? PlayerActivity.getLockedRotation(): ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation());
+        int rotation;
+        if (PlayerActivity.isRotationLocked()) {
+            rotation = PlayerActivity.getLockedRotation();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            rotation = context.getDisplay().getRotation();
+        } else {
+            rotation = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        }
 
         WindowInsets insets = rootView.getRootWindowInsets();
         if (insets == null) return;

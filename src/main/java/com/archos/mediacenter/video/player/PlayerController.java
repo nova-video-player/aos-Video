@@ -36,7 +36,6 @@ import androidx.appcompat.app.ActionBar;
 
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -47,7 +46,7 @@ import android.view.View.OnGenericMotionListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
+
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -1945,10 +1944,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
         float deltaY = e2.getY() - e1.getY();
 
-        WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        Display display = windowManager.getDefaultDisplay();
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        display.getMetrics(displayMetrics);
+        DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
         int screenWidth = displayMetrics.widthPixels;
         int screenHeight = displayMetrics.heightPixels;
 

@@ -56,9 +56,8 @@ public class BackdropTask {
     public BackdropTask(Activity activity, int backgroundDefaultColor) {
         if (DBG) Log.d(TAG, "BackdropTask");
         mContext = activity;
-        mMetrics = new DisplayMetrics();
         mDefaultBackground = new ColorDrawable(backgroundDefaultColor);
-        activity.getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
+        mMetrics = activity.getResources().getDisplayMetrics();
         BackgroundManager backgroundManager = BackgroundManager.getInstance(activity);
         if(!backgroundManager.isAttached())
         backgroundManager.attach(activity.getWindow());

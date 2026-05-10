@@ -113,8 +113,7 @@ public class SubtitleGfxView extends View {
         // Get the screen density
         if (mContext instanceof PlayerActivity) {
             // Should always be the case
-            DisplayMetrics metrics = new DisplayMetrics();
-            ((PlayerActivity)mContext).getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
             float density = metrics.density;
             mScreenDpi = metrics.densityDpi;
         }

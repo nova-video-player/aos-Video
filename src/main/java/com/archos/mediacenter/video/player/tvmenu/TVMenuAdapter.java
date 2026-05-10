@@ -87,8 +87,7 @@ public class TVMenuAdapter {
         if(((TVCardView) v2).hasFocus()) {
 
             ((TVCardView) v2).focus(true);
-            DisplayMetrics displaymetrics = new DisplayMetrics();
-            mWindow.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+            DisplayMetrics displaymetrics = mWindow.getContext().getResources().getDisplayMetrics();
             int width = displaymetrics.widthPixels;
             mView.animate().translationX(-((TVCardView) v2).getPositionX() + width / 2).setDuration(200);
             if(mViewSlave!=null)
@@ -252,8 +251,7 @@ public class TVMenuAdapter {
             ((TVCardView)cards.get(pos).findViewById(R.id.card_view)).restoreFocus(null);
         else
             ((TVCardView)cards.get(pos).findViewById(R.id.card_view)).saveFocus(null);
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        mWindow.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        DisplayMetrics displaymetrics = mWindow.getContext().getResources().getDisplayMetrics();
         final int height = displaymetrics.heightPixels;
         YAnimation a = new YAnimation(state?height:-height,true);           
         a.setDuration(500);
@@ -264,8 +262,7 @@ public class TVMenuAdapter {
     public void focusStart() {
         // TODO Auto-generated method stub
         //will make tv menu appears from bottom to the middle of the screen
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        mWindow.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        DisplayMetrics displaymetrics = mWindow.getContext().getResources().getDisplayMetrics();
         final int width = displaymetrics.heightPixels;
         mView.setY(width);
         if(mViewSlave!=null)
@@ -281,8 +278,7 @@ public class TVMenuAdapter {
     }
     
     public void hideAnimation() {
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        mWindow.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        DisplayMetrics displaymetrics = mWindow.getContext().getResources().getDisplayMetrics();
         final int width = displaymetrics.heightPixels;
         YAnimation a = new YAnimation(-width, false);
         
@@ -295,8 +291,7 @@ public class TVMenuAdapter {
         if(cards!=null&& cards.size()>0&&pos>=0&&pos<cards.size()){
             if(cards.get(pos).findViewById(R.id.card_view)!=null && cards.get(pos).findViewById(R.id.card_view) instanceof TVCardView){
                 View v2 = cards.get(pos).findViewById(R.id.card_view);
-                DisplayMetrics displaymetrics = new DisplayMetrics();
-                mWindow.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+                DisplayMetrics displaymetrics = mWindow.getContext().getResources().getDisplayMetrics();
                 int width = displaymetrics.widthPixels;
                 mView.setX(-((TVCardView) v2).getPositionX() + width / 2);
                 if(mViewSlave!=null)

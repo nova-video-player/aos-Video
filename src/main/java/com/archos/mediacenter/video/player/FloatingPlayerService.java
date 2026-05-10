@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -394,9 +395,13 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
                                     mode = DRAG;
                                 }
                                 if (mode == DRAG) {
-                                    Display display = mWindowManager.getDefaultDisplay();
                                     Point size = new Point();
-                                    display.getSize(size);
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                        Rect b = mWindowManager.getCurrentWindowMetrics().getBounds();
+                                        size.set(b.width(), b.height());
+                                    } else {
+                                        mWindowManager.getDefaultDisplay().getSize(size);
+                                    }
                                     int x = initialX + (int) (event.getRawX() - initialTouchX);
                                     int y = initialY + (int) (event.getRawY() - initialTouchY);
                                     if (x + mParamsF.width <= size.x && x >= 0)
@@ -426,9 +431,13 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
                                     float newDist = spacing(event);
                                     if (newDist > 10f) {
                                         //Get display width, we cant go over.
-                                        Display display = mWindowManager.getDefaultDisplay();
                                         Point point = new Point();
-                                        display.getRealSize(point);
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                            Rect b = mWindowManager.getCurrentWindowMetrics().getBounds();
+                                            point.set(b.width(), b.height());
+                                        } else {
+                                            mWindowManager.getDefaultDisplay().getRealSize(point);
+                                        }
 
                                         //We start at our minimum size.
                                         int width = (int) (initialWidth + (newDist - oldDist));
@@ -533,10 +542,13 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     }
     public void updateSubsSize(){
         if(mSize>=0) {
-            Display display = mWindowManager.getDefaultDisplay();
             Point point = new Point();
-            display.getRealSize(point);
-            display.getSize(point);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Rect b = mWindowManager.getCurrentWindowMetrics().getBounds();
+                point.set(b.width(), b.height());
+            } else {
+                mWindowManager.getDefaultDisplay().getRealSize(point);
+            }
             int size = (int) ((mParamsF.width / (float)(Math.max(point.y, point.x))) * mSize);
             int vpos = (int) ((mParamsF.height / (float)(Math.min(point.y, point.x))) * mVPos);
             mSubtitleManager.setSize(size);

@@ -23,6 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.display.DisplayManager;
 import android.media.AudioManager;
@@ -549,10 +550,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         Display[] displays = displayManager.getDisplays();
         for (Display display : displays) {
             if ((display.getFlags() & Display.FLAG_PRESENTATION) != 0) {
-                DisplayMetrics metrics = new DisplayMetrics();
-                display.getRealMetrics(metrics);
-                int width = metrics.widthPixels;
-                int height = metrics.heightPixels;
+                Display.Mode mode = display.getMode();
+                int width = mode.getPhysicalWidth();
+                int height = mode.getPhysicalHeight();
                 if (log.isDebugEnabled()) log.debug("readHdmiSize: size=({},{})", width,height);
                 int[] ret = new int[2];
                 ret[0] = width;
@@ -565,10 +565,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     }
 
     private int[] readFallbackDisplaySize() {
-        DisplayMetrics metrics = new DisplayMetrics();
-        Display display = getWindowManager().getDefaultDisplay();
-        display.getRealMetrics(metrics);
-        return new int[] { metrics.widthPixels, metrics.heightPixels };
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Rect bounds = getWindowManager().getCurrentWindowMetrics().getBounds();
+            return new int[] { bounds.width(), bounds.height() };
+        } else {
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+            return new int[] { metrics.widthPixels, metrics.heightPixels };
+        }
     }
 
     public void setUIExternalSurface(Surface uiSurface) {
@@ -736,7 +740,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
                 @Override
                 public void onDisplayChanged(int displayId) {
-                    orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        orientation = mContext.getDisplay().getRotation();
+                    } else {
+                        orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+                    }
                     if(mCurrentRotation != orientation) {
                         mCurrentRotation = orientation;
                         runOnUiThread(new Runnable() {
@@ -1259,16 +1267,27 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private void updateSizes() {
         boolean isInPictureInPictureMode = Build.VERSION.SDK_INT>=Build.VERSION_CODES.N&&isInPictureInPictureMode();
         boolean isInMultiWindowMode = Build.VERSION.SDK_INT>=Build.VERSION_CODES.N&&isInMultiWindowMode();
-        Display display = getWindowManager().getDefaultDisplay();
         int width, height, layoutWidth, layoutHeight, displayWidth, displayHeight;
-        Point realPoint = new Point();
         // returns the real screen dimension
-        display.getRealSize(realPoint);
-        displayWidth = realPoint.x;
-        displayHeight = realPoint.y;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Rect realBounds = getWindowManager().getCurrentWindowMetrics().getBounds();
+            displayWidth = realBounds.width();
+            displayHeight = realBounds.height();
+        } else {
+            Point realPoint = new Point();
+            getWindowManager().getDefaultDisplay().getRealSize(realPoint);
+            displayWidth = realPoint.x;
+            displayHeight = realPoint.y;
+        }
         // returns the available dimension (real screen size minus decors): this is needed on phones, cannot only matchParent
         Point point = new Point();
-        display.getSize(point);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // In API 30+ use currentWindowMetrics bounds minus insets for the usable area
+            Rect bounds = getWindowManager().getCurrentWindowMetrics().getBounds();
+            point.set(bounds.width(), bounds.height());
+        } else {
+            getWindowManager().getDefaultDisplay().getSize(point);
+        }
         // note on chromeos pixelbook point.y when fullscreen only reports a wrong layoutHeight (2400x1400 instead of 2400x1600) as if there are hidden decors
         // status bar | action bar | navigation bar, system bar = status bar + navigation bar
         layoutWidth = point.x;
@@ -1277,9 +1296,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         boolean isPortrait = ((1.0f*layoutHeight/layoutWidth)>1.0);
         boolean isSeenPortrait = ((1.0f*displayHeight/displayWidth)>1.0);
 
-        //Find the screen size.
-        DisplayMetrics metrics = new DisplayMetrics();
-        display.getMetrics(metrics);
+        //Find the screen density.
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
         
         //Set the Floating Player Size, 45% of the smallest side, or 2 inches on Tablet etc.
         int smallestSide = (isPortrait ? displayWidth : displayHeight);
@@ -1306,8 +1324,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         // if rotation is locked reverse w/h but only if we have a difference of portrait/landscape perception between layout and screen dimension
         if (isRotationLocked()&&(isPortrait != isSeenPortrait)) {
-            displayWidth = realPoint.y;
-            displayHeight = realPoint.x;
+            int swapTemp = displayWidth;
+            displayWidth = displayHeight;
+            displayHeight = swapTemp;
             if (log.isDebugEnabled()) log.debug("CONFIG updateSizes RotationLocked overriding display ({},{})", displayWidth, displayHeight);
         }
 
@@ -1385,8 +1404,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     }
 
     private void setLockRotation(boolean avpLock) {
-        Display display = getWindowManager().getDefaultDisplay();
-        int rotation = display.getRotation();
+        int rotation;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            rotation = getDisplay().getRotation();
+        } else {
+            rotation = getWindowManager().getDefaultDisplay().getRotation();
+        }
         if (log.isDebugEnabled()) log.debug("CONFIG setLockRotation, rotation status: {}, i.e. {}", rotation, getHumanReadableRotation(rotation));
 
         boolean systemLock;
