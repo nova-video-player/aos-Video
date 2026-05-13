@@ -84,6 +84,8 @@ import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
 import static com.archos.mediacenter.utils.ISO639codes.isLanguageInString;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateTrackName;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.getSubLanguageFromSubPathAndVideoPath;
+import com.archos.medialib.LibAvos;
+import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_AUDIO_SPEED_AUDIOTRACK;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 import static com.archos.mediascraper.StringUtils.stringContainsForced;
 
@@ -1961,6 +1963,15 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mAudioSpeed = speed;
             if ((AUDIO_SPEED_ON_THE_FLY && mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false)) || force) {
                 mPlayer.setAvSpeed(mAudioSpeed);
+                // When using AudioTrack-based speed (not atempo), check if native actually applied the speed.
+                // If AudioTrack creation failed, native reverts to 1x without notifying Java.
+                if (mPreferences.getBoolean(KEY_AUDIO_SPEED_AUDIOTRACK, false)) {
+                    float appliedSpeed = LibAvos.getAudioSpeed();
+                    if (Math.abs(appliedSpeed - mAudioSpeed) > 1e-5f) {
+                        if (log.isWarnEnabled()) log.warn("setAudioSpeed: AudioTrack speed change failed, reverted from {} to {}", mAudioSpeed, appliedSpeed);
+                        mAudioSpeed = appliedSpeed;
+                    }
+                }
             }
         }
         if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) != 0) {
