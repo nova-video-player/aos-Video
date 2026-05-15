@@ -560,6 +560,8 @@ desteklenmiyor.</string>
     <string name="preferences_tv_refreshrate_switch_disabled">Devre dışı bırakıldı</string>
     <string name="preferences_tv_refreshrate_switch_mode_selection">Video fps ile eşleşen ekran modu seçimi</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">Android 12+kare hızı eşleştirme özelliği</string>
+    <string name="preference_dolby_vision_mode">Dolby Vision Modu</string>
+    <string name="preference_force_dolby_vision">Dolby Vision\'a zorla</string>
     <string name="preference_remove_dolby_vision">Dolby Vision\'ı devre dışı bırak</string>
     <string name="preference_remove_dolby_vision_summary">Dolby vision yerine standart video kodeklerini kullanın</string>
     <string name="preference_cutout_short_edges">Ekran kesimli tam ekran video</string>
@@ -657,6 +659,8 @@ desteklenmiyor.</string>
     <string name="network_thumbnails">Küçük resimler oluştur</string>
     <string name="network_thumbnails_summary">Poster yokken uzak videolardan küçük resimler oluşturun</string>
     <string name="network_bookmarks_summary">Mümkün olduğunda ağdaki devam noktası ve konum yer işaretlerini kaydedin ve kontrol edin</string>
+    <string name="share_folders_smbj">Alternatif SMB uygulamasını (SMB2+) kullan</string>
+    <string name="share_folders_smbj_summary">Alternatif SMB entegrasyonunu, protokol sürüm 2\'nin üzerindeki sürümlerde sınırlayacak şekilde etkinleştir. Uyarı: Bazı cihazlarda daha yavaş çalışabilir.</string>
     <string name="share_folders_sshj">Daha yeni bir SFTP entegrasyonu kullan</string>
     <string name="share_folders_sshj_summary">SFTP bağlantıları için yeni SFTP kullanımını etkinleştir</string>
     <string name="share_folders_smbv2">SMBv2 desteğini etkinleştir</string>

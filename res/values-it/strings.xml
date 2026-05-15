@@ -101,6 +101,7 @@ Copertina (rotolo di copertina)</string>
         <item quantity="other">%d film già visti</item>
     </plurals>
     <string name="not_watched_movies_format">Non visto -  %d</string>
+    <string name="not_watched_animes_format">Non visto -  %d</string>
     <string name="no_movie_watched">Non hai ancora visto nessun film</string>
     <string name="all_movies_watched">Hai guardato tutti i film</string>
     <string name="movies_by_alpha">Film in ordine alfabetico</string>
@@ -112,6 +113,7 @@ Copertina (rotolo di copertina)</string>
     <string name="all_tvshows">Tutte le serie TV</string>
     <string name="all_tvshows_format">Tutte le serie TV - %d</string>
     <string name="not_watched_tvshows_format">Non visto -  %d</string>
+    <string name="not_watched_animeshows_format">Non visto -  %d</string>
     <string name="all_seasons">Tutte le stagioni</string>
     <string name="tvshows_by_alpha">Serie TV in ordine alfabetico</string>
     <string name="tvshows_by_genre">Serie TV per genere</string>
@@ -153,7 +155,9 @@ Copertina (rotolo di copertina)</string>
     <string name="scrap_get_title">Recupero informazioni</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Regista</string>
+    <string name="scrap_writer">Autore</string>
     <string name="scrap_director_format">Regista: %s</string>
+    <string name="scrap_writer_format">Autore: %s</string>
     <string name="scrap_rating">Valutazione</string>
     <string name="scrap_rating_format">Valutazione: %s</string>
     <string name="scrap_year">Anno</string>
@@ -309,10 +313,20 @@ Copertina (rotolo di copertina)</string>
     <string name="seek_to_percentage">Ricerca al %s%%</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
+    <string name="subs_HI">Non udenti</string>
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <string name="s_brazilian">Brasiliano</string>
     <string name="s_chinese">Cinese</string>
+    <string name="s_chinese_simplified">Cinese Semplificato</string>
+    <string name="s_traditional_chinese">Cinese Tradizionale</string>
+    <string name="s_chinese_bilingual">Cinese bilingue</string>
+    <string name="s_chinese_mainland">Cinese (Cina Continentale)</string>
+    <string name="s_chinese_hk">Cinese (Hong Kong)</string>
+    <string name="s_chinese_tw">Cinese (Taiwan)</string>
+    <string name="s_spanish_la">Spagnolo (LA)</string>
+    <string name="s_montenegrin">Montenegrino</string>
+    <string name="s_portuguese_mz">Portoghese (MZ)</string>
     <string name="s_none">Nessuna</string>
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Impossibile riprodurre il video</string>
@@ -405,6 +419,7 @@ Copertina (rotolo di copertina)</string>
     <string name="exit">Esci</string>
     <!-- torrent -->
     <string name="error">Si è verificato un errore</string>
+    <string name="error_protocol_not_supported">Errore: protocollo non supportato</string>
     <string name="error_loading_torrent">Errore nel caricamento del torrent</string>
     <string name="error_downloading_not_enough_space">Errore nel caricamento del torrent: spazio non sufficiente</string>
     <string name="loading_torrent">Caricamento del torrent...</string>
@@ -448,6 +463,7 @@ Copertina (rotolo di copertina)</string>
     <string name="ssh_password">Password</string>
     <string name="ssh_username">Username</string>
     <string name="ssh_shortcut_name">Nome della scorciatoia</string>
+    <string name="smb_domain">Dominio (opzionale)</string>
     <!-- Preferences -->
     <string name="preferences">Preferenze</string>
     <string name="get_the_ad_free_version">Ottieni la versione senza pubblicità dal Google Play</string>
@@ -458,15 +474,35 @@ Copertina (rotolo di copertina)</string>
     <string name="preferences_force_software_decoding">Forza la decodifica software</string>
     <string name="preferences_force_software_decoding_summary">Potresti provare questa opzione nel caso in cui alcuni video non vengano riprodotti correttamente</string>
     <string name="preferences_force_audio_passthrough">Passthrough audio</string>
-    <string name="preferences_force_audio_passthrough_disabled">Preferenze_forza_audio_passthrough_disabilitato</string>
+    <string name="preferences_force_audio_passthrough_disabled">Disabilitato (consigliato)</string>
+    <string name="preferences_force_audio_passthrough_enable">Incapsulamento Nova (sperimentale)</string>
+    <string name="preferences_force_audio_passthrough_enable2">Incapsulamento di sistema</string>
+    <string name="preferences_force_audio_passthrough_ac3">Universale (ricodifica AC3)</string>
+    <string name="preferences_force_audio_passthrough_summary">Trasmettere audio compresso su HDMI o S/PDIF. ⚠ Sperimentale può causare A/V fuori sincronizzazione</string>
+    <string name="preferences_force_passthrough">Forza audio passthrough</string>
+    <string name="preferences_force_passthrough_summary">Se il passthrough è abilitato, forzalo anche se il codec audio non è dichiarato supportato dal ricevitore AV invece di controllare le capacità del ricevitore AV</string>
+    <string name="preferences_playback_speed">Abilita velocità di riproduzione</string>
+    <string name="preferences_playback_speed_summary">Abilita la possibilità di modificare la velocità di riproduzione. ⚠ Sperimentale può causare un video instabile</string>
+    <string name="preferences_audio_speed_audiotrack">Usa AudioTrack per la velocità di riproduzione</string>
+    <string name="preferences_audio_speed_audiotrack_summary">Usa AudioTrack invece del filtro atempo FFmpeg per il controllo della velocità di riproduzione. Sperimentale: potrebbe non funzionare su tutte le configurazioni.</string>
+    <string name="preferences_enable_dynamic_audio_delay_title">Stima dinamica ritardo audio/video</string>
+    <string name="preferences_enable_dynamic_audio_delay_summary">Usa la stima della latenza dinamica per una migliore sincronizzazione audio/video soprattutto con le cuffie bluetooth. Disabilita se si verificano problemi di sincronizzazione.</string>
     <string name="preferences_disable_downmix_title">Disattiva il downmix audio stereo</string>
     <string name="preferences_disable_downmix_summary">Decodifica sempre tutti i canali e permetti il downmix di Android a seconda della capacità di uscita audio (si potrebbe avere interruzione dei canali vocali)</string>
+    <string name="preferences_enable_downmix_androidtv_title">Forza downmix audio stereo</string>
+    <string name="preferences_enable_downmix_androidtv_summary">Effettua sempre downmix di più canali della traccia audio a stereo (da selezionare se i canali vocali non sono udibili)</string>
     <string name="preferences_allow_3rd_party_player">Consenti l\'utilizzo di un altro lettore video</string>
     <string name="preferences_allow_3rd_party_player_summary">Altri lettori video verranno proposti da Android durante la riproduzione di un filmato. Alcune funzioni potrebbero non funzionare (riprendi, segnalibri, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Abilita lo switch 3D automatico</string>
     <string name="preference_tv_3d_automatic_switch_summary">Usa questa funzione solo se la tua TV 3D la supporta</string>
+    <string name="hide_watched_videos">Nascondi video visti</string>
+    <string name="hide_watched_videos_summary">Nascondi i video dalla libreria multimediale se sono contrassegnati come visti.</string>
     <string name="preference_tv_refreshrate_switch">Abilita lo switch refresh rate automatico</string>
     <string name="preference_tv_refreshrate_switch_summary">Rimuovere l\'effetto judder adattando la migliore frequenza di aggiornamento dello schermo alla frequenza del video (supporto dispositivo può variare)</string>
+    <string name="preference_dolby_vision_mode">Modalità Dolby Vision</string>
+    <string name="preference_force_dolby_vision">Forza Dolby Vision</string>
+    <string name="preference_remove_dolby_vision">Disabilita Dolby Vision</string>
+    <string name="preference_remove_dolby_vision_summary">Usa codec video standard invece di quelli dolby vision</string>
     <string name="preference_cutout_short_edges">Video a schermo intero con i ritagli</string>
     <string name="preference_cutout_short_edges_summary">Consenti video a schermo intero in modalità schermo intero con ritagli</string>
     <string name="category_languages">Sottotitoli</string>
@@ -478,8 +514,14 @@ Copertina (rotolo di copertina)</string>
     <string name="summary_list_preference_primary">Seleziona la tua lingua per i sottotitoli da scaricare</string>
     <string name="favSubLang_title">Lingua di lettura dei sottotitoli</string>
     <string name="favSubLang_summary">Scegli la tua lingua preferita per la lettura dei sottotitoli</string>
+    <string name="favAudioLang_title">Lingua preferita audio</string>
+    <string name="favAudioLang_summary">Scegli la lingua preferita della traccia audio</string>
+    <string name="ui_language_title">Scegli la lingua dell\'interfaccia utente</string>
+    <string name="UiLang_title">Lingua interfaccia utente</string>
     <string name="ui_mode_title">Modalità Interfaccia Utente</string>
     <string name="ui_mode_summary">Scegli fra interfaccia TV e interfaccia tablet/telefono</string>
+    <string name="theme_blue">Blu</string>
+    <string name="theme_black">Nero</string>
     <string name="preferences_video_about">Informazioni</string>
     <string name="preferences_video_os_text">Sottotitoli forniti da</string>
     <string name="preferences_video_tvdb_text">Infromazioni sulla serie TV fornite daTV</string>
@@ -487,6 +529,8 @@ Copertina (rotolo di copertina)</string>
     <string name="preferences_video_licenses">Licenze</string>
     <string name="preferences_network_mobile_vpn_summary">Usalo solo con una VPN configurata e presta attenzione all\'utilizzo dei tuoi dati</string>
     <string name="preferences_network_mobile_vpn_title">Utilizza la condivisione di rete su connessione mobile</string>
+    <string name="preferences_network_prefer_vpn_summary">Usa VPN invece delle interfacce di rete locali.</string>
+    <string name="preferences_network_prefer_vpn_title">Preferisci rete VPN</string>
     <string name="preferences_video_advanced">Avanzate</string>
     <string name="preferences_video_advanced_quit_title">Preferenze predefinite</string>
     <string name="preferences_video_advanced_quit_summary">Torna alle preferenze predefinite</string>
@@ -514,7 +558,7 @@ Copertina (rotolo di copertina)</string>
     <string name="notifications_none">Nessuna notifica</string>
     <string name="pref_format_mode_title">Formato</string>
     <string name="format_fullscreen">Schermo intero</string>
-    <string name="format_optimized">Otimizzato</string>
+    <string name="format_optimized">Ottimizzato</string>
     <string name="format_original">Originale</string>
     <string name="format_stretched">Allungato</string>
     <string name="stereo_dive_enable">Effetto stereo dive</string>
@@ -536,6 +580,9 @@ Copertina (rotolo di copertina)</string>
     <string name="network_thumbnails">Crea un\'anteprima remota</string>
     <string name="network_thumbnails_summary">Crea un\'anteprima da un video remoto quando non ci sono poster disponibili</string>
     <string name="network_bookmarks_summary">Salva e controlla per il punto di ripresa e per la posizione dei segnalibri sulla rete qualora sia possibile</string>
+    <string name="share_folders_smbj">Usa implementazione SMB alternativa (SMB2+)</string>
+    <string name="share_folders_sshj">Usa implementazione SFTP più recente</string>
+    <string name="share_folders_sshj_summary">Abilita la nuova implementazione SFTP per i link SFTP</string>
     <string name="share_folders_smbv2">Abilita il supporto SMBv2</string>
     <string name="share_folders_smb_resolv">Ordine risolutore SMB</string>
     <string name="connection_abnormally_long">La connessione sta richiedendo più tempo del previsto. Vuoi resettarla?</string>
@@ -587,9 +634,19 @@ Copertina (rotolo di copertina)</string>
     <string name="dec_android">Android MediaPlayer</string>
     <string name="audio_interface_choice_title">Scegli l\'interfaccia di uscita audio</string>
     <string name="audio_interface_choice_summary">Preferenze avanzate, potrebbero interferire con la decodifica audio.</string>
+    <string name="audio_decoder_choice_title">Scegli decoder audio</string>
+    <string name="audio_decoder_choice_summary">Scegli se preferire la decodifica audio con FFmpeg o MediaCodec.</string>
+    <string name="audio_decoder_auto">Automatico</string>
+    <string name="audio_decoder_prefer_ffmpeg">Preferisci FFmpeg</string>
+    <string name="audio_decoder_prefer_mediacodec">Preferisci MediaCodec</string>
     <string name="audio_interface_opensles">Forza OpenSL ES</string>
     <string name="audio_interface_audiotrack">Forza Audiotrack</string>
     <string name="audio_interface_any">Logica predefinita</string>
+    <string name="status_not_supported">non supportato</string>
+    <string name="status_supported">supportato</string>
+    <string name="status_available">disponibile</string>
+    <string name="status_enabled">abilitato</string>
+    <string name="status_disabled">disabilitato</string>
     <string name="preferences_user_interface">Interfaccia Utente</string>
     <string name="preferences_display_resume_box_summary">Mostra o nascondi i tasti quando riprendi l\'ultimo video nella schermata principale</string>
     <string name="preferences_display_resume_box">Mostra l\'area di ripresa</string>
@@ -717,6 +774,8 @@ Copertina (rotolo di copertina)</string>
     <string name="leanback_hint_long_press_on_back">Suggerimento: la pressione prolungata sul tasto INDIETRO chiude il gestore file</string>
     <string name="leanback_archos_video_webview">Nova Video Basic WebView</string>
     <string name="file_access_error">Non sono riuscito ad aprire il file</string>
+    <string name="always_leanback_on_tv">Avvia sempre con l\'interfaccia utente TV</string>
+    <string name="always_leanback_on_tv_summary">Avviare sempre l\'applicazione con l\'interfaccia utente TV, disattivare se si desidera avviare l\'UI classica sulla TV.</string>
     <string name="interface_size">Dimensione dell\'interfaccia</string>
     <string name="interface_size_summary">Cambia questa variabile nel caso in cui l\'interfaccia utente sia troppo piccola o troppo grande</string>
     <string name="interface_size_very_small">Molto piccolo (mdpi)</string>
@@ -762,6 +821,8 @@ Copertina (rotolo di copertina)</string>
     <string name="db_export_manual_title">Esporta database dei media</string>
     <string name="db_export_manual_summary">Esporta file media.db in /sdcard per scopi di debug</string>
     <string name="db_export_in_progress">Esportazione database in corso</string>
+    <string name="media_library_export_error">Errore nell\'esportazione della libreria multimediale</string>
+    <string name="media_library_export_dir_not_found">Directory di esportazione non trovata</string>
     <string name="system">Sistema</string>
     <string name="keep_setting">Mantieni questa impostazione</string>
     <string name="select_sub_file"><![CDATA[Sottotitoli non trovati per il file <font color=#29b6f6><i>%s</i></font><br />Prova uno di questa lista:]]></string>

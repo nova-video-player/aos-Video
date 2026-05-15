@@ -562,12 +562,14 @@
     <string name="hide_watched_videos">Ukryj obejrzane filmy</string>
     <string name="hide_watched_videos_summary">Ukryj filmy z biblioteki mediów, jeśli są oznaczone jako obejrzane</string>
     <string name="enable_projector_mode">Włącz tryb projektora</string>
-    <string name="enable_projector_mode_summary">Odtwarzaj filmy panoramiczne od góry ekranu (podwójny czarny pasek u dołu)</string>
+    <string name="enable_projector_mode_summary">Wyświetlaj filmy panoramiczne od góry ekranu (szerszy pas od dołu)</string>
     <string name="preference_tv_refreshrate_switch">Włącz automatyczne dostosowanie częstotliwości odświeżania</string>
     <string name="preference_tv_refreshrate_switch_summary">Usuń efekt drgania, dostosowując najlepszą częstotliwość odświeżania ekranu do liczby klatek na sekundę wideo (skuteczność zależy od urządzenia)</string>
     <string name="preferences_tv_refreshrate_switch_disabled">Wyłączone</string>
     <string name="preferences_tv_refreshrate_switch_mode_selection">Wybór trybu wyświetlania dopasowany do liczby klatek na sekundę wideo</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">Funkcja dopasowywania szybkości klatek w systemie Android 12</string>
+    <string name="preference_dolby_vision_mode">Tryb Dolby Vision</string>
+    <string name="preference_force_dolby_vision">Wymuś Dolby Vision</string>
     <string name="preference_remove_dolby_vision">Wyłącz Dolby Vision</string>
     <string name="preference_remove_dolby_vision_summary">Użyj standardowych kodeków wideo zamiast Dolby Vision</string>
     <string name="preference_cutout_short_edges">Pełny ekran z przycięciem obrazu</string>
@@ -665,6 +667,8 @@
     <string name="network_thumbnails">Utwórz zdalne miniaturki</string>
     <string name="network_thumbnails_summary">Utwórz miniaturki ze zdalnych filmów, gdy nie ma dostępnego plakatu</string>
     <string name="network_bookmarks_summary">Zapisz i sprawdź ponownie punkt i umiejscowienie zakładek w sieci, jeśli to możliwe</string>
+    <string name="share_folders_smbj">Użyj alternatywnej implementacji SMB (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Włącz alternatywną implementację SMB ograniczającą obsługę protokołu powyżej wersji 2. Ostrzeżenie: może być wolniejsze na niektórych urządzeniach.</string>
     <string name="share_folders_sshj">Użyj nowszej implementacji SFTP</string>
     <string name="share_folders_sshj_summary">Włącz nową implementację SFTP dla linków SFTP</string>
     <string name="share_folders_smbv2">Włącz obsługę SMB v2</string>

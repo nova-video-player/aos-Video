@@ -553,6 +553,8 @@
     <string name="preferences_tv_refreshrate_switch_disabled">禁用</string>
     <string name="preferences_tv_refreshrate_switch_mode_selection">显示模式选择匹配视频fps</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">Android 12+ 帧率匹配功能</string>
+    <string name="preference_dolby_vision_mode">杜比视界模式</string>
+    <string name="preference_force_dolby_vision">强制启用杜比视界</string>
     <string name="preference_remove_dolby_vision">禁用杜比视界</string>
     <string name="preference_remove_dolby_vision_summary">使用标准视频编解码器而不是杜比视界</string>
     <string name="preference_cutout_short_edges">刘海屏视频全屏</string>
@@ -650,6 +652,8 @@
     <string name="network_thumbnails">创建远程缩略图</string>
     <string name="network_thumbnails_summary">在没有海报可用时从远程视频创建缩略图</string>
     <string name="network_bookmarks_summary">尽可能在网络上保存并检查播放进度和位置书签</string>
+    <string name="share_folders_smbj">使用备用SMB实现协议（SMB2及以上版本）</string>
+    <string name="share_folders_smbj_summary">启用备用SMB实现，仅支持2.0以上版本协议。警告：部分设备上运行速度可能变慢。</string>
     <string name="share_folders_sshj">使用较新的 SFTP 实现方式</string>
     <string name="share_folders_sshj_summary">为 SFTP 链接启用新的 SFTP 实现方式</string>
     <string name="share_folders_smbv2">启用 SMBv2 支持</string>
@@ -753,7 +757,7 @@
     <string name="preferences_reset_last_played_row">重置“上次播放”栏</string>
     <string name="reset_last_played_row_in_progress">正在重置“最近播放”栏</string>
     <string name="pref_smart_recently_rows_title">智能最近分类</string>
-    <string name="pref_declutter_home_rows_summary">在“最近添加”中仅显示未观看内容，并在“最近播放”中避免重复项</string>
+    <string name="pref_declutter_home_rows_summary">在“最近添加”中仅显示未观看内容，并在“继续观看”中避免重复项</string>
     <string name="preferences_show_all_movies_row_summary">选中以“所有电影”栏代替“电影类别”栏</string>
     <string name="preferences_show_all_movies_row">显示“所有电影”栏</string>
     <string name="preferences_movie_sort_order_summary">选择“所有电影”栏的排序方法</string>
@@ -930,7 +934,7 @@
     <string name="rescrap_all_title">重新刮削所有文件</string>
     <string name="rescrap_all_movies_title">重新刮削所有电影</string>
     <string name="rescrap_all_collections_title">重新刮削所有合集</string>
-    <string name="nfo_export_manual_title">导出已刮削的视频</string>
+    <string name="nfo_export_manual_title">导出已刮削的视频信息</string>
     <string name="nfo_export_manual_summary">导出已经刮削过的每个视频的 .nfo 文件</string>
     <string name="db_export_manual_title">导出媒体数据库</string>
     <string name="db_export_manual_summary">为调试目的将 media.db 文件导出到 /sdcard</string>

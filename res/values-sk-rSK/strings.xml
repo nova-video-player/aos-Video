@@ -568,6 +568,8 @@
     <string name="preferences_tv_refreshrate_switch_disabled">Vypnutý</string>
     <string name="preferences_tv_refreshrate_switch_mode_selection">Výber režimu zobrazenia zodpovedajúci videu fps</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">Funkcia prispôsobenia snímkovej frekvencie systému Android 12+</string>
+    <string name="preference_dolby_vision_mode">Režim Dolby Vision</string>
+    <string name="preference_force_dolby_vision">Vynútiť Dolby Vision</string>
     <string name="preference_remove_dolby_vision">Vypnutie funkcie Dolby Vision</string>
     <string name="preference_remove_dolby_vision_summary">Používanie štandardných video kodekov namiesto Dolby Vision</string>
     <string name="preference_cutout_short_edges">Video na celú obrazovku s výrezmi displeja</string>
@@ -665,6 +667,8 @@
     <string name="network_thumbnails">Vytvorenie vzdialených náhľadov</string>
     <string name="network_thumbnails_summary">Vytvorenie náhľadov zo vzdialených videí, keď nie je k dispozícii žiadny plagát</string>
     <string name="network_bookmarks_summary">Uloženie a kontrola bodu obnovenia a polohy záložiek v sieti, ak je to možné</string>
+    <string name="share_folders_smbj">Použiť alternatívnu implementáciu SMB (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Povoliť alternatívnu implementáciu SMB, ktorá obmedzuje podporu na protokoly staršie ako verzia 2. Upozornenie: na niektorých zariadeniach môže dôjsť k spomaleniu.</string>
     <string name="share_folders_sshj">Použitie novšej implementácie SFTP</string>
     <string name="share_folders_sshj_summary">Povolenie novej implementácie SFTP pre odkazy SFTP</string>
     <string name="share_folders_smbv2">Zapnutie podpory SMBv2</string>

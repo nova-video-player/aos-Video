@@ -18,40 +18,277 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- Menu item that takes the user back to the top level screen of the music player -->
+    <string name="goto_start">ᱞᱟᱭᱵᱨᱮᱨᱤ</string>
     <!-- Menu item that takes the user to the "now playing" screen of the music player -->
     <!-- Menu item to refresh servers list -->
+    <string name="refresh_servers_list">ᱥᱮᱨᱵᱷᱟᱨ ᱛᱟᱞᱠᱟ ᱨᱤᱯᱷᱨᱮᱥ ᱢᱮ</string>
     <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">ᱱᱮᱴᱣᱟᱨᱠ ᱦᱟᱹᱴᱤᱧ ᱠᱚ ᱪᱟᱹᱞᱩᱭ ᱢᱮ</string>
+    <string name="initial_scan">ᱮᱛᱚᱦᱚᱵ ᱥᱠᱮᱱ</string>
     <!-- Library screen, menu item -->
     <string name="search_title">ᱥᱮᱸᱫᱽᱨᱟ</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
+    <string name="unknown_track_name">ᱵᱟᱝ ᱵᱟᱰᱟᱭ</string>
     <!-- Toast after turning shuffle on -->
     <!-- Toast after turning shuffle off -->
     <!-- Toast after turning single repeat on -->
     <!-- Context menu item -->
+    <string name="info">ᱵᱟᱰᱟᱭ</string>
     <!-- Context menu item -->
+    <string name="play_selection">ᱪᱟᱹᱞᱩᱭ ᱢᱮ</string>
     <!-- Context menu item -->
+    <string name="multiple_selection">ᱵᱟᱹᱲᱛᱤ ᱵᱟᱪᱷᱟᱣ</string>
     <!-- Context menu item -->
+    <string name="play_from_beginning">ᱮᱛᱚᱦᱚᱵ ᱠᱷᱚᱱ ᱪᱟᱹᱞᱩᱭ ᱢᱮ</string>
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
+    <string name="fast_scroll_alphabet">\u0020ᱚᱛᱜᱝᱞᱟᱠᱡᱢᱣᱤᱥᱦᱧᱨᱩᱪᱫᱬᱭᱮᱯᱰᱱᱲᱳᱴᱵᱶᱷᱸᱹᱻ-ᱽ</string>
     <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">ᱚᱠᱛᱚ ᱥᱤᱢᱟᱹ</string>
+    <string name="video_sources">ᱯᱷᱮᱰᱟᱛ</string>
     <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">ᱪᱚᱞᱚᱱᱪᱤᱛᱟᱹᱨ </string>
+    <string name="info_tab_show">ᱫᱮᱠᱷᱟᱣ ᱢᱮ</string>
+    <string name="info_tab_episode">ᱮᱯᱤᱥᱚᱰ</string>
+    <string name="info_tab_video">ᱵᱷᱤᱰᱤᱭᱳ </string>
+    <string name="info_tab_file">ᱨᱮᱫ ᱵᱤᱵᱨᱚᱬ</string>
+    <string name="info_tab_backdrop_chooser">ᱵᱮᱠᱰᱨᱚᱯ ᱵᱟᱪᱷᱟᱣᱤᱡ</string>
+    <string name="info_tab_poster_chooser">ᱯᱳᱥᱴᱟᱨ ᱵᱟᱪᱷᱟᱣᱤᱡ</string>
+    <string name="info_tab_share">ᱦᱟᱴᱤᱧ ᱢᱮ </string>
+    <string name="info_menu_backdrop_select">ᱵᱮᱠᱰᱨᱚᱯ</string>
+    <string name="info_menu_series_backdrop_select">ᱥᱮᱨᱤᱡᱽ ᱵᱮᱠᱰᱨᱚᱯ</string>
+    <string name="info_menu_poster_select">ᱮᱴᱟᱜ ᱯᱳᱥᱴᱟᱨ ᱵᱟᱪᱷᱟᱣ ᱢᱮ</string>
+    <string name="info_menu_series_poster_select">ᱮᱴᱟᱜ ᱯᱳᱥᱴᱟᱨ ᱵᱟᱪᱷᱟᱣ ᱢᱮ</string>
     <!-- COVER ROLL -->
+    <string name="watching_up_next">ᱧᱮᱞ/ᱛᱟᱭᱚᱢ ᱪᱮᱛᱟᱱ</string>
+    <string name="recently_added">ᱱᱤᱛᱚᱜ ᱜᱮ ᱥᱮᱞᱮᱫ ᱟᱠᱟᱱᱟ</string>
+    <string name="recently_added_videos">ᱱᱤᱛᱚᱜ ᱜᱮ ᱥᱮᱞᱮᱫ ᱟᱠᱟᱱᱟ</string>
+    <string name="recently_played">ᱱᱤᱛᱚᱜ ᱜᱮ ᱪᱟᱞᱩ ᱞᱮᱱᱟ</string>
+    <string name="recently_played_videos">ᱱᱤᱛᱚᱜ ᱜᱮ ᱪᱟᱞᱩ ᱞᱮᱱᱟ</string>
+    <string name="new_and_unwatched">ᱧᱮᱞ ᱞᱟᱹᱜᱤᱫ ᱱᱟᱶᱟ</string>
+    <string name="new_and_unwatched_videos">ᱧᱮᱞ ᱞᱟᱹᱜᱤᱫ ᱱᱟᱶᱟ</string>
+    <string name="keep_watching">ᱧᱮᱞ ᱛᱟᱦᱮᱱ ᱢᱮ</string>
+    <string name="keep_watching_videos">ᱧᱮᱞ ᱛᱟᱦᱮᱱ ᱢᱮ</string>
+    <string name="video_lists">ᱯᱞᱮᱞᱤᱥᱴ</string>
     <!-- The string used in main storage list -->
+    <string name="external_storage">ᱵᱟᱦᱤᱨᱤ</string>
+    <string name="internal_storage">ᱵᱷᱤᱛᱨᱤ </string>
+    <string name="network_storage">ᱱᱮᱴᱣᱟᱨᱠ</string>
+    <string name="sd_card_storage">SD ᱠᱟᱨᱰ</string>
+    <string name="usb_host_storage">ᱵᱟᱦᱨᱤ ᱰᱨᱟᱭᱤᱵᱷ</string>
+    <string name="other_storage">ᱰᱨᱟᱭᱤᱵᱷ </string>
+    <string name="network_media_servers">ᱢᱤᱰᱤᱭᱟ ᱥᱮᱨᱵᱷᱟᱨ (UPnP)</string>
+    <string name="network_shared_folders">ᱦᱟᱹᱴᱤᱧ ᱟᱠᱟᱱ ᱯᱷᱚᱞᱰᱟᱨ (SMB)</string>
+    <string name="network_connected_as">%s ᱞᱮᱠᱟᱛᱮ ᱡᱚᱯᱲᱟᱣ ᱟᱠᱟᱱᱟ</string>
+    <string name="network_guest">ᱯᱮᱲᱟ</string>
+    <string name="sftp_folders">FTP</string>
+    <string name="network_jcifs">ᱥᱟᱢᱵᱟ (ᱵᱮᱵᱷᱟᱨ)</string>
+    <string name="network_cling">UPNP (ᱵᱮᱵᱷᱟᱨ)</string>
+    <string name="recordings_storage">ᱨᱮᱠᱚᱰᱤᱝ ᱠᱚ </string>
+    <string name="root_storage">ᱵᱷᱤᱛᱨᱤ ᱥᱴᱳᱨᱮᱡᱽ</string>
+    <string name="cannot_list">ᱡᱤᱱᱤᱥ ᱠᱚ ᱥᱩᱪᱤ ᱵᱟᱝ ᱦᱩᱭ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
     <!-- VIDEO -->
+    <string name="videos">ᱵᱷᱤᱰᱤᱭᱳ ᱠᱚ </string>
+    <string name="all_videos">ᱥᱟᱱᱟᱢ ᱵᱷᱤᱰᱤᱭᱳ</string>
+    <string name="not_played_yet_videos">ᱱᱤᱛ ᱫᱷᱟᱹᱵᱤᱡ ᱵᱟᱝ ᱪᱟᱹᱞᱩ ᱟᱠᱟᱱᱟ</string>
+    <string name="video_folder">ᱯᱷᱚᱞᱰᱟᱨ ᱠᱚ</string>
+    <string name="movies">ᱪᱚᱞᱚᱱᱪᱤᱛᱟᱹᱨ ᱠᱚ </string>
+    <string name="animes">ᱮᱱᱤᱢᱮᱥᱚᱱ ᱠᱚ</string>
+    <string name="all_movies">ᱥᱟᱱᱟᱢ ᱪᱚᱞᱚᱱᱪᱤᱛᱟᱹᱨ ᱠᱚ</string>
+    <string name="all_movies_format">ᱥᱟᱱᱟᱢ ᱪᱚᱞᱚᱱᱪᱤᱛᱟᱹᱨ - %d</string>
+    <string name="all_animes_format">ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ ᱠᱚ - %d</string>
+    <string name="all_collections">ᱥᱟᱱᱟᱢ ᱡᱟᱣᱨᱟ</string>
+    <string name="all_collections_format">ᱥᱟᱱᱟᱢ ᱡᱟᱣᱨᱟ - %d</string>
+    <string name="all_collection_watched">ᱥᱟᱱᱟᱢ ᱠᱟᱞᱮᱠᱥᱚᱱ ᱧᱮᱞ ᱦᱩᱭ ᱮᱱᱟ</string>
+    <string name="all_collection_unwatched">ᱠᱟᱞᱮᱠᱥᱚᱱ ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ</string>
+    <string name="not_watched_movies_format">ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ - %d</string>
+    <string name="not_watched_animes_format">ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ - %d</string>
+    <string name="no_movie_watched">ᱪᱮᱫ ᱯᱷᱤᱞᱤᱢ ᱦᱚᱸ ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ</string>
+    <string name="all_movies_watched">ᱥᱟᱱᱟᱢ ᱯᱷᱤᱞᱤᱢ ᱠᱚ ᱧᱮᱞ ᱮᱱᱟ</string>
+    <string name="movies_by_alpha">ᱯᱷᱤᱞᱤᱢ ᱠᱚ ᱪᱤᱠᱤ ᱞᱮᱠᱟᱛᱮ</string>
+    <string name="movies_by_genre">ᱦᱟᱹᱴᱤᱧ ᱞᱮᱠᱟᱛᱮ ᱯᱷᱤᱞᱤᱢ</string>
+    <string name="movies_by_rating">ᱨᱮᱴᱤᱝ ᱞᱮᱠᱟᱛᱮ ᱯᱷᱤᱞᱤᱢ</string>
+    <string name="movie_collections">ᱡᱟᱣᱨᱟ</string>
+    <string name="anime_collections">ᱮᱱᱤᱢᱮ ᱡᱟᱣᱨᱟ ᱠᱚ</string>
+    <string name="movies_by_year">ᱥᱮᱨᱢᱟ ᱞᱮᱠᱟᱛᱮ ᱯᱷᱤᱞᱤᱢ</string>
+    <string name="all_tv_shows">ᱴᱤᱵᱷᱤ ᱥᱚ</string>
+    <string name="all_tvshows">ᱥᱟᱱᱟᱢ TV ᱥᱚ</string>
+    <string name="all_animes">ᱥᱟᱱᱟᱢ ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ</string>
+    <string name="all_animes_row">ᱥᱟᱱᱟᱢ ᱮᱱᱤᱢᱮᱥᱚᱱ ᱠᱚ</string>
+    <string name="all_animeshows">ᱥᱟᱱᱟᱢ ᱮᱱᱤᱢᱮᱥᱚᱱ ᱴᱤᱵᱷᱤ ᱥᱚ</string>
+    <string name="animes_by_alpha">ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ ᱠᱚ ᱪᱤᱠᱤ ᱞᱮᱠᱟᱛᱮ</string>
+    <string name="animes_by_genre">ᱦᱟᱹᱴᱤᱧ ᱞᱮᱠᱟᱛᱮ ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ</string>
+    <string name="animes_by_rating">ᱨᱮᱴᱤᱝ ᱞᱮᱠᱟᱛᱮ ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ</string>
+    <string name="animes_by_year">ᱥᱮᱨᱢᱟ ᱞᱮᱠᱟᱛᱮ ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ</string>
+    <string name="all_tvshows_format">ᱥᱟᱱᱟᱢ TV ᱥᱚ ᱠᱚ - %d</string>
+    <string name="not_watched_tvshows_format">ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ - %d</string>
+    <string name="all_animeshows_format">ᱮᱱᱤᱢᱮᱥᱚᱱ ᱴᱤᱵᱷᱤ ᱥᱚᱫᱚᱨ ᱠᱚ - %d</string>
+    <string name="not_watched_animeshows_format">ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ - %d</string>
+    <string name="all_seasons">ᱥᱟᱱᱟᱢ ᱨᱤᱛᱩ</string>
+    <string name="tvshows_by_alpha">ᱴᱤᱵᱷᱤ ᱫᱚ ᱪᱤᱠᱤ ᱞᱮᱠᱟᱛᱮ ᱩᱫᱩᱜᱚᱜ ᱠᱟᱱᱟ</string>
+    <string name="tvshows_by_genre">ᱦᱟᱹᱴᱤᱧ ᱞᱮᱠᱟᱛᱮ ᱴᱤᱵᱷᱤ ᱥᱚ</string>
+    <string name="tvshows_by_rating">ᱨᱮᱴᱤᱝ ᱞᱮᱠᱟᱛᱮ ᱴᱤᱵᱷᱤ ᱥᱚ</string>
+    <string name="animation_shows_by_alpha">ᱮᱱᱤᱢᱮᱥᱚᱱ ᱥᱚ ᱠᱚ ᱪᱤᱠᱤ ᱞᱮᱠᱟᱛᱮ</string>
+    <string name="episodes_by_date">ᱢᱟᱹᱦᱤᱛ ᱞᱮᱠᱟᱛᱮ ᱮᱯᱤᱥᱚᱰ</string>
+    <string name="date_view_week">ᱦᱟᱯᱛᱟ</string>
+    <string name="date_view_month">ᱪᱟᱸᱫᱚ</string>
+    <string name="date_view_year">ᱥᱮᱨᱢᱟ</string>
+    <string name="all_movies_and_tv_shows">ᱯᱷᱤᱞᱤᱢ ᱟᱨ ᱴᱤᱵᱷᱤ ᱥᱚ</string>
+    <string name="non_scraped_videos">ᱵᱟᱝ ᱥᱠᱨᱮᱯ ᱵᱷᱤᱰᱤᱭᱳ ᱠᱚ</string>
+    <string name="no_server">ᱪᱮᱫ ᱢᱤᱰᱤᱭᱟ ᱥᱮᱨᱵᱷᱟᱨ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ</string>
+    <string name="cannot_open_video">ᱱᱚᱣᱟ ᱵᱷᱤᱰᱤᱭᱳ ᱵᱟᱝ ᱡᱷᱤᱡᱽ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
+    <string name="confirm_delete">ᱪᱮᱫ ᱟᱢ ᱥᱟᱹᱨᱤ ᱜᱮ ᱱᱚᱣᱟ ᱰᱤᱞᱤᱴ ᱥᱟᱱᱟᱭᱮᱫ ᱢᱮᱭᱟ?</string>
+    <string name="deleting">ᱰᱤᱞᱤᱴ ᱚᱠᱛᱚ ᱫᱟᱭᱟ ᱠᱟᱛᱮ ᱛᱟᱺᱜᱤᱭ ᱢᱮ...</string>
+    <string name="cannot_delete_directory">ᱯᱷᱚᱞᱰᱟᱨ ᱵᱟᱝ ᱰᱤᱞᱤᱴ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
+    <string name="cannot_delete_file">ᱨᱮᱫ ᱵᱟᱝ ᱢᱮᱴᱟᱣ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
+    <string name="directory_deleted">ᱯᱷᱚᱞᱰᱟᱨ ᱫᱚ ᱰᱤᱞᱤᱴ ᱮᱱᱟ</string>
+    <string name="file_deleted">ᱨᱮᱫ ᱫᱚ ᱰᱤᱞᱤᱴ ᱟᱠᱟᱱᱟ</string>
+    <string name="resume">ᱮᱦᱳᱵ ᱟᱨᱩ</string>
+    <string name="remote_resume">ᱨᱤᱢᱚᱴ ᱨᱮᱡᱩᱢ</string>
+    <string name="bookmark">ᱵᱩᱠᱢᱟᱨᱠ</string>
+    <string name="delete">ᱢᱮᱴᱟᱣ ᱢᱮ </string>
+    <string name="confirm_delete_short">ᱢᱮᱴᱟᱣ ᱴᱷᱟᱹᱣᱠᱟᱹ ᱢᱮ</string>
+    <string name="delete_resume">ᱨᱤᱡᱩᱢ ᱢᱮᱴᱟᱣ ᱢᱮ</string>
+    <string name="delete_bookmark">ᱵᱩᱠᱢᱟᱨᱠ ᱰᱤᱞᱤᱴ ᱢᱮ</string>
+    <string name="mark_as_watched">ᱢᱟᱨᱠ ᱧᱮᱞ ᱠᱮᱫᱟᱭ</string>
+    <string name="mark_as_not_watched">ᱢᱟᱨᱠ ᱵᱟᱭ ᱧᱮᱞ ᱟᱠᱟᱫᱟ</string>
+    <string name="upnp_not_allowed">ᱟᱢ ᱱᱚᱣᱟ UPnP ᱥᱮᱨᱵᱷᱟᱨ ᱮᱠᱥᱮᱥ ᱞᱟᱹᱜᱤᱫ ᱫᱟᱣ ᱵᱟᱝ ᱧᱟᱢ ᱟᱠᱟᱱᱟᱢ ᱾  ᱫᱟᱭᱟ ᱠᱟᱛᱮ ᱞᱟᱦᱟᱨᱮ ᱟᱢᱟᱜ ᱮᱠᱥᱮᱥ ᱠᱚᱱᱯᱷᱤᱜᱟᱨᱮᱥᱚᱱ ᱵᱚᱫᱚᱞ ᱢᱮ᱾</string>
+    <string name="scrap_no_info">ᱱᱚᱣᱟ ᱵᱷᱤᱰᱤᱭᱳ ᱞᱟᱹᱜᱤᱫ ᱟᱢ ᱴᱷᱮᱱ ᱪᱮᱫ ᱢᱩᱵᱷᱤ ᱵᱟᱝᱠᱷᱟᱱ ᱴᱤᱵᱷᱤ ᱥᱚ ᱨᱮᱭᱟᱜ ᱵᱤᱵᱨᱚᱬ ᱵᱟᱹᱱᱩᱜᱼᱟ ᱾</string>
+    <string name="scrap_remove">ᱵᱟᱰᱟᱭ ᱚᱪᱚᱜᱽ ᱢᱮ</string>
+    <string name="scrap_remove_short">ᱚᱪᱚᱜᱽ ᱢᱮᱸ</string>
     <!-- for small screens -->
+    <string name="scrap_change">ᱥᱟᱱᱟᱢ ᱮᱯᱤᱥᱚᱰ ᱨᱮᱭᱟᱜ ᱵᱟᱯᱟᱰᱟᱭ ᱵᱚᱫᱚᱞ ᱢᱮ</string>
+    <string name="scrap_series_change">ᱥᱮᱨᱤᱡᱽ ᱵᱟᱯᱟᱰᱟᱭ ᱵᱚᱫᱚᱞ ᱢᱮ</string>
     <!-- Generic strings for Movies or TV shows -->
     <!-- Specific strings for TV shows -->
+    <string name="scrap_status_busy">ᱥᱮᱸᱫᱽᱨᱟ...</string>
+    <string name="scrap_status_success">ᱱᱟᱣᱟ ᱟᱠᱟᱱᱟ</string>
+    <string name="scrap_status_failed">ᱵᱟᱰᱟᱭ ᱵᱟᱝ ᱧᱟᱢ ᱟᱠᱟᱱᱟ</string>
+    <string name="scrap_status_rejected">ᱵᱟᱰᱟᱭ ᱚᱪᱚᱜ ᱮᱱᱟ</string>
+    <string name="scrap_status_unknown">ᱵᱟᱝ ᱵᱟᱰᱟᱭ </string>
+    <string name="scraper_abort_request">ᱪᱮᱫ ᱟᱢ ᱥᱟᱹᱨᱤ ᱜᱮ ᱥᱮᱸᱫᱽᱨᱟ ᱵᱚᱱᱫᱚ ᱥᱟᱱᱟᱭᱮᱫ ᱢᱮᱭᱟ?</string>
+    <string name="scraper_no_files">ᱯᱨᱚᱥᱮᱥ ᱞᱟᱹᱜᱤᱫ ᱪᱮᱫ ᱨᱮᱫ ᱦᱚᱸ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
+    <string name="scraper_no_new_files">ᱯᱨᱚᱥᱮᱥ ᱞᱟᱹᱜᱤᱫ ᱪᱮᱫ ᱦᱚᱸ ᱱᱟᱶᱟ ᱨᱮᱫ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
+    <string name="scraper_no_new_files_in_folder">ᱱᱚᱶᱟ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮ ᱯᱨᱚᱥᱮᱥ ᱞᱟᱹᱜᱤᱫ ᱪᱮᱫ ᱦᱚᱸ ᱱᱟᱶᱟ ᱨᱮᱫ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
+    <string name="scraper_folder_no_files">ᱮᱱᱛᱮᱨᱮᱦᱚᱸ ᱱᱤᱛ ᱦᱚᱸ %d ᱵᱷᱤᱰᱤᱭᱳ ᱢᱮᱱᱟᱜᱼᱟ ᱡᱟᱦᱟᱸ ᱞᱟᱹᱜᱤᱫ ᱞᱟᱦᱟ ᱛᱮ ᱪᱮᱫ ᱵᱟᱲᱟᱭ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ ᱾</string>
+    <string name="scraper_folder_no_file">ᱮᱱᱛᱮᱨᱮᱦᱚᱸ ᱱᱤᱛ ᱦᱚᱸ ᱢᱤᱫᱴᱟᱝ ᱵᱷᱤᱰᱤᱭᱳ ᱢᱮᱱᱟᱜᱼᱟ ᱡᱟᱦᱟᱸ ᱞᱟᱹᱜᱤᱫ ᱞᱟᱦᱟ ᱛᱮ ᱪᱮᱫ ᱵᱟᱲᱟᱭ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ ᱾</string>
+    <string name="scraper_folder_try_again">ᱪᱮᱫ ᱟᱢ ᱫᱚᱦᱲᱟ ᱠᱩᱨᱩᱢᱩᱴᱩ ᱥᱟᱱᱟᱭᱮᱫ ᱢᱮᱭᱟ?</string>
+    <string name="scraper_notification_title">ᱚᱱᱞᱟᱭᱤᱱ ᱨᱮ ᱵᱤᱵᱨᱚᱬ ᱥᱮᱸᱫᱽᱨᱟ</string>
+    <string name="scraper_notification_progress">\"%1$d ᱨᱮᱭᱟᱜ %2$d ᱨᱮᱫ ᱠᱚ ᱯᱨᱚᱥᱮᱥ ᱦᱩᱭ ᱟᱠᱟᱱᱟ</string>
+    <string name="scraper_no_episode_found">ᱪᱮᱫ ᱮᱯᱤᱥᱚᱰ ᱦᱚᱸ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ</string>
+    <string name="scraper_suggest_message">ᱟᱢ ᱟᱢᱟᱜ ᱵᱷᱤᱰᱤᱭᱳ ᱞᱟᱹᱜᱤᱫ ᱯᱳᱥᱴᱟᱨ ᱟᱨ ᱵᱟᱯᱟᱰᱟᱭ ᱚᱱᱞᱟᱭᱤᱱ ᱨᱮ ᱥᱮᱸᱫᱽᱨᱟ ᱫᱟᱲᱮᱭᱟᱜᱼᱟᱢ \'ᱚᱱᱞᱟᱭᱤᱱ ᱵᱟᱯᱟᱰᱟᱭ ᱥᱮᱸᱫᱽᱨᱟ\' ᱢᱮᱱᱩ ᱦᱚᱛᱮᱛᱮ ᱾</string>
+    <string name="scraper_no_movie_text">ᱟᱢ ᱴᱷᱮᱱ ᱱᱤᱛᱚᱜ ᱟᱢᱟᱜ ᱯᱷᱤᱞᱢ ᱨᱮᱭᱟᱜ ᱯᱳᱥᱴᱟᱨ ᱟᱨ ᱵᱤᱵᱨᱚᱬ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
+    <string name="scraper_no_movie_button_label">ᱚᱱᱞᱟᱭᱤᱱ ᱨᱮ ᱯᱷᱤᱞᱤᱢ ᱵᱤᱵᱨᱚᱬ ᱥᱮᱸᱫᱽᱨᱟᱭ ᱢᱮ</string>
+    <string name="scraper_no_tv_show_text">ᱟᱢ ᱴᱷᱮᱱ ᱱᱤᱛᱚᱜ ᱟᱢᱟᱜ ᱴᱤᱵᱷᱤ ᱥᱚ ᱨᱮᱭᱟᱜ ᱯᱳᱥᱴᱟᱨ ᱟᱨ ᱵᱤᱵᱨᱚᱬ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
+    <string name="scraper_no_tv_show_button_label">ᱚᱱᱞᱟᱭᱤᱱ ᱨᱮ ᱴᱤᱵᱷᱤ ᱥᱚ ᱨᱮᱭᱟᱜ ᱵᱟᱯᱟᱰᱟᱭ ᱥᱮᱸᱫᱽᱨᱟᱭ ᱢᱮ</string>
+    <string name="imdb_title_url">https://www.imdb.com/title/</string>
     <!-- To be translated only in case there is a localized IMDB -->
+    <string name="storage">ᱥᱴᱳᱨᱮᱡᱽ </string>
+    <string name="rescan_storage">ᱥᱴᱚᱨᱮᱡᱽ ᱫᱚᱦᱲᱟ ᱥᱠᱮᱱ ᱢᱮ</string>
+    <string name="rescanning">ᱥᱴᱚᱨᱮᱡᱽ ᱰᱤᱵᱷᱟᱭᱤᱥ ᱠᱚ ᱫᱚᱦᱲᱟ ᱥᱠᱮᱱᱤᱝ ᱢᱮ</string>
+    <string name="rescan_storage_summary">ᱫᱚᱦᱲᱟ ᱥᱠᱮᱱ ᱢᱮ ᱤᱱᱴᱚᱨᱱᱟᱞ, SD ᱠᱟᱨᱰ ᱟᱨ USB ᱥᱴᱚᱨᱮᱡᱽ ᱰᱤᱵᱷᱟᱭᱤᱥ ᱠᱚ</string>
+    <string name="preference_display_all_files">ᱵᱽᱨᱟᱣᱩᱡᱟᱨ ᱨᱮ ᱥᱟᱱᱟᱢ ᱨᱮᱫ ᱠᱚ ᱩᱫᱩᱜ ᱢᱮ</string>
+    <string name="preference_display_all_files_summary">ᱱᱚᱱ-ᱵᱷᱤᱰᱤᱭᱳ ᱨᱮᱫ ᱠᱚ ᱦᱚᱸ ᱩᱫᱩᱜ ᱢᱮ</string>
+    <string name="info_processing">ᱢᱤᱰᱤᱭᱟ ᱜᱩᱱ ᱠᱚ ᱧᱮᱞ ᱵᱤᱰᱟᱹᱣ...</string>
+    <string name="info_video">ᱵᱷᱤᱰᱤᱭᱳ </string>
+    <string name="info_audio">ᱚᱰᱤᱭᱚ</string>
+    <string name="info_audio_vbr">VBR</string>
+    <string name="info_plugin_required">(ᱯᱞᱟᱜᱤᱱ ᱞᱟᱹᱠᱛᱤᱜ ᱠᱟᱱᱟ)</string>
+    <string name="info_subtitle">ᱥᱟᱵᱽᱴᱟᱭᱤᱴᱟᱞ</string>
+    <string name="info_resume">ᱨᱤᱡᱩᱢ ᱟᱜ ᱯᱚᱡᱤᱥᱚᱱ</string>
+    <string name="info_bookmark">ᱵᱩᱠᱢᱟᱨᱠ ᱯᱚᱡᱤᱥᱚᱱ</string>
+    <string name="info_file">ᱨᱮᱫ ᱵᱤᱵᱨᱚᱬ</string>
+    <string name="use_remote_resume">ᱱᱮᱴᱣᱟᱨᱠ ᱨᱮᱡᱩᱢ ᱯᱚᱡᱤᱥᱚᱱ ᱵᱮᱵᱷᱟᱨ ᱢᱮ?</string>
     <!-- VIDEO COVER ROLL -->
+    <string name="you_have_no_recently_added_video">ᱱᱤᱛᱚᱜ ᱪᱮᱫ ᱦᱚᱸ ᱵᱷᱤᱰᱤᱭᱳ ᱵᱟᱝ ᱥᱮᱞᱮᱫ ᱟᱠᱟᱱᱟ</string>
+    <string name="you_have_no_recently_played_video">ᱱᱤᱛᱚᱜ ᱪᱮᱫ ᱦᱚᱸ ᱵᱷᱤᱰᱤᱭᱚ ᱵᱟᱝ ᱪᱟᱹᱞᱩ ᱟᱠᱟᱱᱟ</string>
+    <string name="you_have_no_video">ᱵᱷᱤᱰᱤᱭᱳ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
+    <string name="you_have_no_video_yet">ᱵᱷᱤᱰᱤᱭᱳ ᱠᱚ ᱥᱮᱸᱫᱽᱨᱟ ᱦᱩᱭᱩᱜ ᱠᱟᱱᱟ&#8230;</string>
+    <string name="you_have_no_movies">ᱯᱷᱤᱞᱤᱢ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
+    <string name="you_have_no_animes">ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
+    <string name="you_have_no_movie_collections">ᱪᱮᱫ ᱦᱚᱸ ᱡᱟᱣᱨᱟ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
+    <string name="you_have_no_anime_collections">ᱮᱱᱤᱢᱮ ᱡᱟᱣᱨᱟ ᱠᱚ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
+    <string name="you_have_no_tv_shows">ᱪᱮᱫ ᱴᱤᱵᱷᱤ ᱥᱚ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
+    <string name="you_have_no_anime_shows">ᱮᱱᱤᱢᱮᱥᱚᱱ ᱴᱤᱵᱷᱤ ᱥᱚ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
+    <string name="you_have_no_non_scraped_videos">ᱱᱚᱱ ᱥᱠᱨᱮᱯ ᱵᱷᱤᱰᱤᱭᱳ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
     <!-- Media Center -->
+    <string name="mediacenterlabel">ᱢᱤᱰᱤᱭᱟ ᱛᱟᱞᱢᱟ</string>
+    <string name="view_mode">ᱰᱤᱥᱯᱞᱮ ᱢᱚᱰ</string>
+    <string name="view_mode_list">ᱞᱤᱥᱴ</string>
+    <string name="view_mode_grid">ᱞᱤᱥᱴ ᱠᱚ</string>
+    <string name="view_mode_details">ᱵᱤᱵᱚᱨᱚᱱ</string>
+    <string name="switch_to_list">ᱞᱤᱥᱴ</string>
+    <string name="switch_to_grid">ᱜᱽᱨᱤᱰ</string>
     <!-- VideoPlayer -->
+    <string name="player_track">ᱴᱨᱟᱠ</string>
+    <string name="player_loading_video">ᱵᱷᱤᱰᱤᱭᱚ ᱞᱳᱰᱤᱝ ᱠᱟᱱᱟ\u2026</string>
+    <string name="player_audio_track_toast">ᱚᱰᱤᱭᱳ ᱴᱨᱮᱠᱺ</string>
+    <string name="player_subtitle_track_toast">ᱥᱟᱹᱵᱽᱴᱟᱭᱴᱟᱹᱞ ᱴᱨᱟᱠᱺ</string>
+    <string name="player_bookmark_set">ᱵᱩᱠᱢᱟᱨᱠ ᱥᱮᱴ ᱟᱠᱟᱱᱟ</string>
+    <string name="player_pref_subtitle_delay_title">ᱫᱤᱨᱤ</string>
+    <string name="floating_player_restore">ᱨᱤᱥᱴᱳᱨ ᱢᱮ</string>
+    <string name="floating_player_play">ᱪᱟᱹᱞᱩᱭ ᱢᱮ</string>
+    <string name="floating_player_pause">ᱛᱚᱝᱜᱮ</string>
+    <string name="player_pref_audio_delay_title">ᱥᱟᱲᱮ ᱜᱷᱟᱹᱬᱤᱡ</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
+    <string name="s_portuguese_mz">ᱯᱩᱨᱴᱩᱜᱤᱡᱽ (MZ)</string>
+    <string name="s_spanish_eu">ᱥᱯᱮᱱᱤᱥ (EU)</string>
+    <string name="s_santali">ᱥᱟᱱᱛᱟᱲᱤ</string>
+    <string name="s_syriac">ᱥᱤᱨᱤᱭᱟᱠ</string>
+    <string name="s_toki_pona">ᱴᱚᱠᱤ ᱯᱳᱱᱟ</string>
+    <string name="s_none">ᱪᱮᱫ ᱦᱚᱸ ᱵᱟᱝ</string>
     <!-- Player errors -->
+    <string name="player_err_cantplayvideo">ᱵᱷᱤᱰᱤᱭᱚ ᱵᱟᱝ ᱪᱟᱹᱞᱩ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
+    <string name="player_err_cantplaysound">ᱚᱰᱤᱭᱚ ᱴᱨᱟᱠ ᱵᱟᱝ ᱪᱟᱹᱞᱩ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
+    <string name="audiocodec_not_supported">ᱱᱚᱣᱟ ᱚᱰᱤᱭᱚ ᱨᱩᱯ (<xliff:g id="codec">%s</xliff:g>) ᱵᱟᱝ ᱜᱚᱲᱚ ᱫᱟᱲᱮᱟᱜᱼᱟ ᱾</string>
+    <string name="videocodec_not_supported">ᱱᱚᱣᱟ ᱵᱷᱤᱰᱤᱭᱳ ᱨᱩᱯ (<xliff:g id="codec">%s</xliff:g>) ᱵᱟᱝ ᱜᱚᱲᱚ ᱟᱭᱟ ᱾</string>
+    <string name="player_err_file">ᱵᱷᱤᱰᱤᱭᱚ ᱨᱮᱫ ᱫᱚ ᱵᱟᱹᱱᱩᱜᱼᱟ ᱾</string>
+    <string name="player_err_sizetoobig">ᱵᱷᱤᱰᱤᱭᱚ ᱥᱟᱭᱤᱡᱽ ᱟᱹᱰᱤ ᱢᱟᱨᱟᱝᱟ</string>
+    <string name="player_err_unknown">ᱵᱟᱝ ᱵᱟᱰᱟᱭᱟᱱ ᱵᱷᱩᱞ᱾</string>
+    <string name="player_err_critical">ᱢᱤᱰᱤᱭᱟ ᱯᱞᱮᱭᱟᱨ ᱦᱤᱲᱤᱡ ᱾</string>
+    <string name="player_err_forcodec">ᱠᱚᱰᱮᱠ ᱞᱟᱹᱜᱤᱫ</string>
+    <string name="player_err_notinterleaved">ᱵᱷᱤᱰᱤᱭᱚ ᱟᱨ ᱚᱰᱤᱭᱚ ᱥᱴᱨᱤᱢ ᱫᱚ ᱵᱟᱝ ᱛᱟᱞᱟ ᱛᱮ ᱛᱟᱦᱮᱱᱟ ᱾</string>
+    <string name="player_err_codec">ᱠᱳᱰᱮᱠ</string>
+    <string name="player_err_isnotsupported">ᱵᱟᱝ ᱥᱟᱯᱚᱨᱴ ᱟᱠᱟᱱᱟ ᱾</string>
+    <string name="player_err_fileNoLicense">ᱱᱚᱶᱟ ᱨᱮᱫ ᱞᱟᱹᱜᱤᱫ ᱪᱮᱫ ᱞᱟᱭᱥᱮᱱᱥ ᱵᱟᱝ ᱧᱟᱢ ᱟᱠᱟᱱᱟ ᱾</string>
+    <string name="player_err_fileerror">ᱨᱮᱫ ᱫᱚ ᱵᱟᱹᱲᱤᱡ ᱟᱠᱟᱱᱟ ᱵᱟᱝᱠᱷᱟᱱ ᱵᱟᱝ ᱯᱩᱨᱟᱹᱣ ᱟᱠᱟᱱᱟ ᱾</string>
+    <string name="player_err_connection_failed">ᱡᱚᱯᱲᱟᱣ ᱵᱟᱝ ᱥᱟᱹᱛ ᱟᱠᱟᱱᱟ ᱾</string>
+    <string name="player_err_video_decoder_error">ᱵᱷᱤᱰᱤᱭᱚ ᱰᱤᱠᱚᱰᱟᱨ ᱦᱩᱰᱟᱹᱜ:</string>
+    <string name="player_err_qpel_and_gmc">\"ᱠᱣᱟᱨᱴᱟᱨ ᱯᱤᱠᱥᱮᱞ\" ᱟᱨ \"GMC\"</string>
+    <string name="player_err_profile_and_level">\"ᱯᱨᱚᱯᱷᱟᱭᱤᱞ\" ᱟᱨ \"ᱞᱮᱵᱮᱞ\"</string>
+    <string name="player_err_interlaced">ᱤᱱᱴᱟᱨᱞᱮᱥᱰ</string>
     <!-- Player plug-in -->
+    <string name="player_plugin_cinema_title">ᱥᱤᱱᱮᱢᱟ ᱯᱞᱟᱜᱽ-ᱤᱱ ᱢᱮ</string>
+    <string name="player_plugin_cinema">ᱥᱤᱱᱮᱢᱟ ᱯᱞᱟᱜᱽ-ᱤᱱ ᱢᱮ (DVD, MPEG-2, AC3)</string>
+    <string name="player_plugin_ac3_title">AC3 ᱯᱞᱟᱜᱽ-ᱤᱱ</string>
+    <string name="player_plugin_ac3">AC3 ᱯᱞᱟᱜᱽ-ᱤᱱ ᱢᱮ</string>
+    <string name="player_plugin_mpeg2_title">MPEG-2 ᱯᱞᱟᱜᱽ-ᱤᱱ</string>
+    <string name="player_plugin_mpeg2">MPEG-2 ᱯᱞᱟᱜᱽ-ᱤᱱ ᱢᱮ (DVD)</string>
+    <string name="player_plugin_video_msg">ᱱᱚᱣᱟ ᱨᱮᱫ ᱨᱮ ᱢᱤᱫ <xliff:g id="ᱵᱷᱤᱰᱤᱭᱳ">%1$s</xliff:g> ᱵᱷᱤᱰᱤᱭᱳ ᱨᱩᱯ ᱢᱮᱱᱟᱜᱼᱟ |</string>
+    <string name="player_plugin_audio_msg">ᱱᱚᱣᱟ ᱨᱮᱫ ᱨᱮ ᱢᱤᱫ <xliff:g id="ᱚᱰᱤᱭᱚ">%1$s</xliff:g> ᱚᱰᱤᱭᱚ ᱨᱩᱯ ᱢᱮᱱᱟᱜᱼᱟ |</string>
+    <string name="player_plugin_video_audio_msg">ᱱᱚᱣᱟ ᱨᱮᱫ ᱨᱮ ᱢᱤᱫ <xliff:g id="video">%1$s</xliff:g> ᱵᱷᱤᱰᱤᱭᱚ ᱨᱩᱯ ᱟᱨ ᱢᱤᱫ <xliff:g id="audio">%2$s</xliff:g> ᱚᱰᱤᱭᱚ ᱨᱩᱯ ᱢᱮᱱᱟᱜᱼᱟ ᱾</string>
+    <string name="player_plugin_purchase_msg">ᱟᱢ <xliff:g id="ᱯᱞᱟᱜᱤᱱ">%1$s</xliff:g> ᱠᱤᱨᱤᱧ ᱞᱟᱹᱠᱛᱤᱜ ᱠᱟᱱᱟ</string>
+    <string name="player_plugin_purchase">ᱥᱴᱳᱨ ᱛᱮ ᱥᱮᱱᱚᱜ ᱢᱮ</string>
+    <string name="player_plugin_purchase_archos_msg">ᱟᱢ www.archos.com ᱨᱮ ᱵᱟᱹᱲᱛᱤ ᱠᱚᱰᱮᱠ ᱯᱞᱟᱜᱽ-ᱤᱱ ᱠᱤᱨᱤᱧ ᱫᱟᱲᱮᱭᱟᱜᱼᱟᱢ᱾</string>
+    <string name="player_plugin_purchase_google_play_msg">ᱟᱢ ᱜᱩᱜᱚᱞ ᱯᱞᱮ ᱨᱮ ᱵᱟᱹᱲᱛᱤ ᱠᱚᱰᱮᱠ ᱯᱞᱟᱜᱽ-ᱤᱱ ᱠᱤᱨᱤᱧ ᱫᱟᱲᱮᱭᱟᱜᱼᱟᱢ᱾</string>
+    <string name="player_plugin_purchase_google_play_button">ᱜᱩᱜᱚᱞ ᱯᱞᱮ ᱛᱮ ᱪᱟᱞᱟᱜ ᱢᱮ</string>
+    <string name="plugin_update_required_title">ᱠᱚᱰᱮᱠ ᱟᱯᱰᱮᱴ ᱞᱟᱹᱠᱛᱤᱜ ᱠᱟᱱᱟ</string>
+    <string name="plugin_update_required_message">ᱱᱚᱶᱟ ᱧᱮᱞᱚᱜ ᱠᱟᱱᱟ ᱡᱮ ᱟᱢ ᱴᱷᱮᱱ Nova Video Player ᱞᱟᱹᱜᱤᱫ ᱵᱟᱹᱲᱛᱤ codecs ᱠᱚ ᱞᱟᱦᱟ ᱠᱷᱚᱱ ᱜᱮ ᱢᱮᱱᱟᱜᱼᱟ ᱾
+\n\nᱱᱚᱶᱟ Nova Video Player ᱨᱮᱱᱟᱜ ᱱᱟᱶᱟ ᱵᱷᱟᱨᱥᱚᱱ ᱞᱟᱹᱜᱤᱫ ᱱᱚᱶᱟ codecs ᱠᱚ ᱟᱯᱰᱮᱴ ᱞᱟᱹᱠᱛᱤ ᱠᱟᱱᱟ ᱾
+\n\nᱫᱟᱭᱟ ᱠᱟᱛᱮ Google Play ᱛᱮ ᱪᱟᱞᱟᱣ ᱠᱟᱛᱮ ᱱᱚᱶᱟ codecs ᱠᱚ ᱟᱯᱰᱮᱴ ᱟᱨ ᱫᱚᱲᱦᱟ ᱛᱮ ᱤᱱᱥᱴᱚᱞ ᱢᱮ ᱾</string>
     <!-- Subtitles wizard -->
+    <string name="get_subtitles_on_drive">ᱥᱴᱚᱨᱮᱡᱽ ᱨᱮ ᱥᱟᱵᱴᱟᱭᱤᱴᱟᱞ ᱵᱟᱪᱷᱟᱣ ᱢᱮ</string>
+    <string name="subtitles_wizard_no_files">ᱪᱮᱫ ᱥᱟᱵᱽᱴᱟᱭᱤᱴᱟᱞ ᱨᱮᱫ ᱠᱚ ᱵᱟᱝ ᱧᱟᱢ ᱟᱠᱟᱱᱟ</string>
+    <string name="subtitles_wizard_current_files">ᱱᱤᱛᱚᱜᱟᱜ ᱥᱟᱵᱴᱟᱭᱤᱴᱟᱞ ᱨᱮᱫ ᱠᱚ</string>
+    <string name="subtitles_wizard_available_files">ᱢᱮᱱᱟᱜ ᱥᱟᱵᱽᱴᱟᱭᱤᱴᱟᱞ ᱨᱮᱫ ᱠᱚ</string>
+    <string name="subtitles_wizard_associate">ᱱᱚᱣᱟ ᱨᱮᱫ ᱫᱚ ᱵᱷᱤᱰᱤᱭᱳ ᱥᱟᱶ ᱡᱚᱲᱟᱣ ᱢᱮ</string>
+    <string name="subtitles_wizard_delete">ᱱᱚᱶᱟ ᱨᱮᱫ ᱢᱮᱴᱟᱣ ᱢᱮ</string>
+    <string name="subtitles_wizard_empty_list">ᱪᱮᱫ ᱨᱮᱫ ᱦᱚᱸ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ</string>
+    <string name="subtitles_wizard_add_files">ᱱᱚᱣᱟ ᱵᱷᱤᱰᱤᱭᱳ ᱥᱟᱶ ᱡᱚᱲᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱟᱢ ᱱᱚᱣᱟ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮ ᱟᱨᱦᱚᱸ ᱥᱟᱵᱽᱴᱟᱭᱤᱴᱟᱞ ᱨᱮᱫ ᱠᱚ ᱠᱚᱯᱤ ᱫᱟᱲᱮᱭᱟᱜᱼᱟᱢ᱾</string>
+    <string name="subtitles_wizard_help">ᱵᱷᱤᱰᱤᱭᱚ %s ᱥᱟᱶ ᱡᱚᱲᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱢᱮᱱᱟᱜ ᱥᱟᱵᱽᱴᱟᱭᱤᱴᱟᱞ ᱨᱮᱫ ᱠᱚ ᱢᱩᱫᱽ ᱨᱮ ᱡᱟᱦᱟᱸ ᱜᱮ ᱵᱟᱪᱷᱟᱣ ᱢᱮ᱾  ᱵᱷᱤᱰᱤᱭᱳ ᱨᱮᱭᱟᱜ ᱧᱩᱛᱩᱢ ᱢᱤᱞᱟᱹᱣ ᱞᱟᱹᱜᱤᱫ ᱨᱮᱫ ᱨᱮᱭᱟᱜ ᱧᱩᱛᱩᱢ ᱵᱚᱫᱚᱞᱚᱜᱼᱟ᱾</string>
     <!-- Subloader -->
     <!-- Subtitle Settings Dialog -->
     <!-- Subtitle Delay Dialog -->
@@ -61,6 +298,34 @@
     not visible otherwise -->
     <!-- torrent -->
     <!-- Shortcuts -->
+    <string name="add_smb_server">ᱢᱤᱫ SMB ᱥᱮᱨᱵᱷᱟᱨ ᱵᱽᱨᱟᱣᱩᱡᱽ ᱢᱮ</string>
+    <string name="add_network_server">ᱢᱤᱫ ᱱᱮᱴᱣᱟᱨᱠ ᱦᱟᱹᱴᱤᱧ ᱥᱮᱞᱮᱫ ᱢᱮ</string>
+    <string name="add_to_shortcuts">ᱢᱤᱫ ᱠᱷᱟᱴᱚᱢᱟᱪᱷᱟ ᱵᱮᱱᱟᱣ ᱢᱮ</string>
+    <string name="add_ssh_server">ᱢᱤᱫ FTP ᱥᱮᱨᱵᱷᱟᱨ ᱵᱽᱨᱟᱣᱩᱡᱽ ᱢᱮ</string>
+    <string name="add_ssh_shortcut">ᱥᱚᱴᱠᱟᱴ ᱞᱮᱠᱟᱛᱮ ᱥᱮᱞᱮᱫ ᱢᱮ</string>
+    <string name="ssh_prompt">FTP ᱞᱮᱠᱟᱱ</string>
+    <string name="protocol_prompt">ᱯᱨᱚᱴᱚᱠᱚᱞ ᱞᱮᱠᱟᱱ</string>
+    <string name="ssh_empty_view">\"ᱟᱢ ᱟᱢᱟᱜ ftp ᱥᱮᱨᱵᱷᱟᱨ ᱠᱷᱚᱱ ᱵᱽᱨᱟᱣᱩᱡᱽ ᱟᱨ ᱠᱷᱮᱞ ᱫᱟᱲᱮᱭᱟᱜᱼᱟᱢ\"</string>
+    <string name="remove_from_shortcuts">ᱥᱚᱴᱠᱟᱴ ᱚᱪᱚᱜᱽ ᱢᱮ</string>
+    <string name="shortcut_added">ᱥᱚᱴᱠᱟᱴ % ᱛᱮᱭᱟᱨ ᱦᱩᱭ ᱟᱠᱟᱱᱟ</string>
+    <string name="shortcut_removed">ᱥᱚᱴᱠᱟᱴ %s ᱚᱪᱚᱜ ᱟᱠᱟᱱᱟ</string>
+    <string name="server_not_available">ᱥᱮᱨᱵᱷᱟᱨ ᱫᱚ ᱱᱤᱛᱚᱜ ᱵᱟᱝ ᱧᱟᱢᱚᱜ ᱠᱟᱱᱟ</string>
+    <string name="cannot_open_shortcut">ᱱᱚᱣᱟ ᱥᱚᱴᱠᱟᱴ ᱨᱮᱭᱟᱜ ᱡᱤᱱᱤᱥ ᱫᱚ ᱱᱤᱛᱚᱜ ᱵᱟᱝ ᱧᱟᱢᱚᱜ ᱠᱟᱱᱟ ᱾ \nᱫᱟᱭᱟ ᱠᱟᱛᱮ ᱧᱮᱞ ᱢᱮ ᱟᱢ ᱴᱷᱮᱱ ᱞᱟᱹᱠᱛᱤᱭᱟᱱ ᱟᱹᱭᱫᱟᱹᱨ ᱢᱮᱱᱟᱜᱼᱟ ᱥᱮ ᱵᱟᱝᱟ ᱾</string>
+    <string name="network_shortcuts">ᱱᱮᱴᱣᱟᱨᱠ ᱥᱚᱴᱠᱟᱴ ᱠᱚ</string>
+    <string name="media_servers">ᱢᱤᱰᱤᱭᱟ ᱥᱮᱨᱵᱷᱟᱨ ᱠᱚ</string>
+    <string name="shortcut_list_empty">ᱱᱮᱴᱣᱟᱨᱠ ᱥᱚᱴᱠᱟᱴ ᱵᱟᱝ ᱵᱮᱱᱟᱣ ᱟᱠᱟᱱᱟ᱾\n\nᱟᱢᱟᱜ ᱠᱩᱥᱤ ᱨᱤᱢᱚᱴ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮ ᱥᱚᱴᱠᱟᱴ ᱵᱮᱱᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱴᱟᱨᱜᱮᱴ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮ ᱞᱟᱹᱴᱩ ᱠᱷᱚᱱ ᱞᱤᱱ ᱢᱮ ᱟᱨ ᱪᱮᱛᱟᱱ ᱠᱟᱹᱢᱤ ᱵᱟᱨ ᱨᱮ \"%s\" ᱵᱟᱪᱷᱟᱣ ᱢᱮ᱾</string>
+    <string name="ftp_shortcut_list_empty">ᱟᱢᱟᱜ ᱠᱩᱥᱤ ᱨᱤᱢᱚᱴ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮᱭᱟᱜ ᱥᱚᱴᱠᱟᱴ ᱵᱮᱱᱟᱣ ᱞᱟᱹᱜᱤᱫ, ᱥᱮᱨᱵᱷᱟᱨ ᱵᱽᱨᱟᱣᱩᱡᱽ ᱚᱠᱛᱚ ᱪᱮᱛᱟᱱ ᱠᱟᱹᱢᱤ ᱵᱟᱨ ᱨᱮ \"%s\" ᱵᱟᱪᱷᱟᱣ ᱢᱮ᱾</string>
+    <string name="indexed_folders">ᱤᱱᱰᱮᱠᱥ ᱯᱷᱚᱞᱰᱟᱨ ᱠᱚ</string>
+    <string name="ftp_shortcuts">FTP ᱥᱚᱴᱠᱟᱴ</string>
+    <string name="add_to_indexed_folders">ᱤᱱᱰᱮᱠᱥ ᱯᱷᱚᱞᱰᱟᱨ</string>
+    <string name="add_to_library">ᱞᱟᱭᱵᱨᱮᱨᱤ ᱨᱮ ᱥᱮᱞᱮᱫ ᱢᱮ</string>
+    <string name="add_all_items_to_library">ᱥᱟᱱᱟᱢ ᱵᱷᱤᱰᱤᱭᱳ ᱠᱚ ᱞᱟᱭᱵᱨᱮᱨᱤ ᱨᱮ ᱱᱤᱛ ᱜᱮ ᱥᱮᱞᱮᱫ ᱢᱮ ?</string>
+    <string name="invalid_host">ᱢᱤᱫ ᱢᱟᱱᱭᱟ ᱦᱚᱥᱴ ᱴᱷᱤᱠᱟᱹᱱᱟ ᱨᱩᱯ ᱵᱟᱝ ᱠᱟᱱᱟ</string>
+    <string name="invalid_port">ᱢᱤᱫ ᱢᱟᱱᱟᱣᱟᱱ ᱯᱚᱨᱴ ᱯᱷᱚᱨᱢᱟᱴ ᱵᱟᱝ ᱠᱟᱱᱟ</string>
+    <string name="invalid_path">ᱢᱤᱫ ᱢᱟᱱᱟᱣᱟᱱ ᱰᱟᱦᱟᱨ ᱨᱩᱯ ᱵᱟᱝ ᱠᱟᱱᱟ</string>
+    <string name="shortcut_folder_added">ᱯᱷᱚᱞᱰᱟᱨ %s ᱥᱚᱴᱠᱟᱴ ᱞᱮᱠᱟᱛᱮ ᱥᱮᱞᱮᱫ ᱮᱱᱟ</string>
+    <string name="indexed_folder_added">ᱯᱷᱚᱞᱰᱟᱨ %s ᱞᱟᱭᱵᱨᱮᱨᱤ ᱨᱮ ᱥᱮᱞᱮᱫ ᱮᱱᱟ</string>
+    <string name="remove_from_indexed_folders">ᱞᱟᱭᱵᱨᱮᱨᱤ ᱠᱷᱚᱱ ᱚᱰᱚᱠ ᱢᱮ</string>
     <!-- Preferences -->
     <!--  Title of the video picker activity. -->
     <!-- Archos File Info -->
