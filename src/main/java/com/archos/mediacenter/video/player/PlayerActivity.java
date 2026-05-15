@@ -640,7 +640,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mPlayerController.pauseTimeout = (mPreferences.getBoolean("hide_controls_on_pause", false)) ? 5000 : 0;
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().setAttributes(attributes);
         /*
          * transparent background for archos devices

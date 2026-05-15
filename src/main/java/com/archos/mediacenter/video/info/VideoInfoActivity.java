@@ -134,6 +134,7 @@ public class VideoInfoActivity extends AppCompatActivity {
         return mGlobalBackdrop;
     }
 
+    @SuppressWarnings("deprecation")
     public void setBackgroundColor(int color) {
         getWindow().getDecorView().setBackgroundColor(color);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -143,7 +144,7 @@ public class VideoInfoActivity extends AppCompatActivity {
             insetsController.setAppearanceLightStatusBars(isColorDark(color));
             insetsController.setAppearanceLightNavigationBars(isColorDark(color));
         } else {
-            // For older APIs, use the deprecated methods
+            // For older APIs (API < 29), setStatusBarColor/setNavigationBarColor are the only option
             getWindow().setNavigationBarColor(color);
             getWindow().setStatusBarColor(color);
         }

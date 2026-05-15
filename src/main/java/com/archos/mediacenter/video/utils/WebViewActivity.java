@@ -15,13 +15,11 @@
 package com.archos.mediacenter.video.utils;
 
 import android.graphics.Bitmap;
-import android.graphics.Insets;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowInsets;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -30,6 +28,8 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.archos.mediacenter.video.R;
 
@@ -53,24 +53,11 @@ public class WebViewActivity extends AppCompatActivity {
         mWebView = findViewById(R.id.webview_activity);
 
         // Handle insets for the global window
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            getWindow().getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
-                Insets systemBarsInsets = insets.getInsets(WindowInsets.Type.systemBars());
-                // Adjust padding for the content within the window
-                v.setPadding(systemBarsInsets.left, systemBarsInsets.top, systemBarsInsets.right, systemBarsInsets.bottom);
-                return insets;
-            });
-        } else {
-            getWindow().getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
-                v.setPadding(
-                        insets.getSystemWindowInsetLeft(),
-                        insets.getSystemWindowInsetTop(),
-                        insets.getSystemWindowInsetRight(),
-                        insets.getSystemWindowInsetBottom()
-                );
-                return insets;
-            });
-        }
+        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(), (v, insets) -> {
+            androidx.core.graphics.Insets systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBarsInsets.left, systemBarsInsets.top, systemBarsInsets.right, systemBarsInsets.bottom);
+            return insets;
+        });
     }
 
     @Override

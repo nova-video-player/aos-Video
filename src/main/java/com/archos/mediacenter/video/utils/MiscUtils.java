@@ -36,6 +36,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+
+import androidx.core.view.WindowInsetsCompat;
 import android.view.WindowMetrics;
 
 import static android.view.RoundedCorner.POSITION_BOTTOM_LEFT;
@@ -430,13 +432,15 @@ public class MiscUtils {
             systemBarRight = systemBarsInsets.right;
             systemBarBottom = systemBarsInsets.bottom;
         } else {
-            if (log.isDebugEnabled()) log.debug("adjustViewLayoutForInsets: {} LTRB insets=({},{},{},{}), cutout=({},{},{},{})", viewName, insets.getSystemWindowInsetLeft(), insets.getSystemWindowInsetTop(), insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom(),
+            WindowInsetsCompat insetsCompat = WindowInsetsCompat.toWindowInsetsCompat(insets);
+            androidx.core.graphics.Insets systemBarsInsets = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars());
+            if (log.isDebugEnabled()) log.debug("adjustViewLayoutForInsets: {} LTRB insets=({},{},{},{}), cutout=({},{},{},{})", viewName, systemBarsInsets.left, systemBarsInsets.top, systemBarsInsets.right, systemBarsInsets.bottom,
                     mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom);
             radius = 0;
-            systemBarLeft = insets.getSystemWindowInsetLeft();
-            systemBarTop = insets.getSystemWindowInsetTop();
-            systemBarRight = insets.getSystemWindowInsetRight();
-            systemBarBottom = insets.getSystemWindowInsetBottom();
+            systemBarLeft = systemBarsInsets.left;
+            systemBarTop = systemBarsInsets.top;
+            systemBarRight = systemBarsInsets.right;
+            systemBarBottom = systemBarsInsets.bottom;
         }
         // avoidRoundEdges is false for gfx subtitleView
         if (avoidRoundEdges) { // at this point left/top/right/bottom is already set to cutout insets if applied

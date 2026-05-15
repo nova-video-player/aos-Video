@@ -231,6 +231,7 @@ public class ThemeManager {
      * Get phone-specific window gradient for black theme
      * Applies gradient to window, decor view, and status bar
      */
+    @SuppressWarnings("deprecation")
     public void applyPhoneWindowGradient(Activity activity) {
         if (activity == null) return;
 
@@ -330,6 +331,7 @@ public class ThemeManager {
     /**
      * Apply theme to window status/navigation bars and background
      */
+    @SuppressWarnings("deprecation")
     public void applyWindowTheme(Activity activity) {
         if (activity == null) return;
 

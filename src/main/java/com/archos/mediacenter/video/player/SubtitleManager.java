@@ -640,6 +640,9 @@ public class SubtitleManager {
             mSubtitleSpacer.setRenderingSurface(uiSurface);
     }
 
+    // setOnSystemUiVisibilityChangeListener is the only reliable way to track transient bar visibility;
+    // no WindowInsetsControllerCompat equivalent exists for this use case.
+    @SuppressWarnings("deprecation")
     private void attachWindow() {
         SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (mPreferences != null) mFullScreenWithCutout = mPreferences.getBoolean("enable_cutout_mode_short_edges", true);
@@ -674,9 +677,15 @@ public class SubtitleManager {
             });
 
             // ui visibility listener is needed for UI mode changes
+            // No WindowInsetsControllerCompat equivalent for transient bar visibility tracking;
+            // setOnSystemUiVisibilityChangeListener remains the only reliable option here.
+            //noinspection deprecation
             mRootView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                //noinspection deprecation
                 mNavigationBarShowing = (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0;
+                //noinspection deprecation
                 mSystemBarShowing = (visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0;
+                //noinspection deprecation
                 mActionBarShowing = (visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) == 0;
                 mIsNavBarOnBottom = MiscUtils.isNavigationBarOnBottom(mRootView, mContext);
                 mIsGestureAreaShowing = MiscUtils.isGestureAreaDisplayed(mContext);

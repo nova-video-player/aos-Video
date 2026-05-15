@@ -34,6 +34,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.video.R;
@@ -204,7 +207,10 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     @Override
     public void onDetachedFromWindow() {
         Log.d("Player", "onDetachedFromWindow");
-        mSampleText.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        if (getWindow() != null) {
+            WindowCompat.getInsetsController(getWindow(), mSampleText)
+                    .show(WindowInsetsCompat.Type.statusBars());
+        }
         mSharedPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_SIZE, mSize).apply();
         mSharedPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_VPOS, mVPos).apply();
         mSharedPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mOutline).apply();
@@ -217,7 +223,11 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mSampleText.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        if (getWindow() != null) {
+            WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), mSampleText);
+            controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            controller.hide(WindowInsetsCompat.Type.statusBars());
+        }
 
         // Set the initial position of the sliders and checkbox
         mSizeSeekBar.setProgress(mSubtitleManager.getSize());

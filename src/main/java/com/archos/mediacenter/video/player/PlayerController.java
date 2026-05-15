@@ -47,6 +47,10 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -237,6 +241,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private int                 mLastProgress;
     private Rect                mLastCrop = new Rect();
     private int                 mSystemUiVisibility;
+    private WindowInsetsControllerCompat mInsetsController;
     private int 				UIMode;
     private int 				testSwitchView=0;
 
@@ -288,11 +293,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mActionBar.setCustomView(mVideoTitle);
         manualVisibilityChange=false;
 
-        mSystemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        mSystemUiVisibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;
-        mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
+        mSystemUiVisibility = 0;
+        WindowCompat.setDecorFitsSystemWindows(mWindow, false);
+        mInsetsController = WindowCompat.getInsetsController(mWindow, mWindow.getDecorView());
+        mInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        // Do not hide bars here — old code only set LAYOUT_* flags + IMMERSIVE behavior, not FULLSCREEN|HIDE_NAVIGATION.
+        // Bars are hidden later via showSystemBar(false) / MSG_HIDE_SYSTEM_BAR.
         manualVisibilityChange=true;
 
         /* Hack:
@@ -606,6 +612,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
 
 
+    // setOnSystemUiVisibilityChangeListener is the only reliable way to track transient bar visibility;
+    // no WindowInsetsControllerCompat equivalent exists for this use case.
+    @SuppressWarnings("deprecation")
     private void attachWindow() {
         SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (mPreferences != null) mFullScreenWithCutout = mPreferences.getBoolean("enable_cutout_mode_short_edges", true);
@@ -674,9 +683,15 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             });
 
             // ui visibility listener is needed for UI mode changes
+            // No WindowInsetsControllerCompat equivalent for transient bar visibility tracking;
+            // setOnSystemUiVisibilityChangeListener remains the only reliable option here.
+            //noinspection deprecation
             mRootView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                //noinspection deprecation
                 mNavigationBarShowing = (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0;
+                //noinspection deprecation
                 mSystemBarShowing = (visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0;
+                //noinspection deprecation
                 mActionBarShowing = (visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) == 0;
                 mIsNavBarOnBottom = MiscUtils.isNavigationBarOnBottom(mRootView, mContext);
                 mIsGestureAreaShowing = MiscUtils.isGestureAreaDisplayed(mContext);
@@ -824,18 +839,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     protected void showSystemBar(boolean show) {
         if (log.isDebugEnabled()) log.debug("showSystemBar {}", show);
         if (mSystemBarShowing == show) return;
-        mSystemUiVisibility = mPlayerView.getSystemUiVisibility();
-        int systemUiFlag = View.SYSTEM_UI_FLAG_LOW_PROFILE;
-        systemUiFlag |= View.SYSTEM_UI_FLAG_FULLSCREEN;
         if (show) {
-            mSystemUiVisibility &= ~systemUiFlag;
-            mSystemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE;
+            mInsetsController.show(WindowInsetsCompat.Type.systemBars());
+        } else {
+            mInsetsController.hide(WindowInsetsCompat.Type.statusBars());
         }
-        else {
-            mSystemUiVisibility |= systemUiFlag;
-            mSystemUiVisibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;
-        }
-        mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
         manualVisibilityChange=true;
         mSystemBarGone = false;
         if (!show)
@@ -1158,8 +1166,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     break;
                 case MSG_HIDE_SYSTEM_BAR:
                     if (log.isDebugEnabled()) log.debug("Handle: MSG_HIDE_SYSTEM_BAR");
-                    mSystemUiVisibility |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-                    mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
+                    mInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
                     manualVisibilityChange=true;
                     break;
                 case MSG_OVERLAY_FADE_OUT:
@@ -2505,6 +2512,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
     }
 
+    // STATUS_BAR_DISABLE_* are internal system flags with no public API replacement;
+    // they have no effect for regular (non-system) apps on modern Android.
+    @SuppressWarnings("deprecation")
     public void enableAllNotifications() {
         if (log.isDebugEnabled()) log.debug("Enable all notifications");
         mSystemUiVisibility = mPlayerView.getSystemUiVisibility();
@@ -2515,6 +2525,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         manualVisibilityChange=true;
     }
 
+    @SuppressWarnings("deprecation")
     public void enableNotificationAlerts() {
         if (log.isDebugEnabled()) log.debug("Enable notification alerts only");
         mSystemUiVisibility = mPlayerView.getSystemUiVisibility();
@@ -2525,6 +2536,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         manualVisibilityChange=true;
     }
 
+    @SuppressWarnings("deprecation")
     public void disableNotifications() {
         if (log.isDebugEnabled()) log.debug("Disable all notifications");
         mSystemUiVisibility = mPlayerView.getSystemUiVisibility();
