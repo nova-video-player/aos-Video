@@ -84,6 +84,14 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
             result -> ExternalPlayerResultListener.getInstance().onActivityResult(
                     PLAY_ACTIVITY_REQUEST_CODE, result.getResultCode(), result.getData()));
 
+    protected final ActivityResultLauncher<Intent> infoLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> onInfoActivityResult(result.getResultCode(), result.getData()));
+
+    protected void onInfoActivityResult(int resultCode, Intent data) {
+        // default: no-op; subclasses may override
+    }
+
     @Override
     protected void postBindAdapter() {
         super.postBindAdapter();
@@ -114,7 +122,7 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
             if(j>VideoInfoActivity.MAX_VIDEO)
                 break;
         }
-        VideoInfoActivity.startInstance(getActivity(), this,video,finalPos,urlList,-1, shouldForceVideoSelection(), getPlaylistId());
+        VideoInfoActivity.startInstance(infoLauncher, getActivity(), video, finalPos, urlList, -1, shouldForceVideoSelection(), getPlaylistId());
     }
 
     protected long getPlaylistId(){

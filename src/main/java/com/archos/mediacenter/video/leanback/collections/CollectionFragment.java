@@ -153,6 +153,10 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     private static Delete delete;
     private static List<Uri> deleteUrisList;
 
+    private final ActivityResultLauncher<Intent> videoLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { if (result.getResultCode() == Activity.RESULT_OK) { refreshCollection(); refreshActivity(); } });
+
     private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
             result -> { // result can be RESULT_OK, RESULT_CANCELED
@@ -283,7 +287,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 if (item instanceof Video) {
                     //animate only if episode picture isn't displayed
                     boolean animate =!((item instanceof Video)&&((Video)item).getPosterUri()!=null);
-                    VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1, CollectionFragment.this, REQUEST_CODE_VIDEO);
+                    VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1, videoLauncher);
                 }
             }
         });
@@ -456,23 +460,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         mOverlay.pause();
     }
 
-    /**
-     * Getting RESULT_OK from REQUEST_CODE_MORE_DETAILS means that the poster and/or the backdrop has been changed
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (log.isDebugEnabled()) log.debug("onActivityResult requestCode {}", requestCode);
-        if ((requestCode == REQUEST_CODE_MARK_WATCHED || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
-            if (log.isDebugEnabled()) log.debug("onActivityResult processing requestCode, first refreshCollection");
-            refreshCollection();
-            refreshActivity();
-        } else {
-            if (log.isDebugEnabled()) log.debug("onActivityResult NOT processing requestCode");
-        }
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {

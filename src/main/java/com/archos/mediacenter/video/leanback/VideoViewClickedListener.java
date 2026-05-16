@@ -19,8 +19,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.fragment.app.Fragment;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.ImageCardView;
 import androidx.leanback.widget.OnItemViewClickedListener;
@@ -67,37 +67,33 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
     }
 
     public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean forceSelection, long listId) {
-        showVideoDetails(activity,video, itemViewHolder, true, forceSelection, true, listId, null, -1);
+        showVideoDetails(activity, video, itemViewHolder, true, forceSelection, true, listId, null);
     }
 
-    public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean animate, boolean forceSelection, boolean shouldLoadBackdrop, long listId, Fragment fragment, int requestCode) {
+    public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean animate, boolean forceSelection, boolean shouldLoadBackdrop, long listId, ActivityResultLauncher<Intent> launcher) {
         Intent intent = new Intent(activity, VideoDetailsActivity.class);
         intent.putExtra(VideoDetailsFragment.EXTRA_VIDEO, video);
         intent.putExtra(VideoDetailsFragment.EXTRA_LIST_ID, listId);
         intent.putExtra(VideoDetailsFragment.EXTRA_FORCE_VIDEO_SELECTION, forceSelection);
-        intent.putExtra(VideoDetailsFragment.EXTRA_SHOULD_LOAD_BACKDROP,shouldLoadBackdrop);
+        intent.putExtra(VideoDetailsFragment.EXTRA_SHOULD_LOAD_BACKDROP, shouldLoadBackdrop);
         View sourceView = null;
         if (itemViewHolder.view instanceof ImageCardView) {
             sourceView = ((ImageCardView) itemViewHolder.view).getMainImageView();
         } else if (itemViewHolder instanceof ListPresenter.ListViewHolder){
             sourceView = ((ListPresenter.ListViewHolder)itemViewHolder).getImageView();
         }
-        if(animate) {
-            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    activity,
-                    sourceView,
-                    VideoDetailsActivity.SHARED_ELEMENT_NAME).toBundle();
-
-            if (fragment == null || requestCode == -1)
-                activity.startActivity(intent, bundle);
+        if (animate) {
+            ActivityOptionsCompat opts = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity, sourceView, VideoDetailsActivity.SHARED_ELEMENT_NAME);
+            if (launcher != null)
+                launcher.launch(intent, opts);
             else
-                fragment.startActivityForResult(intent, requestCode, bundle);
-        }
-        else{
-            if (fragment == null || requestCode == -1)
+                activity.startActivity(intent, opts.toBundle());
+        } else {
+            if (launcher != null)
+                launcher.launch(intent);
+            else
                 activity.startActivity(intent);
-            else
-                fragment.startActivityForResult(intent, requestCode);
         }
     }
 

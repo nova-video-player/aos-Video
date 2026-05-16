@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
@@ -180,26 +181,46 @@ public class VideoInfoActivity extends AppCompatActivity {
                                      long playlistId){
 
         if (DBG) Log.d(TAG, "startInstance: " + currentVideo.getFilePath());
+        Intent intent = buildIntent(context, currentVideo, currentPosition, paths, id, forceVideoSelection, playlistId);
+        if (fragment != null) {
+            fragment.startActivityForResult(intent, 0);
+        } else if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).startActivityForResult(intent, 0);
+        } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            context.startActivity(intent);
+        }
+    }
+
+    public static void startInstance(ActivityResultLauncher<Intent> launcher,
+                                     Context context,
+                                     Video currentVideo,
+                                     int currentPosition,
+                                     ArrayList<Uri> paths,
+                                     long id,
+                                     boolean forceVideoSelection,
+                                     long playlistId){
+        if (DBG) Log.d(TAG, "startInstance (launcher): " + currentVideo.getFilePath());
+        launcher.launch(buildIntent(context, currentVideo, currentPosition, paths, id, forceVideoSelection, playlistId));
+    }
+
+    private static Intent buildIntent(Context context,
+                                      Video currentVideo,
+                                      int currentPosition,
+                                      ArrayList<Uri> paths,
+                                      long id,
+                                      boolean forceVideoSelection,
+                                      long playlistId) {
         Intent intent = new Intent(context, VideoInfoActivity.class);
-        if(currentVideo!=null)
+        if (currentVideo != null)
             intent.putExtra(VideoInfoActivityFragment.EXTRA_VIDEO, currentVideo);
-        if(paths!=null)
+        if (paths != null)
             intent.putExtra(EXTRA_VIDEO_PATHS, paths);
-        intent.putExtra(EXTRA_FORCE_VIDEO_SELECTION,forceVideoSelection);
+        intent.putExtra(EXTRA_FORCE_VIDEO_SELECTION, forceVideoSelection);
         intent.putExtra(EXTRA_VIDEO_ID, id);
         intent.putExtra(EXTRA_PLAYLIST_ID, playlistId);
         intent.putExtra(EXTRA_CURRENT_POSITION, currentPosition);
-        if(fragment!=null) {
-            fragment.startActivityForResult(intent, 0);
-        }else if(context instanceof AppCompatActivity)
-            ((AppCompatActivity) context).startActivityForResult(intent, 0);
-        else {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            context.startActivity(intent);
-
-        }
-
-
+        return intent;
     }
     public static void startInstance(Context context, Video video, Uri path, Long id){
         if (DBG) Log.d(TAG, "startInstance: " + path);

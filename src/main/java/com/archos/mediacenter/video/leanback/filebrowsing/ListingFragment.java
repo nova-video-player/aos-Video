@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.filebrowsing;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.os.BundleCompat;
@@ -92,6 +94,14 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     private static final Logger log = LoggerFactory.getLogger(ListingFragment.class);
 
     private static final String PREF_LISTING_DISPLAY_MODE = "PREF_LISTING_DISPLAY_MODE";
+
+    private final ActivityResultLauncher<Intent> infoLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == ListingActivity.RESULT_FILE_DELETED && result.getData() != null) {
+                    ((ListingActivity) requireActivity()).notifyFileDeleted(result.getData().getData());
+                }
+            });
 
     public static final String ARG_URI = "URI";
     public static final String ARG_TITLE = "TITLE";
@@ -744,12 +754,9 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
             sourceView = ((ListPresenter.ListViewHolder)itemViewHolder).getImageView();
         }
 
-        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                getActivity(),
-                sourceView,
-                VideoDetailsActivity.SHARED_ELEMENT_NAME).toBundle();
-
-        getActivity().startActivityForResult(intent, ListingActivity.REQUEST_INFO_ACTIVITY, bundle);
+        ActivityOptionsCompat opts = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity(), sourceView, VideoDetailsActivity.SHARED_ELEMENT_NAME);
+        infoLauncher.launch(intent, opts);
     }
 
 

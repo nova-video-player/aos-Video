@@ -16,6 +16,8 @@ package com.archos.mediacenter.video.leanback.tvshow;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.loader.app.LoaderManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -110,6 +112,22 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     public static final int REQUEST_CODE_CHANGE_TVSHOW = 8575; // some random integer may be useful for grep/debug...
     public static final int REQUEST_CODE_VIDEO = 8576;
     public static final int REQUEST_CODE_MARK_WATCHED = 8577;
+
+    private final ActivityResultLauncher<Intent> moreDetailsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { if (result.getResultCode() == Activity.RESULT_OK) onMoreDetailsResult(); });
+
+    private final ActivityResultLauncher<Intent> markWatchedLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { if (result.getResultCode() == Activity.RESULT_OK) onMarkWatchedResult(); });
+
+    private final ActivityResultLauncher<Intent> changeTvshowLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { if (result.getResultCode() == Activity.RESULT_OK) onChangeTvshowResult(result.getData()); });
+
+    private final ActivityResultLauncher<Intent> videoLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { if (result.getResultCode() == Activity.RESULT_OK) onVideoResult(); });
 
     private static final int INDEX_DETAILS = 0;
     private static final int INDEX_FIRST_SEASON = 1;
@@ -209,11 +227,10 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     Intent intent = new Intent(getActivity(), TvshowMoreDetailsActivity.class);
                     intent.putExtra(TvshowMoreDetailsFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
                     intent.putExtra(TvshowMoreDetailsFragment.EXTRA_TVSHOW_WATCHED, mTvshow.isWatched());
-                    Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    moreDetailsLauncher.launch(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(
                             getActivity(),
                             getView().findViewById(R.id.details_overview_image),
-                            TvshowMoreDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                    startActivityForResult(intent, REQUEST_CODE_MORE_DETAILS, bundle);
+                            TvshowMoreDetailsFragment.SHARED_ELEMENT_NAME));
                 }
                 else if (action.getId() == TvshowActionAdapter.ACTION_MARK_SHOW_AS_WATCHED) {
                     Intent intent = new Intent(getActivity(), SeasonActivity.class);
@@ -221,7 +238,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     intent.putExtra(SeasonFragment.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
                     intent.putExtra(SeasonFragment.EXTRA_TVSHOW_NAME, mTvshow.getName());
                     intent.putExtra(SeasonFragment.EXTRA_TVSHOW_POSTER, mTvshow.getPosterUri() != null ? mTvshow.getPosterUri().toString() : null);
-                    startActivityForResult(intent, REQUEST_CODE_MARK_WATCHED);
+                    markWatchedLauncher.launch(intent);
                 }
                 else if (action.getId() == TvshowActionAdapter.ACTION_UNINDEX) {
                     Intent intent = new Intent(getActivity(), SeasonActivity.class);
@@ -238,7 +255,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                         Intent intent = new Intent(getActivity(), ManualShowScrappingActivity.class);
                         intent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME, mTvshow.getName());
                         intent.putExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, mTvshow.getTvshowId());
-                        startActivityForResult(intent, REQUEST_CODE_CHANGE_TVSHOW);
+                        changeTvshowLauncher.launch(intent);
                     }
                 }
                 else if (action.getId() == TvshowActionAdapter.ACTION_DELETE) {
@@ -270,7 +287,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                 if (item instanceof Video) {
                     //animate only if episode picture isn't displayed
                     boolean animate =!((item instanceof Episode)&&((Episode)item).getPictureUri()!=null);
-                    VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1, TvshowFragment.this, REQUEST_CODE_VIDEO);
+                    VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1, videoLauncher);
                 }
             }
         });
@@ -399,80 +416,68 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         mOverlay.pause();
     }
 
-    /**
-     * Getting RESULT_OK from REQUEST_CODE_MORE_DETAILS means that the poster and/or the backdrop has been changed
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ((requestCode == REQUEST_CODE_MARK_WATCHED || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
-            // TvshowLoader is a CursorLoader
-            TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), mTvshow.getTvshowId());
-            Cursor cursor = tvshowLoader.loadInBackground();
-            if(cursor != null && cursor.getCount()>0) {
-                cursor.moveToFirst();
-                TvshowCursorMapper tvshowCursorMapper = new TvshowCursorMapper();
-                tvshowCursorMapper.bindColumns(cursor);
-                Tvshow tvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
-                tvshow.setShowTags(mTvshow.getShowTags());
-                mTvshow = tvshow;
-                if (mRefreshTvshowBitmapTask != null) mRefreshTvshowBitmapTask.cancel();
-                mRefreshTvshowBitmapTask = new RefreshTvshowBitmapTask();
-                mRefreshTvshowBitmapTask.execute(mTvshow);
-                refreshActivity();
-                cursor.close();
-            }
-            // sometimes mTvshow is null (tracepot)
-            if (mTvshow != null)
-                mDetailsOverviewRow.setItem(mTvshow);
+    private void onMarkWatchedResult() {
+        // TvshowLoader is a CursorLoader
+        TvshowLoader tvshowLoader = new TvshowLoader(getActivity(), mTvshow.getTvshowId());
+        Cursor cursor = tvshowLoader.loadInBackground();
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            TvshowCursorMapper tvshowCursorMapper = new TvshowCursorMapper();
+            tvshowCursorMapper.bindColumns(cursor);
+            Tvshow tvshow = (Tvshow) tvshowCursorMapper.bind(cursor);
+            tvshow.setShowTags(mTvshow.getShowTags());
+            mTvshow = tvshow;
+            if (mRefreshTvshowBitmapTask != null) mRefreshTvshowBitmapTask.cancel();
+            mRefreshTvshowBitmapTask = new RefreshTvshowBitmapTask();
+            mRefreshTvshowBitmapTask.execute(mTvshow);
+            refreshActivity();
+            cursor.close();
         }
-        if ((requestCode == REQUEST_CODE_MORE_DETAILS || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "onActivityResult: got RESULT_OK from TvshowMoreDetailsFragment/VideoDetailsFragment");
+        // sometimes mTvshow is null (tracepot)
+        if (mTvshow != null)
+            mDetailsOverviewRow.setItem(mTvshow);
+    }
 
-            // Only Poster and/or backdrop has been changed.
-            // But the ShowTags must be recomputed as well.
-            // The simpler is to reload everything...
-            // Well for now at least, because the result is a big ugly glitch...
-            for (int i = 0; i < mRowsAdapter.size(); i++) {
-                if (i != INDEX_DETAILS)
-                    mRowsAdapter.removeItems(i, 1);
-            }
-
-            clearSeasonAdapters();
-
-            if (mFullScraperTagsTask!=null) {
-                mFullScraperTagsTask.cancel();
-            }
-            mFullScraperTagsTask = new FullScraperTagsTask();
-            mFullScraperTagsTask.execute(mTvshow);
+    private void onMoreDetailsResult() {
+        Log.d(TAG, "onMoreDetailsResult: got RESULT_OK from TvshowMoreDetailsFragment");
+        // Only Poster and/or backdrop has been changed.
+        // But the ShowTags must be recomputed as well.
+        for (int i = 0; i < mRowsAdapter.size(); i++) {
+            if (i != INDEX_DETAILS)
+                mRowsAdapter.removeItems(i, 1);
         }
-        else if (requestCode == REQUEST_CODE_CHANGE_TVSHOW && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "onActivityResult: got RESULT_OK from ManualShowScrappingActivity");
-            // Whole show has been changed, need to reload everything
-            // First update the TvShow instance we have here with the data returned by ManualShowScrappingActivity
-            String newName = data.getStringExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME);
-            Long newId = data.getLongExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, -1);
-
-            if (DBG) Log.d(TAG, "onActivityResult: newName=" + newName + ", newId=" + newId);
-            // doing this assumes same number of seasons/episodes and results in null getPosterUri...
-            //mTvshow = new Tvshow(newId, newName, null, mTvshow.getSeasonCount(), mTvshow.getEpisodeCount(), mTvshow.getEpisodeWatchedCount());
-            setmTvshow(newId);
-
-            // Clear all the loader managers because they need to be recreated with the new ID
-            LoaderManager.getInstance(this).destroyLoader(SEASONS_LOADER_ID);
-            if (mSeasonAdapters != null){
-                for (int i = 0; i < mSeasonAdapters.size(); i++) {
-                    LoaderManager.getInstance(this).destroyLoader(mSeasonAdapters.keyAt(i));
-                }
-            }
-            // Clear the rows
-            mRowsAdapter.removeItems(0, mRowsAdapter.size());
-
-            clearSeasonAdapters();
-            mHasDetailRow = false;
+        clearSeasonAdapters();
+        if (mFullScraperTagsTask != null) {
+            mFullScraperTagsTask.cancel();
         }
+        mFullScraperTagsTask = new FullScraperTagsTask();
+        mFullScraperTagsTask.execute(mTvshow);
+    }
+
+    private void onVideoResult() {
+        // Reload tvshow watch state
+        onMarkWatchedResult();
+        // Reload scraper tags (poster/backdrop may have changed)
+        onMoreDetailsResult();
+    }
+
+    private void onChangeTvshowResult(Intent data) {
+        Log.d(TAG, "onChangeTvshowResult: got RESULT_OK from ManualShowScrappingActivity");
+        String newName = data.getStringExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_NAME);
+        Long newId = data.getLongExtra(ManualShowScrappingActivity.EXTRA_TVSHOW_ID, -1);
+        if (DBG) Log.d(TAG, "onChangeTvshowResult: newName=" + newName + ", newId=" + newId);
+        setmTvshow(newId);
+        // Clear all the loader managers because they need to be recreated with the new ID
+        LoaderManager.getInstance(this).destroyLoader(SEASONS_LOADER_ID);
+        if (mSeasonAdapters != null) {
+            for (int i = 0; i < mSeasonAdapters.size(); i++) {
+                LoaderManager.getInstance(this).destroyLoader(mSeasonAdapters.keyAt(i));
+            }
+        }
+        // Clear the rows
+        mRowsAdapter.removeItems(0, mRowsAdapter.size());
+        clearSeasonAdapters();
+        mHasDetailRow = false;
     }
 
     private void clearSeasonAdapters() {

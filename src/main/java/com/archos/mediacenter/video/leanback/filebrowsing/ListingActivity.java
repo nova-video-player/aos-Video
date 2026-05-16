@@ -183,21 +183,12 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int result, Intent data){
-        super.onActivityResult(requestCode, result, data);
-
-        if(requestCode==REQUEST_INFO_ACTIVITY&&result== RESULT_FILE_DELETED){
-            Uri file = data.getData();
-
-            for(int i = 0; i<= getSupportFragmentManager().getBackStackEntryCount(); i++){
-                Fragment frag = getSupportFragmentManager().findFragmentByTag("fragment_"+i);//tag specified in fragmenttransaction
-                if(frag != null&&frag instanceof ListingFragment){ //send uri to refresh
-                    ((ListingFragment)frag).onFileDelete(file);
-                }
+    public void notifyFileDeleted(Uri file) {
+        for (int i = 0; i <= getSupportFragmentManager().getBackStackEntryCount(); i++) {
+            Fragment frag = getSupportFragmentManager().findFragmentByTag("fragment_" + i);
+            if (frag instanceof ListingFragment) {
+                ((ListingFragment) frag).onFileDelete(file);
             }
-
-
         }
     }
 

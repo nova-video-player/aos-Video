@@ -203,12 +203,9 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     }
 
     @Override
-    public void onActivityResult(int requesto, int result, Intent data){
-        super.onActivityResult(requesto, result, data);
-        if(result == RESULT_FILE_DELETED){
-            if(mCurrentDirectory.equals(data.getData()))
-                getActivity().onBackPressed();
-        }
+    protected void onInfoActivityResult(int resultCode, Intent data) {
+        if (resultCode == RESULT_FILE_DELETED && data != null && mCurrentDirectory.equals(data.getData()))
+            getActivity().onBackPressed();
     }
 
     @Override
