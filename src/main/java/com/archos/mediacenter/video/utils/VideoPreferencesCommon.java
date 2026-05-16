@@ -1336,7 +1336,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         Locale defaultLocale = Locale.getDefault();
         String defaultLocaleLanguage = defaultLocale.getDisplayLanguage();
-        Locale englishLocale = new Locale("en");
+        Locale englishLocale = Locale.forLanguageTag("en");
         String englishLocaleLanguage = englishLocale.getDisplayLanguage();
 
         // Add default system language first
@@ -1387,17 +1387,12 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public static Locale getLocaleFromCode(String code) {
         //log.trace("getLocaleFromCode: code {}", code);
-        String[] parts = code.split("[-_]");
-        if (parts.length == 1) {
-            //log.trace("getLocaleFromCode: parts[0] {}", parts[0]);
-            return new Locale(parts[0]);
-        } else if (parts.length == 2) {
-            //log.trace("getLocaleFromCode: parts[0] {} parts[1] {}", parts[0], parts[1]);
-            return new Locale(parts[0], parts[1]);
-        } else {
-            //log.trace("getLocaleFromCode: returning default locale");
-            return Locale.getDefault();
-        }
+        if (code == null || code.isEmpty()) return Locale.getDefault();
+        // forLanguageTag requires BCP-47 format with '-' separator; stored values may use '_'
+        Locale locale = Locale.forLanguageTag(code.replace('_', '-'));
+        // forLanguageTag returns an empty Locale (not null) for unrecognised tags
+        if (locale.toLanguageTag().equals("und")) return Locale.getDefault();
+        return locale;
     }
 
     private String getLocaleDisplayName(String localeCode) {
