@@ -1,6 +1,5 @@
 package com.archos.mediacenter.video.leanback.settings;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.archos.mediacenter.video.R;
@@ -38,11 +37,4 @@ public class VideoSettingsActivity extends LeanbackActivity {
         super.finish();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (getSupportFragmentManager().findFragmentById(R.id.settingsFragment) != null) {
-            ((VideoSettingsFragment) getSupportFragmentManager().findFragmentById(R.id.settingsFragment)).onActivityResult(requestCode, resultCode, data);
-        }
-    }
 }

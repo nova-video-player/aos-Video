@@ -150,6 +150,10 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     private String mCurrentUiModeLeanback = null;
 
+    private final ActivityResultLauncher<Intent> traktRelogLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { /* Trakt relog completed; token stored by TraktDeviceAuthActivity */ });
+
     private final ActivityResultLauncher<Intent> playLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> ExternalPlayerResultListener.getInstance().onActivityResult(
@@ -406,6 +410,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     TraktSigninDialogPreference dialog = new TraktSigninDialogPreference(MainActivity.this, null);
+                                    dialog.setLauncher(traktRelogLauncher);
                                     dialog.performDeviceAuth();
                                 }
                             })

@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.utils;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
@@ -77,14 +76,6 @@ public class VideoPreferencesActivity extends AppCompatActivity {
     public void videoPreferenceTraktClick(View v) {
         WebUtils.openWebLink(this,"https://trakt.tv/");
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(getSupportFragmentManager().findFragmentById(R.id.preferencesFragment)!=null){
-            ((VideoPreferencesFragment)getSupportFragmentManager().findFragmentById(R.id.preferencesFragment)).onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean ret = super.onOptionsItemSelected(item);

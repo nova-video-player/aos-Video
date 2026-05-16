@@ -18,6 +18,10 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -311,8 +315,38 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     List<String> UiLanguageListEntries = new ArrayList<>();
     List<String> UiLanguageListEntryValues = new ArrayList<>();
 
+    private final ActivityResultLauncher<Intent> mFolderPickerLauncher;
+    private final ActivityResultLauncher<Intent> mTraktAuthLauncher;
+
     public VideoPreferencesCommon(PreferenceFragmentCompat preferencesFragment) {
         mPreferencesFragment = preferencesFragment;
+        mFolderPickerLauncher = preferencesFragment.registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::onFolderPickerResult);
+        mTraktAuthLauncher = preferencesFragment.registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::onTraktAuthResult);
+    }
+
+    private void onFolderPickerResult(ActivityResult result) {
+        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+            String newPath = result.getData().getStringExtra(FolderPicker.EXTRA_SELECTED_FOLDER);
+            if (newPath != null) {
+                java.io.File f = new java.io.File(newPath);
+                if (f.isDirectory() && f.exists()) {
+                    PreferenceManager.getDefaultSharedPreferences(getActivity())
+                            .edit().putString(KEY_TORRENT_PATH, f.getAbsolutePath()).apply();
+                    TorrentPathDialogPreference pref =
+                            (TorrentPathDialogPreference) findPreference(KEY_TORRENT_PATH);
+                    if (pref != null) pref.notifyChanged();
+                }
+            }
+        }
+    }
+
+    private void onTraktAuthResult(ActivityResult result) {
+        if (mTraktSigninPreference != null)
+            mTraktSigninPreference.onAuthCompleted(result.getResultCode() == Activity.RESULT_OK);
     }
 
     private Activity getActivity() {
@@ -543,6 +577,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         resetPassthroughPref(mSharedPreferences);
 
         addPreferencesFromResource(R.xml.preferences_video);
+
+        TorrentPathDialogPreference torrentPref =
+                (TorrentPathDialogPreference) findPreference(KEY_TORRENT_PATH);
+        if (torrentPref != null) torrentPref.setFolderPickerLauncher(mFolderPickerLauncher);
 
         mSharedPreferences = getPreferenceManager().getSharedPreferences();
         migrateDolbyVisionPreference(mSharedPreferences);
@@ -991,6 +1029,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mHanlder = new Handler();
         mTraktSigninPreference = (TraktSigninDialogPreference) findPreference(KEY_TRAKT_SIGNIN);
+        if (mTraktSigninPreference != null) mTraktSigninPreference.setLauncher(mTraktAuthLauncher);
         if(mTraktSigninPreference!= null && savedInstanceState!=null) {
             if (log.isDebugEnabled()) log.debug("onCreatePreferences: closing mTraktSigninPreference dialog to prevent leaked window");
             // close dialog to prevent leaked window
@@ -1496,23 +1535,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         return traktUser != null;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE){
-            if (resultCode == AppCompatActivity.RESULT_OK) {
-                String newPath = data.getStringExtra(FolderPicker.EXTRA_SELECTED_FOLDER);
-                if (newPath!=null) {
-                    File f = new File(newPath);
-                    if ((f!=null) && f.isDirectory() && f.exists()) { //better safe than sorry x3
-                        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString(VideoPreferencesCommon.KEY_TORRENT_PATH, f.getAbsolutePath()).apply();
-                        ((TorrentPathDialogPreference)findPreference(KEY_TORRENT_PATH)).notifyChanged();
-                    }
-                }
-            }
-        } else if (mTraktSigninPreference != null) {
-            // Forward to TraktSigninDialogPreference to handle device auth result
-            mTraktSigninPreference.onActivityResult(requestCode, resultCode);
-        }
-    }
 
     private void showImportDialog() {
         File exportDir = getContext().getExternalFilesDir(null);

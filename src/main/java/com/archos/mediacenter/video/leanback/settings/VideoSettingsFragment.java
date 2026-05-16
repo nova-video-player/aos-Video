@@ -1,6 +1,5 @@
 package com.archos.mediacenter.video.leanback.settings;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.preference.Preference;
@@ -38,14 +37,6 @@ public class VideoSettingsFragment extends LeanbackSettingsFragmentCompat {
         mPrefsFragment.setArguments(args);
         startPreferenceFragment(mPrefsFragment);
         return true;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (mPrefsFragment != null)
-            mPrefsFragment.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -109,10 +100,5 @@ public class VideoSettingsFragment extends LeanbackSettingsFragmentCompat {
             mPreferencesCommon.onSaveInstanceState(outState);
         }
 
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
-            mPreferencesCommon.onActivityResult(requestCode, resultCode, data);
-        }
     }
 }

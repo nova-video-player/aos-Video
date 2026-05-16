@@ -23,6 +23,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
@@ -35,6 +37,10 @@ public abstract class LeanbackActivity extends FragmentActivity {
 
     private BroadcastReceiver mTraktRelogBroadcastReceiver;
     private AlertDialog mTraktRelogAlertDialog;
+
+    private final ActivityResultLauncher<Intent> traktRelogLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { /* Trakt relog completed; token stored by TraktDeviceAuthActivity */ });
 
     @Override
     protected void onCreate(Bundle saved){
@@ -53,6 +59,7 @@ public abstract class LeanbackActivity extends FragmentActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     TraktSigninDialogPreference dialog = new TraktSigninDialogPreference(LeanbackActivity.this, null);
+                                    dialog.setLauncher(traktRelogLauncher);
                                     dialog.performDeviceAuth();
                                 }
                             })

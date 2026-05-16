@@ -14,7 +14,6 @@
 package com.archos.mediacenter.video.utils;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,9 +63,4 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
         mPreferencesCommon.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mPreferencesCommon.onActivityResult(requestCode, resultCode, data);
-    }
 }

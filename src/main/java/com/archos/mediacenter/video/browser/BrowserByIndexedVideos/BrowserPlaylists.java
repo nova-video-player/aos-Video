@@ -11,8 +11,12 @@ import com.archos.mediacenter.video.utils.TraktSigninDialogPreference;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,8 +30,14 @@ import android.widget.AdapterView;
 
 public class BrowserPlaylists extends BrowserMoviesBy {
 
-    private static final int ACTIVITY_REQUEST_CODE_PREFERENCES = 1012;
     private boolean mHasLaunchedTrakt = false;
+
+    private final ActivityResultLauncher<Intent> traktAuthLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) postBindAdapter();
+                mHasLaunchedTrakt = false;
+            });
 
     @Override
     public int getThumbnailsType() {
@@ -56,28 +66,15 @@ public class BrowserPlaylists extends BrowserMoviesBy {
     protected boolean onEmptyviewButtonClick(){
         if(mHasLaunchedTrakt)
             return true;
-            //connect to trakt
-        TraktSigninDialogPreference dialogPreference = new TraktSigninDialogPreference(getContext(),null);
+        TraktSigninDialogPreference dialogPreference = new TraktSigninDialogPreference(getContext(), null);
+        dialogPreference.setLauncher(traktAuthLauncher);
         dialogPreference.showDialog(true);
-        dialogPreference.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                postBindAdapter();
-                mHasLaunchedTrakt = false;
-            }
-        });
-    mHasLaunchedTrakt = true;
+        mHasLaunchedTrakt = true;
         return true;
     }
     public void onResume(){
         super.onResume();
         ((MainActivity)getActivity()).setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-    }
-    @Override
-    public void  onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(ACTIVITY_REQUEST_CODE_PREFERENCES == requestCode)
-            mHasLaunchedTrakt = false;
-        else super.onActivityResult(requestCode, resultCode, data);
     }
     public void addSortOptionsSubmenus(ActionBarSubmenu submenu) {
 	    // MENU_ITEM_NAME is not a typo here, because the year will be copied to the name column

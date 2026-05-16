@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Environment;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
@@ -37,6 +38,11 @@ public class TorrentPathDialogPreference extends Preference {
     private static boolean DBG = false;
 
     private View mView;
+    private ActivityResultLauncher<Intent> mFolderPickerLauncher;
+
+    public void setFolderPickerLauncher(ActivityResultLauncher<Intent> launcher) {
+        mFolderPickerLauncher = launcher;
+    }
 
     public TorrentPathDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -64,11 +70,15 @@ public class TorrentPathDialogPreference extends Preference {
             Intent i = new Intent(getContext(), FolderPicker.class);
             i.putExtra(FolderPicker.EXTRA_CURRENT_SELECTION, getDefaultDirectory(getSharedPreferences()).getPath());
             i.putExtra(FolderPicker.EXTRA_DIALOG_TITLE, getContext().getString(R.string.torrent_path));
-            // getContext() on phones/tablets is an activity but not a ContextThemeWrapper on AndroidTV
-            if (getContext() instanceof Activity)
-                ((Activity) getContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
-            else if (getContext() instanceof ContextWrapper)
-                ((Activity) ((ContextWrapper)getContext()).getBaseContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
+            if (mFolderPickerLauncher != null) {
+                mFolderPickerLauncher.launch(i);
+            } else {
+                // fallback for contexts without a launcher (e.g. non-fragment host)
+                if (getContext() instanceof Activity)
+                    ((Activity) getContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
+                else if (getContext() instanceof ContextWrapper)
+                    ((Activity) ((ContextWrapper) getContext()).getBaseContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
+            }
         }
     }
 
