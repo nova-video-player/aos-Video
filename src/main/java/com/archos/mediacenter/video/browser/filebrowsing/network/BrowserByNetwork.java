@@ -27,6 +27,7 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -407,6 +408,9 @@ public class BrowserByNetwork extends BrowserByFolder {
     }
 
     private class HelpOverlayHandler extends Handler {
+        HelpOverlayHandler() {
+            super(Looper.getMainLooper());
+        }
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == MSG_START_HELP_OVERLAY && mIndexFolderActionView != null) {

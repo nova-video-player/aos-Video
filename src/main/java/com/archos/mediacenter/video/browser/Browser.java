@@ -33,6 +33,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.view.ContextMenu;
@@ -150,7 +151,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     protected boolean mHideWatched;
     protected boolean mHideOption = false;
     protected int LOADING_FINISHED = 2;
-    protected final Handler mHandler = new Handler();
+    protected final Handler mHandler = new Handler(Looper.getMainLooper());
 
     protected int mDeletedPosition;
     protected int mFirstVisiblePosition;

@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -119,7 +120,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
         detailRow.setImageScaleUpAllowed(false);
         checkIfIsShortcut(mShortcut.getUri());
         addActions(detailRow);
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.getMainLooper());
         mDetailsRowPresenter = new ArchosDetailsOverviewRowPresenter(new ShortcutDetailsPresenter());
         //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
 

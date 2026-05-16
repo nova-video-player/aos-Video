@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -133,7 +134,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     int mReady = 0;
     protected ListingEngine mListingEngine;
 
-    protected final Handler mHandler = new Handler() {
+    protected final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             // The video browser activity may have been paused since the request

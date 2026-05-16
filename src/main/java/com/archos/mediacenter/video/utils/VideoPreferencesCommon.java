@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
@@ -1027,7 +1028,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         entryArray[0] = getResources().getString(R.string.codepage_default,getResources().getString(cpStringID));
         lp.setEntries(entryArray);
 
-        mHanlder = new Handler();
+        mHanlder = new Handler(Looper.getMainLooper());
         mTraktSigninPreference = (TraktSigninDialogPreference) findPreference(KEY_TRAKT_SIGNIN);
         if (mTraktSigninPreference != null) mTraktSigninPreference.setLauncher(mTraktAuthLauncher);
         if(mTraktSigninPreference!= null && savedInstanceState!=null) {

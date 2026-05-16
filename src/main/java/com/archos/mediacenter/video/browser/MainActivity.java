@@ -800,7 +800,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     private class GlobalResumeContentObserver extends ContentObserver {
         public GlobalResumeContentObserver() {
-            super(new Handler());
+            super(new Handler(Looper.getMainLooper()));
         }
 
         @Override

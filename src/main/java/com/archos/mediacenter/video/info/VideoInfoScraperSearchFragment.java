@@ -19,6 +19,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -89,7 +90,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
 
     private Scraper mScraper;
 
-    private final Handler mHandler = new Handler (this);
+    private final Handler mHandler = new Handler(Looper.getMainLooper(), this);
     
     // Search thread
     private Thread mResThread;
