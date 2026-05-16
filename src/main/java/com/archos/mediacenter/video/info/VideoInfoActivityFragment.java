@@ -177,6 +177,19 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private Delete delete;
     private List<Uri> deleteUrisList;
 
+    private final ActivityResultLauncher<Intent> playLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> ExternalPlayerResultListener.getInstance().onActivityResult(
+                    PLAY_ACTIVITY_REQUEST_CODE, result.getResultCode(), result.getData()));
+
+    private final ActivityResultLauncher<Intent> subtitleLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { if (result.getResultCode() == Activity.RESULT_OK) onSubtitleResult(); });
+
+    private final ActivityResultLauncher<Intent> backdropLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { if (result.getResultCode() == Activity.RESULT_OK) onBackdropResult(); });
+
     private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
             result -> { // result can be RESULT_OK, RESULT_CANCELED
@@ -686,31 +699,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 }
             };
         updateUI(); // be sure to be on right state
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (log.isDebugEnabled()) log.debug("onActivityResult");
-        if (requestCode == REQUEST_CODE_SUBTITLES_DOWNLOADER_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            if (log.isDebugEnabled()) log.debug("onActivityResult, get RESULT_OK from SubtitlesDownloaderActivity");
-            // Update the subtitle row
-            if (mSubtitleFilesListerTask != null)
-                mSubtitleFilesListerTask.cancel();
-            //invalidate cache
-            mSubtitleListCache.remove(mCurrentVideo.getFilePath());
-            mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity());
-            mSubtitleFilesListerTask.execute(mCurrentVideo);
-        }
-        else if(requestCode == REQUEST_BACKDROP_ACTIVITY && resultCode == Activity.RESULT_OK){
-            if(mFullScraperTagsTask!=null)
-                mFullScraperTagsTask.cancel();
-            mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
-            mFullScraperTagsTask.execute(mCurrentVideo);
-        }
-        else if (requestCode == PLAY_ACTIVITY_REQUEST_CODE){
-            ExternalPlayerResultListener.getInstance().onActivityResult(requestCode, resultCode, data);
-        }
-        else super.onActivityResult(requestCode,resultCode, data);
     }
 
     private void updateActionButtons(){
@@ -1224,7 +1212,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.setClass(getActivity(), SubtitlesDownloaderActivity2.class);
             intent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, mCurrentVideo.getFilePath());
-            startActivityForResult(intent, REQUEST_CODE_SUBTITLES_DOWNLOADER_ACTIVITY);
+            subtitleLauncher.launch(intent);
         }else if(view == mTMDBIcon){
             // Format TMDB URL with movie ID and preferred language
             final String language, tmdbUrl;
@@ -1345,7 +1333,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
             intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mCurrentVideo);
             intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_BACKDROP, true);
-            startActivityForResult(intent, REQUEST_BACKDROP_ACTIVITY);
+            backdropLauncher.launch(intent);
         } else if (menuItemId == R.string.delete) {
             deleteFile_async(mCurrentVideo);
             if (log.isDebugEnabled()) log.debug("onMenuItemClick: deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
@@ -1489,10 +1477,26 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     }
 
 
+    private void onSubtitleResult() {
+        if (log.isDebugEnabled()) log.debug("onSubtitleResult: get RESULT_OK from SubtitlesDownloaderActivity");
+        if (mSubtitleFilesListerTask != null)
+            mSubtitleFilesListerTask.cancel();
+        mSubtitleListCache.remove(mCurrentVideo.getFilePath());
+        mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity());
+        mSubtitleFilesListerTask.execute(mCurrentVideo);
+    }
+
+    private void onBackdropResult() {
+        if (mFullScraperTagsTask != null)
+            mFullScraperTagsTask.cancel();
+        mFullScraperTagsTask = new FullScraperTagsTask(getActivity());
+        mFullScraperTagsTask.execute(mCurrentVideo);
+    }
+
     @Override
     public void startActivityWithResultListener(Intent intent) {
         if (log.isDebugEnabled()) log.debug("startActivityWithResultListener");
-        startActivityForResult(intent, PLAY_ACTIVITY_REQUEST_CODE);
+        playLauncher.launch(intent);
     }
 
     //retrieve info on file such as codecs, etc

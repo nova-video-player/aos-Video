@@ -22,6 +22,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.PreferenceManager;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -78,8 +80,13 @@ abstract public class BrowserCategory extends ListFragment {
     protected static final int ITEM_ID_FTP = 4;
     protected static final int ITEM_ID_PROVIDER = 6;
     protected static final int ITEM_ID_NETWORK = 5;
-    protected static final int FILE_CHOOSER_ACTIVITY_REQUEST_CODE = 788;
-
+    final ActivityResultLauncher<Intent> fileChooserLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getData() != null) {
+                    VideoInfoActivity.startInstance(getActivity(), null, result.getData().getData(), -1L);
+                }
+            });
 
     private int mLibrarySize;
     protected int mSelectedItemId;
@@ -186,14 +193,6 @@ abstract public class BrowserCategory extends ListFragment {
             categoryView.setSelector(selector);
         }
         return categoryView;
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode, data);
-        if(requestCode == FILE_CHOOSER_ACTIVITY_REQUEST_CODE&&data!=null){
-            //PlayUtils.startVideo(getActivity(), data.getData(), data.getData(), null, null, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, null);
-            VideoInfoActivity.startInstance(getActivity(), null, data.getData(),new Long(-1));
-        }
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {

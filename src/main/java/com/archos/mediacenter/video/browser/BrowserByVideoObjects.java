@@ -18,6 +18,9 @@ package com.archos.mediacenter.video.browser;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -75,6 +78,11 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
 
     private static final int PLAY_ACTIVITY_REQUEST_CODE = 780;
     protected AdapterByVideoObjectsInterface mAdapterByVideoObjects;
+
+    private final ActivityResultLauncher<Intent> playLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> ExternalPlayerResultListener.getInstance().onActivityResult(
+                    PLAY_ACTIVITY_REQUEST_CODE, result.getResultCode(), result.getData()));
 
     @Override
     protected void postBindAdapter() {
@@ -388,14 +396,6 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
 
     @Override
     public void startActivityWithResultListener(Intent intent) {
-        startActivityForResult(intent, PLAY_ACTIVITY_REQUEST_CODE);
-    }
-
-    @Override
-    public void  onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == PLAY_ACTIVITY_REQUEST_CODE){
-            ExternalPlayerResultListener.getInstance().onActivityResult(requestCode,resultCode,data);
-        }
-        else super.onActivityResult(requestCode,resultCode,data);
+        playLauncher.launch(intent);
     }
 }

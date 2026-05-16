@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 
@@ -57,6 +59,31 @@ public class MainActivityLeanback extends LeanbackActivity {
     private String mCurrentUiModeLeanback;
     private PermissionChecker mPermissionChecker;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
+
+    private final ActivityResultLauncher<Intent> preferencesLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == VideoPreferencesCommon.ACTIVITY_RESULT_UI_MODE_CHANGED) {
+                    String newUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this)
+                            .getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
+                    if (!newUiModeLeanback.equals(mCurrentUiModeLeanback)) {
+                        finish();
+                        startActivity(new Intent(this, EntryActivity.class));
+                    }
+                    mCurrentUiModeLeanback = null;
+                } else if (result.getResultCode() == VideoPreferencesCommon.ACTIVITY_RESULT_UI_ZOOM_CHANGED) {
+                    new DensityTweak(this).forceDensityDialogAtNextStart();
+                    finish();
+                    startActivity(new Intent(this, EntryActivity.class));
+                } else if (result.getResultCode() == VideoPreferencesCommon.ACTIVITY_RESULT_THEME_CHANGED) {
+                    ThemeManager.getInstance(this).applyWindowTheme(this);
+                    MainFragment mainFragment = (MainFragment) getSupportFragmentManager()
+                            .findFragmentById(R.id.main_browse_fragment);
+                    if (mainFragment != null) {
+                        mainFragment.refreshTheme();
+                    }
+                }
+            });
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -173,49 +200,9 @@ public class MainActivityLeanback extends LeanbackActivity {
      * This is ugly I know. It's because VideoViewClickedListener has lost a lot of context...
      */
     public void startPreferencesActivity() {
-        startActivityForResult(new Intent(this, VideoSettingsActivity.class), ACTIVITY_REQUEST_CODE_PREFERENCES);
         // Save the uimode_leanback to check if it changed when back from preferences
         mCurrentUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
-    }
-
-    /**
-     * Handle the return from VideoSettingsActivity, check if the UiMode has been changed or if
-     * the zoom dialog must be displayed
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Preference activity sets RESULT_OK if something need to be checked when back
-        if (requestCode == ACTIVITY_REQUEST_CODE_PREFERENCES) {
-            if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_UI_MODE_CHANGED) {
-                // Check if the UI mode changed
-                String newUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
-                if (!newUiModeLeanback.equals(mCurrentUiModeLeanback)) {
-                    // ui mode changed -> quit the current activity and restart
-                    finish();
-                    startActivity(new Intent(this, EntryActivity.class));
-                }
-                mCurrentUiModeLeanback = null; // reset
-            } else if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_UI_ZOOM_CHANGED) {
-                new DensityTweak(this)
-                        .forceDensityDialogAtNextStart();
-                // restart the leanback activity for user to change the zoom
-                finish();
-                startActivity(new Intent(this, EntryActivity.class));
-            } else if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_THEME_CHANGED) {
-                // Theme changed - update window background and refresh MainFragment
-                ThemeManager.getInstance(this).applyWindowTheme(this);
-                MainFragment mainFragment = (MainFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.main_browse_fragment);
-                if (mainFragment != null) {
-                    mainFragment.refreshTheme();
-                }
-            }
-        }
+        preferencesLauncher.launch(new Intent(this, VideoSettingsActivity.class));
     }
 
     @Override

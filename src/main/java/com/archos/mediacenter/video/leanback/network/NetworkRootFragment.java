@@ -26,6 +26,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.BrowseSupportFragment;
@@ -117,6 +119,26 @@ public class NetworkRootFragment extends BrowseSupportFragment {
     private ArrayObjectAdapter mNetworkShortcutsAdapter;
     private NetworkShortcutsLoaderTask mNetworkShortcutsLoaderTask;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
+
+    private final ActivityResultLauncher<Intent> detailsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_CODE_SHORTCUTS_MODIFIED) {
+                    mShortcutsLoaderTask = new ShortcutsLoaderTask();
+                    mShortcutsLoaderTask.execute();
+                    mNetworkShortcutsLoaderTask = new NetworkShortcutsLoaderTask();
+                    mNetworkShortcutsLoaderTask.execute();
+                }
+            });
+
+    private final ActivityResultLauncher<Intent> browsingLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_CODE_SHORTCUTS_MODIFIED) {
+                    mShortcutsLoaderTask = new ShortcutsLoaderTask();
+                    mShortcutsLoaderTask.execute();
+                }
+            });
 
     // temp debug flag (to remove once re-scan feature is published)
     static boolean sDisplayRescanItem = false;
@@ -273,20 +295,6 @@ public class NetworkRootFragment extends BrowseSupportFragment {
         mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());        setOnItemViewClickedListener(mClickListener);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode==REQUEST_CODE_DETAILS && resultCode==RESULT_CODE_SHORTCUTS_MODIFIED) {
-            mShortcutsLoaderTask = new ShortcutsLoaderTask();
-            mShortcutsLoaderTask.execute();
-            mNetworkShortcutsLoaderTask = new NetworkShortcutsLoaderTask();
-            mNetworkShortcutsLoaderTask.execute();
-        }
-        else if (requestCode==REQUEST_CODE_BROWSING && resultCode==RESULT_CODE_SHORTCUTS_MODIFIED) {
-            mShortcutsLoaderTask = new ShortcutsLoaderTask();
-            mShortcutsLoaderTask.execute();
-        }
-    }
-
     OnItemViewClickedListener mClickListener = new OnItemViewClickedListener() {
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
@@ -294,10 +302,9 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 if (log.isDebugEnabled()) log.debug("onItemClicked: GenericNetworkShortcut");
                 Intent intent = new Intent(getActivity(), NetworkShortcutDetailsActivity.class);
                 intent.putExtra(NetworkShortcutDetailsFragment.EXTRA_SHORTCUT, (Serializable) item);
-                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                detailsLauncher.launch(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                         ((NetworkShortcutPresenter.NetworkShortcutViewHolder) itemViewHolder).getImageView(),
-                        NetworkShortcutDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                startActivityForResult(intent, REQUEST_CODE_DETAILS, bundle);
+                        NetworkShortcutDetailsFragment.SHARED_ELEMENT_NAME));
             }
             else if (item instanceof NetworkBrowse) { // browse network
                 if (log.isDebugEnabled()) log.debug("onItemClicked: NetworkBrowse");
@@ -346,7 +353,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                             intent.putExtra(ListingActivity.EXTRA_ROOT_URI, uri);
                             String shareName = FileUtils.getName(uri);
                             intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, (shareName==null || shareName.isEmpty())?uri.getHost():shareName);
-                            startActivityForResult(intent, REQUEST_CODE_BROWSING);
+                            browsingLauncher.launch(intent);
                         }
                     });
                     dialog.setOnCancelClickListener(new View.OnClickListener() {
@@ -361,10 +368,9 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 if (log.isDebugEnabled()) log.debug("onItemClicked: NetworkShortcut");
                 Intent intent = new Intent(getActivity(), NetworkShortcutDetailsActivity.class);
                 intent.putExtra(NetworkShortcutDetailsFragment.EXTRA_SHORTCUT, (Serializable)item);
-                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                detailsLauncher.launch(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                         ((NetworkShortcutPresenter.NetworkShortcutViewHolder) itemViewHolder).getImageView(),
-                        NetworkShortcutDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                startActivityForResult(intent, REQUEST_CODE_DETAILS, bundle);
+                        NetworkShortcutDetailsFragment.SHARED_ELEMENT_NAME));
             }
             else if (item instanceof Box) {
                 if (log.isDebugEnabled()) log.debug("onItemClicked: Box");
@@ -382,7 +388,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 Intent intent = new Intent(getActivity(), ListingActivity.getActivityForUri(uri));
                 intent.putExtra(ListingActivity.EXTRA_ROOT_URI, uri);
                 intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, share.getName());
-                startActivityForResult(intent, REQUEST_CODE_BROWSING);
+                browsingLauncher.launch(intent);
             }
             else if (item instanceof UpnpServer) {
                 if (log.isDebugEnabled()) log.debug("onItemClicked: UpnpServer");
@@ -395,7 +401,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 Intent intent = new Intent(getActivity(), ListingActivity.getActivityForUri(uri));
                 intent.putExtra(ListingActivity.EXTRA_ROOT_URI, uri);
                 intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, server.getName());
-                startActivityForResult(intent, REQUEST_CODE_BROWSING);
+                browsingLauncher.launch(intent);
             }
         }
     };

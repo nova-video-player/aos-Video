@@ -61,6 +61,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -145,6 +147,31 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     public static final int MENU_CHANGE_FOLDER = 6;
 
     public static final int ACTIVITY_REQUEST_CODE_PREFERENCES = 101;
+
+    private String mCurrentUiModeLeanback = null;
+
+    private final ActivityResultLauncher<Intent> playLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> ExternalPlayerResultListener.getInstance().onActivityResult(
+                    PLAY_ACTIVITY_REQUEST_CODE, result.getResultCode(), result.getData()));
+
+    private final ActivityResultLauncher<Intent> preferencesLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == VideoPreferencesCommon.ACTIVITY_RESULT_UI_MODE_CHANGED) {
+                    String newUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this)
+                            .getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
+                    if (!newUiModeLeanback.equals(mCurrentUiModeLeanback)) {
+                        finish();
+                        startActivity(new Intent(this, EntryActivity.class));
+                    }
+                    mCurrentUiModeLeanback = null;
+                } else if (result.getResultCode() == VideoPreferencesCommon.ACTIVITY_RESULT_UI_ZOOM_CHANGED) {
+                    new DensityTweak(this).forceDensityDialogAtNextStart();
+                    finish();
+                    startActivity(new Intent(this, EntryActivity.class));
+                }
+            });
 
     private int mGlobalResumeId = -1;
     private GlobalResumeContentObserver mGlobalResumeContentObserver = null;
@@ -624,7 +651,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public void startActivityWithResultListener(Intent intent) {
-        startActivityForResult(intent, PLAY_ACTIVITY_REQUEST_CODE);
+        playLauncher.launch(intent);
     }
 
     @Override
@@ -718,51 +745,12 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         return ret;
     }
 
-    private String mCurrentUiModeLeanback = null;
-
-    /**
-     * Handle the return from VideoPreferencesActivity, check if the UiMode has been changed or if
-     * the zoom dialog must be displayed
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Preference activity sets RESULT_OK if something need to be checked when back
-        if (requestCode == ACTIVITY_REQUEST_CODE_PREFERENCES) {
-            if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_UI_MODE_CHANGED) {
-                // Check if the UI mode changed
-                String newUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
-                if (!newUiModeLeanback.equals(mCurrentUiModeLeanback)) {
-                    // ui mode changed -> quit the current activity and restart
-                    finish();
-                    startActivity(new Intent(this, EntryActivity.class));
-                }
-                mCurrentUiModeLeanback = null; // reset
-            }
-            else if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_UI_ZOOM_CHANGED) {
-                new DensityTweak(this)
-                        .forceDensityDialogAtNextStart();
-                // restart the leanback activity for user to change the zoom
-                finish();
-                startActivity(new Intent(this, EntryActivity.class));
-            }
-        }
-       else if(requestCode == PLAY_ACTIVITY_REQUEST_CODE){
-            ExternalPlayerResultListener.getInstance().onActivityResult(requestCode,resultCode,data);
-        }
-
-    }
-
     public void startPreference(){
         Intent p = new Intent(Intent.ACTION_MAIN);
         p.setComponent(new ComponentName(this, VideoPreferencesActivity.class));
-        startActivityForResult(p, ACTIVITY_REQUEST_CODE_PREFERENCES);
         // Save the uimode_leanback to check if it changed when back from preferences
         mCurrentUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
+        preferencesLauncher.launch(p);
     }
 
     /**

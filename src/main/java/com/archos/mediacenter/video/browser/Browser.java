@@ -181,6 +181,11 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     private List<Uri> deleteUrisList = null;
     private static Boolean isFileManagerServiceBound = false;
 
+    private final ActivityResultLauncher<Intent> playLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> ExternalPlayerResultListener.getInstance().onActivityResult(
+                    PLAY_ACTIVITY_REQUEST_CODE, result.getResultCode(), result.getData()));
+
     private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
             result -> { // result can be RESULT_OK, RESULT_CANCELED
@@ -836,15 +841,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
     @Override
     public void startActivityWithResultListener(Intent intent) {
-        startActivityForResult(intent, PLAY_ACTIVITY_REQUEST_CODE);
-    }
-
-    @Override
-    public void  onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == PLAY_ACTIVITY_REQUEST_CODE){
-            ExternalPlayerResultListener.getInstance().onActivityResult(requestCode,resultCode,data);
-        }
-        else super.onActivityResult(requestCode,resultCode,data);
+        playLauncher.launch(intent);
     }
 
     public void showSubsRetrievingDialog(SubtitleManager engine){

@@ -23,6 +23,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.DetailsSupportFragment;
@@ -67,6 +69,17 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
     private static final int ACTION_ADD_INDEX = 4;
 
     protected Shortcut mShortcut;
+
+    private final ActivityResultLauncher<Intent> browsingLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                // If the shortcut has been modified (removed) from the NetworkListingActivity launched by ACTION_OPEN,
+                // we must forward the info to the root fragment
+                if (result.getResultCode() == NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED) {
+                    getActivity().setResult(NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED);
+                }
+                getActivity().finish();
+            });
 
     public boolean isHimselfIndexedFolder = false;
     public boolean isCurrentDirectoryShortcut = false;
@@ -259,16 +272,6 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
         mOverlay.pause();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // If the shortcut has been modified (removed) from the NetworkListingActivity launched by ACTION_OPEN,
-        // we must forward the info to the root fragment
-        if (requestCode==NetworkRootFragment.REQUEST_CODE_BROWSING && resultCode==NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED) {
-            getActivity().setResult(NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED);
-        }
-        getActivity().finish();
-    }
-
     protected void slightlyDelayedFinish() {
         getView().postDelayed(new Runnable() {
             @Override
@@ -285,7 +288,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
             Intent intent = new Intent(getActivity(), ListingActivity.getActivityForUri(mShortcut.getUri()));
             intent.putExtra(ListingActivity.EXTRA_ROOT_URI, mShortcut.getUri());
             intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, mShortcut.getName());
-            startActivityForResult(intent, NetworkRootFragment.REQUEST_CODE_BROWSING);
+            browsingLauncher.launch(intent);
         }
         else if (action.getId() == ACTION_REINDEX) {
             //If we are scraping, we need to stop that.

@@ -231,7 +231,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("video/*");
-            startActivityForResult(intent.createChooser(intent, "Choose file"), FILE_CHOOSER_ACTIVITY_REQUEST_CODE);
+            fileChooserLauncher.launch(intent.createChooser(intent, "Choose file"));
             //restore browser
             mSelectedItemId = mOldSelectedItemId;
             return ;

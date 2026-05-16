@@ -285,6 +285,24 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private static Delete delete;
     private static List<Uri> deleteUrisList = null;
 
+    private final ActivityResultLauncher<Intent> playLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> ExternalPlayerResultListener.getInstance().onActivityResult(
+                    PLAY_ACTIVITY_REQUEST_CODE, result.getResultCode(), result.getData()));
+
+    private final ActivityResultLauncher<Intent> subtitleLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    if (log.isDebugEnabled()) log.debug("Get RESULT_OK from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
+                    if (mSubtitleFilesListerTask != null) {
+                        mSubtitleFilesListerTask.cancel();
+                    }
+                    mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity());
+                    mSubtitleFilesListerTask.execute(mVideo);
+                }
+            });
+
     private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
             result -> { // result can be RESULT_OK, RESULT_CANCELED
@@ -1169,7 +1187,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void startActivityWithResultListener(Intent intent) {
         if (isAdded()) {
-            startActivityForResult(intent, PLAY_ACTIVITY_REQUEST_CODE);
+            playLauncher.launch(intent);
         } else {
             log.error("startActivityWithResultListener: fragment not added");
         }
@@ -1810,7 +1828,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.setClass(getActivity(), SubtitlesDownloaderActivity2.class);
         intent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, mVideo.getFilePath());
-        startActivityForResult(intent, REQUEST_CODE_SUBTITLES_ACTIVITY);
+        subtitleLauncher.launch(intent);
     }
 
     /** Implements SubtitleInterface */
@@ -1820,7 +1838,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         intent.setClass(getActivity(), SubtitlesWizardActivity.class);
         intent.setData(mVideo.getFileUri());
-        startActivityForResult(intent, REQUEST_CODE_SUBTITLES_ACTIVITY);
+        subtitleLauncher.launch(intent);
     }
 
     private void startAds(int requestCode) {
@@ -1845,23 +1863,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
         mResumeFromPlayer = true;
         PlayUtils.startVideo(getActivity(), mVideo, resume, false,resumePos, this, getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1));
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_SUBTITLES_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            if (log.isDebugEnabled()) log.debug("Get RESULT_OK from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
-            // Update the subtitle row
-            if (mSubtitleFilesListerTask !=null) {
-                mSubtitleFilesListerTask.cancel();
-            }
-            mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity());
-            mSubtitleFilesListerTask.execute(mVideo);
-        }
-        else if(requestCode == PLAY_ACTIVITY_REQUEST_CODE){
-            ExternalPlayerResultListener.getInstance().onActivityResult(requestCode,resultCode,data);
-        }
-        else super.onActivityResult(requestCode,resultCode,data);
     }
 
     /** Saves a Poster as default poster for a video and update the current poster */

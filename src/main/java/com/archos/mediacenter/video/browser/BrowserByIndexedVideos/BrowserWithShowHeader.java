@@ -17,6 +17,9 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
 import android.app.Activity;
 import android.content.Intent;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -86,8 +89,21 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     protected Tvshow mShow;
     protected int SHOW_LOADER_ID = 1;
     private TvShowAsyncTask mTvShowAsyncTask;
-    private final static int SCRAPER_REQUEST = 0;
     private int mCurrentPlotLines = 5;
+
+    private final ActivityResultLauncher<Intent> scraperLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    long newShowID = result.getData().getIntExtra(VideoInfoShowScraperFragment.SHOW_ID, -1);
+                    if (newShowID != -1 && newShowID != mShowId) {
+                        mShowId = newShowID;
+                        getArguments().putLong(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID, mShowId);
+                        LoaderManager.getInstance(this).restartLoader(0, null, this);
+                        LoaderManager.getInstance(this).restartLoader(SHOW_LOADER_ID, null, this);
+                    }
+                }
+            });
 
     private ImageViewSetter mBackgroundSetter;
     private ImageProcessor mBackgroundLoader;
@@ -199,23 +215,11 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == Activity.RESULT_OK){
-            long newShowID = data.getIntExtra(VideoInfoShowScraperFragment.SHOW_ID, -1);
-            if(newShowID!=-1&&newShowID!=mShowId){
-                mShowId = newShowID;
-                getArguments().putLong(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID, mShowId);
-                LoaderManager.getInstance(this).restartLoader(0, null, this);
-                LoaderManager.getInstance(this).restartLoader(SHOW_LOADER_ID, null, this);
-            }
-        }
-    }
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.string.scrap_series_change){
             Intent intent = new Intent(getActivity(), VideoInfoScraperActivity.class);
             intent.putExtra(VideoInfoScraperActivity.EXTRA_SHOW, mShow);
-            startActivityForResult(intent, SCRAPER_REQUEST);
+            scraperLauncher.launch(intent);
             return true;
         }else if(item.getItemId()==R.string.info_menu_series_backdrop_select){
             Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);

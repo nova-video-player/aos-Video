@@ -64,6 +64,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -248,8 +250,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     // from WindowManagerPolicy.java ; should be aligned in case of change
     private static final String ACTION_HDMI_PLUGGED = "android.intent.action.HDMI_PLUGGED";
     private static final String EXTRA_HDMI_PLUGGED_STATE = "state";
-    private static final int SUBTITLE_REQUEST = 0;
     private static final String[] GENERIC_TEXT_SUBTITLE_FORMATS = {"srt", "vtt"};
+
+    private final ActivityResultLauncher<Intent> subtitleLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { if (result.getResultCode() == Activity.RESULT_OK) onSubtitleResult(); });
 
     private boolean mHasAskedFloatingPermission;
     private boolean mIsInfoActivityDisplayed;
@@ -3797,11 +3802,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         return true;
     }
 
+    private void onSubtitleResult() {
+        if (log.isDebugEnabled()) log.debug("Get result from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
+        mPlayer.checkSubtitles();
+    }
+
     private void downloadSubtitles() {
         Intent subIntent = new Intent(Intent.ACTION_MAIN);
         subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
         subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, PlayerService.sPlayerService.getStreamingUri().toString());
-        startActivityForResult(subIntent, SUBTITLE_REQUEST);
+        subtitleLauncher.launch(subIntent);
     }
 
     private void chooseSubtitles() {
@@ -3810,7 +3820,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         subIntent.setClass(mContext, SubtitlesWizardActivity.class);
         subIntent.setData(uri);
-        startActivityForResult(subIntent, SUBTITLE_REQUEST);
+        subtitleLauncher.launch(subIntent);
     }
 
     private static boolean isGenericTextSubtitleFormat(String lang) {
@@ -3849,14 +3859,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         return languageStr.substring(0, Math.min(2, languageStr.length())).toLowerCase();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == SUBTITLE_REQUEST && resultCode == Activity.RESULT_OK){
-            if (log.isDebugEnabled()) log.debug("Get result from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
-            mPlayer.checkSubtitles();
-        }
-    }
     protected boolean forceExitOnTouch() {
         return mForceExitOnTouch;
     }
