@@ -195,8 +195,9 @@ abstract public class BrowserCategory extends ListFragment {
         return categoryView;
     }
 
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String lastPath = null;
@@ -234,7 +235,7 @@ abstract public class BrowserCategory extends ListFragment {
         if (propertyChangeListener == null)
             propertyChangeListener = evt -> {
                 if (evt.getOldValue() != evt.getNewValue()) {
-                    if (DBG) Log.d(TAG, "onActivityCreated: updateUI NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
+                    if (DBG) Log.d(TAG, "onViewCreated: updateUI NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
                     updateUI();
                 }
             };

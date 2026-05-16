@@ -336,8 +336,8 @@ public class BrowserByNetwork extends BrowserByFolder {
         }
     };
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mIndexFolderActionView = (ViewGroup)getActivity().getLayoutInflater().inflate(R.layout.action_bar_menu_item_index_folder, null, false);
         if (mIndexFolderActionView != null) {

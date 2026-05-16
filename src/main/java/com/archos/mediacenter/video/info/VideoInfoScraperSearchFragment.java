@@ -157,16 +157,6 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
         super.onDestroyView();
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-    	super.onActivityCreated(savedInstanceState);
-    	// The activity was destroyed while the selection thread was running => now that
-        // the data are restored  we can tell the thread that the activity has changed
-    	if (mSelectionThread != null) {
-            if (log.isDebugEnabled()) log.debug("onActivityCreated: unpause mSelectionThread");
-    		mSelectionThread.unpause();
-    	}
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -278,8 +268,15 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
 
     	// Check if everything is ready to setup the fragment
     	setupIfReady();
+
+    	// The activity was destroyed while the selection thread was running => now that
+    	// the data are restored we can tell the thread that the activity has changed
+    	if (mSelectionThread != null) {
+    		if (log.isDebugEnabled()) log.debug("onViewCreated: unpause mSelectionThread");
+    		mSelectionThread.unpause();
+    	}
     }
-    
+
     private void initVisibilities() {
     	mHeaderMessage.setVisibility(View.VISIBLE);
 		mMessage.setVisibility(View.GONE);

@@ -136,38 +136,10 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment implements
         } else {
             throw new IllegalArgumentException("Did not find R.id.browse_frame in BrowseFragment! Need to update the emptyview hack!");
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        mOverlay.destroy();
-        // Unregister theme change listener
-        if (mThemeChangeListener != null) {
-            ThemeManager.getInstance(getActivity()).unregisterThemeChangeListener(mThemeChangeListener);
-        }
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mBackgroundWorkWasOngoing = isBackgroundWorkOngoing();
-        mOverlay.resume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mOverlay.pause();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
-        if (log.isDebugEnabled()) log.debug("onActivityCreated: mSeparateAnimeFromShowMovie={}", mSeparateAnimeFromShowMovie);
+        if (log.isDebugEnabled()) log.debug("onViewCreated: mSeparateAnimeFromShowMovie={}", mSeparateAnimeFromShowMovie);
 
         mSortOrder = mPrefs.getString(getSortOrderParamKey(), mDefaultSort);
 
@@ -199,6 +171,29 @@ public abstract class TvshowsByFragment extends BrowseSupportFragment implements
 
         // Setup theme change listener
         setupThemeListener();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mOverlay.destroy();
+        // Unregister theme change listener
+        if (mThemeChangeListener != null) {
+            ThemeManager.getInstance(getActivity()).unregisterThemeChangeListener(mThemeChangeListener);
+        }
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mBackgroundWorkWasOngoing = isBackgroundWorkOngoing();
+        mOverlay.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mOverlay.pause();
     }
 
     private void setupEventListeners() {

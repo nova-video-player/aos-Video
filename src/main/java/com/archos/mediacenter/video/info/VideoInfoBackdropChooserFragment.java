@@ -106,12 +106,7 @@ public class VideoInfoBackdropChooserFragment extends Fragment implements
         mGrid = (GridView) mView.findViewById(R.id.list);
         mGrid.setAdapter(mAdapter);
         mGrid.setOnItemClickListener(this);
-    }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        if (DBG_LC) Log.d(TAG, "onActivityCreated");
-        super.onActivityCreated(savedInstanceState);
         startLoadingIfReady();
     }
 

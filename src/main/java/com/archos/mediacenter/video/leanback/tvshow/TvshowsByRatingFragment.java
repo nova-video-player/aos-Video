@@ -19,6 +19,7 @@ import androidx.loader.content.Loader;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
@@ -47,8 +48,8 @@ public class TvshowsByRatingFragment extends TvshowsByFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         setTitle(getString(R.string.tvshows_by_rating));
         mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
     }

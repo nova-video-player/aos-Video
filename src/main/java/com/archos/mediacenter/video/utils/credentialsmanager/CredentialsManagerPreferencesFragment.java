@@ -58,10 +58,6 @@ public class CredentialsManagerPreferencesFragment extends Fragment implements C
         refreshCredentialsList();
         return v;
     }
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
 
 
     @Override

@@ -114,12 +114,7 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
         mGrid = (GridView) view.findViewById(R.id.list);
         mGrid.setAdapter(mAdapter);
         mGrid.setOnItemClickListener(this);
-    }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        if (DBG_LC) Log.d(TAG, "onActivityCreated");
-        super.onActivityCreated(savedInstanceState);
         startLoadingIfReady();
     }
 

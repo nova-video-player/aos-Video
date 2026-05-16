@@ -138,40 +138,6 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         } else {
             throw new IllegalArgumentException("Did not find R.id.browse_frame in BrowseFragment! Need to update the emptyview hack!");
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (log.isDebugEnabled()) log.debug("onDestroyView");
-        clearRowAdapters();
-        mCurrentCategoriesCursor = null;
-        mOverlay.destroy();
-        // Unregister theme change listener
-        if (mThemeChangeListener != null) {
-            ThemeManager.getInstance(getActivity()).unregisterThemeChangeListener(mThemeChangeListener);
-        }
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onResume() {
-        if (log.isDebugEnabled()) log.debug("onResume");
-        super.onResume();
-        mBackgroundWorkWasOngoing = isBackgroundWorkOngoing();
-        mOverlay.resume();
-    }
-
-    @Override
-    public void onPause() {
-        if (log.isDebugEnabled()) log.debug("onPause");
-        super.onPause();
-        mOverlay.pause();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        if (log.isDebugEnabled()) log.debug("onActivityCreated");
-        super.onActivityCreated(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mSortOrder = mPrefs.getString(getSortOrderParamKey(), mDefaultSort);
@@ -204,6 +170,34 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
 
         // Setup theme change listener
         setupThemeListener();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (log.isDebugEnabled()) log.debug("onDestroyView");
+        clearRowAdapters();
+        mCurrentCategoriesCursor = null;
+        mOverlay.destroy();
+        // Unregister theme change listener
+        if (mThemeChangeListener != null) {
+            ThemeManager.getInstance(getActivity()).unregisterThemeChangeListener(mThemeChangeListener);
+        }
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onResume() {
+        if (log.isDebugEnabled()) log.debug("onResume");
+        super.onResume();
+        mBackgroundWorkWasOngoing = isBackgroundWorkOngoing();
+        mOverlay.resume();
+    }
+
+    @Override
+    public void onPause() {
+        if (log.isDebugEnabled()) log.debug("onPause");
+        super.onPause();
+        mOverlay.pause();
     }
 
     private void setupEventListeners() {

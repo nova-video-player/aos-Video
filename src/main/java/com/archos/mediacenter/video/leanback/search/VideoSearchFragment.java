@@ -21,6 +21,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.os.Looper;
 import android.util.Log;
 
@@ -119,8 +120,8 @@ public class VideoSearchFragment extends SafeSearchSupportFragment implements Se
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         Resources r = getResources();
         updateBackground();
         // Setup theme change listener

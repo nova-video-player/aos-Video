@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.os.Looper;
 
 import androidx.core.content.ContextCompat;
@@ -138,8 +139,8 @@ public abstract class ManualScrappingSearchFragment extends SafeSearchSupportFra
         }
     }
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         Resources r = getResources();
         updateBackground();

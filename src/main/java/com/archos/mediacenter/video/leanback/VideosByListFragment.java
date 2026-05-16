@@ -25,11 +25,18 @@ public class VideosByListFragment extends VideosByFragment {
     private static final String SORT_PARAM_KEY = VideosByListFragment.class.getName() + "_SORT";
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    protected Loader<Cursor> getSubsetLoader(Context context) {
+        return new VideosByListLoader(context);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(mEmptyView!=null)
+            mEmptyView.setText(R.string.no_list_detected);
 
         setTitle(getString(R.string.video_lists));
-        SearchOrbView searchOrbView = (SearchOrbView) getView().findViewById(R.id.title_orb);
+        SearchOrbView searchOrbView = (SearchOrbView) view.findViewById(R.id.title_orb);
         searchOrbView.setOrbIcon(ContextCompat.getDrawable(getActivity(), R.drawable.orb_minus));
         setOnSearchClickedListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -55,18 +62,6 @@ public class VideosByListFragment extends VideosByFragment {
                 }
             }
         });
-    }
-
-    @Override
-    protected Loader<Cursor> getSubsetLoader(Context context) {
-        return new VideosByListLoader(context);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if(mEmptyView!=null)
-            mEmptyView.setText(R.string.no_list_detected);
     }
 
     @Override
