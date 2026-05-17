@@ -570,6 +570,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         return null;
     }
 
+    @SuppressWarnings("deprecation") // getRealMetrics: API 30+ uses getCurrentWindowMetrics
     private int[] readFallbackDisplaySize() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             Rect bounds = getWindowManager().getCurrentWindowMetrics().getBounds();
@@ -1269,6 +1270,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         super.onDestroy();
     }
 
+    @SuppressWarnings("deprecation") // getRealSize/getSize: API 30+ uses getCurrentWindowMetrics
     private void updateSizes() {
         boolean isInPictureInPictureMode = Build.VERSION.SDK_INT>=Build.VERSION_CODES.N&&isInPictureInPictureMode();
         boolean isInMultiWindowMode = Build.VERSION.SDK_INT>=Build.VERSION_CODES.N&&isInMultiWindowMode();

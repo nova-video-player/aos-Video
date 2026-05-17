@@ -73,13 +73,18 @@ public class TorrentPathDialogPreference extends Preference {
             if (mFolderPickerLauncher != null) {
                 mFolderPickerLauncher.launch(i);
             } else {
-                // fallback for contexts without a launcher (e.g. non-fragment host)
-                if (getContext() instanceof Activity)
-                    ((Activity) getContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
-                else if (getContext() instanceof ContextWrapper)
-                    ((Activity) ((ContextWrapper) getContext()).getBaseContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
+                // fallback for contexts without a registered launcher (e.g. non-fragment host)
+                startActivityForResultFallback(i);
             }
         }
+    }
+
+    @SuppressWarnings("deprecation") // legacy fallback when no ActivityResultLauncher is available
+    private void startActivityForResultFallback(Intent i) {
+        if (getContext() instanceof Activity)
+            ((Activity) getContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
+        else if (getContext() instanceof ContextWrapper)
+            ((Activity) ((ContextWrapper) getContext()).getBaseContext()).startActivityForResult(i, VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE);
     }
 
     public static File getDefaultDirectory(SharedPreferences pref) {

@@ -103,8 +103,13 @@ public class TraktSigninDialogPreference extends Preference {
             mTraktAuthLauncher.launch(intent);
         } else {
             // fallback for contexts without a registered launcher
-            activity.startActivityForResult(intent, REQUEST_CODE_DEVICE_AUTH);
+            launchLegacy(activity, intent);
         }
+    }
+
+    @SuppressWarnings("deprecation") // legacy fallback when no ActivityResultLauncher is registered
+    private void launchLegacy(Activity activity, Intent intent) {
+        activity.startActivityForResult(intent, REQUEST_CODE_DEVICE_AUTH);
     }
 
     /**

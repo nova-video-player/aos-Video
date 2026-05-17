@@ -69,7 +69,6 @@ public class VideoSearchFragment extends SafeSearchSupportFragment implements Se
     private SearchRunnable mDelayedLoad;
     private VideoLoader mSearchLoader;
     private String mLastQuery;
-    private static final int SEARCH_REQUEST_CODE = 1;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
     private class SearchRunnable implements Runnable {
@@ -112,13 +111,6 @@ public class VideoSearchFragment extends SafeSearchSupportFragment implements Se
             mSearchLoader = new SearchVideoLoader(getActivity());
         }
     }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode==SEARCH_REQUEST_CODE&&data!=null){
-                setSearchQuery(data, true);
-        }
-    }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

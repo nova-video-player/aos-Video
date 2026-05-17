@@ -171,6 +171,7 @@ public class VideoInfoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressWarnings("deprecation") // legacy overload retained for callers without ActivityResultLauncher
     public static void startInstance(Context context,
                                      Fragment fragment,
                                      Video currentVideo,

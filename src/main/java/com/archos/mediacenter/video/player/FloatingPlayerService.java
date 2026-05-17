@@ -341,6 +341,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
                         return (float) Math.sqrt(x * x + y * y);
                     }
 
+                    @SuppressWarnings("deprecation") // getSize/getRealSize: API 30+ uses getCurrentWindowMetrics
                     public boolean onTouch(View v, MotionEvent event) {
 
                         // Dump touch event to log
@@ -541,6 +542,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
         updateSubsSize();
     }
+    @SuppressWarnings("deprecation") // getRealSize: API 30+ uses getCurrentWindowMetrics
     public void updateSubsSize(){
         if(mSize>=0) {
             Point point = new Point();

@@ -79,7 +79,6 @@ public abstract class ManualScrappingSearchFragment extends SafeSearchSupportFra
     private int mOffset;
     private NfoTask mNfoTask;
 
-    private static final int SEARCH_REQUEST_CODE = 1;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
 
@@ -132,12 +131,6 @@ public abstract class ManualScrappingSearchFragment extends SafeSearchSupportFra
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode==SEARCH_REQUEST_CODE&&data!=null){
-            setSearchQuery(data, true);
-        }
-    }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

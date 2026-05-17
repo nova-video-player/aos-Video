@@ -1262,6 +1262,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         setLocale(localeCode, getResources());
     }
 
+    @SuppressWarnings("deprecation") // updateConfiguration: needed for locale injection pre-API 33
     public static void setLocale(String localeCode, Resources resources) {
         // Warning no log.debug at this stage
         Locale locale;
