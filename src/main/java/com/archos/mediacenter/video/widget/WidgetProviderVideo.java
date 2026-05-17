@@ -105,6 +105,7 @@ public class WidgetProviderVideo extends AppWidgetProvider {
      *  - if a widget id is provided => apply the action to this widget only.
      *  - if no id is provided => apply the action to all the existing video widgets.
      */
+    @SuppressWarnings("deprecation") // notifyAppWidgetViewDataChanged(int[], int) deprecated API 33; no array-based compat replacement
     @Override
     public void onReceive(Context context, Intent intent) {
         if (log.isDebugEnabled()) log.debug("onReceive intent={}", intent);
@@ -239,6 +240,7 @@ public class WidgetProviderVideo extends AppWidgetProvider {
     ** Local methods
     *****************************************************************/
 
+    @SuppressWarnings("deprecation") // setRemoteAdapter(int, Intent) deprecated API 31; RemoteCollectionItems replacement requires service-backed adapter migration
     private void update(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds,
                         boolean updateRemoteAdapter, boolean showEmptyViewText, boolean showDataLoadingSpinBar) {
         if (log.isDebugEnabled()) log.debug("update: updateRemoteAdapter={} showEmptyViewText={} showDataLoadingSpinBar={}", updateRemoteAdapter, showEmptyViewText, showDataLoadingSpinBar);

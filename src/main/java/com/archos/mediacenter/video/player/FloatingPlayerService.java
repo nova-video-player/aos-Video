@@ -218,6 +218,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
         setMusicVolume(mVolumeLevel.getProgress());
     }
 
+    @SuppressWarnings("deprecation") // TYPE_PHONE deprecated API 26; already in SDK_INT < O branch; TYPE_APPLICATION_OVERLAY used on O+
     @Nullable
     public void addFloatingView() {
         //PlayerService.sPlayerService.startStatusbarNotification(false);

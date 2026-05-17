@@ -1409,6 +1409,7 @@ public class Player implements IPlayerControl,
         return Math.round(mCurrentFps * 100.0f) / 100.0f + "fps";
     }
 
+    @SuppressWarnings("deprecation") // HdrCapabilities.getSupportedHdrTypes() deprecated API 34; Display.Mode.getSupportedHdrTypes() (API 30) is the replacement but this path covers API 24-29
     private void setHdrCapabilities() {
         resetHdrCapabilities();
         if (mWindow != null) {

@@ -113,7 +113,7 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
                                         startPlayerActivity(mFiles.keySet().toArray(new String[mFiles.size()])[which]);
                                         isDialogDisplayed = false;
                                     })
-                                    .setNegativeButton(android.R.string.no, (dialog, which) -> TorrentLoaderActivity.this.finish())
+                                    .setNegativeButton(R.string.no, (dialog, which) -> TorrentLoaderActivity.this.finish())
                                     .create()
                                     .show();
                         } else {
