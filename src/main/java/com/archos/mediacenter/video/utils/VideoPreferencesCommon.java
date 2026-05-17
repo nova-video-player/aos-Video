@@ -228,8 +228,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final boolean TRAKT_LIVE_SCROBBLING_DEFAULT = true;
     public static final boolean ENABLE_SPONSOR_DEFAULT = false;
 
-    public static final String LOGIN_DIALOG = "login_dialog";
-
     private static final boolean ACTIVATE_EMAIL_MEDIA_DB = true;
     private static final String KEY_RESCAN_STORAGE = "rescan_storage" ;
     private static final String KEY_DISPLAY_ALL_FILE = "preference_display_all_files" ;
@@ -1032,12 +1030,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mHanlder = new Handler(Looper.getMainLooper());
         mTraktSigninPreference = (TraktSigninDialogPreference) findPreference(KEY_TRAKT_SIGNIN);
         if (mTraktSigninPreference != null) mTraktSigninPreference.setLauncher(mTraktAuthLauncher);
-        if(mTraktSigninPreference!= null && savedInstanceState!=null) {
-            if (log.isDebugEnabled()) log.debug("onCreatePreferences: closing mTraktSigninPreference dialog to prevent leaked window");
-            // close dialog to prevent leaked window
-            mTraktSigninPreference.showDialog(savedInstanceState.getBoolean(LOGIN_DIALOG, false));
-        }
-
         mTraktWipePreference = findPreference(KEY_TRAKT_WIPE);
         mTraktLiveScrobblingPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_LIVE_SCROBBLING);
         //trakt resume must be disabled when no scrobbling
@@ -1489,11 +1481,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     }
 
     public void onSaveInstanceState(Bundle outState) {
-        if(mTraktSigninPreference!= null && mTraktSigninPreference.isDialogShowing()) {
-            // close dialog to prevent leaked window
-            mTraktSigninPreference.dismissDialog();
-            outState.putBoolean(LOGIN_DIALOG, true);
-        }
     }
     private boolean onTraktUserChange() {
         final String traktUser = Trakt.getAccessTokenFromPreferences(mSharedPreferences);

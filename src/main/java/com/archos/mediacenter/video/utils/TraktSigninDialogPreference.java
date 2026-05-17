@@ -132,24 +132,6 @@ public class TraktSigninDialogPreference extends Preference {
         }
     }
 
-    /**
-     * Legacy method for dialog management - no-op since we now use Activity
-     * @deprecated Device flow uses Activity instead of Dialog
-     */
-    @Deprecated
-    public boolean isDialogShowing() {
-        return false;
-    }
-
-    /**
-     * Legacy method for dialog management - no-op since we now use Activity
-     * @deprecated Device flow uses Activity instead of Dialog
-     */
-    @Deprecated
-    public void dismissDialog() {
-        // No-op: Activity lifecycle is managed by Android system
-    }
-
     private Activity getActivityFromContext(Context context) {
         while (context instanceof ContextWrapper) {
             if (context instanceof Activity) {

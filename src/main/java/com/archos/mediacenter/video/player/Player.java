@@ -438,6 +438,7 @@ public class Player implements IPlayerControl,
         openVideo();
     }
 
+    @SuppressWarnings("deprecation") // abandonAudioFocus: API 26+ uses abandonAudioFocusRequest
     synchronized public void stopPlayback() {
         // TODO used to have if (PlayerService.sPlayerService != null) PlayerService.sPlayerService.saveVideoStateIfReady();
         if (log.isDebugEnabled()) log.debug("stopPlayback");
@@ -709,6 +710,7 @@ public class Player implements IPlayerControl,
         if (restartVideo) openVideo();
     }
     
+    @SuppressWarnings("deprecation") // requestAudioFocus: API 26+ uses AudioFocusRequest
     public void start(int state) {
         if (log.isDebugEnabled()) log.debug("start");
 
