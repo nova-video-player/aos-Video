@@ -128,6 +128,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         }
     }
 
+    @SuppressWarnings("deprecation") // getSerializable: API 33+ branch uses typed form; else branch cast suppressed
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHideOption = false;

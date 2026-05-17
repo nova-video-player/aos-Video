@@ -310,6 +310,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      *              <li><b>false</b> ends after last in folder
      *              </ul>
      */
+    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch cast suppressed
     private void updateNextVideo(boolean repeatFolder, boolean binge, boolean sync) {
         if (log.isDebugEnabled()) log.debug("updateNextVideo: repeatfolder {}, binge {}, sync {}", repeatFolder, binge, sync);
         // reset to nothing
@@ -1124,6 +1125,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     private final TraktService.Client.Listener mTraktListener = new TraktService.Client.Listener() {
+        @SuppressWarnings("deprecation") // getSerializable: API 33+ branch uses typed form; else branch cast suppressed
         @Override
         public void onResult(Bundle bundle) {
             Trakt.Status status = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU

@@ -1533,6 +1533,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             });
         }
 
+        @SuppressWarnings("deprecation") // Bundle.get(key): headersBundle is an untyped String passthrough from external app intent — instanceof guard used
         private VideoMetadata doWork(Video video) {
             if (mIsLaunchFromPlayer && mVideoMetadataFromPlayer != null && mVideoMetadataFromPlayer.getVideoTrack() != null)
                 return mVideoMetadataFromPlayer;

@@ -974,6 +974,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         getIntent().putExtra(LAUNCH_FROM_FLOATING_PLAYER, false);
     }
 
+    @SuppressWarnings("deprecation") // Bundle.get(key): position extras accept Integer or Long from external apps — instanceof dispatch required; headersBundle is untyped passthrough
     private void postOnPlayerServiceBind() {
         if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: START, mResumeFromLast={}", mResumeFromLast);
         if (!mResumeFromLast && getSharedPreferences("player", 0).getInt("lastintent", 0) == getIntent().hashCode()) {
