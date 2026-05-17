@@ -18,6 +18,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
@@ -1427,9 +1428,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         Uri toIndex = Uri.parse(s);
         if (toIndex.getScheme() == null)
             toIndex = Uri.parse("file://" + toIndex.toString());
-        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        scanIntent.setData(toIndex);
-        getActivity().sendBroadcast(scanIntent);
+        MediaScannerConnection.scanFile(getActivity(), new String[]{toIndex.getPath()}, null, null);
     }
 
     public static boolean isMediaScannerScanning(ContentResolver cr) {

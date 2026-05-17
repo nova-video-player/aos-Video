@@ -179,6 +179,7 @@ public class Delete {
                             deleteFileAndAssociatedFiles(mContext, fileUri);
                         } else {
                             // sending intent to unindex the file
+                            @SuppressWarnings("deprecation") // ACTION_MEDIA_SCANNER_SCAN_FILE as internal IPC (setPackage targets Nova's own receiver only)
                             Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(VideoUtils.getMediaLibCompatibleFilepathFromUri(fileUri)));
                             intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
                             mContext.sendBroadcast(intent);
@@ -246,6 +247,7 @@ public class Delete {
                 } catch (Exception e) { }
                 //sending intent to unindex the file
                 if (isLocal(fileUri)) {
+                    @SuppressWarnings("deprecation") // ACTION_MEDIA_SCANNER_SCAN_FILE as internal IPC (setPackage targets Nova's own receiver only)
                     Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.parse(VideoUtils.getMediaLibCompatibleFilepathFromUri(fileUri)));
                     intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
                     mContext.sendBroadcast(intent);

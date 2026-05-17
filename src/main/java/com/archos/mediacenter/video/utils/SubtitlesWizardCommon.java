@@ -248,6 +248,7 @@ public class SubtitlesWizardCommon {
         }
     }
 
+    @SuppressWarnings("deprecation") // ACTION_MEDIA_SCANNER_SCAN_FILE used as internal IPC (setPackage targets Nova's own receiver only)
     public boolean renameFile(String path, int index) {
         boolean fileRenamed = false;
 
@@ -314,6 +315,7 @@ public class SubtitlesWizardCommon {
         return fileRenamed;
     }
 
+    @SuppressWarnings("deprecation") // ACTION_MEDIA_SCANNER_SCAN_FILE used as internal IPC (setPackage targets Nova's own receiver only)
     public boolean deleteFile(String path, int index, boolean current) {
         boolean fileDeleted = false;
         
