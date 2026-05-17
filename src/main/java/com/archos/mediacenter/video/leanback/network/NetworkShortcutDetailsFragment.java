@@ -102,6 +102,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
     private int oldSelectedSubPosition = 0;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
+    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

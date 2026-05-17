@@ -50,6 +50,7 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
     private SearchInfo mSearchInfo;
     HashMap<BaseTags, SearchResult> mTagsToSearchResultMap = new HashMap<>();
 
+    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

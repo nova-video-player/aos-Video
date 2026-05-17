@@ -174,6 +174,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         }
     }
 
+    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (DBG) Log.d(TAG, "onCreate");

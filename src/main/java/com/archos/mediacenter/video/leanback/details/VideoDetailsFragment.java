@@ -321,6 +321,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 }
             });
 
+    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -138,6 +138,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         return mView;
     }
 
+    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         if (log.isDebugEnabled()) log.debug("onViewCreated");

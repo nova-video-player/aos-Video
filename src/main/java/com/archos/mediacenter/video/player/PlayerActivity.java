@@ -2237,6 +2237,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
             else vPicInPic = null;
             tvmFormat.setOnItemClickListener(new View.OnClickListener() {
+                @SuppressWarnings("deprecation") // enterPictureInPictureMode(): API 26+ uses PictureInPictureParams
                 @Override
                 public void onClick(View v) {
                     // TODO Auto-generated method stub

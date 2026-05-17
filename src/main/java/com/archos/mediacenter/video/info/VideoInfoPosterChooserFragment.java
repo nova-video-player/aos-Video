@@ -73,6 +73,7 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
 
     // onAttach
 
+    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (DBG_LC) Log.d(TAG, "onCreate");
