@@ -39,6 +39,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ServiceCompat;
@@ -407,7 +408,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 	AdditionalServiceSingleton.getInstance().bindToService(getApplicationContext());
         if (log.isDebugEnabled()) log.debug("onCreate()");
         sPlayerService = this;
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.getMainLooper());
         if (PERIODIC_BOOKMARK_SAVE) {
             mAutoSaveTask = new Runnable() {
                 @Override
@@ -417,7 +418,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 }
             };
         }
-        mVideoObserver = new VideoObserver(new Handler());
+        mVideoObserver = new VideoObserver(new Handler(Looper.getMainLooper()));
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (Trakt.isTraktV2Enabled(this, mPreferences) && !PrivateMode.isActive()) {

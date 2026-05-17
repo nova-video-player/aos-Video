@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
@@ -60,7 +61,7 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     private View mLeftVerticalButton;
     private View mRightVerticalButton;
     private static int REPEAT_TOUCH_ACTION = 0;
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler(Looper.getMainLooper()){
         public void handleMessage(Message msg) {
             if(mTouchedView != null){
                 onAction(mTouchedView);

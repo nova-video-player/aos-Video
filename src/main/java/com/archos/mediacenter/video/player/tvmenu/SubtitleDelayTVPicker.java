@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.player.tvmenu;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -56,7 +57,7 @@ public class SubtitleDelayTVPicker extends SubtitleDelayPickerAbstract implement
      * The callback used to indicate the user changes the date.
      */
 
-    Handler mHandler = new Handler(){
+    Handler mHandler = new Handler(Looper.getMainLooper()){
         public void handleMessage(Message msg){
             if(msg.what==INCREASE_STEPS&&mLeftIsDown||mRightIsDown){
                 removeMessages(INCREASE_STEPS);

@@ -19,6 +19,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -51,7 +52,7 @@ public class SubtitleDelayPickerDialog extends AlertDialog implements OnClickLis
     private final Context mContext;
     private int mRatio = 0;
 
-    private final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             SubtitleDelayPickerDialog.this.handleMessage(msg);

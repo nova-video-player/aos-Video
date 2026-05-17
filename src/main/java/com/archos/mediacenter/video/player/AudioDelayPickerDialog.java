@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -45,7 +46,7 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
     private final AudioDelayPickerAbstract mAudioDelayPicker;
     private final OnAudioDelayChangeListener mCallBack;
 
-    private final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             AudioDelayPickerDialog.this.handleMessage(msg);

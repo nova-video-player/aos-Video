@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
@@ -90,7 +91,7 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
         }
     };
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == LOADING_FINISHED) {

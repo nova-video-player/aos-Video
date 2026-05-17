@@ -31,6 +31,7 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import androidx.preference.PreferenceManager;
 
 import android.view.Display;
@@ -165,7 +166,7 @@ public class Player implements IPlayerControl,
     private int         mSaveStopPosition;
     private boolean     mUpdateMetadata;
 
-    private Handler     mHandler = new Handler();
+    private Handler     mHandler = new Handler(Looper.getMainLooper());
     private Runnable mPreparedAsync = new Runnable() {
         public void run() {
 

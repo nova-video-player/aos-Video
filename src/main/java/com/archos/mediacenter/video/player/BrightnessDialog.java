@@ -21,6 +21,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.util.Log;
@@ -171,7 +172,7 @@ public class BrightnessDialog extends AlertDialog implements SeekBar.OnSeekBarCh
 //       Settings.System.putInt(mContentResolver, Settings.System.SCREEN_BRIGHTNESS, brightness_value);
     }
 
-    private ContentObserver mBrightnessObserver = new ContentObserver(new Handler()) {
+    private ContentObserver mBrightnessObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
         @Override
         public void onChange(boolean selfChange) {
             // Retrieve the current system brightness value

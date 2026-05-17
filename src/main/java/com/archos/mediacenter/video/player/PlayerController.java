@@ -30,6 +30,7 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.ActionBar;
@@ -1034,7 +1035,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 (mBackwardButton != null && mBackwardButton.isPressed());
     }
 
-    private final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             int pos;
@@ -2091,7 +2092,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         return false;
     }
 
-    private Handler hideOsdHandler = new Handler();
+    private Handler hideOsdHandler = new Handler(Looper.getMainLooper());
     private Runnable hideOsdRunnable = new Runnable() {
         @Override
         public void run() {
