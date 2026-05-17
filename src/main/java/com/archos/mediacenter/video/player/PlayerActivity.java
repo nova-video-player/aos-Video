@@ -570,6 +570,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         return null;
     }
 
+    @SuppressWarnings("deprecation") // FLAG_TRANSLUCENT_NAVIGATION: no edge-to-edge alternative in PlayerActivity
+    private void addTranslucentNavigationFlag() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+    }
+
     @SuppressWarnings("deprecation") // getRealMetrics: API 30+ uses getCurrentWindowMetrics
     private int[] readFallbackDisplaySize() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -646,7 +651,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         mPlayerController.pauseTimeout = (mPreferences.getBoolean("hide_controls_on_pause", false)) ? 5000 : 0;
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        addTranslucentNavigationFlag();
         getWindow().setAttributes(attributes);
         /*
          * transparent background for archos devices
@@ -745,6 +750,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
 
                 @Override
+                @SuppressWarnings("deprecation") // getDefaultDisplay: API 30+ uses context.getDisplay()
                 public void onDisplayChanged(int displayId) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         orientation = mContext.getDisplay().getRotation();
@@ -1136,6 +1142,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mWasInPictureInPicture = false;
     }
 
+    @SuppressWarnings("deprecation") // requestVisibleBehind: deprecated API 26, no replacement for Android TV
     @Override
     protected void onPause() {
         super.onPause();
@@ -1183,6 +1190,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
     }
 
+    @SuppressWarnings("deprecation") // onVisibleBehindCanceled: deprecated API 26, no replacement for Android TV
     @Override
     public void onVisibleBehindCanceled() {
         mPaused = true;
@@ -1410,6 +1418,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         };
     }
 
+    @SuppressWarnings("deprecation") // getDefaultDisplay: API 30+ uses getDisplay()
     private void setLockRotation(boolean avpLock) {
         int rotation;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

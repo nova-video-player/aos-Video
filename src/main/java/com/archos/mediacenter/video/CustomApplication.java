@@ -547,6 +547,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
      * Uses getDirectPlaybackSupport() on API 33+ (preferred, non-deprecated)
      * Falls back to isDirectPlaybackSupported() on API 29-32
      */
+    @SuppressWarnings("deprecation") // CHANNEL_OUT_7POINT1: different mask from CHANNEL_OUT_7POINT1_SURROUND, intentional for probe
     private void updateDirectPcmMultichannelCapability() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || mAudioManager == null || !hasHdmi) {
             isDirectPcmMultichannelCapable = false;

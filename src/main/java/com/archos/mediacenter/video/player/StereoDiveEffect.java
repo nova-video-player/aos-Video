@@ -189,6 +189,7 @@ public class StereoDiveEffect extends VideoEffect {
         }
     }
     
+    @SuppressWarnings("deprecation") // getDefaultDisplay: API 30+ uses context.getDisplay()
     private static int getScreenOrientation(Context context) {
         int rotation;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
