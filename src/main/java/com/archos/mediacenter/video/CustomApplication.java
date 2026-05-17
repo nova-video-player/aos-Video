@@ -1109,6 +1109,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         return mHttpImageManager;
     }
 
+    @SuppressWarnings("deprecation") // info.versionCode: field and callers use int; getLongVersionCode() would require field type change across callers
     private static synchronized void updateVersionState(Context context) {
         if (novaVersionStateInitialized) return;
         if (context == null) return;

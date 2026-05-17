@@ -138,7 +138,7 @@ public class MediaLibraryBackupService extends Service {
                 log.error("startExport: error exporting media library", e);
                 showToast(getString(R.string.media_library_export_error));
             } finally {
-                stopForeground(true);
+                ServiceCompat.stopForeground(MediaLibraryBackupService.this, ServiceCompat.STOP_FOREGROUND_REMOVE);
                 stopSelf();
             }
         });
@@ -170,7 +170,7 @@ public class MediaLibraryBackupService extends Service {
                 log.error("startImport: error importing media library", e);
                 showToast(getString(R.string.media_library_import_error));
             } finally {
-                stopForeground(true);
+                ServiceCompat.stopForeground(MediaLibraryBackupService.this, ServiceCompat.STOP_FOREGROUND_REMOVE);
                 stopSelf();
             }
         });

@@ -28,7 +28,7 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
 
     private final static String TAG="VideoEffectRenderer";
     
-    private static final Boolean mTrue = new Boolean(Boolean.TRUE);
+    private static final Boolean mTrue = Boolean.TRUE;
 
     private int mViewWidth;
     private int mViewHeight;

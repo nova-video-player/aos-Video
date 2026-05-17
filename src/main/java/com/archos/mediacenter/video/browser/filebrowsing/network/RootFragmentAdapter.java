@@ -207,7 +207,7 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
             v.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
+                    Log.d(TAG, "Element " + getBindingAdapterPosition() + " clicked.");
                 }
             });
             mName = (TextView) v.findViewById(R.id.name);

@@ -17,8 +17,7 @@ package com.archos.mediacenter.video.player;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Build;
-import android.text.Html;
+import androidx.core.text.HtmlCompat;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -196,11 +195,7 @@ public class TrackInfoController implements OnMenuItemClickListener, OnItemClick
                     // Apply SpannableString only for checkable items (RadioButtons)
 
                     if (trackInfo.name != null) {
-                        if (Build.VERSION.SDK_INT >= 24) {
-                            spannableText = new SpannableString(Html.fromHtml(trackInfo.name.toString(), Html.FROM_HTML_MODE_LEGACY));
-                        } else {
-                            spannableText = new SpannableString(Html.fromHtml(trackInfo.name.toString()));
-                        }
+                        spannableText = new SpannableString(HtmlCompat.fromHtml(trackInfo.name.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY));
                         ((TextView) v.findViewById(R.id.name)).setText(spannableText);
                     }
                     if (trackInfo.summary != null) {
