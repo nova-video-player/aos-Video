@@ -1501,7 +1501,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         int nbTrack = vMetadata.getAudioTrackNb();
         boolean supported = true;
 
-        Locale locale = new Locale(mAudioTrackFavoriteLanguage);
+        Locale locale = Locale.forLanguageTag(mAudioTrackFavoriteLanguage);
         String trackName = "";
         Integer firstSupportedTrack = null;
         supported = false;
@@ -1604,7 +1604,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: hide subs -> selected none track");
                     mVideoInfo.subtitleTrack = noneTrack;
                 } else {
-                    Locale locale = new Locale(mSubsFavoriteLanguage);
+                    Locale locale = Locale.forLanguageTag(mSubsFavoriteLanguage);
                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: favorite locale {}, current locale {}", locale.getDisplayLanguage(), Locale.getDefault().getDisplayLanguage());
                     String trackName = "";
                     String lang = null;
