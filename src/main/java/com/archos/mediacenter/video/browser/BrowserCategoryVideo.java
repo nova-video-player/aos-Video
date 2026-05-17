@@ -97,12 +97,16 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
     public void onViewCreated(View v, Bundle save){
         super.onViewCreated(v, save);
         if (save!=null) {
-            int navigationMode = save.getInt(KEY_ACTIONBAR_NAVIGATION_MODE, ActionBar.NAVIGATION_MODE_STANDARD);
-            if (navigationMode==ActionBar.NAVIGATION_MODE_LIST) {
-                setupMovieActionBarNavigation(false); // false because the corresponding fragment is already re-created by the framework after rotation
-            } else {
-                setNavigationMode(navigationMode);
-            }
+            v.post(() -> {
+                if (!isAdded())
+                    return;
+                int navigationMode = save.getInt(KEY_ACTIONBAR_NAVIGATION_MODE, ActionBar.NAVIGATION_MODE_STANDARD);
+                if (navigationMode==ActionBar.NAVIGATION_MODE_LIST) {
+                    setupMovieActionBarNavigation(false); // false because the corresponding fragment is already re-created by the framework after rotation
+                } else {
+                    setNavigationMode(navigationMode);
+                }
+            });
         }
         // Apply theme colors to actionbar - defer to onResume when ActionBar is available
         // Register theme change listener

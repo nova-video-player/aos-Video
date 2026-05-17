@@ -224,11 +224,16 @@ abstract public class BrowserCategory extends ListFragment {
         if(mSelectedItemId == ITEM_ID_BROWSER && lastPath == null)
             mSelectedItemId = BrowserCategoryVideo.ITEM_ID_RECENTLY_ADDED;
 
-        if(savedInstanceState==null) //restore only when starting from scratch
-            setFragment(lastPath);
+        final String initialPath = lastPath;
+        view.post(() -> {
+            if (!isAdded())
+                return;
+            if(savedInstanceState==null) //restore only when starting from scratch
+                setFragment(initialPath);
 
-        if(getActivity() instanceof BrowserActivity)
-            ((MainActivity)getActivity()).updateHomeIcon(getParentFragmentManager().getBackStackEntryCount()>1);
+            if(getActivity() instanceof BrowserActivity)
+                ((MainActivity)getActivity()).updateHomeIcon(getParentFragmentManager().getBackStackEntryCount()>1);
+        });
 
         // handles NetworkState changes
         networkState = NetworkState.instance(getContext());
