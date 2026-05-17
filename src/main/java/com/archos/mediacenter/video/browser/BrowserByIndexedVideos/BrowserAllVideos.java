@@ -92,6 +92,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
         return getString(R.string.all_videos);
     }
 
+	@SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
@@ -129,6 +130,7 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
 	}
 
 
+	@SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.string.rescrap_not_found){
 			Intent intent = new Intent(getActivity(),AutoScrapeService.class);

@@ -186,6 +186,7 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
     }
 
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -197,6 +198,7 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
         }
     }
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == MENU_VIEW_HIDE_SEEN){
             mHideWatched = !mHideWatched;

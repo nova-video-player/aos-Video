@@ -206,6 +206,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             }
     }
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if(mShow!=null){
@@ -215,6 +216,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.string.scrap_series_change){
             Intent intent = new Intent(getActivity(), VideoInfoScraperActivity.class);

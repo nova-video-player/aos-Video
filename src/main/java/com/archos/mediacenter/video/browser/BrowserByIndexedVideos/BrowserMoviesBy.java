@@ -117,6 +117,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
         return ""; // no title because there is the NAVIGATION_MODE_LIST list at this place instead
     }
 
+	@SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
             // Add the "view mode" item

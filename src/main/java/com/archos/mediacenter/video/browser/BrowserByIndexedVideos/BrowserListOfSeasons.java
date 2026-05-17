@@ -81,6 +81,7 @@ public class BrowserListOfSeasons extends BrowserWithShowHeader  {
         return false;
     }
     
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -95,6 +96,7 @@ public class BrowserListOfSeasons extends BrowserWithShowHeader  {
         }
     }
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Override to only cycle between LIST and GRID (no DETAILS mode for seasons)

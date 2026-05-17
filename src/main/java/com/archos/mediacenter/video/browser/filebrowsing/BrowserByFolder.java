@@ -302,6 +302,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -859,6 +860,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         }
     }
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {

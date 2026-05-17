@@ -232,6 +232,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
             mArchosGridView.clearChoices();
     }
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -246,6 +247,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
         }
     }
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Override to skip GRID mode - only cycle between LIST and DETAILS

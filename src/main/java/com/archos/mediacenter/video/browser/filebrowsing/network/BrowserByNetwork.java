@@ -255,6 +255,7 @@ public class BrowserByNetwork extends BrowserByFolder {
         return super.onContextItemSelected(menuItem);
     }
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (log.isDebugEnabled()) log.debug("onOptionsItemSelected");
@@ -350,6 +351,7 @@ public class BrowserByNetwork extends BrowserByFolder {
     }
 
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -389,6 +391,7 @@ public class BrowserByNetwork extends BrowserByFolder {
         }
     }
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);

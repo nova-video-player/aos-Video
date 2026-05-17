@@ -74,12 +74,14 @@ public class BrowserByVideoFolder extends BrowserByLocalFolder {
         }
     }
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.add(0, MainActivity.MENU_CHANGE_FOLDER, Menu.NONE, R.string.menu_change_folder).setIcon(R.drawable.ic_menu_folder).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean ret;
