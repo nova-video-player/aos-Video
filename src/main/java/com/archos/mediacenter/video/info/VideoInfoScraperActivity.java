@@ -15,6 +15,11 @@
 package com.archos.mediacenter.video.info;
 
 import android.os.Bundle;
+import android.view.View;
+
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -35,6 +40,7 @@ public class VideoInfoScraperActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_info_posterandbackdrop);
+        applySystemInsets(findViewById(R.id.root));
         Fragment frag;
         if (getIntent().hasExtra(EXTRA_VIDEO)) {
             if (DBG) Log.d(TAG, "onCreate: detected video");
@@ -47,6 +53,19 @@ public class VideoInfoScraperActivity extends FragmentActivity {
                 .beginTransaction()
                 .replace(R.id.root,frag)
                 .addToBackStack(null).commit();
+    }
+
+    private void applySystemInsets(View root) {
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets cutoutInsets = insets.getInsets(WindowInsetsCompat.Type.displayCutout());
+            v.setPadding(
+                    Math.max(systemBarsInsets.left, cutoutInsets.left),
+                    Math.max(systemBarsInsets.top, cutoutInsets.top),
+                    Math.max(systemBarsInsets.right, cutoutInsets.right),
+                    Math.max(systemBarsInsets.bottom, cutoutInsets.bottom));
+            return insets;
+        });
     }
 
     @Override
