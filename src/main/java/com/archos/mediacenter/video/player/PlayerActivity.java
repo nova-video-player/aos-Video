@@ -4350,9 +4350,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     showTraktResumeDialog(localTraktPosition, localVideoInfo);
                                                 }
-                                            });
+                                    });
                                     AlertDialog alert = builder.create();
                                     alert.show();
+                                    alert.getButton(DialogInterface.BUTTON_POSITIVE).requestFocus();
                                 }
                             }
                             return;
