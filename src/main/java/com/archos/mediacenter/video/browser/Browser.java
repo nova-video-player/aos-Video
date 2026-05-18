@@ -258,13 +258,8 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                 menu.setGroupVisible(MENU_HIDE_WATCHED_GROUP, mHideOption);
                 MenuItem item = menu.findItem(MENU_VIEW_MODE);
                 if (item != null) {
-                    if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
-                        item.setIcon(R.drawable.ic_menu_poster_mode);
-                    } else if (mViewMode == VideoUtils.VIEW_MODE_GRID) {
-                        item.setIcon(R.drawable.ic_menu_details_mode2);
-                    } else if (mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
-                        item.setIcon(R.drawable.ic_menu_list_mode2);
-                    }
+                    int icon = getViewModeMenuIcon(mViewMode);
+                    if (icon != 0) item.setIcon(icon);
                 }
             }
             @Override
@@ -549,6 +544,19 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
      */
     public int getDefaultViewMode() {
         return VideoUtils.VIEW_MODE_LIST;
+    }
+
+    /**
+     * Returns the icon resource to display on the view-mode menu button for the given current mode.
+     * The icon represents the next mode the user will switch to. Subclasses that support a subset
+     * of modes (e.g. only LIST/DETAILS or LIST/GRID) should override this to show the correct icon.
+     * Return 0 to leave the icon unchanged.
+     */
+    protected int getViewModeMenuIcon(int currentViewMode) {
+        if (currentViewMode == VideoUtils.VIEW_MODE_LIST) return R.drawable.ic_menu_poster_mode;
+        if (currentViewMode == VideoUtils.VIEW_MODE_GRID) return R.drawable.ic_menu_details_mode2;
+        if (currentViewMode == VideoUtils.VIEW_MODE_DETAILS) return R.drawable.ic_menu_list_mode2;
+        return 0;
     }
 
     protected void setViewMode(int mode) {

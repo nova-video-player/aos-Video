@@ -44,6 +44,7 @@ import com.archos.mediacenter.video.utils.ThemeManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.os.BundleCompat;
+import androidx.core.view.MenuProvider;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -233,6 +234,43 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
             }
         };
         ThemeManager.getInstance(getActivity()).registerThemeChangeListener(mThemeChangeListener);
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+                menu.removeItem(Browser.MENU_VIEW_MODE);
+                if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu != null) {
+                    MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
+                    sortMenuItem.setIcon(R.drawable.ic_menu_sort);
+                    sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    mSortModeSubmenu.attachMenuItem(sortMenuItem);
+                    mSortModeSubmenu.clear();
+                    mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_asc,  MENU_ITEM_SORT+0);
+                    mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_desc, MENU_ITEM_SORT+1);
+                    mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_asc,  MENU_ITEM_SORT+2);
+                    mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_desc, MENU_ITEM_SORT+3);
+                    mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_size_asc,  MENU_ITEM_SORT+4);
+                    mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_size_desc, MENU_ITEM_SORT+5);
+                    int initId = sortorder2itemid(mSortOrder);
+                    if (initId == -1) {
+                        mSortModeSubmenu.selectSubmenuItem(0);
+                    } else {
+                        int position = mSortModeSubmenu.getPosition(initId);
+                        mSortModeSubmenu.selectSubmenuItem(position < 0 ? 0 : position);
+                    }
+                }
+            }
+            @Override
+            public void onPrepareMenu(Menu menu) {
+                mMenu = menu;
+                hideSubMenu(menu);
+                MenuItem item = menu.findItem(Browser.MENU_VIEW_MODE);
+                if (item != null) item.setIcon(R.drawable.ic_menu_sort);
+            }
+            @Override
+            public boolean onMenuItemSelected(MenuItem item) {
+                return false;
+            }
+        }, getViewLifecycleOwner());
     }
 
     @Override
@@ -302,13 +340,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        mMenu = menu;
-        hideSubMenu(menu);
-    }
 
     private void hideSubMenu(Menu menu) {
         // Check if there is at least one video file in the current folder
@@ -860,37 +891,6 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         }
     }
 
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
-            // Add the "sort mode" item
-            MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
-            sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-            sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            mSortModeSubmenu.attachMenuItem(sortMenuItem);
-
-            mSortModeSubmenu.clear();
-            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_asc,MENU_ITEM_SORT+0);
-            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_desc,MENU_ITEM_SORT+1);
-            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_asc,MENU_ITEM_SORT+2);
-            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_desc,MENU_ITEM_SORT+3);
-            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_size_asc,MENU_ITEM_SORT+4);
-            mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_size_desc,MENU_ITEM_SORT+5);
-            // Init with the current value
-            int initId = sortorder2itemid(mSortOrder);
-            if (initId==-1) { // not found
-                mSortModeSubmenu.selectSubmenuItem(0);
-            }
-            else {
-                int position = mSortModeSubmenu.getPosition(initId);
-                if (position<0) { // not found
-                    position=0;
-                }
-                mSortModeSubmenu.selectSubmenuItem(position);
-            }
-        }
-    }
 
     @Override
     public void onSubmenuItemSelected(ActionBarSubmenu submenu, int position, long itemId) {

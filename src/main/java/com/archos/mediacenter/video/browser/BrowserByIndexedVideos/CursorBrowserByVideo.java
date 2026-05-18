@@ -21,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.core.view.MenuProvider;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 
@@ -186,28 +188,33 @@ abstract public class CursorBrowserByVideo extends BrowserByVideoObjects impleme
     }
 
 
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (mBrowserAdapter != null && (!mBrowserAdapter.isEmpty()||mHideWatched)) {
-            if (Trakt.isTraktV2Enabled(mContext, PreferenceManager.getDefaultSharedPreferences(mContext))) {
-                MenuItem hideMarkedSeen = menu.add(MENU_HIDE_WATCHED_GROUP, MENU_VIEW_HIDE_SEEN, Menu.NONE, mHideWatched ? R.string.hide_seen : R.string.show_all);
-                hideMarkedSeen.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        // Register before super so our handler for MENU_VIEW_HIDE_SEEN runs first (includes loader restart)
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+                if (mBrowserAdapter != null && (!mBrowserAdapter.isEmpty() || mHideWatched)) {
+                    if (Trakt.isTraktV2Enabled(mContext, PreferenceManager.getDefaultSharedPreferences(mContext))) {
+                        MenuItem hideMarkedSeen = menu.add(MENU_HIDE_WATCHED_GROUP, MENU_VIEW_HIDE_SEEN, Menu.NONE,
+                                mHideWatched ? R.string.hide_seen : R.string.show_all);
+                        hideMarkedSeen.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    }
+                }
             }
-        }
-    }
-
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == MENU_VIEW_HIDE_SEEN){
-            mHideWatched = !mHideWatched;
-            item.setTitle(mHideWatched ? R.string.hide_seen : R.string.show_all);
-            mPreferences.edit().putBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, mHideWatched).apply();
-            LoaderManager.getInstance(this).restartLoader(0, null, this);
-            return true;
-        } else
-            return super.onOptionsItemSelected(item);
+            @Override
+            public boolean onMenuItemSelected(MenuItem item) {
+                if (item.getItemId() == MENU_VIEW_HIDE_SEEN) {
+                    mHideWatched = !mHideWatched;
+                    item.setTitle(mHideWatched ? R.string.hide_seen : R.string.show_all);
+                    mPreferences.edit().putBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, mHideWatched).apply();
+                    LoaderManager.getInstance(CursorBrowserByVideo.this).restartLoader(0, null, CursorBrowserByVideo.this);
+                    return true;
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner());
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

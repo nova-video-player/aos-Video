@@ -30,9 +30,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.loader.content.Loader;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -232,35 +229,21 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
             mArchosGridView.clearChoices();
     }
 
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        // Show current mode icon instead of next mode
-        MenuItem item = menu.findItem(Browser.MENU_VIEW_MODE);
-        if (item != null) {
-            if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
-                item.setIcon(R.drawable.ic_menu_list_mode2);
-            } else if (mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
-                item.setIcon(R.drawable.ic_menu_details_mode2);
-            }
+    protected void applySelectedViewMode(int viewMode) {
+        // Only cycle between LIST and DETAILS; redirect GRID to DETAILS
+        if (viewMode == VideoUtils.VIEW_MODE_GRID) {
+            viewMode = VideoUtils.VIEW_MODE_DETAILS;
         }
+        super.applySelectedViewMode(viewMode);
     }
 
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Override to skip GRID mode - only cycle between LIST and DETAILS
-        if (item.getItemId() == Browser.MENU_VIEW_MODE) {
-            if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
-                applySelectedViewMode(VideoUtils.VIEW_MODE_DETAILS);
-            } else {
-                applySelectedViewMode(VideoUtils.VIEW_MODE_LIST);
-            }
-            getActivity().invalidateOptionsMenu();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    protected int getViewModeMenuIcon(int currentViewMode) {
+        // Icon points to the next mode in the LIST↔DETAILS cycle
+        return currentViewMode == VideoUtils.VIEW_MODE_LIST
+                ? R.drawable.ic_menu_details_mode2
+                : R.drawable.ic_menu_list_mode2;
     }
 
     @Override

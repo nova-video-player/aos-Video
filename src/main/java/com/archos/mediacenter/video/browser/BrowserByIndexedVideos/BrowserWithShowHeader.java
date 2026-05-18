@@ -37,6 +37,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.core.view.MenuProvider;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -162,6 +164,35 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         mHeaderView.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new));
         setContentInfoVisibility(false);
         addHeaderView();
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+                if (mShow != null) {
+                    menu.add(0, R.string.scrap_series_change, 0, R.string.scrap_series_change);
+                    menu.add(0, R.string.info_menu_series_backdrop_select, 0, R.string.info_menu_series_backdrop_select);
+                    menu.add(0, R.string.info_menu_series_poster_select, 0, R.string.info_menu_series_poster_select);
+                }
+            }
+            @Override
+            public boolean onMenuItemSelected(MenuItem item) {
+                if (item.getItemId() == R.string.scrap_series_change) {
+                    Intent intent = new Intent(getActivity(), VideoInfoScraperActivity.class);
+                    intent.putExtra(VideoInfoScraperActivity.EXTRA_SHOW, mShow);
+                    scraperLauncher.launch(intent);
+                    return true;
+                } else if (item.getItemId() == R.string.info_menu_series_backdrop_select) {
+                    Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
+                    intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mShow);
+                    intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_BACKDROP, true);
+                    startActivity(intent);
+                    return true;
+                } else if (item.getItemId() == R.string.info_menu_series_poster_select) {
+                    selectSeriesPoster();
+                    return true;
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner());
     }
 
     @Override
@@ -207,36 +238,6 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             }
     }
 
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(mShow!=null){
-            menu.add(0,R.string.scrap_series_change, 0, R.string.scrap_series_change);
-            menu.add(0,R.string.info_menu_series_backdrop_select, 0, R.string.info_menu_series_backdrop_select);
-            menu.add(0,R.string.info_menu_series_poster_select, 0, R.string.info_menu_series_poster_select);
-        }
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.string.scrap_series_change){
-            Intent intent = new Intent(getActivity(), VideoInfoScraperActivity.class);
-            intent.putExtra(VideoInfoScraperActivity.EXTRA_SHOW, mShow);
-            scraperLauncher.launch(intent);
-            return true;
-        }else if(item.getItemId()==R.string.info_menu_series_backdrop_select){
-            Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);
-            intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, mShow);
-            intent.putExtra(VideoInfoPosterBackdropActivity.EXTRA_CHOOSE_BACKDROP, true);
-            startActivity(intent);
-            return  true;
-        }else if(item.getItemId()==R.string.info_menu_series_poster_select){
-            selectSeriesPoster();
-            return  true;
-        }
-        else
-            return super.onOptionsItemSelected(item);
-    }
 
     protected void selectSeriesPoster(){
         Intent intent = new Intent(getActivity(), VideoInfoPosterBackdropActivity.class);

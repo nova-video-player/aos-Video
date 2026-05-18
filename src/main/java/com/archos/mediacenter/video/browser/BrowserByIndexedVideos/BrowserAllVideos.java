@@ -22,9 +22,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.view.MenuItemCompat;
+import androidx.core.view.MenuProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
@@ -92,55 +94,58 @@ public class BrowserAllVideos extends CursorBrowserByVideo {
         return getString(R.string.all_videos);
     }
 
-	@SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
-			// Add the "sort mode" item
-			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
-			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-			mSortModeSubmenu.attachMenuItem(sortMenuItem);
-
-			mSortModeSubmenu.clear();
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_asc,      MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_desc,     MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_asc,      MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_desc,     MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_duration_asc,  MENU_ITEM_SORT+MENU_ITEM_DURATION+MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_duration_desc, MENU_ITEM_SORT+MENU_ITEM_DURATION+MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_rating_asc,    MENU_ITEM_SORT+MENU_ITEM_RATING  +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_added_desc,MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_added_asc, MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_ASC);
-
-			// Init with the current value
-			int initId = sortorder2itemid(mSortOrder);
-			if (initId==-1) { // not found
-				mSortModeSubmenu.selectSubmenuItem(0);
-			}
-			else {
-				int position = mSortModeSubmenu.getPosition(initId);
-				if (position<0) { // not found
-				    position=0;
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		requireActivity().addMenuProvider(new MenuProvider() {
+			@Override
+			public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+				// Replace base class view-mode item with sort-mode item
+				menu.removeItem(Browser.MENU_VIEW_MODE);
+				if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu != null) {
+					MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
+					sortMenuItem.setIcon(R.drawable.ic_menu_sort);
+					sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+					mSortModeSubmenu.attachMenuItem(sortMenuItem);
+					mSortModeSubmenu.clear();
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_asc,       MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_ASC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_desc,      MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_asc,       MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_ASC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_desc,      MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_duration_asc,   MENU_ITEM_SORT+MENU_ITEM_DURATION+MENU_ITEM_ASC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_duration_desc,  MENU_ITEM_SORT+MENU_ITEM_DURATION+MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_rating_asc,     MENU_ITEM_SORT+MENU_ITEM_RATING  +MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_added_desc, MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_added_asc,  MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_ASC);
+					int initId = sortorder2itemid(mSortOrder);
+					if (initId == -1) {
+						mSortModeSubmenu.selectSubmenuItem(0);
+					} else {
+						int position = mSortModeSubmenu.getPosition(initId);
+						mSortModeSubmenu.selectSubmenuItem(position < 0 ? 0 : position);
+					}
+					menu.add(0, R.string.rescrap_not_found, 0, R.string.rescrap_not_found).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 				}
-				mSortModeSubmenu.selectSubmenuItem(position);
 			}
-			menu.add(0,R.string.rescrap_not_found,0, R.string.rescrap_not_found).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		}
-	}
-
-
-	@SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.string.rescrap_not_found){
-			Intent intent = new Intent(getActivity(),AutoScrapeService.class);
-			intent.putExtra(AutoScrapeService.RESCAN_EVERYTHING, true);
-			intent.putExtra(AutoScrapeService.RESCAN_ONLY_DESC_NOT_FOUND, true);
-			getActivity().startService(intent);
-			Toast.makeText(getActivity(), R.string.rescrap_in_progress, Toast.LENGTH_SHORT).show();
-			return true;
-		} else
-			return super.onOptionsItemSelected(item);
+			@Override
+			public void onPrepareMenu(Menu menu) {
+				// Keep sort icon; prevent base class onPrepareMenu from overwriting with view-mode icon
+				MenuItem item = menu.findItem(Browser.MENU_VIEW_MODE);
+				if (item != null) item.setIcon(R.drawable.ic_menu_sort);
+			}
+			@Override
+			public boolean onMenuItemSelected(MenuItem item) {
+				if (item.getItemId() == R.string.rescrap_not_found) {
+					Intent intent = new Intent(getActivity(), AutoScrapeService.class);
+					intent.putExtra(AutoScrapeService.RESCAN_EVERYTHING, true);
+					intent.putExtra(AutoScrapeService.RESCAN_ONLY_DESC_NOT_FOUND, true);
+					getActivity().startService(intent);
+					Toast.makeText(getActivity(), R.string.rescrap_in_progress, Toast.LENGTH_SHORT).show();
+					return true;
+				}
+				return false;
+			}
+		}, getViewLifecycleOwner());
 	}
 
 	@Override

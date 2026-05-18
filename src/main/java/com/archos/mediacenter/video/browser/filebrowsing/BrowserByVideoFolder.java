@@ -25,10 +25,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.view.MenuItemCompat;
+import androidx.core.view.MenuProvider;
 import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.video.R;
@@ -74,28 +76,28 @@ public class BrowserByVideoFolder extends BrowserByLocalFolder {
         }
     }
 
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(0, MainActivity.MENU_CHANGE_FOLDER, Menu.NONE, R.string.menu_change_folder).setIcon(R.drawable.ic_menu_folder).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        boolean ret;
-        switch (item.getItemId()) {
-            case MainActivity.MENU_CHANGE_FOLDER:
-                Intent i = new Intent(mContext, FolderPicker.class);
-                Bundle b = new Bundle();
-                i.putExtra(FolderPicker.EXTRA_CURRENT_SELECTION, getDefaultDirectory().getPath());
-                i.putExtra(FolderPicker.EXTRA_DIALOG_TITLE, getResources().getString(R.string.menu_change_folder_details));
-                folderPickerLauncher.launch(i);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+                menu.add(0, MainActivity.MENU_CHANGE_FOLDER, Menu.NONE, R.string.menu_change_folder)
+                        .setIcon(R.drawable.ic_menu_folder)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            }
+            @Override
+            public boolean onMenuItemSelected(MenuItem item) {
+                if (item.getItemId() == MainActivity.MENU_CHANGE_FOLDER) {
+                    Intent i = new Intent(mContext, FolderPicker.class);
+                    i.putExtra(FolderPicker.EXTRA_CURRENT_SELECTION, getDefaultDirectory().getPath());
+                    i.putExtra(FolderPicker.EXTRA_DIALOG_TITLE, getResources().getString(R.string.menu_change_folder_details));
+                    folderPickerLauncher.launch(i);
+                    return true;
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner());
     }
 
 

@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import androidx.core.view.MenuItemCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -117,37 +118,44 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
         return getString(R.string.all_tv_shows);
     }
 
-	@SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
-			// Add the "sort mode" item
-			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
-			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			mSortModeSubmenu.attachMenuItem(sortMenuItem);
-
-			mSortModeSubmenu.clear();
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_asc,              MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_desc,             MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_premiered_desc,   MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_premiered_asc,    MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_rating_asc,            MENU_ITEM_SORT+MENU_ITEM_RATING  +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_recently_added_episode_desc, MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_DESC);
-
-			// Init with the current value
-			int initId = sortorder2itemid(mSortOrder);
-			if (initId==-1) { // not found
-				mSortModeSubmenu.selectSubmenuItem(0);
-			}
-			else {
-				int position = mSortModeSubmenu.getPosition(initId);
-				if (position<0) { // not found
-				    position=0;
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		requireActivity().addMenuProvider(new MenuProvider() {
+			@Override
+			public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+				menu.removeItem(Browser.MENU_VIEW_MODE);
+				if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu != null) {
+					MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
+					sortMenuItem.setIcon(R.drawable.ic_menu_sort);
+					sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+					mSortModeSubmenu.attachMenuItem(sortMenuItem);
+					mSortModeSubmenu.clear();
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_asc,              MENU_ITEM_SORT+MENU_ITEM_NAME  +MENU_ITEM_ASC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_desc,             MENU_ITEM_SORT+MENU_ITEM_NAME  +MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_premiered_desc,   MENU_ITEM_SORT+MENU_ITEM_YEAR  +MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_premiered_asc,    MENU_ITEM_SORT+MENU_ITEM_YEAR  +MENU_ITEM_ASC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_rating_asc,            MENU_ITEM_SORT+MENU_ITEM_RATING+MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_recently_added_episode_desc, MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_DESC);
+					int initId = sortorder2itemid(mSortOrder);
+					if (initId == -1) {
+						mSortModeSubmenu.selectSubmenuItem(0);
+					} else {
+						int position = mSortModeSubmenu.getPosition(initId);
+						mSortModeSubmenu.selectSubmenuItem(position < 0 ? 0 : position);
+					}
 				}
-				mSortModeSubmenu.selectSubmenuItem(position);
 			}
-		}
+			@Override
+			public void onPrepareMenu(Menu menu) {
+				MenuItem item = menu.findItem(Browser.MENU_VIEW_MODE);
+				if (item != null) item.setIcon(R.drawable.ic_menu_sort);
+			}
+			@Override
+			public boolean onMenuItemSelected(MenuItem item) {
+				return false;
+			}
+		}, getViewLifecycleOwner());
 	}
 
 	@Override

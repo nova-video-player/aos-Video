@@ -29,6 +29,7 @@ import android.widget.AdapterView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.core.view.MenuItemCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 
@@ -117,35 +118,36 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
         return ""; // no title because there is the NAVIGATION_MODE_LIST list at this place instead
     }
 
-	@SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
-            // Add the "view mode" item
-            MenuItem viewModeMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.view_mode);
-            viewModeMenuItem.setIcon(R.drawable.ic_menu_view_mode);
-			viewModeMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+	private static final int MENU_SORT_MODE = Browser.MENU_VIEW_MODE + 1;
 
-			// Add the "sort mode" item
-			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
-			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			mSortModeSubmenu.attachMenuItem(sortMenuItem);
-			mSortModeSubmenu.clear();
-			addSortOptionsSubmenus(mSortModeSubmenu);
-
-			// Init with the current value
-			int initId = sortorder2itemid(mSortOrder);
-			if (initId==-1) { // not found
-				mSortModeSubmenu.selectSubmenuItem(0);
-			}
-			else {
-				int position = mSortModeSubmenu.getPosition(initId);
-				if (position<0) { // not found
-				    position=0;
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		requireActivity().addMenuProvider(new MenuProvider() {
+			@Override
+			public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+				if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu != null) {
+					// View mode item is already added by Browser base class
+					MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, MENU_SORT_MODE, Menu.NONE, R.string.sort_mode);
+					sortMenuItem.setIcon(R.drawable.ic_menu_sort);
+					sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+					mSortModeSubmenu.attachMenuItem(sortMenuItem);
+					mSortModeSubmenu.clear();
+					addSortOptionsSubmenus(mSortModeSubmenu);
+					int initId = sortorder2itemid(mSortOrder);
+					if (initId == -1) {
+						mSortModeSubmenu.selectSubmenuItem(0);
+					} else {
+						int position = mSortModeSubmenu.getPosition(initId);
+						mSortModeSubmenu.selectSubmenuItem(position < 0 ? 0 : position);
+					}
 				}
-				mSortModeSubmenu.selectSubmenuItem(position);
 			}
-		}
+			@Override
+			public boolean onMenuItemSelected(MenuItem item) {
+				return false;
+			}
+		}, getViewLifecycleOwner());
 	}
 	
 	abstract public void addSortOptionsSubmenus(ActionBarSubmenu submenu);

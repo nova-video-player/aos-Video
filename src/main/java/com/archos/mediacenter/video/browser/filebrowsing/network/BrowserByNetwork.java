@@ -36,6 +36,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.MenuProvider;
 
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.MetaFile2;
@@ -255,73 +256,6 @@ public class BrowserByNetwork extends BrowserByFolder {
         return super.onContextItemSelected(menuItem);
     }
 
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (log.isDebugEnabled()) log.debug("onOptionsItemSelected");
-        boolean ret;
-        int optionId = item.getItemId();
-        if (optionId == R.string.add_to_indexed_folders) {
-            mShortcutPath = mCurrentDirectory.toString();
-            mShortcutName = FileUtils.getName(mCurrentDirectory);
-            if (log.isDebugEnabled()) log.debug("onOptionsItemSelected: index folder mShortcutPath={}, mShortcutName={}", mShortcutPath, mShortcutName);
-            createShortcut(mShortcutPath, mShortcutName);
-            ret = true;
-        } else if (optionId == R.string.remove_from_indexed_folders || optionId == R.string.remove_from_shortcuts) {
-            removeShortcut(mCurrentDirectory.toString());
-            ret = true;
-        } else if (optionId == R.string.add_ssh_shortcut) {
-            mShortcutPath = mCurrentDirectory.toString();
-            mShortcutName = getActionBarTitle();
-            if (log.isDebugEnabled()) log.debug("onOptionsItemSelected: add as shortcut mShortcutPath={}, mShortcutName={}", mShortcutPath, mShortcutName);
-            final View v = getActivity().getLayoutInflater().inflate(R.layout.ssh_shortcut_dialog_layout, null);
-            ((EditText)v.findViewById(R.id.shortcut_name)).setText(Uri.parse(getFriendlyUri()).getLastPathSegment());
-            boolean isCurrentDirectoryIndexed = ShortcutDbAdapter.VIDEO.isHimselfOrAncestorShortcut(getActivity(), mCurrentDirectory.toString());
-            if (isCurrentDirectoryIndexed) {
-                v.findViewById(R.id.checkBox).setVisibility(View.INVISIBLE);
-            } else {
-                v.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
-            }
-            new AlertDialog.Builder(getActivity())
-                    .setCancelable(false)
-                    .setView(v)
-                    .setTitle(R.string.ssh_shortcut_name)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                            if (((CheckBox) v.findViewById(R.id.checkBox)).isChecked()) {
-                                NetworkScanner.scanVideos(getActivity(), mCurrentDirectory);
-                                addIndexedFolder(mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
-                            } else {
-                                ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString(), getFriendlyUri());
-                            }
-                            getActivity().invalidateOptionsMenu();
-                        }
-                    })
-                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel,new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,int id) {
-                            dialog.cancel();
-                        }
-                    }).create().show();
-            ret = true;
-        } else if (optionId == R.string.manually_create_share || optionId == R.string.rescan) {
-            if (optionId == R.string.manually_create_share) {
-                CreateShareDialog shareDialog = new CreateShareDialog();
-                shareDialog.setRetainInstance(true);
-                shareDialog.show(getParentFragmentManager(), "CreateShareDialog");
-            }
-            NetworkScanner.scanVideos(mContext, mCurrentDirectory);
-            return true;
-        } else {
-            ret = super.onOptionsItemSelected(item);
-        }
-        return ret;
-    }
 
     protected String getFriendlyUri() {
         if (log.isDebugEnabled()) log.debug("getFriendlyUri={}", mCurrentDirectory.toString());
@@ -348,63 +282,93 @@ public class BrowserByNetwork extends BrowserByFolder {
 
         mHelpOverlayHorizontalOffset = getActivity().getResources().getDimensionPixelSize(R.dimen.help_overlay_horizontal_offset);
         mHelpOverlayVerticalOffset = getActivity().getResources().getDimensionPixelSize(R.dimen.help_overlay_vertical_offset);
-    }
 
-
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        mMenu = menu;
-        if (getFileAndFolderSize() == 0)
-            mMenu.setGroupVisible(MENU_SUBLOADER_GROUP, false);
-
-        // Enable/Disable the items related to folder indexing
-        MenuItem addFolderMenuItem = menu.findItem(R.string.add_to_indexed_folders);
-        MenuItem addShortcutMenuItem = menu.findItem(R.string.add_ssh_shortcut);
-        MenuItem removeFolderMenuItem = menu.findItem(R.string.remove_from_indexed_folders);
-        MenuItem removeShortcutMenuItem = menu.findItem(R.string.remove_from_shortcuts);
-        MenuItem rescanFolderMenuItem = menu.findItem(R.string.rescan);
-        if(removeFolderMenuItem!=null&&addFolderMenuItem!=null) {
-            if (!UriUtils.isIndexable(mCurrentDirectory)) {
-                // No possible actions at the root and workgroup levels
-                addFolderMenuItem.setVisible(false);
-                removeFolderMenuItem.setVisible(false);
-                rescanFolderMenuItem.setVisible(false);
-                addShortcutMenuItem.setVisible(false);
-                removeShortcutMenuItem.setVisible(false);
-            } else {
-                // Check if the current folder or one of its ancestor is indexed
-                checkIfIsShortcut();
-                if (log.isDebugEnabled()) log.debug("onPrepareOptionsMenu: isCurrentDirectoryIndexed={}, isHimselfIndexedFolder={}, isCurrentDirectoryShortcut={}", isCurrentDirectoryIndexed, isHimselfIndexedFolder, isCurrentDirectoryShortcut);
-                // If the current folder is indexed => show the "unindex folder" item and do not show "remove the shortcut" item
-                // If the current folder is not indexed and none of its ancestors is indexed => show the "add as shortcut" item
-                // If the current folder is not indexed but one of its ancestors is indexed => show "add as shortcut" item and do not propose to index folder in add shortcut dialog
-                // If the current folder is indexed => show the "rescan" item
-                // If the current folder is a shortcut but not indexed => show the "index folder"
-                addFolderMenuItem.setVisible(isCurrentDirectoryShortcut && (! isCurrentDirectoryIndexed));
-                rescanFolderMenuItem.setVisible(isHimselfIndexedFolder);
-                removeFolderMenuItem.setVisible(isHimselfIndexedFolder);
-                addShortcutMenuItem.setVisible((!isCurrentDirectoryShortcut) && (! isCurrentDirectoryIndexed));
-                removeShortcutMenuItem.setVisible(isCurrentDirectoryShortcut && (! isHimselfIndexedFolder));
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+                MenuItem indexFolderMenuItem = menu.add(0, R.string.add_to_indexed_folders, Menu.NONE, R.string.add_to_indexed_folders);
+                indexFolderMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                indexFolderMenuItem.setActionView(mIndexFolderActionView);
+                menu.add(0, R.string.add_ssh_shortcut, 0, R.string.add_ssh_shortcut);
+                menu.add(0, R.string.remove_from_indexed_folders, Menu.NONE, R.string.remove_from_indexed_folders)
+                        .setIcon(R.drawable.ic_menu_video_unindex)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                menu.add(0, R.string.rescan, Menu.NONE, R.string.rescan);
+                menu.add(0, R.string.remove_from_shortcuts, 0, R.string.remove_from_shortcuts)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
             }
-        }
+            @Override
+            public void onPrepareMenu(Menu menu) {
+                mMenu = menu;
+                if (getFileAndFolderSize() == 0)
+                    mMenu.setGroupVisible(MENU_SUBLOADER_GROUP, false);
+                MenuItem addFolderMenuItem = menu.findItem(R.string.add_to_indexed_folders);
+                MenuItem addShortcutMenuItem = menu.findItem(R.string.add_ssh_shortcut);
+                MenuItem removeFolderMenuItem = menu.findItem(R.string.remove_from_indexed_folders);
+                MenuItem removeShortcutMenuItem = menu.findItem(R.string.remove_from_shortcuts);
+                MenuItem rescanFolderMenuItem = menu.findItem(R.string.rescan);
+                if (removeFolderMenuItem != null && addFolderMenuItem != null) {
+                    if (!UriUtils.isIndexable(mCurrentDirectory)) {
+                        addFolderMenuItem.setVisible(false);
+                        removeFolderMenuItem.setVisible(false);
+                        rescanFolderMenuItem.setVisible(false);
+                        addShortcutMenuItem.setVisible(false);
+                        removeShortcutMenuItem.setVisible(false);
+                    } else {
+                        checkIfIsShortcut();
+                        addFolderMenuItem.setVisible(isCurrentDirectoryShortcut && (!isCurrentDirectoryIndexed));
+                        rescanFolderMenuItem.setVisible(isHimselfIndexedFolder);
+                        removeFolderMenuItem.setVisible(isHimselfIndexedFolder);
+                        addShortcutMenuItem.setVisible((!isCurrentDirectoryShortcut) && (!isCurrentDirectoryIndexed));
+                        removeShortcutMenuItem.setVisible(isCurrentDirectoryShortcut && (!isHimselfIndexedFolder));
+                    }
+                }
+            }
+            @Override
+            public boolean onMenuItemSelected(MenuItem item) {
+                int optionId = item.getItemId();
+                if (optionId == R.string.add_to_indexed_folders) {
+                    mShortcutPath = mCurrentDirectory.toString();
+                    mShortcutName = FileUtils.getName(mCurrentDirectory);
+                    createShortcut(mShortcutPath, mShortcutName);
+                    return true;
+                } else if (optionId == R.string.remove_from_indexed_folders || optionId == R.string.remove_from_shortcuts) {
+                    removeShortcut(mCurrentDirectory.toString());
+                    return true;
+                } else if (optionId == R.string.add_ssh_shortcut) {
+                    mShortcutPath = mCurrentDirectory.toString();
+                    mShortcutName = getActionBarTitle();
+                    final View v = getActivity().getLayoutInflater().inflate(R.layout.ssh_shortcut_dialog_layout, null);
+                    ((EditText) v.findViewById(R.id.shortcut_name)).setText(Uri.parse(getFriendlyUri()).getLastPathSegment());
+                    boolean isCurrentDirectoryIndexed = ShortcutDbAdapter.VIDEO.isHimselfOrAncestorShortcut(getActivity(), mCurrentDirectory.toString());
+                    v.findViewById(R.id.checkBox).setVisibility(isCurrentDirectoryIndexed ? View.INVISIBLE : View.VISIBLE);
+                    new AlertDialog.Builder(getActivity())
+                            .setCancelable(false)
+                            .setView(v)
+                            .setTitle(R.string.ssh_shortcut_name)
+                            .setPositiveButton(android.R.string.ok, (dialog, id) -> {
+                                dialog.dismiss();
+                                if (((CheckBox) v.findViewById(R.id.checkBox)).isChecked()) {
+                                    NetworkScanner.scanVideos(getActivity(), mCurrentDirectory);
+                                    addIndexedFolder(mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString());
+                                } else {
+                                    ShortcutDb.STATIC.insertShortcut(getContext(), mCurrentDirectory, ((EditText) v.findViewById(R.id.shortcut_name)).getText().toString(), getFriendlyUri());
+                                }
+                                getActivity().invalidateOptionsMenu();
+                            })
+                            .setNegativeButton(android.R.string.cancel, (dialog, id) -> dialog.cancel())
+                            .create().show();
+                    return true;
+                } else if (optionId == R.string.rescan) {
+                    NetworkScanner.scanVideos(mContext, mCurrentDirectory);
+                    return true;
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner());
     }
 
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        MenuItem IndexFolderMenuItem = menu.add(0, R.string.add_to_indexed_folders, Menu.NONE, R.string.add_to_indexed_folders);
-        IndexFolderMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        IndexFolderMenuItem.setActionView(mIndexFolderActionView);
-        menu.add(0,R.string.add_ssh_shortcut, 0,R.string.add_ssh_shortcut);
-        menu.add(0, R.string.remove_from_indexed_folders, Menu.NONE, R.string.remove_from_indexed_folders).setIcon(R.drawable.ic_menu_video_unindex).setShowAsAction(
-                MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0, R.string.rescan, Menu.NONE, R.string.rescan);
-        menu.add(0,R.string.remove_from_shortcuts, 0,R.string.remove_from_shortcuts).setShowAsAction(
-                MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
-    }
+
 
     private boolean helpOverlayAlreadyActivated() {
         return mPreferences.getBoolean(SAMBA_INDEXING_HELP_OVERLAY_KEY, false);

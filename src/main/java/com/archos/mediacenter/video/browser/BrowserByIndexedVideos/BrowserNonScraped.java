@@ -18,6 +18,8 @@ package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
+import androidx.core.view.MenuProvider;
 import androidx.loader.content.Loader;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,7 +27,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.loader.NonScrapedVideosLoader;
-import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.AutoScrapeService;
 
 
@@ -33,26 +34,29 @@ public class BrowserNonScraped extends CursorBrowserByVideo {
     //private static final boolean DBG = false;
     //private static final String TAG = "BrowserNonScraped";
 
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
-            menu.add(0,R.string.rescrap_not_found,0, R.string.rescrap_not_found).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        }
-    }
-
-
-    @SuppressWarnings("deprecation") // Fragment menu APIs deprecated API 33; audit and migrate inactive Browser subclass menu logic to MenuProvider with UI testing
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.string.rescrap_not_found){
-            Intent intent = new Intent(getActivity(),AutoScrapeService.class);
-            intent.putExtra(AutoScrapeService.RESCAN_EVERYTHING, true);
-            intent.putExtra(AutoScrapeService.RESCAN_ONLY_DESC_NOT_FOUND, true);
-            getActivity().startService(intent);
-            Toast.makeText(getActivity(), R.string.rescrap_in_progress, Toast.LENGTH_SHORT).show();
-            return true;
-        } else
-            return super.onOptionsItemSelected(item);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+                if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
+                    menu.add(0, R.string.rescrap_not_found, 0, R.string.rescrap_not_found).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                }
+            }
+            @Override
+            public boolean onMenuItemSelected(MenuItem item) {
+                if (item.getItemId() == R.string.rescrap_not_found) {
+                    Intent intent = new Intent(getActivity(), AutoScrapeService.class);
+                    intent.putExtra(AutoScrapeService.RESCAN_EVERYTHING, true);
+                    intent.putExtra(AutoScrapeService.RESCAN_ONLY_DESC_NOT_FOUND, true);
+                    getActivity().startService(intent);
+                    Toast.makeText(getActivity(), R.string.rescrap_in_progress, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner());
     }
 
     @Override
