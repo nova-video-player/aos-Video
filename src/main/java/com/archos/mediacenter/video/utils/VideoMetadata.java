@@ -83,6 +83,7 @@ public class VideoMetadata implements Serializable {
             fpsScale = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_VIDEO_TRACK_FPS_SCALE);
             s3dMode = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_VIDEO_TRACK_S3D);
             decoder = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_VIDEO_TRACK_DECODER);
+            colorTrc = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_VIDEO_TRACK_COLOR_TRC);
         }
         
         VideoTrack(IMediaMetadataRetriever retriever) {
@@ -97,6 +98,7 @@ public class VideoMetadata implements Serializable {
             fpsScale = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_VIDEO_TRACK_FPS_SCALE);
             s3dMode = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_VIDEO_TRACK_S3D_MODE);
             decoder = LibAvos.MP_DECODER_ANY;
+            colorTrc = 0;
         }
 
         public final String format;
@@ -109,6 +111,7 @@ public class VideoMetadata implements Serializable {
         public final int fpsScale;
         public final int s3dMode;
         public final int decoder;
+        public final int colorTrc; // AVCOL_TRC_* (e.g. 16=SMPTE2084/PQ, 18=HLG)
     }
 
     public static class AudioTrack implements Serializable {
