@@ -436,6 +436,8 @@
     <string name="subtitle_style_text">Estilo:</string>
     <string name="subtitle_vert_text">Posição Vertical:</string>
     <string name="subtitle_outline">Contorno da legenda</string>
+    <string name="subtitle_background_text">Plano de fundo da legenda</string>
+    <string name="subtitle_bg_opacity_text">Opacidade do plano de fundo</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Ajuste de velocidade</string>
     <string name="subtitle_delay_radio_none">nenhum</string>

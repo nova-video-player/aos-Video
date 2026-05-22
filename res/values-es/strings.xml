@@ -436,6 +436,8 @@
     <string name="subtitle_style_text">Estilo:</string>
     <string name="subtitle_vert_text">Posición vertical:</string>
     <string name="subtitle_outline">Contorno de subtítulos</string>
+    <string name="subtitle_background_text">Fondo de subtítulos</string>
+    <string name="subtitle_bg_opacity_text">Opacidad del fondo</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Ajuste de velocidad</string>
     <string name="subtitle_delay_radio_none">ninguno</string>

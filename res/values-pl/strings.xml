@@ -446,6 +446,8 @@
     <string name="subtitle_style_text">Styl:</string>
     <string name="subtitle_vert_text">Pozycja pionowa:</string>
     <string name="subtitle_outline">Cień napisów</string>
+    <string name="subtitle_background_text">Tło napisów</string>
+    <string name="subtitle_bg_opacity_text">Przezroczystość tła</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Regulacja prędkości</string>
     <string name="subtitle_delay_radio_none">brak</string>

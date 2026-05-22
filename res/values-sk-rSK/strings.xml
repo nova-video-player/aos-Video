@@ -446,6 +446,8 @@
     <string name="subtitle_style_text">Štýl:</string>
     <string name="subtitle_vert_text">Vertikálna poloha:</string>
     <string name="subtitle_outline">Obrys titulkov</string>
+    <string name="subtitle_background_text">Pozadie titulkov</string>
+    <string name="subtitle_bg_opacity_text">Priehľadnosť pozadia</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Úprava rýchlosti</string>
     <string name="subtitle_delay_radio_none">žiadne</string>
