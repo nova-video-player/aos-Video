@@ -33,6 +33,7 @@ import com.archos.filecorelibrary.MimeUtils;
 import com.archos.filecorelibrary.OperationEngineListener;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.RawListerFactoryWithUpnp;
+import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.utils.VideoMetadata;
@@ -454,12 +455,43 @@ public class SubtitleManager {
         try {
             MediaUtils.removeLastSubs(mContext);
             String baseName = getName(videoUri);
+            // Compute prefix early so we can purge stale cached subs for this video before
+            // copying fresh ones. Without this, renamed copies from a previous run (e.g.
+            // video.Ep02.srt, video.Ep03.srt …) survive in the cache and pollute the listing.
+            String prefix = stripExtension(videoUri) + ".";
+            File subsDir = MediaUtils.getSubsDir(mContext);
+            if (subsDir != null) {
+                File[] cachedSubs = subsDir.listFiles();
+                if (cachedSubs != null) {
+                    for (File f : cachedSubs) {
+                        String fname = f.getName();
+                        if (!fname.startsWith(prefix)) continue;
+                        // Extract the segment between the video prefix and the final subtitle extension.
+                        // e.g. "videoName.en.srt"  → segment = "en"   (language code → keep)
+                        //      "videoName.srt"      → segment = ""     (exact match → keep)
+                        //      "videoName.Ep02 - Title.srt" → segment = "Ep02 - Title" (episode title → delete)
+                        String afterPrefix = fname.substring(prefix.length()); // e.g. "en.srt" or "Ep02 - Title.srt"
+                        int lastDot = afterPrefix.lastIndexOf('.');
+                        // lastDot == -1 means afterPrefix is just a bare extension (e.g. "srt"),
+                        // which is an exact-name match (videoName.srt) — always preserve.
+                        // Otherwise segment is the part between prefix and final extension.
+                        String segment = (lastDot > 0) ? afterPrefix.substring(0, lastDot) : "";
+                        // Preserve exact-name cached sub (segment is empty) or a recognized language code
+                        if (segment.isEmpty() || ISO639codes.isletterCode(segment)) {
+                            if (log.isDebugEnabled()) log.debug("privatePrefetchSub: keeping cached sub {} (segment='{}')", fname, segment);
+                            continue;
+                        }
+                        if (log.isDebugEnabled()) log.debug("privatePrefetchSub: removing stale cached sub {} (segment='{}')", fname, segment);
+                        f.delete();
+                    }
+                }
+            }
             List<MetaFile2> subs;
             // do not prefetch first level subs for local files to avoid duplicate on local videos since they are already captured afterwards
             if (FileUtils.isLocal(videoUri)) subs = getSubtitleListExcludingFirstLevelSubs(videoUri);
             else subs = getSubtitleList(videoUri);
-            if (!subs.isEmpty()){
-                Uri target = Uri.fromFile(MediaUtils.getSubsDir(mContext));
+            if (!subs.isEmpty() && subsDir != null){
+                Uri target = Uri.fromFile(subsDir);
                 final CountDownLatch latch = new CountDownLatch(subs.size()); // Initialize the CountDownLatch with a count of 1
                 engine = new CopyCutEngine(mContext);
                 engine.setListener(new OperationEngineListener() {
@@ -499,7 +531,6 @@ public class SubtitleManager {
                 });
                 //force prefixing with video name before copy if this is not the case i.e. Subs/en.srt -> videoName.en.srt,
                 // /!\ it will cause subs duplicates because detection is based on fileName
-                String prefix = stripExtension(videoUri) + ".";
                 // Use the raw prefix so we don't double-prefix when files already carry encoded names (spaces -> '+')
                 if (log.isDebugEnabled()) log.debug("privatePrefetchSub: setAllTargetFilesShouldStartWithString {}", prefix);
                 engine.setAllTargetFilesShouldStartWithString(prefix);
@@ -595,9 +626,17 @@ public class SubtitleManager {
                                     nameNoCase.equals("subtitles")||
                                     nameNoCase.equals("subtitle")
                     )){
-                        // add all subs in the specific subdirectory
                         if (log.isDebugEnabled()) log.debug("recursiveSubListing: recursing into {} for {}", item.getUri().toString(), filenameWithoutExtension);
-                        subs.addAll(recursiveSubListing(item.getUri(), filenameWithoutExtension, true));
+                        // First try name-matched subs only (e.g. Ep01.srt when playing Ep01.mp4).
+                        // Fall back to all subs only if nothing matches, to support language-code
+                        // naming conventions (en.srt, fr.srt, etc.) without picking up unrelated
+                        // episode subs from a shared Subtitles/ directory.
+                        ArrayList<MetaFile2> matchingSubs = recursiveSubListing(item.getUri(), filenameWithoutExtension, false);
+                        if (!matchingSubs.isEmpty()) {
+                            subs.addAll(matchingSubs);
+                        } else {
+                            subs.addAll(recursiveSubListing(item.getUri(), filenameWithoutExtension, true));
+                        }
                         continue;
                     }
 
@@ -661,15 +700,29 @@ public class SubtitleManager {
             if (localSubsDirUri != null) {
                 try {
                     List<MetaFile2> files = RawListerFactoryWithUpnp.getRawListerForUrl(localSubsDirUri).getFileList();
+                    String encodedFilenameWithoutExtension = encodeFileName(filenameWithoutExtension);
+                    String cachePrefix = filenameWithoutExtension + ".";
+                    String encodedCachePrefix = (encodedFilenameWithoutExtension != null) ? encodedFilenameWithoutExtension + "." : null;
                     for (MetaFile2 file : files) {
                         // ensures that we have a file with the same name as the video
-                        String encodedFilenameWithoutExtension = encodeFileName(filenameWithoutExtension);
-                        if (file.getName().startsWith(filenameWithoutExtension + ".") ||
-                                (encodedFilenameWithoutExtension != null && file.getName().startsWith(encodedFilenameWithoutExtension + ".")) ||
-                                addAllSubs) {
-                            allFiles.add(file);
-                            if (log.isTraceEnabled()) log.trace("listLocalAndRemotesSubtitles: cache add {}", file.getName());
+                        String matchedPrefix = null;
+                        if (file.getName().startsWith(cachePrefix)) matchedPrefix = cachePrefix;
+                        else if (encodedCachePrefix != null && file.getName().startsWith(encodedCachePrefix)) matchedPrefix = encodedCachePrefix;
+                        if (!addAllSubs && matchedPrefix == null) continue;
+                        if (matchedPrefix != null) {
+                            // Filter out stale renamed subs (e.g. "videoName.Episode Title.srt" from a previous
+                            // run). Only accept exact-name match (no middle segment) or a recognised ISO 639
+                            // language code (e.g. "en", "fre"), which are legitimate downloaded subs.
+                            String afterPrefix = file.getName().substring(matchedPrefix.length());
+                            int lastDot = afterPrefix.lastIndexOf('.');
+                            String segment = (lastDot > 0) ? afterPrefix.substring(0, lastDot) : "";
+                            if (!segment.isEmpty() && !ISO639codes.isletterCode(segment)) {
+                                if (log.isDebugEnabled()) log.debug("listLocalAndRemotesSubtitles: skipping stale cached sub {} (segment='{}')", file.getName(), segment);
+                                continue;
+                            }
                         }
+                        allFiles.add(file);
+                        if (log.isTraceEnabled()) log.trace("listLocalAndRemotesSubtitles: cache add {}", file.getName());
                     }
                 } catch (Exception e) {
                 }
