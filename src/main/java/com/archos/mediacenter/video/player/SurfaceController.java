@@ -475,8 +475,8 @@ public class SurfaceController {
      * @param dataSpace HAL dataspace constant (e.g. 0x10C00000 for BT2020_PQ, 0 to reset)
      */
     public void setSurfaceDataSpace(int dataSpace) {
-        if (Build.VERSION.SDK_INT < 32) {
-            if (log.isDebugEnabled()) log.debug("setSurfaceDataSpace: skipped, API {} < 32", Build.VERSION.SDK_INT);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            if (log.isDebugEnabled()) log.debug("setSurfaceDataSpace: skipped, API {} < 33", Build.VERSION.SDK_INT);
             return;
         }
         if (mSurfaceView == null) {
