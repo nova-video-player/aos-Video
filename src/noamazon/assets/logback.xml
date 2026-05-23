@@ -69,6 +69,7 @@
 
     <logger name="com.archos.mediacenter.filecoreextension.upnp2" level="INFO"/>
     <logger name="com.archos.mediacenter.upnp" level="INFO"/>
+    <logger name="org.jupnp" level="ERROR"/>
     <logger name="org.jupnp.android.AndroidRouter" level="WARN"/>
     <logger name="com.archos.filecorelibrary.samba.NetworkCredentialsDatabase" level="INFO"/>
     <logger name="com.archos.mediacenter.video.leanback.network.NetworkServerCredentialsDialog" level="INFO"/>
