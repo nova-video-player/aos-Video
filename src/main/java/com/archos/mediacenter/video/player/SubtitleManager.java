@@ -685,8 +685,7 @@ public class SubtitleManager {
                 mNavigationBarShowing = (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0;
                 //noinspection deprecation
                 mSystemBarShowing = (visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0;
-                //noinspection deprecation
-                mActionBarShowing = (visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) == 0;
+                mActionBarShowing = PlayerController.isActionBarShowing();
                 mIsNavBarOnBottom = MiscUtils.isNavigationBarOnBottom(mRootView, mContext);
                 mIsGestureAreaShowing = MiscUtils.isGestureAreaDisplayed(mContext);
                 mGestureAreaHeight = MiscUtils.getGestureAreaHeight(mContext);
@@ -709,6 +708,7 @@ public class SubtitleManager {
         // Player.sPlayer.getSurfaceControllerWidth(), Player.sPlayer.getSurfaceControllerHeight() is for the videoView but virtualScreen is larger
         // do not apply globalShift if in floating player mode
         if (log.isDebugEnabled()) log.debug("adjustView: mIsSubtitleGfx={}", mIsSubtitleGfx);
+        mActionBarShowing = PlayerController.isActionBarShowing();
         MiscUtils.adjustViewLayoutForInsets(mContext, mRootView, mSubtitleLayout, "mSubtitleLayout",
                 mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, PlayerController.isControlBarShowing(), mIsNavBarOnBottom, mIsGestureAreaShowing,
                 (! mIsSubtitleGfx && PlayerController.isControlBarShowing() ? PlayerController.getControlBarCurrentHeight() : 0), (mIsSubtitleGfx ? 0 :mSubtitleEvadedVPos),

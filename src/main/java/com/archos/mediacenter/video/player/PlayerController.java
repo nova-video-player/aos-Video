@@ -747,6 +747,10 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         return mControlBarShowing;
     }
 
+    public static boolean isActionBarShowing() {
+        return mActionBarShowing;
+    }
+
     private void showHelpOverlay(View controllerView) {
         View overlay = controllerView.findViewById(R.id.help_overlay);
         if(overlay!=null){
