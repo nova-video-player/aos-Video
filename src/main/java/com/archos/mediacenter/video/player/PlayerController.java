@@ -296,6 +296,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
         mSystemUiVisibility = 0;
         WindowCompat.setDecorFitsSystemWindows(mWindow, false);
+        mWindow.setStatusBarColor(Color.TRANSPARENT); // FLAG_TRANSLUCENT_STATUS replacement: keep status bar transparent when visible
         mInsetsController = WindowCompat.getInsetsController(mWindow, mWindow.getDecorView());
         mInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         // Do not hide bars here — old code only set LAYOUT_* flags + IMMERSIVE behavior, not FULLSCREEN|HIDE_NAVIGATION.
@@ -692,8 +693,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 mNavigationBarShowing = (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0;
                 //noinspection deprecation
                 mSystemBarShowing = (visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0;
-                //noinspection deprecation
-                mActionBarShowing = (visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) == 0;
+                // SYSTEM_UI_FLAG_LOW_PROFILE is no longer set by WindowInsetsControllerCompat;
+                // mActionBarShowing is tracked directly by showActionBar(), so skip update here.
                 mIsNavBarOnBottom = MiscUtils.isNavigationBarOnBottom(mRootView, mContext);
                 mIsGestureAreaShowing = MiscUtils.isGestureAreaDisplayed(mContext);
                 mGestureAreaHeight = MiscUtils.getGestureAreaHeight(mContext);
@@ -825,11 +826,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void showActionBar(boolean show) {
-        if (mActionBarShowing != show) {
+        if (mActionBarShowing != show || mActionBar.isShowing() != show) {
             if (show) mActionBar.show();
             else mActionBar.hide();
-            mActionBarShowing = show;
         }
+        mActionBarShowing = show;
     }
     public View getVolumeBar(){
         return mVolumeBar;
@@ -839,9 +840,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
     protected void showSystemBar(boolean show) {
         if (log.isDebugEnabled()) log.debug("showSystemBar {}", show);
-        if (mSystemBarShowing == show) return;
         if (show) {
             mInsetsController.show(WindowInsetsCompat.Type.systemBars());
+            mNavigationBarShowing = true;
         } else {
             mInsetsController.hide(WindowInsetsCompat.Type.statusBars());
         }
@@ -854,7 +855,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     private void showControlBar(boolean show) {
         if (log.isDebugEnabled()) log.debug("showControlBar {}", show);
-        if (mControlBar != null && mControlBarShowing != show) {
+        if (mControlBar != null && (mControlBarShowing != show
+                || mControlBar.getVisibility() != (show ? View.VISIBLE : View.GONE))) {
             if (log.isDebugEnabled()) log.debug("showControlBar {}", String.valueOf(show));
             setVisibility(mControlBar, show, true);
             if(mPlayPauseTouchZone!=null){
@@ -1168,6 +1170,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 case MSG_HIDE_SYSTEM_BAR:
                     if (log.isDebugEnabled()) log.debug("Handle: MSG_HIDE_SYSTEM_BAR");
                     mInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
+                    mNavigationBarShowing = false;
                     manualVisibilityChange=true;
                     break;
                 case MSG_OVERLAY_FADE_OUT:
