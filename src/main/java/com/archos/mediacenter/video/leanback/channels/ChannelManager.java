@@ -387,6 +387,9 @@ public class ChannelManager {
                             if (DBG) Log.e(TAG, "CreateChannelTask: caught exception (HarmonyOS?)", e);
                         }
                     }
+                    if (channel.getId() != -1 && !isCancelled && !Thread.currentThread().isInterrupted()) {
+                        refreshChannel(channel);
+                    }
                 } catch (Exception e) {
                     Log.e(TAG, "CreateChannelTask failed", e);
                 } finally {
