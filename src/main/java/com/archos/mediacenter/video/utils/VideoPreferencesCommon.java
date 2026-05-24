@@ -90,6 +90,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
@@ -277,6 +278,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mTraktSyncProgressPreference = null;
     private Preference mTraktForcePushPreference = null;
     private Preference mTraktForcePullPreference = null;
+    private Preference mTraktSyncStatusPreference = null;
     private CheckBoxPreference mAutoScrapPreference = null;
 
     private CheckBoxPreference mSeparateAnimeMoviePreference = null;
@@ -1044,6 +1046,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             }
         });
         mTraktSyncCollectionPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_SYNC_COLLECTION);
+        mTraktSyncStatusPreference = findPreference("trakt_sync_status");
         mTraktForcePushPreference = findPreference("trakt_force_push");
         mTraktForcePullPreference = findPreference("trakt_force_pull");
         if (mTraktForcePushPreference != null) {
@@ -1478,6 +1481,59 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         }
         mTraktSigninPreference.setEnabled(!enabled);
         mTraktSigninPreference.setSelectable(!enabled);
+        if (mTraktSyncStatusPreference != null) {
+            mTraktSyncStatusPreference.setVisible(enabled);
+        }
+    }
+
+    private void updateTraktSyncStatus() {
+        if (mTraktSyncStatusPreference == null) return;
+        Resources res = getResources();
+        long lastSync = mSharedPreferences.getLong("trakt_last_sync", 0);
+        int status = mSharedPreferences.getInt(TraktService.PREFERENCE_TRAKT_LAST_SYNC_STATUS, -1);
+        int skippedDuration = mSharedPreferences.getInt(TraktService.PREFERENCE_TRAKT_SKIPPED_NO_DURATION, 0);
+        int skippedMeta = mSharedPreferences.getInt(TraktService.PREFERENCE_TRAKT_SKIPPED_NO_METADATA, 0);
+
+        if (status == TraktService.SYNC_STATUS_ERROR_AUTH) {
+            mTraktSyncStatusPreference.setSummary(res.getString(R.string.trakt_sync_status_error_auth));
+            return;
+        }
+        if (status == TraktService.SYNC_STATUS_ERROR_ACCOUNT_LOCKED) {
+            mTraktSyncStatusPreference.setSummary(res.getString(R.string.trakt_sync_status_error_locked));
+            return;
+        }
+        if (status == TraktService.SYNC_STATUS_ERROR_NETWORK) {
+            mTraktSyncStatusPreference.setSummary(res.getString(R.string.trakt_sync_status_error_network));
+            return;
+        }
+        if (lastSync == 0) {
+            mTraktSyncStatusPreference.setSummary(res.getString(R.string.trakt_sync_status_never));
+            return;
+        }
+        // Format elapsed time
+        long elapsedSeconds = System.currentTimeMillis() / 1000L - lastSync;
+        String elapsed;
+        if (elapsedSeconds < 120) {
+            elapsed = "1 min";
+        } else if (elapsedSeconds < 3600) {
+            elapsed = TimeUnit.SECONDS.toMinutes(elapsedSeconds) + " min";
+        } else if (elapsedSeconds < 86400) {
+            elapsed = TimeUnit.SECONDS.toHours(elapsedSeconds) + " hr";
+        } else {
+            elapsed = TimeUnit.SECONDS.toDays(elapsedSeconds) + " day(s)";
+        }
+        if (skippedDuration > 0 && skippedMeta > 0) {
+            mTraktSyncStatusPreference.setSummary(
+                    res.getString(R.string.trakt_sync_status_ok_both_skipped, elapsed, skippedDuration, skippedMeta));
+        } else if (skippedDuration > 0) {
+            mTraktSyncStatusPreference.setSummary(
+                    res.getString(R.string.trakt_sync_status_ok_skipped, elapsed, skippedDuration));
+        } else if (skippedMeta > 0) {
+            mTraktSyncStatusPreference.setSummary(
+                    res.getString(R.string.trakt_sync_status_ok_meta_skipped, elapsed, skippedMeta));
+        } else {
+            mTraktSyncStatusPreference.setSummary(res.getString(R.string.trakt_sync_status_ok, elapsed));
+        }
     }
 
     public void onSaveInstanceState(Bundle outState) {
@@ -1498,6 +1554,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 mTraktSigninPreference.setSummary(getResources().getString(R.string.trakt_signin_summary_logged));
                 new TraktService.Client(getActivity(), null, false).sync(0);
             }
+            updateTraktSyncStatus();
         } else {
             if (mLastTraktUser != null ) {
                 Trakt.wipePreferences(PreferenceManager.getDefaultSharedPreferences(getActivity()), false);
@@ -1567,6 +1624,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             // preference just changed, assume it's valid
             mTraktStatus = Trakt.Status.SUCCESS;
             onTraktUserChange();
+        } else if (key.equals(TraktService.PREFERENCE_TRAKT_LAST_SYNC_STATUS)
+                || key.equals(TraktService.PREFERENCE_TRAKT_SKIPPED_NO_DURATION)
+                || key.equals(TraktService.PREFERENCE_TRAKT_SKIPPED_NO_METADATA)
+                || key.equals("trakt_last_sync")) {
+            updateTraktSyncStatus();
         } else if (key.equals(KEY_TRAKT_SYNC_COLLECTION)) {
             if (Trakt.isTraktV2Enabled(getActivity(), mSharedPreferences)) {
                 Boolean newBoolean = (Boolean) sharedPreferences.getBoolean(KEY_TRAKT_SYNC_COLLECTION, TRAKT_SYNC_COLLECTION_DEFAULT);

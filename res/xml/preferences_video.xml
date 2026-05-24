@@ -435,6 +435,12 @@
             android:title="@string/trakt_signin_title"
             app:iconSpaceReserved="false"/>
 
+        <Preference
+            android:key="trakt_sync_status"
+            android:title="@string/trakt_sync_status_title"
+            android:selectable="false"
+            app:iconSpaceReserved="false"/>
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="trakt_live_scrobbling"
