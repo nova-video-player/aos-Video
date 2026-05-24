@@ -961,11 +961,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (log.isDebugEnabled()) log.debug("stopAndSaveVideoState");
         if(mIndexHelper!=null) {
             mIndexHelper.abort(); //too late : do not retrieve db info
-            saveVideoStateIfReady();
+            // stopTrakt() must run before saveVideoStateIfReady() so that it sets
+            // mVideoInfo.traktResume = -progress synchronously before the async DB write captures it
             if ((mPlayerState != PlayerState.INIT && mPlayerState != PlayerState.PREPARING)) {
                 if (log.isDebugEnabled()) log.debug("stopAndSaveVideoState: stopTrakt");
                 stopTrakt();
             }
+            saveVideoStateIfReady();
             if (mUpdateNextTask != null) {
                 mUpdateNextTask.cancel(false);
                 mUpdateNextTask.setListener(null);
