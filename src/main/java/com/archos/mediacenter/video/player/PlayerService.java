@@ -1460,13 +1460,15 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onPause(int state) {
         if (log.isDebugEnabled()) log.debug("onPause");
         mPlayerState = PlayerState.PAUSED;
-        saveVideoStateIfReady();
+        // pauseTrakt() must run before saveVideoStateIfReady() so that it sets
+        // mVideoInfo.traktResume = -progress synchronously before the async DB write captures it
         if (state == PlayerController.STATE_NORMAL) {
             if (log.isDebugEnabled()) log.debug("onPause: normal state thus pauseTrakt()!");
             pauseTrakt();
         } else {
             if (log.isDebugEnabled()) log.debug("onPause: other/seek state thus not doing pauseTrakt()!");
         }
+        saveVideoStateIfReady();
         if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
         }
