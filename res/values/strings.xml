@@ -942,7 +942,6 @@
     <string name="trakt_device_auth_timeout">Code expired. Please try again.</string>
     <string name="trakt_account_locked">Trakt account locked. Unlock on trakt.tv or try later.</string>
     <string name="connect_trakt">Connect to Trakt</string>
-    <string name="trakt_sync_status_title">Sync status</string>
     <string name="trakt_sync_status_never">Not yet synced</string>
     <string name="trakt_sync_status_ok">Last sync: %1$s ago</string>
     <string name="trakt_sync_status_ok_skipped">Last sync: %1$s ago · %2$d video(s) pending (unknown duration)</string>
@@ -951,6 +950,8 @@
     <string name="trakt_sync_status_error_network">Last sync failed: network error</string>
     <string name="trakt_sync_status_error_auth">Authentication error — please sign in again</string>
     <string name="trakt_sync_status_error_locked">Account locked — unlock on trakt.tv</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
+    <string name="trakt_signin_summary_logged_sync">Signed in · %1$s</string>
 
     <string name="show_all">All videos</string>
     <string name="hide_seen">Not watched</string>
