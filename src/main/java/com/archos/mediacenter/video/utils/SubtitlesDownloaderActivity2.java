@@ -293,16 +293,19 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 }
                 boolean loginOk = OpenSubtitlesApiHelper.login(getApplicationContext().getString(R.string.opensubtitles_api_key), mUsername, mPassword);
                 if (!loginOk && !mUsername.isEmpty()) {
+                    OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_BAD_CREDENTIALS, -1, -1, "");
                     displayToast(getString(R.string.toast_subloader_login_failed) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
                     return false;
                 }
             } catch (IOException e) {
                 log.warn("logIn error message: result={} message:{}; localizedMessage:{}, cause: {}", OpenSubtitlesApiHelper.getLastQueryResult(), e.getMessage(), e.getLocalizedMessage(), e.getCause());
+                OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_NETWORK_ERROR, -1, -1, "");
                 displayToast(getString(R.string.toast_subloader_login_failed) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
                 closeDialog();
                 return false;
             } catch (Throwable e) { //for various service outages
                 log.error("logIn: caught exception result={}", OpenSubtitlesApiHelper.getLastQueryResult(),e);
+                OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_NETWORK_ERROR, -1, -1, "");
                 displayToast(getString(R.string.toast_subloader_service_unreachable) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
                 closeDialog();
                 return false;
@@ -336,6 +339,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 searchResults = OpenSubtitlesApiHelper.searchSubtitle(fileInfo, languagesString);
             } catch (Throwable e) { //for various service outages
                 log.error("getSubtitles: caught Throwable ", e);
+                OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_NETWORK_ERROR, -1, -1, "");
                 displayToast(getString(R.string.toast_subloader_service_unreachable));
                 mDoNotFinish = false;
                 return;
@@ -350,6 +354,23 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             if (searchResults != null && searchResults.size() > 1) {
                 mHandler.post(() -> askSubChoice(fileUrl, searchResults,languages.size()>1, !searchResults.isEmpty()));
             } else {
+                if (searchResults == null) {
+                    int qr = OpenSubtitlesApiHelper.getLastQueryResult();
+                    final int osStatus;
+                    if (qr == OpenSubtitlesApiHelper.RESULT_CODE_BAD_CREDENTIALS
+                            || qr == OpenSubtitlesApiHelper.RESULT_CODE_TOKEN_EXPIRED) {
+                        osStatus = OpenSubtitlesApiHelper.OS_STATUS_BAD_CREDENTIALS;
+                    } else if (qr == OpenSubtitlesApiHelper.RESULT_CODE_QUOTA_EXCEEDED
+                            || qr == OpenSubtitlesApiHelper.RESULT_CODE_TOO_MANY_REQUESTS) {
+                        osStatus = OpenSubtitlesApiHelper.OS_STATUS_QUOTA_EXCEEDED;
+                    } else if (qr != OpenSubtitlesApiHelper.RESULT_CODE_OK) {
+                        osStatus = OpenSubtitlesApiHelper.OS_STATUS_NETWORK_ERROR;
+                    } else {
+                        osStatus = -1; // searchSubtitle returned null with OK — don't overwrite status
+                    }
+                    if (osStatus != -1)
+                        OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), osStatus, -1, -1, "");
+                }
                 log.warn("getSubtitles: no subs found on opensubtitles for {}", fileUrl);
                 displayToast(getString(R.string.dialog_subloader_fails) + " " + ((fileInfo != null) ? fileInfo.getFileName() : null));
                 mDoNotFinish = false;
@@ -365,6 +386,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResult.getFileId());
                 if (OpenSubtitlesApiHelper.getLastQueryResult() == OpenSubtitlesApiHelper.RESULT_CODE_QUOTA_EXCEEDED) {
                     log.warn("getSub: quota exceeded, quota resets in {}", OpenSubtitlesApiHelper.getTimeRemaining());
+                    OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_QUOTA_EXCEEDED);
                     displayToast(getString(R.string.toast_subloader_quota_exceeded));
                     displayToast(getString(R.string.opensubtitles_quota_reset_time_remaining, OpenSubtitlesApiHelper.getTimeRemaining()));
                     mDoNotFinish = false;
@@ -378,9 +400,11 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                     finish();
                     return;
                 }
+                OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_OK);
                 displayToast(getString(R.string.opensubtitles_quota_download_remaining, OpenSubtitlesApiHelper.getRemainingDownloads(), OpenSubtitlesApiHelper.getAllowedDownloads()));
             } catch (IOException e) {
                 log.error("getSub: caught IOException", e);
+                OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_NETWORK_ERROR, -1, -1, "");
                 mDoNotFinish = false;
                 finish();
                 return;

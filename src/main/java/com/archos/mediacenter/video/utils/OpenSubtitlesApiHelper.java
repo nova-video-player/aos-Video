@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.format.DateUtils;
 
 import com.archos.mediacenter.video.CustomApplication;
@@ -62,6 +63,21 @@ public class OpenSubtitlesApiHelper {
     public static final int RESULT_CODE_LINK_GONE = 410;
     public static final int RESULT_CODE_TOO_MANY_REQUESTS = 429;
     public static final int RESULT_CODE_SERVER_ISSUE = 500;
+
+    // Shared prefs file (same as OpenSubtitlesCredentialsDialog)
+    public static final String OS_PREFS_NAME = "opensubtitles_credentials";
+    // Persisted last-use status keys
+    public static final String PREF_LAST_STATUS = "os_last_status";
+    public static final String PREF_LAST_STATUS_TIME = "os_last_status_time";
+    public static final String PREF_LAST_REMAINING_DOWNLOADS = "os_last_remaining_downloads";
+    public static final String PREF_LAST_ALLOWED_DOWNLOADS = "os_last_allowed_downloads";
+    public static final String PREF_LAST_RESET_TIME_UTC = "os_last_reset_time_utc";
+    // Status codes for PREF_LAST_STATUS
+    public static final int OS_STATUS_NONE = 0;
+    public static final int OS_STATUS_OK = 1;
+    public static final int OS_STATUS_BAD_CREDENTIALS = 2;
+    public static final int OS_STATUS_QUOTA_EXCEEDED = 3;
+    public static final int OS_STATUS_NETWORK_ERROR = 4;
 
     private static int LAST_QUERY_RESULT = RESULT_CODE_OK;
     private static String LAST_QUERY_MESSAGE = "";
@@ -540,18 +556,41 @@ public class OpenSubtitlesApiHelper {
     }
 
     public static String getTimeRemaining() {
+        return getTimeRemainingFromUtc(resetTimeUTC);
+    }
+
+    public static String getTimeRemainingFromUtc(String utcString) {
+        if (utcString == null || utcString.isEmpty()) return "";
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            Date resetTime = dateFormat.parse(resetTimeUTC);
+            Date resetTime = dateFormat.parse(utcString);
             Date currentTime = new Date();
             long timeDifference = resetTime.getTime() - currentTime.getTime();
-            String formattedTimeRemaining = DateUtils.formatElapsedTime(timeDifference / 1000);
-            return formattedTimeRemaining;
+            if (timeDifference <= 0) return "";
+            return DateUtils.formatElapsedTime(timeDifference / 1000);
         } catch (ParseException e) {
-            log.error("getTimeRemaining: caught ParseException", e);
+            log.error("getTimeRemainingFromUtc: caught ParseException", e);
             return "";
         }
+    }
+
+    /** Persist last-use status to shared prefs (uses current in-memory quota values). */
+    public static void persistStatus(Context ctx, int status) {
+        persistStatus(ctx, status, remainingDownloads, remainingDownloads + numberDownloads, resetTimeUTC);
+    }
+
+    /** Persist last-use status with explicit quota values (pass -1/-1 when quota is not yet known). */
+    public static void persistStatus(Context ctx, int status, int remaining, int allowed, String resetUtc) {
+        SharedPreferences prefs = ctx.getApplicationContext()
+                .getSharedPreferences(OS_PREFS_NAME, Context.MODE_PRIVATE);
+        prefs.edit()
+                .putInt(PREF_LAST_STATUS, status)
+                .putLong(PREF_LAST_STATUS_TIME, System.currentTimeMillis())
+                .putInt(PREF_LAST_REMAINING_DOWNLOADS, remaining)
+                .putInt(PREF_LAST_ALLOWED_DOWNLOADS, allowed)
+                .putString(PREF_LAST_RESET_TIME_UTC, resetUtc != null ? resetUtc : "")
+                .apply();
     }
 
     public static boolean isCurrentTimeAfterResetTime() {

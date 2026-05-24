@@ -52,6 +52,12 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mPreferencesCommon.onResume();
+    }
+
+    @Override
     public void onDestroy() {
         mPreferencesCommon.onDestroy();
         super.onDestroy();

@@ -280,6 +280,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private Preference mTraktForcePullPreference = null;
     private CheckBoxPreference mAutoScrapPreference = null;
 
+    private Preference mSubtitlesCredentialsPreference = null;
+    private SharedPreferences mOsPreferences = null;
+    private SharedPreferences.OnSharedPreferenceChangeListener mOsPrefsListener = null;
+
     private CheckBoxPreference mSeparateAnimeMoviePreference = null;
     private CheckBoxPreference mShowAllAnimesRowPreference = null;
     private ListPreference mAnimesSortOrderPreference = null;
@@ -938,6 +942,12 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             }
             return true;
         });
+        mSubtitlesCredentialsPreference = subtitlesCredentialsButton;
+        mOsPreferences = getActivity().getApplicationContext()
+                .getSharedPreferences(OpenSubtitlesApiHelper.OS_PREFS_NAME, Context.MODE_PRIVATE);
+        mOsPrefsListener = (sharedPreferences, key) -> updateOsStatus();
+        mOsPreferences.registerOnSharedPreferenceChangeListener(mOsPrefsListener);
+        updateOsStatus();
 
         CheckBoxPreference cbp = (CheckBoxPreference)findPreference(KEY_SUBTITLES_HIDE);
         cbp.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -1454,6 +1464,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public void onDestroy() {
         if (mSharedPreferences != null)
             mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        if (mOsPreferences != null && mOsPrefsListener != null)
+            mOsPreferences.unregisterOnSharedPreferenceChangeListener(mOsPrefsListener);
     }
 
     private void setTraktPreferencesEnabled(boolean enabled) {
@@ -1530,6 +1542,69 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             }
         }
         mTraktSigninPreference.setSummary(res.getString(R.string.trakt_signin_summary_logged_sync, statusPart));
+    }
+
+    private void updateOsStatus() {
+        if (mSubtitlesCredentialsPreference == null || mOsPreferences == null) return;
+        String username = mOsPreferences.getString(
+                OpenSubtitlesCredentialsDialog.OPENSUBTITLES_USERNAME, "");
+        Resources res = getResources();
+        String identity = username.isEmpty()
+                ? res.getString(R.string.opensubtitles_summary_anonymous)
+                : res.getString(R.string.opensubtitles_summary_user_account);
+        int status = mOsPreferences.getInt(
+                OpenSubtitlesApiHelper.PREF_LAST_STATUS, OpenSubtitlesApiHelper.OS_STATUS_NONE);
+        int remaining = mOsPreferences.getInt(OpenSubtitlesApiHelper.PREF_LAST_REMAINING_DOWNLOADS, -1);
+        int allowed = mOsPreferences.getInt(OpenSubtitlesApiHelper.PREF_LAST_ALLOWED_DOWNLOADS, -1);
+        String resetTimeUtc = mOsPreferences.getString(OpenSubtitlesApiHelper.PREF_LAST_RESET_TIME_UTC, "");
+        final String summary;
+        if (username.isEmpty()) {
+            if (status == OpenSubtitlesApiHelper.OS_STATUS_BAD_CREDENTIALS) {
+                // Credentials were cleared after a failed validation — still surface the failure.
+                summary = res.getString(R.string.opensubtitles_summary_login_failed);
+            } else if (remaining >= 0 && allowed > 0) {
+                summary = res.getString(R.string.opensubtitles_summary_status, identity,
+                        res.getString(R.string.opensubtitles_quota_download_remaining, remaining, allowed));
+            } else {
+                summary = res.getString(R.string.subtitles_credentials_summary);
+            }
+        } else {
+            switch (status) {
+                case OpenSubtitlesApiHelper.OS_STATUS_OK:
+                    if (remaining >= 0 && allowed > 0) {
+                        summary = res.getString(R.string.opensubtitles_summary_status, identity,
+                                res.getString(R.string.opensubtitles_quota_download_remaining, remaining, allowed));
+                    } else {
+                        summary = res.getString(R.string.opensubtitles_summary_status, identity,
+                                res.getString(R.string.opensubtitles_summary_credentials_verified));
+                    }
+                    break;
+                case OpenSubtitlesApiHelper.OS_STATUS_QUOTA_EXCEEDED:
+                    String timeLeft = OpenSubtitlesApiHelper.getTimeRemainingFromUtc(resetTimeUtc);
+                    String resetStr = timeLeft.isEmpty()
+                            ? res.getString(R.string.opensubtitles_summary_quota_exhausted)
+                            : res.getString(R.string.opensubtitles_quota_reset_time_remaining, timeLeft);
+                    summary = res.getString(R.string.opensubtitles_summary_status, identity, resetStr);
+                    break;
+                case OpenSubtitlesApiHelper.OS_STATUS_BAD_CREDENTIALS:
+                    summary = res.getString(R.string.opensubtitles_summary_status, identity,
+                            res.getString(R.string.opensubtitles_summary_login_failed));
+                    break;
+                case OpenSubtitlesApiHelper.OS_STATUS_NETWORK_ERROR:
+                    summary = res.getString(R.string.opensubtitles_summary_status, identity,
+                            res.getString(R.string.opensubtitles_summary_service_unavailable));
+                    break;
+                default:
+                    summary = res.getString(R.string.opensubtitles_summary_status, identity,
+                            res.getString(R.string.opensubtitles_summary_not_checked));
+                    break;
+            }
+        }
+        mSubtitlesCredentialsPreference.setSummary(summary);
+    }
+
+    public void onResume() {
+        updateOsStatus();
     }
 
     public void onSaveInstanceState(Bundle outState) {

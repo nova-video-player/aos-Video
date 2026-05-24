@@ -473,6 +473,14 @@
     <string name="toast_subloader_login_failed">Incorrect opensubtitles credentials or service not available</string>
     <string name="toast_subloader_quota_exceeded">OpenSubtitles download quota exceeded</string>
     <string name="opensubtitles_quota_reset_time_remaining">Quota resets in %s</string>
+    <string name="opensubtitles_summary_anonymous">Anonymous</string>
+    <string name="opensubtitles_summary_user_account">User account</string>
+    <string name="opensubtitles_summary_not_checked">Not checked yet</string>
+    <string name="opensubtitles_summary_credentials_verified">Credentials verified</string>
+    <string name="opensubtitles_summary_login_failed">Login failed</string>
+    <string name="opensubtitles_summary_service_unavailable">Service unavailable</string>
+    <string name="opensubtitles_summary_quota_exhausted">Quota exhausted</string>
+    <string name="opensubtitles_summary_status">%1$s · %2$s</string>
 
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Subtitle Settings</string>

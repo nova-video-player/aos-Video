@@ -137,8 +137,12 @@ public class OpenSubtitlesCredentialsDialog extends DialogFragment {
                 handler.post(() -> {
                     if (valid) {
                         storeCredentials(username, password);
+                        OpenSubtitlesApiHelper.persistStatus(CustomApplication.getAppContext(),
+                                OpenSubtitlesApiHelper.OS_STATUS_OK, -1, -1, "");
                     } else {
                         storeCredentials("", "");
+                        OpenSubtitlesApiHelper.persistStatus(CustomApplication.getAppContext(),
+                                OpenSubtitlesApiHelper.OS_STATUS_BAD_CREDENTIALS, -1, -1, "");
                         Toast.makeText(CustomApplication.getAppContext(), R.string.toast_subloader_login_failed, Toast.LENGTH_SHORT).show();
                     }
                 });
