@@ -1048,6 +1048,17 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
     };
 
+    /**
+     * Returns the best available video duration in milliseconds: prefers mVideoInfo.duration (set at
+     * startTrakt()), falls back to the live player value so threshold calculations are accurate even
+     * when mVideoInfo has a stale or zero duration.
+     */
+    private long getEffectiveDurationMs() {
+        if (mVideoInfo != null && mVideoInfo.duration > 0) return mVideoInfo.duration;
+        if (Player.sPlayer != null) return Player.sPlayer.getDuration();
+        return 0;
+    }
+
     private void startTrakt() {
         if (log.isDebugEnabled()) log.debug("startTrakt");
         if (mTraktClient != null) {
@@ -1059,7 +1070,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     return;
                 }
                 int progress = getPlayerProgress();
-                mVideoInfo.traktResume = -progress; // traktResume is set to -resume unless synced with trakt
+                // Do not set traktResume here: the pending DB marker is set by pauseTrakt()/stopTrakt()
+                // after threshold validation. Setting it at start (typically 0%) would leave a stale
+                // negative value if the video is closed below threshold.
                 mVideoInfo.duration = Player.sPlayer.getDuration();
                 if (log.isDebugEnabled()) log.debug("startTrakt: trakt watching progress={}", progress);
                 mTraktClient.watching(mVideoInfo, progress);
@@ -1077,7 +1090,20 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 mHandler.removeCallbacks(mTraktWatchingRunnable);
                 int progress = getPlayerProgress();
                 if (progress >= 0){
-                    mVideoInfo.traktResume = - progress; // traktResume is set to -resume unless synced with trakt
+                    // Only record traktResume if progress meets the minimum threshold: max(30s, 1%).
+                    // Still call watchingStop so Trakt closes the session cleanly.
+                    final long effectiveDuration = getEffectiveDurationMs();
+                    final float minPercent = effectiveDuration > 0
+                            ? Math.max(Trakt.RESUME_THRESHOLD_PERCENT, Trakt.RESUME_THRESHOLD_MS * 100.0f / effectiveDuration)
+                            : Trakt.RESUME_THRESHOLD_PERCENT;
+                    if (progress >= minPercent) {
+                        mVideoInfo.traktResume = -progress; // traktResume is set to -resume unless synced with trakt
+                    } else {
+                        // Below threshold: clear any stale pending marker so saveVideoStateIfReady()
+                        // does not persist a negative (pending-sync) value from an earlier state.
+                        if (mVideoInfo.traktResume < 0) mVideoInfo.traktResume = 0;
+                        if (log.isDebugEnabled()) log.debug("stopTrakt: progress {}% below threshold {}%, clearing pending traktResume", progress, minPercent);
+                    }
                     if (log.isDebugEnabled()) log.debug("stopTrakt: watchingStop progress={}", progress);
                     mTraktClient.watchingStop(mVideoInfo, progress);
                 }
@@ -1116,7 +1142,20 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (mTraktWatching) {
                 int progress = getPlayerProgress();
                 if (progress > 0) {
-                    mVideoInfo.traktResume = - progress; // traktResume is set to -resume unless synced with trakt
+                    // Only record traktResume if progress meets the minimum threshold: max(30s, 1%).
+                    // Still call watchingPause so Trakt closes the session cleanly.
+                    final long effectiveDuration = getEffectiveDurationMs();
+                    final float minPercent = effectiveDuration > 0
+                            ? Math.max(Trakt.RESUME_THRESHOLD_PERCENT, Trakt.RESUME_THRESHOLD_MS * 100.0f / effectiveDuration)
+                            : Trakt.RESUME_THRESHOLD_PERCENT;
+                    if (progress >= minPercent) {
+                        mVideoInfo.traktResume = -progress; // traktResume is set to -resume unless synced with trakt
+                    } else {
+                        // Below threshold: clear any stale pending marker so saveVideoStateIfReady()
+                        // does not persist a negative (pending-sync) value from an earlier state.
+                        if (mVideoInfo.traktResume < 0) mVideoInfo.traktResume = 0;
+                        if (log.isDebugEnabled()) log.debug("pauseTrakt: progress {}% below threshold {}%, clearing pending traktResume", progress, minPercent);
+                    }
                     if (log.isDebugEnabled()) log.debug("pauseTrakt: watchingPause progress={}", progress);
                     mTraktClient.watchingPause(mVideoInfo, progress);
                 }
