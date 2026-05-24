@@ -291,7 +291,11 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 if (mUsername.isEmpty() || mPassword.isEmpty()) {
                     displayToast(getString(R.string.toast_subloader_credentials_empty));
                 }
-                OpenSubtitlesApiHelper.login(getApplicationContext().getString(R.string.opensubtitles_api_key), mUsername, mPassword);
+                boolean loginOk = OpenSubtitlesApiHelper.login(getApplicationContext().getString(R.string.opensubtitles_api_key), mUsername, mPassword);
+                if (!loginOk && !mUsername.isEmpty()) {
+                    displayToast(getString(R.string.toast_subloader_login_failed) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
+                    return false;
+                }
             } catch (IOException e) {
                 log.warn("logIn error message: result={} message:{}; localizedMessage:{}, cause: {}", OpenSubtitlesApiHelper.getLastQueryResult(), e.getMessage(), e.getLocalizedMessage(), e.getCause());
                 displayToast(getString(R.string.toast_subloader_login_failed) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
