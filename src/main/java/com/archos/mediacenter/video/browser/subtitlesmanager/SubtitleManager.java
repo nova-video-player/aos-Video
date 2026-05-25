@@ -401,22 +401,27 @@ public class SubtitleManager {
                     if (log.isDebugEnabled()) log.debug("preFetchHTTPSubtitlesAndPrepareUpnpSubs: waiting for {} pending operations", pendingOps.get());
                 }
 
-                // Safety timeout: if onSuccess hasn't been called within 5 seconds, call it anyway
-                // This prevents indefinite hanging if async operations get stuck or deadlock
-                Thread timeoutThread = new Thread(() -> {
-                    try {
-                        Thread.sleep(5000);
-                        // Guard: only call if not already called by normal completion
-                        if (successCalled.compareAndSet(0, 1)) {
-                            log.warn("preFetchHTTPSubtitlesAndPrepareUpnpSubs: 5 second timeout reached, forcing onSuccess completion");
-                            callOnSuccess(upnpNiceUri);
+                // Safety timeout: if onSuccess hasn't been called within 5 seconds, call it anyway.
+                // This prevents indefinite hanging if async operations get stuck on network shares.
+                // Not applied to local files: local I/O always completes, just slowly for large
+                // directories, and firing early would launch the external player before subtitles
+                // are collected or with an incomplete list.
+                if (hasPrivatePrefetch && !FileUtils.isLocal(fileUri)) {
+                    Thread timeoutThread = new Thread(() -> {
+                        try {
+                            Thread.sleep(5000);
+                            // Guard: only call if not already called by normal completion
+                            if (successCalled.compareAndSet(0, 1)) {
+                                log.warn("preFetchHTTPSubtitlesAndPrepareUpnpSubs: 5 second timeout reached, forcing onSuccess completion");
+                                callOnSuccess(upnpNiceUri);
+                            }
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
                         }
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
-                });
-                timeoutThread.setName("SubtitleFetchTimeout");
-                timeoutThread.start();
+                    });
+                    timeoutThread.setName("SubtitleFetchTimeout");
+                    timeoutThread.start();
+                }
             }
         };
         mainThread.setName("SubtitleFetchMain-" + (fileUri.getLastPathSegment() != null ? fileUri.getLastPathSegment() : "unknown"));
