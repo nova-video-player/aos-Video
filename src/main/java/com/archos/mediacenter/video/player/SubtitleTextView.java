@@ -45,19 +45,24 @@ public class SubtitleTextView extends AppCompatTextView {
     public SubtitleTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mBgPaint.setStyle(Paint.Style.FILL);
-        mBgPaint.setColor(android.graphics.Color.argb(128, 0, 0, 0));
+        mBgPaint.setColor(android.graphics.Color.argb(0, 0, 0, 0));
         setLineSpacing(0f, 1.15f);
     }
 
     public void setBackgroundState(boolean show) { 
-        mShowBackground = show; 
+        mShowBackground = show;
+        mBgPaint.setAlpha(mShowBackground ? mBgOpacity : 0);
         invalidate(); 
     }
 
     public void setBackgroundOpacity(int opacity) { 
-        mBgOpacity = opacity;
-        mBgPaint.setAlpha(mBgOpacity);
+        mBgOpacity = Math.max(0, Math.min(255, opacity));
+        mBgPaint.setAlpha(mShowBackground ? mBgOpacity : 0);
         invalidate(); 
+    }
+
+    private boolean shouldDrawBackground() {
+        return mShowBackground && mBgOpacity > 0;
     }
 
     public void setOutlineState(boolean outline) { mOutline = outline; }
@@ -99,7 +104,7 @@ public class SubtitleTextView extends AppCompatTextView {
         }
         
         // Draw black background behind subtitle text line-by-line
-        if (mShowBackground && getLayout() != null) {
+        if (shouldDrawBackground() && getLayout() != null) {
             android.text.Layout layout = getLayout();
             
             float padX = getTextSize() * 0.25f;
