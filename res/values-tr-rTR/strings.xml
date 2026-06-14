@@ -438,6 +438,8 @@ desteklenmiyor.</string>
     <string name="subtitle_style_text">Stil:</string>
     <string name="subtitle_vert_text">Dikey Pozisyon:</string>
     <string name="subtitle_outline">Altyazı Konturu</string>
+    <string name="subtitle_background_text">Altyazı arka planı</string>
+    <string name="subtitle_bg_opacity_text">Arkaplan saydamlığı</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Hız Ayarı</string>
     <string name="subtitle_delay_radio_none">boş</string>

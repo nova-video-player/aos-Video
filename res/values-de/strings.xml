@@ -737,6 +737,7 @@
     <string name="audio_interface_any">Standardlogik</string>
     <string name="mediacodec_audio_capabilities">MediaCodec Audio-Funktionen</string>
     <string name="spatialization_capabilities">Plattform-Spatialisierung</string>
+    <string name="status_unsupported_api">nicht unterstützt (API %1$d)</string>
     <string name="status_not_supported">Nicht unterstützt</string>
     <string name="status_supported">Unterstützt</string>
     <string name="status_available">Verfügbar</string>

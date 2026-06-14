@@ -814,8 +814,8 @@
     <string name="audio_decoder_choice_title">Choose audio decoder</string>
     <string name="audio_decoder_choice_summary">Controls whether audio decoding prefers FFmpeg or MediaCodec.</string>
     <string name="audio_decoder_auto">Automatic</string>
-    <string name="audio_decoder_prefer_ffmpeg">Prefer FFmpeg</string>
-    <string name="audio_decoder_prefer_mediacodec">Prefer MediaCodec</string>
+    <string name="audio_decoder_prefer_ffmpeg">Prefer FFmpeg (default)</string>
+    <string name="audio_decoder_prefer_mediacodec">Prefer MediaCodec (experimental)</string>
     <string name="audio_interface_opensles">Force OpenSL ES</string>
     <string name="audio_interface_audiotrack">Force Audiotrack</string>
     <string name="audio_interface_any">Default logic</string>
