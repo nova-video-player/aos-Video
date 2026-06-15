@@ -748,7 +748,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             Field f = fireOSInit.getDeclaredField("sVendorCallbacks");
             f.setAccessible(true);
             Object o = f.get(null);
-            Map<Class<?>, Object> m = (Map<Class<?>, Object>) o;
+            Map<?, ?> m = (Map<?, ?>) o;
             m.remove(Class.forName("android.media.VendorAudioTrackCallback"));
         } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException | NullPointerException e) {
         }
