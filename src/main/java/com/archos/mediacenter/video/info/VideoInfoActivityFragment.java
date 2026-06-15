@@ -1108,7 +1108,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 mDuration.setText(MediaUtils.formatTime(videoMetadata.getDuration()));
                 String decoder = VideoInfoCommonClass.getDecoder(videoMetadata, getResources(), mPlayerType);
                 setTextOrHideContainer(mDecoderTextView, decoder, mDecoderTextView);
-                String audiotrack = VideoInfoCommonClass.getAudioTrackString(videoMetadata, getResources(), getActivity());
+                CharSequence audiotrack = VideoInfoCommonClass.getAudioTrackString(videoMetadata, getResources(), getActivity());
                 setTextOrHideContainer(mAudioTrackTextView, audiotrack, mRoot.findViewById(R.id.audio_row));
             }
         }
@@ -1131,7 +1131,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (!videoMetadata.getSubtitleTrack(i).isExternal) { //manage external subs with sub manager
                         if (log.isDebugEnabled()) log.debug("updateSubtitleInfo: int subtitleTrack {} {} {} {}", i, subTrack.name, subTrack.language, subTrack.format);
                         String format = VideoUtils.getSubtitleFormatLabel(getContext(), subTrack.format);
-                        lines.add((totSubs + 1) + ": " + StringUtils.removeHtmlTags(generateTrackName(getContext(), subTrack.name, subTrack.language, format, false)));
+                        lines.add((totSubs + 1) + ": " + StringUtils.removeHtmlTags(generateTrackName(getContext(), subTrack.name, subTrack.language, format, subTrack.disposition, false)));
                         totSubs++;
                     }
                 }

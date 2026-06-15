@@ -14,12 +14,14 @@
 
 package com.archos.mediacenter.video.info;
 
-import static com.archos.mediacenter.utils.ISO639codes.generateTrackName;
+import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateTrackName;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
+import android.text.Html;
 
 import com.archos.filecorelibrary.FileEditor;
 import com.archos.filecorelibrary.FileUtils;
@@ -170,7 +172,7 @@ public class VideoInfoCommonClass {
             return null;
         return resources.getString(videoDecoderStringResId);
     }
-    public static String getAudioTrackString(VideoMetadata videoMetadata, Resources resources, Context c ) {
+    public static CharSequence getAudioTrackString(VideoMetadata videoMetadata, Resources resources, Context c ) {
         // Audio track(s)
         int audioTrackNb = videoMetadata.getAudioTrackNb();
         if (audioTrackNb > 0) {
@@ -178,16 +180,16 @@ public class VideoInfoCommonClass {
 
             for (int i = 0; i < audioTrackNb; i++) {
                 if (i > 0) {
-                    sb.append("\n");
+                    sb.append("<br>");
                 }
                 VideoMetadata.AudioTrack audio = videoMetadata.getAudioTrack(i);
                 if (audioTrackNb == 1) {  // name of the track only if there is only one
-                    String language = generateTrackName(audio.name, audio.language, audio.format, true);
+                    String language = generateTrackName(c, audio.name, audio.language, null, audio.disposition, true);
                     if (!language.isEmpty()) sb.append(language).append(SEP); // avoid adding space if language is unknown
                 }
                 if (audioTrackNb > 1) {  // number and name of the track only if there are more than one track
                     sb.append(Integer.toString(i + 1)).append('.').append(SEP);
-                    String language = generateTrackName(audio.name, audio.language, audio.format, true);
+                    String language = generateTrackName(c, audio.name, audio.language, null, audio.disposition, true);
                     if (!language.isEmpty()) sb.append(language).append(SEP); // avoid adding space if language is unknown
                 }
                 sb.append(audio.format).append(SEP);
@@ -200,7 +202,11 @@ public class VideoInfoCommonClass {
                     sb.append(resources.getText(R.string.info_audio_vbr)).append(SEP);
                 }
             }
-            return sb.toString();
+            if (Build.VERSION.SDK_INT >= 24) {
+                return Html.fromHtml(sb.toString(), Html.FROM_HTML_MODE_LEGACY);
+            } else {
+                return Html.fromHtml(sb.toString());
+            }
         } else {
             return null;
         }

@@ -128,7 +128,8 @@ public class VideoMetadata implements Serializable {
             vbr = getMetadataBool(data, gapKey + IMediaPlayer.METADATA_KEY_AUDIO_TRACK_VBR);
             supported = getMetadataBool(data, gapKey + IMediaPlayer.METADATA_KEY_AUDIO_TRACK_SUPPORTED);
             language = getMetadataString(data, gapKey + IMediaPlayer.METADATA_KEY_AUDIO_TRACK_LANGUAGE);
-            if (log.isDebugEnabled()) log.debug("AudioTrack name={}, format={}, language{}", name, format, language);
+            disposition = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_AUDIO_TRACK_DISPOSITION);
+            if (log.isDebugEnabled()) log.debug("AudioTrack name={}, format={}, language={}, disposition={}", name, format, language, disposition);
         }
         
         AudioTrack(IMediaMetadataRetriever retriever, int idx) {
@@ -142,7 +143,8 @@ public class VideoMetadata implements Serializable {
             vbr = getMetadataRetrieverBool(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_AUDIO_TRACK_VBR);
             supported = getMetadataRetrieverBool(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_AUDIO_TRACK_SUPPORTED);
             language = getMetadataRetrieverString(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_AUDIO_TRACK_LANGUAGE);
-            if (log.isDebugEnabled()) log.debug("AudioTrack name={}, format={}", name, format);
+            disposition = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_AUDIO_TRACK_DISPOSITION);
+            if (log.isDebugEnabled()) log.debug("AudioTrack name={}, format={}, disposition={}", name, format, disposition);
         }
 
         public final String  name;
@@ -153,6 +155,7 @@ public class VideoMetadata implements Serializable {
         public final boolean vbr;
         public final boolean supported;
         public final String  language;
+        public final int     disposition;
     }
 
     public static class SubtitleTrack implements Serializable {
@@ -167,6 +170,7 @@ public class VideoMetadata implements Serializable {
             else isGfx = getMetadataBool(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_IS_GFX);
             format = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_FORMAT);
             language = getMetadataString(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_LANGUAGE);
+            disposition = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_DISPOSITION);
         }
         
         SubtitleTrack(IMediaMetadataRetriever retriever, int idx) {
@@ -179,6 +183,7 @@ public class VideoMetadata implements Serializable {
             else isGfx = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_IS_GFX) == 1;
             format = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_FORMAT);
             language = getMetadataRetrieverString(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_LANGUAGE);
+            disposition = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_DISPOSITION);
         }
 
         public final String name;
@@ -187,6 +192,7 @@ public class VideoMetadata implements Serializable {
         public final boolean isGfx;
         public final int format;
         public final String language;
+        public final int disposition;
     }
 
     public VideoMetadata() {

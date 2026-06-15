@@ -174,7 +174,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
         // Audio track(s)
 
 
-        String audioString = VideoInfoCommonClass.getAudioTrackString(videoMetadata, mR, c);
+        CharSequence audioString = VideoInfoCommonClass.getAudioTrackString(videoMetadata, mR, c);
         if (audioString!=null) {
             vh.mAudioTracksTv.setText(audioString);
             vh.mAudioGroup.setVisibility(View.VISIBLE);
@@ -197,8 +197,9 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
             }
             int index = i + offset;
             String format = VideoUtils.getSubtitleFormatLabel(context, videoMetadata.getSubtitleTrack(index).format);
+            VideoMetadata.SubtitleTrack track = videoMetadata.getSubtitleTrack(index);
             sb.append(Integer.toString(index + 1)).append(".").append(separator)
-                    .append(StringUtils.removeHtmlTags(generateTrackName(context, videoMetadata.getSubtitleTrack(index).name, videoMetadata.getSubtitleTrack(index).language, format, false)) + separator);
+                    .append(StringUtils.removeHtmlTags(generateTrackName(context, track.name, track.language, format, track.disposition, false)) + separator);
         }
         return StringUtils.removeHtmlTags(sb.toString());
     }

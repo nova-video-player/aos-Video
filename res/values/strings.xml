@@ -1141,4 +1141,15 @@
     <string name="external_player_service_description">Nova Video Player provides content for an external player</string>
     <string name="stop">Stop</string>
 
+    <string name="s_visual_impaired">visual impaired</string>
+    <string name="s_audio_description">audio description</string>
+    <string name="s_descriptions">descriptions</string>
+    <string name="s_forced">forced</string>
+    <string name="s_original">original</string>
+    <string name="s_translated">translated</string>
+    <string name="s_dubbed">dubbed</string>
+    <string name="s_commentary">commentary</string>
+    <string name="s_lyrics">lyrics</string>
+    <string name="s_karaoke">karaoke</string>
+
 </resources>

@@ -4160,8 +4160,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 VideoMetadata.AudioTrack audio = vMetadata.getAudioTrack(i);
                 if (audio == null)
                     continue;
-                if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: name={}, language={}, format={}", audio.name, audio.language, audio.format);
-                trackName = generateTrackName(mContext, audio.name, audio.language, audio.format, true);
+                if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: name={}, language={}, format={}, disposition={}", audio.name, audio.language, audio.format, audio.disposition);
+                trackName = generateTrackName(mContext, audio.name, audio.language, audio.format, audio.disposition, true);
                 CharSequence name = trackName;
                 // when no name use track number instead of R.string.unknown_track_name th
                 if (trackName.isEmpty())
@@ -4216,9 +4216,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         }
                     } else {
                         // internal subtitle get name from name
-                        if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: intsub add track name with name={} replacing language code in {}", track.name, track.language);
+                        if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: intsub add track name with name={} replacing language code in {}, disposition={}", track.name, track.language, track.disposition);
                         String format = VideoUtils.getSubtitleFormatLabel(mContext, track.format);
-                        mSubtitleInfoController.addTrack(generateTrackName(mContext, track.name, track.language, format, false), false);
+                        mSubtitleInfoController.addTrack(generateTrackName(mContext, track.name, track.language, format, track.disposition, false), false);
                     }
                 }
                 mSubtitleInfoController.addSeparator();
