@@ -1555,7 +1555,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // VideoDbInfo sets audioTrack to -1 when file has not been played or restores playerParams
         for (int i = 0; i < nbTrack; ++i) {
             if (vMetadata.getAudioTrack(i).supported) {
-                trackName = generateTrackName(getApplicationContext(), vMetadata.getAudioTrack(i).name, vMetadata.getAudioTrack(i).language, vMetadata.getAudioTrack(i).format, true);
+                trackName = generateTrackName(getApplicationContext(), vMetadata.getAudioTrack(i).name, vMetadata.getAudioTrack(i).language, vMetadata.getAudioTrack(i).format, vMetadata.getAudioTrack(i).disposition, true);
                 if (firstSupportedTrack == null) {
                     if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: identify firstSupportedTrack={}({})", i, trackName);
                     firstSupportedTrack = i;

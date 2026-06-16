@@ -145,7 +145,7 @@ public class SubtitleManager {
         }
 
         void updateMetadata(VideoMetadata metadata) {
-            this.processedMetadata = metadata;
+            this.processedMetadata = metadata != null ? new VideoMetadata(metadata) : null;
         }
     }
 
@@ -204,7 +204,7 @@ public class SubtitleManager {
         SubtitleCacheEntry entry = mSubtitleCache.get(uriKey);
         if (entry != null && entry.processedMetadata != null) {
             if (log.isDebugEnabled()) log.debug("getCachedProcessedMetadata: cache hit for {}", uriKey);
-            return entry.processedMetadata;
+            return new VideoMetadata(entry.processedMetadata);
         }
         if (log.isDebugEnabled()) log.debug("getCachedProcessedMetadata: cache miss for {}", uriKey);
         return null;

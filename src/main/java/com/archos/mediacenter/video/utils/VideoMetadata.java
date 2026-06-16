@@ -211,6 +211,18 @@ public class VideoMetadata implements Serializable {
             mFile = new File(path);
     }
 
+    public VideoMetadata(VideoMetadata other) {
+        mFile = other.mFile;
+        mRemotePath = other.mRemotePath;
+        mVideoTrack = other.mVideoTrack;
+        mAudioTrackList = other.mAudioTrackList != null ? Arrays.copyOf(other.mAudioTrackList, other.mAudioTrackList.length) : null;
+        mSubtitleTrackList = other.mSubtitleTrackList != null ? Arrays.copyOf(other.mSubtitleTrackList, other.mSubtitleTrackList.length) : null;
+        mDuration = other.mDuration;
+        mVideoWidth = other.mVideoWidth;
+        mVideoHeight = other.mVideoHeight;
+        mFileSize = other.mFileSize;
+    }
+
     private void reset() {
         mVideoTrack = null;
         mAudioTrackList = null;
