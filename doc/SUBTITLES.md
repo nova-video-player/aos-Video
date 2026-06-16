@@ -313,6 +313,61 @@ aspect ratio:
 the scaled subtitle bounds. Like text rendering, it can draw into either the
 normal view canvas or an external UI `Surface`.
 
+## Stereoscopic 3D subtitles
+
+When a stereoscopic 3D video plays, subtitles must be duplicated into both eye
+halves so the left and right eye see matching text. Otherwise the text doubles
+or floats at the wrong depth and breaks the 3D effect.
+
+### Mode detection
+
+The 3D mode is auto-detected from the **filename** during library scanning by
+`MediaLib/src/com/archos/mediaprovider/video/VideoNameProcessor.java`. It
+keyword-matches the name and stores a stereo type in the DB column
+`Archos_videoStereo`:
+
+- Top-bottom (`ARCHOS_STEREO_3D_TB`): `tb`, `htb`, `top bot`, `topbot`, `tab`,
+  `htab`.
+- Side-by-side (`ARCHOS_STEREO_3D_SBS`): `sbs`, `hsbs`, `side by side`,
+  `sidebyside`.
+- Anaglyph (`ARCHOS_STEREO_3D_ANAGLYPH`): `anaglyph`.
+- Generic 3D (`ARCHOS_STEREO_3D_UNKNOWN`): `3d`.
+
+`PlayerActivity` reads the stored value through `mVideoInfo.videoStereo` and maps
+it to a `VideoEffect` mode (`SBS_MODE`, `TB_MODE`, `ANAGLYPH_MODE`, or
+`NORMAL_2D_MODE`). The user can also override the mode manually from the player's
+3D menu.
+
+To test the 3D subtitle path, name a clip something like `movie.sbs.mkv` or
+`movie.htb.mkv` with an SRT alongside; it comes up in 3D mode and the subtitle is
+split/duplicated per eye-half.
+
+### Text duplication
+
+`Subtitle3DTextView` wraps a primary and a secondary `SubtitleTextView`.
+`setUIMode()` reads the active mode:
+
+- `SBS_MODE` splits the layout horizontally so each text view gets half the
+  width.
+- `TB_MODE` splits the layout vertically so each text view gets half the height.
+
+The same cue is drawn into both views, positioned through `setGravity3D()`.
+Normal 2D playback uses only the primary view.
+
+### External GL surface
+
+When an OpenGL video effect is active (3D stereo merge), the video runs through
+`VideoEffectRenderer` with `StereoMergeEffect`/`StereoMergeArchosEffect`, which
+merges the two half-frames into the stereo output. In this mode `Player` calls
+`setUIExternalSurface(mUISurface)`, handing the subtitle views a `Surface` owned
+by the GL renderer instead of the normal view hierarchy.
+
+`SubtitleTextView.setRenderingSurface()` then draws via `Surface.lockCanvas()` /
+`unlockCanvasAndPost()` directly onto that GL surface, so the subtitle pixels are
+composited and warped by the same stereo shader as the video. This external
+surface path is the part most coupled to the custom subtitle views: it draws into
+an arbitrary `Surface` rather than the view's own canvas.
+
 ## Layout, insets, and bars
 
 `SubtitleManager` adds `subtitle_layout` over the player root view and updates
@@ -373,4 +428,7 @@ Useful entry points:
 - App scheduling/rendering: `Video/src/main/java/com/archos/mediacenter/video/player/SubtitleManager.java`
 - Text drawing: `Video/src/main/java/com/archos/mediacenter/video/player/SubtitleTextView.java`
 - 3D text duplication: `Video/src/main/java/com/archos/mediacenter/video/player/Subtitle3DTextView.java`
+- 3D filename detection: `MediaLib/src/com/archos/mediaprovider/video/VideoNameProcessor.java`
+- 3D effect/mode selection: `Video/src/main/java/com/archos/mediacenter/video/player/PlayerActivity.java`
+- 3D GL stereo merge: `Video/src/main/java/com/archos/mediacenter/video/player/StereoMergeArchosEffect.java`
 - Graphic drawing: `Video/src/main/java/com/archos/mediacenter/video/player/SubtitleGfxView.java`
