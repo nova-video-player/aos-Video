@@ -163,6 +163,38 @@ such as `Primary (Secondary) (Format)`.
 These examples are covered by
 `MediaLib/test/resources/track_naming_tests.csv`.
 
+## Test Data Tool
+
+Real media samples can be converted into append-ready CSV rows with:
+
+```bash
+MediaLib/test/tools/ffprobe_track_naming_to_csv.sh VIDEO
+```
+
+The script runs `ffprobe`, parses audio and subtitle stream metadata, computes
+the FFmpeg disposition bitmask, maps common codecs to the format labels used by
+the tests, and prints rows matching `track_naming_tests.csv`:
+
+```csv
+title,lang,format,disposition,titleFirst,expectedResult
+```
+
+Preview rows before modifying the CSV:
+
+```bash
+MediaLib/test/tools/ffprobe_track_naming_to_csv.sh --json-out /tmp/video.ffprobe.json /path/to/video.mkv
+```
+
+Append generated rows to the default test CSV:
+
+```bash
+MediaLib/test/tools/ffprobe_track_naming_to_csv.sh --append /path/to/video.mkv
+```
+
+Use preview mode for files with many internal subtitle streams. The script emits
+one row per audio/subtitle stream and intentionally does not deduplicate, so
+files with repeated subtitle dispositions can generate many identical rows.
+
 ## Legacy Overload
 
 The older `generateTrackName(string, lang, format, titleFirst)` overload is
