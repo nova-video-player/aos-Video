@@ -101,6 +101,9 @@ A secondary label is skipped if it is already represented by the primary label:
 * Language is skipped when the primary contains the localized language name, the
   English language name, or equals the ISO 639-1/639-3 code.
 * Disposition is skipped when the primary contains the disposition label.
+* Dubbed / translated is skipped when a language label is available, because
+  the language already carries the useful information and `Language
+  (Translated)` is redundant.
 * French hearing-impaired labels are also considered redundant when the primary
   contains `(SDH)`.
 * Format is skipped when the primary already contains the format.
@@ -154,6 +157,8 @@ such as `Primary (Secondary) (Format)`.
 | `French (Forced)` | `fre` | Default + Forced | `TEXT` | `false` | `Français - <small>Forced (TEXT)</small>` |
 | `Commentary` | `eng` | Commentary | `AC3` | `true` | `Commentary - Anglais (AC3)` |
 | `Audio Description` | `fre` | Visual impaired | `EAC3` | `true` | `Audio Description - Français (EAC3)` |
+| `Main` | `fre` | Translated | `TEXT` | `false` | `Main - <small>Français (TEXT)</small>` |
+| `Main` | `eng` | Dubbed | `AC3` | `true` | `Main - Anglais (AC3)` |
 
 These examples are covered by
 `MediaLib/test/resources/track_naming_tests.csv`.
