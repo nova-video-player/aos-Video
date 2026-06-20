@@ -827,6 +827,7 @@
     <string name="trakt_device_auth_success">Sikeres csatlakozás!</string>
     <string name="trakt_device_auth_error">A hitelesítés sikertelen. Próbáld újra.</string>
     <string name="trakt_device_auth_timeout">A kód lejárt. Próbáld meg újra.</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Összes videó</string>
     <string name="hide_seen">Nem látott</string>
     <string name="search_results">Keresési eredmények</string>

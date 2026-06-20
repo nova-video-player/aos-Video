@@ -861,6 +861,7 @@ desteklenmiyor.</string>
     <string name="trakt_device_auth_timeout">Kodun geçerlilik süresi doldu. Lütfen tekrar deneyin.</string>
     <string name="trakt_account_locked">Trakt hesabınız kilitlendi. Kilidi trakt.tv\'den açın veya daha sonra tekrar deneyin.</string>
     <string name="connect_trakt">Trakt\'a bağlan</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Tüm videolar</string>
     <string name="hide_seen">İzlenmedi</string>
     <string name="search_results">Arama sonuçları</string>

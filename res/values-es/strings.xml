@@ -856,6 +856,7 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="trakt_device_auth_timeout">Código caducado. Por favor, inténtalo de nuevo.</string>
     <string name="trakt_account_locked">Cuenta de Trakt bloqueada. Desbloquea en trakt.tv o inténtalo más tarde.</string>
     <string name="connect_trakt">Conectar a Trakt</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Todos los vídeos</string>
     <string name="hide_seen">No visto</string>
     <string name="search_results">Resultados de la búsqueda</string>

@@ -858,6 +858,7 @@
     <string name="trakt_force_pull_summary">Одноразовый импорт списка просмотренных и места для возобновления в Trakt</string>
     <string name="trakt_sync_collection_summary">Автоматически добавлять все видео из Вашей библиотеки Nova в вашу коллекцию Trakt</string>
     <string name="trakt_toast_syncing">Синхронизация с Trakt&#8230;</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Все видео</string>
     <string name="hide_seen">Не просмотрено</string>
     <string name="search_results">Результаты поиска</string>

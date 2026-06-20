@@ -692,6 +692,7 @@
     <string name="trakt_wipe_title">از Trakt.tv خارج شوید</string>
     <string name="trakt_live_scrobbling_title">رهگیری زنده</string>
     <string name="trakt_live_scrobbling_summary">ویدیوهای در حال تماشا را در Trakt به اشتراک بگذارید</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">همه ویدیوها</string>
     <string name="search_results">دستاورد جستجو</string>
     <string name="leanback_weblinks_header">پیوندها</string>

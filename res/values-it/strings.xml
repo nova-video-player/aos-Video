@@ -736,6 +736,7 @@ Copertina (rotolo di copertina)</string>
     <string name="trakt_sync_trakt_resume">Usa il riprendi posizione di Trakt quando è più avanzato di quello locale</string>
     <string name="trakt_sync_collection_summary">Aggiungi automaticamente tutti i video dalla tua libreria Nova alla tua collezione su Trakt</string>
     <string name="trakt_toast_syncing">Sincronizzazione con Trakt&#8230;</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Tutti i video</string>
     <string name="hide_seen">Non visti</string>
     <string name="search_results">Risultati della ricerca</string>

@@ -786,6 +786,7 @@
     <string name="trakt_sync_trakt_resume">Sử dụng vị trí tiếp tục từ trakt khi nâng cao hơn là từ cục bộ</string>
     <string name="trakt_sync_collection_summary">Tự động thêm tất cả cuộn phim từ thư viện Nova vào bộ sưu tập Trakt của bạn</string>
     <string name="trakt_toast_syncing">Đang đồng bộ hóa với Trakt&#8230;</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Tất cả băng hình</string>
     <string name="hide_seen">Chưa xem</string>
     <string name="search_results">Kết quả tìm kiếm</string>

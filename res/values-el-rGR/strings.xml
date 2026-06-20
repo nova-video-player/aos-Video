@@ -695,6 +695,7 @@
     <string name="trakt_sync_trakt_resume">Χρήση της θέσης συνέχισης του trakt όταν είναι πιο προχωρημένο από το τοπικό</string>
     <string name="trakt_sync_collection_summary">Αυτόματη προσθήκη όλων των βίντεο από τη βιβλιοθήκη Nova στη συλλογή σας Trakt</string>
     <string name="trakt_toast_syncing">Συγχρονισμός με Trakt&#8230;</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Όλα τα βίντεο</string>
     <string name="hide_seen">Δεν έχει προβληθεί</string>
     <string name="search_results">Αποτελέσματα αναζήτησης</string>

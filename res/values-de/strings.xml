@@ -859,6 +859,7 @@
     <string name="trakt_device_auth_timeout">Code ist abgelaufen. Bitte erneut versuchen.</string>
     <string name="trakt_account_locked">Trakt-Konto gesperrt. Auf trakt.tv entsperren oder später erneut versuchen.</string>
     <string name="connect_trakt">Mit Trakt verbinden</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Alle Videos</string>
     <string name="hide_seen">Nicht angeschaut</string>
     <string name="search_results">Suchergebnisse</string>

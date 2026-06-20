@@ -859,6 +859,7 @@
     <string name="trakt_device_auth_timeout">Código expirado. Por favor, tente novamente.</string>
     <string name="trakt_account_locked">Conta do Trakt bloqueada. Desbloqueie em trakt.tv ou tente mais tarde.</string>
     <string name="connect_trakt">Conectar ao Trakt</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Todos os vídeos</string>
     <string name="hide_seen">Não assistidos</string>
     <string name="search_results">Resultado da busca</string>

@@ -863,6 +863,7 @@
     <string name="trakt_device_auth_timeout">Термін дії коду закінчився. Спробуйте ще раз.</string>
     <string name="trakt_account_locked">Обліковий запис Trakt заблоковано. Розблокуйте його на trakt.tv або спробуйте пізніше.</string>
     <string name="connect_trakt">Під’єднатися до Trakt</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Все відео</string>
     <string name="hide_seen">Не переглянуто</string>
     <string name="search_results">Результати пошуку</string>

@@ -787,6 +787,7 @@
     <string name="trakt_sync_trakt_resume">如果比本裝置的觀看進度播放更長，就使用 Trakt 的續播進度</string>
     <string name="trakt_sync_collection_summary">自動將 Nova 媒體庫的所有影片新增至 Trakt 的收藏</string>
     <string name="trakt_toast_syncing">正在與 Trakt&#8230; 同步</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">所有影片</string>
     <string name="hide_seen">未觀看</string>
     <string name="search_results">搜索結果</string>

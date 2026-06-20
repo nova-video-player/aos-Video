@@ -704,6 +704,7 @@
     <string name="trakt_sync_trakt_resume">Naudoti Trakt tęsimo poziciją kai ji tolimesnė nei lokali</string>
     <string name="trakt_sync_collection_summary">Automatiškai pridėti visus video iš Nova mediatekos į Trakt kolekciją</string>
     <string name="trakt_toast_syncing">Sinchronizuojama su Trakt&#8230;</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Visi vaizdo įrašai</string>
     <string name="hide_seen">Nežiūrėta</string>
     <string name="search_results">Paieškos rezultatai</string>

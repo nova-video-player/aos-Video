@@ -460,7 +460,7 @@
     <string name="torrent_buy_premium">购买高级版本</string>
     <!-- Shortcuts -->
     <string name="browse_net_server">浏览网络共享</string>
-    <string name="add_smb_server">浏览SMB服务器</string>
+    <string name="add_smb_server">浏览 SMB 服务器</string>
     <string name="add_network_server">添加网络共享</string>
     <string name="add_to_shortcuts">创建快捷方式</string>
     <string name="add_ssh_server">浏览FTP服务器</string>
@@ -654,8 +654,8 @@
     <string name="network_thumbnails">创建远程缩略图</string>
     <string name="network_thumbnails_summary">在没有海报可用时从远程视频创建缩略图</string>
     <string name="network_bookmarks_summary">尽可能在网络上保存并检查播放进度和位置书签</string>
-    <string name="share_folders_smbj">使用备用SMB实现协议（SMB2及以上版本）</string>
-    <string name="share_folders_smbj_summary">启用备用SMB实现，仅支持2.0以上版本协议。警告：部分设备上运行速度可能变慢。</string>
+    <string name="share_folders_smbj">使用备用 SMB 实现协议 (SMB2 及以上版本)</string>
+    <string name="share_folders_smbj_summary">启用备用 SMB 实现，仅支持版本2以上协议。警告：部分设备上运行速度可能变慢。</string>
     <string name="share_folders_sshj">使用较新的 SFTP 实现方式</string>
     <string name="share_folders_sshj_summary">为 SFTP 链接启用新的 SFTP 实现方式</string>
     <string name="share_folders_smbv2">启用 SMBv2 支持</string>
@@ -854,6 +854,7 @@
     <string name="trakt_device_auth_timeout">代码已过期。请重试。</string>
     <string name="trakt_account_locked">Trakt 账号已锁定。请前往 trakt.tv 解锁或稍后重试。</string>
     <string name="connect_trakt">连接到 Trakt</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">所有视频</string>
     <string name="hide_seen">未观看</string>
     <string name="search_results">搜索结果</string>
@@ -942,7 +943,7 @@
     <string name="db_export_manual_summary">为调试目的将 media.db 文件导出到 /sdcard</string>
     <string name="db_export_in_progress">正在导出数据库</string>
     <string name="media_library_export_title">导出媒体库 + 凭据 + 快捷方式</string>
-    <string name="media_library_export_summary">将 media.db、网络凭据（SMB/FTP/SFTP）、网络快捷方式和所有缓存图片导出为 ZIP 文件</string>
+    <string name="media_library_export_summary">将 media.db、网络凭据 (SMB/FTP/SFTP)、网络快捷方式和所有缓存图片导出为 ZIP 文件</string>
     <string name="media_library_import_title">导入媒体库 + 凭据 + 快捷方式</string>
     <string name="media_library_import_summary">从之前导出的 ZIP 文件中导入 media.db、网络凭据、网络快捷方式和缓存图片</string>
     <string name="media_library_export_in_progress">正在导出媒体库、凭据和快捷方式</string>

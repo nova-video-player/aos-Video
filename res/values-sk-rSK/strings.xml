@@ -869,6 +869,7 @@
     <string name="trakt_device_auth_timeout">Kód vypršal. Skúste to znovu.</string>
     <string name="trakt_account_locked">Účet Trakt je uzamknutý. Odomknite ho na trakt.tv alebo to skúste neskôr.</string>
     <string name="connect_trakt">Pripojiť sa k Trakt</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Všetky videá</string>
     <string name="hide_seen">Nevidené</string>
     <string name="search_results">Výsledky vyhľadávania</string>

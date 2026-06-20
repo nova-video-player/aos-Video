@@ -429,6 +429,14 @@
     <string name="toast_subloader_login_failed">Identifiants opensubtitles incorrects ou service non disponible</string>
     <string name="toast_subloader_quota_exceeded">Quota de téléchargement de OpenSubtitles dépassé</string>
     <string name="opensubtitles_quota_reset_time_remaining">Réinitialisation du quota dans %s</string>
+    <string name="opensubtitles_summary_anonymous">Anonyme</string>
+    <string name="opensubtitles_summary_user_account">Compte utilisateur</string>
+    <string name="opensubtitles_summary_not_checked">Pas encore déterminé</string>
+    <string name="opensubtitles_summary_credentials_verified">Identifiants vérifiés</string>
+    <string name="opensubtitles_summary_login_failed">Échec d\'authentification</string>
+    <string name="opensubtitles_summary_service_unavailable">Service indisponible</string>
+    <string name="opensubtitles_summary_quota_exhausted">Quota épuisé</string>
+    <string name="opensubtitles_summary_status">%1$s · %2$s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Réglages des sous-titres</string>
     <string name="subtitle_sample_text">\"exemple\"</string>
@@ -730,8 +738,8 @@
     <string name="audio_decoder_choice_title">Choix du décodeur audio</string>
     <string name="audio_decoder_choice_summary">Contrôle si le décodage audio utilise de préférence FFmpeg ou MediaCodec.</string>
     <string name="audio_decoder_auto">Automatique</string>
-    <string name="audio_decoder_prefer_ffmpeg">Préférer FFmpeg</string>
-    <string name="audio_decoder_prefer_mediacodec">Préférer MediaCodec</string>
+    <string name="audio_decoder_prefer_ffmpeg">Préférer FFmpeg (par défaut)</string>
+    <string name="audio_decoder_prefer_mediacodec">Préférer MediaCodec (expérimental)</string>
     <string name="audio_interface_opensles">Forcer OpenSL ES</string>
     <string name="audio_interface_audiotrack">Forcer Audiotrack</string>
     <string name="audio_interface_any">Logique par défaut</string>
@@ -859,6 +867,16 @@
     <string name="trakt_device_auth_timeout">Le code a expiré. Veuillez réessayer.</string>
     <string name="trakt_account_locked">Compte Trakt verrouillé. Déverrouillez sur trakt.tv ou essayez plus tard.</string>
     <string name="connect_trakt">Connexion à Trakt</string>
+    <string name="trakt_sync_status_never">Pas encore synchronisé</string>
+    <string name="trakt_sync_status_ok">Dernière synchronisation : il y a %1$s</string>
+    <string name="trakt_sync_status_ok_skipped">Dernière synchronisation : Il y a %1$s · %2$d vidéo(s) en attente (durée inconnue)</string>
+    <string name="trakt_sync_status_ok_meta_skipped">Dernière synchronisation : Il y a %1$s · %2$d scrobble(s) ignorée(s) (métadonnées manquantes)</string>
+    <string name="trakt_sync_status_ok_both_skipped">Dernière synchronisation : Il y a %1$s · %2$d en attente (durée inconnue), %3$d scrobble(s) ignorée(s) (métadonnées manquantes)</string>
+    <string name="trakt_sync_status_error_network">La dernière synchronisation a échoué : erreur réseau</string>
+    <string name="trakt_sync_status_error_auth">Erreur d\'authentification — veuillez vous reconnecter</string>
+    <string name="trakt_sync_status_error_locked">Compte verrouillé - déverrouiller sur trakt.tv</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
+    <string name="trakt_signin_summary_logged_sync">Connecté · %1$s</string>
     <string name="show_all">Toutes les vidéos</string>
     <string name="hide_seen">Non vus</string>
     <string name="search_results">Résultat de la recherche</string>
@@ -1021,4 +1039,14 @@
     <string name="external_player_service_title">Lecture du lecteur externe</string>
     <string name="external_player_service_description">Nova Video Player fournit du contenu pour un lecteur externe</string>
     <string name="stop">Arrêt</string>
+    <string name="s_visual_impaired">malvoyant</string>
+    <string name="s_audio_description">description audio</string>
+    <string name="s_descriptions">descriptions</string>
+    <string name="s_forced">forcé</string>
+    <string name="s_original">d\'origine</string>
+    <string name="s_translated">traduit</string>
+    <string name="s_dubbed">doublé</string>
+    <string name="s_commentary">commentaires</string>
+    <string name="s_lyrics">paroles</string>
+    <string name="s_karaoke">karaoké</string>
 </resources>

@@ -757,6 +757,7 @@
     <string name="trakt_sync_trakt_resume">Použít pozici pro obnovení z Trakt pokud je dále ve videu než místní pozice</string>
     <string name="trakt_sync_collection_summary">Automaticky přidat všechna videa z vaší knihovny Nova do vaší sbírky na Trakt</string>
     <string name="trakt_toast_syncing">Synchronizuji s Trakt&#8230;</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Všechna videa</string>
     <string name="hide_seen">Nezhlédnuto</string>
     <string name="search_results">Výsledky hledání</string>

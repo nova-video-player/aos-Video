@@ -214,6 +214,7 @@
     <string name="share_path">ପଥ</string>
     <string name="trakt_user">ଉପଭୋକ୍ତା ନାମ</string>
     <string name="trakt_password">ପାସ୍‌ୱର୍ଡ଼</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">ସବୁ ଵିଡ଼ିଓ</string>
     <string name="hide_seen">ଦେଖି ନାହାଁନ୍ତି</string>
     <string name="search_results">ସନ୍ଧାନ ଫଳାଫଳ</string>

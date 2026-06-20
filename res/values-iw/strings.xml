@@ -794,6 +794,7 @@
     <string name="trakt_sync_trakt_resume">השתמש בנקודת המשך של Trakt אם היא יותר מתקדמת מהמקומית</string>
     <string name="trakt_sync_collection_summary">הוסף אוטומטית את כל קבצי הוידאו מספריית Nova שלך לאוסף ה-Trakt שלך</string>
     <string name="trakt_toast_syncing">מסתנכרן עם Trakt&#8230;</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">כל הוידאו</string>
     <string name="hide_seen">לא נצפו</string>
     <string name="search_results">תוצאות החיפוש</string>

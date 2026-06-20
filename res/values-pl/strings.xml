@@ -869,6 +869,7 @@
     <string name="trakt_device_auth_timeout">Kod wygasł. Spróbuj ponownie.</string>
     <string name="trakt_account_locked">Konto Trakt zablokowane. Odblokuj na Trakt.tv lub spróbuj później.</string>
     <string name="connect_trakt">Połącz z Trakt.tv</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Wszystkie wideo</string>
     <string name="hide_seen">Nieobejrzane</string>
     <string name="search_results">Wynik wyszukiwania</string>
