@@ -73,6 +73,13 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
         mAudioDelayPicker = (AudioDelayPickerAbstract) view.findViewById(R.id.audioDelayPicker);
         mSaveSettingCB = (CheckBox)view.findViewById(R.id.save_setting);
         mAudioDelayPicker.init(delay, this);
+        mSaveSettingCB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putInt(getContext().getResources().getString(R.string.save_delay_setting_pref_key),
+                        mSaveSettingCB.isChecked()?mAudioDelayPicker.getDelay():0).apply();
+            }
+        });
 
         setCancelable(true);
         setCanceledOnTouchOutside(true);
@@ -114,6 +121,9 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
         mHandler.removeMessages(CHANGE_DELAY);
         Message msg = mHandler.obtainMessage(CHANGE_DELAY);
         mHandler.sendMessageDelayed(msg, CHANGE_DELAY_TIMEOUT);
+        if (mSaveSettingCB.isChecked()) {
+            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putInt(getContext().getResources().getString(R.string.save_delay_setting_pref_key), delay).apply();
+        }
     }
 
     public void onClick(DialogInterface dialog, int which) {
