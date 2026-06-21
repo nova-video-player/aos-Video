@@ -111,7 +111,7 @@ public class Player implements IPlayerControl,
     private static final int STATE_PLAYING            = 5;
     private static final int STATE_PAUSED             = 6;
     private static final int STATE_PLAYBACK_COMPLETED = 7;
-    
+
     // mCurrentState is a PlayerView object's current state.
     // mTargetState is the state that a method caller intends to reach.
     // For instance, regardless the PlayerView object's current state,
@@ -157,6 +157,7 @@ public class Player implements IPlayerControl,
     private static float mCurrentFps = 0.0f;
 
     private VideoEffectRenderer mEffectRenderer;
+    private SubtitleEngine mSubtitleEngine; // NEW: The native subtitle engine
 
     /*
      * Archos
@@ -347,6 +348,7 @@ public class Player implements IPlayerControl,
         mWindow = window;
         mAudioManager = (AudioManager) mContext.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         mEffectRenderer = new VideoEffectRenderer(mContext, VideoEffect.getDefaultType());
+        mSubtitleEngine = new SubtitleEngine(); // NEW: Create the JNI wrapper
         setSurfaceController(surfaceController);
     }
     public void setWindow(Window window){
@@ -363,6 +365,7 @@ public class Player implements IPlayerControl,
         if (mSurfaceController != null) {
             mSurfaceController.setTextureCallback(this);
             mSurfaceController.setSurfaceCallback(this);
+            mSurfaceController.setSubtitleTextureCallback(mSubtitleEngine);
         }
     }
     private void setGLSupportEnabled(boolean enable) {
@@ -373,19 +376,19 @@ public class Player implements IPlayerControl,
         restoreUri(mSurfaceController.supportOpenGLVideoEffect());
         start(PlayerController.STATE_OTHER);
     }
-    
+
     public int getEffectType() {
         if (mEffectRenderer != null)
             return mEffectRenderer.getEffectType();
         else return VideoEffect.getDefaultType();
     }
-    
+
     public int getEffectMode() {
         if (mEffectRenderer != null)
             return mEffectRenderer.getEffectMode();
         else return VideoEffect.getDefaultMode();
     }
-    
+
     public void setEffect(int type, int mode) {
         boolean needToSupportGLEffect = VideoEffect.openGLRequested(type);
         if (needToSupportGLEffect ^ mSurfaceController.supportOpenGLVideoEffect()) setGLSupportEnabled(needToSupportGLEffect);
@@ -631,7 +634,7 @@ public class Player implements IPlayerControl,
         mSurfaceWidth = width;
         mSurfaceHeight = height;
         openVideo();
-        
+
     }
 
     /* SurfaceHolder.Callback */
@@ -692,14 +695,14 @@ public class Player implements IPlayerControl,
         mSaveUri = mUri;
         mSaveStopPosition = mStopPosition;
     }
-    
+
     private void restoreUri(boolean restartVideo) {
         if (log.isDebugEnabled()) log.debug("restoreUri");
         mUri = mSaveUri;
         mStopPosition = mSaveStopPosition;
         if (restartVideo) openVideo();
     }
-    
+
     @SuppressWarnings("deprecation") // requestAudioFocus: API 26+ uses AudioFocusRequest
     public void start(int state) {
         if (log.isDebugEnabled()) log.debug("start");
@@ -790,7 +793,7 @@ public class Player implements IPlayerControl,
     public int getRelativePosition() {
         return mRelativePosition;
     }
-    
+
     public void seekTo(int msec) {
         if (log.isDebugEnabled()) log.debug("seekTo: {} ms", msec);
         if (isInPlaybackState()) {
@@ -803,7 +806,7 @@ public class Player implements IPlayerControl,
             mResumeCtx.setSeek(msec);
         }
     }
-    
+
     /*
      * return true if MediaPlayer is seeking on network videos,
      * in that case, avoid to call any MediaPlayer method in order to prevent freeze.
@@ -811,7 +814,7 @@ public class Player implements IPlayerControl,
     public boolean isBusy() {
         return mIsBusy && !isLocalVideo();
     }
-            
+
     public boolean isPlaying() {
         return isInPlaybackState() && mMediaPlayer.isPlaying();
     }
@@ -830,7 +833,7 @@ public class Player implements IPlayerControl,
     public void setLooping(boolean enable) {
         if (mMediaPlayer != null) mMediaPlayer.setLooping(enable);
     }
-    
+
     public boolean isLocalVideo() {
         return mIsLocalVideo;
     }
@@ -846,12 +849,12 @@ public class Player implements IPlayerControl,
     public boolean canSeekForward() {
         return mCanSeekForward;
     }
-    
+
     public Bitmap screenshot() {
         return null;
     }
 
-    /* 
+    /*
      * Archos Part
      */
 
@@ -931,7 +934,7 @@ public class Player implements IPlayerControl,
             mResumeCtx.setSubtitleRatio(n, d);
         }
     }
-    
+
     public boolean setAudioFilter(int n, boolean nightOn) {
         int enable = nightOn?1:0;
         if (isInPlaybackState()) {
