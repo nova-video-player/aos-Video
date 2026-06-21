@@ -97,6 +97,7 @@ public class SurfaceController {
     private View mView;
     private SurfaceView mSurfaceView = null;
     private TextureView mEffectView = null;
+    private TextureView mSubtitleView = null; // NEW: The OpenGL Subtitle Layer
     private IMediaPlayer mMediaPlayer = null;
     private SurfaceController.Listener      mSurfaceListener;
     private int         mLcdWidth = 0;
@@ -130,6 +131,7 @@ public class SurfaceController {
  
         mEffectView =  (TextureView) mLp.findViewById(R.id.gl_surface_view);
         mSurfaceView =  (SurfaceView) mLp.findViewById(R.id.surface_view);
+        mSubtitleView = (TextureView) mLp.findViewById(R.id.gl_subtitle_view); // NEW
         if (mEffectEnable) {
             mView = mEffectView;
             mSurfaceView.setVisibility(View.GONE);
@@ -173,6 +175,14 @@ public class SurfaceController {
         if (mEffectView != null)
             mEffectView.setSurfaceTextureListener(callback);
     }
+
+    public void setSubtitleTextureCallback(TextureView.SurfaceTextureListener callback) {
+        if (mSubtitleView != null)
+            mSubtitleView.setSurfaceTextureListener(callback);
+    }
+
+    public int getSubtitleViewWidth() { return mSubtitleView != null ? mSubtitleView.getWidth() : 0; }
+    public int getSubtitleViewHeight() { return mSubtitleView != null ? mSubtitleView.getHeight() : 0; }
 
     public void setHdmiPlugged(boolean plugged, int hdmiWidth, int hdmiHeight) {
         if (log.isDebugEnabled()) log.debug("setHdmiPlugged: plugged={}, hdmi=({},{})", plugged, hdmiWidth, hdmiHeight);
@@ -441,6 +451,7 @@ public class SurfaceController {
         mMarginTop = mHdmiPlugged || mFullScreenWithCutout ? 0 : (int)((cutoutTop - cutoutBottom)/ 2.0f);
 
         ViewGroup.LayoutParams lp = mView.getLayoutParams();
+        ViewGroup.LayoutParams subLp = mSubtitleView != null ? mSubtitleView.getLayoutParams() : null; // NEW
         if (lp instanceof ViewGroup.MarginLayoutParams marginParams) {
             if (log.isDebugEnabled()) log.debug("MARC works with MarginLayoutParams"); // TODO MARC it works!!!
             lp.width = dcw;
@@ -448,13 +459,28 @@ public class SurfaceController {
             // video view is centered on the screen, in order to avoid cutout it needs to be shifted slightly
             marginParams.setMargins(mMarginLeft, mMarginTop, 0, 0);
             mView.setLayoutParams(marginParams);
+
+            // NEW: Apply identical margins to the Native Subtitle View
+            if (subLp instanceof ViewGroup.MarginLayoutParams subMarginParams) {
+                subMarginParams.width = dcw;
+                subMarginParams.height = dch;
+                subMarginParams.setMargins(mMarginLeft, mMarginTop, 0, 0);
+                mSubtitleView.setLayoutParams(subMarginParams);
+            }
         } else {
             if (log.isDebugEnabled()) log.debug("MARC works with LayoutParams NO MARGIN");
             lp.width = dcw;
             lp.height = dch;
             mView.setLayoutParams(lp);
+            // NEW: Apply identical dimensions to the Native Subtitle View
+            if (subLp != null) {
+                subLp.width = dcw;
+                subLp.height = dch;
+                mSubtitleView.setLayoutParams(subLp);
+            }
         }
         mView.invalidate();
+        if (mSubtitleView != null) mSubtitleView.invalidate(); // NEW
 
         mSurfaceWidth = dcw;
         mSurfaceHeight = dch;
