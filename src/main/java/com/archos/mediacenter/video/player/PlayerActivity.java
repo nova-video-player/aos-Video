@@ -534,6 +534,30 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
     }
 
+    private boolean isPassthroughAudioDelayLimited() {
+        return CustomApplication.isPassthroughSupported()
+                && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple", "0")) > 0;
+    }
+
+    private int clampAudioDelayForPassthrough(int delay) {
+        return isPassthroughAudioDelayLimited() && delay > 0 ? 0 : delay;
+    }
+
+    private void resetUnsupportedPassthroughAudioDelayPreset() {
+        if (!isPassthroughAudioDelayLimited()) {
+            return;
+        }
+        int delay = mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0);
+        if (delay <= 0) {
+            return;
+        }
+        if (log.isDebugEnabled()) log.debug("resetUnsupportedPassthroughAudioDelayPreset: reset unsupported delay {}", delay);
+        mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), 0).apply();
+        if (PlayerService.sPlayerService != null) {
+            PlayerService.sPlayerService.setAudioDelay(0, false);
+        }
+    }
+
     private void setSpatializationPreferenceEnabled(boolean enabled) {
         mPreferences.edit().putBoolean(KEY_SPATIALIZATION_ENABLED, enabled).apply();
         applySpatializationPreferenceToAvos();
@@ -911,6 +935,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             LibAvos.setPcmChannelMasks(CustomApplication.getHdmiChannelMasks());
             int passthroughMode = CustomApplication.isPassthroughSupported() ? Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0") ) : 0;
             LibAvos.setPassthrough(passthroughMode);
+            resetUnsupportedPassthroughAudioDelayPreset();
             if (mPreferences.getBoolean(VideoPreferencesCommon.KEY_FORCE_AUDIO_PASSTHROUGH, false)) {
                 long forcedFlags = CustomApplication.allHdmiAudioCodecs;
                 if (!CustomApplication.isIecEncapsulationCapable()) {
@@ -1865,6 +1890,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             tvPicker.setMax(mPlayer.getDuration());
             tvPicker.setMin(-mPlayer.getDuration());
         }
+        if (isPassthroughAudioDelayLimited()) {
+            tvPicker.setMax(0);
+        }
         tvPicker.setHourFormat(true);
         tvmenu.addTVMenuItem(tvPicker);
         final TVMenuItem saveSettingCB = tvmenu.createAndAddTVSwitchableMenuItem(getString(R.string.keep_setting), mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0) != 0);
@@ -1874,8 +1902,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 saveSettingCB.toggle();
                 if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog:onClick saveSettingCB.isChecked()={}", saveSettingCB.isChecked());
                 if (saveSettingCB.isChecked()) {
-                    if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog: keep setting toggled ON, save current audio delay={} in prefs", PlayerService.sPlayerService.getAudioDelay());
-                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), PlayerService.sPlayerService.getAudioDelay()).apply();
+                    int delay = clampAudioDelayForPassthrough(PlayerService.sPlayerService.getAudioDelay());
+                    if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog: keep setting toggled ON, save current audio delay={} in prefs", delay);
+                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), delay).apply();
                 } else {
                     if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog: keep setting toggled OFF, save 0 in prefs");
                     mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), 0).apply();
@@ -1889,9 +1918,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         //        └── TVMenu
         //            ├── AudioDelayTVPicker
         //            └── TVMenuItem (saveSettingCB)
-        tvPicker.init(PlayerService.sPlayerService.getAudioDelay(), new AudioDelayPickerAbstract.OnAudioDelayChangedListener() {
+        tvPicker.init(clampAudioDelayForPassthrough(PlayerService.sPlayerService.getAudioDelay()), new AudioDelayPickerAbstract.OnAudioDelayChangedListener() {
             @Override
             public void onAudioDelayChanged(AudioDelayPickerAbstract view, int delay) {
+                delay = clampAudioDelayForPassthrough(delay);
                 if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog:onAudioDelayChanged delay={}", delay);
                 PlayerActivity.this.onAudioDelayChange(null, delay);
                 if (saveSettingCB.isChecked()) {
@@ -1906,8 +1936,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             public void onResult(int code) {
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
                 if(saveSettingCB.isChecked()){
-                    if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog:onResult save audio delay={} in prefs", PlayerService.sPlayerService.getAudioDelay());
-                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), PlayerService.sPlayerService.getAudioDelay()).apply();
+                    int delay = clampAudioDelayForPassthrough(PlayerService.sPlayerService.getAudioDelay());
+                    if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog:onResult save audio delay={} in prefs", delay);
+                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), delay).apply();
                 }
                 else {
                     if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog:onResult do not save audio delay and carve 0 in prefs");
@@ -2899,9 +2930,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 break;
             case DIALOG_AUDIO_DELAY:
                 if(PlayerService.sPlayerService!=null)
-                    mDialog = new AudioDelayPickerDialog(this, this, PlayerService.sPlayerService.getAudioDelay());
+                    mDialog = new AudioDelayPickerDialog(this, this, clampAudioDelayForPassthrough(PlayerService.sPlayerService.getAudioDelay()), isPassthroughAudioDelayLimited());
                 else
-                    mDialog = new AudioDelayPickerDialog(this, this, mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0));
+                    mDialog = new AudioDelayPickerDialog(this, this, clampAudioDelayForPassthrough(mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0)), isPassthroughAudioDelayLimited());
                 AudioDelayPickerDialog audioPickerDialog = (AudioDelayPickerDialog) mDialog;
                 audioPickerDialog.setStep(20);
                 if (mPlayer.getDuration() > 0) {
@@ -2909,9 +2940,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     audioPickerDialog.setMin(-mPlayer.getDuration());
                 }
                 if(PlayerService.sPlayerService!=null)
-                    audioPickerDialog.updateDelay(PlayerService.sPlayerService.getAudioDelay());
+                    audioPickerDialog.updateDelay(clampAudioDelayForPassthrough(PlayerService.sPlayerService.getAudioDelay()));
                 else
-                    audioPickerDialog.updateDelay(mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0));
+                    audioPickerDialog.updateDelay(clampAudioDelayForPassthrough(mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0)));
                 mPlayerController.hide();
                 break;
             case DIALOG_AUDIO_SPEED:
@@ -3508,7 +3539,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     /* AudioDelayPickerDialog.OnAudioDelayChangeListener */
     public void onAudioDelayChange(AudioDelayPickerAbstract delayPicker, int delay) {
-       PlayerService.sPlayerService.setAudioDelay(delay,false);
+       PlayerService.sPlayerService.setAudioDelay(clampAudioDelayForPassthrough(delay), false);
     }
 
     /* AudioSpeedPickerDialog.OnAudioSpeedChangeListener */

@@ -45,6 +45,7 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
 
     private final AudioDelayPickerAbstract mAudioDelayPicker;
     private final OnAudioDelayChangeListener mCallBack;
+    private final boolean mDisablePositiveDelay;
 
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -55,6 +56,10 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
     private final CheckBox mSaveSettingCB;
 
     public AudioDelayPickerDialog(Context context, OnAudioDelayChangeListener callBack, int delay) {
+        this(context, callBack, delay, false);
+    }
+
+    public AudioDelayPickerDialog(Context context, OnAudioDelayChangeListener callBack, int delay, boolean disablePositiveDelay) {
         super(context);
         log.error("AudioDelayPickerDialog: delay={}", delay);
 
@@ -62,6 +67,7 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
         mCallBack = callBack;
+        mDisablePositiveDelay = disablePositiveDelay;
 
         setIcon(R.drawable.ic_menu_delay);
         setTitle(R.string.player_pref_audio_delay_title);
@@ -72,12 +78,12 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
         setView(view);
         mAudioDelayPicker = (AudioDelayPickerAbstract) view.findViewById(R.id.audioDelayPicker);
         mSaveSettingCB = (CheckBox)view.findViewById(R.id.save_setting);
-        mAudioDelayPicker.init(delay, this);
+        mAudioDelayPicker.init(clampDelay(delay), this);
         mSaveSettingCB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putInt(getContext().getResources().getString(R.string.save_delay_setting_pref_key),
-                        mSaveSettingCB.isChecked()?mAudioDelayPicker.getDelay():0).apply();
+                        mSaveSettingCB.isChecked()?clampDelay(mAudioDelayPicker.getDelay()):0).apply();
             }
         });
 
@@ -94,8 +100,8 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
         switch(msg.what) {
             case CHANGE_DELAY:
                 if (mCallBack != null) {
-                    if (log.isDebugEnabled()) log.debug("handleMessage: apply delay change {}", mAudioDelayPicker.getDelay());
-                    mCallBack.onAudioDelayChange(mAudioDelayPicker, mAudioDelayPicker.getDelay());
+                    if (log.isDebugEnabled()) log.debug("handleMessage: apply delay change {}", clampDelay(mAudioDelayPicker.getDelay()));
+                    mCallBack.onAudioDelayChange(mAudioDelayPicker, clampDelay(mAudioDelayPicker.getDelay()));
                 }
             break;
         }
@@ -107,12 +113,12 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
         log.error("onStop");
         mHandler.removeCallbacksAndMessages(null);
         if (mCallBack != null) {
-            if (log.isDebugEnabled()) log.debug("onStop: apply delay change {}", mAudioDelayPicker.getDelay());
-            mCallBack.onAudioDelayChange(mAudioDelayPicker, mAudioDelayPicker.getDelay());
+            if (log.isDebugEnabled()) log.debug("onStop: apply delay change {}", clampDelay(mAudioDelayPicker.getDelay()));
+            mCallBack.onAudioDelayChange(mAudioDelayPicker, clampDelay(mAudioDelayPicker.getDelay()));
         }
         if (log.isDebugEnabled()) log.debug("onStop: apply save setting {} delay {}", mSaveSettingCB.isChecked(), (mSaveSettingCB.isChecked()?PlayerService.sPlayerService.getAudioDelay():0));
         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putInt(getContext().getResources().getString(R.string.save_delay_setting_pref_key),
-                mSaveSettingCB.isChecked()?PlayerService.sPlayerService.getAudioDelay():0).commit();
+                mSaveSettingCB.isChecked()?clampDelay(PlayerService.sPlayerService.getAudioDelay()):0).commit();
     }
 
     @Override
@@ -122,18 +128,18 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
         Message msg = mHandler.obtainMessage(CHANGE_DELAY);
         mHandler.sendMessageDelayed(msg, CHANGE_DELAY_TIMEOUT);
         if (mSaveSettingCB.isChecked()) {
-            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putInt(getContext().getResources().getString(R.string.save_delay_setting_pref_key), delay).apply();
+            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putInt(getContext().getResources().getString(R.string.save_delay_setting_pref_key), clampDelay(delay)).apply();
         }
     }
 
     public void onClick(DialogInterface dialog, int which) {
         if (mCallBack != null) {
-            mCallBack.onAudioDelayChange(mAudioDelayPicker, mAudioDelayPicker.getDelay());
+            mCallBack.onAudioDelayChange(mAudioDelayPicker, clampDelay(mAudioDelayPicker.getDelay()));
         }
     }
 
     public void updateDelay(int delay) {
-        mAudioDelayPicker.updateDelay(delay);
+        mAudioDelayPicker.updateDelay(clampDelay(delay));
     }
 
     public void setStep(int step) {
@@ -145,7 +151,11 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
     }
 
     public void setMax(int max) {
-        mAudioDelayPicker.setMax(max);
+        mAudioDelayPicker.setMax(mDisablePositiveDelay ? Math.min(max, 0) : max);
+    }
+
+    private int clampDelay(int delay) {
+        return mDisablePositiveDelay && delay > 0 ? 0 : delay;
     }
 
 }
