@@ -172,6 +172,7 @@ public class Player implements IPlayerControl,
     private static float mCurrentFps = 0.0f;
 
     private VideoEffectRenderer mEffectRenderer;
+    private SubtitleEngine mSubtitleEngine; // NEW: The native subtitle engine
 
     /*
      * Archos
@@ -370,6 +371,7 @@ public class Player implements IPlayerControl,
         mWindow = window;
         mAudioManager = (AudioManager) mContext.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         mEffectRenderer = new VideoEffectRenderer(mContext, VideoEffect.getDefaultType());
+        mSubtitleEngine = new SubtitleEngine(); // NEW: Create the JNI wrapper
         setSurfaceController(surfaceController);
     }
     public void setWindow(Window window){
@@ -388,6 +390,7 @@ public class Player implements IPlayerControl,
         if (mSurfaceController != null) {
             mSurfaceController.setTextureCallback(this);
             mSurfaceController.setSurfaceCallback(this);
+            mSurfaceController.setSubtitleTextureCallback(mSubtitleEngine);
         }
     }
     private void setGLSupportEnabled(boolean enable) {
