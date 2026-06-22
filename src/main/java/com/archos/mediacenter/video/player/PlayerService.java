@@ -54,6 +54,9 @@ import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.StreamUriFinder;
 import com.archos.mediacenter.utils.ISO639codes;
+import com.archos.mediacenter.utils.introdb.IntroDbApiHelper;
+import com.archos.mediacenter.utils.introdb.IntroDbQueryParams;
+import com.archos.mediacenter.utils.introdb.IntroDbResult;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
@@ -74,6 +77,7 @@ import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.ScrapeDetailResult;
 import com.archos.environment.ArchosUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -421,6 +425,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
         mVideoObserver = new VideoObserver(new Handler(Looper.getMainLooper()));
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // TheIntroDB: init the GET-only api helper (enables the shared OkHttp disk cache)
+        IntroDbApiHelper.init(getApplicationContext());
+        mAutoSkipTask = new Runnable() {
+            @Override
+            public void run() {
+                autoSkipIfNeeded();
+                mHandler.postDelayed(mAutoSkipTask, AUTO_SKIP_INTERVAL);
+            }
+        };
 
         if (Trakt.isTraktV2Enabled(this, mPreferences) && !PrivateMode.isActive()) {
             mTraktClient = new TraktService.Client(this, mTraktListener, false);
@@ -975,6 +989,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             }
             if (PERIODIC_BOOKMARK_SAVE)
                 mHandler.removeCallbacks(mAutoSaveTask);
+            if (mAutoSkipTask != null)
+                mHandler.removeCallbacks(mAutoSkipTask);
             mPlayer.pause(PlayerController.STATE_OTHER);
             mPlayer.stopPlayback();
             mPlayerState = PlayerState.STOPPED;
@@ -1186,6 +1202,22 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private VideoObserver mVideoObserver;
     private boolean mHasRequestedIndexing;
     private VideoDbInfo mVideoInfo;
+
+    /*
+        TheIntroDB skip intro/outro (GET only, proof of concept)
+     */
+    // TODO: move to VideoPreferencesCommon once a settings toggle/UI is added
+    private static final String KEY_INTRODB_ENABLED = "introdb_enabled";
+    // how often the auto-skip task checks the playback position against the fetched segments
+    private static final long AUTO_SKIP_INTERVAL = 1000;
+    // segments fetched once per playback from TheIntroDB, read from the player tick for auto-skip
+    private volatile IntroDbResult mIntroDbResult;
+    // uri the cached result (or in-flight fetch) belongs to, guards against duplicate/stale fetches
+    private volatile Uri mIntroDbFetchedUri;
+    // periodic task that auto-skips intro/recap segments during playback
+    private Runnable mAutoSkipTask;
+    // end (ms) of the last segment we auto-skipped, so we don't fight a user who seeks back into it
+    private long mLastAutoSkippedEndMs = -1;
     private BaseTags mScraperTag;
     private IndexHelper mIndexHelper;
     private TraktService.Client mTraktClient = null;
@@ -1298,6 +1330,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onDestroy(){
         super.onDestroy();
         if (log.isDebugEnabled()) log.debug("onDestroy");
+        if (mAutoSkipTask != null)
+            mHandler.removeCallbacks(mAutoSkipTask);
         saveVideoStateIfReady();
         if (log.isDebugEnabled()) log.debug("onDestroy: release mediaSessionCompat");
         if (mSession != null) {
@@ -1365,7 +1399,109 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             setAudioFilt();
             if (PERIODIC_BOOKMARK_SAVE)
                 mHandler.postDelayed(mAutoSaveTask, AUTO_SAVE_INTERVAL);
+            fetchIntroDbIfNeeded();
+            mHandler.removeCallbacks(mAutoSkipTask);
+            mHandler.postDelayed(mAutoSkipTask, AUTO_SKIP_INTERVAL);
         }
+    }
+
+    /**
+     * Fetch intro/outro segments from TheIntroDB for the current video (GET /media, no api key).
+     * Runs at most once per video on a background thread; the result is cached in mIntroDbResult
+     * for the auto-skip check in the player tick.
+     */
+    private void fetchIntroDbIfNeeded() {
+        if (mVideoInfo == null) return;
+        if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, true)) return;
+        if (!mVideoInfo.isScraped) {
+            if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: not scraped, skipping");
+            return;
+        }
+        final Uri uri = mVideoInfo.uri;
+        if (uri == null) return;
+        // already fetched (or fetch in flight) for this video
+        if (uri.equals(mIntroDbFetchedUri)) return;
+        mIntroDbFetchedUri = uri;
+        mIntroDbResult = null; // drop any stale data from the previous video
+        mLastAutoSkippedEndMs = -1;
+
+        final boolean isShow = mVideoInfo.isShow;
+        Integer tmdbId = null;
+        try {
+            String idStr = isShow ? mVideoInfo.scraperShowId : mVideoInfo.scraperMovieId;
+            if (idStr != null && !idStr.isEmpty()) tmdbId = Integer.valueOf(idStr);
+        } catch (NumberFormatException e) {
+            log.warn("fetchIntroDbIfNeeded: invalid tmdb id");
+        }
+        if (tmdbId == null) {
+            if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: no tmdb id, skipping");
+            return;
+        }
+        final IntroDbQueryParams params = new IntroDbQueryParams();
+        params.setTmdbId(tmdbId);
+        params.setIsShow(isShow);
+        if (isShow) {
+            if (mVideoInfo.scraperSeasonNr > 0) params.setSeason(mVideoInfo.scraperSeasonNr);
+            if (mVideoInfo.scraperEpisodeNr > 0) params.setEpisode(mVideoInfo.scraperEpisodeNr);
+        }
+        long durationMs = getEffectiveDurationMs();
+        if (durationMs > 0) params.setDurationMs(durationMs);
+
+        if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: querying {}", params);
+        new Thread("IntroDbFetch") {
+            public void run() {
+                try {
+                    IntroDbResult result = IntroDbApiHelper.getMedia(params);
+                    // only keep the result if we are still playing the same video
+                    if (uri.equals(mIntroDbFetchedUri)) {
+                        mIntroDbResult = result;
+                        if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: stored {}", result);
+                    } else {
+                        if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: video changed, dropping result");
+                    }
+                } catch (IOException e) {
+                    log.warn("fetchIntroDbIfNeeded: network error", e);
+                }
+            }
+        }.start();
+    }
+
+    /** Intro/outro segments for the current video, or null if not available yet. */
+    public IntroDbResult getIntroDbResult() {
+        return mIntroDbResult;
+    }
+
+    /**
+     * Auto-skip check, run periodically while playing. If the current position falls inside an
+     * intro or recap segment, seek to the end of that segment. Credits/preview are intentionally
+     * left out of the proof of concept (skipping them could jump to the end of the media).
+     */
+    private void autoSkipIfNeeded() {
+        IntroDbResult result = mIntroDbResult;
+        if (result == null) return;
+        if (mPlayer == null || Player.sPlayer == null || !mPlayer.isPlaying()) return;
+        if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, true)) return;
+        int position = Player.sPlayer.getCurrentPosition();
+        if (position < 0) return;
+        Long target = findSkipTarget(result.getIntro(), position);
+        if (target == null) target = findSkipTarget(result.getRecap(), position);
+        if (target == null) return;
+        // don't re-skip the same segment if the user deliberately seeks back into it
+        if (target == mLastAutoSkippedEndMs) return;
+        mLastAutoSkippedEndMs = target;
+        if (log.isDebugEnabled()) log.debug("autoSkipIfNeeded: skipping from {} to {}", position, target);
+        Player.sPlayer.seekTo(target.intValue());
+    }
+
+    // Returns the end (ms) to skip to if position is inside a skippable segment, else null.
+    private Long findSkipTarget(List<IntroDbResult.Segment> segments, int position) {
+        if (segments == null) return null;
+        for (IntroDbResult.Segment segment : segments) {
+            if (segment.endMs == null) continue; // need a concrete end to jump to
+            if (segment.endMs <= position) continue;
+            if (segment.contains(position)) return segment.endMs;
+        }
+        return null;
     }
 
     public void requestIndexAndScrap(){
