@@ -245,6 +245,10 @@ public class Player implements IPlayerControl,
     private boolean mForceSoftwareDecoding;
     private int mLastExistState = -1;
 
+    // --- NEW: Expose the Subtitle Engine for the UI ---
+    public SubtitleEngine getSubtitleEngine() {
+        return mSubtitleEngine;
+    }
 
     private class ResumeCtx {
         private int     mSeek;
