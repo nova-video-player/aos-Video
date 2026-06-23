@@ -382,6 +382,12 @@ public class SubtitleManager {
 
     public void setOutlineState(boolean outline) {
         mOutline = outline;
+
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            // Your C-code uses bg_enabled to toggle between Box and Outline modes
+            Player.sPlayer.getSubtitleEngine().setOutlineWidth(outline ? 2.0f : 0.0f);
+        }
+
         if (mSubtitleTxtView != null) {
             mSubtitleTxtView.setOutlineState(outline);
         }
@@ -393,6 +399,11 @@ public class SubtitleManager {
 
     public void setBackgroundState(boolean background) {
         mBackground = background;
+
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setBackgroundEnabled(background);
+        }
+
         if (mSubtitleTxtView != null) {
             mSubtitleTxtView.setBackgroundState(background);
         }
@@ -404,6 +415,12 @@ public class SubtitleManager {
 
     public void setBackgroundOpacity(int opacity) {
         mBgOpacity = opacity;
+
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            // Java passes 0-255, our C-engine expects a 0.0 - 1.0 float!
+            Player.sPlayer.getSubtitleEngine().setBackgroundOpacity(opacity / 255.0f);
+        }
+
         if (mSubtitleTxtView != null) {
             mSubtitleTxtView.setBackgroundOpacity(opacity); 
         }
@@ -798,6 +815,12 @@ public class SubtitleManager {
     public void setSize(int size) {
         if (log.isDebugEnabled()) log.debug("setSize: {}", size);
         mSubtitleSize = size;
+
+        // --- NEW: Route to Native Engine ---
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setFontSize(calcTextSize(size));
+        }
+
         if (mSubtitleGfxView != null) {
             mSubtitleGfxView.setSize(size, mScreenWidth, mScreenHeight);
         }
@@ -809,6 +832,11 @@ public class SubtitleManager {
     public void setColor(int color){
         if (log.isDebugEnabled()) log.debug("setColor: {}", color);
         mColor = color;
+
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setTextColor(color);
+        }
+
         if (mSubtitleTxtView != null) {
             mSubtitleTxtView.setTextColor(color);
         }
@@ -866,6 +894,12 @@ public class SubtitleManager {
     private void setVerticalPositionInternal (int pos) {
         if (mIsSubtitleGfx && SubtitleGfxView.RECT_COORDINATES) mSubtitleEvadedVPos = 0;
         else mSubtitleEvadedVPos = pos;
+
+        // --- NEW: Route margin to Native Engine ---
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setVerticalOffset(mSubtitleEvadedVPos);
+        }
+
         if (mSubtitleSpacer == null) return;
         mSubtitleSpacerParams.height = mSubtitleEvadedVPos;
         if (log.isDebugEnabled()) log.debug("setVerticalPositionInternal: new Height {}", mSubtitleSpacerParams.height);

@@ -66,10 +66,44 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
         // Ignored. The native OpenGL thread owns the render loop, not Java.
     }
 
-    // --- JNI Bindings (to be implemented in jni_sub_engine.c) ---
+    // ====================================================================
+    // USER STYLE SETTERS (Routes UI Preferences to the C-Engine)
+    // ====================================================================
+
+    public void setFontSize(float pt) { if (mNativeEngineHandle != 0) nativeSetFontSize(mNativeEngineHandle, pt); }
+    public void setFontScale(float scale) { if (mNativeEngineHandle != 0) nativeSetFontScale(mNativeEngineHandle, scale); }
+    public void setFontFamily(String familyName) { if (mNativeEngineHandle != 0) nativeSetFontFamily(mNativeEngineHandle, familyName); }
+    public void setBold(boolean bold) { if (mNativeEngineHandle != 0) nativeSetBold(mNativeEngineHandle, bold); }
+    public void setItalic(boolean italic) { if (mNativeEngineHandle != 0) nativeSetItalic(mNativeEngineHandle, italic); }
+    public void setTextColor(int color) { if (mNativeEngineHandle != 0) nativeSetTextColor(mNativeEngineHandle, color); }
+    public void setOutlineColor(int color) { if (mNativeEngineHandle != 0) nativeSetOutlineColor(mNativeEngineHandle, color); }
+    public void setOutlineWidth(float px) { if (mNativeEngineHandle != 0) nativeSetOutlineWidth(mNativeEngineHandle, px); }
+    public void setBackgroundEnabled(boolean enabled) { if (mNativeEngineHandle != 0) nativeSetBackgroundEnabled(mNativeEngineHandle, enabled); }
+    public void setBackgroundColor(int color) { if (mNativeEngineHandle != 0) nativeSetBackgroundColor(mNativeEngineHandle, color); }
+    public void setBackgroundOpacity(float opacity) { if (mNativeEngineHandle != 0) nativeSetBackgroundOpacity(mNativeEngineHandle, opacity); }
+    public void setVerticalOffset(float pixels) { if (mNativeEngineHandle != 0) nativeSetVerticalOffset(mNativeEngineHandle, pixels); }
+    public void setForceOverride(boolean force) { if (mNativeEngineHandle != 0) nativeSetForceOverride(mNativeEngineHandle, force); }
+
+// --- JNI Bindings (implemented in jni_sub_engine.c) ---
     private native long nativeCreate();
     private native void nativeDestroy(long handle);
     private native void nativeSurfaceCreated(long handle, Surface surface);
     private native void nativeSurfaceChanged(long handle, int width, int height);
     private native void nativeSurfaceDestroyed(long handle);
+
+    // --- NEW: Style Native Declarations ---
+    private native void nativeSetFontSize(long handle, float pt);
+    private native void nativeSetFontScale(long handle, float scale);
+    private native void nativeSetFontFamily(long handle, String familyName);
+    private native void nativeSetBold(long handle, boolean bold);
+    private native void nativeSetItalic(long handle, boolean italic);
+    private native void nativeSetTextColor(long handle, int color);
+    private native void nativeSetOutlineColor(long handle, int color);
+    private native void nativeSetOutlineWidth(long handle, float px);
+    private native void nativeSetBackgroundEnabled(long handle, boolean enabled);
+    private native void nativeSetBackgroundColor(long handle, int color);
+    private native void nativeSetBackgroundOpacity(long handle, float opacity);
+    private native void nativeSetVerticalOffset(long handle, float fraction);
+    private native void nativeSetForceOverride(long handle, boolean force);
+
 }
