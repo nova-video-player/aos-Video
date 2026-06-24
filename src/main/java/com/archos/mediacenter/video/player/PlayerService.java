@@ -1217,6 +1217,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final boolean DEFAULT_INTRODB_ENABLED = false;
     // how often the auto-skip task checks the playback position against the fetched segments
     private static final long AUTO_SKIP_INTERVAL = 1000;
+    // If a skip target lands within this margin of the media end, treat it as end-of-video
+    // (seeking right to EOF fails and breaks playback) and complete naturally instead.
+    private static final int AUTO_SKIP_END_MARGIN_MS = 5000;
     // normalized segments fetched once per playback (fused from all providers by IntroDbManager),
     // read from the player tick for auto-skip
     private volatile IntroSegments mIntroSegments;
@@ -1523,6 +1526,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // don't re-skip the same segment if the user deliberately seeks back into it
         if (skip.endMs == mLastAutoSkippedEndMs) return;
         mLastAutoSkippedEndMs = skip.endMs;
+        // When the skip target reaches the end of the media (e.g. an outro that runs to the
+        // file end), seeking there fails ("stream_seek time err") and breaks playback. End the
+        // video naturally instead, which advances to the next episode (binge) or stops cleanly.
+        int duration = Player.sPlayer.getDuration();
+        if (duration > 0 && skip.endMs >= duration - AUTO_SKIP_END_MARGIN_MS) {
+            if (log.isDebugEnabled()) log.debug("autoSkipIfNeeded: skipping {} from {} reaches end ({}), completing", skip.type, position, duration);
+            showAutoSkipToast(skip.type);
+            onCompletion();
+            return;
+        }
         if (log.isDebugEnabled()) log.debug("autoSkipIfNeeded: skipping {} from {} to {}", skip.type, position, skip.endMs);
         Player.sPlayer.seekTo((int) skip.endMs);
         showAutoSkipToast(skip.type);
