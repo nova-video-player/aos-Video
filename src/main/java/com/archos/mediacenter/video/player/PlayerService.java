@@ -79,8 +79,10 @@ import com.archos.mediascraper.ScrapeDetailResult;
 import com.archos.environment.ArchosUtils;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -892,6 +894,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
         void onFirstPlay();
         // mHandler.sendMessage(mHandler.obtainMessage(MSG_TORRENT_STARTED));
+
+        // Called on the main thread once intro/outro segments have been fetched, so the
+        // UI (e.g. the Play mode tile summary) can refresh if it is already displayed.
+        void onIntroDbReady();
     }
 
     public void removePlayerFrontend(PlayerFrontend playerFrontend, boolean prepareForSurfaceSwitch) {
@@ -1206,8 +1212,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     /*
         IntroDB skip intro/outro (GET only, proof of concept)
      */
-    // TODO: move to VideoPreferencesCommon once a settings toggle/UI is added
-    private static final String KEY_INTRODB_ENABLED = "introdb_enabled";
+    // auto-skip toggle, shared with the in-player play-mode tile/menu (TV + phone/tablet)
+    public static final String KEY_INTRODB_ENABLED = "introdb_enabled";
+    public static final boolean DEFAULT_INTRODB_ENABLED = false;
     // how often the auto-skip task checks the playback position against the fetched segments
     private static final long AUTO_SKIP_INTERVAL = 1000;
     // normalized segments fetched once per playback (fused from all providers by IntroDbManager),
@@ -1413,7 +1420,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      */
     private void fetchIntroDbIfNeeded() {
         if (mVideoInfo == null) return;
-        if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, true)) return;
+        if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED)) return;
         if (!mVideoInfo.isScraped) {
             if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: not scraped, skipping");
             return;
@@ -1436,7 +1443,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 if (uri.equals(mIntroDbFetchedUri)) {
                     mIntroSegments = segments;
                     if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: stored {}", segments);
-                    if (segments != null) showIntroDbDebugToast(segments.toDebugString());
+                    if (segments != null) {
+                        showIntroDbDebugToast(segments.toDebugString(introLabels(getApplicationContext())));
+                        mHandler.post(() -> { if (mPlayerFrontend != null) mPlayerFrontend.onIntroDbReady(); });
+                    }
                 } else {
                     if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: video changed, dropping result");
                 }
@@ -1504,17 +1514,35 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         int position = (Player.sPlayer != null) ? Player.sPlayer.getCurrentPosition() : -1;
         if (log.isDebugEnabled())
             log.debug("autoSkipIfNeeded: tick pos={} playing={} pref={}",
-                    position, playing, mPreferences.getBoolean(KEY_INTRODB_ENABLED, true));
+                    position, playing, mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED));
         if (mPlayer == null || Player.sPlayer == null || !mPlayer.isPlaying()) return;
-        if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, true)) return;
+        if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED)) return;
         if (position < 0) return;
-        Long target = segments.findSkipTarget(position);
-        if (target == null) return;
+        IntroSegments.Skip skip = segments.findSkip(position);
+        if (skip == null) return;
         // don't re-skip the same segment if the user deliberately seeks back into it
-        if (target == mLastAutoSkippedEndMs) return;
-        mLastAutoSkippedEndMs = target;
-        if (log.isDebugEnabled()) log.debug("autoSkipIfNeeded: skipping from {} to {}", position, target);
-        Player.sPlayer.seekTo(target.intValue());
+        if (skip.endMs == mLastAutoSkippedEndMs) return;
+        mLastAutoSkippedEndMs = skip.endMs;
+        if (log.isDebugEnabled()) log.debug("autoSkipIfNeeded: skipping {} from {} to {}", skip.type, position, skip.endMs);
+        Player.sPlayer.seekTo((int) skip.endMs);
+        showAutoSkipToast(skip.type);
+    }
+
+    // User-facing feedback when an auto-skip fires (the user opted in via the Play mode toggle).
+    private void showAutoSkipToast(final IntroSegments.Type type) {
+        final String message = getString(R.string.introdb_autoskip) + ": " + introLabels(getApplicationContext()).get(type);
+        mHandler.post(() -> Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show());
+    }
+
+    // Translatable display labels for each segment type, resolved from string resources.
+    public static Map<IntroSegments.Type, String> introLabels(Context ctx) {
+        Map<IntroSegments.Type, String> labels = new EnumMap<>(IntroSegments.Type.class);
+        labels.put(IntroSegments.Type.INTRO, ctx.getString(R.string.introdb_segment_intro));
+        labels.put(IntroSegments.Type.RECAP, ctx.getString(R.string.introdb_segment_recap));
+        labels.put(IntroSegments.Type.OUTRO, ctx.getString(R.string.introdb_segment_outro));
+        labels.put(IntroSegments.Type.CREDITS, ctx.getString(R.string.introdb_segment_credits));
+        labels.put(IntroSegments.Type.PREVIEW, ctx.getString(R.string.introdb_segment_preview));
+        return labels;
     }
 
     public void requestIndexAndScrap(){

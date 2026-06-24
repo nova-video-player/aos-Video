@@ -655,7 +655,12 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
     @Override
     public void onFirstPlay() {
-        
+
+    }
+
+    @Override
+    public void onIntroDbReady() {
+        // no TV menu in floating mode
     }
 
     @Override

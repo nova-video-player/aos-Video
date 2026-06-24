@@ -2670,6 +2670,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     public void showTVMenu(boolean show){
+        if (show && mContext instanceof PlayerActivity) {
+            ((PlayerActivity) mContext).refreshPlayModeIntroSummary();
+        }
         if (mTVMenuView != null) {
             mTVMenuView.setVisibility(show ? View.VISIBLE : View.GONE);
             if (show && !isTVMenuDisplayed) {
