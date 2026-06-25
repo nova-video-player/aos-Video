@@ -60,7 +60,9 @@ import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -2372,6 +2374,18 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
             });
 
+            final TVMenuItem tvmSkipRecap = tvmPlayMode.createAndAddTVSwitchableMenuItem(
+                    getResources().getString(R.string.pref_introdb_skip_recap_title),
+                    mPreferences.getBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, PlayerService.DEFAULT_INTRODB_SKIP_RECAP));
+            tvmSkipRecap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean enabled = !mPreferences.getBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, PlayerService.DEFAULT_INTRODB_SKIP_RECAP);
+                    mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, enabled).apply();
+                    tvmSkipRecap.setChecked(enabled);
+                }
+            });
+
             mPlayModeTVMenu = tvmPlayMode;
             mIntroSummaryMenuItem = null;
             tcv.addOtherView(tvmPlayMode);
@@ -2660,62 +2674,67 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 adb.setTitle(R.string.pref_play_mode_title);
                 final CharSequence[] playModeEntries = mContext.getResources().getTextArray(R.array.pref_play_mode_entries);
                 final ArrayList<RadioButton> playModeRbs = new ArrayList<RadioButton>();
-                IntroSegments introSegmentsPhone = (PlayerService.sPlayerService != null) ? PlayerService.sPlayerService.getIntroSegments() : null;
-                final String introSummaryPhone = (introSegmentsPhone != null) ? introSegmentsPhone.toSummaryString(PlayerService.introLabels(this), getString(R.string.introdb_segment_end)) : null;
-                final int playModeOffset = (introSummaryPhone != null) ? 1 : 0;
-                adb.setAdapter(new ArrayAdapter<View>(mContext, R.layout.menu_item_layout) {
-                    @Override
-                    public View getView(final int position, View convertView, ViewGroup parent) {
-                        if (introSummaryPhone != null && position == 0) {
-                            TextView header = new TextView(mContext);
-                            header.setText(introSummaryPhone);
-                            header.setPadding(20, 20, 20, 20);
-                            header.setEnabled(false);
-                            return header;
+
+                LinearLayout content = new LinearLayout(mContext);
+                content.setOrientation(LinearLayout.VERTICAL);
+                int pad = (int) (16 * getResources().getDisplayMetrics().density);
+                content.setPadding(pad, pad / 2, pad, pad / 2);
+
+                for (int i = 0; i < playModeEntries.length; i++) {
+                    final int position2 = i;
+                    RadioButton rb = new RadioButton(mContext);
+                    rb.setText(playModeEntries[i]);
+                    rb.setPadding(pad, pad, pad, pad);
+                    rb.setChecked(PlayerService.sPlayerService.mPlayMode == i);
+                    playModeRbs.add(rb);
+                    rb.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            PlayerService.sPlayerService.menuChangePlayMode(position2);
+                            for (RadioButton other : playModeRbs)
+                                other.setChecked(other == v);
                         }
-                        final int entry = position - playModeOffset;
-                        if (entry < playModeEntries.length) {
-                            final int position2 = entry;
-                            RadioButton rb = new RadioButton(mContext);
-                            rb.setText(playModeEntries[position2]);
-                            rb.setPadding(20, 20, 20, 20);
-                            rb.setChecked(PlayerService.sPlayerService.mPlayMode == position2);
-                            playModeRbs.add(rb);
-                            rb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                                @Override
-                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                    if (isChecked) {
-                                        PlayerService.sPlayerService.menuChangePlayMode(position2);
-                                        for (int i = 0; i < playModeRbs.size(); i++) {
-                                            if (buttonView != playModeRbs.get(i))
-                                                playModeRbs.get(i).setChecked(false);
-                                        }
-                                    }
-                                }
-                            });
-                            return rb;
-                        } else {
-                            Switch tb = new Switch(mContext);
-                            tb.setText(R.string.pref_introdb_autoskip_title);
-                            tb.setPadding(20, 20, 20, 20);
-                            tb.setChecked(mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED));
-                            tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                                @Override
-                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                    mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_ENABLED, isChecked).apply();
-                                }
-                            });
-                            return tb;
-                        }
-                    }
+                    });
+                    content.addView(rb);
+                }
+
+                Switch tb = new Switch(mContext);
+                tb.setText(R.string.pref_introdb_autoskip_title);
+                tb.setPadding(pad, pad, pad, pad);
+                tb.setChecked(mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED));
+                tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                     @Override
-                    public int getCount() {
-                        return playModeOffset + playModeEntries.length + 1;
-                    }
-                }, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_ENABLED, isChecked).apply();
                     }
                 });
+                content.addView(tb);
+
+                Switch tbRecap = new Switch(mContext);
+                tbRecap.setText(R.string.pref_introdb_skip_recap_title);
+                tbRecap.setPadding(pad, pad, pad, pad);
+                tbRecap.setChecked(mPreferences.getBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, PlayerService.DEFAULT_INTRODB_SKIP_RECAP));
+                tbRecap.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, isChecked).apply();
+                    }
+                });
+                content.addView(tbRecap);
+
+                IntroSegments introSegmentsPhone = (PlayerService.sPlayerService != null) ? PlayerService.sPlayerService.getIntroSegments() : null;
+                String introSummaryPhone = (introSegmentsPhone != null) ? introSegmentsPhone.toSummaryString(PlayerService.introLabels(this), getString(R.string.introdb_segment_end)) : null;
+                if (introSummaryPhone != null) {
+                    TextView footer = new TextView(mContext);
+                    footer.setText(introSummaryPhone);
+                    footer.setEnabled(false);
+                    footer.setPadding(pad, pad / 2, pad, pad / 2);
+                    content.addView(footer);
+                }
+
+                ScrollView scroll = new ScrollView(mContext);
+                scroll.addView(content);
+                adb.setView(scroll);
                 adb.create().show();
 
                 return true;

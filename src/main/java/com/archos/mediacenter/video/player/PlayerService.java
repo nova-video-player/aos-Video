@@ -482,6 +482,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mForceSingleRepeatMode = isDemoMode;
         mHideSubtitles = mPreferences.getBoolean(KEY_HIDE_SUBTITLES, false);
         mPlayMode = mPreferences.getInt(KEY_PLAY_MODE, PLAYMODE_SINGLE);
+        // Any start clears the binge-transition flag; onCompletion re-sets it when auto-advancing.
+        mArrivedViaBingeTransition = false;
         mResume = intent.getIntExtra(RESUME, RESUME_NO);
         if (log.isDebugEnabled()) log.debug("PlayerService.onStart: read mResume={} from intent", mResume);
 
@@ -1215,6 +1217,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     // auto-skip toggle, shared with the in-player play-mode tile/menu (TV + phone/tablet)
     public static final String KEY_INTRODB_ENABLED = "introdb_enabled";
     public static final boolean DEFAULT_INTRODB_ENABLED = false;
+    // recap auto-skip toggle: off by default, and only applied while binge-watching, i.e. in
+    // PLAYMODE_BINGE and on an episode we auto-advanced into (mArrivedViaBingeTransition).
+    public static final String KEY_INTRODB_SKIP_RECAP = "introdb_skip_recap";
+    public static final boolean DEFAULT_INTRODB_SKIP_RECAP = false;
     // how often the auto-skip task checks the playback position against the fetched segments
     private static final long AUTO_SKIP_INTERVAL = 1000;
     // If a skip target lands within this margin of the media end, treat it as end-of-video
@@ -1229,6 +1235,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private Runnable mAutoSkipTask;
     // end (ms) of the last segment we auto-skipped, so we don't fight a user who seeks back into it
     private long mLastAutoSkippedEndMs = -1;
+    // true when the current episode was reached by auto-advancing from the previous one (binge),
+    // not by the user manually starting it. Recap auto-skip only fires when this is set.
+    private boolean mArrivedViaBingeTransition = false;
     private BaseTags mScraperTag;
     private IndexHelper mIndexHelper;
     private TraktService.Client mTraktClient = null;
@@ -1423,7 +1432,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      */
     private void fetchIntroDbIfNeeded() {
         if (mVideoInfo == null) return;
-        if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED)) return;
+        if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED)
+                && !mPreferences.getBoolean(KEY_INTRODB_SKIP_RECAP, DEFAULT_INTRODB_SKIP_RECAP)) return;
         if (!mVideoInfo.isScraped) {
             if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: not scraped, skipping");
             return;
@@ -1519,9 +1529,14 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             log.debug("autoSkipIfNeeded: tick pos={} playing={} pref={}",
                     position, playing, mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED));
         if (mPlayer == null || Player.sPlayer == null || !mPlayer.isPlaying()) return;
-        if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED)) return;
+        boolean introEnabled = mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED);
+        // Recap is only skipped while actually binge-watching: pref on, binge mode, and on an
+        // episode we auto-advanced into (so the very first episode of the binge keeps its recap).
+        boolean recapEnabled = mPreferences.getBoolean(KEY_INTRODB_SKIP_RECAP, DEFAULT_INTRODB_SKIP_RECAP)
+                && mPlayMode == PLAYMODE_BINGE && mArrivedViaBingeTransition;
+        if (!introEnabled && !recapEnabled) return;
         if (position < 0) return;
-        IntroSegments.Skip skip = segments.findSkip(position);
+        IntroSegments.Skip skip = segments.findSkip(position, introEnabled, recapEnabled);
         if (skip == null) return;
         // don't re-skip the same segment if the user deliberately seeks back into it
         if (skip.endMs == mLastAutoSkippedEndMs) return;
@@ -1625,6 +1640,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mNextVideoId = -1;
             mLastPosition = 0;
             onStart(mIntent);
+            // onStart() cleared the flag; mark that this episode was auto-advanced into, so recap
+            // auto-skip may apply (it additionally requires PLAYMODE_BINGE).
+            mArrivedViaBingeTransition = true;
         } else {
             if (log.isDebugEnabled()) log.debug("onCompletion: we have no new video after {} mVideoInfo.id {}", mVideoId, mVideoInfo.id);
             if(mPlayerFrontend!=null) {

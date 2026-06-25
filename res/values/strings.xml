@@ -346,6 +346,7 @@
     <string name="pref_play_mode_entry_repeat_single">Repeat single</string>
     <string name="pref_play_mode_entry_binge">Binge watching</string>
     <string name="pref_introdb_autoskip_title">Skip intro/outro</string>
+    <string name="pref_introdb_skip_recap_title">Skip recap (binge)</string>
     <string name="introdb_autoskip_on">Auto-skip enabled</string>
     <string name="introdb_autoskip_off">Auto-skip disabled</string>
     <string name="introdb_autoskip">Auto-skip</string>
