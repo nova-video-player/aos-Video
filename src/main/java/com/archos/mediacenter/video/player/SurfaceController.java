@@ -132,6 +132,13 @@ public class SurfaceController {
         mEffectView =  (TextureView) mLp.findViewById(R.id.gl_surface_view);
         mSurfaceView =  (SurfaceView) mLp.findViewById(R.id.surface_view);
         mSubtitleView = (TextureView) mLp.findViewById(R.id.gl_subtitle_view); // NEW
+        // --- NATIVE OPENGL UPGRADE FIX ---
+        // CRITICAL: TextureViews are opaque by default! If we don't set this to false,
+        // Android thinks this view is a solid black box, optimizes out the 3D video
+        // underneath it, and causes the hardware MediaCodec to stall and crash!
+        if (mSubtitleView != null) {
+            mSubtitleView.setOpaque(false);
+        }
         if (mEffectEnable) {
             mView = mEffectView;
             mSurfaceView.setVisibility(View.GONE);
@@ -148,13 +155,13 @@ public class SurfaceController {
         if (enable) {
             //Need openGL, let's use TextureView
             mView = mEffectView;
-         } else {
-             //Do not need openGL, let's use SurfaceView
-             mView = mSurfaceView;
+        } else {
+            //Do not need openGL, let's use SurfaceView
+            mView = mSurfaceView;
         }
         mView.setVisibility(View.VISIBLE);
         mEffectEnable = enable;
-    	updateSurface();
+        updateSurface();
     }
     synchronized public void setMediaPlayer(IMediaPlayer player) {
         mMediaPlayer = player;
