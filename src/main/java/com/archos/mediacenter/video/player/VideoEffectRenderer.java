@@ -222,12 +222,18 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
     }
 
     @Override
-    public void onFrameAvailable(SurfaceTexture surfaceTexture)
-    {
-	try {
+    public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+        try {
+            // Check if 3D mode is active and trigger the synchronous readback draw
+            if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+                SubtitleEngine eng = Player.sPlayer.getSubtitleEngine();
+                if (eng.is3DMode()) {
+                    eng.draw3DSubtitles(mUISurface, mViewWidth, mViewHeight);
+                }
+            }
             mSourceFrameAvailable.put(mTrue);
         } catch (Exception e) {
-            Log.e(TAG, "FrameAvailable missed");
+            Log.e(TAG, "FrameAvailable missed", e);
         }
     }
 }

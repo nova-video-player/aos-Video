@@ -384,8 +384,8 @@ public class SubtitleManager {
         mOutline = outline;
 
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
-            // Your C-code uses bg_enabled to toggle between Box and Outline modes
-            Player.sPlayer.getSubtitleEngine().setOutlineWidth(outline ? 2.0f : 0.0f);
+            // Match legacy SubtitleTextView stroke width of 4.0f!
+            Player.sPlayer.getSubtitleEngine().setOutlineWidth(outline ? 4.0f : 0.0f);
         }
 
         if (mSubtitleTxtView != null) {
@@ -430,6 +430,20 @@ public class SubtitleManager {
         mUiMode = uiMode;
         if(mSubtitleTxtView!=null)
             mSubtitleTxtView.setUIMode(uiMode);
+
+        // Determine whether the native GL engine is now the active subtitle renderer.
+        // In SBS or TB mode, SubtitleEngine's EGL thread owns gl_subtitle_view exclusively.
+        // In 2D mode, the Java canvas path (SubtitleTextView.lockCanvas) is active instead.
+        // These two paths must never run simultaneously — doing so causes lockCanvas() to
+        // overwrite GL frames with a black clear, producing the black screen bug.
+        boolean glEngineIsActive = ((uiMode & VideoEffect.SBS_MODE) != 0)
+                                || ((uiMode & VideoEffect.TB_MODE) != 0);
+        setGLEngineActive(glEngineIsActive);
+
+        // Pass the 3D mode to the GPU compositor
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setUIMode(uiMode);
+        }
     }
 
     final class DispSubtitleThread extends Thread {
@@ -647,9 +661,80 @@ public class SubtitleManager {
         }
     }
     
+    // When true, the native SubtitleEngine GL thread owns gl_subtitle_view.
+    // The Java canvas subtitle path (SubtitleTextView.setRenderingSurface / lockCanvas)
+    // must be completely disconnected — two producers cannot share one SurfaceTexture,
+    // and calling lockCanvas() on a TextureView-backed Surface that has an active EGL
+    // context wipes the GL frame with a black canvas clear every time it fires.
+    private boolean mGLEngineActive = false;
+
+    public void setGLEngineActive(boolean active) {
+        if (log.isDebugEnabled()) log.debug("setGLEngineActive: {}", active);
+        mGLEngineActive = active;
+        if (active) {
+            // Disconnect the Java canvas path — SubtitleTextView stops calling lockCanvas().
+            disconnectJavaSubtitleSurface();
+
+            // CRITICAL: VideoEffectRenderer.draw() calls mUISurfaceTexture.updateTexImage()
+            // unconditionally every frame. mUISurface is the Surface backed by that
+            // SurfaceTexture. Now that we've disconnected all Java subtitle drawing,
+            // nothing will ever produce a buffer into mUISurfaceTexture's queue again.
+            // Calling updateTexImage() on a SurfaceTexture with an empty queue corrupts
+            // GL texture unit state on most Android drivers, turning the video black.
+            //
+            // Fix: post one transparent clear frame to mUiSurface right now, so
+            // mUISurfaceTexture has a valid initial buffer. VideoEffectRenderer will
+            // consume it on the first draw() call and then keep re-using that last
+            // frame (updateTexImage with no new buffer is safe once a valid frame exists).
+            postClearFrameToUISurface();
+        } else {
+            // Re-connect the Java path with whatever surface was last set.
+            setUIExternalSurface(mUiSurface);
+        }
+    }
+
+    // Posts a single fully-transparent frame to mUiSurface so that
+    // VideoEffectRenderer's mUISurfaceTexture always has a valid buffer.
+    private void postClearFrameToUISurface() {
+        if (mUiSurface == null) {
+            if (log.isDebugEnabled()) log.debug("postClearFrameToUISurface: mUiSurface is null, skipping");
+            return;
+        }
+        try {
+            android.graphics.Canvas c = mUiSurface.lockCanvas(null);
+            if (c != null) {
+                c.drawColor(0x00000000); // fully transparent clear
+                mUiSurface.unlockCanvasAndPost(c);
+                if (log.isDebugEnabled()) log.debug("postClearFrameToUISurface: posted transparent frame to keep mUISurfaceTexture queue valid");
+            }
+        } catch (Exception e) {
+            // Surface may be in an invalid state during init; log and continue.
+            log.warn("postClearFrameToUISurface: failed to post clear frame", e);
+        }
+    }
+
+    // Silently disconnects all Java-canvas subtitle drawing without clearing mUiSurface,
+    // so we can reconnect later if we switch back to 2D mode.
+    private void disconnectJavaSubtitleSurface() {
+        if (mSubtitleGfxView != null) mSubtitleGfxView.setRenderingSurface(null);
+        if (mSubtitleTxtView != null) mSubtitleTxtView.setRenderingSurface(null);
+        if (mSubtitleSpacer != null) mSubtitleSpacer.setRenderingSurface(null);
+    }
+
     public void setUIExternalSurface(Surface uiSurface) {
         if (log.isDebugEnabled()) log.debug("setUIExternalSurface {}", uiSurface);
         mUiSurface = uiSurface;
+        if (mGLEngineActive) {
+            // GL engine owns gl_subtitle_view. Do NOT forward this surface to the Java
+            // canvas path — it would be pointing at gl_surface_view (the VIDEO surface)
+            // and lockCanvas() calls would black out video frames on every subtitle update.
+            if (log.isDebugEnabled()) log.debug("setUIExternalSurface: GL engine active, skipping Java canvas path");
+            // But we DO need a single transparent frame in mUISurfaceTexture's queue so
+            // VideoEffectRenderer.draw()'s unconditional updateTexImage() doesn't corrupt
+            // GL state. Post it now that we have the real surface reference.
+            postClearFrameToUISurface();
+            return;
+        }
         if (mSubtitleGfxView != null) {
             mSubtitleGfxView.setRenderingSurface(uiSurface);
             if (log.isDebugEnabled()) log.debug("setUIExternalSurface setRenderingSurface for mSubtitleGfxView");
