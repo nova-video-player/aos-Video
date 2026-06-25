@@ -1494,11 +1494,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     /**
-     * Debug-only: surface the consolidated segment timings on screen once when DEBUG logging is
+     * Trace-only: surface the consolidated segment timings on screen once when TRACE logging is
      * enabled. Safe to call from a background fetch thread (posts to the main handler).
      */
     private void showIntroDbDebugToast(final String message) {
-        if (!log.isDebugEnabled() || message == null || message.isEmpty()) return;
+        if (!log.isTraceEnabled() || message == null || message.isEmpty()) return;
         mHandler.post(() -> Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show());
     }
 
