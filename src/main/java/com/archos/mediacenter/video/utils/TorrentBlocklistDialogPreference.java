@@ -15,8 +15,10 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
@@ -173,11 +175,30 @@ public class TorrentBlocklistDialogPreference extends Preference {
         }
     }
 
+    private boolean isContextValid() {
+        Context context = getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                break;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            return !activity.isFinishing() && !activity.isDestroyed();
+        }
+        return context != null;
+    }
+
     private void startDownload(final String url) {
-        if (url == null)
+        if (url == null || !isContextValid())
             return;
 
-        mProgress.show();
+        try {
+            mProgress.show();
+        } catch (Exception e) {
+            return;
+        }
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
@@ -246,15 +267,23 @@ public class TorrentBlocklistDialogPreference extends Preference {
             }
             final int finalResult = result;
             handler.post(() -> {
-                mProgress.dismiss();
-                if (200 <= finalResult && 300 > finalResult) {
-                    setSummary(url);
-                    mCurrentBlockList = url;
-                    getSharedPreferences().edit().putString(getKey(), url).commit();
-                    Toast.makeText(getContext(), getErrorString(200), Toast.LENGTH_SHORT).show();
-                    mView.findViewById(R.id.button).setVisibility(View.VISIBLE);
-                } else {
-                    showErrorDialog(getErrorString(finalResult));
+                if (isContextValid()) {
+                    try {
+                        if (mProgress.isShowing()) {
+                            mProgress.dismiss();
+                        }
+                    } catch (Exception e) {
+                        // ignore if already detached
+                    }
+                    if (200 <= finalResult && 300 > finalResult) {
+                        setSummary(url);
+                        mCurrentBlockList = url;
+                        getSharedPreferences().edit().putString(getKey(), url).commit();
+                        Toast.makeText(getContext(), getErrorString(200), Toast.LENGTH_SHORT).show();
+                        mView.findViewById(R.id.button).setVisibility(View.VISIBLE);
+                    } else {
+                        showErrorDialog(getErrorString(finalResult));
+                    }
                 }
             });
             executor.shutdown();
@@ -277,10 +306,17 @@ public class TorrentBlocklistDialogPreference extends Preference {
     }
 
     private void showErrorDialog(String message) {
-        new AlertDialog.Builder(getContext())
-                .setTitle(R.string.error_listing)
-                .setMessage(message)
-                .create().show();
+        if (!isContextValid()) {
+            return;
+        }
+        try {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.error_listing)
+                    .setMessage(message)
+                    .create().show();
+        } catch (Exception e) {
+            // ignore window manager exceptions if activity state changed asynchronously
+        }
     }
 
 }
