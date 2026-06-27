@@ -137,6 +137,7 @@ public class ChannelManager {
     }
 
     private void createChannels() {
+        if (mChannels == null) return;
         for(ChannelData channel : mChannels.values()) {
             if (channel.getId() == -1)
                 createChannel(channel);
@@ -156,6 +157,7 @@ public class ChannelManager {
     }
 
     private void refreshChannels() {
+        if (mChannels == null) return;
         for(ChannelData channel : mChannels.values()) {
             if (channel.getId() != -1)
                 refreshChannel(channel);
@@ -265,8 +267,10 @@ public class ChannelManager {
                 if (isCancelled) return;
                 handler.post(() -> {
                     if (isCancelled) return;
-                    initInternalChannels();
-                    onChannelsPrepared();
+                    if (mChannels != null) {
+                        initInternalChannels();
+                        onChannelsPrepared();
+                    }
                 });
             });
         }
@@ -286,17 +290,17 @@ public class ChannelManager {
             addInternalChannel(newChannels, mAllAnimes);
 
             Cursor listCursor = mListLoader.loadInBackground();
+            if (listCursor != null) {
+                try {
+                    int subsetIdColumn = listCursor.getColumnIndex(VideosByListLoader.COLUMN_SUBSET_ID);
+                    int subsetNameColumn = listCursor.getColumnIndex(VideosByListLoader.COLUMN_SUBSET_NAME);
+                    int videoIdsColumn = listCursor.getColumnIndex(VideosByListLoader.COLUMN_LIST_OF_VIDEO_IDS);
 
-            int subsetIdColumn = listCursor.getColumnIndex(VideosByListLoader.COLUMN_SUBSET_ID);
-            int subsetNameColumn = listCursor.getColumnIndex(VideosByListLoader.COLUMN_SUBSET_NAME);
-            int videoIdsColumn = listCursor.getColumnIndex(VideosByListLoader.COLUMN_LIST_OF_VIDEO_IDS);
-
-            try {
-                while (listCursor.moveToNext())
-                    addInternalChannel(newChannels, listCursor.getString(subsetNameColumn), listCursor.getLong(subsetIdColumn), listCursor.getString(videoIdsColumn));
-            }
-            finally {
-                listCursor.close();
+                    while (listCursor.moveToNext())
+                        addInternalChannel(newChannels, listCursor.getString(subsetNameColumn), listCursor.getLong(subsetIdColumn), listCursor.getString(videoIdsColumn));
+                } finally {
+                    listCursor.close();
+                }
             }
             
             mChannels = newChannels;
@@ -342,22 +346,34 @@ public class ChannelManager {
         }
 
         private void initInternalChannels() {
+            if (mChannels == null) {
+                Log.e(TAG, "initInternalChannels: mChannels is null");
+                return;
+            }
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             String allMoviesSortOrder = prefs.getString(VideoPreferencesCommon.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
             String allTvShowsSortOrder = prefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
             String allAnimesSortOrder = prefs.getString(VideoPreferencesCommon.KEY_ANIMES_SORT_ORDER, AnimesLoader.DEFAULT_SORT);
 
-            if (MainFragment.FEATURE_WATCH_UP_NEXT) mChannels.get(mWatchingUpNext).setLoader(new WatchingUpNextLoader(mContext));
-            mChannels.get(mRecentlyAdded).setLoader(new LastAddedLoader(mContext));
-            mChannels.get(mRecentlyPlayed).setLoader(new LastPlayedLoader(mContext));
-            mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
-            mChannels.get(mAllTvShows).setLoader(new AllTvshowsLoader(mContext, allTvShowsSortOrder, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
-            if  (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT))
-                mChannels.get(mAllAnimes).setLoader(new AnimesNShowsLoader(mContext, allAnimesSortOrder, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
-            else mChannels.get(mAllAnimes).setLoader(new AnimesLoader(mContext, allAnimesSortOrder, true, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+            if (MainFragment.FEATURE_WATCH_UP_NEXT && mChannels.get(mWatchingUpNext) != null) 
+                mChannels.get(mWatchingUpNext).setLoader(new WatchingUpNextLoader(mContext));
+            if (mChannels.get(mRecentlyAdded) != null)
+                mChannels.get(mRecentlyAdded).setLoader(new LastAddedLoader(mContext));
+            if (mChannels.get(mRecentlyPlayed) != null)
+                mChannels.get(mRecentlyPlayed).setLoader(new LastPlayedLoader(mContext));
+            if (mChannels.get(mAllMovies) != null)
+                mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+            if (mChannels.get(mAllTvShows) != null)
+                mChannels.get(mAllTvShows).setLoader(new AllTvshowsLoader(mContext, allTvShowsSortOrder, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+            if (mChannels.get(mAllAnimes) != null) {
+                if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT))
+                    mChannels.get(mAllAnimes).setLoader(new AnimesNShowsLoader(mContext, allAnimesSortOrder, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+                else
+                    mChannels.get(mAllAnimes).setLoader(new AnimesLoader(mContext, allAnimesSortOrder, true, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+            }
 
             for(ChannelData channel : mChannels.values()) {
-                if (channel.getListVideoIds() != null)
+                if (channel != null && channel.getListVideoIds() != null)
                     channel.setLoader(new VideosSelectionLoader(mContext, channel.getListVideoIds(), VideoLoader.DEFAULT_SORT));
             }
         }
