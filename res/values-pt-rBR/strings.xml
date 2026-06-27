@@ -430,13 +430,13 @@
     <string name="toast_subloader_quota_exceeded">Cota de download do OpenSubtitles excedida</string>
     <string name="opensubtitles_quota_reset_time_remaining">Cota reseta em %s</string>
     <string name="opensubtitles_summary_anonymous">Anônimo</string>
-    <string name="opensubtitles_summary_user_account">Conta do usuário</string>
+    <string name="opensubtitles_summary_user_account">Conta de usuário</string>
     <string name="opensubtitles_summary_not_checked">Ainda não verificado</string>
     <string name="opensubtitles_summary_credentials_verified">Credenciais verificadas</string>
     <string name="opensubtitles_summary_login_failed">Falha no login</string>
     <string name="opensubtitles_summary_service_unavailable">Serviço indisponível</string>
     <string name="opensubtitles_summary_quota_exhausted">Cota esgotada</string>
-    <string name="opensubtitles_summary_status">%1$s - %2$s</string>
+    <string name="opensubtitles_summary_status">%1$s · %2$s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Configurações de legenda</string>
     <string name="subtitle_sample_text">\"exemplo\"</string>
@@ -739,7 +739,7 @@
     <string name="audio_decoder_choice_summary">Define se a decodificação de áudio prioriza o FFmpeg ou o MediaCodec.</string>
     <string name="audio_decoder_auto">Automático</string>
     <string name="audio_decoder_prefer_ffmpeg">Preferir FFmpeg (padrão)</string>
-    <string name="audio_decoder_prefer_mediacodec">MediaCodec preferencial (experimental)</string>
+    <string name="audio_decoder_prefer_mediacodec">Preferir MediaCodec (experimental)</string>
     <string name="audio_interface_opensles">Forçar OpenSL ES</string>
     <string name="audio_interface_audiotrack">Forçar Audiotrack</string>
     <string name="audio_interface_any">Lógica padrão</string>
@@ -869,12 +869,12 @@
     <string name="connect_trakt">Conectar ao Trakt</string>
     <string name="trakt_sync_status_never">Ainda não sincronizado</string>
     <string name="trakt_sync_status_ok">Última sincronização: %1$s atrás</string>
-    <string name="trakt_sync_status_ok_skipped">Última sincronização: %1$s atrás. %2$d video(s) pendentes (duração desconhecida)</string>
-    <string name="trakt_sync_status_ok_meta_skipped">Última sincronização: %1$s atrás. %2$d captação(s) puladas (metadata perdida)</string>
-    <string name="trakt_sync_status_ok_both_skipped">Última sincronização: %1$s atrás. %2$d pendentes (duração desconhecida) %3$d captação(s) puladas (metadata perdidos)</string>
-    <string name="trakt_sync_status_error_network">Última sincronização perdida: erro de rede</string>
-    <string name="trakt_sync_status_error_auth">Erro de autenticação - por favor logue novamente</string>
-    <string name="trakt_sync_status_error_locked">Conta bloqueada - desbloqueie em trakt.tv</string>
+    <string name="trakt_sync_status_ok_skipped">Última sincronização: %1$s atrás · %2$d vídeo(s) pendente(s) (duração desconhecida)</string>
+    <string name="trakt_sync_status_ok_meta_skipped">Última sincronização: %1$s atrás · %2$d scrobble(s) ignorado(s) (metadados ausentes)</string>
+    <string name="trakt_sync_status_ok_both_skipped">Última sincronização: %1$s atrás · %2$d pendente(s) (duração desconhecida), %3$d scrobble(s) ignorado(s) (metadados ausentes)</string>
+    <string name="trakt_sync_status_error_network">Falha na última sincronização: erro de rede</string>
+    <string name="trakt_sync_status_error_auth">Erro de autenticação — por favor, faça login novamente</string>
+    <string name="trakt_sync_status_error_locked">Conta bloqueada — desbloqueie em trakt.tv</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="trakt_signin_summary_logged_sync">Logado em %1$s</string>
     <string name="show_all">Todos os vídeos</string>
@@ -1040,8 +1040,8 @@
     <string name="external_player_service_title">Reprodução em player externo</string>
     <string name="external_player_service_description">O Nova Video Player fornece conteúdo para um player externo</string>
     <string name="stop">Parar</string>
-    <string name="s_visual_impaired">visual não pareado</string>
-    <string name="s_audio_description">audio descrição</string>
+    <string name="s_visual_impaired">deficientes visuais</string>
+    <string name="s_audio_description">audiodescrição</string>
     <string name="s_descriptions">descrições</string>
     <string name="s_forced">forçado</string>
     <string name="s_original">original</string>
@@ -1049,5 +1049,5 @@
     <string name="s_dubbed">dublado</string>
     <string name="s_commentary">comentários</string>
     <string name="s_lyrics">letras</string>
-    <string name="s_karaoke">karaoke</string>
+    <string name="s_karaoke">karaokê</string>
 </resources>

@@ -309,6 +309,17 @@
     <string name="pref_play_mode_entry_repeat_folder">Répétition du dossier</string>
     <string name="pref_play_mode_entry_repeat_single">Répétition du fichier</string>
     <string name="pref_play_mode_entry_binge">Rafale (binge)</string>
+    <string name="pref_introdb_autoskip_title">Passer l\'intro/l\'outro</string>
+    <string name="pref_introdb_skip_recap_title">Passer le récap (rafale)</string>
+    <string name="introdb_autoskip_on">Saut automatique activé</string>
+    <string name="introdb_autoskip_off">Saut automatique désactivé</string>
+    <string name="introdb_autoskip">Saut automatique</string>
+    <string name="introdb_segment_intro">Intro</string>
+    <string name="introdb_segment_recap">Récap</string>
+    <string name="introdb_segment_outro">Outro</string>
+    <string name="introdb_segment_credits">Générique</string>
+    <string name="introdb_segment_preview">Aperçu</string>
+    <string name="introdb_segment_end">fin</string>
     <string name="pref_audio_parameters_title">Audio</string>
     <string name="pref_audio_filt_title">Boost audio</string>
     <string name="pref_audio_filt_night_mode">Mode nuit</string>
