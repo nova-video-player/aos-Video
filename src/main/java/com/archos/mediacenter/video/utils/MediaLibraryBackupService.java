@@ -30,6 +30,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.ServiceCompat;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediaprovider.DbHolder;
 import com.archos.mediaprovider.VideoDb;
 import com.archos.mediaprovider.video.VideoOpenHelper;
@@ -422,6 +423,11 @@ public class MediaLibraryBackupService extends Service {
 
     private void cleanupExistingData() {
         if (log.isDebugEnabled()) log.debug("cleanupExistingData: DELETING all existing media library data");
+
+        // Close database helper and connections before deleting files to release locks and files
+        if (log.isDebugEnabled()) log.debug("cleanupExistingData: closing database connections");
+        VideoDb.getHolder(this).close();
+        ShortcutDbAdapter.VIDEO.close();
 
         // Delete media database files
         File dbFile = getDatabasePath(DATABASE_NAME);

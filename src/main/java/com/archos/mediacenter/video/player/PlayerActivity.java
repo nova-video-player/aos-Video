@@ -40,6 +40,7 @@ import android.provider.Settings.SettingNotFoundException;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -59,7 +60,9 @@ import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -81,6 +84,7 @@ import com.archos.environment.ArchosUtils;
 import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.MediaUtils;
+import com.archos.mediacenter.utils.introdb.IntroSegments;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.CustomApplication;
@@ -408,6 +412,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private TVCardView mSubtitleTVCardView;
     private TVCardView mAudioTracksTVCardView;
     private TVMenu mAudioTracksTVMenu;
+    private TVMenu mPlayModeTVMenu;
+    private TVMenuItem mIntroSummaryMenuItem;
     private boolean isTVMode;
     private TorrentObserverService mTorrent;
     private int mTorrentFilePosition = -1;
@@ -2157,6 +2163,33 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
     }
 
+    // The intro/outro timings are fetched asynchronously and may not be known when the Play
+    // mode tile is first built. This adds (or updates) the summary line inside the Play mode
+    // menu once the segments become available; safe to call repeatedly (e.g. on each menu show).
+    public void refreshPlayModeIntroSummary() {
+        if (mPlayModeTVMenu == null) return;
+        IntroSegments segments = (PlayerService.sPlayerService != null) ? PlayerService.sPlayerService.getIntroSegments() : null;
+        String summary = (segments != null) ? segments.toSummaryString(PlayerService.introLabels(this), getString(R.string.introdb_segment_end)) : null;
+        if (summary == null) return;
+        if (mIntroSummaryMenuItem == null) {
+            mPlayModeTVMenu.createAndAddSeparator();
+            mIntroSummaryMenuItem = mPlayModeTVMenu.createAndAddTVMenuItem(summary, false);
+            ViewGroup.LayoutParams lp = mIntroSummaryMenuItem.getLayoutParams();
+            if (lp != null) {
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                mIntroSummaryMenuItem.setLayoutParams(lp);
+            }
+        } else {
+            mIntroSummaryMenuItem.setText(summary);
+        }
+        TextView summaryText = (TextView) mIntroSummaryMenuItem.findViewById(R.id.info_text);
+        if (summaryText != null) {
+            summaryText.setSingleLine(false);
+            summaryText.setMaxLines(6);
+            summaryText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
+        }
+    }
+
     public void createPlayerTVMenu() {
         if (mPlayerController != null && mPlayerController.getTVMenuAdapter() != null) {
             TVMenuAdapter tma = mPlayerController.getTVMenuAdapter();
@@ -2327,7 +2360,36 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             });
 
             tvmPlayMode.setItems(R.array.pref_play_mode_entries, PlayerService.sPlayerService.mPlayMode, true);
+
+            tvmPlayMode.createAndAddSeparator();
+            final TVMenuItem tvmAutoSkip = tvmPlayMode.createAndAddTVSwitchableMenuItem(
+                    getResources().getString(R.string.pref_introdb_autoskip_title),
+                    mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED));
+            tvmAutoSkip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean enabled = !mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED);
+                    mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_ENABLED, enabled).apply();
+                    tvmAutoSkip.setChecked(enabled);
+                }
+            });
+
+            final TVMenuItem tvmSkipRecap = tvmPlayMode.createAndAddTVSwitchableMenuItem(
+                    getResources().getString(R.string.pref_introdb_skip_recap_title),
+                    mPreferences.getBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, PlayerService.DEFAULT_INTRODB_SKIP_RECAP));
+            tvmSkipRecap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean enabled = !mPreferences.getBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, PlayerService.DEFAULT_INTRODB_SKIP_RECAP);
+                    mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, enabled).apply();
+                    tvmSkipRecap.setChecked(enabled);
+                }
+            });
+
+            mPlayModeTVMenu = tvmPlayMode;
+            mIntroSummaryMenuItem = null;
             tcv.addOtherView(tvmPlayMode);
+            refreshPlayModeIntroSummary();
             //[/playmode]
             /*
             //[sleep timer]
@@ -2610,12 +2672,69 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             case MENU_PLAYMODE_ID: {
                 AlertDialog.Builder adb = new AlertDialog.Builder(this);
                 adb.setTitle(R.string.pref_play_mode_title);
-                adb.setSingleChoiceItems(R.array.pref_play_mode_entries, PlayerService.sPlayerService.mPlayMode, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        PlayerService.sPlayerService.menuChangePlayMode(which);
-                        dialog.dismiss();
+                final CharSequence[] playModeEntries = mContext.getResources().getTextArray(R.array.pref_play_mode_entries);
+                final ArrayList<RadioButton> playModeRbs = new ArrayList<RadioButton>();
+
+                LinearLayout content = new LinearLayout(mContext);
+                content.setOrientation(LinearLayout.VERTICAL);
+                int pad = (int) (16 * getResources().getDisplayMetrics().density);
+                content.setPadding(pad, pad / 2, pad, pad / 2);
+
+                for (int i = 0; i < playModeEntries.length; i++) {
+                    final int position2 = i;
+                    RadioButton rb = new RadioButton(mContext);
+                    rb.setText(playModeEntries[i]);
+                    rb.setPadding(pad, pad, pad, pad);
+                    rb.setChecked(PlayerService.sPlayerService.mPlayMode == i);
+                    playModeRbs.add(rb);
+                    rb.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            PlayerService.sPlayerService.menuChangePlayMode(position2);
+                            for (RadioButton other : playModeRbs)
+                                other.setChecked(other == v);
+                        }
+                    });
+                    content.addView(rb);
+                }
+
+                Switch tb = new Switch(mContext);
+                tb.setText(R.string.pref_introdb_autoskip_title);
+                tb.setPadding(pad, pad, pad, pad);
+                tb.setChecked(mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED));
+                tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_ENABLED, isChecked).apply();
                     }
                 });
+                content.addView(tb);
+
+                Switch tbRecap = new Switch(mContext);
+                tbRecap.setText(R.string.pref_introdb_skip_recap_title);
+                tbRecap.setPadding(pad, pad, pad, pad);
+                tbRecap.setChecked(mPreferences.getBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, PlayerService.DEFAULT_INTRODB_SKIP_RECAP));
+                tbRecap.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, isChecked).apply();
+                    }
+                });
+                content.addView(tbRecap);
+
+                IntroSegments introSegmentsPhone = (PlayerService.sPlayerService != null) ? PlayerService.sPlayerService.getIntroSegments() : null;
+                String introSummaryPhone = (introSegmentsPhone != null) ? introSegmentsPhone.toSummaryString(PlayerService.introLabels(this), getString(R.string.introdb_segment_end)) : null;
+                if (introSummaryPhone != null) {
+                    TextView footer = new TextView(mContext);
+                    footer.setText(introSummaryPhone);
+                    footer.setEnabled(false);
+                    footer.setPadding(pad, pad / 2, pad, pad / 2);
+                    content.addView(footer);
+                }
+
+                ScrollView scroll = new ScrollView(mContext);
+                scroll.addView(content);
+                adb.setView(scroll);
                 adb.create().show();
 
                 return true;
@@ -4148,6 +4267,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
         public void onFirstPlay() {
             mPlayerController.hide();
+        }
+        public void onIntroDbReady() {
+            refreshPlayModeIntroSummary();
         }
         public void onPause(int state) {
 

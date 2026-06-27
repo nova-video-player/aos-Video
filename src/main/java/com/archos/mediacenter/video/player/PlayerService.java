@@ -40,6 +40,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ServiceCompat;
@@ -54,6 +55,9 @@ import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.filecoreextension.upnp2.StreamUriFinder;
 import com.archos.mediacenter.utils.ISO639codes;
+import com.archos.mediacenter.utils.introdb.IntroDbManager;
+import com.archos.mediacenter.utils.introdb.IntroDbQueryParams;
+import com.archos.mediacenter.utils.introdb.IntroSegments;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
@@ -75,8 +79,10 @@ import com.archos.mediascraper.ScrapeDetailResult;
 import com.archos.environment.ArchosUtils;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -422,6 +428,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mVideoObserver = new VideoObserver(new Handler(Looper.getMainLooper()));
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        // IntroDB: init the GET-only multi-provider facade (enables the shared OkHttp disk cache)
+        IntroDbManager.init(getApplicationContext());
+        mAutoSkipTask = new Runnable() {
+            @Override
+            public void run() {
+                autoSkipIfNeeded();
+                mHandler.postDelayed(mAutoSkipTask, AUTO_SKIP_INTERVAL);
+            }
+        };
+
         if (Trakt.isTraktV2Enabled(this, mPreferences) && !PrivateMode.isActive()) {
             mTraktClient = new TraktService.Client(this, mTraktListener, false);
         }
@@ -466,6 +482,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mForceSingleRepeatMode = isDemoMode;
         mHideSubtitles = mPreferences.getBoolean(KEY_HIDE_SUBTITLES, false);
         mPlayMode = mPreferences.getInt(KEY_PLAY_MODE, PLAYMODE_SINGLE);
+        // Any start clears the binge-transition flag; onCompletion re-sets it when auto-advancing.
+        mArrivedViaBingeTransition = false;
         mResume = intent.getIntExtra(RESUME, RESUME_NO);
         if (log.isDebugEnabled()) log.debug("PlayerService.onStart: read mResume={} from intent", mResume);
 
@@ -878,6 +896,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
         void onFirstPlay();
         // mHandler.sendMessage(mHandler.obtainMessage(MSG_TORRENT_STARTED));
+
+        // Called on the main thread once intro/outro segments have been fetched, so the
+        // UI (e.g. the Play mode tile summary) can refresh if it is already displayed.
+        void onIntroDbReady();
     }
 
     public void removePlayerFrontend(PlayerFrontend playerFrontend, boolean prepareForSurfaceSwitch) {
@@ -975,6 +997,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             }
             if (PERIODIC_BOOKMARK_SAVE)
                 mHandler.removeCallbacks(mAutoSaveTask);
+            if (mAutoSkipTask != null)
+                mHandler.removeCallbacks(mAutoSkipTask);
             mPlayer.pause(PlayerController.STATE_OTHER);
             mPlayer.stopPlayback();
             mPlayerState = PlayerState.STOPPED;
@@ -1186,6 +1210,34 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private VideoObserver mVideoObserver;
     private boolean mHasRequestedIndexing;
     private VideoDbInfo mVideoInfo;
+
+    /*
+        IntroDB skip intro/outro (GET only, proof of concept)
+     */
+    // auto-skip toggle, shared with the in-player play-mode tile/menu (TV + phone/tablet)
+    public static final String KEY_INTRODB_ENABLED = "introdb_enabled";
+    public static final boolean DEFAULT_INTRODB_ENABLED = false;
+    // recap auto-skip toggle: off by default, and only applied while binge-watching, i.e. in
+    // PLAYMODE_BINGE and on an episode we auto-advanced into (mArrivedViaBingeTransition).
+    public static final String KEY_INTRODB_SKIP_RECAP = "introdb_skip_recap";
+    public static final boolean DEFAULT_INTRODB_SKIP_RECAP = false;
+    // how often the auto-skip task checks the playback position against the fetched segments
+    private static final long AUTO_SKIP_INTERVAL = 1000;
+    // If a skip target lands within this margin of the media end, treat it as end-of-video
+    // (seeking right to EOF fails and breaks playback) and complete naturally instead.
+    private static final int AUTO_SKIP_END_MARGIN_MS = 5000;
+    // normalized segments fetched once per playback (fused from all providers by IntroDbManager),
+    // read from the player tick for auto-skip
+    private volatile IntroSegments mIntroSegments;
+    // uri the cached result (or in-flight fetch) belongs to, guards against duplicate/stale fetches
+    private volatile Uri mIntroDbFetchedUri;
+    // periodic task that auto-skips intro/recap segments during playback
+    private Runnable mAutoSkipTask;
+    // end (ms) of the last segment we auto-skipped, so we don't fight a user who seeks back into it
+    private long mLastAutoSkippedEndMs = -1;
+    // true when the current episode was reached by auto-advancing from the previous one (binge),
+    // not by the user manually starting it. Recap auto-skip only fires when this is set.
+    private boolean mArrivedViaBingeTransition = false;
     private BaseTags mScraperTag;
     private IndexHelper mIndexHelper;
     private TraktService.Client mTraktClient = null;
@@ -1298,6 +1350,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onDestroy(){
         super.onDestroy();
         if (log.isDebugEnabled()) log.debug("onDestroy");
+        if (mAutoSkipTask != null)
+            mHandler.removeCallbacks(mAutoSkipTask);
         saveVideoStateIfReady();
         if (log.isDebugEnabled()) log.debug("onDestroy: release mediaSessionCompat");
         if (mSession != null) {
@@ -1365,7 +1419,158 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             setAudioFilt();
             if (PERIODIC_BOOKMARK_SAVE)
                 mHandler.postDelayed(mAutoSaveTask, AUTO_SAVE_INTERVAL);
+            fetchIntroDbIfNeeded();
+            mHandler.removeCallbacks(mAutoSkipTask);
+            mHandler.postDelayed(mAutoSkipTask, AUTO_SKIP_INTERVAL);
         }
+    }
+
+    /**
+     * Fetch intro/outro segments for the current video via the multi-provider IntroDbManager
+     * (GET only, no api key). Runs at most once per video on a background thread; the fused,
+     * provider-agnostic result is cached in mIntroSegments for the auto-skip check in the tick.
+     */
+    private void fetchIntroDbIfNeeded() {
+        if (mVideoInfo == null) return;
+        if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED)
+                && !mPreferences.getBoolean(KEY_INTRODB_SKIP_RECAP, DEFAULT_INTRODB_SKIP_RECAP)) return;
+        if (!mVideoInfo.isScraped) {
+            if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: not scraped, skipping");
+            return;
+        }
+        final Uri uri = mVideoInfo.uri;
+        if (uri == null) return;
+        // already fetched (or fetch in flight) for this video
+        if (uri.equals(mIntroDbFetchedUri)) return;
+        mIntroDbFetchedUri = uri;
+        mIntroSegments = null; // drop any stale data from the previous video
+        mLastAutoSkippedEndMs = -1;
+
+        final IntroDbQueryParams query = buildIntroDbQuery();
+        if (query == null) return;
+
+        if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: querying {}", query);
+        new Thread("IntroDbFetch") {
+            public void run() {
+                IntroSegments segments = IntroDbManager.fetch(query);
+                if (uri.equals(mIntroDbFetchedUri)) {
+                    mIntroSegments = segments;
+                    if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: stored {}", segments);
+                    if (segments != null) {
+                        showIntroDbDebugToast(segments.toDebugString(introLabels(getApplicationContext())));
+                        mHandler.post(() -> { if (mPlayerFrontend != null) mPlayerFrontend.onIntroDbReady(); });
+                    }
+                } else {
+                    if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: video changed, dropping result");
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * Build the unified query for IntroDbManager from the current scraped metadata, carrying the
+     * identifiers both providers need (tmdb id for theintrodb.org, show imdb id + season/episode
+     * for introdb.app). Returns null when no usable identifier is available.
+     */
+    private IntroDbQueryParams buildIntroDbQuery() {
+        final boolean isShow = mVideoInfo.isShow;
+        IntroDbQueryParams params = new IntroDbQueryParams();
+        params.setIsShow(isShow);
+        try {
+            String idStr = isShow ? mVideoInfo.scraperShowId : mVideoInfo.scraperMovieId;
+            if (idStr != null && !idStr.isEmpty()) params.setTmdbId(Integer.valueOf(idStr));
+        } catch (NumberFormatException e) {
+            log.warn("buildIntroDbQuery: invalid tmdb id");
+        }
+        if (isShow) {
+            // show imdb id is what introdb.app keys on
+            String imdbId = mVideoInfo.scraperShowImdbId;
+            if (imdbId != null && !imdbId.isEmpty()) params.setImdbId(imdbId);
+            if (mVideoInfo.scraperSeasonNr > 0) params.setSeason(mVideoInfo.scraperSeasonNr);
+            if (mVideoInfo.scraperEpisodeNr > 0) params.setEpisode(mVideoInfo.scraperEpisodeNr);
+        }
+        long durationMs = getEffectiveDurationMs();
+        if (durationMs > 0) params.setDurationMs(durationMs);
+        if (!params.hasIdentifier()) {
+            if (log.isDebugEnabled()) log.debug("buildIntroDbQuery: no identifier, skipping");
+            return null;
+        }
+        return params;
+    }
+
+    /** Fused intro/outro segments for the current video, or null if not available yet. */
+    public IntroSegments getIntroSegments() {
+        return mIntroSegments;
+    }
+
+    /**
+     * Trace-only: surface the consolidated segment timings on screen once when TRACE logging is
+     * enabled. Safe to call from a background fetch thread (posts to the main handler).
+     */
+    private void showIntroDbDebugToast(final String message) {
+        if (!log.isTraceEnabled() || message == null || message.isEmpty()) return;
+        mHandler.post(() -> Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show());
+    }
+
+    /**
+     * Auto-skip check, run periodically while playing. If the current position falls inside an
+     * intro or recap segment, seek to the end of that segment. Credits/outro/preview are
+     * intentionally left out of the proof of concept (skipping them could jump to end of media).
+     */
+    private void autoSkipIfNeeded() {
+        IntroSegments segments = mIntroSegments;
+        if (segments == null) {
+            if (log.isTraceEnabled()) log.trace("autoSkipIfNeeded: no data yet");
+            return;
+        }
+        boolean playing = mPlayer != null && Player.sPlayer != null && mPlayer.isPlaying();
+        int position = (Player.sPlayer != null) ? Player.sPlayer.getCurrentPosition() : -1;
+        if (log.isDebugEnabled())
+            log.debug("autoSkipIfNeeded: tick pos={} playing={} pref={}",
+                    position, playing, mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED));
+        if (mPlayer == null || Player.sPlayer == null || !mPlayer.isPlaying()) return;
+        boolean introEnabled = mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED);
+        // Recap is only skipped while actually binge-watching: pref on, binge mode, and on an
+        // episode we auto-advanced into (so the very first episode of the binge keeps its recap).
+        boolean recapEnabled = mPreferences.getBoolean(KEY_INTRODB_SKIP_RECAP, DEFAULT_INTRODB_SKIP_RECAP)
+                && mPlayMode == PLAYMODE_BINGE && mArrivedViaBingeTransition;
+        if (!introEnabled && !recapEnabled) return;
+        if (position < 0) return;
+        IntroSegments.Skip skip = segments.findSkip(position, introEnabled, recapEnabled);
+        if (skip == null) return;
+        // don't re-skip the same segment if the user deliberately seeks back into it
+        if (skip.endMs == mLastAutoSkippedEndMs) return;
+        mLastAutoSkippedEndMs = skip.endMs;
+        // When the skip target reaches the end of the media (e.g. an outro that runs to the
+        // file end), seeking there fails ("stream_seek time err") and breaks playback. End the
+        // video naturally instead, which advances to the next episode (binge) or stops cleanly.
+        int duration = Player.sPlayer.getDuration();
+        if (duration > 0 && skip.endMs >= duration - AUTO_SKIP_END_MARGIN_MS) {
+            if (log.isDebugEnabled()) log.debug("autoSkipIfNeeded: skipping {} from {} reaches end ({}), completing", skip.type, position, duration);
+            showAutoSkipToast(skip.type);
+            onCompletion();
+            return;
+        }
+        if (log.isDebugEnabled()) log.debug("autoSkipIfNeeded: skipping {} from {} to {}", skip.type, position, skip.endMs);
+        Player.sPlayer.seekTo((int) skip.endMs);
+        showAutoSkipToast(skip.type);
+    }
+
+    // User-facing feedback when an auto-skip fires (the user opted in via the Play mode toggle).
+    private void showAutoSkipToast(final IntroSegments.Type type) {
+        final String message = getString(R.string.introdb_autoskip) + ": " + introLabels(getApplicationContext()).get(type);
+        mHandler.post(() -> Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show());
+    }
+
+    // Translatable display labels for each segment type, resolved from string resources.
+    public static Map<IntroSegments.Type, String> introLabels(Context ctx) {
+        Map<IntroSegments.Type, String> labels = new EnumMap<>(IntroSegments.Type.class);
+        labels.put(IntroSegments.Type.INTRO, ctx.getString(R.string.introdb_segment_intro));
+        labels.put(IntroSegments.Type.RECAP, ctx.getString(R.string.introdb_segment_recap));
+        labels.put(IntroSegments.Type.OUTRO, ctx.getString(R.string.introdb_segment_outro));
+        labels.put(IntroSegments.Type.CREDITS, ctx.getString(R.string.introdb_segment_credits));
+        labels.put(IntroSegments.Type.PREVIEW, ctx.getString(R.string.introdb_segment_preview));
+        return labels;
     }
 
     public void requestIndexAndScrap(){
@@ -1435,6 +1640,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mNextVideoId = -1;
             mLastPosition = 0;
             onStart(mIntent);
+            // onStart() cleared the flag; mark that this episode was auto-advanced into, so recap
+            // auto-skip may apply (it additionally requires PLAYMODE_BINGE).
+            mArrivedViaBingeTransition = true;
         } else {
             if (log.isDebugEnabled()) log.debug("onCompletion: we have no new video after {} mVideoInfo.id {}", mVideoId, mVideoInfo.id);
             if(mPlayerFrontend!=null) {
