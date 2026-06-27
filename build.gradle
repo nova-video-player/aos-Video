@@ -13,7 +13,7 @@ buildscript {
 
 plugins {
     id "com.github.triplet.play" version "4.0.0" apply false
-    id "io.sentry.android.gradle" version "6.6.0" apply false
+    id "io.sentry.android.gradle" version "6.13.0" apply false
     //id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
@@ -357,7 +357,7 @@ androidComponents {
 dependencies {
     implementation project(':FileCoreLibrary')
     implementation project(':MediaLib')
-    implementation 'androidx.lifecycle:lifecycle-process:2.10.0'
+    implementation 'androidx.lifecycle:lifecycle-process:2.11.0'
     // needed for old Android versions when using java 17
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
@@ -384,15 +384,15 @@ dependencies {
     implementation 'androidx.tvprovider:tvprovider:1.1.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:5.4.0'
     implementation 'com.github.tony19:logback-android:3.0.0'
-    implementation 'io.sentry:sentry-android:8.43.2'
-    implementation 'io.sentry:sentry:8.43.2'
+    implementation 'io.sentry:sentry-android:8.46.0'
+    implementation 'io.sentry:sentry:8.46.0'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.23.0'
     testImplementation 'org.robolectric:robolectric:4.16.1'
     testImplementation 'androidx.test:core:1.7.0'
     testImplementation 'org.slf4j:slf4j-api:2.0.18'
-    testImplementation 'ch.qos.logback:logback-classic:1.5.34'
+    testImplementation 'ch.qos.logback:logback-classic:1.5.37'
 }
 
 configurations { // try to exclude device specific libraries interfering
