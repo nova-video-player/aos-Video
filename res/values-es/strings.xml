@@ -309,6 +309,17 @@
     <string name="pref_play_mode_entry_repeat_folder">Repetir carpeta</string>
     <string name="pref_play_mode_entry_repeat_single">Repetir único</string>
     <string name="pref_play_mode_entry_binge">Maratón de series</string>
+    <string name="pref_introdb_autoskip_title">Saltar cabecera/cierre</string>
+    <string name="pref_introdb_skip_recap_title">Saltar resumen (maratón)</string>
+    <string name="introdb_autoskip_on">Autosalto activado</string>
+    <string name="introdb_autoskip_off">Autosalto desactivado</string>
+    <string name="introdb_autoskip">Autosalto</string>
+    <string name="introdb_segment_intro">Cabecera</string>
+    <string name="introdb_segment_recap">Resumen</string>
+    <string name="introdb_segment_outro">Cierre</string>
+    <string name="introdb_segment_credits">Créditos</string>
+    <string name="introdb_segment_preview">Avance</string>
+    <string name="introdb_segment_end">fin</string>
     <string name="pref_audio_parameters_title">Audio</string>
     <string name="pref_audio_filt_title">Potenciador de audio</string>
     <string name="pref_audio_filt_night_mode">Modo noche</string>
