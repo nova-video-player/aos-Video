@@ -1214,13 +1214,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     /*
         IntroDB skip intro/outro (GET only, proof of concept)
      */
-    // auto-skip toggle, shared with the in-player play-mode tile/menu (TV + phone/tablet)
+    // auto-skip toggle, shared with the in-player play-mode tile/menu (TV + phone/tablet).
+    // Recap has no separate toggle: it is skipped automatically when this toggle is on AND we
+    // are genuinely binge-watching (PLAYMODE_BINGE on an auto-advanced episode), see autoSkipIfNeeded.
     public static final String KEY_INTRODB_ENABLED = "introdb_enabled";
     public static final boolean DEFAULT_INTRODB_ENABLED = false;
-    // recap auto-skip toggle: off by default, and only applied while binge-watching, i.e. in
-    // PLAYMODE_BINGE and on an episode we auto-advanced into (mArrivedViaBingeTransition).
-    public static final String KEY_INTRODB_SKIP_RECAP = "introdb_skip_recap";
-    public static final boolean DEFAULT_INTRODB_SKIP_RECAP = false;
     // how often the auto-skip task checks the playback position against the fetched segments
     private static final long AUTO_SKIP_INTERVAL = 1000;
     // If a skip target lands within this margin of the media end, treat it as end-of-video
@@ -1432,8 +1430,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      */
     private void fetchIntroDbIfNeeded() {
         if (mVideoInfo == null) return;
-        if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED)
-                && !mPreferences.getBoolean(KEY_INTRODB_SKIP_RECAP, DEFAULT_INTRODB_SKIP_RECAP)) return;
+        if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED)) return;
         if (!mVideoInfo.isScraped) {
             if (log.isDebugEnabled()) log.debug("fetchIntroDbIfNeeded: not scraped, skipping");
             return;
@@ -1530,11 +1527,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     position, playing, mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED));
         if (mPlayer == null || Player.sPlayer == null || !mPlayer.isPlaying()) return;
         boolean introEnabled = mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED);
-        // Recap is only skipped while actually binge-watching: pref on, binge mode, and on an
-        // episode we auto-advanced into (so the very first episode of the binge keeps its recap).
-        boolean recapEnabled = mPreferences.getBoolean(KEY_INTRODB_SKIP_RECAP, DEFAULT_INTRODB_SKIP_RECAP)
-                && mPlayMode == PLAYMODE_BINGE && mArrivedViaBingeTransition;
-        if (!introEnabled && !recapEnabled) return;
+        if (!introEnabled) return;
+        // Recap has no separate toggle: it is additionally skipped only while actually
+        // binge-watching, i.e. in binge mode on an episode we auto-advanced into (so the very
+        // first episode of the binge keeps its recap).
+        boolean recapEnabled = mPlayMode == PLAYMODE_BINGE && mArrivedViaBingeTransition;
         if (position < 0) return;
         IntroSegments.Skip skip = segments.findSkip(position, introEnabled, recapEnabled);
         if (skip == null) return;

@@ -2374,18 +2374,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
             });
 
-            final TVMenuItem tvmSkipRecap = tvmPlayMode.createAndAddTVSwitchableMenuItem(
-                    getResources().getString(R.string.pref_introdb_skip_recap_title),
-                    mPreferences.getBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, PlayerService.DEFAULT_INTRODB_SKIP_RECAP));
-            tvmSkipRecap.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    boolean enabled = !mPreferences.getBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, PlayerService.DEFAULT_INTRODB_SKIP_RECAP);
-                    mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, enabled).apply();
-                    tvmSkipRecap.setChecked(enabled);
-                }
-            });
-
             mPlayModeTVMenu = tvmPlayMode;
             mIntroSummaryMenuItem = null;
             tcv.addOtherView(tvmPlayMode);
@@ -2709,18 +2697,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                 });
                 content.addView(tb);
-
-                Switch tbRecap = new Switch(mContext);
-                tbRecap.setText(R.string.pref_introdb_skip_recap_title);
-                tbRecap.setPadding(pad, pad, pad, pad);
-                tbRecap.setChecked(mPreferences.getBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, PlayerService.DEFAULT_INTRODB_SKIP_RECAP));
-                tbRecap.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_SKIP_RECAP, isChecked).apply();
-                    }
-                });
-                content.addView(tbRecap);
 
                 IntroSegments introSegmentsPhone = (PlayerService.sPlayerService != null) ? PlayerService.sPlayerService.getIntroSegments() : null;
                 String introSummaryPhone = (introSegmentsPhone != null) ? introSegmentsPhone.toSummaryString(PlayerService.introLabels(this), getString(R.string.introdb_segment_end)) : null;

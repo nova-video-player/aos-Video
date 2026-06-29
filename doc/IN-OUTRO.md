@@ -12,26 +12,27 @@ fusion** half is documented in `MediaLib/doc/IN-OUTRO.md`.
 
 ## User-facing controls
 
-Two independent toggles, both **off by default**, exposed in the in-player
-**Play mode** UI (TV tile and phone/tablet dialog), persisted in shared prefs:
+A **single** toggle, **off by default**, exposed in the in-player **Play mode**
+UI (TV tile and phone/tablet dialog), persisted in shared prefs:
 
 | Preference key | Default | Label | Effect |
 |----------------|---------|-------|--------|
-| `introdb_enabled` (`KEY_INTRODB_ENABLED`) | false | "Skip intro/outro" | enables auto-skip of intro/credits/outro/preview |
-| `introdb_skip_recap` (`KEY_INTRODB_SKIP_RECAP`) | false | "Skip recap (binge)" | enables auto-skip of recap, but only under binge conditions |
+| `introdb_enabled` (`KEY_INTRODB_ENABLED`) | false | "Skip intro/outro" | enables auto-skip of intro/credits/outro/preview, and of recap while binge-watching |
 
-The Play mode UI also renders the fetched segment timings (via
+There is **no separate recap toggle**: recap skipping is derived from this one
+toggle plus the binge conditions below, so the user has a single control to
+understand. The Play mode UI also renders the fetched segment timings (via
 `IntroSegments.toSummaryString`) so the user can see what was found.
 
 ## Specification
 
 ### What gets skipped, and when
 
-- **Standard skip** (`introdb_enabled`): applies to `INTRO`, `CREDITS`,
-  `OUTRO`, `PREVIEW`, in that priority order.
-- **Recap skip** (`introdb_skip_recap`): applies to `RECAP` **only** and only
-  when **all** of the following hold:
-  1. `introdb_skip_recap` is enabled, **and**
+- **Standard skip**: when `introdb_enabled` is on, applies to `INTRO`,
+  `CREDITS`, `OUTRO`, `PREVIEW`, in that priority order.
+- **Recap skip**: applies to `RECAP` **only** and only when **all** of the
+  following hold:
+  1. `introdb_enabled` is on (the same single toggle), **and**
   2. play mode is `PLAYMODE_BINGE`, **and**
   3. the current episode was reached by **auto-advancing** from the previous
      one (`mArrivedViaBingeTransition`), not by the user manually opening it.
@@ -96,8 +97,7 @@ segment summary when tracing is enabled.
 
 ### Fetch (`fetchIntroDbIfNeeded`)
 
-- Skips entirely if **both** toggles are off (no network unless a feature that
-  needs the data is enabled).
+- Skips entirely if the toggle is off (no network unless the feature is enabled).
 - Requires scraped metadata; builds an `IntroDbQueryParams` from the scraper
   ids (`buildIntroDbQuery`); fetches once per video URI on a background
   `IntroDbFetch` thread; caches the fused `IntroSegments` in `mIntroSegments`.
@@ -111,10 +111,9 @@ segment summary when tracing is enabled.
 ```
 if (!playing) return;
 introEnabled = pref(KEY_INTRODB_ENABLED);
-recapEnabled = pref(KEY_INTRODB_SKIP_RECAP)
-               && mPlayMode == PLAYMODE_BINGE
-               && mArrivedViaBingeTransition;
-if (!introEnabled && !recapEnabled) return;
+if (!introEnabled) return;
+// recap rides on the same toggle, gated by the binge conditions
+recapEnabled = mPlayMode == PLAYMODE_BINGE && mArrivedViaBingeTransition;
 
 skip = segments.findSkip(position, introEnabled, recapEnabled);   // MediaLib
 if (skip == null) return;
@@ -154,7 +153,8 @@ in the eligible set) until stable, yielding one jump target.
 - Set to **false** on every `onStart` (a manual start of any video).
 - Set to **true** in `onCompletion` immediately after auto-advancing into the
   next episode (`onStart(mIntent)` with the next URI).
-- Read in `autoSkipIfNeeded` as one of the three recap-skip conditions.
+- Read in `autoSkipIfNeeded` as one of the recap-skip conditions (alongside the
+  enabled toggle and `PLAYMODE_BINGE`).
 
 This is what distinguishes "I deliberately opened episode 3" (keep recap) from
 "episode 3 started because episode 2 finished while I was binging" (skip recap).
@@ -162,13 +162,14 @@ This is what distinguishes "I deliberately opened episode 3" (keep recap) from
 ### Play mode UI (`PlayerActivity`)
 
 - **TV**: the Play mode tile (`createPlayerTVMenu`) lists the play modes, then a
-  separator, then the "Skip intro/outro" switch, then the "Skip recap (binge)"
-  switch; the fetched segment summary is appended as a non-focusable item at the
-  bottom (`refreshPlayModeIntroSummary`, refreshed on menu open and on
-  `onIntroDbReady`).
+  separator, then the single "Skip intro/outro" switch; the fetched segment
+  summary is appended as a non-focusable item at the bottom
+  (`refreshPlayModeIntroSummary`, refreshed on menu open and on `onIntroDbReady`).
 - **Phone/tablet**: the Play mode dialog (`MENU_PLAYMODE_ID`) is a custom
   `LinearLayout` inside a `ScrollView` (`adb.setView`): a `RadioButton` per play
-  mode, the two `Switch` toggles, then the segment-timings summary at the bottom.
+  mode, the single "Skip intro/outro" `Switch`, then the segment-timings summary
+  at the bottom.
 
-Both toggles only write their respective preference; the actual skipping is
-entirely driven by `autoSkipIfNeeded` reading those prefs on the next tick.
+The toggle only writes its preference; the actual skipping (including the
+binge-gated recap) is entirely driven by `autoSkipIfNeeded` reading that pref
+and the play-mode/transition state on the next tick.
