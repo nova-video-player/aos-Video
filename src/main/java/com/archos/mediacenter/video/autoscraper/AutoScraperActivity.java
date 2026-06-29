@@ -1308,6 +1308,10 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                 }
             }
 
+            if (exportContext != null) {
+                // drain the queued NFO exports for this batch before returning
+                NfoWriter.awaitPendingExports();
+            }
             if (log.isDebugEnabled()) log.debug("ScraperResultTask : all files processed");
             return Integer.valueOf(1);
         }

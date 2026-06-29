@@ -729,6 +729,10 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                         }
                     }
                 }
+                if (exportContext != null) {
+                    // drain the queued NFO exports for this batch before returning
+                    NfoWriter.awaitPendingExports();
+                }
                 if (log.isDebugEnabled()) log.debug("preparations took:{}", t.step());
                 if (opList.size() > 0) {
                     try {

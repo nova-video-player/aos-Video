@@ -376,6 +376,10 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
                 }
                 updateProgress(i, newEpisodeTag.getSeason(), newEpisodeTag.getEpisode());
             }
+            if (exportContext != null) {
+                // drain the queued NFO exports for this batch before returning
+                NfoWriter.awaitPendingExports();
+            }
             updateProgress(PROGRESS_ID_FINALIZING);
             log.info("preparations took:" + t.step());
             if (isCancelled || Thread.currentThread().isInterrupted()) return null;
