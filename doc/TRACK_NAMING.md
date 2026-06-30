@@ -41,9 +41,10 @@ ISO 639-2b codes are normalized before ISO 639-1 lookup, for example:
 * `ger` -> `deu` -> `de`
 
 ISO 639-3 to ISO 639-1 conversion uses the JVM locale language table instead of
-a large hardcoded map. Nova-specific and OpenSubtitles-specific exceptions
-remain in the existing small exception maps, for example `pb`, `zt`, `pt-br`,
-`zh-cn`, and `zh-tw`.
+a large hardcoded map. Unrecognized three-letter codes (such as `zho`, `fra`,
+`deu`) automatically fall back to their corresponding ISO 639-1 display language
+name. Nova-specific and OpenSubtitles-specific exceptions remain in the existing
+small exception maps, for example `pb`, `zt`, `pt-br`, `zh-cn`, and `zh-tw`.
 
 ## Disposition Labels
 
