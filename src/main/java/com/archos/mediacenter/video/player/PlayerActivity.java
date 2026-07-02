@@ -188,6 +188,24 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     /* package */ public static final String KEY_SUBTITLE_VPOS = "pref_play_subtitle_vpos_key";
     public static final String KEY_SUBTITLE_OUTLINE = "pref_play_subtitle_outline_key";
     public static final String KEY_SUBTITLE_COLOR = "pref_play_subtitle_color_key";
+
+    // --- NEW: libass styling system additions ---
+    // KEY_SUBTITLE_BG_MODE uses -1 as a sentinel default meaning "not yet migrated";
+    // see restorePreferences()/savePreferences() for the one-time migration from the
+    // legacy KEY_SUBTITLE_OUTLINE / KEY_SUBTITLE_BACKGROUND booleans.
+    public static final String KEY_SUBTITLE_BG_MODE = "pref_play_subtitle_bg_mode_key";
+    public static final String KEY_SUBTITLE_OVERRIDE_MODE = "pref_play_subtitle_override_mode_key";
+    public static final String KEY_SUBTITLE_BOLD = "pref_play_subtitle_bold_key";
+    public static final String KEY_SUBTITLE_OUTLINE_COLOR = "pref_play_subtitle_outline_color_key";
+    public static final String KEY_SUBTITLE_SHADOW_COLOR = "pref_play_subtitle_shadow_color_key";
+    public static final String KEY_SUBTITLE_BACKGROUND_COLOR = "pref_play_subtitle_background_color_key";
+    public static final String KEY_SUBTITLE_OUTLINE_WIDTH = "pref_play_subtitle_outline_width_key";
+    public static final String KEY_SUBTITLE_SHADOW_WIDTH = "pref_play_subtitle_shadow_width_key";
+    // Separate from the legacy KEY_SUBTITLE_SIZE (0..100 abstract scale, still read by the
+    // PIP/multi-window proportional-rescale code in updateSizes()). This key holds the new
+    // dialog's absolute point value directly, so the two representations never collide.
+    public static final String KEY_SUBTITLE_FONT_SIZE_PT = "pref_play_subtitle_font_size_pt_key";
+
     private static final String KEY_PLAYER_FORMAT = "player_pref_format_key";
     private static final String KEY_PLAYER_AUTO_FORMAT = "player_pref_auto_format_key";
     private static final String KEY_PLAYER_PROJECTOR_MODE = "player_projector_mode_key";
@@ -1733,11 +1751,43 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         tvPicker.requestFocus();
     }
 
+    /**
+     * TV remote settings dialog for the libass styling system. Structure:
+     *
+     *   Style Source     <cycles Embedded/Custom/Scale Only, rebuilds menu below on change>
+     *   ── Custom/Embedded only ──
+     *   Size             <spinner, pt>
+     *   Bold             <switch>
+     *   Text Color       <color picker>
+     *   ── Scale Only only ──
+     *   Scale            <spinner, %>
+     *   ── always ──
+     *   Background Style <cycles Floating/Boxed Line/Boxed Block, rebuilds menu below on change>
+     *   ── Floating only ──
+     *   Outline Width    <spinner>
+     *   Outline Color    <color picker>
+     *   Shadow Width     <spinner>
+     *   Shadow Color     <color picker>
+     *   ── Boxed Line/Block only ──
+     *   Background Color <color picker>
+     *   Background Opacity <spinner>
+     *   ── Boxed Block only ──
+     *   Block Outline Width <spinner>
+     *   Block Outline Color <color picker>
+     *   Padding          <spinner>
+     *   ── always ──
+     *   Vertical Position <spinner>
+     *
+     * The TV menu toolkit has no dynamic show/hide primitive for individual rows once
+     * built (unlike the touch dialog's View.GONE), so every row relevant to any mode is
+     * created up front and irrelevant ones are hidden via TVMenuItem.setDisabled(), the
+     * same idiom already used by disableSubtitleSettingsMenuItem()/
+     * disableSubtitleDelayTVMenuItem() elsewhere in this file. Changing Style Source or
+     * Background Style rebuilds the whole list via tvmenu.clean() + re-populate, mirroring
+     * refreshSubtitleTVMenu()'s existing rebuild-on-change pattern for track switching.
+     */
     private void createTVSubtitleSettingsDialog() {
-        float density = getApplicationContext().getResources().getDisplayMetrics().density;
-        float pickerWidth= (float)100 * density;
-
-        View dialogMainView =   LayoutInflater.from(mContext)
+        View dialogMainView = LayoutInflater.from(mContext)
                 .inflate(R.layout.card_dialog_layout, null);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) dialogMainView.findViewById(R.id.card_view).getLayoutParams();
         params.gravity = Gravity.CENTER_HORIZONTAL;
@@ -1746,134 +1796,367 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mPlayerController.getTVMenuAdapter().setDiscrete(true);
         final TVMenu tvmenu = mPlayerController.getTVMenuAdapter().createTVMenu();
 
-        tvmenu.createAndAddTVMenuItem(getText(R.string.subtitle_style_text).toString(), false);
-        final SubtitleDelayTVPicker tvPicker = (SubtitleDelayTVPicker)LayoutInflater.from(mContext)
-                .inflate(R.layout.subtitle_delay_tv_picker, null);
-        tvPicker.setStep(1);
-        tvPicker.setMin(10 * 100);
-        tvPicker.setMax(100 * 100);
-        // tvPicker.setHourFormat(true);
-        tvmenu.addTVMenuItem(tvPicker);
-        tvPicker.setTextViewWidth((int) pickerWidth);
-        mSubtitleManager.setShowSubtitlePositionHint(true);
-        tvPicker.setText(getTVSizeText(mSubtitleManager.getSize()));
-        tvPicker.setTextSize(mSubtitleManager.getSize());
-        tvPicker.setUpdateText(false);
-        tvPicker.setTextColor(mSubtitleManager.getColor());
-        tvPicker.init(mSubtitleManager.getSize() * 100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
-            @Override
-            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
-                if (r != null)
-                    tvPicker.removeCallbacks(r);
-                mSubtitleManager.setSize(delay / 100);
-                tvPicker.setText(getTVSizeText(delay / 100));
-                tvPicker.setTextSize(mSubtitleManager.getSize());
-            }
-        });
-
-        final SubtitleColorPicker colorPicker = new SubtitleColorPicker(this);
-
-        colorPicker.setColorPickListener(new SubtitleColorPicker.ColorPickListener() {
-            @Override
-            public void onColorPicked(int color) {
-                tvPicker.setTextColor(color);
-                mSubtitleManager.setColor(color);
-
-            }
-        });
-        tvmenu.addTVMenuItem(colorPicker);
-
-        tvmenu.createAndAddTVMenuItem(getText(R.string.subtitle_vert_text).toString(), false);
-
-        // adding tv picker
-        final SubtitleDelayTVPicker tvPicker2 = (SubtitleDelayTVPicker)LayoutInflater.from(mContext)
-                .inflate(R.layout.subtitle_delay_tv_picker, null);
-
-        tvPicker2.setStep(10);
-        tvPicker2.setMin(0);
-        tvPicker2.setMax(255*100);
-        // tvPicker.setHourFormat(true);
-        tvmenu.addTVMenuItem(tvPicker2);
-        tvPicker2.setTextViewWidth((int) pickerWidth);
-        mSubtitleManager.setShowSubtitlePositionHint(true);
-        tvPicker2.init(mSubtitleManager.getVerticalPosition()*100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
-            @Override
-            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
-                if (r != null)
-                    tvPicker2.removeCallbacks(r);
-                mSubtitleManager.fadeSubtitlePositionHint(true);
-                setSubtitleVpos(delay/100, "onDelayChanged");
-                r = new Runnable() {
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        mSubtitleManager.fadeSubtitlePositionHint(false);
-                    }
-                };
-                tvPicker2.postDelayed(r, 200);
-            }
-        });
-
-        tvmenu.createAndAddSeparator();
-        final TVMenuItem tvm = tvmenu.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.subtitle_outline), mSubtitleManager.getOutlineState());
-        tvm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean outline = mSubtitleManager.getOutlineState();
-                tvm.setChecked(! outline);
-                mSubtitleManager.setOutlineState(! outline);
-            }
-        });
-
-        final TVMenuItem tvmBg = tvmenu.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.subtitle_background_text), mSubtitleManager.getBackgroundState()); // Make sure to add string resource or use literal "Subtitle Background"
-        tvmBg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean bg = mSubtitleManager.getBackgroundState();
-                tvmBg.setChecked(!bg);
-                mSubtitleManager.setBackgroundState(!bg);
-            }
-        });
-
-        tvmenu.createAndAddTVMenuItem(getResources().getString(R.string.subtitle_bg_opacity_text), false);
-
-        final SubtitleDelayTVPicker tvPickerOpacity = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
-                .inflate(R.layout.subtitle_delay_tv_picker, null);
-        tvPickerOpacity.setStep(1); 
-        tvPickerOpacity.setMin(0);
-        tvPickerOpacity.setMax(255 * 100); 
-        tvmenu.addTVMenuItem(tvPickerOpacity);
-        tvPickerOpacity.setTextViewWidth((int) pickerWidth);
-        tvPickerOpacity.setUpdateText(false);
-        tvPickerOpacity.setText(String.valueOf(mSubtitleManager.getBackgroundOpacity()));
-        tvPickerOpacity.init(mSubtitleManager.getBackgroundOpacity() * 100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
-            @Override
-            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
-                int opacity = delay / 100;
-                if (opacity < 0) opacity = 0;
-                if (opacity > 255) opacity = 255;
-                mSubtitleManager.setBackgroundOpacity(opacity);
-                tvPickerOpacity.setText(String.valueOf(opacity));
-            }
-        });
+        final TVMenuItem firstItem = populateTVSubtitleSettingsMenu(tvmenu);
 
         ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).addOtherView(tvmenu);
-        ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {     
+        ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {
             @Override
             public void onResult(int code) {
-                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_SIZE, mSubtitleManager.getSize()).apply();
-                mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleManager.getVerticalPosition()).apply();
-                mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_COLOR, mSubtitleManager.getColor()).apply();
+                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleManager.getVerticalPosition()).apply();
+                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_COLOR, mSubtitleManager.getColor()).apply();
                 mPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mSubtitleManager.getOutlineState()).apply();
                 mPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_BACKGROUND, mSubtitleManager.getBackgroundState()).apply();
                 mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_BG_OPACITY, mSubtitleManager.getBackgroundOpacity()).apply();
+                // --- NEW: libass styling system — persist alongside the legacy keys so the
+                // TV picker's changes (which go through setOutlineState/setBackgroundState,
+                // themselves mapped onto setBgMode internally) aren't lost on next restore.
+                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_BG_MODE, mSubtitleManager.getBgMode()).apply();
+                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_OVERRIDE_MODE, mSubtitleManager.getOverrideMode()).apply();
+                mPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_BOLD, mSubtitleManager.getBold()).apply();
+                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_OUTLINE_COLOR, mSubtitleManager.getOutlineColor()).apply();
+                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_SHADOW_COLOR, mSubtitleManager.getShadowColor()).apply();
+                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_BACKGROUND_COLOR, mSubtitleManager.getBackgroundColor()).apply();
+                mPreferences.edit().putFloat(PlayerActivity.KEY_SUBTITLE_OUTLINE_WIDTH, mSubtitleManager.getOutlineWidth()).apply();
+                mPreferences.edit().putFloat(PlayerActivity.KEY_SUBTITLE_SHADOW_WIDTH, mSubtitleManager.getShadowWidth()).apply();
+                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_FONT_SIZE_PT, mSubtitleManager.getFontSizePt()).apply();
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
                 mSubtitleManager.fadeSubtitlePositionHint(false);
             }
         });
         mPlayerController.getTVMenuAdapter().setDiscrete(true);
         mPlayerController.addToMenuContainer(dialogMainView);
-        tvPicker.requestFocus();
+        if (firstItem != null) firstItem.requestFocus();
+    }
+
+    /**
+     * Builds (or rebuilds, after tvmenu.clean()) every row of the TV subtitle settings
+     * menu. Called once from createTVSubtitleSettingsDialog() and again from the Style
+     * Source / Background Style cycling rows' click handlers whenever the mode changes,
+     * since rows relevant to one mode aren't relevant to another and this toolkit has no
+     * per-row dynamic visibility -- only setDisabled().
+     */
+    private TVMenuItem populateTVSubtitleSettingsMenu(final TVMenu tvmenu) {
+        tvmenu.clean();
+
+        float density = getApplicationContext().getResources().getDisplayMetrics().density;
+        float pickerWidth = (float) 100 * density;
+
+        // ---------------- Style Source (Embedded / Custom / Scale Only) ----------------
+        final int[] overrideModes = {
+                SubtitleManager.OVERRIDE_EMBEDDED,
+                SubtitleManager.OVERRIDE_CUSTOM,
+                SubtitleManager.OVERRIDE_SCALE_ONLY
+        };
+        final String[] overrideLabels = {
+                getString(R.string.subtitle_override_embedded),
+                getString(R.string.subtitle_override_custom),
+                getString(R.string.subtitle_override_scale_only)
+        };
+        int overrideIdx = 1; // default Custom
+        for (int i = 0; i < overrideModes.length; i++) if (overrideModes[i] == mSubtitleManager.getOverrideMode()) overrideIdx = i;
+        final int currentOverrideIdx = overrideIdx;
+
+        TVMenuItem overrideItem = tvmenu.createAndAddTVMenuItem(
+                getString(R.string.subtitle_override_mode_text) + ": " + overrideLabels[currentOverrideIdx], false);
+        overrideItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int nextIdx = (currentOverrideIdx + 1) % overrideModes.length;
+                mSubtitleManager.setOverrideMode(overrideModes[nextIdx]);
+                populateTVSubtitleSettingsMenu(tvmenu); // rebuild: different rows are relevant now
+            }
+        });
+
+        boolean isEmbedded = mSubtitleManager.getOverrideMode() == SubtitleManager.OVERRIDE_EMBEDDED;
+        boolean isScaleOnly = mSubtitleManager.getOverrideMode() == SubtitleManager.OVERRIDE_SCALE_ONLY;
+        boolean isCustom = !isEmbedded && !isScaleOnly;
+
+        // ---------------- Font size (Custom mode) ----------------
+        tvmenu.createAndAddTVMenuItem(getText(R.string.subtitle_size_text).toString(), false).setDisabled(!isCustom);
+        final SubtitleDelayTVPicker sizePicker = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
+                .inflate(R.layout.subtitle_delay_tv_picker, null);
+        sizePicker.setStep(2);
+        sizePicker.setMin(12 * 100);
+        sizePicker.setMax(96 * 100);
+        tvmenu.addTVMenuItem(sizePicker);
+        sizePicker.setTextViewWidth((int) pickerWidth);
+        sizePicker.setUpdateText(false);
+        sizePicker.setText(mSubtitleManager.getFontSizePt() + "pt");
+        sizePicker.init(mSubtitleManager.getFontSizePt() * 100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
+            @Override
+            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
+                int pt = delay / 100;
+                mSubtitleManager.setFontSizePt(pt);
+                sizePicker.setText(pt + "pt");
+            }
+        });
+
+        // ---------------- Bold + Text color (Custom mode) ----------------
+        final TVMenuItem boldItem = tvmenu.createAndAddTVSwitchableMenuItem(getString(R.string.subtitle_bold_text), mSubtitleManager.getBold());
+        boldItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean bold = mSubtitleManager.getBold();
+                boldItem.setChecked(!bold);
+                mSubtitleManager.setBold(!bold);
+            }
+        });
+        boldItem.setDisabled(!isCustom);
+
+        tvmenu.createAndAddTVMenuItem(getString(R.string.subtitle_text_color_text), false).setDisabled(!isCustom);
+        final SubtitleColorPicker textColorPicker = new SubtitleColorPicker(this);
+        textColorPicker.setColorPickListener(new SubtitleColorPicker.ColorPickListener() {
+            @Override
+            public void onColorPicked(int color) {
+                mSubtitleManager.setColor(color);
+            }
+        });
+        tvmenu.addTVMenuItem(textColorPicker);
+
+        // ---------------- Font scale (Scale Only mode) ----------------
+        tvmenu.createAndAddTVMenuItem(getString(R.string.subtitle_scale_text), false).setDisabled(!isScaleOnly);
+        final SubtitleDelayTVPicker scalePicker = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
+                .inflate(R.layout.subtitle_delay_tv_picker, null);
+        scalePicker.setStep(10);
+        scalePicker.setMin(50 * 100);
+        scalePicker.setMax(300 * 100);
+        tvmenu.addTVMenuItem(scalePicker);
+        scalePicker.setTextViewWidth((int) pickerWidth);
+        scalePicker.setUpdateText(false);
+        int scalePct = Math.round(mSubtitleManager.getFontScale() * 100);
+        scalePicker.setText(scalePct + "%");
+        scalePicker.init(scalePct * 100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
+            @Override
+            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
+                int pct = delay / 100;
+                mSubtitleManager.setFontScale(pct / 100.0f);
+                scalePicker.setText(pct + "%");
+            }
+        });
+
+        tvmenu.createAndAddSeparator();
+
+        // ---------------- Background Style (Floating / Boxed Line / Boxed Block) ----------------
+        final int[] bgModes = {
+                SubtitleManager.BG_MODE_FLOATING,
+                SubtitleManager.BG_MODE_BOXED_LINE,
+                SubtitleManager.BG_MODE_BOXED_BLOCK
+        };
+        final String[] bgLabels = {
+                getString(R.string.subtitle_bg_mode_floating),
+                getString(R.string.subtitle_bg_mode_boxed_line),
+                getString(R.string.subtitle_bg_mode_boxed_block)
+        };
+        int bgIdx = 0;
+        for (int i = 0; i < bgModes.length; i++) if (bgModes[i] == mSubtitleManager.getBgMode()) bgIdx = i;
+        final int currentBgIdx = bgIdx;
+
+        TVMenuItem bgModeItem = tvmenu.createAndAddTVMenuItem(
+                getString(R.string.subtitle_bg_mode_text) + ": " + bgLabels[currentBgIdx], false);
+        bgModeItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int nextIdx = (currentBgIdx + 1) % bgModes.length;
+                mSubtitleManager.setBgMode(bgModes[nextIdx]);
+                populateTVSubtitleSettingsMenu(tvmenu); // rebuild: different rows are relevant now
+            }
+        });
+
+        boolean isFloating = mSubtitleManager.getBgMode() == SubtitleManager.BG_MODE_FLOATING;
+        boolean isBoxedLine = mSubtitleManager.getBgMode() == SubtitleManager.BG_MODE_BOXED_LINE;
+        boolean isBoxedBlock = mSubtitleManager.getBgMode() == SubtitleManager.BG_MODE_BOXED_BLOCK;
+        boolean isBoxed = !isFloating; // BOXED_LINE or BOXED_BLOCK
+
+        // ---------------- Outline / Shadow (Floating mode) ----------------
+        tvmenu.createAndAddTVMenuItem(getString(R.string.subtitle_outline_width_text), false).setDisabled(!isFloating);
+        final SubtitleDelayTVPicker outlineWidthPicker = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
+                .inflate(R.layout.subtitle_delay_tv_picker, null);
+        outlineWidthPicker.setStep(1);
+        outlineWidthPicker.setMin(0);
+        outlineWidthPicker.setMax(20 * 100);
+        tvmenu.addTVMenuItem(outlineWidthPicker);
+        outlineWidthPicker.setTextViewWidth((int) pickerWidth);
+        outlineWidthPicker.setUpdateText(false);
+        outlineWidthPicker.setText(String.valueOf((int) mSubtitleManager.getOutlineWidth()));
+        outlineWidthPicker.init((int) (mSubtitleManager.getOutlineWidth() * 100), new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
+            @Override
+            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
+                float px = delay / 100.0f;
+                mSubtitleManager.setOutlineWidth(px);
+                outlineWidthPicker.setText(String.valueOf((int) px));
+            }
+        });
+
+        tvmenu.createAndAddTVMenuItem(getString(R.string.subtitle_outline_color_text), false).setDisabled(!isFloating);
+        final SubtitleColorPicker outlineColorPicker = new SubtitleColorPicker(this);
+        outlineColorPicker.setColorPickListener(new SubtitleColorPicker.ColorPickListener() {
+            @Override
+            public void onColorPicked(int color) {
+                mSubtitleManager.setOutlineColor(color);
+            }
+        });
+        tvmenu.addTVMenuItem(outlineColorPicker);
+
+        tvmenu.createAndAddTVMenuItem(getString(R.string.subtitle_shadow_width_text), false).setDisabled(!isFloating);
+        final SubtitleDelayTVPicker shadowWidthPicker = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
+                .inflate(R.layout.subtitle_delay_tv_picker, null);
+        shadowWidthPicker.setStep(1);
+        shadowWidthPicker.setMin(0);
+        shadowWidthPicker.setMax(20 * 100);
+        tvmenu.addTVMenuItem(shadowWidthPicker);
+        shadowWidthPicker.setTextViewWidth((int) pickerWidth);
+        shadowWidthPicker.setUpdateText(false);
+        shadowWidthPicker.setText(String.valueOf((int) mSubtitleManager.getShadowWidth()));
+        shadowWidthPicker.init((int) (mSubtitleManager.getShadowWidth() * 100), new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
+            @Override
+            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
+                float px = delay / 100.0f;
+                mSubtitleManager.setShadowWidth(px);
+                shadowWidthPicker.setText(String.valueOf((int) px));
+            }
+        });
+
+        tvmenu.createAndAddTVMenuItem(getString(R.string.subtitle_shadow_color_text), false).setDisabled(!isFloating);
+        final SubtitleColorPicker shadowColorPicker = new SubtitleColorPicker(this);
+        shadowColorPicker.setColorPickListener(new SubtitleColorPicker.ColorPickListener() {
+            @Override
+            public void onColorPicked(int color) {
+                mSubtitleManager.setShadowColor(color);
+            }
+        });
+        tvmenu.addTVMenuItem(shadowColorPicker);
+
+        // ---------------- Background color + opacity (Boxed Line / Boxed Block) ----------------
+        tvmenu.createAndAddTVMenuItem(getString(R.string.subtitle_background_color_text), false).setDisabled(!isBoxed);
+        final SubtitleColorPicker bgColorPicker = new SubtitleColorPicker(this);
+        bgColorPicker.setColorPickListener(new SubtitleColorPicker.ColorPickListener() {
+            @Override
+            public void onColorPicked(int color) {
+                mSubtitleManager.setBackgroundColor(color);
+            }
+        });
+        tvmenu.addTVMenuItem(bgColorPicker);
+
+        tvmenu.createAndAddTVMenuItem(getString(R.string.subtitle_bg_opacity_text), false).setDisabled(!isBoxed);
+        final SubtitleDelayTVPicker opacityPicker = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
+                .inflate(R.layout.subtitle_delay_tv_picker, null);
+        opacityPicker.setStep(1);
+        opacityPicker.setMin(0);
+        opacityPicker.setMax(255 * 100);
+        tvmenu.addTVMenuItem(opacityPicker);
+        opacityPicker.setTextViewWidth((int) pickerWidth);
+        opacityPicker.setUpdateText(false);
+        opacityPicker.setText(String.valueOf(mSubtitleManager.getBackgroundOpacity()));
+        opacityPicker.init(mSubtitleManager.getBackgroundOpacity() * 100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
+            @Override
+            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
+                int opacity = Math.max(0, Math.min(255, delay / 100));
+                mSubtitleManager.setBackgroundOpacity(opacity);
+                opacityPicker.setText(String.valueOf(opacity));
+            }
+        });
+
+        // ---------------- Padding (Boxed Line only) ----------------
+        // BorderStyle=3's Outline field is genuine uniform box padding per the ASS spec,
+        // not a stroke width — same reasoning and same underlying outline_width field as
+        // the touch dialog's boxed_line_padding_row (see sub_format_ssa.c sync_styles()).
+        tvmenu.createAndAddTVMenuItem(getString(R.string.subtitle_padding_text), false).setDisabled(!isBoxedLine);
+        final SubtitleDelayTVPicker linePaddingPicker = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
+                .inflate(R.layout.subtitle_delay_tv_picker, null);
+        linePaddingPicker.setStep(1);
+        linePaddingPicker.setMin(0);
+        linePaddingPicker.setMax(20 * 100);
+        tvmenu.addTVMenuItem(linePaddingPicker);
+        linePaddingPicker.setTextViewWidth((int) pickerWidth);
+        linePaddingPicker.setUpdateText(false);
+        linePaddingPicker.setText(String.valueOf((int) mSubtitleManager.getOutlineWidth()));
+        linePaddingPicker.init((int) (mSubtitleManager.getOutlineWidth() * 100), new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
+            @Override
+            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
+                float px = delay / 100.0f;
+                mSubtitleManager.setOutlineWidth(px);
+                linePaddingPicker.setText(String.valueOf((int) px));
+            }
+        });
+
+        // ---------------- Outline + Padding (Boxed Block only) ----------------
+        tvmenu.createAndAddTVMenuItem(getString(R.string.subtitle_outline_width_text), false).setDisabled(!isBoxedBlock);
+        final SubtitleDelayTVPicker blockOutlineWidthPicker = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
+                .inflate(R.layout.subtitle_delay_tv_picker, null);
+        blockOutlineWidthPicker.setStep(1);
+        blockOutlineWidthPicker.setMin(0);
+        blockOutlineWidthPicker.setMax(20 * 100);
+        tvmenu.addTVMenuItem(blockOutlineWidthPicker);
+        blockOutlineWidthPicker.setTextViewWidth((int) pickerWidth);
+        blockOutlineWidthPicker.setUpdateText(false);
+        blockOutlineWidthPicker.setText(String.valueOf((int) mSubtitleManager.getOutlineWidth()));
+        blockOutlineWidthPicker.init((int) (mSubtitleManager.getOutlineWidth() * 100), new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
+            @Override
+            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
+                float px = delay / 100.0f;
+                mSubtitleManager.setOutlineWidth(px);
+                blockOutlineWidthPicker.setText(String.valueOf((int) px));
+            }
+        });
+
+        tvmenu.createAndAddTVMenuItem(getString(R.string.subtitle_outline_color_text), false).setDisabled(!isBoxedBlock);
+        final SubtitleColorPicker blockOutlineColorPicker = new SubtitleColorPicker(this);
+        blockOutlineColorPicker.setColorPickListener(new SubtitleColorPicker.ColorPickListener() {
+            @Override
+            public void onColorPicked(int color) {
+                mSubtitleManager.setOutlineColor(color);
+            }
+        });
+        tvmenu.addTVMenuItem(blockOutlineColorPicker);
+
+        tvmenu.createAndAddTVMenuItem(getString(R.string.subtitle_padding_text), false).setDisabled(!isBoxedBlock);
+        final SubtitleDelayTVPicker paddingPicker = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
+                .inflate(R.layout.subtitle_delay_tv_picker, null);
+        paddingPicker.setStep(1);
+        paddingPicker.setMin(0);
+        paddingPicker.setMax(20 * 100);
+        tvmenu.addTVMenuItem(paddingPicker);
+        paddingPicker.setTextViewWidth((int) pickerWidth);
+        paddingPicker.setUpdateText(false);
+        paddingPicker.setText(String.valueOf((int) mSubtitleManager.getShadowWidth()));
+        paddingPicker.init((int) (mSubtitleManager.getShadowWidth() * 100), new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
+            @Override
+            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
+                float px = delay / 100.0f;
+                mSubtitleManager.setShadowWidth(px); // hijacked as padding in Boxed Block, see sub_format_ssa.c
+                paddingPicker.setText(String.valueOf((int) px));
+            }
+        });
+
+        tvmenu.createAndAddSeparator();
+
+        // ---------------- Vertical position (always) ----------------
+        tvmenu.createAndAddTVMenuItem(getText(R.string.subtitle_vert_text).toString(), false);
+        final SubtitleDelayTVPicker vposPicker = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
+                .inflate(R.layout.subtitle_delay_tv_picker, null);
+        vposPicker.setStep(10);
+        vposPicker.setMin(0);
+        vposPicker.setMax(255 * 100);
+        tvmenu.addTVMenuItem(vposPicker);
+        vposPicker.setTextViewWidth((int) pickerWidth);
+        mSubtitleManager.setShowSubtitlePositionHint(true);
+        vposPicker.init(mSubtitleManager.getVerticalPosition() * 100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
+            @Override
+            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
+                if (r != null) vposPicker.removeCallbacks(r);
+                mSubtitleManager.fadeSubtitlePositionHint(true);
+                setSubtitleVpos(delay / 100, "onDelayChanged");
+                r = new Runnable() {
+                    @Override
+                    public void run() {
+                        mSubtitleManager.fadeSubtitlePositionHint(false);
+                    }
+                };
+                vposPicker.postDelayed(r, 200);
+            }
+        });
+
+        return overrideItem;
     }
 
     private void createTVAudioDelayDialog() {
@@ -4374,14 +4657,52 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 int vpos = preferences.getInt(KEY_SUBTITLE_VPOS, mSubtitleVPosDefault);
                 int color = preferences.getInt(KEY_SUBTITLE_COLOR, mSubtitleColorDefault);
                 boolean outline = preferences.getBoolean(KEY_SUBTITLE_OUTLINE, mSubtitleOutlineDefault);
-                mSubtitleManager.setSize(size);
                 mSubtitleManager.setColor(color);
                 setSubtitleVpos(vpos, "onSubtitleMetadataUpdated");
-                mSubtitleManager.setOutlineState(outline);
                 boolean background = preferences.getBoolean(KEY_SUBTITLE_BACKGROUND, false);
                 int bgOpacity = preferences.getInt(KEY_SUBTITLE_BG_OPACITY, 128);
-                mSubtitleManager.setBackgroundState(background);
                 mSubtitleManager.setBackgroundOpacity(bgOpacity);
+
+                // --- NEW: libass styling system ---
+                // KEY_SUBTITLE_BG_MODE is only written once setBgMode()/setOutlineState()/
+                // setBackgroundState() has run at least once via savePreferences(). If it's
+                // absent (sentinel -1), this is the first launch after upgrading to the
+                // libass styling system: derive the 3-state bg mode from the old booleans
+                // instead of defaulting to Floating, so existing users don't lose their
+                // outline/background choice.
+                int bgMode = preferences.getInt(KEY_SUBTITLE_BG_MODE, -1);
+                if (bgMode == -1) {
+                    bgMode = background ? SubtitleManager.BG_MODE_BOXED_LINE
+                                        : SubtitleManager.BG_MODE_FLOATING;
+                }
+                int overrideMode = preferences.getInt(KEY_SUBTITLE_OVERRIDE_MODE, SubtitleManager.OVERRIDE_CUSTOM);
+                boolean bold = preferences.getBoolean(KEY_SUBTITLE_BOLD, false);
+                int outlineColor = preferences.getInt(KEY_SUBTITLE_OUTLINE_COLOR, 0xFF000000);
+                int shadowColor = preferences.getInt(KEY_SUBTITLE_SHADOW_COLOR, 0xAA000000);
+                int backgroundColor = preferences.getInt(KEY_SUBTITLE_BACKGROUND_COLOR, 0xFF000000);
+                float outlineWidth = preferences.getFloat(KEY_SUBTITLE_OUTLINE_WIDTH, outline ? 4.0f : 2.0f);
+                float shadowWidth = preferences.getFloat(KEY_SUBTITLE_SHADOW_WIDTH, 2.0f);
+                // KEY_SUBTITLE_FONT_SIZE_PT sentinel -1 means "never set by the new dialog yet":
+                // derive a reasonable pt value from the legacy 0..100 KEY_SUBTITLE_SIZE via the
+                // same calcTextSize() curve the old TextView-based renderer used, so existing
+                // users see a comparable size on first launch after upgrading.
+                int fontSizePt = preferences.getInt(KEY_SUBTITLE_FONT_SIZE_PT, -1);
+                if (fontSizePt == -1) {
+                    fontSizePt = Math.round(SubtitleManager.calcTextSize(size));
+                }
+
+                mSubtitleManager.setFontSizePt(fontSizePt);
+                mSubtitleManager.setOverrideMode(overrideMode);
+                mSubtitleManager.setBold(bold);
+                mSubtitleManager.setOutlineColor(outlineColor);
+                mSubtitleManager.setShadowColor(shadowColor);
+                mSubtitleManager.setBackgroundColor(backgroundColor);
+                mSubtitleManager.setOutlineWidth(outlineWidth);
+                mSubtitleManager.setShadowWidth(shadowWidth);
+                // setBgMode last: it also updates the legacy mOutline/mBackground booleans,
+                // so it must win over the plain setOutlineState()/setBackgroundState() calls
+                // above rather than the other way around.
+                mSubtitleManager.setBgMode(bgMode);
                 // mVideoInfo.subtitleTrack is the track number with the none track 0<=mVideoInfo.subtitleTrack<=nbTrack, nbTrack for none track
                 // but mSubtitleInfoController is the track number with the none track (i.e. nbTrack + 1) at position 0
                 // at this point mVideoInfo.subtitleTrack is the track number to be used

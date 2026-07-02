@@ -25,11 +25,6 @@
     android:orientation="vertical"
     android:padding="@dimen/subtitles_settings_dialog_margin_outerframe" >
 
-    <!-- Size: a (seekbar) A -->
-
-
-
-
     <!-- "sample" minWidth/Height might need adjustment -->
 
     <TextView
@@ -64,64 +59,547 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- ===================== OVERRIDE MODE ===================== -->
+
             <TextView
-                android:id="@+id/subtitle_size_text"
+                android:id="@+id/subtitle_override_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/subtitles_settings_dialog_margin_small"
-                android:text="@string/subtitle_size_text" />
-            <RelativeLayout
-                android:id="@+id/seekbar_container"
+                android:text="@string/subtitle_override_mode_text" />
+
+            <RadioGroup
+                android:id="@+id/subtitle_override_mode_group"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/subtitles_settings_dialog_margin_small">
 
-                <ImageView
-                    android:id="@+id/left_a"
-                    android:layout_width="wrap_content"
+                <RadioButton
+                    android:id="@+id/override_embedded"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/subtitle_size_seekbar"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignTop="@+id/subtitle_size_seekbar"
-                    android:padding="@dimen/subtitles_settings_dialog_margin_large"
-                    app:srcCompat="@drawable/video_info_arrow_down" />
+                    android:layout_weight="1"
+                    android:text="@string/subtitle_override_embedded" />
 
-                <SeekBar
-                    android:id="@+id/subtitle_size_seekbar"
-                    android:layout_width="wrap_content"
+                <RadioButton
+                    android:id="@+id/override_custom"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/right_a"
-                    android:layout_toRightOf="@+id/left_a"
-                    android:paddingBottom="@dimen/subtitles_settings_dialog_margin_large"
-                    android:paddingTop="@dimen/subtitles_settings_dialog_margin_large" />
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="@string/subtitle_override_custom" />
 
-                <ImageView
-                    android:id="@+id/right_a"
-                    android:layout_width="wrap_content"
+                <RadioButton
+                    android:id="@+id/override_scale_only"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/subtitle_size_seekbar"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignTop="@+id/subtitle_size_seekbar"
-                    android:padding="@dimen/subtitles_settings_dialog_margin_large"
-                    app:srcCompat="@drawable/video_info_arrow_up" />
+                    android:layout_weight="1"
+                    android:text="@string/subtitle_override_scale_only" />
 
-            </RelativeLayout>
-    <!-- simple listDivider, should be using current Theme -->
+            </RadioGroup>
 
-            <com.archos.mediacenter.video.player.SubtitleColorPicker
-                android:id="@+id/color_layout"
-                android:orientation="vertical"
+            <TextView
+                android:id="@+id/subtitle_override_hint"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></com.archos.mediacenter.video.player.SubtitleColorPicker>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/subtitles_settings_dialog_margin_small"
+                android:layout_marginBottom="@dimen/subtitles_settings_dialog_margin_small"
+                android:textStyle="italic"
+                android:textSize="12sp"
+                android:text="@string/subtitle_override_embedded_hint"
+                android:visibility="gone" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginBottom="@dimen/subtitles_settings_dialog_margin_large"
-                android:layout_marginTop="@dimen/subtitles_settings_dialog_margin_large"
                 android:scaleType="fitXY"
                 app:srcCompat="?android:attr/listDivider" />
 
-<!-- Vertical Positon v (seekbar) ^ -->
+            <!-- Everything below this point is dimmed/disabled when override mode = Embedded -->
+            <LinearLayout
+                android:id="@+id/subtitle_style_controls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- ===================== FONT SIZE (absolute, stepper) ===================== -->
+                <!-- Shown for Embedded/Custom modes. Hidden in Scale Only mode, where the
+                     absolute font_size field is never read by sync_styles() — only
+                     font_scale is (see sub_format_ssa.c override_mode==2 branch). -->
+
+                <TextView
+                    android:id="@+id/subtitle_size_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/subtitles_settings_dialog_margin_small"
+                    android:text="@string/subtitle_size_text" />
+
+                <LinearLayout
+                    android:id="@+id/font_size_stepper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/font_size_minus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                        app:srcCompat="@drawable/video_info_arrow_down" />
+
+                    <TextView
+                        android:id="@+id/font_size_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="42pt" />
+
+                    <ImageView
+                        android:id="@+id/font_size_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                        app:srcCompat="@drawable/video_info_arrow_up" />
+
+                </LinearLayout>
+
+                <!-- ===================== FONT SCALE (Scale Only mode) ===================== -->
+                <!-- Shown ONLY in Scale Only mode: multiplies the embedded track's own
+                     font size uniformly, rather than replacing it with an absolute value. -->
+
+                <LinearLayout
+                    android:id="@+id/font_scale_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/subtitle_scale_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/subtitles_settings_dialog_margin_small"
+                        android:text="@string/subtitle_scale_text" />
+
+                    <LinearLayout
+                        android:id="@+id/font_scale_stepper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:id="@+id/font_scale_minus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                            app:srcCompat="@drawable/video_info_arrow_down" />
+
+                        <TextView
+                            android:id="@+id/font_scale_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="100%" />
+
+                        <ImageView
+                            android:id="@+id/font_scale_plus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                            app:srcCompat="@drawable/video_info_arrow_up" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- ===================== TEXT PROPERTIES ===================== -->
+
+                <LinearLayout
+                    android:id="@+id/bold_color_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_margin="@dimen/subtitles_settings_dialog_margin_small">
+
+                    <CheckBox
+                        android:id="@+id/subBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/subtitle_bold_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/subtitle_text_color_text" />
+
+                    <View
+                        android:id="@+id/swatch_text_color"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@android:color/white" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginBottom="@dimen/subtitles_settings_dialog_margin_large"
+                    android:layout_marginTop="@dimen/subtitles_settings_dialog_margin_large"
+                    android:scaleType="fitXY"
+                    app:srcCompat="?android:attr/listDivider" />
+
+                <!-- ===================== BACKGROUND MODE ===================== -->
+
+                <TextView
+                    android:id="@+id/subtitle_bg_mode_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/subtitles_settings_dialog_margin_small"
+                    android:text="@string/subtitle_bg_mode_text" />
+
+                <RadioGroup
+                    android:id="@+id/subtitle_bg_mode_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/subtitles_settings_dialog_margin_small">
+
+                    <RadioButton
+                        android:id="@+id/bg_mode_floating"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="@string/subtitle_bg_mode_floating" />
+
+                    <RadioButton
+                        android:id="@+id/bg_mode_boxed_line"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/subtitle_bg_mode_boxed_line" />
+
+                    <RadioButton
+                        android:id="@+id/bg_mode_boxed_block"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/subtitle_bg_mode_boxed_block" />
+
+                </RadioGroup>
+
+                <!-- Mode 0 (Floating): outline + shadow -->
+                <LinearLayout
+                    android:id="@+id/floating_controls"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_margin="@dimen/subtitles_settings_dialog_margin_small">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/subtitle_outline_width_text" />
+
+                        <ImageView
+                            android:id="@+id/outline_width_minus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                            app:srcCompat="@drawable/video_info_arrow_down" />
+
+                        <TextView
+                            android:id="@+id/outline_width_value"
+                            android:layout_width="32dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="2" />
+
+                        <ImageView
+                            android:id="@+id/outline_width_plus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                            app:srcCompat="@drawable/video_info_arrow_up" />
+
+                        <View
+                            android:id="@+id/swatch_outline_color"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@android:color/black" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_margin="@dimen/subtitles_settings_dialog_margin_small">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/subtitle_shadow_width_text" />
+
+                        <ImageView
+                            android:id="@+id/shadow_width_minus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                            app:srcCompat="@drawable/video_info_arrow_down" />
+
+                        <TextView
+                            android:id="@+id/shadow_width_value"
+                            android:layout_width="32dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="2" />
+
+                        <ImageView
+                            android:id="@+id/shadow_width_plus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                            app:srcCompat="@drawable/video_info_arrow_up" />
+
+                        <View
+                            android:id="@+id/swatch_shadow_color"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@android:color/black" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Mode 1 / Mode 2 (Boxed): background color + opacity -->
+                <LinearLayout
+                    android:id="@+id/background_controls"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_margin="@dimen/subtitles_settings_dialog_margin_small">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/subtitle_background_color_text" />
+
+                        <View
+                            android:id="@+id/swatch_background_color"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@android:color/black" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/subtitle_bg_opacity_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="@dimen/subtitles_settings_dialog_margin_small"
+                        android:text="@string/subtitle_bg_opacity_text" />
+
+                    <SeekBar
+                        android:id="@+id/subtitle_bg_opacity_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp" />
+
+                    <!-- Boxed Line only: BorderStyle=3's Outline field is genuinely the
+                         box's padding (uniform on all 4 sides) per the ASS spec — NOT a
+                         stroke width, and NOT the same "hijacked Shadow" mechanism Boxed
+                         Block uses. Shadow for BorderStyle=3 is a real offset drop-shadow
+                         of the whole box and is intentionally left at 0 (see sync_styles()
+                         in sub_format_ssa.c); there is no separate padding field to expose
+                         for this mode, so this row reuses outline_width directly. -->
+                    <LinearLayout
+                        android:id="@+id/boxed_line_padding_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_margin="@dimen/subtitles_settings_dialog_margin_small">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/subtitle_padding_text" />
+
+                        <ImageView
+                            android:id="@+id/line_padding_minus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                            app:srcCompat="@drawable/video_info_arrow_down" />
+
+                        <TextView
+                            android:id="@+id/line_padding_value"
+                            android:layout_width="32dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="2" />
+
+                        <ImageView
+                            android:id="@+id/line_padding_plus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                            app:srcCompat="@drawable/video_info_arrow_up" />
+
+                    </LinearLayout>
+
+                    <!-- Mode 2 only: outline stays active, shadow width becomes "padding" -->
+                    <LinearLayout
+                        android:id="@+id/boxed_block_extra_controls"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_margin="@dimen/subtitles_settings_dialog_margin_small">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="@string/subtitle_outline_width_text" />
+
+                            <ImageView
+                                android:id="@+id/block_outline_width_minus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                                app:srcCompat="@drawable/video_info_arrow_down" />
+
+                            <TextView
+                                android:id="@+id/block_outline_width_value"
+                                android:layout_width="32dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="2" />
+
+                            <ImageView
+                                android:id="@+id/block_outline_width_plus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                                app:srcCompat="@drawable/video_info_arrow_up" />
+
+                            <View
+                                android:id="@+id/swatch_block_outline_color"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginStart="8dp"
+                                android:background="@android:color/black" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_margin="@dimen/subtitles_settings_dialog_margin_small">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="@string/subtitle_padding_text" />
+
+                            <ImageView
+                                android:id="@+id/block_padding_minus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                                app:srcCompat="@drawable/video_info_arrow_down" />
+
+                            <TextView
+                                android:id="@+id/block_padding_value"
+                                android:layout_width="32dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="4" />
+
+                            <ImageView
+                                android:id="@+id/block_padding_plus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/subtitles_settings_dialog_margin_large"
+                                app:srcCompat="@drawable/video_info_arrow_up" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginBottom="@dimen/subtitles_settings_dialog_margin_large"
+                    android:layout_marginTop="@dimen/subtitles_settings_dialog_margin_large"
+                    android:scaleType="fitXY"
+                    app:srcCompat="?android:attr/listDivider" />
+
+                <!-- ===================== SHARED COLOR PICKER ===================== -->
+                <!-- One instance, retargeted at whichever swatch was last tapped. -->
+
+                <com.archos.mediacenter.video.player.SubtitleColorPicker
+                    android:id="@+id/color_layout"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginBottom="@dimen/subtitles_settings_dialog_margin_large"
+                    android:layout_marginTop="@dimen/subtitles_settings_dialog_margin_large"
+                    android:scaleType="fitXY"
+                    app:srcCompat="?android:attr/listDivider" />
+
+            </LinearLayout>
+
+            <!-- ===================== VERTICAL POSITION (stays outside the dimmed block: applies regardless of override mode) ===================== -->
 
             <RelativeLayout
                 android:id="@+id/seekbar_container2"
@@ -167,43 +645,6 @@
                     app:srcCompat="@drawable/video_info_arrow_up" />
 
             </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/outline_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <CheckBox
-                    android:id="@+id/subOutline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:duplicateParentState="true"
-                    android:text="@string/subtitle_outline" />
-                
-                <CheckBox
-                    android:id="@+id/subBackground"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/subtitle_background_text" /> 
-
-                <TextView
-                    android:id="@+id/subtitle_bg_opacity_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="@dimen/subtitles_settings_dialog_margin_small"
-                    android:text="@string/subtitle_bg_opacity_text" />
-
-                <SeekBar
-                    android:id="@+id/subtitle_bg_opacity_seekbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp" />
-
-            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
