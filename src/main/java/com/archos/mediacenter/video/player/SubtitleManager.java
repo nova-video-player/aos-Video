@@ -17,18 +17,13 @@ package com.archos.mediacenter.video.player;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.medialib.Subtitle;
-import com.archos.medialib.Subtitle.SubtitleAlignment;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
@@ -39,14 +34,11 @@ import androidx.preference.PreferenceManager;
 import android.content.SharedPreferences;
 
 import androidx.core.content.ContextCompat;
-import androidx.core.text.HtmlCompat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.ref.WeakReference;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SubtitleManager {
 
@@ -58,8 +50,6 @@ public class SubtitleManager {
     private WindowManager       mWindow;
     private Resources           mRes;
     private View                mSubtitleLayout = null;
-    SubtitleGfxView             mSubtitleGfxView = null;
-    Subtitle3DTextView          mSubtitleTxtView = null;
     private SubtitleSpacerView  mSubtitleSpacer = null;
     private LayoutParams        mSubtitleSpacerParams = null;
     private Drawable            mSubtitlePosHintDrawable;
@@ -69,8 +59,6 @@ public class SubtitleManager {
     private int                 mSubtitleVPos = 10;
     private int                 mSubtitleVPosPixel;
     private int                 mSubtitleEvadedVPos;
-    SpannableStringBuilder      mSpannableStringBuilder = null;
-    TextShadowSpan              mTextShadowSpan = null;
     private boolean mIsSubtitleGfx = false;
     private boolean isFirstTime = true;
     private Subtitle currentSubtitle = null;
@@ -98,32 +86,6 @@ public class SubtitleManager {
     private static final int TXT_SIZE_MAX = 64;
     private static final float TXT_SIZE_RANGE = TXT_SIZE_MAX - TXT_SIZE_MIN;
 
-    // some ssa syntax https://sweetkaraoke.pagesperso-orange.fr/Tutoriels/Tutoriel4_1b.html#Chapitre_1_:_les_styles_ASS_et_SSA_:
-    // matches a single "{\ ... }"
-    private static final Pattern SSA_ANY_TAG = Pattern.compile("(?:\\\\)?\\{(?:\\{\\})?\\\\.*?\\}"); // capture any ssa tag {\tag} but also this format \{{}\an8}
-    // matches "{\c&Hcolor&}text" until end of input or next color tag, matches also "\<1/2/3/4>c&H<hex code>&" and "*c&H<hex code>&"
-    private static final Pattern SSA_COLOR_TAG = Pattern.compile("\\{\\\\?[1-4\\*]?\\\\c&[h,H]([0-9A-Fa-f]+)&\\}(.*?)(?=\\{\\\\c|$)");
-    // replacement for SSA_COLOR_TAG $1=color and $2=text
-    private static final String HTML_COLOR_TAG = "<font color=\"#$1\">$2</font>";
-    // bold, italic, underline, slanted ssa tags
-    private static final Pattern SSA_BOLD_TAG = Pattern.compile("\\{\\\\b1\\}(.*?)(?=\\{\\\\b0|$)");
-    private static final String HTML_BOLD_TAG = "<b>$1</b>";
-    private static final Pattern SSA_ITALIC_TAG = Pattern.compile("\\{\\\\i1\\}(.*?)(?=\\{\\\\i0|$)");
-    private static final String HTML_ITALIC_TAG = "<i>$1</i>";
-    private static final Pattern SSA_UNDERLINE_TAG = Pattern.compile("\\{\\\\u1\\}(.*?)(?=\\{\\\\u0|$)");
-    private static final String HTML_UNDERLINE_TAG = "<u>$1</u>";
-    private static final Pattern SSA_STRIKETHROUGH_TAG = Pattern.compile("\\{\\\\s1\\}(.*?)(?=\\{\\\\s0|$)");
-    private static final String HTML_STRIKETHROUGH_TAG = "<s>$1</s>";
-
-    // WebVTT voice tag <v Voice Name>
-    private static final Pattern VTT_VOICE_TAG_OPEN = Pattern.compile("<v\\s+([^>]+)>");
-    private static final String HTML_VTT_VOICE_TAG_OPEN = "<b>$1:</b> ";
-    private static final Pattern VTT_VOICE_TAG_CLOSE = Pattern.compile("</v>");
-
-    // alignment tag can contain a Word Joiner (WJ) \u2060 unicode character and be of the form \{{}\\u2060an8} or simply {\an8} or \{\\an8\}
-    // 1 is BOTTOM_LEFT, 2 is BOTTOM_MID, 3 is BOTTOM_RIGHT, 4 is MID_LEFT, 5 is MID_MID, 6 is MID_RIGHT, 7 is TOP_LEFT, 8 is TOP_MID, 9 is TOP_RIGHT
-    private static final Pattern SUBRIP_ALIGNMENT_TAG = Pattern.compile("\\\\?\\{(?:\\{\\})?\\\\?\\\\(?:\\u2060)?an([1-9])\\\\?\\}");
-
     private static class SubtitleHandler extends Handler {
         private final WeakReference<SubtitleManager> mSubtitleManager;
 
@@ -143,28 +105,22 @@ public class SubtitleManager {
 
     private final Handler mHandler = new SubtitleHandler(this);
 
+    // NOTE: the native subtitle pipeline (avos_mp_video.c::send_subtitle) now returns
+    // early for every subtitle format (SSA/TEXT/DVD_GFX/PGS) and never reaches the old
+    // JNI addSubtitle() callback — SubtitleEngine's native GL/libass renderer draws
+    // everything now. displayView()/removeView() are therefore unreachable in practice
+    // and have been removed along with the SubtitleGfxView/Subtitle3DTextView rendering
+    // calls; addSubtitle()/DispSubtitleThread are kept intact (now harmless no-ops)
+    // rather than ripped out, since PlayerActivity/FloatingPlayerService still call
+    // addSubtitle() and removing that call site is a separate, larger change.
     private void handleMessage(Message msg) {
         if (log.isDebugEnabled()) log.debug("handleMessage: {}", msg.what);
         switch (msg.what) {
             case MSG_STOP_SUBTITLE:
-                if (log.isDebugEnabled()) log.debug("handleMessage: MSG_STOP_SUBTITLE");
-                mSubtitleTxtView.setVisibility(View.GONE);
-                mSubtitleGfxView.setVisibility(View.GONE);
+            case MSG_DISPLAY_SUBTITLE:
+            case MSG_REMOVE_SUBTITLE:
+                if (log.isDebugEnabled()) log.debug("handleMessage: {} (no-op, native GL engine owns rendering)", msg.what);
                 break;
-            case MSG_DISPLAY_SUBTITLE: {
-                if (log.isDebugEnabled()) log.debug("handleMessage: MSG_DISPLAY_SUBTITLE");
-                if (msg.obj == null)
-                    break;
-                displayView((Subtitle) msg.obj);
-                break;
-            }
-            case MSG_REMOVE_SUBTITLE: {
-                if (log.isDebugEnabled()) log.debug("handleMessage: MSG_REMOVE_SUBTITLE");
-                if (msg.obj == null)
-                    break;
-                removeView((Subtitle) msg.obj);
-                break;
-            }
             case MSG_SET_STATUSBAR_EVADE: {
                 // Handle status bar evade
                 if (log.isDebugEnabled()) log.debug("handleMessage: MSG_SET_STATUSBAR_EVADE");
@@ -172,114 +128,36 @@ public class SubtitleManager {
         }
     }
 
-    private void removeView(Subtitle subtitle) {
-        if (log.isDebugEnabled()) log.debug("removeView");
-        if (subtitle.isText()) {
-            mSubtitleTxtView.setText("");
-            mSubtitleTxtView.setVisibility(View.GONE);
-            // need to Invalidate View to force an update!
-            mSubtitleTxtView.postInvalidate();
-        } else if (subtitle.isBitmap()) {
-            mSubtitleGfxView.remove();
-        }
-    }
-
-    private void displayView(Subtitle subtitle) {
-        if (log.isDebugEnabled()) log.debug("displayView sub duration={}", subtitle.getDuration());
-
-        if (subtitle.isText()) {
-            if (mIsSubtitleGfx || isFirstTime) { // transition or first time we need to adjustView
-                setScreenSize(mScreenWidth, mScreenHeight);
-                mIsSubtitleGfx = false;
-                isFirstTime = false;
-                if (log.isDebugEnabled()) log.debug("displayView: Text, mIsSubtitleGfx=false adjustView");
-                // reset the layout params to get full screen text subs since before it was gfx subs with different layout
-                setScreenSize(mScreenWidth, mScreenHeight);
-                adjustView(); // we need to adjust the view to reflect the change
-            }
-
-            subtitle.setAlignment(getAlignment(subtitle.getText()));
-
-            if (log.isDebugEnabled()) log.debug("displayView: Text, mIsSubtitleGfx=false, alignment={} for text={}", subtitle.getAlignment(), subtitle.getText());
-
-            mSubtitleTxtView.setVisibility(View.VISIBLE);
-
-            // Adjust the position based on the alignment
-            adjustSubtitlePosition(subtitle.getAlignment());
-
-            if (mSpannableStringBuilder == null) {
-                mSpannableStringBuilder = new SpannableStringBuilder();
-                float shadowRadius = mRes.getDimension(R.dimen.subtitles_shadow_radius);
-                float shadowDx = mRes.getDimension(R.dimen.subtitles_shadow_dx);
-                float shadowDy = mRes.getDimension(R.dimen.subtitles_shadow_dy);
-                int shadowColor = ContextCompat.getColor(mContext, R.color.subtitles_shadow_color);
-                mTextShadowSpan = new TextShadowSpan(shadowRadius, shadowDx, shadowDy, shadowColor);
-            }
-            mSpannableStringBuilder.clear();
-            mSpannableStringBuilder.append(HtmlCompat.fromHtml(cleanText(subtitle.getText()), HtmlCompat.FROM_HTML_MODE_LEGACY));
-            if (mSpannableStringBuilder.length() > 0) {
-                // HtmlCompat.fromHtml override shadow style, so add a shadowSpan for whole text.
-                mSpannableStringBuilder.setSpan(mTextShadowSpan, 0, mSpannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-            }
-            mSubtitleTxtView.setText(mSpannableStringBuilder);
-            if (log.isDebugEnabled()) log.debug("displayView: text={}", mSpannableStringBuilder.toString());
-            // need to Invalidate View to force an update!
-            mSubtitleTxtView.postInvalidate();
-        } else if (subtitle.isBitmap()) {
-            if (! mIsSubtitleGfx || isFirstTime) { // transition or first time we need to adjustView
-                isFirstTime = false;
-                mIsSubtitleGfx = true;
-                if (log.isDebugEnabled()) log.debug("displayView: Bitmap, mIsSubtitleGfx=true adjustView");
-                adjustView(); // we need to adjust the view because it was initialized with mIsSubtitleGfx=true
-            }
-            if (log.isDebugEnabled()) log.debug("displayView: Bitmap bounds={}, mIsSubtitleGfx=true", subtitle.getBounds());
-            Rect bounds = subtitle.getBounds();
-            mSubtitleGfxView.setSubtitle(subtitle.getBitmap(), bounds, subtitle.getFrameWidth(), subtitle.getFrameHeight());
-        }
-    }
-
-    private void adjustSubtitlePosition(SubtitleAlignment alignment) {
-        // Set the gravity based on the alignment for positioning
-        int gravity = switch (alignment) {
-            case BOTTOM_LEFT -> Gravity.BOTTOM | Gravity.START;
-            case BOTTOM_MID -> Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-            case BOTTOM_RIGHT -> Gravity.BOTTOM | Gravity.END;
-            case MID_LEFT -> Gravity.CENTER_VERTICAL | Gravity.START;
-            case MID_MID -> Gravity.CENTER;
-            case MID_RIGHT -> Gravity.CENTER_VERTICAL | Gravity.END;
-            case TOP_LEFT -> Gravity.TOP | Gravity.START;
-            case TOP_MID -> Gravity.TOP | Gravity.CENTER_HORIZONTAL;
-            case TOP_RIGHT -> Gravity.TOP | Gravity.END;
-        }; // Default to bottom center
-
-        // Get text justification based on horizontal alignment
-        int textJustification = getTextJustification(alignment);
-
-        // Set both positioning gravity and text justification
-        mSubtitleTxtView.setGravity3D(gravity, textJustification);
-    }
-
-    /**
-     * Get text justification based on subtitle alignment according to SRT standards
-     * @param alignment The subtitle alignment
-     * @return Gravity constant for text justification
-     */
-    private int getTextJustification(SubtitleAlignment alignment) {
-        return switch (alignment) {
-            // Left positions (1, 4, 7) - left justify
-            case BOTTOM_LEFT, MID_LEFT, TOP_LEFT -> Gravity.START;
-            // Right positions (3, 6, 9) - right justify
-            case BOTTOM_RIGHT, MID_RIGHT, TOP_RIGHT -> Gravity.END;
-            // Center positions (2, 5, 8) - center justify
-            case BOTTOM_MID, MID_MID, TOP_MID -> Gravity.CENTER_HORIZONTAL;
-        };
-    }
-
     private int mColor;
     private boolean mOutline;
     private boolean mBackground;
     private int mBgOpacity;
     private int mUiMode;
+
+    // --- NEW: libass styling system (bg mode / override mode / absolute values) ---
+    // mBgMode / mOutline / mBackground are kept in sync with each other so that legacy
+    // callers (TV picker, old prefs) and the new dialog never disagree about state:
+    //   mBgMode 0 (Floating)    <=> mOutline may be true/false, mBackground=false
+    //   mBgMode 1 (Boxed Line)  <=> mBackground=true, mOutline forced false
+    //   mBgMode 2 (Boxed Block) <=> mBackground=true, mOutline may be true/false
+    public static final int BG_MODE_FLOATING    = 0;
+    public static final int BG_MODE_BOXED_LINE  = 1;
+    public static final int BG_MODE_BOXED_BLOCK = 2;
+
+    public static final int OVERRIDE_EMBEDDED   = 0;
+    public static final int OVERRIDE_CUSTOM     = 1;
+    public static final int OVERRIDE_SCALE_ONLY = 2;
+
+    private int mBgMode = BG_MODE_FLOATING;
+    private int mOverrideMode = OVERRIDE_CUSTOM;
+    private int mFontSizePt = 42;
+    private float mFontScale = 1.0f;
+    private boolean mBold = false;
+    private int mOutlineColor = 0xFF000000;
+    private int mShadowColor  = 0xAA000000;
+    private int mBackgroundColor = 0x88000000; // matches sub_style.c's native default (50% transparent black)
+    private float mOutlineWidth = 2.0f; // px, also used as "outline" in Boxed Block mode
+    private float mShadowWidth  = 2.0f; // px in Floating mode, padding in Boxed Block mode
 
     private void removeSubtitle(Subtitle subtitle) {
         if (log.isDebugEnabled()) log.debug("removeSubtitle");
@@ -295,118 +173,39 @@ public class SubtitleManager {
         mHandler.sendMessage(mHandler.obtainMessage(MSG_DISPLAY_SUBTITLE, subtitle));
     }
 
-    private static SubtitleAlignment getAlignment(final String input) {
-        SubtitleAlignment alignment = SubtitleAlignment.BOTTOM_MID;
-        Matcher subripAlignmentMatch = SUBRIP_ALIGNMENT_TAG.matcher(input);
-        if (subripAlignmentMatch.find()) {
-            int alignmentInt = Integer.parseInt(subripAlignmentMatch.group(1));
-            if (log.isDebugEnabled()) log.debug("getAlignment: input={} -> alignmentInt={}", input, alignmentInt);
-            alignment = switch (alignmentInt) {
-                case 1 -> SubtitleAlignment.BOTTOM_LEFT;
-                case 2 -> SubtitleAlignment.BOTTOM_MID;
-                case 3 -> SubtitleAlignment.BOTTOM_RIGHT;
-                case 4 -> SubtitleAlignment.MID_LEFT;
-                case 5 -> SubtitleAlignment.MID_MID;
-                case 6 -> SubtitleAlignment.MID_RIGHT;
-                case 7 -> SubtitleAlignment.TOP_LEFT;
-                case 8 -> SubtitleAlignment.TOP_MID;
-                case 9 -> SubtitleAlignment.TOP_RIGHT;
-                default -> alignment;
-            };
-        }
-        return alignment;
-    }
-
-    private static String cleanText(final String input) {
-        // remove space/new lines at end and beginning
-        String displayText = input.trim();
-
-        // convert \n or literal "\n" to <br>
-        displayText = displayText.replaceAll("(?i)\\n|\\\\n", "<br />");
-
-        // Fix concatenated lines that lost newlines during SRT parsing
-        // Pattern: any character + sentence ending + capital letter = missing line break
-        displayText = displayText.replaceAll("([^\\n\\r][.!?])([A-Z])", "$1<br />$2");
-
-        // Protect <br /> tags during whitespace condensing
-        displayText = displayText.replaceAll("<br\\s*/>", "§NEWLINE§");
-        // condense whitespace to 1 space (but preserve our protected newlines)
-        displayText = displayText.replaceAll("\\s+", " ");
-        // Restore <br /> tags
-        displayText = displayText.replaceAll("§NEWLINE§", "<br />");
-
-        // check for .SSA subtitle tags {\ ... }
-        // check for WebVTT voice tags <v ...> and </v>
-        // Must be done before removing SSA_ANY_TAG, because { } could be inside <v> </v>
-        StringBuffer sb = new StringBuffer(displayText.length());
-        displayText = replaceAll(displayText, VTT_VOICE_TAG_OPEN, HTML_VTT_VOICE_TAG_OPEN, sb);
-        displayText = replaceAll(displayText, VTT_VOICE_TAG_CLOSE, "", sb);
-        Matcher ssaTagMatch = SSA_ANY_TAG.matcher(displayText);
-        if (ssaTagMatch.find()) {
-            // convert color Tag = {\c&H0F0F0F&} ......{\ to html tag
-            sb.setLength(0);
-            displayText = replaceAll(displayText, SSA_COLOR_TAG, HTML_COLOR_TAG, sb);
-            displayText = replaceAll(displayText, SSA_ITALIC_TAG, HTML_ITALIC_TAG, sb);
-            displayText = replaceAll(displayText, SSA_BOLD_TAG, HTML_BOLD_TAG, sb);
-            displayText = replaceAll(displayText, SSA_UNDERLINE_TAG, HTML_UNDERLINE_TAG, sb);
-            displayText = replaceAll(displayText, SSA_STRIKETHROUGH_TAG, HTML_STRIKETHROUGH_TAG, sb);
-            displayText = replaceAll(displayText, SSA_ANY_TAG, "", sb);
-        }
-        if (log.isDebugEnabled()) log.debug("cleanText: [{}] -> [{}]", input, displayText);
-        return displayText;
-    }
-
-    /**
-     * Behaves like String.replaceAll() but takes Pattern and a StringBuffer rather than recreating them all the time
-     * @param input String that needs replacements
-     * @param pattern RegEx to find in input
-     * @param replacement String (may contain $1, $2, ...) that replaces the match
-     * @param buffer a StringBuffer this method may use
-     * @return the resulting String
-     */
-    private static String replaceAll(String input, Pattern pattern, String replacement, StringBuffer buffer) {
-        buffer.setLength(0);
-        Matcher match = pattern.matcher(input);
-        while (match.find()) {
-            match.appendReplacement(buffer, replacement);
-        }
-        match.appendTail(buffer);
-        return buffer.toString();
-    }
-
     public int getColor() {
         return mColor;
     }
 
+    // --- LEGACY (TV picker + old prefs): boolean outline/background toggles ---
+    // Kept working by mapping onto the new bg_mode enum under the hood.
+
     public boolean getOutlineState() { return mOutline; }
 
+    /**
+     * Legacy on/off outline toggle. Only meaningful in Floating mode (bg_mode 0);
+     * if a boxed mode is active, forces Floating so the outline is actually visible,
+     * matching what a user flipping this switch would expect to see.
+     */
     public void setOutlineState(boolean outline) {
         mOutline = outline;
-
-        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
-            // Match legacy SubtitleTextView stroke width of 4.0f!
-            Player.sPlayer.getSubtitleEngine().setOutlineWidth(outline ? 4.0f : 0.0f);
+        if (mBgMode != BG_MODE_FLOATING) {
+            setBgMode(BG_MODE_FLOATING);
         }
-
-        if (mSubtitleTxtView != null) {
-            mSubtitleTxtView.setOutlineState(outline);
-        }
+        setOutlineWidth(outline ? 4.0f : 0.0f); // matches legacy SubtitleTextView stroke width
     }
 
-    public boolean getBackgroundState() { 
-        return mBackground; 
+    public boolean getBackgroundState() {
+        return mBackground;
     }
 
+    /**
+     * Legacy on/off background toggle. Maps to Boxed Line (bg_mode 1), the closest
+     * equivalent to the old per-line CC-style box. Turning it off returns to Floating.
+     */
     public void setBackgroundState(boolean background) {
         mBackground = background;
-
-        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
-            Player.sPlayer.getSubtitleEngine().setBackgroundEnabled(background);
-        }
-
-        if (mSubtitleTxtView != null) {
-            mSubtitleTxtView.setBackgroundState(background);
-        }
+        setBgMode(background ? BG_MODE_BOXED_LINE : BG_MODE_FLOATING);
     }
 
     public int getBackgroundOpacity() { 
@@ -420,16 +219,132 @@ public class SubtitleManager {
             // Java passes 0-255, our C-engine expects a 0.0 - 1.0 float!
             Player.sPlayer.getSubtitleEngine().setBackgroundOpacity(opacity / 255.0f);
         }
+    }
 
-        if (mSubtitleTxtView != null) {
-            mSubtitleTxtView.setBackgroundOpacity(opacity); 
+    // --- NEW: libass styling system ---
+
+    public int getBgMode() { return mBgMode; }
+
+    /**
+     * Switches between Floating (0) / Boxed Line (1) / Boxed Block (2).
+     * Also updates the legacy mOutline/mBackground booleans so getters used by the
+     * TV picker and preference-save code stay consistent with whichever surface
+     * last changed the mode.
+     */
+    public void setBgMode(int mode) {
+        mBgMode = mode;
+        mBackground = (mode != BG_MODE_FLOATING);
+        if (mode != BG_MODE_FLOATING) mOutline = false;
+
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setBackgroundMode(mode);
+        }
+    }
+
+    public int getOverrideMode() { return mOverrideMode; }
+
+    /** 0 = Embedded track styles, 1 = Force custom user styles, 2 = Scale only. */
+    public void setOverrideMode(int mode) {
+        mOverrideMode = mode;
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setOverrideMode(mode);
+        }
+    }
+
+    public int getFontSizePt() { return mFontSizePt; }
+
+    /** Absolute point size, replaces the old 0..100 abstract scale for the new dialog. */
+    public void setFontSizePt(int pt) {
+        mFontSizePt = pt;
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setFontSize((float) pt);
+        }
+        // Keep the legacy 0..100 slider field roughly in sync in case old code paths
+        // (TV picker) read mSubtitleSize before this dialog has run.
+        mSubtitleSize = pt;
+    }
+
+    public boolean getBold() { return mBold; }
+
+    /**
+     * Multiplier applied on top of the embedded track's own font size — only meaningful
+     * in OVERRIDE_SCALE_ONLY mode. In OVERRIDE_CUSTOM/OVERRIDE_EMBEDDED this value is
+     * tracked but never read by sync_styles() (see sub_format_ssa.c's override_mode==2
+     * branch, which multiplies the embedded ASS_Style.FontSize by font_scale — it never
+     * touches the absolute font_size field that setFontSizePt() drives).
+     */
+    public float getFontScale() { return mFontScale; }
+
+    public void setFontScale(float scale) {
+        mFontScale = scale;
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setFontScale(scale);
+        }
+    }
+
+    public void setBold(boolean bold) {
+        mBold = bold;
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setBold(bold);
+        }
+    }
+
+    public int getOutlineColor() { return mOutlineColor; }
+
+    public void setOutlineColor(int color) {
+        mOutlineColor = color;
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setOutlineColor(color);
+        }
+    }
+
+    public int getShadowColor() { return mShadowColor; }
+
+    public void setShadowColor(int color) {
+        mShadowColor = color;
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setShadowColor(color);
+        }
+    }
+
+    public int getBackgroundColor() { return mBackgroundColor; }
+
+    public void setBackgroundColor(int color) {
+        mBackgroundColor = color;
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setBackgroundColor(color);
+            // nativeSetBackgroundColor overwrites the ENTIRE bg_color word (RGB + the
+            // transparency byte nativeSetBackgroundOpacity separately patches). Re-apply
+            // the currently tracked opacity right after, or picking a background color
+            // silently resets opacity to whatever alpha channel the picked color's swatch
+            // default happened to carry — which is how "Boxed Line looks broken" manifests:
+            // the box was drawn, just at the wrong (often fully opaque) transparency.
+            Player.sPlayer.getSubtitleEngine().setBackgroundOpacity(mBgOpacity / 255.0f);
+        }
+    }
+
+    public float getOutlineWidth() { return mOutlineWidth; }
+
+    /** In Boxed Block mode (bg_mode 2) this is the outline drawn inside the box. */
+    public void setOutlineWidth(float px) {
+        mOutlineWidth = px;
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setOutlineWidth(px);
+        }
+    }
+
+    public float getShadowWidth() { return mShadowWidth; }
+
+    /** In Boxed Block mode (bg_mode 2) this value is hijacked by libass as box padding. */
+    public void setShadowWidth(float px) {
+        mShadowWidth = px;
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setShadowWidth(px);
         }
     }
 
     public void setUIMode(int uiMode) {
         mUiMode = uiMode;
-        if(mSubtitleTxtView!=null)
-            mSubtitleTxtView.setUIMode(uiMode);
 
         // Determine whether the native GL engine is now the active subtitle renderer.
         // In SBS or TB mode, SubtitleEngine's EGL thread owns gl_subtitle_view exclusively.
@@ -647,7 +562,6 @@ public class SubtitleManager {
             mPlayerView.updateViewLayout(mSubtitleLayout, lp);
         }
         if (currentSubtitle != null) displaySubtitle(currentSubtitle); // redisplay when changing screen size or video surface format
-        if(mSubtitleTxtView!=null) mSubtitleTxtView.setScreenSize(displayWidth, displayHeight);
         setSize(mSubtitleSize);
         updateSubtitleLayout();
     }
@@ -716,8 +630,6 @@ public class SubtitleManager {
     // Silently disconnects all Java-canvas subtitle drawing without clearing mUiSurface,
     // so we can reconnect later if we switch back to 2D mode.
     private void disconnectJavaSubtitleSurface() {
-        if (mSubtitleGfxView != null) mSubtitleGfxView.setRenderingSurface(null);
-        if (mSubtitleTxtView != null) mSubtitleTxtView.setRenderingSurface(null);
         if (mSubtitleSpacer != null) mSubtitleSpacer.setRenderingSurface(null);
     }
 
@@ -735,12 +647,9 @@ public class SubtitleManager {
             postClearFrameToUISurface();
             return;
         }
-        if (mSubtitleGfxView != null) {
-            mSubtitleGfxView.setRenderingSurface(uiSurface);
-            if (log.isDebugEnabled()) log.debug("setUIExternalSurface setRenderingSurface for mSubtitleGfxView");
-        }
-        if (mSubtitleTxtView != null)
-            mSubtitleTxtView.setRenderingSurface(uiSurface);
+        // NOTE: subtitle_gfx_view / subtitle_txt_view no longer exist — the native
+        // SubtitleEngine renders everything (2D and 3D) now. Only the position-hint
+        // spacer still needs the surface reference.
         if (mSubtitleSpacer != null)
             mSubtitleSpacer.setRenderingSurface(uiSurface);
     }
@@ -755,14 +664,11 @@ public class SubtitleManager {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mSubtitleLayout = inflater.inflate(R.layout.subtitle_layout, mPlayerView, false);
         if (mSubtitleLayout == null) return;
+        // NOTE: subtitle_gfx_view / subtitle_txt_view are no longer inflated or referenced here.
+        // The native SubtitleEngine (libass + GL) owns all subtitle rendering now; this class
+        // only retains the spacer (position-hint view) and the UI surface plumbing below.
         mSubtitleSpacer = (SubtitleSpacerView) mSubtitleLayout.findViewById(R.id.subtitle_spacer);
-        mSubtitleGfxView = (SubtitleGfxView) mSubtitleLayout.findViewById(R.id.subtitle_gfx_view);
-        mSubtitleTxtView = (Subtitle3DTextView) mSubtitleLayout.findViewById(R.id.subtitle_txt_view);
-        if (mSubtitleSpacer == null || mSubtitleGfxView == null || mSubtitleTxtView == null) return;
-        mSubtitleTxtView.setScreenSize(mScreenWidth, mScreenHeight);
-        mSubtitleTxtView.setUIMode(mUiMode);
-        mSubtitleTxtView.setBackgroundState(mBackground);
-        mSubtitleTxtView.setBackgroundOpacity(mBgOpacity);
+        if (mSubtitleSpacer == null) return;
         mSubtitleSpacerParams = mSubtitleSpacer.getLayoutParams();
         if (log.isDebugEnabled()) log.debug("attachWindow: mSubtitleSpacerParams.height={}", mSubtitleSpacerParams.height);
         mSubtitleSpacerParams.height = mSubtitleEvadedVPos;
@@ -905,13 +811,6 @@ public class SubtitleManager {
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
             Player.sPlayer.getSubtitleEngine().setFontSize(calcTextSize(size));
         }
-
-        if (mSubtitleGfxView != null) {
-            mSubtitleGfxView.setSize(size, mScreenWidth, mScreenHeight);
-        }
-        if (mSubtitleTxtView != null) {
-            mSubtitleTxtView.setTextSize(calcTextSize(size));
-        }
     }
 
     public void setColor(int color){
@@ -920,10 +819,6 @@ public class SubtitleManager {
 
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
             Player.sPlayer.getSubtitleEngine().setTextColor(color);
-        }
-
-        if (mSubtitleTxtView != null) {
-            mSubtitleTxtView.setTextColor(color);
         }
     }
 
@@ -965,7 +860,7 @@ public class SubtitleManager {
      * @param pos 0..255.
      */
     public void setVerticalPosition(int pos) {
-        if (mIsSubtitleGfx && SubtitleGfxView.RECT_COORDINATES)
+        if (mIsSubtitleGfx)
             mSubtitleVPos = 0;
         else
             mSubtitleVPos = pos;
@@ -977,20 +872,21 @@ public class SubtitleManager {
     }
 
     private void setVerticalPositionInternal (int pos) {
-        if (mIsSubtitleGfx && SubtitleGfxView.RECT_COORDINATES) mSubtitleEvadedVPos = 0;
+        if (mIsSubtitleGfx) mSubtitleEvadedVPos = 0;
         else mSubtitleEvadedVPos = pos;
 
-        // --- NEW: Route margin to Native Engine ---
+        // --- Route margin to Native Engine ---
+        // libass applies MarginV as a bottom-only offset for our bottom-center alignment
+        // (see generate_dynamic_ass_header()/sub_style_set_margin_bottom -> ASS MarginV).
+        // The legacy mSubtitleSpacer view below is NOT resized here anymore: it was a
+        // Java-canvas era mechanism for reserving screen space above SubtitleTextView, and
+        // dynamically growing/shrinking its height in the layout visually shifts the video
+        // surface's top boundary too, which looked like "the top margin is moving" even
+        // though MarginV itself is correctly bottom-only. The native offset alone now owns
+        // vertical position; the spacer stays at whatever static size the layout gives it.
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
             Player.sPlayer.getSubtitleEngine().setVerticalOffset(mSubtitleEvadedVPos);
         }
-
-        if (mSubtitleSpacer == null) return;
-        mSubtitleSpacerParams.height = mSubtitleEvadedVPos;
-        if (log.isDebugEnabled()) log.debug("setVerticalPositionInternal: new Height {}", mSubtitleSpacerParams.height);
-        mSubtitleSpacer.setLayoutParams(mSubtitleSpacerParams);
-        mSubtitleSpacer.requestLayout();
-        mSubtitleSpacer.postInvalidate();
     }
 
     public void addSubtitle(Subtitle subtitle) {
