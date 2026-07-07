@@ -586,9 +586,6 @@ public class SubtitleManager {
         if (log.isDebugEnabled()) log.debug("setGLEngineActive: {}", active);
         mGLEngineActive = active;
         if (active) {
-            // Disconnect the Java canvas path — SubtitleTextView stops calling lockCanvas().
-            disconnectJavaSubtitleSurface();
-
             // CRITICAL: VideoEffectRenderer.draw() calls mUISurfaceTexture.updateTexImage()
             // unconditionally every frame. mUISurface is the Surface backed by that
             // SurfaceTexture. Now that we've disconnected all Java subtitle drawing,
@@ -627,12 +624,6 @@ public class SubtitleManager {
         }
     }
 
-    // Silently disconnects all Java-canvas subtitle drawing without clearing mUiSurface,
-    // so we can reconnect later if we switch back to 2D mode.
-    private void disconnectJavaSubtitleSurface() {
-        if (mSubtitleSpacer != null) mSubtitleSpacer.setRenderingSurface(null);
-    }
-
     public void setUIExternalSurface(Surface uiSurface) {
         if (log.isDebugEnabled()) log.debug("setUIExternalSurface {}", uiSurface);
         mUiSurface = uiSurface;
@@ -647,11 +638,11 @@ public class SubtitleManager {
             postClearFrameToUISurface();
             return;
         }
-        // NOTE: subtitle_gfx_view / subtitle_txt_view no longer exist — the native
-        // SubtitleEngine renders everything (2D and 3D) now. Only the position-hint
-        // spacer still needs the surface reference.
-        if (mSubtitleSpacer != null)
-            mSubtitleSpacer.setRenderingSurface(uiSurface);
+        // NOTE: subtitle_gfx_view / subtitle_txt_view no longer exist, and the position-hint
+        // spacer (SubtitleSpacerView) no longer has a rendering-surface concept either — it's
+        // a plain View shown via alpha/background now, not a second Java-canvas draw target.
+        // This surface is simply tracked in mUiSurface above for whichever GL-active branch
+        // needs it next time this is called.
     }
 
     // setOnSystemUiVisibilityChangeListener is the only reliable way to track transient bar visibility;
@@ -876,16 +867,23 @@ public class SubtitleManager {
         else mSubtitleEvadedVPos = pos;
 
         // --- Route margin to Native Engine ---
-        // libass applies MarginV as a bottom-only offset for our bottom-center alignment
-        // (see generate_dynamic_ass_header()/sub_style_set_margin_bottom -> ASS MarginV).
-        // The legacy mSubtitleSpacer view below is NOT resized here anymore: it was a
-        // Java-canvas era mechanism for reserving screen space above SubtitleTextView, and
-        // dynamically growing/shrinking its height in the layout visually shifts the video
-        // surface's top boundary too, which looked like "the top margin is moving" even
-        // though MarginV itself is correctly bottom-only. The native offset alone now owns
-        // vertical position; the spacer stays at whatever static size the layout gives it.
+        // libass applies MarginV as a bottom-only offset for bottom-aligned styles
+        // (Alignment 1-3; see sub_format_ssa.c's sync_styles(), which gates the MarginV
+        // write to that range). This is what actually positions subtitle text.
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
             Player.sPlayer.getSubtitleEngine().setVerticalOffset(mSubtitleEvadedVPos);
+        }
+
+        // --- Keep the position-hint indicator in sync ---
+        // subtitle_layout.xml no longer has any view positioned layout_above the spacer
+        // (subtitle_gfx_view/subtitle_txt_view were removed once native rendering took
+        // over), so resizing the spacer live can no longer visually shift a sibling's top
+        // boundary the way it used to — that was the actual reason this was removed
+        // previously, not the resize itself. Without this, the hint bar shown while
+        // dragging the vertical-offset control silently stops tracking the live value.
+        if (mSubtitleSpacer != null && mSubtitleSpacerParams != null) {
+            mSubtitleSpacerParams.height = mSubtitleEvadedVPos;
+            mSubtitleSpacer.setLayoutParams(mSubtitleSpacerParams);
         }
     }
 
