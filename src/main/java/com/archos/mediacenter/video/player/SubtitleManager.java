@@ -21,9 +21,6 @@ import com.archos.medialib.Subtitle;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
@@ -37,8 +34,6 @@ import androidx.core.content.ContextCompat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.ref.WeakReference;
 
 public class SubtitleManager {
 
@@ -61,15 +56,12 @@ public class SubtitleManager {
     private int                 mSubtitleEvadedVPos;
     private boolean mIsSubtitleGfx = false;
     private boolean isFirstTime = true;
-    private Subtitle currentSubtitle = null;
-    private boolean mPlaybackPaused;
 
     private boolean mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
     private int mGestureAreaHeight, mControlBarHeight;
 
     Surface                     mUiSurface;
     private boolean mForbidWindow ;
-    DispSubtitleThread mDispSubtitleThread = null;
     private static int mRoundCornerRadius = 0;
     private static boolean mFullScreenWithCutout = true;
 
@@ -77,70 +69,25 @@ public class SubtitleManager {
     public static final int SUBTITLE_TYPE_TEXT = 1;
     public static final int SUBTITLE_TYPE_GFX = 2;
 
-    private static final int MSG_STOP_SUBTITLE = 0;
-    private static final int MSG_DISPLAY_SUBTITLE = 1;
-    private static final int MSG_REMOVE_SUBTITLE = 2;
-    private static final int MSG_SET_STATUSBAR_EVADE = 3;
-
     // Range for TextView.setTextSize() (txt Subtitle)
     private static final int TXT_SIZE_MIN = 16;
     private static final int TXT_SIZE_MAX = 64;
     private static final float TXT_SIZE_RANGE = TXT_SIZE_MAX - TXT_SIZE_MIN;
 
-    private static class SubtitleHandler extends Handler {
-        private final WeakReference<SubtitleManager> mSubtitleManager;
-
-        SubtitleHandler(SubtitleManager subtitleManager) {
-            super(Looper.getMainLooper());
-            mSubtitleManager = new WeakReference<>(subtitleManager);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            SubtitleManager subtitleManager = mSubtitleManager.get();
-            if (subtitleManager != null) {
-                subtitleManager.handleMessage(msg);
-            }
-        }
-    }
-
-    private final Handler mHandler = new SubtitleHandler(this);
-
-    // NOTE: the native subtitle pipeline (avos_mp_video.c::send_subtitle) now returns
-    // early for every subtitle format (SSA/TEXT/DVD_GFX/PGS) and never reaches the old
-    // JNI addSubtitle() callback — SubtitleEngine's native GL/libass renderer draws
-    // everything now. displayView()/removeView() are therefore unreachable in practice
-    // and have been removed along with the SubtitleGfxView/Subtitle3DTextView rendering
-    // calls; addSubtitle()/DispSubtitleThread are kept intact (now harmless no-ops)
-    // rather than ripped out, since PlayerActivity/FloatingPlayerService still call
-    // addSubtitle() and removing that call site is a separate, larger change.
-    private void handleMessage(Message msg) {
-        if (log.isDebugEnabled()) log.debug("handleMessage: {}", msg.what);
-        switch (msg.what) {
-            case MSG_STOP_SUBTITLE:
-            case MSG_DISPLAY_SUBTITLE:
-            case MSG_REMOVE_SUBTITLE:
-                if (log.isDebugEnabled()) log.debug("handleMessage: {} (no-op, native GL engine owns rendering)", msg.what);
-                break;
-            case MSG_SET_STATUSBAR_EVADE: {
-                // Handle status bar evade
-                if (log.isDebugEnabled()) log.debug("handleMessage: MSG_SET_STATUSBAR_EVADE");
-            }
-        }
-    }
+    // NOTE: this class used to hold a Handler (SubtitleHandler) posting MSG_STOP_SUBTITLE/
+    // MSG_DISPLAY_SUBTITLE/MSG_REMOVE_SUBTITLE/MSG_SET_STATUSBAR_EVADE messages, driven by
+    // displaySubtitle()/removeSubtitle(), which were in turn only ever called by
+    // DispSubtitleThread. All of that has been removed: the native subtitle pipeline
+    // (avos_mp_video.c::send_subtitle) returns early for every subtitle format before the
+    // JNI callback that would feed this chain ever fires, so the whole thing only ever
+    // processed zero real messages. The native SubtitleEngine (libass + GL) renders
+    // everything now.
 
     private int mColor;
-    private boolean mOutline;
-    private boolean mBackground;
     private int mBgOpacity;
     private int mUiMode;
 
-    // --- NEW: libass styling system (bg mode / override mode / absolute values) ---
-    // mBgMode / mOutline / mBackground are kept in sync with each other so that legacy
-    // callers (TV picker, old prefs) and the new dialog never disagree about state:
-    //   mBgMode 0 (Floating)    <=> mOutline may be true/false, mBackground=false
-    //   mBgMode 1 (Boxed Line)  <=> mBackground=true, mOutline forced false
-    //   mBgMode 2 (Boxed Block) <=> mBackground=true, mOutline may be true/false
+    // --- libass styling system (bg mode / override mode / absolute values) ---
     public static final int BG_MODE_FLOATING    = 0;
     public static final int BG_MODE_BOXED_LINE  = 1;
     public static final int BG_MODE_BOXED_BLOCK = 2;
@@ -160,57 +107,12 @@ public class SubtitleManager {
     private float mOutlineWidth = 2.0f; // px, also used as "outline" in Boxed Block mode
     private float mShadowWidth  = 2.0f; // px in Floating mode, padding in Boxed Block mode
 
-    private void removeSubtitle(Subtitle subtitle) {
-        if (log.isDebugEnabled()) log.debug("removeSubtitle");
-        mHandler.removeMessages(MSG_DISPLAY_SUBTITLE);
-        mHandler.removeMessages(MSG_REMOVE_SUBTITLE);
-        mHandler.sendMessage(mHandler.obtainMessage(MSG_REMOVE_SUBTITLE, subtitle));
-    }
-
-    private void displaySubtitle(Subtitle subtitle) {
-        if (log.isDebugEnabled()) log.debug("displaySubtitle");
-        mHandler.removeMessages(MSG_REMOVE_SUBTITLE);
-        mHandler.removeMessages(MSG_DISPLAY_SUBTITLE);
-        mHandler.sendMessage(mHandler.obtainMessage(MSG_DISPLAY_SUBTITLE, subtitle));
-    }
-
     public int getColor() {
         return mColor;
     }
 
-    // --- LEGACY (TV picker + old prefs): boolean outline/background toggles ---
-    // Kept working by mapping onto the new bg_mode enum under the hood.
-
-    public boolean getOutlineState() { return mOutline; }
-
-    /**
-     * Legacy on/off outline toggle. Only meaningful in Floating mode (bg_mode 0);
-     * if a boxed mode is active, forces Floating so the outline is actually visible,
-     * matching what a user flipping this switch would expect to see.
-     */
-    public void setOutlineState(boolean outline) {
-        mOutline = outline;
-        if (mBgMode != BG_MODE_FLOATING) {
-            setBgMode(BG_MODE_FLOATING);
-        }
-        setOutlineWidth(outline ? 4.0f : 0.0f); // matches legacy SubtitleTextView stroke width
-    }
-
-    public boolean getBackgroundState() {
-        return mBackground;
-    }
-
-    /**
-     * Legacy on/off background toggle. Maps to Boxed Line (bg_mode 1), the closest
-     * equivalent to the old per-line CC-style box. Turning it off returns to Floating.
-     */
-    public void setBackgroundState(boolean background) {
-        mBackground = background;
-        setBgMode(background ? BG_MODE_BOXED_LINE : BG_MODE_FLOATING);
-    }
-
-    public int getBackgroundOpacity() { 
-        return mBgOpacity; 
+    public int getBackgroundOpacity() {
+        return mBgOpacity;
     }
 
     public void setBackgroundOpacity(int opacity) {
@@ -228,14 +130,9 @@ public class SubtitleManager {
 
     /**
      * Switches between Floating (0) / Boxed Line (1) / Boxed Block (2).
-     * Also updates the legacy mOutline/mBackground booleans so getters used by the
-     * TV picker and preference-save code stay consistent with whichever surface
-     * last changed the mode.
      */
     public void setBgMode(int mode) {
         mBgMode = mode;
-        mBackground = (mode != BG_MODE_FLOATING);
-        if (mode != BG_MODE_FLOATING) mOutline = false;
 
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
             Player.sPlayer.getSubtitleEngine().setBackgroundMode(mode);
@@ -267,6 +164,13 @@ public class SubtitleManager {
 
     public boolean getBold() { return mBold; }
 
+    public void setBold(boolean bold) {
+        mBold = bold;
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setBold(bold);
+        }
+    }
+
     /**
      * Multiplier applied on top of the embedded track's own font size — only meaningful
      * in OVERRIDE_SCALE_ONLY mode. In OVERRIDE_CUSTOM/OVERRIDE_EMBEDDED this value is
@@ -280,13 +184,6 @@ public class SubtitleManager {
         mFontScale = scale;
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
             Player.sPlayer.getSubtitleEngine().setFontScale(scale);
-        }
-    }
-
-    public void setBold(boolean bold) {
-        mBold = bold;
-        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
-            Player.sPlayer.getSubtitleEngine().setBold(bold);
         }
     }
 
@@ -362,139 +259,15 @@ public class SubtitleManager {
         }
     }
 
-    final class DispSubtitleThread extends Thread {
-        private boolean mRunning = true;
-        private boolean mPaused = mPlaybackPaused;
-        private Subtitle mCurrentSubtitle;
-        private Subtitle mNextSubtitle;
-        private long mRemainingMs;
-        private long mDeadlineMs;
-        private long mElapsedMs;
-        private long mRunStartMs;
-
-        // All cue and timer state belongs to this monitor. Paused replay may
-        // replace the visible cue, but never starts its expiration clock.
-        private long remaining(long now) {
-            return mPaused ? mRemainingMs : Math.max(0L, mDeadlineMs - now);
-        }
-
-        private long elapsed(long now) {
-            return mElapsedMs + (mPaused ? 0L : now - mRunStartMs);
-        }
-
-        private void removeCurrent() {
-            if (mCurrentSubtitle != null) removeSubtitle(mCurrentSubtitle);
-            mCurrentSubtitle = null;
-            currentSubtitle = null;
-        }
-
-        private void install(Subtitle subtitle, long now) {
-            removeCurrent();
-            mCurrentSubtitle = subtitle;
-            currentSubtitle = subtitle;
-            mRemainingMs = Math.max(0, subtitle.getDuration());
-            mDeadlineMs = now + mRemainingMs;
-            mElapsedMs = 0;
-            mRunStartMs = now;
-            displaySubtitle(subtitle);
-        }
-
-        void quit() {
-            synchronized (this) {
-                mRunning = false;
-                notifyAll();
-            }
-            try {
-                join();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                log.error("DispSubtitleThread quit - interrupted", e);
-            }
-            mDispSubtitleThread = null;
-        }
-
-        @Override
-        public void run() {
-            synchronized (this) {
-                while (mRunning) {
-                    long now = SystemClock.uptimeMillis();
-                    if (mCurrentSubtitle == null && mNextSubtitle != null) {
-                        Subtitle next = mNextSubtitle;
-                        mNextSubtitle = null;
-                        install(next, now);
-                    }
-                    if (mCurrentSubtitle != null && mCurrentSubtitle.isTimed()
-                            && remaining(now) <= 0) {
-                        removeCurrent();
-                        continue;
-                    }
-                    try {
-                        if (mPaused || mCurrentSubtitle == null || !mCurrentSubtitle.isTimed()) {
-                            wait();
-                        } else {
-                            wait(Math.max(1L, remaining(now)));
-                        }
-                    } catch (InterruptedException e) {
-                        // Seek/stop or a spurious wakeup: reevaluate under the lock.
-                    }
-                }
-                clear();
-            }
-        }
-
-        synchronized void addSubtitle(Subtitle subtitle) {
-            if (!mRunning) return;
-            long now = SystemClock.uptimeMillis();
-            if (!subtitle.isTimed()) {
-                mNextSubtitle = null;
-                install(subtitle, now);
-            } else if (mPaused) {
-                // Native delivers only the cue active at the paused playhead.
-                mNextSubtitle = null;
-                removeCurrent();
-                if (subtitle.getDuration() > 0) install(subtitle, now);
-            } else if (mCurrentSubtitle == null || !mCurrentSubtitle.isTimed()) {
-                removeCurrent();
-                mNextSubtitle = subtitle.getDuration() > 0 ? subtitle : null;
-            } else {
-                // A PGS clear ends the current cue without becoming a visible
-                // cue itself. Use long arithmetic for open-ended PGS durations.
-                long untilNext = Math.max(0L, (long) subtitle.getPosition()
-                        - mCurrentSubtitle.getPosition() - elapsed(now));
-                mRemainingMs = Math.min(remaining(now), untilNext);
-                mDeadlineMs = now + mRemainingMs;
-                mNextSubtitle = subtitle.getDuration() > 0 ? subtitle : null;
-            }
-            notifyAll();
-        }
-
-        synchronized void show() {
-            // Visibility is updated by displaySubtitle/removeSubtitle.
-        }
-
-        synchronized void clear() {
-            mNextSubtitle = null;
-            removeCurrent();
-            mRemainingMs = 0;
-            mElapsedMs = 0;
-            mHandler.sendMessage(mHandler.obtainMessage(MSG_STOP_SUBTITLE));
-            notifyAll();
-        }
-
-        synchronized void setSuspended(boolean paused) {
-            if (mPaused == paused) return;
-            long now = SystemClock.uptimeMillis();
-            if (paused) {
-                mRemainingMs = remaining(now);
-                mElapsedMs = elapsed(now);
-            } else {
-                mRunStartMs = now;
-                mDeadlineMs = now + mRemainingMs;
-            }
-            mPaused = paused;
-            notifyAll();
-        }
-    }
+    // DispSubtitleThread removed: it was a scheduling engine for displaying/timing
+    // subtitles fed via addSubtitle(), but addSubtitle() is never called in practice —
+    // avos_mp_video.c's send_subtitle() returns early for every subtitle format
+    // (SSA/TEXT/DVD_GFX/PGS) before the native code ever reaches the JNI callback that
+    // would invoke it. The native SubtitleEngine (libass + GL, see sub_engine.c /
+    // sub_format_ssa.c / sub_render_gl.c) is the only thing that renders subtitles now.
+    // See start()/stop()/show()/clear()/addSubtitle()/onPlay()/onPause()/onSeekStart()
+    // below for the no-op stubs kept for API compatibility with PlayerActivity and
+    // FloatingPlayerService, which still call these methods from live code paths.
 
     public SubtitleManager(Context context, ViewGroup playerView, WindowManager window, boolean forbidWindow) {
         mContext = context;
@@ -516,7 +289,8 @@ public class SubtitleManager {
             lp.height = mScreenHeight;
             mPlayerView.updateViewLayout(mSubtitleLayout, lp);
         }
-        if (currentSubtitle != null) displaySubtitle(currentSubtitle); // redisplay when changing screen size or video surface format
+        // NOTE: this used to redisplay a currentSubtitle field here, tracked by
+        // DispSubtitleThread, which has been removed (see the note above start()).
         setSize(mSubtitleSize);
         updateSubtitleLayout();
     }
@@ -525,11 +299,8 @@ public class SubtitleManager {
         if (log.isDebugEnabled()) log.debug("updateSubtitleLayout");
         // surface change redisplay sub to adjust surface size
         if (! isFirstTime) adjustView();
-        if (currentSubtitle != null) {
-            displaySubtitle(currentSubtitle);
-        }
     }
-    
+
     // When true, the native SubtitleEngine GL thread owns gl_subtitle_view.
     // The Java canvas subtitle path (SubtitleTextView.setRenderingSurface / lockCanvas)
     // must be completely disconnected — two producers cannot share one SurfaceTexture,
@@ -687,41 +458,24 @@ public class SubtitleManager {
 
     public void start() {
         if (log.isDebugEnabled()) log.debug("start");
-
         attachWindow();
-
-        if (mDispSubtitleThread == null) {
-            mDispSubtitleThread = new DispSubtitleThread();
-            try {
-                mDispSubtitleThread.start();
-            } catch (IllegalThreadStateException e) {
-                // thread has been started before
-            }
-        }
-
-        show();
     }
 
     public void stop() {
         if (log.isDebugEnabled()) log.debug("stop");
-
-        if (mDispSubtitleThread != null) {
-            mDispSubtitleThread.quit();
-        }
         detachWindow();
     }
 
-    public void show() {
-        if (mDispSubtitleThread != null) {
-            mDispSubtitleThread.show();
-        }
-    }
-
-    public void clear() {
-        if (mDispSubtitleThread != null) {
-            mDispSubtitleThread.clear();
-        }
-    }
+    // NOTE: show()/clear()/addSubtitle()/onPlay()/onPause()/onSeekStart() below are kept
+    // as no-op stubs rather than removed outright, since PlayerActivity and
+    // FloatingPlayerService still call them from live code paths (track open/close,
+    // seek, play/pause, and the onSubtitle() JNI callback). Their bodies are empty
+    // because DispSubtitleThread — the class that used to give them meaning — has been
+    // removed: avos_mp_video.c's send_subtitle() returns early for every subtitle format
+    // (SSA/TEXT/DVD_GFX/PGS) before it ever reaches the JNI callback that would call
+    // addSubtitle(), so the thread only ever sat blocked on wait() for its entire life.
+    // The native SubtitleEngine (libass + GL) is the only thing that actually renders
+    // subtitles now.
 
     public int getSize() {
         return mSubtitleSize;
@@ -730,10 +484,10 @@ public class SubtitleManager {
     public int getVerticalPosition() {
         return mSubtitleVPos;
     }
-    
+
     /**
      * Translates size to a usable size for TextView.SetTextSize()
-     * 
+     *
      * @param size 0..100 so we can use default slidebar values
      * @return float between TXT_SIZE_MIN and TXT_SIZE_MAX
      */
@@ -786,7 +540,7 @@ public class SubtitleManager {
     /**
      * after you enable this you need to call fadeSubtitlePositionHint(true)
      * otherwise the Alpha of the Drawable stays at 0
-     * @param show 
+     * @param show
      */
     public void setShowSubtitlePositionHint (boolean show) {
         if (log.isDebugEnabled()) log.debug("setShowSubtitlePositionHint: {}", show);
@@ -810,9 +564,7 @@ public class SubtitleManager {
             mSubtitleVPos = 0;
         else
             mSubtitleVPos = pos;
-        // note: Increased the Range from 0.100 to 0.255 to make it smoother
-        // translate VPos 0..255 to 0..(1/3)DisplayHeight
-        // mScreenHeight / 3 * pos / 255
+
         mSubtitleVPosPixel = (mScreenHeight * pos / 765) + 1;
         setVerticalPositionInternal(mSubtitleVPosPixel);
     }
@@ -820,50 +572,13 @@ public class SubtitleManager {
     private void setVerticalPositionInternal (int pos) {
         if (mIsSubtitleGfx) mSubtitleEvadedVPos = 0;
         else mSubtitleEvadedVPos = pos;
-
-        // --- Route margin to Native Engine ---
-        // libass applies MarginV as a bottom-only offset for bottom-aligned styles
-        // (Alignment 1-3; see sub_format_ssa.c's sync_styles(), which gates the MarginV
-        // write to that range). This is what actually positions subtitle text.
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
             Player.sPlayer.getSubtitleEngine().setVerticalOffset(mSubtitleEvadedVPos);
         }
 
-        // --- Keep the position-hint indicator in sync ---
-        // subtitle_layout.xml no longer has any view positioned layout_above the spacer
-        // (subtitle_gfx_view/subtitle_txt_view were removed once native rendering took
-        // over), so resizing the spacer live can no longer visually shift a sibling's top
-        // boundary the way it used to — that was the actual reason this was removed
-        // previously, not the resize itself. Without this, the hint bar shown while
-        // dragging the vertical-offset control silently stops tracking the live value.
         if (mSubtitleSpacer != null && mSubtitleSpacerParams != null) {
             mSubtitleSpacerParams.height = mSubtitleEvadedVPos;
             mSubtitleSpacer.setLayoutParams(mSubtitleSpacerParams);
-        }
-    }
-
-    public void addSubtitle(Subtitle subtitle) {
-        if (mDispSubtitleThread != null)
-            mDispSubtitleThread.addSubtitle(subtitle);
-    }
-
-    public void onPlay() {
-        mPlaybackPaused = false;
-        if (mDispSubtitleThread != null)
-            mDispSubtitleThread.setSuspended(false);
-    }
-
-    public void onPause() {
-        mPlaybackPaused = true;
-        if (mDispSubtitleThread != null)
-            mDispSubtitleThread.setSuspended(true);
-    }
-
-    public void onSeekStart(int pos) {
-        if (mDispSubtitleThread != null) {
-            if (log.isDebugEnabled()) log.debug("onSeekStart: clear");
-            mDispSubtitleThread.clear();
-            mDispSubtitleThread.interrupt();
         }
     }
 }
