@@ -630,8 +630,6 @@ public class SubtitleSettingsDialog extends AlertDialog implements
                 .putInt(PlayerActivity.KEY_SUBTITLE_FONT_SIZE_PT, mFontSizePt)
                 .putInt(PlayerActivity.KEY_SUBTITLE_VPOS, mVPos)
                 .putInt(PlayerActivity.KEY_SUBTITLE_COLOR, mSubtitleManager.getColor())
-                .putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mSubtitleManager.getOutlineState())
-                .putBoolean(PlayerActivity.KEY_SUBTITLE_BACKGROUND, mSubtitleManager.getBackgroundState())
                 .putInt(PlayerActivity.KEY_SUBTITLE_BG_OPACITY, mBgOpacity)
                 .putInt(PlayerActivity.KEY_SUBTITLE_BG_MODE, mSubtitleManager.getBgMode())
                 .putInt(PlayerActivity.KEY_SUBTITLE_OVERRIDE_MODE, mSubtitleManager.getOverrideMode())
