@@ -690,8 +690,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
     @Override
     public void onSeekStart(int pos) {
-        if (mSubtitleManager != null)
-            mSubtitleManager.onSeekStart(pos);
+
     }
 
     @Override
@@ -706,16 +705,12 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
     @Override
     public void onPlay(int state) {
-        if (mSubtitleManager != null)
-            mSubtitleManager.onPlay();
         setProgress();
         //PlayerService.sPlayerService.startStatusbarNotification(isDiscrete());
     }
 
     @Override
     public void onPause(int state) {
-        if (mSubtitleManager != null)
-            mSubtitleManager.onPause();
         //PlayerService.sPlayerService.startStatusbarNotification(isDiscrete());
     }
 
@@ -748,10 +743,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     public void onBufferingUpdate(int percent) {   }
 
     @Override
-    public void onSubtitle(Subtitle subtitle) {
-        if (mSubtitleManager != null)
-            mSubtitleManager.addSubtitle(subtitle);
-    }
+    public void onSubtitle(Subtitle subtitle) {   }
 
     public void setUIExternalSurface(Surface uiSurface) {
        // mSubtitleManager.setUIExternalSurface(uiSurface); do not enable this with floating player
