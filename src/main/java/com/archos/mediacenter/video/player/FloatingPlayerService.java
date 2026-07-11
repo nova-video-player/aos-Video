@@ -86,7 +86,6 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     private boolean contains;
     private SurfaceController mSurfaceController;
     private SubtitleManager mSubtitleManager;
-    private int mSubtitleSizeDefault;
     private int mSubtitleVPosDefault;
     private WindowManager.LayoutParams mParamsF;
     private View mProgressView;
@@ -127,7 +126,6 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
         super.onCreate();
         sFloatingPlayerService = this;
         mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        mSubtitleSizeDefault = getResources().getInteger(R.integer.player_pref_subtitle_size_default);
         mSubtitleVPosDefault = getResources().getInteger(R.integer.player_pref_subtitle_vpos_default);
         mSubtitleColorDefault = Color.parseColor(getResources().getString(R.string.subtitle_color_default));
         bindService(new Intent(this, PlayerService.class), mPlayerServiceConnection, BIND_AUTO_CREATE);
@@ -554,9 +552,9 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
             } else {
                 mWindowManager.getDefaultDisplay().getRealSize(point);
             }
-            int size = (int) ((mParamsF.width / (float)(Math.max(point.y, point.x))) * mSize);
+            //int size = (int) ((mParamsF.width / (float)(Math.max(point.y, point.x))) * mSize);
             int vpos = (int) ((mParamsF.height / (float)(Math.min(point.y, point.x))) * mVPos);
-            mSubtitleManager.setSize(size);
+            //mSubtitleManager.setSize(size);
             mSubtitleManager.setVerticalPosition(vpos);
         }
     }
@@ -719,7 +717,6 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
             mSubtitleManager.start();
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            mSize = preferences.getInt(PlayerActivity.KEY_SUBTITLE_SIZE, mSubtitleSizeDefault);
             mVPos = preferences.getInt(PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleVPosDefault);
             int color = preferences.getInt(PlayerActivity.KEY_SUBTITLE_COLOR, mSubtitleColorDefault);
             //mSubtitleManager.setSize(mSize);

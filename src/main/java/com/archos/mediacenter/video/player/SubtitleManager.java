@@ -50,44 +50,35 @@ public class SubtitleManager {
     private Drawable            mSubtitlePosHintDrawable;
     private int                 mScreenWidth;
     private int                 mScreenHeight;
-    private int                 mSubtitleSize = 50;
     private int                 mSubtitleVPos = 10;
     private int                 mSubtitleVPosPixel;
     private int                 mSubtitleEvadedVPos;
+    private boolean mGLEngineActive = false;
     private boolean mIsSubtitleGfx = false;
     private boolean isFirstTime = true;
 
     private boolean mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
-    private int mGestureAreaHeight, mControlBarHeight;
+    private int mGestureAreaHeight;
 
     Surface                     mUiSurface;
     private boolean mForbidWindow ;
-    private static int mRoundCornerRadius = 0;
     private static boolean mFullScreenWithCutout = true;
-
-    public static final int SUBTITLE_TYPE_NONE = 0;
-    public static final int SUBTITLE_TYPE_TEXT = 1;
-    public static final int SUBTITLE_TYPE_GFX = 2;
-
-    // Range for TextView.setTextSize() (txt Subtitle)
-    private static final int TXT_SIZE_MIN = 16;
-    private static final int TXT_SIZE_MAX = 64;
-    private static final float TXT_SIZE_RANGE = TXT_SIZE_MAX - TXT_SIZE_MIN;
-
-    // NOTE: this class used to hold a Handler (SubtitleHandler) posting MSG_STOP_SUBTITLE/
-    // MSG_DISPLAY_SUBTITLE/MSG_REMOVE_SUBTITLE/MSG_SET_STATUSBAR_EVADE messages, driven by
-    // displaySubtitle()/removeSubtitle(), which were in turn only ever called by
-    // DispSubtitleThread. All of that has been removed: the native subtitle pipeline
-    // (avos_mp_video.c::send_subtitle) returns early for every subtitle format before the
-    // JNI callback that would feed this chain ever fires, so the whole thing only ever
-    // processed zero real messages. The native SubtitleEngine (libass + GL) renders
-    // everything now.
 
     private int mColor;
     private int mBgOpacity;
     private int mUiMode;
 
-    // --- libass styling system (bg mode / override mode / absolute values) ---
+    private int mBgMode = BG_MODE_FLOATING;
+    private int mOverrideMode = OVERRIDE_CUSTOM;
+    private int mFontSizePt;
+    private float mFontScale;
+    private boolean mBold;
+    private int mOutlineColor;
+    private int mShadowColor;
+    private int mBackgroundColor;
+    private float mOutlineWidth;
+    private float mShadowWidth;
+
     public static final int BG_MODE_FLOATING    = 0;
     public static final int BG_MODE_BOXED_LINE  = 1;
     public static final int BG_MODE_BOXED_BLOCK = 2;
@@ -96,23 +87,21 @@ public class SubtitleManager {
     public static final int OVERRIDE_CUSTOM     = 1;
     public static final int OVERRIDE_SCALE_ONLY = 2;
 
-    private int mBgMode = BG_MODE_FLOATING;
-    private int mOverrideMode = OVERRIDE_CUSTOM;
-    private int mFontSizePt = 42;
-    private float mFontScale = 1.0f;
-    private boolean mBold = false;
-    private int mOutlineColor = 0xFF000000;
-    private int mShadowColor  = 0xAA000000;
-    private int mBackgroundColor = 0x88000000; // matches sub_style.c's native default (50% transparent black)
-    private float mOutlineWidth = 2.0f; // px, also used as "outline" in Boxed Block mode
-    private float mShadowWidth  = 2.0f; // px in Floating mode, padding in Boxed Block mode
-
     public int getColor() {
         return mColor;
     }
 
-    public int getBackgroundOpacity() {
-        return mBgOpacity;
+    public void setColor(int color){
+        if (log.isDebugEnabled()) log.debug("setColor: {}", color);
+        mColor = color;
+
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setTextColor(color);
+        }
+    }
+
+    public int getBackgroundOpacity() { 
+        return mBgOpacity; 
     }
 
     public void setBackgroundOpacity(int opacity) {
@@ -123,8 +112,6 @@ public class SubtitleManager {
             Player.sPlayer.getSubtitleEngine().setBackgroundOpacity(opacity / 255.0f);
         }
     }
-
-    // --- NEW: libass styling system ---
 
     public int getBgMode() { return mBgMode; }
 
@@ -157,9 +144,6 @@ public class SubtitleManager {
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
             Player.sPlayer.getSubtitleEngine().setFontSize((float) pt);
         }
-        // Keep the legacy 0..100 slider field roughly in sync in case old code paths
-        // (TV picker) read mSubtitleSize before this dialog has run.
-        mSubtitleSize = pt;
     }
 
     public boolean getBold() { return mBold; }
@@ -173,10 +157,7 @@ public class SubtitleManager {
 
     /**
      * Multiplier applied on top of the embedded track's own font size — only meaningful
-     * in OVERRIDE_SCALE_ONLY mode. In OVERRIDE_CUSTOM/OVERRIDE_EMBEDDED this value is
-     * tracked but never read by sync_styles() (see sub_format_ssa.c's override_mode==2
-     * branch, which multiplies the embedded ASS_Style.FontSize by font_scale — it never
-     * touches the absolute font_size field that setFontSizePt() drives).
+     * in OVERRIDE_SCALE_ONLY mode.
      */
     public float getFontScale() { return mFontScale; }
 
@@ -211,12 +192,6 @@ public class SubtitleManager {
         mBackgroundColor = color;
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
             Player.sPlayer.getSubtitleEngine().setBackgroundColor(color);
-            // nativeSetBackgroundColor overwrites the ENTIRE bg_color word (RGB + the
-            // transparency byte nativeSetBackgroundOpacity separately patches). Re-apply
-            // the currently tracked opacity right after, or picking a background color
-            // silently resets opacity to whatever alpha channel the picked color's swatch
-            // default happened to carry — which is how "Boxed Line looks broken" manifests:
-            // the box was drawn, just at the wrong (often fully opaque) transparency.
             Player.sPlayer.getSubtitleEngine().setBackgroundOpacity(mBgOpacity / 255.0f);
         }
     }
@@ -247,8 +222,7 @@ public class SubtitleManager {
         // Determine whether the native GL engine is now the active subtitle renderer.
         // In SBS or TB mode, SubtitleEngine's EGL thread owns gl_subtitle_view exclusively.
         // In 2D mode, the Java canvas path (SubtitleTextView.lockCanvas) is active instead.
-        // These two paths must never run simultaneously — doing so causes lockCanvas() to
-        // overwrite GL frames with a black clear, producing the black screen bug.
+        // These two paths must never run simultaneously
         boolean glEngineIsActive = ((uiMode & VideoEffect.SBS_MODE) != 0)
                                 || ((uiMode & VideoEffect.TB_MODE) != 0);
         setGLEngineActive(glEngineIsActive);
@@ -258,16 +232,6 @@ public class SubtitleManager {
             Player.sPlayer.getSubtitleEngine().setUIMode(uiMode);
         }
     }
-
-    // DispSubtitleThread removed: it was a scheduling engine for displaying/timing
-    // subtitles fed via addSubtitle(), but addSubtitle() is never called in practice —
-    // avos_mp_video.c's send_subtitle() returns early for every subtitle format
-    // (SSA/TEXT/DVD_GFX/PGS) before the native code ever reaches the JNI callback that
-    // would invoke it. The native SubtitleEngine (libass + GL, see sub_engine.c /
-    // sub_format_ssa.c / sub_render_gl.c) is the only thing that renders subtitles now.
-    // See start()/stop()/show()/clear()/addSubtitle()/onPlay()/onPause()/onSeekStart()
-    // below for the no-op stubs kept for API compatibility with PlayerActivity and
-    // FloatingPlayerService, which still call these methods from live code paths.
 
     public SubtitleManager(Context context, ViewGroup playerView, WindowManager window, boolean forbidWindow) {
         mContext = context;
@@ -289,9 +253,7 @@ public class SubtitleManager {
             lp.height = mScreenHeight;
             mPlayerView.updateViewLayout(mSubtitleLayout, lp);
         }
-        // NOTE: this used to redisplay a currentSubtitle field here, tracked by
-        // DispSubtitleThread, which has been removed (see the note above start()).
-        setSize(mSubtitleSize);
+        setFontSizePt(mFontSizePt);
         updateSubtitleLayout();
     }
 
@@ -301,28 +263,10 @@ public class SubtitleManager {
         if (! isFirstTime) adjustView();
     }
 
-    // When true, the native SubtitleEngine GL thread owns gl_subtitle_view.
-    // The Java canvas subtitle path (SubtitleTextView.setRenderingSurface / lockCanvas)
-    // must be completely disconnected — two producers cannot share one SurfaceTexture,
-    // and calling lockCanvas() on a TextureView-backed Surface that has an active EGL
-    // context wipes the GL frame with a black canvas clear every time it fires.
-    private boolean mGLEngineActive = false;
-
     public void setGLEngineActive(boolean active) {
         if (log.isDebugEnabled()) log.debug("setGLEngineActive: {}", active);
         mGLEngineActive = active;
         if (active) {
-            // CRITICAL: VideoEffectRenderer.draw() calls mUISurfaceTexture.updateTexImage()
-            // unconditionally every frame. mUISurface is the Surface backed by that
-            // SurfaceTexture. Now that we've disconnected all Java subtitle drawing,
-            // nothing will ever produce a buffer into mUISurfaceTexture's queue again.
-            // Calling updateTexImage() on a SurfaceTexture with an empty queue corrupts
-            // GL texture unit state on most Android drivers, turning the video black.
-            //
-            // Fix: post one transparent clear frame to mUiSurface right now, so
-            // mUISurfaceTexture has a valid initial buffer. VideoEffectRenderer will
-            // consume it on the first draw() call and then keep re-using that last
-            // frame (updateTexImage with no new buffer is safe once a valid frame exists).
             postClearFrameToUISurface();
         } else {
             // Re-connect the Java path with whatever surface was last set.
@@ -364,11 +308,6 @@ public class SubtitleManager {
             postClearFrameToUISurface();
             return;
         }
-        // NOTE: subtitle_gfx_view / subtitle_txt_view no longer exist, and the position-hint
-        // spacer (SubtitleSpacerView) no longer has a rendering-surface concept either — it's
-        // a plain View shown via alpha/background now, not a second Java-canvas draw target.
-        // This surface is simply tracked in mUiSurface above for whichever GL-active branch
-        // needs it next time this is called.
     }
 
     // setOnSystemUiVisibilityChangeListener is the only reliable way to track transient bar visibility;
@@ -381,9 +320,6 @@ public class SubtitleManager {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mSubtitleLayout = inflater.inflate(R.layout.subtitle_layout, mPlayerView, false);
         if (mSubtitleLayout == null) return;
-        // NOTE: subtitle_gfx_view / subtitle_txt_view are no longer inflated or referenced here.
-        // The native SubtitleEngine (libass + GL) owns all subtitle rendering now; this class
-        // only retains the spacer (position-hint view) and the UI surface plumbing below.
         mSubtitleSpacer = (SubtitleSpacerView) mSubtitleLayout.findViewById(R.id.subtitle_spacer);
         if (mSubtitleSpacer == null) return;
         mSubtitleSpacerParams = mSubtitleSpacer.getLayoutParams();
@@ -466,60 +402,8 @@ public class SubtitleManager {
         detachWindow();
     }
 
-    // NOTE: show()/clear()/addSubtitle()/onPlay()/onPause()/onSeekStart() below are kept
-    // as no-op stubs rather than removed outright, since PlayerActivity and
-    // FloatingPlayerService still call them from live code paths (track open/close,
-    // seek, play/pause, and the onSubtitle() JNI callback). Their bodies are empty
-    // because DispSubtitleThread — the class that used to give them meaning — has been
-    // removed: avos_mp_video.c's send_subtitle() returns early for every subtitle format
-    // (SSA/TEXT/DVD_GFX/PGS) before it ever reaches the JNI callback that would call
-    // addSubtitle(), so the thread only ever sat blocked on wait() for its entire life.
-    // The native SubtitleEngine (libass + GL) is the only thing that actually renders
-    // subtitles now.
-
-    public int getSize() {
-        return mSubtitleSize;
-    }
-
     public int getVerticalPosition() {
         return mSubtitleVPos;
-    }
-
-    /**
-     * Translates size to a usable size for TextView.SetTextSize()
-     *
-     * @param size 0..100 so we can use default slidebar values
-     * @return float between TXT_SIZE_MIN and TXT_SIZE_MAX
-     */
-    public static float calcTextSize(int size) {
-        int tmp = size;
-        if (tmp > 100)
-            tmp = 100;
-        if (tmp < 0)
-            tmp = 0;
-        return (tmp / 100f) * TXT_SIZE_RANGE + TXT_SIZE_MIN;
-    }
-
-    /**
-     * @param size expects Number 0..100
-     */
-    public void setSize(int size) {
-        if (log.isDebugEnabled()) log.debug("setSize: {}", size);
-        mSubtitleSize = size;
-
-        // --- NEW: Route to Native Engine ---
-        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
-            Player.sPlayer.getSubtitleEngine().setFontSize(calcTextSize(size));
-        }
-    }
-
-    public void setColor(int color){
-        if (log.isDebugEnabled()) log.debug("setColor: {}", color);
-        mColor = color;
-
-        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
-            Player.sPlayer.getSubtitleEngine().setTextColor(color);
-        }
     }
 
     /**

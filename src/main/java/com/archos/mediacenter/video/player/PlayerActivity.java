@@ -203,7 +203,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     // accessed from SubtitleSettingsDialog
     public static final String KEY_SUBTITLE_BG_OPACITY = "subtitle_bg_opacity";
-    /* package */ public static final String KEY_SUBTITLE_SIZE = "pref_play_subtitle_size_key";
     /* package */ public static final String KEY_SUBTITLE_VPOS = "pref_play_subtitle_vpos_key";
     public static final String KEY_SUBTITLE_COLOR = "pref_play_subtitle_color_key";
 
@@ -219,9 +218,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public static final String KEY_SUBTITLE_BACKGROUND_COLOR = "pref_play_subtitle_background_color_key";
     public static final String KEY_SUBTITLE_OUTLINE_WIDTH = "pref_play_subtitle_outline_width_key";
     public static final String KEY_SUBTITLE_SHADOW_WIDTH = "pref_play_subtitle_shadow_width_key";
-    // Separate from the legacy KEY_SUBTITLE_SIZE (0..100 abstract scale, still read by the
-    // PIP/multi-window proportional-rescale code in updateSizes()). This key holds the new
-    // dialog's absolute point value directly, so the two representations never collide.
     public static final String KEY_SUBTITLE_FONT_SIZE_PT = "pref_play_subtitle_font_size_pt_key";
 
     private static final String KEY_PLAYER_FORMAT = "player_pref_format_key";
@@ -427,7 +423,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     // Specific player settings used for demo mode
     private boolean mForceExitOnTouch;
 
-    private int mSubtitleSizeDefault;
     private int mSubtitleVPosDefault;
     private int mSubtitleColorDefault;
     private boolean mAudioSubtitleNeedUpdate = false;
@@ -798,7 +793,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
         });
 
-        mSubtitleSizeDefault = getResources().getInteger(R.integer.player_pref_subtitle_size_default);
         mSubtitleVPosDefault = getResources().getInteger(R.integer.player_pref_subtitle_vpos_default);
         mSubtitleColorDefault = Color.parseColor(getResources().getString(R.string.subtitle_color_default));
         mSurfaceController = new SurfaceController(mRootView);
@@ -1415,15 +1409,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mAudioInfoController.resetPopup();
             mSubtitleInfoController.resetPopup();
         }
-        int size = mPreferences.getInt(KEY_SUBTITLE_SIZE, mSubtitleSizeDefault);
         int vpos = mPreferences.getInt(KEY_SUBTITLE_VPOS, mSubtitleVPosDefault);
-        if(isInPictureInPictureMode||isInMultiWindowMode) { //proportional size
-            size = (int) ((layoutWidth / (float)(displayHeight<displayWidth?displayWidth:displayHeight)) * size);
+        if(isInPictureInPictureMode||isInMultiWindowMode) {
             // note that in multiwindow mode chromeos returns correct height but not in full screen thus it works here
             vpos = (int) ((layoutHeight / (float)(displayHeight<displayWidth?displayHeight:displayWidth)) * vpos);
         }
-        if (log.isDebugEnabled()) log.debug("CONFIG updateSizes: mSubtitleManager.setSize({}), vpos={}", size, vpos);
-        mSubtitleManager.setSize(size);
+        if (log.isDebugEnabled()) log.debug("CONFIG updateSizes: vpos={}", vpos);
         setSubtitleVpos(vpos, "updateSizes");
     }
 
@@ -4630,7 +4621,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mSubtitleManager.start();
 
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(PlayerActivity.this);
-                int size = preferences.getInt(KEY_SUBTITLE_SIZE, mSubtitleSizeDefault);
                 int vpos = preferences.getInt(KEY_SUBTITLE_VPOS, mSubtitleVPosDefault);
                 int color = preferences.getInt(KEY_SUBTITLE_COLOR, mSubtitleColorDefault);
                 mSubtitleManager.setColor(color);
@@ -4655,14 +4645,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 int backgroundColor = preferences.getInt(KEY_SUBTITLE_BACKGROUND_COLOR, 0xFF000000);
                 float outlineWidth = preferences.getFloat(KEY_SUBTITLE_OUTLINE_WIDTH, 2.0f);
                 float shadowWidth = preferences.getFloat(KEY_SUBTITLE_SHADOW_WIDTH, 2.0f);
-                // KEY_SUBTITLE_FONT_SIZE_PT sentinel -1 means "never set by the new dialog yet":
-                // derive a reasonable pt value from the legacy 0..100 KEY_SUBTITLE_SIZE via the
-                // same calcTextSize() curve the old TextView-based renderer used, so existing
-                // users see a comparable size on first launch after upgrading.
-                int fontSizePt = preferences.getInt(KEY_SUBTITLE_FONT_SIZE_PT, -1);
-                if (fontSizePt == -1) {
-                    fontSizePt = Math.round(SubtitleManager.calcTextSize(size));
-                }
+                int fontSizePt = preferences.getInt(KEY_SUBTITLE_FONT_SIZE_PT, 22);
 
                 mSubtitleManager.setFontSizePt(fontSizePt);
                 mSubtitleManager.setOverrideMode(overrideMode);
