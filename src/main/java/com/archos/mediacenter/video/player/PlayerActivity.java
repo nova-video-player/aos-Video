@@ -219,6 +219,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public static final String KEY_SUBTITLE_OUTLINE_WIDTH = "pref_play_subtitle_outline_width_key";
     public static final String KEY_SUBTITLE_SHADOW_WIDTH = "pref_play_subtitle_shadow_width_key";
     public static final String KEY_SUBTITLE_FONT_SIZE_PT = "pref_play_subtitle_font_size_pt_key";
+    public static final String KEY_SUBTITLE_FONT_SCALE = "pref_play_subtitle_font_scale_key";
 
     private static final String KEY_PLAYER_FORMAT = "player_pref_format_key";
     private static final String KEY_PLAYER_AUTO_FORMAT = "player_pref_auto_format_key";
@@ -425,6 +426,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     private int mSubtitleVPosDefault;
     private int mSubtitleColorDefault;
+    private int mSubtitleBgOpacityDefault;
+    private int mSubtitleFontSizePtDefault;
+    private float mSubtitleFontScaleDefault;
+    private int mSubtitleOverrideModeDefault;
+    private boolean mSubtitleBoldDefault;
+    private int mSubtitleOutlineColorDefault;
+    private int mSubtitleShadowColorDefault;
+    private int mSubtitleBackgroundColorDefault;
+    private float mSubtitleOutlineWidthDefault;
+    private float mSubtitleShadowWidthDefault;
+    private int mSubtitleBgModeDefault;
     private boolean mAudioSubtitleNeedUpdate = false;
     private int mNewSubtitleTrack = -1;
     private int mNewAudioTrack = -1;
@@ -795,6 +807,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         mSubtitleVPosDefault = getResources().getInteger(R.integer.player_pref_subtitle_vpos_default);
         mSubtitleColorDefault = Color.parseColor(getResources().getString(R.string.subtitle_color_default));
+        mSubtitleBgOpacityDefault = 128;
+        mSubtitleFontSizePtDefault = 55;
+        mSubtitleOverrideModeDefault = SubtitleManager.OVERRIDE_CUSTOM;
+        mSubtitleBoldDefault = false;
+        mSubtitleOutlineColorDefault = 0xFF000000;
+        mSubtitleShadowColorDefault = 0xAA000000;
+        mSubtitleBackgroundColorDefault = 0xFF000000;
+        mSubtitleOutlineWidthDefault = 2.0f;
+        mSubtitleShadowWidthDefault = 2.0f;
+        mSubtitleBgModeDefault = SubtitleManager.BG_MODE_FLOATING;
         mSurfaceController = new SurfaceController(mRootView);
         mSurfaceController.mFullScreenWithCutout = mFullScreenWithCutout;
         mSurfaceController.mCutBothSidesX = cutBothSidesX;
@@ -4625,37 +4647,32 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 int color = preferences.getInt(KEY_SUBTITLE_COLOR, mSubtitleColorDefault);
                 mSubtitleManager.setColor(color);
                 setSubtitleVpos(vpos, "onSubtitleMetadataUpdated");
-                int bgOpacity = preferences.getInt(KEY_SUBTITLE_BG_OPACITY, 128);
-                mSubtitleManager.setBackgroundOpacity(bgOpacity);
+                // Use the new default variables instead of hardcoded values
+                int bgOpacity = preferences.getInt(KEY_SUBTITLE_BG_OPACITY, mSubtitleBgOpacityDefault);
+                int bgMode = preferences.getInt(KEY_SUBTITLE_BG_MODE, mSubtitleBgModeDefault);
+                int overrideMode = preferences.getInt(KEY_SUBTITLE_OVERRIDE_MODE, mSubtitleOverrideModeDefault);
+                boolean bold = preferences.getBoolean(KEY_SUBTITLE_BOLD, mSubtitleBoldDefault);
+                int outlineColor = preferences.getInt(KEY_SUBTITLE_OUTLINE_COLOR, mSubtitleOutlineColorDefault);
+                int shadowColor = preferences.getInt(KEY_SUBTITLE_SHADOW_COLOR, mSubtitleShadowColorDefault);
+                int backgroundColor = preferences.getInt(KEY_SUBTITLE_BACKGROUND_COLOR, mSubtitleBackgroundColorDefault);
+                float outlineWidth = preferences.getFloat(KEY_SUBTITLE_OUTLINE_WIDTH, mSubtitleOutlineWidthDefault);
+                float shadowWidth = preferences.getFloat(KEY_SUBTITLE_SHADOW_WIDTH, mSubtitleShadowWidthDefault);
+                int fontSizePt = preferences.getInt(KEY_SUBTITLE_FONT_SIZE_PT, mSubtitleFontSizePtDefault);
+                float fontScale = preferences.getFloat(KEY_SUBTITLE_FONT_SCALE, mSubtitleFontScaleDefault);
 
-                // --- libass styling system ---
-                // KEY_SUBTITLE_BG_MODE is only written once setBgMode() has run at least
-                // once via savePreferences(). If it's absent (sentinel -1), this is the
-                // first launch after upgrading to the libass styling system: derive the
-                // 3-state bg mode from the old booleans instead of defaulting to Floating,
-                // so existing users don't lose their outline/background choice. (The old
-                // booleans themselves are still read from SharedPreferences directly, just
-                // above — SubtitleManager's getOutlineState()/getBackgroundState() methods
-                // that used to wrap them were removed once both UIs migrated to setBgMode().)
-                int bgMode = preferences.getInt(KEY_SUBTITLE_BG_MODE, SubtitleManager.BG_MODE_FLOATING);
-                int overrideMode = preferences.getInt(KEY_SUBTITLE_OVERRIDE_MODE, SubtitleManager.OVERRIDE_CUSTOM);
-                boolean bold = preferences.getBoolean(KEY_SUBTITLE_BOLD, false);
-                int outlineColor = preferences.getInt(KEY_SUBTITLE_OUTLINE_COLOR, 0xFF000000);
-                int shadowColor = preferences.getInt(KEY_SUBTITLE_SHADOW_COLOR, 0xAA000000);
-                int backgroundColor = preferences.getInt(KEY_SUBTITLE_BACKGROUND_COLOR, 0xFF000000);
-                float outlineWidth = preferences.getFloat(KEY_SUBTITLE_OUTLINE_WIDTH, 2.0f);
-                float shadowWidth = preferences.getFloat(KEY_SUBTITLE_SHADOW_WIDTH, 2.0f);
-                int fontSizePt = preferences.getInt(KEY_SUBTITLE_FONT_SIZE_PT, 22);
-
-                mSubtitleManager.setFontSizePt(fontSizePt);
                 mSubtitleManager.setOverrideMode(overrideMode);
+                mSubtitleManager.setBgMode(bgMode);
+                mSubtitleManager.setFontSizePt(fontSizePt);
+                mSubtitleManager.setFontScale(fontScale);
                 mSubtitleManager.setBold(bold);
                 mSubtitleManager.setOutlineColor(outlineColor);
                 mSubtitleManager.setShadowColor(shadowColor);
                 mSubtitleManager.setBackgroundColor(backgroundColor);
+                mSubtitleManager.setBackgroundOpacity(bgOpacity);
                 mSubtitleManager.setOutlineWidth(outlineWidth);
                 mSubtitleManager.setShadowWidth(shadowWidth);
-                mSubtitleManager.setBgMode(bgMode);
+;
+
                 // mVideoInfo.subtitleTrack is the track number with the none track 0<=mVideoInfo.subtitleTrack<=nbTrack, nbTrack for none track
                 // but mSubtitleInfoController is the track number with the none track (i.e. nbTrack + 1) at position 0
                 // at this point mVideoInfo.subtitleTrack is the track number to be used
