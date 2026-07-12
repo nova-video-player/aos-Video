@@ -124,6 +124,8 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     private View mRightVerticalButton;
     private int mVPos = 10;
     private boolean touching = false;
+    // "Vertical Position:" row label — dimmed alongside the seekbar/buttons outside Custom mode.
+    private TextView mVertLabel;
 
     // Shared color picker, retargeted per swatch tap
     private SubtitleColorPicker mColorPicker;
@@ -348,6 +350,7 @@ public class SubtitleSettingsDialog extends AlertDialog implements
         mRightVerticalButton = view.findViewById(R.id.right_icon);
         mLeftVerticalButton.setOnClickListener(v -> stepVerticalPosition(-3));
         mRightVerticalButton.setOnClickListener(v -> stepVerticalPosition(3));
+        mVertLabel = view.findViewById(R.id.subtitle_vert_text);
 
         // Apply initial override-mode UI state now that every view it touches is wired.
         setOverrideModeChecked(stm.getOverrideMode());
@@ -383,6 +386,7 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     private void updateOverrideModeUI(int mode) {
         boolean embedded = (mode == SubtitleManager.OVERRIDE_EMBEDDED);
         boolean scaleOnly = (mode == SubtitleManager.OVERRIDE_SCALE_ONLY);
+        boolean custom = (mode == SubtitleManager.OVERRIDE_CUSTOM);
 
         mOverrideHint.setVisibility(embedded ? View.VISIBLE : View.GONE);
         mStyleControls.setAlpha(embedded ? 0.4f : 1.0f);
@@ -400,6 +404,19 @@ public class SubtitleSettingsDialog extends AlertDialog implements
         mBgModeGroup.setAlpha(otherAlpha);
         mFloatingControls.setAlpha(otherAlpha);
         mBackgroundControls.setAlpha(otherAlpha);
+
+        // Vertical position only ever takes effect in Custom mode (Embedded keeps the
+        // source subtitle's own position, and Scale Only's force_all gate ignores it
+        // too — see sub_format_ssa.c). Grey it out (dim + disable) rather than hide it,
+        // matching how every other inert control group in this dialog is treated.
+        float vertAlpha = custom ? 1.0f : 0.4f;
+        mVertSeekBar.setEnabled(custom);
+        mVertSeekBar.setAlpha(vertAlpha);
+        mLeftVerticalButton.setEnabled(custom);
+        mLeftVerticalButton.setAlpha(vertAlpha);
+        mRightVerticalButton.setEnabled(custom);
+        mRightVerticalButton.setAlpha(vertAlpha);
+        mVertLabel.setAlpha(vertAlpha);
     }
 
     private void setViewGroupEnabled(View view, boolean enabled) {

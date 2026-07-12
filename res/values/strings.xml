@@ -438,10 +438,10 @@
     <string name="subtitle_vert_text">Vertical Position:</string>
     <string name="subtitle_outline">Outline subtitles</string>
     <string name="subtitle_background_text">Subtitle background</string>
-    <string name="subtitle_bg_opacity_text">Background opacity</string>
+    <string name="subtitle_bg_opacity_text">Background Opacity:</string>
 
     <!-- Subtitle Settings Dialog — libass styling system additions -->
-    <string name="subtitle_override_mode_text">Style Source</string>
+    <string name="subtitle_override_mode_text">Style Source:</string>
     <string name="subtitle_override_embedded">Embedded</string>
     <string name="subtitle_override_custom">Custom</string>
     <string name="subtitle_override_scale_only">Scale Only</string>
@@ -449,19 +449,19 @@
 
     <string name="subtitle_bold_text">Bold</string>
     <string name="subtitle_text_color_text">Text color:</string>
-    <string name="subtitle_scale_text">Scale</string>
+    <string name="subtitle_scale_text">Scale:</string>
 
-    <string name="subtitle_bg_mode_text">Background Style</string>
+    <string name="subtitle_bg_mode_text">Background Style:</string>
     <string name="subtitle_bg_mode_floating">Floating</string>
     <string name="subtitle_bg_mode_boxed_line">Boxed Line</string>
     <string name="subtitle_bg_mode_boxed_block">Boxed Block</string>
 
-    <string name="subtitle_outline_width_text">Outline width:</string>
-    <string name="subtitle_outline_color_text">Outline color:</string>
-    <string name="subtitle_shadow_width_text">Shadow width:</string>
-    <string name="subtitle_shadow_color_text">Shadow color:</string>
+    <string name="subtitle_outline_width_text">Outline Width:</string>
+    <string name="subtitle_outline_color_text">Outline Color:</string>
+    <string name="subtitle_shadow_width_text">Shadow Width:</string>
+    <string name="subtitle_shadow_color_text">Shadow Color:</string>
     <string name="subtitle_padding_text">Padding:</string>
-    <string name="subtitle_background_color_text">Background color:</string>
+    <string name="subtitle_background_color_text">Background Color:</string>
 
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Speed Adjustment</string>
