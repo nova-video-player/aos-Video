@@ -213,6 +213,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private String mAudioTrackFavoriteLanguage;
     private boolean mDestroyed;
     private Runnable mAutoSaveTask;
+    private Runnable mPositionUpdateTask;
     private CountDownLatch mSubtitlesReadyLatch = null;
     private static final long SUBTITLE_ENUMERATION_TIMEOUT_MS = 5000; // 5 second timeout for subtitle enumeration before starting video
 
@@ -425,6 +426,21 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 }
             };
         }
+        mPositionUpdateTask = new Runnable() {
+            int mMetadataTick;
+            @Override
+            public void run() {
+                updateNowPlayingState();
+                if (mMetadataTick == 0 || ++mMetadataTick % 30 == 0) {
+                    mMetadataTick = 1;
+                    updateNowPlayingMetadata();
+                }
+                if (mPlayer != null && mPlayer.isPlaying()) {
+                    int position = getPositionMs();
+                    mHandler.postDelayed(this, Math.max(500, 1000 - (position % 1000)));
+                }
+            }
+        };
         mVideoObserver = new VideoObserver(new Handler(Looper.getMainLooper()));
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -999,6 +1015,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 mHandler.removeCallbacks(mAutoSaveTask);
             if (mAutoSkipTask != null)
                 mHandler.removeCallbacks(mAutoSkipTask);
+            if (mPositionUpdateTask != null)
+                mHandler.removeCallbacks(mPositionUpdateTask);
             mPlayer.pause(PlayerController.STATE_OTHER);
             mPlayer.stopPlayback();
             mPlayerState = PlayerState.STOPPED;
@@ -1348,6 +1366,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onDestroy(){
         super.onDestroy();
         if (log.isDebugEnabled()) log.debug("onDestroy");
+        if (mPositionUpdateTask != null)
+            mHandler.removeCallbacks(mPositionUpdateTask);
         if (mAutoSkipTask != null)
             mHandler.removeCallbacks(mAutoSkipTask);
         saveVideoStateIfReady();
@@ -1694,6 +1714,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
         if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
+            updateNowPlayingMetadata();
+            if (mPositionUpdateTask != null) {
+                mHandler.removeCallbacks(mPositionUpdateTask);
+                mHandler.postDelayed(mPositionUpdateTask, 1000);
+            }
         }
         if(mPlayerFrontend!=null) {
             mPlayerFrontend.onPlay(state);
@@ -1714,6 +1739,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
         saveVideoStateIfReady();
         if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+            if (mPositionUpdateTask != null)
+                mHandler.removeCallbacks(mPositionUpdateTask);
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null){
@@ -2062,6 +2089,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         updateNowPlayingState();
                     }
                 }
+
+                @Override
+                public void onSeekTo(long pos) {
+                    super.onSeekTo(pos);
+                    if (log.isDebugEnabled()) log.debug("setNowPlayingCards.onSeekTo " + pos);
+                    if (Player.sPlayer != null) {
+                        Player.sPlayer.seekTo((int) pos);
+                        updateNowPlayingState();
+                    }
+                }
             };
             mSession.setCallback(mediaSessionCallback);
             // deprecated and always true
@@ -2079,6 +2116,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     /**
      * update state of now playing card to play / buffering / pause / idle
      */
+    private int getPositionMs() {
+        if (mPlayer != null) {
+            return mPlayer.getCurrentPosition();
+        }
+        return (int)PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN;
+    }
+
     private void updateNowPlayingState() {
         if(mSession==null)
             return;
@@ -2086,9 +2130,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (!mSession.isActive()) {
                 mSession.setActive(true);
             }
+            int position = getPositionMs();
             PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
                     .setActions(getAvailableActions());
-            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f);
+            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, position, 1.0f);
             mSession.setPlaybackState(stateBuilder.build());
         }
         else if (mPlayerState==PlayerState.PREPARING) {
@@ -2105,9 +2150,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (!mSession.isActive()) {
                 mSession.setActive(true);
             }
+            int position = getPositionMs();
             PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
                     .setActions(getAvailableActions());
-            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0.0f);
+            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, position, 0.0f);
             mSession.setPlaybackState(stateBuilder.build());
         }
         else if (mPlayer != null && mPlayer.isPaused()) {
@@ -2115,9 +2161,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (!mSession.isActive()) {
                 mSession.setActive(true);
             }
+            int position = getPositionMs();
             PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
                     .setActions(getAvailableActions());
-            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0.0f);
+            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, position, 0.0f);
             mSession.setPlaybackState(stateBuilder.build());
         }
         else stopNowPlayingCard();
@@ -2131,9 +2178,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             return;
         if (log.isDebugEnabled()) log.debug("stopNowPlayingCard");
 
+        int position = getPositionMs();
         PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(getAvailableActions());
-        stateBuilder.setState(PlaybackStateCompat.STATE_NONE, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0.0f);
+        stateBuilder.setState(PlaybackStateCompat.STATE_NONE, position, 0.0f);
         mSession.setPlaybackState(stateBuilder.build());
         mSession.setActive(false);
     }
@@ -2149,6 +2197,22 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,title);
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI,
                 mVideoInfo.scraperCover);
+        if (mVideoInfo.scraperCover != null && !mVideoInfo.scraperCover.isEmpty()) {
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, mVideoInfo.scraperCover);
+        }
+        if (mUri != null) {
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, mUri.toString());
+        }
+        if (mPlayer != null) {
+            int duration = mPlayer.getDuration();
+            if (duration > 0) {
+                metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration);
+            }
+        }
+        if (mVideoInfo.isShow && mVideoInfo.scraperSeasonNr > 0 && mVideoInfo.scraperEpisodeNr > 0) {
+            String subtitle = "S" + mVideoInfo.scraperSeasonNr + "E" + mVideoInfo.scraperEpisodeNr;
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, subtitle);
+        }
         Bitmap bitmap = null;
         if (mVideoInfo.scraperCover != null && !mVideoInfo.scraperCover.isEmpty()) {
             // Video has a poster, try to decode it
@@ -2171,7 +2235,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         long availableActions = PlaybackState.ACTION_PLAY;
         if(mPlayer!=null){
             if(mPlayer.isPlaying())
-                availableActions =PlaybackState.ACTION_PAUSE | PlaybackState.ACTION_STOP;
+                availableActions = PlaybackState.ACTION_PAUSE | PlaybackState.ACTION_STOP;
+            if (mPlayer.canSeekForward() && mPlayer.canSeekBackward())
+                availableActions |= PlaybackState.ACTION_SEEK_TO;
         }
         return availableActions;
     }
