@@ -63,6 +63,8 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
         }
     }
 
+
+
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
         log.debug("SubtitleEngine: onSurfaceTextureDestroyed");
@@ -170,6 +172,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
     private native void nativeSurfaceCreated(long handle, Surface surface);
     private native void nativeSurfaceChanged(long handle, int width, int height);
     private native void nativeSurfaceDestroyed(long handle);
+
 
     // 3D Bridge Hook
     private native boolean nativeFillBitmap(long handle, Bitmap bitmap);
