@@ -100,8 +100,8 @@ public class SubtitleManager {
         }
     }
 
-    public int getBackgroundOpacity() { 
-        return mBgOpacity; 
+    public int getBackgroundOpacity() {
+        return mBgOpacity;
     }
 
     public void setBackgroundOpacity(int opacity) {
@@ -256,6 +256,7 @@ public class SubtitleManager {
         setFontSizePt(mFontSizePt);
         updateSubtitleLayout();
     }
+
 
     public void updateSubtitleLayout() {
         if (log.isDebugEnabled()) log.debug("updateSubtitleLayout");
