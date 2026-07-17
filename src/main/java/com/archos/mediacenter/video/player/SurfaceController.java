@@ -115,6 +115,7 @@ public class SurfaceController {
     public boolean willStretchY;
     private int mEffectMode = VideoEffect.getDefaultMode();
     private int mEffectType = VideoEffect.getDefaultType();
+    private boolean mIsSubtitlePlainText = true;
 
     private int mCutoutLeft = 0;
     private int mCutoutTop = 0;
@@ -243,6 +244,21 @@ public class SurfaceController {
     public void setListener(SurfaceController.Listener listener) {
         mSurfaceListener = listener;
     }
+
+    /**
+     * Called whenever the active subtitle track's format becomes known or
+     * changes (see PlayerActivity/FloatingPlayerService's
+     * onSubtitleMetadataUpdated), so updateSurface() can size mSubtitleView
+     * appropriately: full screen for plain text (SRT/VTT), tethered to the
+     * video's own on-screen box for embedded ASS/SSA. Triggers an immediate
+     * relayout if the value actually changed and a video is already laid out.
+     */
+    public void setSubtitleIsPlainText(boolean isPlainText) {
+        if (mIsSubtitlePlainText == isPlainText) return;
+        mIsSubtitlePlainText = isPlainText;
+        updateSurface();
+    }
+
     public int getMax(){
         return getVideoFormat().getMax();
     }
@@ -507,31 +523,53 @@ public class SurfaceController {
             // video view is centered on the screen, in order to avoid cutout it needs to be shifted slightly
             marginParams.setMargins(mMarginLeft, mMarginTop, 0, 0);
             mView.setLayoutParams(marginParams);
-
-            // NEW: Apply identical margins to the Native Subtitle View
-            if (subLp instanceof ViewGroup.MarginLayoutParams subMarginParams) {
-                subMarginParams.width = dcw;
-                subMarginParams.height = dch;
-                subMarginParams.setMargins(mMarginLeft, mMarginTop, 0, 0);
-                mSubtitleView.setLayoutParams(subMarginParams);
-            }
         } else {
             if (log.isDebugEnabled()) log.debug("MARC works with LayoutParams NO MARGIN");
             lp.width = dcw;
             lp.height = dch;
             mView.setLayoutParams(lp);
-            // NEW: Apply identical dimensions to the Native Subtitle View
-            if (subLp != null) {
+        }
+
+        // NEW: mSubtitleView's sizing depends on the active subtitle track's format.
+        // Plain text (SRT/VTT) has no author-intended aspect/PlayRes to protect, so it's
+        // free to fill the whole container (mpv-style: subs render into window/OSD space),
+        // letting subs drop into black bars around a video like 1920x800 letterboxed inside
+        // a taller frame. Embedded ASS/SSA carries its own authored PlayResX/PlayResY
+        // relative to the video's own frame -- sizing/positioning it exactly like mView
+        // (dcw x dch, same margins) keeps it genuinely tethered to the video image, so
+        // libass's canvas-to-PlayRes scale stays uniform (no more "very zoomed" distortion)
+        // and subs track the video's actual on-screen position precisely, without any
+        // separate native destination-rect bookkeeping -- Android's own view layout does it.
+        if (subLp instanceof ViewGroup.MarginLayoutParams subMarginParams) {
+            if (mIsSubtitlePlainText) {
+                // SRT Mode: Full-screen container to drop into black bars
+                subMarginParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                subMarginParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                subMarginParams.setMargins(0, 0, 0, 0);
+            } else {
+                // ASS Mode: Baked-in tethered mode
+                subMarginParams.width = dcw;
+                subMarginParams.height = dch;
+                subMarginParams.setMargins(mMarginLeft, mMarginTop, 0, 0);
+            }
+            mSubtitleView.setLayoutParams(subMarginParams);
+        } else if (subLp != null) {
+            if (mIsSubtitlePlainText) {
+                subLp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                subLp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            } else {
                 subLp.width = dcw;
                 subLp.height = dch;
-                mSubtitleView.setLayoutParams(subLp);
             }
+            mSubtitleView.setLayoutParams(subLp);
         }
+
         mView.invalidate();
         if (mSubtitleView != null) mSubtitleView.invalidate(); // NEW
 
         mSurfaceWidth = dcw;
         mSurfaceHeight = dch;
+
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: ({},{})->({},{}) / formatCrop: ({},{}) / mEffectMode: {}", vw, vh, dcw, dch, cropW, cropH, mEffectMode);
     }
 
