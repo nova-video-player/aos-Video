@@ -55,7 +55,7 @@ public class SurfaceController {
         public static final int FORCE185 = 5;
         public static final int FORCE239 = 6;
         public static final int AUTO = 7;
-        
+
         public static final double VIDEO_FORMAT_AUTO_THRES = 0.7;
 
         private final int[] mode = {ORIGINAL, STRETCH_XY, FULL_SCREEN, FORCE43, FORCE169, FORCE185, FORCE239, AUTO};
@@ -115,6 +115,7 @@ public class SurfaceController {
     public boolean willStretchY;
     private int mEffectMode = VideoEffect.getDefaultMode();
     private int mEffectType = VideoEffect.getDefaultType();
+    private boolean mIsSubtitlePlainText = true;
 
     private int mCutoutLeft = 0;
     private int mCutoutTop = 0;
@@ -128,7 +129,7 @@ public class SurfaceController {
 
     public SurfaceController(View rootView) {
         ViewGroup mLp = (ViewGroup)rootView;
- 
+
         mEffectView =  (TextureView) mLp.findViewById(R.id.gl_surface_view);
         mSurfaceView =  (SurfaceView) mLp.findViewById(R.id.surface_view);
         mSubtitleView = (TextureView) mLp.findViewById(R.id.gl_subtitle_view); // NEW
@@ -147,7 +148,7 @@ public class SurfaceController {
              mEffectView.setVisibility(View.GONE);
         }
     }
-  
+
     public void setGLSupportEnabled(boolean enable){
         if (log.isDebugEnabled()) log.debug("setGLSupportEnabled: {}", enable);
         if (mEffectEnable == enable) return;
@@ -172,7 +173,7 @@ public class SurfaceController {
         if (mSurfaceView != null)
             mSurfaceView.getHolder().addCallback(callback);
     }
-    
+
     public boolean supportOpenGLVideoEffect() {
         if (log.isDebugEnabled()) log.debug("supportOpenGLVideoEffect: {}", (mEffectView == mView) && (VideoEffect.openGLRequested(mEffectType)));
         return (mEffectView == mView) && (VideoEffect.openGLRequested(mEffectType));
@@ -229,6 +230,21 @@ public class SurfaceController {
     public void setListener(SurfaceController.Listener listener) {
         mSurfaceListener = listener;
     }
+
+    /**
+     * Called whenever the active subtitle track's format becomes known or
+     * changes (see PlayerActivity/FloatingPlayerService's
+     * onSubtitleMetadataUpdated), so updateSurface() can size mSubtitleView
+     * appropriately: full screen for plain text (SRT/VTT), tethered to the
+     * video's own on-screen box for embedded ASS/SSA. Triggers an immediate
+     * relayout if the value actually changed and a video is already laid out.
+     */
+    public void setSubtitleIsPlainText(boolean isPlainText) {
+        if (mIsSubtitlePlainText == isPlainText) return;
+        mIsSubtitlePlainText = isPlainText;
+        updateSurface();
+    }
+
     public int getMax(){
         return getVideoFormat().getMax();
     }
@@ -282,12 +298,12 @@ public class SurfaceController {
         mEffectMode = mode;
         updateSurface();
     }
-    
+
     public void setEffectType(int type) {
         mEffectType = type;
         updateSurface();
     }
-    
+
     public void setProjectorMode(boolean projectorMode){
         //Get the layout paramters for the Views.
         FrameLayout.LayoutParams paramsEffect = (FrameLayout.LayoutParams) mEffectView.getLayoutParams();
@@ -301,27 +317,27 @@ public class SurfaceController {
         mSurfaceView.setLayoutParams(paramsSurface);
         mEffectView.setLayoutParams(paramsEffect);
     }
-    
+
     synchronized public void updateSurface() {
         if (log.isDebugEnabled()) log.debug("updateSurface");
         // get screen size
         int dw, dh, vw, vh, fmt, dcw, dch;
         float cropW = 1.0f;
         float cropH = 1.0f;
-        
+
         //Get the Video Size
         vw = mVideoWidth;
         vh = mVideoHeight;
 
         // calculate aspect ratio
         double sar = (double) vw / (double) vh; // sar = source aspect ratio (video)
-        
+
         //Get the Pixel Aspect Ratio
         double par = mVideoAspect;
 
         //Get the applied cutout size, since it can be changed on the fly now.
         int cutoutLeft, cutoutTop, cutoutRight, cutoutBottom = 0;
-        if (mFullScreenWithCutout) 
+        if (mFullScreenWithCutout)
             cutoutLeft = cutoutTop = cutoutRight = cutoutBottom = 0;
         else {
             cutoutLeft = mCutoutLeft;
@@ -337,7 +353,7 @@ public class SurfaceController {
                 else if (cutoutRight > 0 && cutoutLeft == 0)
                     cutoutLeft = cutoutRight;
             }
-        } 
+        }
 
         //Get the Display size, with and wihtout cutout.
         if (mHdmiPlugged) {
@@ -357,12 +373,12 @@ public class SurfaceController {
         //Get the Display aspect ratio, with and without cutouts.
         double dar = (double) dw / (double) dh;     // display aspect ratio
         double dcar = (double) dcw / (double) dch;  // display aspect ratio without cutout
-        
+
         //Early exit in case of error or nothing to do (yet)
         if (mMediaPlayer == null) log.warn("updateSurface: mMediaPlayer is null!");
         if (vw <= 0 || vh <= 0 || dcw <= 0 || dch <= 0 || mMediaPlayer == null)
             return;
-        
+
         //Do the Aspect Ratio Override if required.
         fmt = getVideoFormat().getFmt();
         double ar = switch (fmt) {
@@ -373,7 +389,7 @@ public class SurfaceController {
             default -> par * sar;
         };
 
-        //Is the STRETCH_XY doing Y? 
+        //Is the STRETCH_XY doing Y?
         willStretchY = (dcar < ar) ;
 
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: sar={}, ar={}, dar={}, dcar={}", sar, ar, dar, dcar);
@@ -399,20 +415,20 @@ public class SurfaceController {
                     //THERE IS NO POSSIBLE WAY TO AVOID THE CUTOUT, AND KEEP ASPECT.
                     //NOT KEEPING ASPECT MAKES THIS FULL_SCREEN.
                     //I HATE THIS CASE!
-                    
+
                     //I have now made it so that if cutouts are not enabled, this works normally
                     //It also works normally in Portrait, since the problem is a landscape only issue
                     //If cutouts are enabled, you cannot stretch Cinema Vertically on Phone.
                     //If I allowed this, the rules would not be respected and Cutout pref would not be honored.
                      if (dcar < 1 || mFullScreenWithCutout)
                         dcw = (int) (dch * (ar));
-                        //cropW = (float) dcar / (float) ar;        //Cropping won't help you! We need a way to not draw the left and r-ecentre, cutting equal left and right. 
+                        //cropW = (float) dcar / (float) ar;        //Cropping won't help you! We need a way to not draw the left and r-ecentre, cutting equal left and right.
                     else {
                         //WE ARE FULLSCREEN, turn Video with Cutouts ON to FIX!
                         if (!mCutoutBugToasted) Toast.makeText(mView.getContext(), R.string.toast_cutout_aspect_ratio_fix, Toast.LENGTH_SHORT).show();
                         mCutoutBugToasted = true;
                     }
-                    
+
                 } else
                     //This stops the Fullscreen Video with Cutouts button from moving Video side to side
                     //It doesnt take up the whole width, so we will just set cutouts to 0 and have same postition
@@ -493,31 +509,53 @@ public class SurfaceController {
             // video view is centered on the screen, in order to avoid cutout it needs to be shifted slightly
             marginParams.setMargins(mMarginLeft, mMarginTop, 0, 0);
             mView.setLayoutParams(marginParams);
-
-            // NEW: Apply identical margins to the Native Subtitle View
-            if (subLp instanceof ViewGroup.MarginLayoutParams subMarginParams) {
-                subMarginParams.width = dcw;
-                subMarginParams.height = dch;
-                subMarginParams.setMargins(mMarginLeft, mMarginTop, 0, 0);
-                mSubtitleView.setLayoutParams(subMarginParams);
-            }
         } else {
             if (log.isDebugEnabled()) log.debug("MARC works with LayoutParams NO MARGIN");
             lp.width = dcw;
             lp.height = dch;
             mView.setLayoutParams(lp);
-            // NEW: Apply identical dimensions to the Native Subtitle View
-            if (subLp != null) {
+        }
+
+        // NEW: mSubtitleView's sizing depends on the active subtitle track's format.
+        // Plain text (SRT/VTT) has no author-intended aspect/PlayRes to protect, so it's
+        // free to fill the whole container (mpv-style: subs render into window/OSD space),
+        // letting subs drop into black bars around a video like 1920x800 letterboxed inside
+        // a taller frame. Embedded ASS/SSA carries its own authored PlayResX/PlayResY
+        // relative to the video's own frame -- sizing/positioning it exactly like mView
+        // (dcw x dch, same margins) keeps it genuinely tethered to the video image, so
+        // libass's canvas-to-PlayRes scale stays uniform (no more "very zoomed" distortion)
+        // and subs track the video's actual on-screen position precisely, without any
+        // separate native destination-rect bookkeeping -- Android's own view layout does it.
+        if (subLp instanceof ViewGroup.MarginLayoutParams subMarginParams) {
+            if (mIsSubtitlePlainText) {
+                // SRT Mode: Full-screen container to drop into black bars
+                subMarginParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                subMarginParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                subMarginParams.setMargins(0, 0, 0, 0);
+            } else {
+                // ASS Mode: Baked-in tethered mode
+                subMarginParams.width = dcw;
+                subMarginParams.height = dch;
+                subMarginParams.setMargins(mMarginLeft, mMarginTop, 0, 0);
+            }
+            mSubtitleView.setLayoutParams(subMarginParams);
+        } else if (subLp != null) {
+            if (mIsSubtitlePlainText) {
+                subLp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                subLp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            } else {
                 subLp.width = dcw;
                 subLp.height = dch;
-                mSubtitleView.setLayoutParams(subLp);
             }
+            mSubtitleView.setLayoutParams(subLp);
         }
+
         mView.invalidate();
         if (mSubtitleView != null) mSubtitleView.invalidate(); // NEW
 
         mSurfaceWidth = dcw;
         mSurfaceHeight = dch;
+
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: ({},{})->({},{}) / formatCrop: ({},{}) / mEffectMode: {}", vw, vh, dcw, dch, cropW, cropH, mEffectMode);
     }
 

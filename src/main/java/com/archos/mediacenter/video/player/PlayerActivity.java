@@ -1342,6 +1342,29 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         super.onDestroy();
     }
 
+    private void updateSubtitleLayoutMode() {
+        boolean isPlainText = true; // Default to full screen (SRT mode)
+        if (mPlayer != null && mPlayer.getVideoMetadata() != null && mVideoInfo != null && mVideoInfo.subtitleTrack >= 0) {
+            // Make sure we aren't selecting the "None" track
+            if (mVideoInfo.subtitleTrack < mVideoInfo.nbSubtitles) {
+                VideoMetadata.SubtitleTrack track = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
+                if (track != null) {
+                    // Convert the integer format ID into a string
+                    String fmt = com.archos.mediacenter.video.utils.VideoUtils.getSubtitleFormatLabel(this, track.format);
+                    if (fmt != null) {
+                        fmt = fmt.toLowerCase();
+                        if (fmt.contains("ass") || fmt.contains("ssa")) {
+                            isPlainText = false; // Trigger "baked-in" ASS mode
+                        }
+                    }
+                }
+            }
+        }
+        if (mSurfaceController != null) {
+            mSurfaceController.setSubtitleIsPlainText(isPlainText);
+        }
+    }
+
     @SuppressWarnings("deprecation") // getRealSize/getSize: API 30+ uses getCurrentWindowMetrics
     private void updateSizes() {
         boolean isInPictureInPictureMode = Build.VERSION.SDK_INT>=Build.VERSION_CODES.N&&isInPictureInPictureMode();
@@ -4196,6 +4219,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     // Save the subtitle track selection to the database for persistence across resume
                     persistVideoInfo();
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: saved subtitleTrack {} to database", mVideoInfo.subtitleTrack);
+                    updateSubtitleLayoutMode();
                 } else {
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: player failed to get to subtitletrack {}", positionToSubtitleTrack(position, mVideoInfo.nbSubtitles));
                 }
@@ -4705,7 +4729,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     disableSubtitleSettingsMenuItem(true);
                 }
             }
-
+            updateSubtitleLayoutMode();
             refreshSubtitleTVMenu();
 
             if (mPlayerController.isTVMenuDisplayed()) {
