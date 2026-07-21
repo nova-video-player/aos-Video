@@ -115,7 +115,24 @@ public class SurfaceController {
     public boolean willStretchY;
     private int mEffectMode = VideoEffect.getDefaultMode();
     private int mEffectType = VideoEffect.getDefaultType();
-    private boolean mIsSubtitlePlainText = true;
+
+    // --- Subtitle surface sizing ---
+    // Three genuine categories (see PlayerActivity.updateSubtitleLayoutMode() for how the
+    // active track maps to one of these). Kept for SubtitleManager.setSubtitleIsGfx() and for
+    // the native engine's backend selection -- mSubtitleView's sizing itself no longer branches
+    // on category (see mUseSubMargins below).
+    public static final int SUBTITLE_CATEGORY_PLAIN_TEXT = 0; // SRT/VTT
+    public static final int SUBTITLE_CATEGORY_ASS         = 1; // embedded/external ASS/SSA
+    public static final int SUBTITLE_CATEGORY_GFX         = 2; // VobSub .idx/.sub, PGS
+
+    private int mSubtitleCategory = SUBTITLE_CATEGORY_PLAIN_TEXT;
+    // User preference (pref_play_subtitle_use_margins_key): when true, ALL subtitle categories
+    // -- plain text, ASS/SSA, and GFX alike -- are allowed to use top/bottom letterbox bars
+    // (mpv's sub-use-margins equivalent). Left/right bars are NEVER used regardless of this
+    // flag -- see updateSurface()'s mSubtitleView sizing block below. For ASS this also
+    // requires a matching native-side change (sub_engine_open_track() in sub_engine.c) so
+    // libass's own frame-size call reflects the same expanded canvas Java is now handing it.
+    private boolean mUseSubMargins = true;
 
     private int mCutoutLeft = 0;
     private int mCutoutTop = 0;
@@ -232,16 +249,22 @@ public class SurfaceController {
     }
 
     /**
-     * Called whenever the active subtitle track's format becomes known or
-     * changes (see PlayerActivity/FloatingPlayerService's
-     * onSubtitleMetadataUpdated), so updateSurface() can size mSubtitleView
-     * appropriately: full screen for plain text (SRT/VTT), tethered to the
-     * video's own on-screen box for embedded ASS/SSA. Triggers an immediate
-     * relayout if the value actually changed and a video is already laid out.
+     * Called whenever the active subtitle track's category becomes known or changes (see
+     * PlayerActivity.updateSubtitleLayoutMode()), and whenever the use-margins preference
+     * changes, so updateSurface() can size mSubtitleView appropriately:
+     *   - useMargins=true  : full video width, extended into top/bottom letterbox bars only
+     *     (never left/right), regardless of category (plain text, ASS, or GFX alike).
+     *   - useMargins=false : tethered exactly to the video's own on-screen box, same as the
+     *     video view itself.
+     * category is still recorded (SubtitleManager.setSubtitleIsGfx() and the native engine's
+     * backend selection depend on it) even though it no longer affects sizing here.
+     * Triggers an immediate relayout if either value actually changed and a video is already
+     * laid out.
      */
-    public void setSubtitleIsPlainText(boolean isPlainText) {
-        if (mIsSubtitlePlainText == isPlainText) return;
-        mIsSubtitlePlainText = isPlainText;
+    public void setSubtitleLayoutMode(int category, boolean useMargins) {
+        if (mSubtitleCategory == category && mUseSubMargins == useMargins) return;
+        mSubtitleCategory = category;
+        mUseSubMargins = useMargins;
         updateSurface();
     }
 
@@ -516,37 +539,46 @@ public class SurfaceController {
             mView.setLayoutParams(lp);
         }
 
-        // NEW: mSubtitleView's sizing depends on the active subtitle track's format.
-        // Plain text (SRT/VTT) has no author-intended aspect/PlayRes to protect, so it's
-        // free to fill the whole container (mpv-style: subs render into window/OSD space),
-        // letting subs drop into black bars around a video like 1920x800 letterboxed inside
-        // a taller frame. Embedded ASS/SSA carries its own authored PlayResX/PlayResY
-        // relative to the video's own frame -- sizing/positioning it exactly like mView
-        // (dcw x dch, same margins) keeps it genuinely tethered to the video image, so
-        // libass's canvas-to-PlayRes scale stays uniform (no more "very zoomed" distortion)
-        // and subs track the video's actual on-screen position precisely, without any
-        // separate native destination-rect bookkeeping -- Android's own view layout does it.
+        // mSubtitleView's sizing depends only on the use-margins preference now -- it applies
+        // uniformly to every subtitle category (plain text, ASS/SSA, and GFX alike). The
+        // category enum is still tracked (SubtitleManager.setSubtitleIsGfx() and the native
+        // engine still need to know which backend/format is active), but it no longer gates
+        // whether margins are used.
+        //
+        //   mUseSubMargins=false: tethered exactly like mView (dcw x dch, same margins) --
+        //   clipped to the video's own box, no black-bar usage.
+        //
+        //   mUseSubMargins=true: WIDTH stays exactly dcw (matches the video view's own width,
+        //   same horizontal margin) -- left/right bars are intentionally NEVER used, regardless
+        //   of this preference. HEIGHT extends to fill the full available vertical space
+        //   (letterbox bars included) ONLY when willStretchY is true, i.e. only when top/bottom
+        //   bars actually exist for this content/screen combination (see the ar/dcar comparison
+        //   above -- willStretchY is recomputed fresh every call, so this generalizes correctly
+        //   across any screen aspect ratio, not just 16:9). When willStretchY is false (bars are
+        //   left/right instead, or there are none at all), there's nothing vertical to gain, so
+        //   it falls back to the same tethered sizing as the non-margins case.
+        //
+        //   For ASS specifically, expanding the canvas also requires the native side to widen
+        //   what it tells libass its frame size is (see sub_engine_open_track() in
+        //   sub_engine.c) -- otherwise the track's own PlayResX/PlayResY scale would be computed
+        //   against the old, smaller video-only canvas while actually being drawn into the
+        //   larger one, distorting text size/position. That native-side change is separate from
+        //   this Java layout change; both are needed together.
+        boolean extendVertically = mUseSubMargins && willStretchY;
+
         if (subLp instanceof ViewGroup.MarginLayoutParams subMarginParams) {
-            if (mIsSubtitlePlainText) {
-                // SRT Mode: Full-screen container to drop into black bars
-                subMarginParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            subMarginParams.width = dcw;
+            if (extendVertically) {
                 subMarginParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                subMarginParams.setMargins(0, 0, 0, 0);
+                subMarginParams.setMargins(mMarginLeft, 0, 0, 0);
             } else {
-                // ASS Mode: Baked-in tethered mode
-                subMarginParams.width = dcw;
                 subMarginParams.height = dch;
                 subMarginParams.setMargins(mMarginLeft, mMarginTop, 0, 0);
             }
             mSubtitleView.setLayoutParams(subMarginParams);
         } else if (subLp != null) {
-            if (mIsSubtitlePlainText) {
-                subLp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                subLp.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            } else {
-                subLp.width = dcw;
-                subLp.height = dch;
-            }
+            subLp.width = dcw;
+            subLp.height = extendVertically ? ViewGroup.LayoutParams.MATCH_PARENT : dch;
             mSubtitleView.setLayoutParams(subLp);
         }
 

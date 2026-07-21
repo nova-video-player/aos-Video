@@ -57,6 +57,21 @@ public class SubtitleManager {
     private boolean mIsSubtitleGfx = false;
     private boolean isFirstTime = true;
 
+    /**
+     * Marks whether the active subtitle track is a bitmap format (VobSub .idx/.sub, PGS).
+     * Previously mIsSubtitleGfx was declared and read in five places below (vertical
+     * position, control-bar avoidance, insets adjustment) but never actually assigned --
+     * always false -- so none of that GFX-specific handling ever activated even when a
+     * bitmap track was genuinely playing. Call this from the same place that classifies
+     * the active track's category (see PlayerActivity.updateSubtitleLayoutMode() and
+     * FloatingPlayerService.onSubtitleMetadataUpdated()).
+     */
+    public void setSubtitleIsGfx(boolean isGfx) {
+        if (mIsSubtitleGfx == isGfx) return;
+        mIsSubtitleGfx = isGfx;
+        if (! isFirstTime) adjustView();
+    }
+
     private boolean mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
     private int mGestureAreaHeight;
 

@@ -588,6 +588,8 @@
     <string name="category_languages">Subtitles</string>
     <string name="subtitles_hide_default">Hide subtitles by default</string>
     <string name="subtitles_hide_default_summary">Hide regular subtitles by default; matching forced subtitles may still be shown</string>
+    <string name="subtitle_use_margins_title">Render subtitles in black bars</string>
+    <string name="subtitle_use_margins_summary">Show subtitles in the letterbox area below the picture instead of overlapping the video</string>
     <string name="subtitles_credentials_title">OpenSubtitles credentials</string>
     <string name="subtitles_credentials_summary">Provide your opensubtitles credentials to be able to download subtitles</string>
 

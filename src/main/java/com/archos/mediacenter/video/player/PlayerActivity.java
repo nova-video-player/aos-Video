@@ -224,6 +224,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public static final String KEY_SUBTITLE_SHADOW_WIDTH = "pref_play_subtitle_shadow_width_key";
     public static final String KEY_SUBTITLE_FONT_SIZE_PT = "pref_play_subtitle_font_size_pt_key";
     public static final String KEY_SUBTITLE_FONT_SCALE = "pref_play_subtitle_font_scale_key";
+    // When true, plain-text (SRT/VTT) and bitmap (VobSub/PGS) subtitles are allowed to render
+    // into top/bottom letterbox bars (mpv's sub-use-margins equivalent). Left/right bars are
+    // never used, regardless of this setting -- see SurfaceController.updateSurface().
+    public static final String KEY_SUBTITLE_USE_MARGINS = "subtitle_use_margins";
 
     private static final String KEY_PLAYER_FORMAT = "player_pref_format_key";
     private static final String KEY_PLAYER_AUTO_FORMAT = "player_pref_auto_format_key";
@@ -1343,25 +1347,44 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     }
 
     private void updateSubtitleLayoutMode() {
-        boolean isPlainText = true; // Default to full screen (SRT mode)
+        // Three genuine categories, not two:
+        //   PLAIN_TEXT (SRT/VTT)   -- no author-intended PlayRes; free to use the full container
+        //   ASS  (embedded/external ASS/SSA) -- has its own authored PlayResX/PlayResY tethered
+        //                                       to the video frame; never uses margins
+        //   GFX  (VobSub .idx/.sub, PGS)      -- bitmap subs with baked-in position/size relative
+        //                                       to the video frame; same margin rule as plain text
+        //                                       when the user opts in, but never stretched/rescaled
+        // Previously this only checked for "ass"/"ssa" in the format label and defaulted
+        // everything else -- including gfx tracks -- to plain-text handling. track.isGfx already
+        // exists (see isCurrentSubtrackGfx()) and is now checked explicitly instead of relying on
+        // format-label string matching, which never distinguished gfx from plain text at all.
+        int category = SurfaceController.SUBTITLE_CATEGORY_PLAIN_TEXT;
         if (mPlayer != null && mPlayer.getVideoMetadata() != null && mVideoInfo != null && mVideoInfo.subtitleTrack >= 0) {
             // Make sure we aren't selecting the "None" track
             if (mVideoInfo.subtitleTrack < mVideoInfo.nbSubtitles) {
                 VideoMetadata.SubtitleTrack track = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
                 if (track != null) {
-                    // Convert the integer format ID into a string
-                    String fmt = com.archos.mediacenter.video.utils.VideoUtils.getSubtitleFormatLabel(this, track.format);
-                    if (fmt != null) {
-                        fmt = fmt.toLowerCase();
-                        if (fmt.contains("ass") || fmt.contains("ssa")) {
-                            isPlainText = false; // Trigger "baked-in" ASS mode
+                    if (track.isGfx) {
+                        category = SurfaceController.SUBTITLE_CATEGORY_GFX;
+                    } else {
+                        String fmt = com.archos.mediacenter.video.utils.VideoUtils.getSubtitleFormatLabel(this, track.format);
+                        if (fmt != null) {
+                            fmt = fmt.toLowerCase();
+                            if (fmt.contains("ass") || fmt.contains("ssa")) {
+                                category = SurfaceController.SUBTITLE_CATEGORY_ASS;
+                            }
                         }
                     }
                 }
             }
         }
+        boolean useMargins = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean(KEY_SUBTITLE_USE_MARGINS, true);
         if (mSurfaceController != null) {
-            mSurfaceController.setSubtitleIsPlainText(isPlainText);
+            mSurfaceController.setSubtitleLayoutMode(category, useMargins);
+        }
+        if (mSubtitleManager != null) {
+            mSubtitleManager.setSubtitleIsGfx(category == SurfaceController.SUBTITLE_CATEGORY_GFX);
         }
     }
 
