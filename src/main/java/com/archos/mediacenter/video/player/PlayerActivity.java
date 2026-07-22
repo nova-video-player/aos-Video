@@ -1000,7 +1000,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 finalSize = DEFAULT_MAX_IFRAME_SIZE;
             }
             LibAvos.setStreamMaxIframeSize(finalSize);
-            LibAvos.enableAudioSpeed(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false));
+            LibAvos.enableAudioSpeed(VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences));
             LibAvos.disableAtempoFilter(mPreferences.getBoolean(VideoPreferencesCommon.KEY_AUDIO_SPEED_AUDIOTRACK, false));
             LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback (does nothing if audio speed not enabled)
             LibAvos.setDynamicAudioDelay(mPreferences.getBoolean(VideoPreferencesCommon.KEY_ENABLE_DYNAMIC_AUDIO_DELAY, true)); // AVOS applies it only when the active sink path can use dynamic delay.
@@ -2165,8 +2165,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                 });
 
-                // disable playback speed if passthrough is enabled and Android M (API23+)
-                if(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0) {
+                // disable playback speed if audio speed is disabled (passthrough, MediaCodec audio decoder, or API < 23)
+                if (VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences)) {
                     final TVMenuItem tvmi4 = mAudioTracksTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_audio_speed_title).toString(), false, false);
                     tvmi4.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -2554,8 +2554,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 menuItem.setIcon(R.drawable.ic_baseline_speed_24);
                 menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
-            // disable playback speed if passthrough is enabled and Android M+ (API23+)
-            menuItem.setVisible(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
+            // disable playback speed if audio speed is disabled (passthrough, MediaCodec audio decoder, or API < 23)
+            menuItem.setVisible(VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences));
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_SPATIALIZATION_ID, Menu.NONE, R.string.spatialization_capabilities);
             if (menuItem != null) {
                 menuItem.setCheckable(true);
@@ -3657,11 +3657,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     /* AudioSpeedPickerDialog.OnAudioSpeedChangeListener */
     public void onAudioSpeedChange(AudioSpeedPickerAbstract speedPicker, float speed) {
-        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+        if (VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences)) {
             if (log.isDebugEnabled()) log.debug("onAudioSpeedChange: setAudioSpeed {}", speed);
              PlayerService.sPlayerService.setAudioSpeed(speed, false);
         } else {
-            if (log.isDebugEnabled()) log.debug("onAudioSpeedChange: DO NOT setAudioSpeed coz passthrough");
+            if (log.isDebugEnabled()) log.debug("onAudioSpeedChange: DO NOT setAudioSpeed coz audio speed disabled");
         }
     }
 

@@ -92,6 +92,7 @@ import static com.archos.mediacenter.utils.ISO639codes.isLanguageInString;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateTrackName;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.getSubLanguageFromSubPathAndVideoPath;
 import com.archos.medialib.LibAvos;
+import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_AUDIO_SPEED_AUDIOTRACK;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 import static com.archos.mediascraper.StringUtils.stringContainsForced;
@@ -2207,12 +2208,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     public void setAudioSpeed(float speed, boolean force) {
         boolean speedChanged = speed != mAudioSpeed || force;
-        if (speedChanged &&
-                (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) &&
+        if (speedChanged && VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences) &&
                 speed > 0.45f && speed < 2.05f) { // min granularity is 0.05
             if (log.isDebugEnabled()) log.debug("setAudioSpeed: audio speed changed from {} to {}", mAudioSpeed, speed);
             mAudioSpeed = speed;
-            if ((AUDIO_SPEED_ON_THE_FLY && mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false)) || force) {
+            if ((AUDIO_SPEED_ON_THE_FLY && VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences)) || force) {
                 mPlayer.setAvSpeed(mAudioSpeed);
                 // When using AudioTrack-based speed (not atempo), check if native actually applied the speed.
                 // If AudioTrack creation failed, native reverts to 1x without notifying Java.
@@ -2225,8 +2225,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 }
             }
         }
-        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) != 0) {
-            if (log.isDebugEnabled()) log.debug("setAudioSpeed does nothing coz passthrough");
+        if (!VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences)) {
+            if (log.isDebugEnabled()) log.debug("setAudioSpeed does nothing coz audio speed disabled");
             mAudioSpeed = 1.0f;
         }
     }
@@ -2235,8 +2235,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         return mAudioDelay;
     }
 
-    public float getAudioSpeed() { // no audio_speed if in passthrough
-        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+    public float getAudioSpeed() { // no audio_speed if audio speed disabled
+        if (VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences)) {
             if (log.isDebugEnabled()) log.debug("getAudioSpeed: {}", mAudioSpeed);
             return mAudioSpeed;
         } else {
@@ -2245,8 +2245,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
     }
 
-    public float getAudioSpeedFromPreferences() { // no audio_speed if in passthrough
-        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+    public float getAudioSpeedFromPreferences() { // no audio_speed if audio speed disabled
+        if (VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences)) {
             if (log.isDebugEnabled()) log.debug("getAudioSpeedFromPreferences: {}", mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f));
             return mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f);
         } else {

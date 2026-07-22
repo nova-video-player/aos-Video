@@ -2048,7 +2048,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     }
                 } else {
                     // Bottom 25% left: decrease audio speed
-                    if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED, false)) {
+                    if (VideoPreferencesCommon.isAudioSpeedEnabled(mContext)) {
                         PlayerService.sPlayerService.decrementAudioSpeed();
                         showAudioSpeedOSD(PlayerService.sPlayerService.getAudioSpeed());
                     }
@@ -2069,7 +2069,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     }
                 } else {
                     // Bottom 25% right: increase audio speed
-                    if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED, false)) {
+                    if (VideoPreferencesCommon.isAudioSpeedEnabled(mContext)) {
                         PlayerService.sPlayerService.incrementAudioSpeed();
                         showAudioSpeedOSD(PlayerService.sPlayerService.getAudioSpeed());
                     }
@@ -2412,7 +2412,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         case KeyEvent.KEYCODE_CHANNEL_DOWN:
                         case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
                         case KeyEvent.KEYCODE_G:
-                            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED,false)) {
+                            if (VideoPreferencesCommon.isAudioSpeedEnabled(mContext)) {
                                 PlayerService.sPlayerService.decrementAudioSpeed();
                                 showAudioSpeedOSD(PlayerService.sPlayerService.getAudioSpeed());
                             }
@@ -2420,7 +2420,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         case KeyEvent.KEYCODE_CHANNEL_UP:
                         case KeyEvent.KEYCODE_MEDIA_NEXT:
                         case KeyEvent.KEYCODE_H:
-                            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED,false)) {
+                            if (VideoPreferencesCommon.isAudioSpeedEnabled(mContext)) {
                                 PlayerService.sPlayerService.incrementAudioSpeed();
                                 showAudioSpeedOSD(PlayerService.sPlayerService.getAudioSpeed());
                             }
