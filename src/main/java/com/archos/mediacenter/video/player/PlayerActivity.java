@@ -68,6 +68,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -652,6 +653,23 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         detectExternalPlayerMode();
 
         super.onCreate(icicle);
+
+        // Predictive back (mandatory on targetSdk 36) no longer dispatches KEYCODE_BACK to
+        // onKeyDown/onKeyUp, which is how the TV menu / TVCardDialog overlays used to intercept
+        // BACK to close themselves instead of finishing the player. Close them explicitly first.
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mPlayerController != null && mPlayerController.isTVMenuDisplayed()) {
+                    mPlayerController.showTVMenu(false);
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    setEnabled(true);
+                }
+            }
+        });
+
         mIndexHelper = new IndexHelper(mContext, LoaderManager.getInstance(this), LOADER_INDEX);
 
         mPermissionChecker = new PermissionChecker(hasManageExternalStoragePermission(getApplicationContext()));

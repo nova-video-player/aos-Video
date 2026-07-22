@@ -61,6 +61,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -216,6 +217,21 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (isResultTaskActive()) {
+                    // We want this activity to keep on running in the background and go back
+                    // to the previous activity => bring the previous activity back to front
+                    startBrowserActivity();
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    setEnabled(true);
+                }
+            }
+        });
+
         getWindow().setFlags(LayoutParams.FLAG_NOT_TOUCH_MODAL, LayoutParams.FLAG_NOT_TOUCH_MODAL);
         getWindow().setFlags(LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
 
@@ -362,19 +378,6 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
     //*****************************************************************************
     // Activity events management
     //*****************************************************************************
-
-    @Override
-    public void onBackPressed() {
-        if (isResultTaskActive()) {
-            // We want this activity to keep on running in the background and go back
-            // to the previous activity => bring the previous activity back to front
-            startBrowserActivity();
-        }
-        else {
-            // Keep the standard BACK behaviour
-            super.onBackPressed();
-        }
-    }
 
     private void startBrowserActivity() {
         Intent intent = new Intent(this, MainActivity.class);

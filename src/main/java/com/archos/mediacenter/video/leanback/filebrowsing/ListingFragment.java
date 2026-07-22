@@ -763,7 +763,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     public void onFileDelete(Uri file) {
 
         if(file.toString().endsWith("/")&&!mUri.toString().endsWith("/")&&file.toString().equals(mUri.toString()+"/")|| mUri.equals(file)) { //if current listed uri
-            if (isAdded()) getActivity().onBackPressed();
+            if (isAdded()) getActivity().getOnBackPressedDispatcher().onBackPressed();
         }
         else{ //if parent uri
             Uri parent = FileUtils.getParentUrl(file);

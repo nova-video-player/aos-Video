@@ -207,7 +207,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     @Override
     protected void onInfoActivityResult(int resultCode, Intent data) {
         if (resultCode == RESULT_FILE_DELETED && data != null && mCurrentDirectory.equals(data.getData()))
-            getActivity().onBackPressed();
+            getActivity().getOnBackPressedDispatcher().onBackPressed();
     }
 
     @Override
@@ -399,7 +399,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     public void onFolderRemoved(final Uri folder) {
         super.onFolderRemoved(folder);
         if(isAdded()) {
-            getActivity().onBackPressed();
+            getActivity().getOnBackPressedDispatcher().onBackPressed();
         }
     }
 

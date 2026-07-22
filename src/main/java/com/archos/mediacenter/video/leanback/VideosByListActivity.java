@@ -7,8 +7,4 @@ public class VideosByListActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new VideosByListFragment();
     }
-
-    public void onBackPressed(){
-        finish();
-    }
 }

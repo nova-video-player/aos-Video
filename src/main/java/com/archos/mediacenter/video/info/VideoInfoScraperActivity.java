@@ -52,7 +52,7 @@ public class VideoInfoScraperActivity extends FragmentActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.root,frag)
-                .addToBackStack(null).commit();
+                .commit();
     }
 
     private void applySystemInsets(View root) {
@@ -68,10 +68,6 @@ public class VideoInfoScraperActivity extends FragmentActivity {
         });
     }
 
-    @Override
-    public void onBackPressed(){
-        finish();
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

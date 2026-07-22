@@ -494,7 +494,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    getActivity().onBackPressed();
+                    getActivity().getOnBackPressedDispatcher().onBackPressed();
                 }
             });
         }

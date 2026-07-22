@@ -61,6 +61,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -283,6 +284,30 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         ((CustomApplication) getApplication()).loadLocale();
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         super.onCreate(savedInstanceState);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
+                if (backStackCount <= 1) {
+                    if (mDrawerLayout == null || mDrawerLayout.isDrawerOpen(GravityCompat.START))
+                        supportFinishAfterTransition();
+                    else {
+                        mDrawerLayout.openDrawer(GravityCompat.START);
+                    }
+                } else {
+                    // Get the fragment that is currently at the top of the back stack
+                    String fragmentTag = getSupportFragmentManager().getBackStackEntryAt(backStackCount - 1).getName();
+                    Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(fragmentTag);
+                    // Check if the fragment is added before trying to remove it
+                    if (currentFragment != null && currentFragment.isAdded()) {
+                        getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
+                    }
+                    getSupportFragmentManager().popBackStackImmediate();
+                }
+                updateHomeIcon(getSupportFragmentManager().getBackStackEntryCount() > 1);
+            }
+        });
 
         mThemeChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
@@ -594,28 +619,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             ThemeManager.getInstance(this).unregisterThemeChangeListener(mThemeChangeListener);
         }
         super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
-        if(backStackCount<=1) {
-            if(mDrawerLayout==null||mDrawerLayout.isDrawerOpen(GravityCompat.START))
-                supportFinishAfterTransition();
-            else{
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
-        } else {
-            // Get the fragment that is currently at the top of the back stack
-            String fragmentTag = getSupportFragmentManager().getBackStackEntryAt(backStackCount - 1).getName();
-            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(fragmentTag);
-            // Check if the fragment is added before trying to remove it
-            if (currentFragment != null && currentFragment.isAdded()) {
-                getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
-            }
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-        updateHomeIcon(getSupportFragmentManager().getBackStackEntryCount() > 1);
     }
 
     @Override

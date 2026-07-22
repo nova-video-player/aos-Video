@@ -426,7 +426,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mTitleBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+                getActivity().getOnBackPressedDispatcher().onBackPressed();
             }
         });
         mEpisodeTitleView =(TextView) mTitleBarContent.findViewById(R.id.episode_title_view);

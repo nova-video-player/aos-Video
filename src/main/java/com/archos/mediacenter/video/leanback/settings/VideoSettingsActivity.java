@@ -2,6 +2,8 @@ package com.archos.mediacenter.video.leanback.settings;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
+
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.LeanbackActivity;
 import com.archos.mediacenter.video.utils.ThemeManager;
@@ -17,13 +19,14 @@ public class VideoSettingsActivity extends LeanbackActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_settings);
         overridePendingTransition(R.anim.slide_in_from_right, 0);
-    }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        // FIXME
-        overridePendingTransition(0, R.anim.slide_out_to_right);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+                overridePendingTransition(0, R.anim.slide_out_to_right);
+            }
+        });
     }
 
     private int getResultCode() {

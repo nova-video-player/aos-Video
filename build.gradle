@@ -136,7 +136,7 @@ android {
         renderScript = false
         resValues = true
     }
-    compileSdk = 36
+    compileSdk = 37
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -154,7 +154,7 @@ android {
         applicationId = "org.courville.nova"
         generatedDensities = []
         minSdkVersion 23
-        targetSdkVersion 35
+        targetSdkVersion 36
         multiDexEnabled = true
         // below version tracks the one from F-Droid or universal package when generated with ./gradlew -Puniversal
         // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
@@ -365,7 +365,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'androidx.tvprovider:tvprovider:1.1.0'
     implementation 'androidx.media:media:1.8.0'
-    implementation 'androidx.core:core:1.18.0'
+    implementation 'androidx.core:core:1.19.0'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.fragment:fragment:1.8.9'
@@ -384,15 +384,15 @@ dependencies {
     implementation 'androidx.tvprovider:tvprovider:1.1.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:5.4.0'
     implementation 'com.github.tony19:logback-android:3.0.0'
-    implementation 'io.sentry:sentry-android:8.46.0'
-    implementation 'io.sentry:sentry:8.46.0'
+    implementation 'io.sentry:sentry-android:8.49.0'
+    implementation 'io.sentry:sentry:8.49.0'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.23.0'
     testImplementation 'org.robolectric:robolectric:4.16.1'
     testImplementation 'androidx.test:core:1.7.0'
     testImplementation 'org.slf4j:slf4j-api:2.0.18'
-    testImplementation 'ch.qos.logback:logback-classic:1.5.37'
+    testImplementation 'ch.qos.logback:logback-classic:1.5.38'
 }
 
 configurations { // try to exclude device specific libraries interfering

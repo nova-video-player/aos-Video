@@ -26,8 +26,4 @@ public class SeasonActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new SeasonFragment();
     }
-
-    public void onBackPressed(){
-        finish();
-    }
 }

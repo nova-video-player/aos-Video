@@ -46,8 +46,4 @@ public class AllCollectionsGridActivity extends SingleFragmentActivity {
 
         return super.onKeyDown(keyCode, event);
     }
-
-    public void onBackPressed(){
-        finish();
-    }
 }

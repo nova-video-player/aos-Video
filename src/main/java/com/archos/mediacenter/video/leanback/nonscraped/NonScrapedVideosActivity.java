@@ -23,8 +23,4 @@ public class NonScrapedVideosActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new NonScrapedVideosFragment();
     }
-
-    public void onBackPressed(){
-        finish();
-    }
 }

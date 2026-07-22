@@ -26,6 +26,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
@@ -57,6 +58,24 @@ public class WebViewActivity extends AppCompatActivity {
             androidx.core.graphics.Insets systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBarsInsets.left, systemBarsInsets.top, systemBarsInsets.right, systemBarsInsets.bottom);
             return insets;
+        });
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mWebView != null && mWebView.getUrl() != null && (mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/ads/control")
+                        || mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/video/control"))) {
+                    mWebView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ESCAPE));
+                }
+                else if (mWebView!=null && mWebView.canGoBack() && !mWebView.getUrl().startsWith("https://www.youtube.com/tv#")) {
+                    mWebView.goBack();
+                }
+                else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    setEnabled(true);
+                }
+            }
         });
     }
 
@@ -105,20 +124,6 @@ public class WebViewActivity extends AppCompatActivity {
                 }
             });
         }  
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mWebView != null && mWebView.getUrl() != null && (mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/ads/control")
-                || mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/video/control"))) {
-            mWebView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ESCAPE));
-        }
-        else if (mWebView!=null && mWebView.canGoBack() && !mWebView.getUrl().startsWith("https://www.youtube.com/tv#")) {
-            mWebView.goBack();
-        }
-        else {
-            super.onBackPressed();;
-        }
     }
 
     @Override

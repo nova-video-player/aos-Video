@@ -37,8 +37,10 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.window.OnBackInvokedDispatcher;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.content.ContextCompat;
@@ -329,6 +331,13 @@ public class FolderPicker extends FragmentActivity {
             loadFolder(mSelectedFolder);
 
             AlertDialog ad = builder.create();
+
+            // setOnKeyListener() above is not called anymore on API 33+ once predictive back
+            // is enabled: register the equivalent callback directly on the dialog's own window.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ad.getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                        OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::onBackPressed);
+            }
 
             // Need to setup this listener to get the ok button once it is actually allocated...
             ad.setOnShowListener(new OnShowListener() {

@@ -37,13 +37,6 @@ public class VideoInfoPosterBackdropActivity extends FragmentActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.root,frag)
-                .addToBackStack(null).commit();
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+                .commit();
     }
 }

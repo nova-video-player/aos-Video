@@ -46,8 +46,4 @@ public class AllAnimeCollectionsGridActivity extends SingleFragmentActivity {
 
         return super.onKeyDown(keyCode, event);
     }
-
-    public void onBackPressed(){
-        finish();
-    }
 }
