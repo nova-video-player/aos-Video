@@ -319,6 +319,17 @@
     <string name="pref_play_mode_entry_repeat_folder">Powtórz folder</string>
     <string name="pref_play_mode_entry_repeat_single">Potwórz pojedynczy</string>
     <string name="pref_play_mode_entry_binge">Odcinek po odcinku</string>
+    <string name="pref_introdb_autoskip_title">Pomiń wstęp/zakończenie</string>
+    <string name="pref_introdb_skip_recap_title">Pomiń podsumowanie</string>
+    <string name="introdb_autoskip_on">Autopomijanie włączone</string>
+    <string name="introdb_autoskip_off">Autopomijanie wyłączone</string>
+    <string name="introdb_autoskip">Autopomijanie</string>
+    <string name="introdb_segment_intro">Wstęp</string>
+    <string name="introdb_segment_recap">Podsumowanie</string>
+    <string name="introdb_segment_outro">Zakończenie</string>
+    <string name="introdb_segment_credits">Twórcy</string>
+    <string name="introdb_segment_preview">Zapowiedź</string>
+    <string name="introdb_segment_end">koniec</string>
     <string name="pref_audio_parameters_title">Dźwięk</string>
     <string name="pref_audio_filt_title">Wzmocnienie</string>
     <string name="pref_audio_filt_night_mode">Tryb nocny</string>
@@ -439,6 +450,14 @@
     <string name="toast_subloader_login_failed">Błędne dane logowania lub niedostępna usługa OpenSubtitles</string>
     <string name="toast_subloader_quota_exceeded">Przekroczono limit pobierania OpenSubtitles</string>
     <string name="opensubtitles_quota_reset_time_remaining">Zresetowano limit w %s</string>
+    <string name="opensubtitles_summary_anonymous">Anonimowy</string>
+    <string name="opensubtitles_summary_user_account">Konto użytkownika</string>
+    <string name="opensubtitles_summary_not_checked">Jeszcze nie sprawdzono</string>
+    <string name="opensubtitles_summary_credentials_verified">Dane zweryfikowane</string>
+    <string name="opensubtitles_summary_login_failed">Logowanie nieudane</string>
+    <string name="opensubtitles_summary_service_unavailable">Serwis niedostępny</string>
+    <string name="opensubtitles_summary_quota_exhausted">Limit wyczerpany</string>
+    <string name="opensubtitles_summary_status">%1$s · %2$s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_settings_title">Ustawienia napisów</string>
     <string name="subtitle_sample_text">\"próbka\"</string>
@@ -740,8 +759,8 @@
     <string name="audio_decoder_choice_title">Wybierz dekoder audio</string>
     <string name="audio_decoder_choice_summary">Określa czy dekodować audio za pomocą oprogramowania (FFmpeg), czy sprzętu (MediaCodec)</string>
     <string name="audio_decoder_auto">Automatycznie</string>
-    <string name="audio_decoder_prefer_ffmpeg">Preferuj FFmpeg</string>
-    <string name="audio_decoder_prefer_mediacodec">Preferuj MediaCodec</string>
+    <string name="audio_decoder_prefer_ffmpeg">Preferuj FFmpeg (domyślnie)</string>
+    <string name="audio_decoder_prefer_mediacodec">Preferuj MediaCodec (eksperymentalnie)</string>
     <string name="audio_interface_opensles">Wymuś OpenSL ES</string>
     <string name="audio_interface_audiotrack">Wymuś ścieżkę dźwiękową</string>
     <string name="audio_interface_any">Domyślna logika</string>
@@ -869,7 +888,16 @@
     <string name="trakt_device_auth_timeout">Kod wygasł. Spróbuj ponownie.</string>
     <string name="trakt_account_locked">Konto Trakt zablokowane. Odblokuj na Trakt.tv lub spróbuj później.</string>
     <string name="connect_trakt">Połącz z Trakt.tv</string>
+    <string name="trakt_sync_status_never">Jeszcze nie zsynchronizowano</string>
+    <string name="trakt_sync_status_ok">Zsynchronizowano: %1$s temu</string>
+    <string name="trakt_sync_status_ok_skipped">Zsynchronizowano: %1$s temu · %2$d wideo oczekujące (nieznany czas trwania)</string>
+    <string name="trakt_sync_status_ok_meta_skipped">Zsynchronizowano: %1$s temu · %2$d wideo pominięte (brakujące metadane)</string>
+    <string name="trakt_sync_status_ok_both_skipped">Zsynchronizowano: %1$s temu · %2$d w toku (nieznany czas trwania), %3$d wideo pominięte (brakujące metadane)</string>
+    <string name="trakt_sync_status_error_network">Synchronizacja nieudana: błąd sieci</string>
+    <string name="trakt_sync_status_error_auth">Błąd uwierzytelniania - zaloguj się ponownie</string>
+    <string name="trakt_sync_status_error_locked">Konto zablokowane - odblokuj na trakt.tv</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
+    <string name="trakt_signin_summary_logged_sync">Zalogowano · %1$s</string>
     <string name="show_all">Wszystkie wideo</string>
     <string name="hide_seen">Nieobejrzane</string>
     <string name="search_results">Wynik wyszukiwania</string>
@@ -1033,4 +1061,14 @@
     <string name="external_player_service_title">Odtwarzanie w zewnętrznym odtwarzaczu</string>
     <string name="external_player_service_description">Nova Video Player udostępnia zawartość zewnętrznemu odtwarzaczowi</string>
     <string name="stop">Zatrzymaj</string>
+    <string name="s_visual_impaired">zaburzenia widzenia</string>
+    <string name="s_audio_description">audiodeskrypcja</string>
+    <string name="s_descriptions">opisy</string>
+    <string name="s_forced">wymuszone</string>
+    <string name="s_original">oryginalne</string>
+    <string name="s_translated">tłumaczone</string>
+    <string name="s_dubbed">dubbingowane</string>
+    <string name="s_commentary">komentarz</string>
+    <string name="s_lyrics">teksty</string>
+    <string name="s_karaoke">karaoke</string>
 </resources>
