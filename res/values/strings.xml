@@ -960,6 +960,7 @@
     <string name="trakt_device_auth_invalid_code">Failed to obtain a valid device code from Trakt. Please try again.</string>
     <string name="trakt_device_auth_timeout">Code expired. Please try again.</string>
     <string name="trakt_account_locked">Trakt account locked. Unlock on trakt.tv or try later.</string>
+    <string name="trakt_social_signin_unsupported">Sign in with Google/Facebook/Apple is not supported here. Please sign in with your Trakt username and password instead.</string>
     <string name="connect_trakt">Connect to Trakt</string>
     <string name="trakt_sync_status_never">Not yet synced</string>
     <string name="trakt_sync_status_ok">Last sync: %1$s ago</string>

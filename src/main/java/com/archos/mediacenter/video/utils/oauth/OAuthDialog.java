@@ -270,10 +270,14 @@ public class OAuthDialog extends Dialog {
         {
 			if (log.isDebugEnabled()) log.debug("onReceivedError API23+");
 			super.onReceivedError(view, request, error);
+			log.warn("onReceivedError: error code={}, description={}, failingUrl={}, mainFrame={}", error.getErrorCode(), error.getDescription(), request.getUrl(), request.isForMainFrame());
+			// Only abort the auth flow for main frame failures: sub-resource failures
+			// (favicon, analytics, ORB-blocked assets, etc.) must not cancel a successfully
+			// loaded sign-in page.
+			if (!request.isForMainFrame()) return;
 			if(mListener!=null)
                 mListener.onFinished(mdata);
 			OAuthDialog.this.dismiss();
-			log.warn("onReceivedError: error code={}, description={}, failingUrl={}", error.getErrorCode(), error.getDescription(), request.getUrl());
 			// ERR_FAILED (-1) often indicates SSL certificate issues or DNS resolution failures
 			String errorMsg = "No Internet";
 			if (error.getErrorCode() == -1) {
@@ -316,7 +320,17 @@ public class OAuthDialog extends Dialog {
 				if(mListener!=null)
 					mListener.onFinished(mdata);
 				OAuthDialog.this.dismiss();
-				Toast.makeText(getContext(), "HTTP Error " + errorResponse.getStatusCode() + " - Cannot connect to Trakt", Toast.LENGTH_LONG).show();
+				// trakt.tv/auth/<provider> (Google, Facebook, Apple, etc.) is the handoff to a
+				// third-party identity provider. Those providers commonly refuse to complete
+				// sign-in inside an embedded WebView, which trakt.tv surfaces as an HTTP error
+				// here. Give the user an actionable message instead of a generic network error.
+				String host = request.getUrl().getHost();
+				String path = request.getUrl().getPath();
+				if (host != null && host.endsWith("trakt.tv") && path != null && path.startsWith("/auth/")) {
+					Toast.makeText(getContext(), R.string.trakt_social_signin_unsupported, Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(getContext(), "HTTP Error " + errorResponse.getStatusCode() + " - Cannot connect to Trakt", Toast.LENGTH_LONG).show();
+				}
 			}
 		}
 
