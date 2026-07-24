@@ -285,6 +285,7 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
+
                 <data android:scheme="file"/>
                 <data android:scheme="content"/>
                 <data android:scheme="http"/>
@@ -313,6 +314,14 @@
                 <data android:mimeType="audio/x-mpegurl"/>
                 <data android:mimeType="application/x-shockwave-flash"/>
                 <data android:mimeType="application/x-bittorrent"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:host="*"/>
             </intent-filter>
             <!--
             such ugly explicit matching is required because Android primitive PatternMatcher where <data android:pathPattern=".*\\.mkv" />
