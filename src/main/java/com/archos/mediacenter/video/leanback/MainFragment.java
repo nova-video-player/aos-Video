@@ -16,6 +16,8 @@ package com.archos.mediacenter.video.leanback;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -24,14 +26,19 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Bundle;
 import android.os.Process;
+import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.BrowseSupportFragment;
@@ -1904,12 +1911,49 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     case SPONSOR:
                         WebUtils.openWebLink(vActivity,getString(R.string.sponsor_url));
                         break;
+                    case OPEN_NETWORK_STREAM:
+                        showNetworkStreamDialog();
+                        break;
                 }
             }
             else {
                 super.onItemClicked(itemViewHolder, item, rowViewHolder, row);
             }
         }
+    }
+
+    private void showNetworkStreamDialog() {
+        final EditText urlInput = new EditText(getActivity());
+        urlInput.setHint(R.string.open_network_stream_hint);
+        urlInput.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+        urlInput.setSingleLine(true);
+
+        // Paste from clipboard if available
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        if (clipboard != null && clipboard.hasPrimaryClip()) {
+            ClipData clip = clipboard.getPrimaryClip();
+            if (clip != null && clip.getItemCount() > 0) {
+                CharSequence pasteData = clip.getItemAt(0).getText();
+                if (pasteData != null) {
+                    urlInput.setText(pasteData);
+                    urlInput.selectAll();
+                }
+            }
+        }
+
+        new AlertDialog.Builder(getActivity())
+            .setTitle(R.string.open_network_stream_title)
+            .setView(urlInput)
+            .setPositiveButton(R.string.open_network_stream_play, (dialog, which) -> {
+                String url = urlInput.getText().toString().trim();
+                if (!url.isEmpty()) {
+                    Uri uri = Uri.parse(url);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+            })
+            .setNegativeButton(R.string.open_network_stream_cancel, null)
+            .show();
     }
 
 }
