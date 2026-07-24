@@ -70,6 +70,7 @@ import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.utils.VideoMetadata;
+import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediacenter.video.utils.AdditionalServiceSingleton;
 import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
@@ -88,7 +89,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
-import static com.archos.mediacenter.utils.ISO639codes.isLanguageInString;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateTrackName;
 import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.getSubLanguageFromSubPathAndVideoPath;
 import com.archos.medialib.LibAvos;
@@ -1753,9 +1753,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         int nbTrack = vMetadata.getAudioTrackNb();
         boolean supported = true;
 
-        Locale locale = Locale.forLanguageTag(mAudioTrackFavoriteLanguage);
         String trackName = "";
         Integer firstSupportedTrack = null;
+        Integer languageMatchTrack = null;
+        Integer languageDefaultMatchTrack = null;
+        Integer languageVariantMatchTrack = null;
         supported = false;
 
         // VideoDbInfo sets audioTrack to -1 when file has not been played or restores playerParams
@@ -1768,19 +1770,41 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     supported = true;
                 }
                 if ((mVideoInfo.audioTrack < 0 || mVideoInfo.audioTrack >= nbTrack || !vMetadata.getAudioTrack(mVideoInfo.audioTrack).supported) && firstTimeAudioCalled) { // track has not been selected yet and it is the first time video is played
-                    if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: trying to find {} in {}", locale.getDisplayLanguage(), trackName);
-                    if (isLanguageInString(locale.getDisplayLanguage(), trackName)) {
-                        if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: selected default track: #{} -> {} matching favorite audioTrack language {}", i, trackName, locale.getDisplayLanguage());
-                        mVideoInfo.audioTrack = i;
-                        break;
+                    String trackLanguage = vMetadata.getAudioTrack(i).language;
+                    if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: trying to match favorite audioTrack language {} against track #{} language {} ({})", mAudioTrackFavoriteLanguage, i, trackLanguage, trackName);
+                    if (ISO639codes.isFavoriteLanguageMatch(mAudioTrackFavoriteLanguage, trackLanguage)) {
+                        if (languageMatchTrack == null) {
+                            if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: track #{} -> {} matches favorite audioTrack language {}", i, trackName, mAudioTrackFavoriteLanguage);
+                            languageMatchTrack = i;
+                        }
+                        // among same-language tracks (e.g. several untitled/generic Chinese tracks),
+                        // the container's own "default" disposition flag is the best signal of which
+                        // one is the most probable/intended track when no title hint disambiguates it
+                        if (languageDefaultMatchTrack == null && (vMetadata.getAudioTrack(i).disposition & VideoUtils.AV_DISPOSITION_DEFAULT) != 0) {
+                            if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: track #{} -> {} matches favorite audioTrack language {} and is marked default", i, trackName, mAudioTrackFavoriteLanguage);
+                            languageDefaultMatchTrack = i;
+                        }
+                        // best-effort disambiguation between Chinese sub-variants (Mainland/HK/Taiwan)
+                        // that share the same "chi"/"zho" code, based on the track's free-text title
+                        if (languageVariantMatchTrack == null && ISO639codes.titleMatchesChineseVariant(mAudioTrackFavoriteLanguage, vMetadata.getAudioTrack(i).name)) {
+                            if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: track #{} -> {} matches favorite Chinese variant {}", i, trackName, mAudioTrackFavoriteLanguage);
+                            languageVariantMatchTrack = i;
+                        }
                     } else {
-                        if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: skip track: #{} -> {} not matching favorite audioTrack language {}", i, trackName, locale.getDisplayLanguage());
+                        if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: skip track: #{} -> {} not matching favorite audioTrack language {}", i, trackName, mAudioTrackFavoriteLanguage);
                     }
                 } else {
-                    if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: not trying to find {} in {} because mVideoInfo.audioTrack={} out of range or not supported or firstTimeAudioCalled={}", locale.getDisplayLanguage(), trackName, mVideoInfo.audioTrack, firstTimeAudioCalled);
+                    if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: not trying to find {} in {} because mVideoInfo.audioTrack={} out of range or not supported or firstTimeAudioCalled={}", mAudioTrackFavoriteLanguage, trackName, mVideoInfo.audioTrack, firstTimeAudioCalled);
                 }
             }
         }
+        // prefer a Chinese-variant title match (Mandarin/Cantonese/Taiwan) if found, otherwise the
+        // language-matching track marked "default" by the container, otherwise the first track
+        // whose language code matches the favorite audio language
+        if (languageVariantMatchTrack != null) mVideoInfo.audioTrack = languageVariantMatchTrack;
+        else if (languageDefaultMatchTrack != null) mVideoInfo.audioTrack = languageDefaultMatchTrack;
+        else if (languageMatchTrack != null) mVideoInfo.audioTrack = languageMatchTrack;
+
         // if no valid audioTrack selected revert to firstSupportedTrack if it exists
         if ((mVideoInfo.audioTrack < 0 || mVideoInfo.audioTrack >= nbTrack) && firstTimeAudioCalled && firstSupportedTrack != null)
             mVideoInfo.audioTrack = firstSupportedTrack;
