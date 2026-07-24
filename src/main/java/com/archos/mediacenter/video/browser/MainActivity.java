@@ -22,6 +22,8 @@ import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -45,6 +47,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.InputType;
 import android.view.DisplayCutout;
 import android.view.InputDevice;
 import android.view.InputEvent;
@@ -58,6 +61,7 @@ import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -144,6 +148,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     private static final int MENU_PRIVATE_MODE_GROUP = 7;
     private static final int MENU_PRIVATE_MODE_ITEM = 33;
+    private static final int MENU_STREAM_GROUP = 8;
+    private static final int MENU_STREAM_ITEM = 34;
     private static final int PERMISSION_REQUEST = 1;
     private static final int PLAY_ACTIVITY_REQUEST_CODE = 900;
     public static String LAUNCH_DIALOG = "LAUNCH_DIALOG";
@@ -715,6 +721,9 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         menuItem.setIcon(R.drawable.ic_menu_private_mode);
         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
+        menuItem = menu.add(MENU_STREAM_GROUP, MENU_STREAM_ITEM, Menu.NONE, R.string.open_network_stream);
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+
         return ret;
     }
 
@@ -758,6 +767,9 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 PrivateMode.toggle();
                 setBackground();
                 //setHomeButton();
+                break;
+            case MENU_STREAM_ITEM:
+                showNetworkStreamDialog();
                 break;
             case android.R.id.home:
                 boolean drawerHandled = false;
@@ -1179,5 +1191,39 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
              !getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK)) { // no UI choice to do on actual AndroidTV devices
             new UiChoiceDialog().show(getSupportFragmentManager(), "UiChoiceDialog");
         }
+    }
+
+    private void showNetworkStreamDialog() {
+        final EditText urlInput = new EditText(this);
+        urlInput.setHint(R.string.open_network_stream_hint);
+        urlInput.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+        urlInput.setSingleLine(true);
+
+        // Paste from clipboard if available
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (clipboard != null && clipboard.hasPrimaryClip()) {
+            ClipData clip = clipboard.getPrimaryClip();
+            if (clip != null && clip.getItemCount() > 0) {
+                CharSequence pasteData = clip.getItemAt(0).getText();
+                if (pasteData != null) {
+                    urlInput.setText(pasteData);
+                    urlInput.selectAll();
+                }
+            }
+        }
+
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.open_network_stream_title)
+            .setView(urlInput)
+            .setPositiveButton(R.string.open_network_stream_play, (dialog, which) -> {
+                String url = urlInput.getText().toString().trim();
+                if (!url.isEmpty()) {
+                    Uri uri = Uri.parse(url);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+            })
+            .setNegativeButton(R.string.open_network_stream_cancel, null)
+            .show();
     }
 }
