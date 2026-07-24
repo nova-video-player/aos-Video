@@ -843,6 +843,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                                             R.drawable.ic_incognito,  R.drawable.ic_incognito_off, PrivateMode.isActive()));
         mPreferencesRowAdapter.add(new Icon(Icon.ID.LEGACY_UI, getString(R.string.leanback_legacy_ui), R.drawable.ic_tablet_cellphone));
         mPreferencesRowAdapter.add(new Icon(Icon.ID.HELP_FAQ, getString(R.string.help_faq), R.drawable.ic_help_circle));
+        mPreferencesRowAdapter.add(new Icon(Icon.ID.OPEN_NETWORK_STREAM, getString(R.string.open_network_stream), R.drawable.ic_baseline_speed_24));
 
         if (BuildConfig.ENABLE_SPONSOR) mEnableSponsor = mPrefs.getBoolean(VideoPreferencesCommon.KEY_ENABLE_SPONSOR, VideoPreferencesCommon.ENABLE_SPONSOR_DEFAULT) && BuildConfig.ENABLE_SPONSOR;
         if (((! ArchosUtils.isInstalledfromPlayStore(getActivity().getApplicationContext())) || mEnableSponsor) && BuildConfig.ENABLE_SPONSOR) {
