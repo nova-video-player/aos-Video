@@ -1175,6 +1175,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             registerReceiver(mClockReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         }
         PlayerBrightnessManager.getInstance().restoreBrightness(this);
+
+        // Safety net for the rare case where Android genuinely killed the process while
+        // backgrounded (memory pressure) and a fresh Player/SubtitleEngine had to be created:
+        // gl_subtitle_view's SurfaceTexture is window-scoped and may not redeliver
+        // onSurfaceTextureAvailable/SizeChanged on every resume, so proactively re-push the
+        // known surface size. No-op-safe to call unconditionally.
+        if (mPlayer != null && mPlayer.getSubtitleEngine() != null) {
+            mPlayer.getSubtitleEngine().resyncSurfaceSize();
+        }
+
         if(!mWasInPictureInPicture){
             mPermissionChecker.checkAndRequestPermission(this);
             if (!isFinishing() && !isDestroyed()) {
@@ -1290,11 +1300,28 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mPlayerController.hide();
 
         stop();
-        if(PlayerService.sPlayerService !=null)
-            PlayerService.sPlayerService.removePlayerFrontend(mPlayerListener, mLaunchFloatingPlayer);
 
-        if(FloatingPlayerService.sFloatingPlayerService!=null&&!mLaunchFloatingPlayer)
-            FloatingPlayerService.sFloatingPlayerService.stopSelf();
+        // Only tear down the shared PlayerService binding when we're actually leaving this
+        // playback session for good (finishing, or handing off to the floating player, which
+        // has its own dedicated handoff path via mLaunchFloatingPlayer/prepareForSurfaceSwitch).
+        // A plain minimize (home button) also reaches onStop(), but mResumeFromLast=true below
+        // already assumes we're coming right back to the SAME Player/SubtitleEngine instance --
+        // unbindService() here let Android destroy PlayerService while backgrounded (nothing
+        // else was bound to it), so PlayerService.onCreate() -> setPlayer() would race
+        // PlayerActivity.postOnPlayerServiceBind() -> "Player.sPlayer = mPlayer" on resume and
+        // often win, silently allocating a throwaway Player (and thus a throwaway
+        // SubtitleEngine/native sub_engine with no known surface size) instead of reusing the
+        // real one. Keeping the binding alive across a plain minimize avoids that race entirely.
+        boolean isLeavingForGood = isFinishing() || mLaunchFloatingPlayer;
+        if (isLeavingForGood) {
+            if(PlayerService.sPlayerService !=null)
+                PlayerService.sPlayerService.removePlayerFrontend(mPlayerListener, mLaunchFloatingPlayer);
+
+            if(FloatingPlayerService.sFloatingPlayerService!=null&&!mLaunchFloatingPlayer)
+                FloatingPlayerService.sFloatingPlayerService.stopSelf();
+        } else {
+            if (log.isDebugEnabled()) log.debug("onStop: plain background transition, keeping PlayerService binding and Player.sPlayer alive for resume");
+        }
         mLaunchFloatingPlayer = false;
         mResumeFromLast = true;
 
@@ -1302,7 +1329,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         editor.putInt("lastintent", getIntent().hashCode());
         editor.apply();
         unregisterReceiver(mReceiver);
-        unbindService(mPlayerServiceConnection);
+        if (isLeavingForGood) {
+            unbindService(mPlayerServiceConnection);
+        }
         removeNetworkListener();
     }
 

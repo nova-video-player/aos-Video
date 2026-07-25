@@ -233,10 +233,36 @@ public class Player implements IPlayerControl,
     private SurfaceController mOldSurfaceController;
     private boolean mForceSoftwareDecoding;
     private int mLastExistState = -1;
+    private boolean mIsReleased = false;
 
     // --- NEW: Expose the Subtitle Engine for the UI ---
     public SubtitleEngine getSubtitleEngine() {
         return mSubtitleEngine;
+    }
+
+    /**
+     * Explicit, one-time teardown for this Player instance. Call this (and ONLY this) when
+     * whoever holds this Player -- currently always via the Player.sPlayer static, see
+     * PlayerService.removePlayerFrontend() -- is truly done with it and about to drop its last
+     * reference (i.e. isFinishing()/not resuming, never on a plain background/minimize).
+     *
+     * Player is the sole owner of the SubtitleEngine it constructs (mSubtitleEngine = new
+     * SubtitleEngine() in the constructor below) -- nothing else in the app should call
+     * SubtitleEngine.release() directly. Routing all teardown through here is what guarantees
+     * at most one live SubtitleEngine (and therefore native SUB_ENGINE) exists at a time: as
+     * long as every discard of a Player goes through releasePlayer() before the next Player is
+     * constructed, there is no window for two to be alive simultaneously.
+     *
+     * Idempotent: safe to call more than once, subsequent calls are a no-op.
+     */
+    public void releasePlayer() {
+        if (mIsReleased) return;
+        mIsReleased = true;
+        stopPlayback();
+        if (mSubtitleEngine != null) {
+            mSubtitleEngine.release();
+            mSubtitleEngine = null;
+        }
     }
 
     private class ResumeCtx {

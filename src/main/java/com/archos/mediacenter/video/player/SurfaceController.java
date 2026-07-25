@@ -202,8 +202,13 @@ public class SurfaceController {
     }
 
     public void setSubtitleTextureCallback(TextureView.SurfaceTextureListener callback) {
-        if (mSubtitleView != null)
+        if (mSubtitleView != null) {
             mSubtitleView.setSurfaceTextureListener(callback);
+            if (callback != null && mSubtitleView.isAvailable()) {
+                callback.onSurfaceTextureAvailable(mSubtitleView.getSurfaceTexture(),
+                    mSubtitleView.getWidth(), mSubtitleView.getHeight());
+            }
+        }
     }
 
     public int getSubtitleViewWidth() { return mSubtitleView != null ? mSubtitleView.getWidth() : 0; }
