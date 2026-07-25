@@ -46,6 +46,8 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
         log.debug("SubtitleEngine: onSurfaceTextureAvailable {}x{}", width, height);
         mCurrentSurface = new Surface(surfaceTexture);
+        mLast2DWidth = width;
+        mLast2DHeight = height;
 
         // Only attach hardware EGL if we are NOT in 3D mode
         if (mNativeEngineHandle != 0 && !is3DMode()) {
@@ -61,6 +63,18 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
         if (mNativeEngineHandle != 0 && !is3DMode()) {
             nativeSurfaceChanged(mNativeEngineHandle, width, height);
         }
+    }
+
+    /**
+     * Re-pushes the last known 2D surface size down to the native engine. Safe to call
+     * unconditionally (e.g. from onResume()): it's a no-op if nothing is attached yet, and
+     * simply re-applies the same size if nothing changed. See callers for why this exists.
+     */
+    public void resyncSurfaceSize() {
+        if (mNativeEngineHandle == 0 || is3DMode()) return;
+        if (mCurrentSurface == null || !mCurrentSurface.isValid()) return;
+        if (mLast2DWidth <= 0 || mLast2DHeight <= 0) return;
+        nativeSurfaceChanged(mNativeEngineHandle, mLast2DWidth, mLast2DHeight);
     }
 
 
