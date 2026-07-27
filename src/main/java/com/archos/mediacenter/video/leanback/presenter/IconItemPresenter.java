@@ -128,6 +128,14 @@ public class IconItemPresenter extends Presenter {
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         ViewHolder vh = (ViewHolder)viewHolder;
         Icon icon = (Icon)item;
+        // Some MediaTek Android TV GPUs corrupt this compound vector path.
+        // Keep the resolution-independent drawable and rasterize only this icon
+        // in software. Reset the layer for recycled holders used by other icons.
+        vh.mImageView.setLayerType(
+                icon.getIconResId() == R.drawable.ic_cog_outline
+                        ? View.LAYER_TYPE_SOFTWARE
+                        : View.LAYER_TYPE_NONE,
+                null);
         vh.mImageView.setImageResource(icon.getIconResId());
         vh.mTitleView.setText(icon.getName());
     }
