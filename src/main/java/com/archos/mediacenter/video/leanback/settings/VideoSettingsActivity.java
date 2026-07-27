@@ -3,6 +3,8 @@ package com.archos.mediacenter.video.leanback.settings;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.fragment.app.Fragment;
+import androidx.leanback.preference.LeanbackSettingsFragmentCompat;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.LeanbackActivity;
@@ -23,6 +25,12 @@ public class VideoSettingsActivity extends LeanbackActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                Fragment fragment = getSupportFragmentManager()
+                        .findFragmentById(R.id.settingsFragment);
+                if (fragment instanceof LeanbackSettingsFragmentCompat
+                        && fragment.getChildFragmentManager().popBackStackImmediate()) {
+                    return;
+                }
                 finish();
                 overridePendingTransition(0, R.anim.slide_out_to_right);
             }
