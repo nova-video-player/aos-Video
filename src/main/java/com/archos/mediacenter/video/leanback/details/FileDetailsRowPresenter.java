@@ -22,8 +22,10 @@ import androidx.leanback.widget.RowHeaderPresenter;
 import androidx.leanback.widget.RowPresenter;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
@@ -51,6 +53,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
     public class FileDetailsViewHolder extends RowPresenter.ViewHolder {
         /** the parent viewholder */
         final ViewHolder mFullWidthViewHolder;
+        final ScrollView mScrollView;
         final TextView mFileNameTv, mFilePathTv, mFileSizeAndDurationTv, mFileErrorTv;
         final TextView mVideoTrackTv, mVideoDecoderTv, mAudioTracksTv, mSubtitlesTracksCol1Tv, mSubtitlesTracksCol2Tv;
         final View mProgress, mVideoGroup, mAudioGroup, mSubtitlesGroup;
@@ -59,6 +62,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
             super(parentViewHolder.view);
 
             mFullWidthViewHolder = parentViewHolder;
+            mScrollView = (ScrollView) contentView.findViewById(R.id.file_details_scroll);
 
             mFileNameTv = (TextView)contentView.findViewById(R.id.file_name);
             mFilePathTv = (TextView)contentView.findViewById(R.id.file_path);
@@ -74,6 +78,25 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
             mSubtitlesGroup = contentView.findViewById(R.id.subtitles_row);
             mSubtitlesTracksCol1Tv = (TextView)mSubtitlesGroup.findViewById(R.id.subtitle_track_col1);
             mSubtitlesTracksCol2Tv = (TextView)mSubtitlesGroup.findViewById(R.id.subtitle_track_col2);
+
+            mScrollView.setOnKeyListener((view, keyCode, event) -> {
+                if (event.getAction() != KeyEvent.ACTION_DOWN) {
+                    return false;
+                }
+                int direction;
+                if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                    direction = 1;
+                } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                    direction = -1;
+                } else {
+                    return false;
+                }
+                if (!mScrollView.canScrollVertically(direction)) {
+                    return false;
+                }
+                mScrollView.smoothScrollBy(0, direction * mScrollView.getHeight() / 2);
+                return true;
+            });
         }
     }
 
@@ -186,7 +209,23 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
         // Subtitles tracks info
         vh.mSubtitlesGroup.setVisibility(View.GONE);
 
+        vh.mScrollView.scrollTo(0, 0);
+        vh.mScrollView.post(() -> limitScrollViewHeight(vh.mScrollView));
         mHolder = vh;
+    }
+
+    private void limitScrollViewHeight(ScrollView scrollView) {
+        View content = scrollView.getChildAt(0);
+        if (content == null) {
+            return;
+        }
+        int maximumHeight = Math.round(scrollView.getResources().getDisplayMetrics().heightPixels * 0.8f);
+        int targetHeight = Math.min(content.getMeasuredHeight(), maximumHeight);
+        ViewGroup.LayoutParams layoutParams = scrollView.getLayoutParams();
+        if (targetHeight > 0 && layoutParams.height != targetHeight) {
+            layoutParams.height = targetHeight;
+            scrollView.setLayoutParams(layoutParams);
+        }
     }
 
     private String getSubtitleTrackList(Context context, int number, int offset, String separator, VideoMetadata videoMetadata) {
