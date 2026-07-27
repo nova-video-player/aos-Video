@@ -660,8 +660,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (mPlayerController != null && mPlayerController.isTVMenuDisplayed()) {
-                    mPlayerController.showTVMenu(false);
+                log.info("Back navigation: OnBackPressedDispatcher callback, dialogId={}",
+                        mShowingDialogId);
+                if (mPlayerController != null && mPlayerController.handleBackPressed()) {
+                    // The player controller dismisses a nested TV card before the main TV menu.
                 } else {
                     setEnabled(false);
                     getOnBackPressedDispatcher().onBackPressed();

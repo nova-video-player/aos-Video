@@ -369,13 +369,21 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if(container1!=null && container1 instanceof FrameLayout){
             ((FrameLayout)container1).addView(v);
         }
+        TVCardDialog dialog = null;
+        View cardView = v.findViewById(R.id.card_view);
+        if (cardView instanceof TVCardDialog) {
+            dialog = (TVCardDialog) cardView;
+            // Keep the primary dialog on every TV layout. Previously this was assigned only
+            // when a split-screen slave controller existed, leaving normal Android TV playback
+            // unable to dismiss the overlay through the predictive-back callback.
+            tvCardDialog = dialog;
+        }
         if(mControllerViewRight!=null){
             View container2 = mControllerViewRight.findViewById(R.id.tv_menu_container);
             if(container2!=null && container2 instanceof FrameLayout){
                 //then we have to inflate a slave view
-                if(v.findViewById(R.id.card_view)!=null&&v.findViewById(R.id.card_view)instanceof TVCardDialog){
-                    tvCardDialog  =(TVCardDialog) v.findViewById(R.id.card_view);
-                    ((FrameLayout)container2).addView(((TVCardDialog)v.findViewById(R.id.card_view)).createSlaveView());
+                if(dialog != null){
+                    ((FrameLayout)container2).addView(dialog.createSlaveView());
                 }
             }
         }
@@ -2699,11 +2707,34 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
         else{
             //destroy dialogs
-            if(tvCardDialog!=null)
-                tvCardDialog.exitDialog();
+            dismissTVCardDialog();
         }
         isTVMenuDisplayed=show;
     }
+
+    private boolean dismissTVCardDialog() {
+        if (tvCardDialog == null || tvCardDialog.getVisibility() != View.VISIBLE)
+            return false;
+        log.info("Back navigation: active TV card dialog found");
+        TVCardDialog dialog = tvCardDialog;
+        tvCardDialog = null;
+        dialog.handleBackPressed();
+        return true;
+    }
+
+    public boolean handleBackPressed() {
+        log.info("Back navigation: TV menu displayed={}, card dialog active={}",
+                isTVMenuDisplayed,
+                tvCardDialog != null && tvCardDialog.getVisibility() == View.VISIBLE);
+        if (dismissTVCardDialog())
+            return true;
+        if (isTVMenuDisplayed) {
+            showTVMenu(false);
+            return true;
+        }
+        return false;
+    }
+
     public boolean isTVMenuDisplayed() {
         // TODO Auto-generated method stub
         return isTVMenuDisplayed;
