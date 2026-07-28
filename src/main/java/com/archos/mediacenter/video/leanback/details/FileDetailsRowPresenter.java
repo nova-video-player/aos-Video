@@ -25,8 +25,11 @@ import android.view.LayoutInflater;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.leanback.widget.VerticalGridView;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -91,8 +94,26 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
                 } else {
                     return false;
                 }
-                if (!mScrollView.canScrollVertically(direction)) {
-                    return false;
+                View content = mScrollView.getChildAt(0);
+                int scrollRange = content != null
+                        ? Math.max(0, content.getHeight() - mScrollView.getHeight())
+                        : 0;
+                boolean canScroll = direction > 0
+                        ? mScrollView.getScrollY() < scrollRange
+                        : mScrollView.getScrollY() > 0;
+                if (log.isDebugEnabled()) {
+                    log.debug("File details DPAD {}: scrollY={}, scrollRange={}, viewportHeight={}, "
+                                    + "contentHeight={}, frameworkCanScroll={}, hasFocus={}",
+                            direction > 0 ? "DOWN" : "UP",
+                            mScrollView.getScrollY(),
+                            scrollRange,
+                            mScrollView.getHeight(),
+                            content != null ? content.getHeight() : -1,
+                            mScrollView.canScrollVertically(direction),
+                            mScrollView.hasFocus());
+                }
+                if (!canScroll) {
+                    return moveToAdjacentRow(mScrollView, direction);
                 }
                 mScrollView.smoothScrollBy(0, direction * mScrollView.getHeight() / 2);
                 return true;
@@ -212,6 +233,35 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
         vh.mScrollView.scrollTo(0, 0);
         vh.mScrollView.post(() -> limitScrollViewHeight(vh.mScrollView));
         mHolder = vh;
+    }
+
+    private boolean moveToAdjacentRow(ScrollView scrollView, int direction) {
+        ViewParent parent = scrollView.getParent();
+        while (parent != null && !(parent instanceof VerticalGridView)) {
+            parent = parent.getParent();
+        }
+        if (!(parent instanceof VerticalGridView)) {
+            log.warn("Could not find the details VerticalGridView");
+            return false;
+        }
+
+        VerticalGridView gridView = (VerticalGridView) parent;
+        int currentPosition = gridView.getSelectedPosition();
+        int nextPosition = currentPosition + direction;
+        int itemCount = gridView.getAdapter() != null ? gridView.getAdapter().getItemCount() : 0;
+        if (nextPosition < 0 || nextPosition >= itemCount) {
+            if (log.isDebugEnabled()) {
+                log.debug("No adjacent details row from row {} in direction {} (row count {})",
+                        currentPosition, direction, itemCount);
+            }
+            return false;
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Moving focus from file details row {} to row {}", currentPosition, nextPosition);
+        }
+        gridView.setSelectedPositionSmooth(nextPosition);
+        return true;
     }
 
     private void limitScrollViewHeight(ScrollView scrollView) {
