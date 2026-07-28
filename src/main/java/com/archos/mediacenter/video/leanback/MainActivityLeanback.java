@@ -23,13 +23,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 
+import androidx.activity.BackEventCompat;
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 
 import android.view.KeyEvent;
+import android.view.ViewConfiguration;
 
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.DensityTweak;
@@ -114,6 +118,35 @@ public class MainActivityLeanback extends LeanbackActivity {
         ((CustomApplication) getApplication()).loadLocale();
 
         super.onCreate(savedInstanceState);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            private long mBackStartedAt;
+
+            @Override
+            public void handleOnBackStarted(@NonNull BackEventCompat backEvent) {
+                mBackStartedAt = SystemClock.elapsedRealtime();
+            }
+
+            @Override
+            public void handleOnBackPressed() {
+                long pressDuration = mBackStartedAt == 0
+                        ? 0 : SystemClock.elapsedRealtime() - mBackStartedAt;
+                mBackStartedAt = 0;
+                if (pressDuration >= ViewConfiguration.getLongPressTimeout()) {
+                    startPreferencesActivity();
+                    return;
+                }
+
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+                setEnabled(true);
+            }
+
+            @Override
+            public void handleOnBackCancelled() {
+                mBackStartedAt = 0;
+            }
+        });
 
         // Check if user disabled "Always start in TV interface" - if so, redirect to phone UI
         if (!UiChoiceDialog.applicationIsInLeanbackMode(this)) {

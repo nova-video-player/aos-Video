@@ -17,14 +17,18 @@ package com.archos.mediacenter.video.leanback.filebrowsing;
 import static com.archos.filecorelibrary.smbj.SmbjUtils.isSMBjEnabled;
 import static com.archos.filecorelibrary.sshj.SshjUtils.isSSHjEnabled;
 
+import androidx.activity.BackEventCompat;
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.core.content.IntentCompat;
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.SystemClock;
 import android.view.KeyEvent;
+import android.view.ViewConfiguration;
 
 import com.archos.mediacenter.video.leanback.SingleFragmentActivity;
 import com.archos.mediacenter.video.leanback.network.ftp.FtpListingActivity;
@@ -178,8 +182,24 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            private long mBackStartedAt;
+
+            @Override
+            public void handleOnBackStarted(@NonNull BackEventCompat backEvent) {
+                mBackStartedAt = SystemClock.elapsedRealtime();
+            }
+
             @Override
             public void handleOnBackPressed() {
+                long pressDuration = mBackStartedAt == 0
+                        ? 0 : SystemClock.elapsedRealtime() - mBackStartedAt;
+                mBackStartedAt = 0;
+                if (pressDuration >= ViewConfiguration.getLongPressTimeout()) {
+                    MultiBackHintManager.getInstance(ListingActivity.this).onBackLongPressed();
+                    finish();
+                    return;
+                }
+
                 MultiBackHintManager.getInstance(ListingActivity.this).onBackPressed();
 
                 boolean popped = getSupportFragmentManager().popBackStackImmediate();
@@ -188,6 +208,11 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
                     getOnBackPressedDispatcher().onBackPressed();
                     setEnabled(true);
                 }
+            }
+
+            @Override
+            public void handleOnBackCancelled() {
+                mBackStartedAt = 0;
             }
         });
     }
