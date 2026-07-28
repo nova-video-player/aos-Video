@@ -25,6 +25,7 @@ import static com.archos.mediacenter.video.utils.CodecDiscovery.getHdrScreenCapa
 import static com.archos.mediacenter.video.utils.CodecDiscovery.resetHdrCapabilities;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.media.AudioAttributes;
@@ -439,6 +440,17 @@ public class Player implements IPlayerControl,
         reset();
         mUri = uri;
         mExtraMap = extraMap;
+
+        // Custom subtitle fonts folder (MX Player / mpv-android style): re-read and re-push
+        // on every new video rather than only once in the Player constructor, because
+        // mSubtitleEngine is created once and reused across every video played within this
+        // same Player/activity instance (see constructor above) -- if the user changes this
+        // setting in the Settings menu and comes back to play another video WITHOUT the
+        // activity being recreated, the old value would otherwise stick around. Cheap no-op
+        // reads if the user never touched the setting (both come back null and the
+        // SubtitleEngine setters below are skipped).
+        applySubtitleFontSettings();
+
         String scheme = mUri.getScheme();
         mIsLocalVideo = false;
         if (scheme == null || scheme.equals("file")) {
@@ -459,6 +471,36 @@ public class Player implements IPlayerControl,
         }
         if (log.isDebugEnabled()) log.debug("setVideoURI: {}", uri);
         openVideo();
+    }
+
+    // Reads the custom-fonts-folder settings from SharedPreferences and pushes them into the
+    // native engine. KEY_SUBTITLE_FONTS_FOLDER is always this app's own private cache
+    // directory path (see SubtitleFontsFolderSync in VideoPreferencesCommon.java), kept in
+    // sync with whatever SAF folder the user picked in Settings -- native code never sees the
+    // user's actual folder or a content:// URI, just a plain path it can fopen() exactly as
+    // before. These are picked up fresh by the SSA backend the NEXT time a track is opened
+    // (sub_engine_open_track() snapshots them into SUB_FORMAT_OPEN_PARAMS every call -- see
+    // sub_engine.c), so calling this before openVideo() below is what makes the setting apply
+    // to the video about to start, without needing any live mid-playback update path.
+    //
+    // Deliberately does NOT also push defaultFont through setFontFamily(): an earlier revision
+    // did, via a stripFontExtension() filename guess (mirroring a since-removed native-side
+    // guess) -- that's not just redundant now that font_name_resolve_family() in
+    // font_name_parser.c reads the font's REAL name table instead of guessing, it's actively
+    // counterproductive. sync_styles() in sub_format_ssa.c's force-mode block only substitutes
+    // the correctly-resolved ctx->resolved_default_family in when u.font_family is STILL
+    // exactly sub_style_create()'s untouched factory value ("roboto medium") -- calling
+    // setFontFamily() here every video open overwrites that sentinel with the (wrong, guessed)
+    // stripped filename, permanently defeating the resolved-family fallback for every video
+    // from then on. Leaving font_family alone and passing only setDefaultFontName() is what
+    // lets the native side's correct resolution actually take effect.
+    private void applySubtitleFontSettings() {
+        if (mSubtitleEngine == null) return;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String fontsFolder = prefs.getString(VideoPreferencesCommon.KEY_SUBTITLE_FONTS_FOLDER, null);
+        String defaultFont = prefs.getString(VideoPreferencesCommon.KEY_SUBTITLE_DEFAULT_FONT, null);
+        mSubtitleEngine.setFontsFolder(fontsFolder);
+        mSubtitleEngine.setDefaultFontName(defaultFont);
     }
 
     @SuppressWarnings("deprecation") // abandonAudioFocus: API 26+ uses abandonAudioFocusRequest

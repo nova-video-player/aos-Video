@@ -411,6 +411,20 @@
             android:title="@string/subtitle_use_margins_title"
             app:iconSpaceReserved="false"/>
 
+        <com.archos.mediacenter.video.utils.FontsFolderSafPreference
+            android:key="subtitle_fonts_folder_uri"
+            android:summary="@string/subtitle_fonts_folder_summary"
+            android:title="@string/subtitle_fonts_folder_title"
+            app:iconSpaceReserved="false"/>
+
+        <ListPreference
+            android:dialogTitle="@string/subtitle_default_font_title"
+            android:key="subtitle_default_font"
+            android:title="@string/subtitle_default_font_title"
+            android:enabled="false"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false"/>
+
         <ListPreference
             android:dialogTitle="@string/favSubLang_title"
             android:entries="@array/entries_list_preference"
