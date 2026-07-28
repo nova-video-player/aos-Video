@@ -94,13 +94,21 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     private static final Logger log = LoggerFactory.getLogger(ListingFragment.class);
 
     private static final String PREF_LISTING_DISPLAY_MODE = "PREF_LISTING_DISPLAY_MODE";
+    private static final String STATE_SELECTED_ITEM_URI = "selected_item_uri";
+
+    private Uri mSelectedItemUri;
 
     private final ActivityResultLauncher<Intent> infoLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == ListingActivity.RESULT_FILE_DELETED && result.getData() != null) {
-                    ((ListingActivity) requireActivity()).notifyFileDeleted(result.getData().getData());
+                    Uri deletedFile = result.getData().getData();
+                    ((ListingActivity) requireActivity()).notifyFileDeleted(deletedFile);
+                    if (mSelectedItemUri != null && mSelectedItemUri.equals(deletedFile)) {
+                        mSelectedItemUri = null;
+                    }
                 }
+                restoreSelectedItem(mSelectedItemUri);
             });
 
     public static final String ARG_URI = "URI";
@@ -177,6 +185,10 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         mSortOrderItem = sortorder2itemid(mSortOrder);
         if (log.isDebugEnabled()) log.debug("onCreate: mSortOrder={} mSortOrderItem={}", mSortOrder, mSortOrderItem);
 
+        if (savedInstanceState != null) {
+            mSelectedItemUri = BundleCompat.getParcelable(savedInstanceState, STATE_SELECTED_ITEM_URI, Uri.class);
+        }
+
         updateBackground();
 
         setTitle(getArguments().getString(ARG_TITLE));
@@ -189,6 +201,14 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         initGridOrList();
 
         mRefreshOnNextResume = true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mSelectedItemUri != null) {
+            outState.putParcelable(STATE_SELECTED_ITEM_URI, mSelectedItemUri);
+        }
     }
 
     @Override
@@ -495,6 +515,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+                mSelectedItemUri = getItemUri(item);
                 if (item instanceof MetaFile2) {
                     MetaFile2 file = (MetaFile2) item;
                     if (file.isDirectory()) {
@@ -545,6 +566,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     private void updateAdapterIfReady() {
         if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: mFileListReady={}, mDbQueryReady={}", mFileListReady, mDbQueryReady);
         if (mFileListReady && mDbQueryReady) {
+            Uri selectedItemUri = mSelectedItemUri;
             VideoCursorMapper cursorMapper = new VideoCursorMapper();
             cursorMapper.publicBindColumns(mCursor);
 
@@ -574,7 +596,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
                 if (file.isDirectory()){
                     if (!doReplace) {
-                        mFilesAdapter.add(file); // Add a regular folder
+                        replaceOrAppend(positionInAdapter, file);
                     } else {
                         // a directory can not be "updated", hence nothing to do in the replace case
                     }
@@ -614,21 +636,55 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
                             if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: replace {}", positionInAdapter);
                             mFilesAdapter.replace(positionInAdapter, newObject);
                         } else {
-                            if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: remove {} and add", positionInAdapter);
-                            mFilesAdapter.removeItems(positionInAdapter,1);
-                            mFilesAdapter.add(newObject);
+                            if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: replace or append {}", positionInAdapter);
+                            replaceOrAppend(positionInAdapter, newObject);
                         }
                         positionInAdapter++; // this increment must be done only when something is added or modified in the adapter (not when skipping a non-video file)
                     }
                 }
             }
             //remove items
-            if(mFilesAdapter.size()>mListedFiles.size()){
-                if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: mFilesAdapter.size()={}>mListedFiles.size()={}, remove above", mFilesAdapter.size(), mListedFiles.size());
-                mFilesAdapter.removeItems(mListedFiles.size(), mFilesAdapter.size()-mListedFiles.size());
+            if (mFilesAdapter.size() > positionInAdapter) {
+                if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: mFilesAdapter.size()={}>positionInAdapter={}, remove above", mFilesAdapter.size(), positionInAdapter);
+                mFilesAdapter.removeItems(positionInAdapter, mFilesAdapter.size() - positionInAdapter);
             }
 
+            restoreSelectedItem(selectedItemUri);
         }
+    }
+
+    private void replaceOrAppend(int position, Object item) {
+        if (position < mFilesAdapter.size()) {
+            mFilesAdapter.replace(position, item);
+        } else {
+            mFilesAdapter.add(item);
+        }
+    }
+
+    private void restoreSelectedItem(Uri selectedItemUri) {
+        if (selectedItemUri == null) {
+            return;
+        }
+        for (int position = 0; position < mFilesAdapter.size(); position++) {
+            if (selectedItemUri.equals(getItemUri(mFilesAdapter.get(position)))) {
+                mSelectedItemUri = selectedItemUri;
+                if (getSelectedPosition() != position) {
+                    if (log.isDebugEnabled()) log.debug("restoreSelectedItem: restoring {} at position {}", selectedItemUri, position);
+                    setSelectedPosition(position);
+                }
+                return;
+            }
+        }
+    }
+
+    private Uri getItemUri(Object item) {
+        if (item instanceof Video) {
+            return ((Video) item).getFileUri();
+        }
+        if (item instanceof MetaFile2) {
+            return ((MetaFile2) item).getUri();
+        }
+        return null;
     }
 
     protected void updateResumes(List<? extends MetaFile2> mListedFiles) {
