@@ -176,6 +176,30 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
     public void setVerticalOffset(float pixels) { if (mNativeEngineHandle != 0) nativeSetVerticalOffset(mNativeEngineHandle, pixels); }
     public void setOverrideMode(int mode) { if (mNativeEngineHandle != 0) nativeSetOverrideMode(mNativeEngineHandle, mode); }
 
+    /**
+     * Points the native engine at a custom fonts folder (MX Player / mpv-android style
+     * "third fonts folder"): every .ttf/.otf/.ttc file in {@code dirPath} is registered with
+     * libass, checked BEFORE the system fontconfig database when resolving a font by name.
+     * Takes effect starting with the next track opened (nativeCreate()d tracks already
+     * playing are unaffected until the next open_track()) -- call this before starting
+     * playback, or force a re-open (e.g. seek/track switch) for it to take effect immediately.
+     * Pass null or empty to clear/disable.
+     */
+    public void setFontsFolder(String dirPath) {
+        if (mNativeEngineHandle != 0) nativeSetFontsFolder(mNativeEngineHandle, dirPath);
+    }
+
+    /**
+     * Sets the fallback family name libass uses when nothing else names a font -- most
+     * importantly, this is what SRT/plain-text subtitles render with, since they carry no
+     * font information of their own. Pass a family name that resolves against whatever
+     * folder was last set via {@link #setFontsFolder(String)} (typically one of the files
+     * in that folder), or null/empty to fall back to the generic "sans-serif" fontconfig alias.
+     */
+    public void setDefaultFontName(String familyName) {
+        if (mNativeEngineHandle != 0) nativeSetDefaultFontName(mNativeEngineHandle, familyName);
+    }
+
     // ====================================================================
     // JNI Bindings (implemented in jni_sub_engine.c)
     // ====================================================================
@@ -211,4 +235,8 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
     /* ── Positioning & Overrides ── */
     private native void nativeSetVerticalOffset(long handle, float fraction);
     private native void nativeSetOverrideMode(long handle, int mode);
+
+    /* ── Custom Fonts Folder (third-party fonts dir, MX Player / mpv-android style) ── */
+    private native void nativeSetFontsFolder(long handle, String dirPath);
+    private native void nativeSetDefaultFontName(long handle, String familyName);
 }
