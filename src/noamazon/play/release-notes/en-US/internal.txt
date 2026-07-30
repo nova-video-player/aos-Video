@@ -1,13 +1,12 @@
-- seamless audio speed with remote shortcuts
-- better lipsync, passthrough and downmix
+- intro/outro autoskip
+- better lipsync, passthrough, downmix, seamless audio speed
 - AC3 universal audio passthrough
-- new aspect ratio modes & projector mode
-- display cutout modes in player UI
-- trakt sync speed logic revisited
-- scrape reliability & speed enhancements
-- UPnP uses jupnp instead of cling
-- avoid USB/SMB rescans & medialib loss
-- new gestures (check FAQ)
-- subtitles fixes & improved rendering
+- display cutout & projector/aspect ratio modes
+- faster trakt sync logic
+- faster media scraping & jcifs-ng SMB streaming
+- avoid USB rescans & medialib loss
+- subtitle fixes & custom background rendering
 - smart categories: new to watch & continue watching
-- database backup/restore
+- dark theme & UI layout refinements with new gestures
+- media library backup/restore
+- spatial audio on supported devices
