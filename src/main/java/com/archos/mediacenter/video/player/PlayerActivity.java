@@ -1880,6 +1880,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mPreferences.edit().putFloat(PlayerActivity.KEY_SUBTITLE_OUTLINE_WIDTH, mSubtitleManager.getOutlineWidth()).apply();
                 mPreferences.edit().putFloat(PlayerActivity.KEY_SUBTITLE_SHADOW_WIDTH, mSubtitleManager.getShadowWidth()).apply();
                 mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_FONT_SIZE_PT, mSubtitleManager.getFontSizePt()).apply();
+                mPreferences.edit().putFloat(PlayerActivity.KEY_SUBTITLE_FONT_SCALE, mSubtitleManager.getFontScale()).apply();
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
                 mSubtitleManager.fadeSubtitlePositionHint(false);
             }
