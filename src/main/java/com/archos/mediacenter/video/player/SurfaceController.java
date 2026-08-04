@@ -433,6 +433,33 @@ public class SurfaceController {
         dcw = Math.round(dcw  / cropW);
         dch = Math.round(dch / cropH);
 
+        if (mHdmiPlugged) {
+            /*
+             * dcw/dch are expressed in the external display coordinate space because the
+             * aspect-ratio calculations above use mHdmiWidth/mHdmiHeight.  mView, however,
+             * is still a child of PlayerActivity on the mirrored phone display, whose
+             * coordinate space is mLcdWidth/mLcdHeight.  Applying HDMI pixels directly as
+             * LayoutParams creates a smaller box whenever both viewports differ (for
+             * example 1920x1080 inside 2404x1080 on a Pixel connected to a TV).
+             *
+             * Map the desired external rectangle back into the local mirrored viewport.
+             * Android's display mirroring then maps it to the corresponding rectangle on
+             * the HDMI output.  This deliberately affects only HDMI mirroring; the normal
+             * phone/tablet path below keeps its existing dimensions unchanged.
+             */
+            int hdmiLayoutWidth = dcw;
+            int hdmiLayoutHeight = dch;
+            if (mHdmiWidth > 0 && mHdmiHeight > 0 && mLcdWidth > 0 && mLcdHeight > 0) {
+                dcw = mapDimension(hdmiLayoutWidth, mHdmiWidth, mLcdWidth);
+                dch = mapDimension(hdmiLayoutHeight, mHdmiHeight, mLcdHeight);
+                if (log.isDebugEnabled()) {
+                    log.debug("CONFIG updateSurface: HDMI layout map external=({},{}) viewport=({},{}) -> local=({},{}) viewport=({},{})",
+                            hdmiLayoutWidth, hdmiLayoutHeight, mHdmiWidth, mHdmiHeight,
+                            dcw, dch, mLcdWidth, mLcdHeight);
+                }
+            }
+        }
+
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: setLayoutParams({},{})", dcw, dch);
 
         // margins to avoid cutout
@@ -459,6 +486,10 @@ public class SurfaceController {
         mSurfaceWidth = dcw;
         mSurfaceHeight = dch;
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: ({},{})->({},{}) / formatCrop: ({},{}) / mEffectMode: {}", vw, vh, dcw, dch, cropW, cropH, mEffectMode);
+    }
+
+    private static int mapDimension(int dimension, int sourceViewport, int destinationViewport) {
+        return (int) Math.round(dimension * (double) destinationViewport / sourceViewport);
     }
 
     public int getViewWidth() { return mSurfaceWidth; }
