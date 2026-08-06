@@ -54,16 +54,16 @@ import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 public class SubtitleSettingsDialog extends AlertDialog implements
         SeekBar.OnSeekBarChangeListener, SubtitleColorPicker.ColorPickListener {
 
-    private static final int FONT_SIZE_MIN = 12;
-    private static final int FONT_SIZE_MAX = 96;
+    private static final int FONT_SIZE_MIN = 1;
+    private static final int FONT_SIZE_MAX = 250;
     private static final int FONT_SIZE_STEP = 2;
 
-    private static final float FONT_SCALE_MIN = 0.5f;
+    private static final float FONT_SCALE_MIN = 0.10f;
     private static final float FONT_SCALE_MAX = 3.0f;
     private static final float FONT_SCALE_STEP = 0.1f;
 
     private static final float WIDTH_MIN = 0f;
-    private static final float WIDTH_MAX = 20f;
+    private static final float WIDTH_MAX = 50f;
     private static final float WIDTH_STEP = 1f;
 
     private SubtitleManager mSubtitleManager;
@@ -78,13 +78,13 @@ public class SubtitleSettingsDialog extends AlertDialog implements
 
     // Font size stepper
     private TextView mFontSizeValue;
-    private int mFontSizePt = 42;
+    private int mFontSizePt;
     private LinearLayout mFontSizeStepperGroup;
 
     // Font scale stepper (Scale Only mode)
     private LinearLayout mFontScaleRow;
     private TextView mFontScaleValue;
-    private float mFontScale = 1.0f;
+    private float mFontScale;
 
     // Bold + text color
     private LinearLayout mBoldColorRow;
@@ -103,8 +103,8 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     private View mSwatchOutlineColor;
     private TextView mShadowWidthValue;
     private View mSwatchShadowColor;
-    private float mOutlineWidth = 2f;
-    private float mShadowWidth = 2f;
+    private float mOutlineWidth;
+    private float mShadowWidth;
 
     // Boxed line/block controls (background)
     private View mSwatchBackgroundColor;
@@ -116,13 +116,13 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     private TextView mBlockOutlineWidthValue;
     private View mSwatchBlockOutlineColor;
     private TextView mBlockPaddingValue;
-    private float mBlockPadding = 4f;
+    private float mBlockPadding;
 
     // Vertical position (kept as the existing spacer-based +/- stepper)
     private SeekBar mVertSeekBar;
     private View mLeftVerticalButton;
     private View mRightVerticalButton;
-    private int mVPos = 10;
+    private int mVPos;
     private boolean touching = false;
     // "Vertical Position:" row label — dimmed alongside the seekbar/buttons outside Custom mode.
     private TextView mVertLabel;
