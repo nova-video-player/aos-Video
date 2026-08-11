@@ -26,6 +26,9 @@ public class FidelityTransformation implements Transformation {
     private final int mTargetHeight;
 
     public FidelityTransformation(int width, int height) {
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("Target dimensions must be positive: " + width + "x" + height);
+        }
         this.mTargetWidth = width;
         this.mTargetHeight = height;
     }
@@ -42,16 +45,17 @@ public class FidelityTransformation implements Transformation {
         if (Math.abs(sourceRatio - targetRatio) > 0.001f) {
             int newWidth, newHeight, x, y;
             if (sourceRatio > targetRatio) {
-                newWidth = (int) (source.getHeight() * targetRatio);
+                newWidth = boundedCropDimension(source.getHeight() * targetRatio, source.getWidth());
                 newHeight = source.getHeight();
                 x = (source.getWidth() - newWidth) / 2;
                 y = 0;
             } else {
                 newWidth = source.getWidth();
-                newHeight = (int) (source.getWidth() / targetRatio);
+                newHeight = boundedCropDimension(source.getWidth() / targetRatio, source.getHeight());
                 x = 0;
                 y = (source.getHeight() - newHeight) / 2;
             }
+
             current = Bitmap.createBitmap(source, x, y, newWidth, newHeight);
             if (current != source) {
                 source.recycle();
@@ -64,7 +68,7 @@ public class FidelityTransformation implements Transformation {
         // Path A: Premium Multi-step SSAA Path (for legacy w780 sources)
         // Path B: Fast Single-pass Path (for optimized w500 sources)
         // We scale by exactly 50% steps if the ratio is large to preserve high-frequency detail.
-        while (current.getWidth() > mTargetWidth * 2) {
+        while ((long) current.getWidth() > (long) mTargetWidth * 2) {
             int nextW = current.getWidth() / 2;
             int nextH = current.getHeight() / 2;
             if (nextW == 0 || nextH == 0) break;
@@ -88,6 +92,10 @@ public class FidelityTransformation implements Transformation {
         finalBitmap.setHasMipMap(true);
         
         return finalBitmap;
+    }
+
+    static int boundedCropDimension(float idealDimension, int sourceDimension) {
+        return Math.max(1, Math.min(sourceDimension, Math.round(idealDimension)));
     }
 
     @Override
