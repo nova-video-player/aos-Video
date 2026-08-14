@@ -1801,9 +1801,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // prefer a Chinese-variant title match (Mandarin/Cantonese/Taiwan) if found, otherwise the
         // language-matching track marked "default" by the container, otherwise the first track
         // whose language code matches the favorite audio language
-        if (languageVariantMatchTrack != null) mVideoInfo.audioTrack = languageVariantMatchTrack;
-        else if (languageDefaultMatchTrack != null) mVideoInfo.audioTrack = languageDefaultMatchTrack;
-        else if (languageMatchTrack != null) mVideoInfo.audioTrack = languageMatchTrack;
+        Integer selectedAudioTrack = ISO639codes.selectPreferredTrack(languageVariantMatchTrack, languageDefaultMatchTrack, languageMatchTrack);
+        if (selectedAudioTrack != null) mVideoInfo.audioTrack = selectedAudioTrack;
 
         // if no valid audioTrack selected revert to firstSupportedTrack if it exists
         if ((mVideoInfo.audioTrack < 0 || mVideoInfo.audioTrack >= nbTrack) && firstTimeAudioCalled && firstSupportedTrack != null)
@@ -1884,6 +1883,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: favorite locale {}, current locale {}", locale.getDisplayLanguage(), Locale.getDefault().getDisplayLanguage());
                     String trackName = "";
                     String lang = null;
+                    Integer languageMatchTrack = null;
+                    Integer languageDefaultMatchTrack = null;
+                    Integer languageVariantMatchTrack = null;
                     for (int i = 0; i < nbTrack; ++i) { // select default track
                         trackName = vMetadata.getSubtitleTrack(i).name;
                         // select default locale and avoid forced subs
@@ -1903,9 +1905,24 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                                 if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: skip track: {} with identified lang: {} because it contains forced sub", trackName, lang);
                             } else {
                                 if (lang.toLowerCase().contains(locale.getDisplayLanguage().toLowerCase())) {
-                                    if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: selected default track: {} identified lang: {} matching locale language {}", trackName, lang, locale.getDisplayLanguage());
-                                    mVideoInfo.subtitleTrack = i;
-                                    break;
+                                    if (languageMatchTrack == null) {
+                                        if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: track {} identified lang: {} matches locale language {}", trackName, lang, locale.getDisplayLanguage());
+                                        languageMatchTrack = i;
+                                    }
+                                    // among same-language tracks (e.g. Simplified/Traditional Chinese subs both
+                                    // tagged "Chinese"), the container's own "default" disposition flag is the
+                                    // best signal of the intended track when no title hint disambiguates it
+                                    if (languageDefaultMatchTrack == null && (vMetadata.getSubtitleTrack(i).disposition & VideoUtils.AV_DISPOSITION_DEFAULT) != 0) {
+                                        if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: track {} identified lang: {} matches locale language {} and is marked default", trackName, lang, locale.getDisplayLanguage());
+                                        languageDefaultMatchTrack = i;
+                                    }
+                                    // best-effort disambiguation between Chinese sub-variants (Mainland/HK/Taiwan)
+                                    // sharing the same "Chinese" language, based on the track's free-text title
+                                    // (e.g. "Simplified"/"Traditional")
+                                    if (languageVariantMatchTrack == null && ISO639codes.titleMatchesChineseVariant(mSubsFavoriteLanguage, trackName)) {
+                                        if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: track {} identified lang: {} matches favorite Chinese variant {}", trackName, lang, mSubsFavoriteLanguage);
+                                        languageVariantMatchTrack = i;
+                                    }
                                 } else {
                                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: skip track: {} identified lang: {} != locale language {}", trackName, lang, locale.getDisplayLanguage());
                                 }
@@ -1916,6 +1933,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                             fallbackTextTrack = i;
                         }
                     }
+                    // prefer a Chinese-variant title match (Simplified/Traditional) if found, otherwise
+                    // the language-matching track marked "default" by the container, otherwise the
+                    // first track whose language matches the favorite subtitle language
+                    Integer selectedSubtitleTrack = ISO639codes.selectPreferredTrack(languageVariantMatchTrack, languageDefaultMatchTrack, languageMatchTrack);
+                    if (selectedSubtitleTrack != null) mVideoInfo.subtitleTrack = selectedSubtitleTrack;
                     if (!mHideSubtitles && mVideoInfo.subtitleTrack == -1) { // selects newSubtitleTrack (could be noneTrack) if language not found
                         int newTrack = 0;
                         String revertTrackName = "";
