@@ -84,11 +84,16 @@ import io.sentry.SentryLevel;
 import io.sentry.android.core.SentryAndroid;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.beans.PropertyChangeListener;
+import java.net.URL;
 import java.security.Provider;
 import java.security.Security;
 import java.util.Arrays;
@@ -101,6 +106,10 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 public class CustomApplication extends Application implements DefaultLifecycleObserver {
+
+    private static final String LOGBACK_DIR_PROPERTY = "nova.logback.dir";
+    private static final String LOGBACK_BOOTSTRAP_CONFIG = "logback.xml";
+    private static final String LOGBACK_FULL_CONFIG = "logback-full.xml";
 
     private static Logger log = null;
 
@@ -668,6 +677,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         mContext = getApplicationContext();
         // must be done after context is available
         log = LoggerFactory.getLogger(CustomApplication.class);
+        configureFullLoggingAsync();
         setupBouncyCastle();
 
         systemLocale = Locale.getDefault();
@@ -782,6 +792,61 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 }
             }
         }.start();
+    }
+
+    /**
+     * Enables rolling file logging and the optional external logback override
+     * without accessing external storage on the provider-startup main thread.
+     */
+    private void configureFullLoggingAsync() {
+        Thread loggingInitThread = new Thread(() -> {
+            LoggerContext loggerContext = null;
+            try {
+                File externalFilesDir = getExternalFilesDir(null);
+                if (externalFilesDir == null) {
+                    Log.w("CustomApplication", "External files directory unavailable; keeping Logcat-only logging");
+                    return;
+                }
+
+                File logDirectory = new File(externalFilesDir, "logback");
+                System.setProperty(LOGBACK_DIR_PROPERTY, logDirectory.getAbsolutePath());
+
+                loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+                synchronized (loggerContext) {
+                    configureLogging(loggerContext, LOGBACK_FULL_CONFIG);
+                }
+            } catch (Exception e) {
+                Log.e("CustomApplication", "Could not enable full logging; restoring Logcat-only logging", e);
+                restoreBootstrapLogging(loggerContext);
+            }
+        }, "logback-init");
+        loggingInitThread.setPriority(Thread.MIN_PRIORITY);
+        loggingInitThread.start();
+    }
+
+    private void configureLogging(LoggerContext loggerContext, String assetName) throws IOException, JoranException {
+        URL configurationUrl = getClassLoader().getResource("assets/" + assetName);
+        if (configurationUrl == null) {
+            throw new IOException("Missing logging configuration asset: " + assetName);
+        }
+
+        JoranConfigurator configurator = new JoranConfigurator();
+        configurator.setContext(loggerContext);
+        loggerContext.reset();
+        configurator.doConfigure(configurationUrl);
+    }
+
+    private void restoreBootstrapLogging(LoggerContext loggerContext) {
+        if (loggerContext == null) {
+            return;
+        }
+        synchronized (loggerContext) {
+            try {
+                configureLogging(loggerContext, LOGBACK_BOOTSTRAP_CONFIG);
+            } catch (Exception fallbackError) {
+                Log.e("CustomApplication", "Could not restore Logcat-only logging", fallbackError);
+            }
+        }
     }
 
     private void launchSambaDiscovery() {
