@@ -176,6 +176,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private CursorObjectAdapter mLastPlayedAdapter;
     private ArrayObjectAdapter mFileBrowsingRowAdapter;
     private ArrayObjectAdapter mPreferencesRowAdapter;
+    private final Handler mRowsSelectionHandler = new Handler(Looper.getMainLooper());
+    private Object mRowPendingSelection;
+    private final Runnable mClearRowPendingSelection = () -> mRowPendingSelection = null;
 
     private ListRow mWatchingUpNextRow;
     private ListRow mLastAddedRow;
@@ -361,6 +364,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     @Override
     public void onDestroyView() {
         if (log.isDebugEnabled()) log.debug("onDestroyView");
+        mRowsSelectionHandler.removeCallbacks(mClearRowPendingSelection);
+        mRowPendingSelection = null;
         if (mBuildAllMoviesBoxTask != null) mBuildAllMoviesBoxTask.cancel();
         if (mBuildAllAnimesBoxTask != null) mBuildAllAnimesBoxTask.cancel();
         if (mBuildAllTvshowsBoxTask != null) mBuildAllTvshowsBoxTask.cancel();
@@ -506,12 +511,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             // Update last added row title
             if (mShowLastAddedRow) {
                 int lastAddedPosition = getRowPosition(ROW_ID_LAST_ADDED);
-                if (lastAddedPosition != -1) {
-                    mRowsAdapter.removeItems(lastAddedPosition, 1);
-                }
                 mLastAddedRow = new ListRow(ROW_ID_LAST_ADDED, new HeaderItem(lastAddedTitle), mLastAddedAdapter);
                 if (lastAddedPosition != -1) {
-                    mRowsAdapter.add(lastAddedPosition, mLastAddedRow);
+                    replaceRow(lastAddedPosition, mLastAddedRow);
                 }
                 LoaderManager.getInstance(this).restartLoader(LOADER_ID_LAST_ADDED, null, this);
             }
@@ -519,12 +521,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             // Update last played row title
             if (mShowLastPlayedRow) {
                 int lastPlayedPosition = getRowPosition(ROW_ID_LAST_PLAYED);
-                if (lastPlayedPosition != -1) {
-                    mRowsAdapter.removeItems(lastPlayedPosition, 1);
-                }
                 mLastPlayedRow = new ListRow(ROW_ID_LAST_PLAYED, new HeaderItem(lastPlayedTitle), mLastPlayedAdapter);
                 if (lastPlayedPosition != -1) {
-                    mRowsAdapter.add(lastPlayedPosition, mLastPlayedRow);
+                    replaceRow(lastPlayedPosition, mLastPlayedRow);
                 }
                 LoaderManager.getInstance(this).restartLoader(LOADER_ID_LAST_PLAYED, null, this);
             }
@@ -1027,14 +1026,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             if (cursor.getCount() == 0 || !mShowWatchingUpNextRow) {
                 if (log.isDebugEnabled()) log.debug("updateWatchingUpNextRow: cursor not null and row not shown thus removing currentPosition={}", currentPosition);
                 if (currentPosition != -1)
-                    mRowsAdapter.removeItems(currentPosition, 1);
+                    removeRows(currentPosition, 1);
             } else {
                 if (currentPosition == -1) {
                     int newPosition = 0;
                     if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                         newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
                     if (log.isDebugEnabled()) log.debug("updateWatchingUpNextRow: cursor not null and row shown thus adding newPosition={}", newPosition);
-                    mRowsAdapter.add(newPosition, mWatchingUpNextRow);
+                    addRow(newPosition, mWatchingUpNextRow);
                 }
             }
         } else {
@@ -1053,13 +1052,13 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             else if (log.isDebugEnabled()) log.debug("updateLastAddedRow: cursor has {} elements", cursor.getCount());
             if (currentPosition != -1) {
                 if (log.isDebugEnabled()) log.debug("updateLastAddedRow: removing currentPosition={}", currentPosition);
-                mRowsAdapter.removeItems(currentPosition, 1);
+                removeRows(currentPosition, 1);
             }
         } else {
             if (currentPosition == -1) {
                 int newPosition = 0;
                 if (log.isDebugEnabled()) log.debug("updateLastAddedRow: adding at newPosition={} if {}", newPosition, mShowLastAddedRow);
-                if (mShowLastAddedRow) mRowsAdapter.add(newPosition, mLastAddedRow);
+                if (mShowLastAddedRow) addRow(newPosition, mLastAddedRow);
             }
         }
         debugRows("updateLastAddedRow");
@@ -1072,7 +1071,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         int currentPosition = getRowPosition(ROW_ID_LAST_PLAYED);
         if (cursor == null || cursor.getCount() == 0 || !mShowLastPlayedRow) {
             if (currentPosition != -1) // it exists thus we remove
-                mRowsAdapter.removeItems(currentPosition, 1);
+                removeRows(currentPosition, 1);
         } else {
             if (currentPosition == -1) {
                 int newPosition = 0;
@@ -1080,7 +1079,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
-                if (mShowLastPlayedRow) mRowsAdapter.add(newPosition, mLastPlayedRow);
+                if (mShowLastPlayedRow) addRow(newPosition, mLastPlayedRow);
             }
         }
         debugRows("updateLastPlayedRow");
@@ -1094,9 +1093,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (log.isDebugEnabled()) log.debug("updateMoviesRow: current position of all movies row {}", currentPosition);
         if (cursor == null || cursor.getCount() == 0 || !mShowMoviesRow) { // NOT ALL MOVIES
             if (log.isDebugEnabled()) log.debug("updateMoviesRow: not all movies");
-            if (currentPosition != -1) { // if ALL MOVIES ROW remove it
-                if (log.isDebugEnabled()) log.debug("updateMoviesRow: remove all movies row at position {}", currentPosition);
-                mRowsAdapter.removeItems(currentPosition, 1);
+            int moviesPosition = getRowPosition(ROW_ID_MOVIES);
+            if (currentPosition != -1) {
+                if (moviesPosition == -1) {
+                    if (log.isDebugEnabled()) log.debug("updateMoviesRow: replace all movies row at position {}", currentPosition);
+                    replaceRow(currentPosition, mMovieRow);
+                } else {
+                    removeRows(currentPosition, 1);
+                }
             }
             if (getRowPosition(ROW_ID_MOVIES) == -1) {
                 int newPosition = 0; // init at row 0
@@ -1107,7 +1111,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1) // otherwise put it after LAST ADDED ROW
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
                 if (log.isDebugEnabled()) log.debug("updateMoviesRow: adding movies row at {}", newPosition);
-                mRowsAdapter.add(newPosition, mMovieRow);
+                addRow(newPosition, mMovieRow);
             }
             if (! mShowMoviesRow && updateBox) {
                 refreshAllMoviesBox();
@@ -1116,11 +1120,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         } else { // ALL MOVIES CASE
             if (log.isDebugEnabled()) log.debug("updateMoviesRow: all movies");
             int position = getRowPosition(ROW_ID_MOVIES);
-            if (position != -1) { // if MOVIES ROW remove it
-                if (log.isDebugEnabled()) log.debug("updateMoviesRow: remove movies row at position {}", position);
-                mRowsAdapter.removeItems(position, 1);
+            if (position != -1) {
+                if (currentPosition == -1) {
+                    if (log.isDebugEnabled()) log.debug("updateMoviesRow: replace movies row at position {}", position);
+                    replaceRow(position, mMoviesRow);
+                } else {
+                    removeRows(position, 1);
+                }
             }
-            if (currentPosition == -1) {
+            if (getRowPosition(ROW_ID_ALL_MOVIES) == -1) {
                 int newPosition = 0; // init at row 0
                 if (getRowPosition(ROW_ID_LAST_PLAYED) != -1) // if LAST PLAYED ROW put it after
                     newPosition = getRowPosition(ROW_ID_LAST_PLAYED) + 1;
@@ -1129,7 +1137,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1) // otherwise put it after LAST ADDED ROW
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
                 if (log.isDebugEnabled()) log.debug("updateMoviesRow: adding movies row at {}", newPosition);
-                mRowsAdapter.add(newPosition, mMoviesRow);
+                addRow(newPosition, mMoviesRow);
             }
         }
         debugRows("updateMoviesRow");
@@ -1143,9 +1151,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (log.isDebugEnabled()) log.debug("updateTvShowsRow: current position of all tvshows row {}", currentPosition);
         if (cursor == null || cursor.getCount() == 0 || !mShowTvshowsRow) {
             if (log.isDebugEnabled()) log.debug("updateTvShowsRow: not all tvshows");
+            int tvshowsPosition = getRowPosition(ROW_ID_TVSHOW);
             if (currentPosition != -1) {
-                if (log.isDebugEnabled()) log.debug("updateTvShowsRow: remove all tvshows row at position {}", currentPosition);
-                mRowsAdapter.removeItems(currentPosition, 1);
+                if (tvshowsPosition == -1) {
+                    if (log.isDebugEnabled()) log.debug("updateTvShowsRow: replace all tvshows row at position {}", currentPosition);
+                    replaceRow(currentPosition, mTvshowRow);
+                } else {
+                    removeRows(currentPosition, 1);
+                }
             }
             if (getRowPosition(ROW_ID_TVSHOW) == -1) {
                 int newPosition = 0;
@@ -1160,16 +1173,20 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
                 if (log.isDebugEnabled()) log.debug("updateTvShowsRow: adding tvshows row at {}", newPosition);
-                mRowsAdapter.add(newPosition, mTvshowRow);
+                addRow(newPosition, mTvshowRow);
             }
             if (! mShowTvshowsRow && updateBox) refreshAllTvshowsBox();
         } else {
             int position = getRowPosition(ROW_ID_TVSHOW);
             if (position != -1) {
-                if (log.isDebugEnabled()) log.debug("updateTvShowsRow: remove tvshows row at position {}", position);
-                mRowsAdapter.removeItems(position, 1);
+                if (currentPosition == -1) {
+                    if (log.isDebugEnabled()) log.debug("updateTvShowsRow: replace tvshows row at position {}", position);
+                    replaceRow(position, mTvshowsRow);
+                } else {
+                    removeRows(position, 1);
+                }
             }
-            if (currentPosition == -1) {
+            if (getRowPosition(ROW_ID_ALL_TVSHOWS) == -1) {
                 int newPosition = 0;
                 if (getRowPosition(ROW_ID_MOVIES) != -1)
                     newPosition = getRowPosition(ROW_ID_MOVIES) + 1;
@@ -1182,7 +1199,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 else if (getRowPosition(ROW_ID_LAST_ADDED) != -1)
                     newPosition = getRowPosition(ROW_ID_LAST_ADDED) + 1;
                 if (log.isDebugEnabled()) log.debug("updateTvShowsRow: adding all tvshows row at {}", newPosition);
-                mRowsAdapter.add(newPosition, mTvshowsRow);
+                addRow(newPosition, mTvshowsRow);
             }
         }
         debugRows("updateTvShowsRow");
@@ -1196,11 +1213,16 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (log.isDebugEnabled()) log.debug("updateAnimesRow: current position of all animes row {}", currentPosition);
         if (cursor ==null || cursor.getCount() == 0 || !mShowAnimesRow) {
             if (log.isDebugEnabled()) log.debug("updateAnimesRow: not all animes");
-            if (currentPosition != -1) {
-                if (log.isDebugEnabled()) log.debug("updateAnimesRow: remove all animations row at position {}", currentPosition);
-                mRowsAdapter.removeItems(currentPosition, 1);
-            }
             if (mSeparateAnimeFromShowMovie) {
+                int animesPosition = getRowPosition(ROW_ID_ANIMES);
+                if (currentPosition != -1) {
+                    if (animesPosition == -1) {
+                        if (log.isDebugEnabled()) log.debug("updateAnimesRow: replace all animations row at position {}", currentPosition);
+                        replaceRow(currentPosition, mAnimeRow);
+                    } else {
+                        removeRows(currentPosition, 1);
+                    }
+                }
                 if (getRowPosition(ROW_ID_ANIMES) == -1) {
                     int newPosition = 0;
                     if (getRowPosition(ROW_ID_TVSHOW) != -1)
@@ -1218,24 +1240,28 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
                         newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
                     if (log.isDebugEnabled()) log.debug("updateAnimesRow: adding animations row at {}", newPosition);
-                    mRowsAdapter.add(newPosition, mAnimeRow);
+                    addRow(newPosition, mAnimeRow);
                 }
                 if (! mShowAnimesRow && updateBox) {
                     refreshAllAnimesBox();
                     refreshAllAnimeShowsBox();
                 }
             } else {
-                // remove row mAnimeRow
-                mRowsAdapter.remove(mAnimeRow);
+                removeRows(currentPosition, 1);
+                removeRows(getRowPosition(ROW_ID_ANIMES), 1);
             }
         } else {
             int position = getRowPosition(ROW_ID_ANIMES);
-            if (position != -1) {
-                if (log.isDebugEnabled()) log.debug("updateAnimesRow: remove animations row at position {}", position);
-                mRowsAdapter.removeItems(position, 1);
-            }
             if (mSeparateAnimeFromShowMovie) {
-                if (currentPosition == -1) {
+                if (position != -1) {
+                    if (currentPosition == -1) {
+                        if (log.isDebugEnabled()) log.debug("updateAnimesRow: replace animations row at position {}", position);
+                        replaceRow(position, mAnimesRow);
+                    } else {
+                        removeRows(position, 1);
+                    }
+                }
+                if (getRowPosition(ROW_ID_ALL_ANIMES) == -1) {
                     int newPosition = 0;
                     if (getRowPosition(ROW_ID_TVSHOW) != -1)
                         newPosition = getRowPosition(ROW_ID_TVSHOW) + 1;
@@ -1252,10 +1278,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     else if (getRowPosition(ROW_ID_WATCHING_UP_NEXT) != -1)
                         newPosition = getRowPosition(ROW_ID_WATCHING_UP_NEXT) + 1;
                     if (log.isDebugEnabled()) log.debug("updateAnimesRow: adding all animations row at {}", newPosition);
-                    mRowsAdapter.add(newPosition, mAnimesRow);
+                    addRow(newPosition, mAnimesRow);
                 }
             } else {
-                mRowsAdapter.remove(mAnimesRow);
+                removeRows(position, 1);
+                removeRows(getRowPosition(ROW_ID_ALL_ANIMES), 1);
             }
         }
         debugRows("updateAnimesRow");
@@ -1293,6 +1320,52 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             }
         }
         return -1;
+    }
+
+    private void addRow(int position, ListRow row) {
+        mRowsAdapter.add(position, row);
+        if (mRowPendingSelection != null) stabilizeRowsSelection(position);
+    }
+
+    private void replaceRow(int position, ListRow row) {
+        if (mRowPendingSelection == mRowsAdapter.get(position)) mRowPendingSelection = row;
+        mRowsAdapter.replace(position, row);
+        if (mRowPendingSelection != null) stabilizeRowsSelection(position);
+    }
+
+    /**
+     * Removes rows without leaving BrowseSupportFragment with a queued selection that is outside
+     * the new adapter bounds. Selection is tracked by row identity because several adapter changes
+     * can occur before Leanback runs its posted selection callback.
+     */
+    private void removeRows(int position, int count) {
+        if (position < 0 || count <= 0 || position + count > mRowsAdapter.size()) return;
+
+        if (mRowPendingSelection == null && mRowsAdapter.size() > 0) {
+            int selectedPosition = Math.max(0,
+                    Math.min(getSelectedPosition(), mRowsAdapter.size() - 1));
+            mRowPendingSelection = mRowsAdapter.get(selectedPosition);
+        }
+        mRowsAdapter.removeItems(position, count);
+        stabilizeRowsSelection(position);
+    }
+
+    private void stabilizeRowsSelection(int fallbackPosition) {
+        if (mRowsAdapter.size() == 0) {
+            mRowPendingSelection = null;
+            return;
+        }
+
+        int selectedPosition = mRowsAdapter.indexOf(mRowPendingSelection);
+        if (selectedPosition == -1) {
+            selectedPosition = Math.min(fallbackPosition, mRowsAdapter.size() - 1);
+            mRowPendingSelection = mRowsAdapter.get(selectedPosition);
+        }
+
+        // A user-request selection supersedes any stale queued internal or user selection.
+        setSelectedPosition(selectedPosition, false);
+        mRowsSelectionHandler.removeCallbacks(mClearRowPendingSelection);
+        mRowsSelectionHandler.post(mClearRowPendingSelection);
     }
 
     /**
