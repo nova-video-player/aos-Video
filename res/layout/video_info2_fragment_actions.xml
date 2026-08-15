@@ -55,5 +55,18 @@
             android:visibility="visible"
             android:layout_width="match_parent"
             />
+
+        <Button
+            android:id="@+id/next_episode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/transparent_ripple"
+            android:gravity="center"
+            android:paddingLeft="20dip"
+            android:paddingTop="20dip"
+            android:paddingRight="15dip"
+            android:paddingBottom="20dip"
+            android:text="@string/next_episode"
+            android:visibility="gone" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

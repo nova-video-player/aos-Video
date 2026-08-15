@@ -89,6 +89,7 @@ import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.dialogs.DialogRetrieveSubtitles;
 import com.archos.mediacenter.video.browser.dialogs.Paste;
 import com.archos.mediacenter.video.browser.filebrowsing.BrowserByFolder;
+import com.archos.mediacenter.video.browser.loader.NextEpisodeLoader;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
@@ -305,7 +306,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private FloatingActionButton mGenericPlayButton;
     private Button mResumeLocalButton;
     private Button mPlayButton;
+    private Button mNextEpisodeButton;
     private ImageView mPosterImageView;
+
+    /** The next episode, if there is one. */
+    private Episode mNextEpisode;
 
 
     //
@@ -458,9 +463,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mSubtitleDownloadButton.setOnClickListener(this);
         mResumeLocalButton = (Button) mRoot.findViewById(R.id.resume);
         mPlayButton = (Button) mRoot.findViewById(R.id.play);
+        mNextEpisodeButton = (Button) mRoot.findViewById(R.id.next_episode);
         mActionButtonsContainer = (CardView) mRoot.findViewById(R.id.action_buttons_container);
         mResumeLocalButton.setOnClickListener(this);
         mPlayButton.setOnClickListener(this);
+        mNextEpisodeButton.setOnClickListener(this);
         mRemoteResumeButton = (Button) mRoot.findViewById(R.id.remote_resume);
         mRemoteResumeButton.setOnClickListener(this);
         mSourceLayout = (LinearLayout)mRoot.findViewById(R.id.source_layout);
@@ -805,6 +812,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
             Video oldVideo = mCurrentVideo;
             mCurrentVideo = video;
+            mNextEpisode = null;
+            mNextEpisodeButton.setVisibility(View.GONE);
             String name = null;
             if(video instanceof Episode){
                 if (log.isDebugEnabled()) log.debug( "setCurrentVideo: new video and it is an episode");
@@ -1192,6 +1201,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             } else {
                 Toast.makeText(getActivity(), R.string.player_err_cantplayvideo, Toast.LENGTH_SHORT).show();
             }
+        }
+        else if (view == mNextEpisodeButton && mNextEpisode != null) {
+            VideoInfoActivity.startInstance(getActivity(), mNextEpisode,
+                    mNextEpisode.getFileUri(), mNextEpisode.getId());
+            getActivity().finish();
         }
         else if(view == mIndexButton){
             if (log.isDebugEnabled()) log.debug("onClick: mIndexButton {}", mCurrentVideo.getFileUri());
@@ -1852,6 +1866,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         private volatile boolean isCancelled = false;
         private final Activity mActivity;
         private List<ScraperTrailer> mTrailers;
+        private Episode mNextEpisodeResult;
 
         FullScraperTagsTask(Activity activity) {
             mActivity = activity;
@@ -1869,6 +1884,19 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 try {
                     if (isCancelled || Thread.currentThread().isInterrupted()) return;
                     result = video.getFullScraperTags(getActivity());
+                    if (result instanceof EpisodeTags) {
+                        // Match the TV details screen: look for the next episode in this show.
+                        if (Looper.myLooper() == null) Looper.prepare();
+                        CursorLoader loader = new NextEpisodeLoader(getActivity(), (EpisodeTags) result);
+                        Cursor cursor = loader.loadInBackground();
+                        if (cursor != null) {
+                            if (cursor.moveToFirst()) {
+                                mNextEpisodeResult = (Episode) new CompatibleCursorMapperConverter(
+                                        new VideoCursorMapper()).convert(cursor);
+                            }
+                            cursor.close();
+                        }
+                    }
                     if (result != null && !isCancelled)
                         mTrailers = result.getAllTrailersInDb(getActivity());
                     else
@@ -1884,6 +1912,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 handler.post(() -> {
                     if (isCancelled || !isAdded() || isDetached()) return;
                     mTags = finalTags;
+                    mNextEpisode = mNextEpisodeResult;
+                    mNextEpisodeButton.setVisibility(mNextEpisode != null ? View.VISIBLE : View.GONE);
                     if (finalTags != null) {
                         // Plot & Genres
                         final String plot = finalTags.getPlot();
