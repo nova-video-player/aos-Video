@@ -525,6 +525,12 @@
     <string name="preferences_about">О программе</string>
     <string name="preferences_category_complete">Полная версия</string>
     <string name="preferences_category_video">Видео</string>
+    <string name="pref_video_orientation_title">Ориентация видео</string>
+    <string name="pref_video_orientation_summary">Положение видео на экране: горизонтальное или вертикальное</string>
+    <string name="pref_video_orientation_auto">Авто</string>
+    <string name="pref_video_orientation_landscape">Горизонтально</string>
+    <string name="pref_video_orientation_portrait">Вертикально</string>
+    <string name="preferences_search_hint">Поиск по настройкам</string>
     <string name="preferences_force_software_decoding">Принудительное программное декодирование</string>
     <string name="preferences_force_software_decoding_summary">Вы можете попробовать эту опцию, если некоторые видео проигрываются не правильно</string>
     <string name="preferences_force_audio_passthrough">Прямой проброс звука</string>

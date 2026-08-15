@@ -198,6 +198,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private static final String KEY_NOTIFICATIONS_MODE = "notifications_mode";
     private static final String KEY_NETWORK_BOOKMARKS = "network_bookmarks";
     private static final String KEY_LOCK_ROTATION = "pref_lock_rotation";
+    private static final String KEY_VIDEO_ORIENTATION = "pref_video_orientation";
     public static final String KEY_ADVANCED_VIDEO_ENABLED = "preferences_advanced_video_enabled";
 
     public static final String INDEXED_URI = "indexed_uri";
@@ -937,7 +938,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mNetworkBookmarksEnabled = mPreferences.getBoolean(KEY_NETWORK_BOOKMARKS, true);
         mForceSWDecoding = mPreferences.getBoolean(KEY_FORCE_SW, false);
         if (log.isDebugEnabled()) log.debug("onStart: setLockRotation {}", mLockRotation);
-        setLockRotation(mLockRotation);
+        setOrientationFromPreference();
         mSurfaceController.setVideoFormat(Integer.parseInt(mPreferences.getString(KEY_PLAYER_FORMAT, "-1")),
                 Integer.parseInt(mPreferences.getString(KEY_PLAYER_AUTO_FORMAT, "-1")));
         
@@ -1468,6 +1469,22 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             case ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED -> "unspecified";
             default -> "";
         };
+    }
+
+    private void setOrientationFromPreference() {
+        String orientation = mPreferences.getString(KEY_VIDEO_ORIENTATION, "auto");
+        if (log.isDebugEnabled()) log.debug("CONFIG setOrientationFromPreference: {}", orientation);
+        switch (orientation) {
+            case "portrait":
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+                break;
+            case "landscape":
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                break;
+            default:
+                setLockRotation(mLockRotation);
+                break;
+        }
     }
 
     @SuppressWarnings("deprecation") // getDefaultDisplay: API 30+ uses getDisplay()

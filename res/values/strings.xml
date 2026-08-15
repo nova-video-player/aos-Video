@@ -587,6 +587,12 @@
     <string name="preferences_about">About</string>
     <string name="preferences_category_complete">Full version</string>
     <string name="preferences_category_video">Video</string>
+    <string name="pref_video_orientation_title">Video orientation</string>
+    <string name="pref_video_orientation_summary">Set the video position on the screen: landscape or portrait</string>
+    <string name="pref_video_orientation_auto">Auto</string>
+    <string name="pref_video_orientation_landscape">Landscape (horizontal)</string>
+    <string name="pref_video_orientation_portrait">Portrait (vertical)</string>
+    <string name="preferences_search_hint">Search settings</string>
     <string name="preferences_force_software_decoding">Force software decoding</string>
     <string name="preferences_force_software_decoding_summary">You may try this option if some videos are not playing correctly</string>
     <string name="preferences_force_audio_passthrough">Audio passthrough</string>

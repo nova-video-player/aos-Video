@@ -14,22 +14,30 @@
 package com.archos.mediacenter.video.utils;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Insets;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import android.view.WindowInsets;
+import android.widget.EditText;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceGroupAdapter;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.archos.mediacenter.video.CustomApplication;
+import com.archos.mediacenter.video.R;
+
+import java.util.Locale;
 
 public class VideoPreferencesFragment extends PreferenceFragmentCompat {
 
@@ -44,11 +52,63 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Adjust padding for edge-to-edge
-        ViewCompat.setOnApplyWindowInsetsListener(view, (v, insets) -> {
-            androidx.core.graphics.Insets systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBarsInsets.left, systemBarsInsets.top, systemBarsInsets.right, systemBarsInsets.bottom);
-            return insets;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            view.setOnApplyWindowInsetsListener((v, insets) -> {
+                Insets systemBarsInsets = insets.getInsets(WindowInsets.Type.systemBars());
+                applySearchBoxInsets(view, systemBarsInsets.top);
+                v.setPadding(systemBarsInsets.left, 0, systemBarsInsets.right, systemBarsInsets.bottom);
+                return insets;
+            });
+        } else {
+            view.setOnApplyWindowInsetsListener((v, insets) -> {
+                applySearchBoxInsets(view, insets.getSystemWindowInsetTop());
+                v.setPadding(
+                        insets.getSystemWindowInsetLeft(),
+                        0,
+                        insets.getSystemWindowInsetRight(),
+                        insets.getSystemWindowInsetBottom()
+                );
+                return insets;
+            });
+        }
+        // The search box lives in the Activity layout (sibling of this fragment),
+        // so it can only be reached once the view is attached to the window.
+        view.post(() -> {
+            if (getActivity() == null) return;
+            EditText searchEdit = getActivity().findViewById(R.id.preferences_search);
+            if (searchEdit != null) {
+                searchEdit.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        filterPreferences(s == null ? "" : s.toString());
+                    }
+                });
+            }
         });
+    }
+
+    private void applySearchBoxInsets(View fragmentView, int statusBarTop) {
+        View root = fragmentView.getRootView();
+        if (root == null) return;
+        EditText search = root.findViewById(R.id.preferences_search);
+        if (search != null) {
+            float density = search.getResources().getDisplayMetrics().density;
+            int extraV = (int) (8 * density);
+            search.setPadding(
+                    (int) (12 * density),
+                    statusBarTop + extraV,
+                    (int) (12 * density),
+                    extraV
+            );
+        }
     }
 
     @Override
@@ -69,4 +129,69 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
         mPreferencesCommon.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPreferencesCommon.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void filterPreferences(String query) {
+        PreferenceScreen screen = getPreferenceScreen();
+        if (screen == null) return;
+        filterGroup(screen, query == null ? "" : query.trim());
+    }
+
+    private void filterGroup(PreferenceGroup group, String q) {
+        if (q.isEmpty()) {
+            group.setVisible(true);
+            for (int j = 0; j < group.getPreferenceCount(); j++) {
+                Preference child = group.getPreference(j);
+                if (child instanceof PreferenceGroup) {
+                    filterGroup((PreferenceGroup) child, q);
+                } else {
+                    child.setVisible(true);
+                }
+            }
+            return;
+        }
+        if (matchesQuery(group, q)) {
+            group.setVisible(true);
+            for (int j = 0; j < group.getPreferenceCount(); j++) {
+                Preference child = group.getPreference(j);
+                if (child instanceof PreferenceGroup) {
+                    filterGroup((PreferenceGroup) child, "");
+                } else {
+                    child.setVisible(true);
+                }
+            }
+            return;
+        }
+        boolean anyVisible = false;
+        for (int j = 0; j < group.getPreferenceCount(); j++) {
+            Preference child = group.getPreference(j);
+            if (child instanceof PreferenceGroup) {
+                filterGroup((PreferenceGroup) child, q);
+                anyVisible |= child.isVisible();
+            } else {
+                boolean childVisible = matchesQuery(child, q);
+                child.setVisible(childVisible);
+                anyVisible |= childVisible;
+            }
+        }
+        group.setVisible(anyVisible);
+    }
+
+    private boolean matchesQuery(Preference preference, String q) {
+        return titleMatches(preference, q) || summaryMatches(preference, q);
+    }
+
+    private boolean titleMatches(Preference preference, String q) {
+        CharSequence title = preference.getTitle();
+        return title != null && title.toString().toLowerCase(Locale.ROOT).contains(q);
+    }
+
+    private boolean summaryMatches(Preference preference, String q) {
+        CharSequence summary = preference.getSummary();
+        return summary != null && summary.toString().toLowerCase(Locale.ROOT).contains(q);
+    }
 }
