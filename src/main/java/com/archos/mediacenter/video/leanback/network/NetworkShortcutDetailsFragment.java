@@ -347,7 +347,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
                 if (isHimselfIndexedFolder) Toast.makeText(getActivity(), getString(R.string.indexed_folder_removed, mShortcut.getName()), Toast.LENGTH_SHORT).show();
                 // Send a delete request to MediaScanner
                 if (isHimselfIndexedFolder) // only if indexed
-                    NetworkScanner.removeVideos(getActivity(), mShortcut.getUri());
+                    NetworkScanner.removeIndexedVideos(getActivity(), mShortcut.getUri());
                 // set caller result
                 getActivity().setResult(NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED);
             }

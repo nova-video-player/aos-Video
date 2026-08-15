@@ -152,7 +152,7 @@ public class BrowserByNetwork extends BrowserByFolder {
                 // Deindex folder
                 ShortcutDbAdapter.VIDEO.deleteShortcut(getActivity(), shortcutPath);
                 // Send a delete request to MediaScanner
-                NetworkScanner.removeVideos(mContext, shortcutPath);
+                NetworkScanner.removeIndexedVideos(mContext, shortcutPath);
             } else {
                 text = getString(R.string.shortcut_removed, shortcutPath);
             }
@@ -162,7 +162,7 @@ public class BrowserByNetwork extends BrowserByFolder {
             if (isHimselfIndexedFolder) {
                 ShortcutDbAdapter.VIDEO.deleteShortcut(getActivity(), shortcutPath);
                 // Send a delete request to MediaScanner
-                NetworkScanner.removeVideos(mContext, shortcutPath);
+                NetworkScanner.removeIndexedVideos(mContext, shortcutPath);
             } else {
                 return;
             }

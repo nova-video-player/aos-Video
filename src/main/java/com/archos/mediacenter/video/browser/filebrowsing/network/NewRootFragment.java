@@ -235,7 +235,7 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
         String text = getString(R.string.indexed_folder_removed, shortcut.getName());
         Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
         // Send a delete request to MediaScanner
-        NetworkScanner.removeVideos(getActivity(), shortcut.getUri());
+        NetworkScanner.removeIndexedVideos(getActivity(), shortcut.getUri());
 
         // Update the menu items
         getActivity().invalidateOptionsMenu();
