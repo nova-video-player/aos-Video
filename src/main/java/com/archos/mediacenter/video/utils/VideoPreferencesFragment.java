@@ -14,7 +14,6 @@
 package com.archos.mediacenter.video.utils;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Insets;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,10 +36,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 
+import java.util.IdentityHashMap;
 import java.util.Locale;
 
 public class VideoPreferencesFragment extends PreferenceFragmentCompat {
 
+    private final IdentityHashMap<Preference, Boolean> mOriginalVisibility = new IdentityHashMap<>();
+    private boolean mVisibilitySnapshotted = false;
     private VideoPreferencesCommon mPreferencesCommon = new VideoPreferencesCommon(this);
 
     @Override
@@ -129,39 +131,55 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
         mPreferencesCommon.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mPreferencesCommon.onActivityResult(requestCode, resultCode, data);
-    }
-
     private void filterPreferences(String query) {
         PreferenceScreen screen = getPreferenceScreen();
         if (screen == null) return;
-        filterGroup(screen, query == null ? "" : query.trim());
+        if (!mVisibilitySnapshotted) {
+            snapshotVisibility(screen);
+            mVisibilitySnapshotted = true;
+        }
+        String q = query == null ? "" : query.trim().toLowerCase(Locale.ROOT);
+        if (q.isEmpty()) {
+            restoreVisibility(screen);
+            return;
+        }
+        filterGroup(screen, q);
+    }
+
+    private void snapshotVisibility(PreferenceGroup group) {
+        mOriginalVisibility.put(group, group.isVisible());
+        for (int j = 0; j < group.getPreferenceCount(); j++) {
+            Preference child = group.getPreference(j);
+            mOriginalVisibility.put(child, child.isVisible());
+            if (child instanceof PreferenceGroup) {
+                snapshotVisibility((PreferenceGroup) child);
+            }
+        }
+    }
+
+    private void restoreVisibility(PreferenceGroup group) {
+        Boolean groupVisible = mOriginalVisibility.get(group);
+        if (groupVisible != null) group.setVisible(groupVisible);
+        for (int j = 0; j < group.getPreferenceCount(); j++) {
+            Preference child = group.getPreference(j);
+            Boolean childVisible = mOriginalVisibility.get(child);
+            if (childVisible != null) child.setVisible(childVisible);
+            if (child instanceof PreferenceGroup) {
+                restoreVisibility((PreferenceGroup) child);
+            }
+        }
     }
 
     private void filterGroup(PreferenceGroup group, String q) {
-        if (q.isEmpty()) {
-            group.setVisible(true);
-            for (int j = 0; j < group.getPreferenceCount(); j++) {
-                Preference child = group.getPreference(j);
-                if (child instanceof PreferenceGroup) {
-                    filterGroup((PreferenceGroup) child, q);
-                } else {
-                    child.setVisible(true);
-                }
-            }
-            return;
-        }
         if (matchesQuery(group, q)) {
             group.setVisible(true);
             for (int j = 0; j < group.getPreferenceCount(); j++) {
                 Preference child = group.getPreference(j);
                 if (child instanceof PreferenceGroup) {
-                    filterGroup((PreferenceGroup) child, "");
+                    restoreVisibility((PreferenceGroup) child);
                 } else {
-                    child.setVisible(true);
+                    Boolean childVisible = mOriginalVisibility.get(child);
+                    child.setVisible(childVisible == null || childVisible);
                 }
             }
             return;

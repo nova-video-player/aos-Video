@@ -895,7 +895,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
         else{
             if (log.isDebugEnabled()) log.debug("setEffect: setLockRotation {}", mLockRotation);
-            setLockRotation(mLockRotation);
+            setOrientationFromPreference();
         }
     }
 
