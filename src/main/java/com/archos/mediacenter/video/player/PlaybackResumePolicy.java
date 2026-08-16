@@ -58,6 +58,16 @@ final class PlaybackResumePolicy {
         return resumeMode != remoteResumeMode && !freshExternalPositionCommand;
     }
 
+    static int chooseExternalResultPosition(int servicePosition, int playerPosition,
+                                            int checkpointPosition) {
+        // Negative values mean that source is unavailable. A real zero is valid and must not
+        // fall through to an older source such as the lifecycle checkpoint.
+        if (servicePosition >= 0) return servicePosition;
+        if (playerPosition >= 0) return playerPosition;
+        if (checkpointPosition >= 0) return checkpointPosition;
+        return 0;
+    }
+
     static boolean isPausedSession(boolean userPaused, int checkpointPosition,
                                    String pausedUri, String currentUri) {
         return userPaused && checkpointPosition >= 0 && currentUri != null

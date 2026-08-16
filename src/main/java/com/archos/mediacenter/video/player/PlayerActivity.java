@@ -4025,18 +4025,18 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         // Set MX Player action - Stremio specifically recognizes this format
         resultIntent.setAction("com.mxtech.intent.result.VIEW");
 
-        // Get current position - use last known position or current player position
+        // Prefer live state, but retain the service-owned lifecycle checkpoint as a fallback for
+        // a deliberate finish after the service/player has already been torn down.
         PlayerService.PlaybackSnapshot snapshot = PlayerService.sPlayerService != null
                 ? PlayerService.sPlayerService.getPlaybackSnapshot()
                 : null;
-        int currentPosition;
-        if (snapshot != null) {
-            currentPosition = snapshot.getPositionMs();
-        } else if (mPlayer != null && mPlayer.isInPlaybackState()) {
-            currentPosition = mPlayer.getCurrentPosition();
-        } else {
-            currentPosition = 0;
-        }
+        int servicePosition = snapshot != null ? snapshot.getPositionMs() : -1;
+        int playerPosition = mPlayer != null && mPlayer.isInPlaybackState()
+                ? mPlayer.getCurrentPosition() : -1;
+        int checkpointPosition = ExternalResumeIntent.readPosition(
+                getIntent(), PlayerService.SESSION_POSITION);
+        int currentPosition = PlaybackResumePolicy.chooseExternalResultPosition(
+                servicePosition, playerPosition, checkpointPosition);
 
         // Get duration
         int duration = -1;

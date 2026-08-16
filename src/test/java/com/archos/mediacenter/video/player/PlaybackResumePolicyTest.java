@@ -61,6 +61,18 @@ public class PlaybackResumePolicyTest {
     }
 
     @Test
+    public void externalResultFallsBackFromLiveStateToLifecycleCheckpoint() {
+        assertEquals(30_000, PlaybackResumePolicy.chooseExternalResultPosition(
+                30_000, 20_000, 10_000));
+        assertEquals(20_000, PlaybackResumePolicy.chooseExternalResultPosition(
+                -1, 20_000, 10_000));
+        assertEquals(10_000, PlaybackResumePolicy.chooseExternalResultPosition(
+                -1, -1, 10_000));
+        assertEquals(0, PlaybackResumePolicy.chooseExternalResultPosition(-1, -1, -1));
+        assertEquals(0, PlaybackResumePolicy.chooseExternalResultPosition(0, -1, 10_000));
+    }
+
+    @Test
     public void databaseResumeRequiresPriorPlayUnlessRemoteWasExplicitlyRequested() {
         assertFalse(PlaybackResumePolicy.isDatabaseResumeEligible(0, 1, 3));
         assertTrue(PlaybackResumePolicy.isDatabaseResumeEligible(1, 1, 3));
