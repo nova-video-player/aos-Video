@@ -617,7 +617,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // An external application may issue a second command for the same URI. Treat it as a
         // fresh playback (including position=0/start-over); only a service checkpoint identifies
         // Home/screensaver reattachment and is allowed to retain the live session instead.
-        if (PlaybackResumePolicy.startsNewExternalSession(sessionPosition, externalPlayerLaunch)) {
+        boolean startsNewExternalSession = PlaybackResumePolicy.startsNewExternalSession(
+                sessionPosition, externalPlayerLaunch);
+        boolean freshExternalPositionCommand = startsNewExternalSession
+                && ExternalResumeIntent.hasPositionExtra(intent);
+        if (startsNewExternalSession) {
             continuingSession = false;
         }
         if (!continuingSession) {
@@ -654,8 +658,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
         // when mVideoInfo uri is the same as intent uri -> info has already been retrieved !
         if(mVideoInfo!=null&&mVideoInfo.uri.equals(mUri)){
-            // Only override to RESUME_FROM_LAST_POS if not already set to RESUME_FROM_REMOTE_POS
-            if (mResume != RESUME_FROM_REMOTE_POS) {
+            // Reusing metadata must not turn an explicit external position=0 (or malformed
+            // position command) into a database resume for a new playback of the same URI.
+            if (PlaybackResumePolicy.shouldPromoteSameUriToLastPosition(
+                    mResume, RESUME_FROM_REMOTE_POS, freshExternalPositionCommand)) {
                 mResume = RESUME_FROM_LAST_POS;
             }
             if (log.isDebugEnabled()) log.debug("PlayerService.onStart: URI matches existing mVideoInfo, mResume={}", mResume);

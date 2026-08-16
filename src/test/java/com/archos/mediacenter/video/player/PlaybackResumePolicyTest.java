@@ -54,6 +54,13 @@ public class PlaybackResumePolicyTest {
     }
 
     @Test
+    public void externalStartOverIsNotReplacedBySameUriDatabaseResume() {
+        assertFalse(PlaybackResumePolicy.shouldPromoteSameUriToLastPosition(0, 3, true));
+        assertTrue(PlaybackResumePolicy.shouldPromoteSameUriToLastPosition(0, 3, false));
+        assertFalse(PlaybackResumePolicy.shouldPromoteSameUriToLastPosition(3, 3, false));
+    }
+
+    @Test
     public void databaseResumeRequiresPriorPlayUnlessRemoteWasExplicitlyRequested() {
         assertFalse(PlaybackResumePolicy.isDatabaseResumeEligible(0, 1, 3));
         assertTrue(PlaybackResumePolicy.isDatabaseResumeEligible(1, 1, 3));

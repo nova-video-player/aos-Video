@@ -50,6 +50,14 @@ final class PlaybackResumePolicy {
         return checkpointPosition < 0 && externalPlayerLaunch;
     }
 
+    static boolean shouldPromoteSameUriToLastPosition(int resumeMode, int remoteResumeMode,
+                                                      boolean freshExternalPositionCommand) {
+        // A supplied external position key is an explicit command even when its value is zero or
+        // malformed. In that case RESUME_NO means start over and must not be replaced by a stale
+        // database resume merely because PlayerService still has metadata for the same URI.
+        return resumeMode != remoteResumeMode && !freshExternalPositionCommand;
+    }
+
     static boolean isPausedSession(boolean userPaused, int checkpointPosition,
                                    String pausedUri, String currentUri) {
         return userPaused && checkpointPosition >= 0 && currentUri != null
