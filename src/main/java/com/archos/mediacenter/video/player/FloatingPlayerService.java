@@ -481,8 +481,9 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
             // Get the last intent which has all video data, then add the position extra
             Intent intentToUse = PlayerService.sPlayerService.getLastIntent();
-            if (mStartIntent != null && mStartIntent.hasExtra("floating_player_position")) {
-                intentToUse.putExtra("floating_player_position", mStartIntent.getIntExtra("floating_player_position", -1));
+            if (mStartIntent != null && mStartIntent.hasExtra(ExternalResumeIntent.FLOATING_POSITION)) {
+                intentToUse.putExtra(ExternalResumeIntent.FLOATING_POSITION,
+                        mStartIntent.getIntExtra(ExternalResumeIntent.FLOATING_POSITION, -1));
                 if (log.isDebugEnabled()) log.debug("addFloatingView: Added floating_player_position to intent");
                 mFloatingPlayerSize = mStartIntent.getIntExtra("floating_player_size", STARTING_WIDTH);
             }
@@ -507,11 +508,11 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
         intent.putExtra(PlayerActivity.LAUNCH_FROM_FLOATING_PLAYER, true);
 
-        // Pass current playback position from floating player
-        if (Player.sPlayer != null) {
-            int currentPos = Player.sPlayer.getCurrentPosition();
-            intent.putExtra("position", currentPos);
-            intent.removeExtra("floating_player_position");
+        // Pass the position owned by PlayerService to the new frontend.
+        if (PlayerService.sPlayerService != null) {
+            int currentPos = PlayerService.sPlayerService.getPlaybackSnapshot().getPositionMs();
+            intent.putExtra(ExternalResumeIntent.POSITION, currentPos);
+            intent.removeExtra(ExternalResumeIntent.FLOATING_POSITION);
         }
         startActivity(intent);
     }

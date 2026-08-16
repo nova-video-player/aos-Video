@@ -140,6 +140,105 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final int RESUME_FROM_REMOTE_POS = 3;
     public static final int RESUME_FROM_LOCAL_POS = 4;
     public static final String RESUME = "resume";
+    public static final String SESSION_POSITION = "player_service_session_position";
+    public static final String PREFERENCE_USER_PAUSED_VIDEO = "user_paused_video";
+    public static final String PREFERENCE_USER_PAUSED_URI = "user_paused_video_uri";
+
+    /*
+     * Resume ownership workflow:
+     * 1. PlayerService parses launch/external positions and keeps every provider as an independent
+     *    candidate (local DB, network XML, Trakt, bookmark, explicit intent and live playback).
+     * 2. PlayerActivity may ask the user which candidate to use, but only PlayerService selects
+     *    and applies the start position.
+     * 3. Before Home/screensaver teardown, PlayerService writes its live checkpoint into the
+     *    frontend intent. A recreated service restores that checkpoint before consulting the DB.
+     * 4. Pause/stop/completion persistence is captured and ordered by the service/IndexHelper;
+     *    frontends never maintain a competing runtime resume position.
+     */
+    public enum ResumeSource {
+        NONE,
+        LOCAL,
+        NETWORK,
+        TRAKT,
+        BOOKMARK,
+        EXPLICIT,
+        LIVE
+    }
+
+    public static final class PlaybackSnapshot {
+        private final int positionMs;
+        private final int durationMs;
+        private final boolean completed;
+        private final boolean paused;
+        private final ResumeSource resumeSource;
+
+        private PlaybackSnapshot(int positionMs, int durationMs, boolean completed,
+                                 boolean paused, ResumeSource resumeSource) {
+            this.positionMs = positionMs;
+            this.durationMs = durationMs;
+            this.completed = completed;
+            this.paused = paused;
+            this.resumeSource = resumeSource;
+        }
+
+        public int getPositionMs() { return positionMs; }
+        public int getDurationMs() { return durationMs; }
+        public boolean isCompleted() { return completed; }
+        public boolean isPaused() { return paused; }
+        public ResumeSource getResumeSource() { return resumeSource; }
+    }
+
+    private static final class PlaybackSession {
+        private Uri uri;
+        private final EnumMap<ResumeSource, Integer> resumeCandidates =
+                new EnumMap<>(ResumeSource.class);
+        private final EnumMap<ResumeSource, Boolean> eligibleCandidates =
+                new EnumMap<>(ResumeSource.class);
+        private ResumeSource selectedSource = ResumeSource.NONE;
+        private int selectedStartPositionMs = 0;
+        private int lastKnownPositionMs = LAST_POSITION_UNKNOWN;
+        private boolean completed;
+        private boolean startPositionApplied;
+
+        private void reset(Uri newUri) {
+            uri = newUri;
+            resumeCandidates.clear();
+            eligibleCandidates.clear();
+            selectedSource = ResumeSource.NONE;
+            selectedStartPositionMs = 0;
+            lastKnownPositionMs = LAST_POSITION_UNKNOWN;
+            completed = false;
+            startPositionApplied = false;
+        }
+
+        private void setCandidate(ResumeSource source, int positionMs) {
+            setCandidate(source, positionMs, true);
+        }
+
+        private void setCandidate(ResumeSource source, int positionMs, boolean eligible) {
+            if (positionMs > 0) {
+                resumeCandidates.put(source, positionMs);
+                eligibleCandidates.put(source, eligible);
+            } else {
+                resumeCandidates.remove(source);
+                eligibleCandidates.remove(source);
+            }
+        }
+
+        private int getCandidate(ResumeSource source) {
+            if (!Boolean.TRUE.equals(eligibleCandidates.get(source))) return 0;
+            Integer position = resumeCandidates.get(source);
+            return position != null ? position : 0;
+        }
+
+        private void select(ResumeSource source, int positionMs) {
+            selectedSource = source;
+            selectedStartPositionMs = Math.max(positionMs, 0);
+            if (positionMs >= 0) lastKnownPositionMs = positionMs;
+            completed = false;
+            startPositionApplied = false;
+        }
+    }
 
     private static final boolean PERIODIC_BOOKMARK_SAVE = false;
 
@@ -188,8 +287,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final String PREFERENCE_LAST_TIME_VIDEO_PLAYED_UTC = "last_time_video_played_utc";
 
     private boolean mNetworkBookmarksEnabled;
-    private int mLastPosition = -1;
-    private int mExplicitPosition = -1; // Position passed from intent (e.g., from floating player)
+    private final PlaybackSession mPlaybackSession = new PlaybackSession();
     private boolean mIsChangingSurface;
     private int mResume;
     private boolean firstTimeSubCalled = true;
@@ -488,34 +586,15 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mResume = intent.getIntExtra(RESUME, RESUME_NO);
         if (log.isDebugEnabled()) log.debug("PlayerService.onStart: read mResume={} from intent", mResume);
 
-        // Check if user had paused the video before - this persists in preferences
-        boolean userPausedVideo = mPreferences.getBoolean("user_paused_video", false);
-        if (log.isDebugEnabled()) log.debug("PlayerService.onStart: userPausedVideo={} from preferences", userPausedVideo);
-
-        if (userPausedVideo) {
-            // User had paused - preserve pause state
-            if (log.isDebugEnabled()) log.debug("PlayerService.onStart: user had paused video, preserving mPlayOnResume = false");
-            mPlayOnResume = false;
-        } else {
-            // New video or should play - reset to true
-            if (log.isDebugEnabled()) log.debug("PlayerService.onStart: starting/resuming video, setting mPlayOnResume = true");
-            mPlayOnResume = true;
-        }
-
-        // Reset explicit position at the start
-        mExplicitPosition = -1;
-
-        // Check if floating player is passing position when switching between players
-        if (intent.hasExtra("floating_player_position")) {
-            mExplicitPosition = intent.getIntExtra("floating_player_position", -1);
-            if (log.isDebugEnabled()) log.debug("PlayerService.onStart: Found floating_player_position={}", mExplicitPosition);
-        } else if (intent.hasExtra("position")) {
-            int position = intent.getIntExtra("position", -1);
-            if (position > 0) {
-                mExplicitPosition = position;
-                if (log.isDebugEnabled()) log.debug("PlayerService.onStart: Found position extra={}", mExplicitPosition);
-            }
-        }
+        if (log.isTraceEnabled()) log.trace("PlayerService.onStart: {}",
+                ExternalResumeIntent.describeForTrace(intent));
+        int sessionPosition = ExternalResumeIntent.readPosition(intent, SESSION_POSITION);
+        int explicitPosition = ExternalResumeIntent.readLaunchPosition(intent);
+        boolean externalPlayerLaunch = intent.getBooleanExtra(
+                ExternalResumeIntent.EXTERNAL_PLAYER_LAUNCH, false);
+        // This marker describes this command, not the reusable intent retained for frontend
+        // handoffs (Activity <-> floating player).
+        intent.removeExtra(ExternalResumeIntent.EXTERNAL_PLAYER_LAUNCH);
 
         mUri = intent.getData();
         mTorrentURL = mIntent.getStringExtra(PlayerActivity.KEY_TORRENT_URL);
@@ -523,6 +602,48 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mUri = Uri.parse(mIntent.getStringExtra(KEY_ORIGINAL_TORRENT_URL));
         }
         mUri = Uri.parse(removeFileSlashSlash(mUri.toString())); // we need to remove "file://"
+
+        boolean userPausedVideo = mPreferences.getBoolean(PREFERENCE_USER_PAUSED_VIDEO, false);
+        String pausedUri = mPreferences.getString(PREFERENCE_USER_PAUSED_URI, null);
+        // A scoped checkpoint distinguishes lifecycle recreation from a fresh launch of the
+        // same URI, so an old paused preference cannot pause a later independent playback.
+        boolean pausedSession = PlaybackResumePolicy.isPausedSession(
+                userPausedVideo, sessionPosition, pausedUri, mUri.toString());
+        mPlayOnResume = !pausedSession;
+        if (log.isDebugEnabled()) log.debug("PlayerService.onStart: pausedSession={} pausedUri={} uri={}",
+                pausedSession, pausedUri, mUri);
+
+        boolean continuingSession = Objects.equals(mPlaybackSession.uri, mUri);
+        // An external application may issue a second command for the same URI. Treat it as a
+        // fresh playback (including position=0/start-over); only a service checkpoint identifies
+        // Home/screensaver reattachment and is allowed to retain the live session instead.
+        if (PlaybackResumePolicy.startsNewExternalSession(sessionPosition, externalPlayerLaunch)) {
+            continuingSession = false;
+        }
+        if (!continuingSession) {
+            mPlaybackSession.reset(mUri);
+        }
+        PlaybackResumePolicy.StartupSource startupSource = PlaybackResumePolicy.chooseStartupSource(
+                continuingSession, sessionPosition, explicitPosition,
+                mPlaybackSession.lastKnownPositionMs);
+        switch (startupSource) {
+            case CHECKPOINT:
+                mPlaybackSession.setCandidate(ResumeSource.LIVE, sessionPosition);
+                mPlaybackSession.select(ResumeSource.LIVE, sessionPosition);
+                if (log.isDebugEnabled()) log.debug("PlayerService.onStart: restored session checkpoint={}", sessionPosition);
+                break;
+            case EXPLICIT:
+                mPlaybackSession.setCandidate(ResumeSource.EXPLICIT, explicitPosition);
+                mPlaybackSession.select(ResumeSource.EXPLICIT, explicitPosition);
+                if (log.isDebugEnabled()) log.debug("PlayerService.onStart: explicit resume position={}", explicitPosition);
+                break;
+            case RETAINED_LIVE:
+                mPlaybackSession.setCandidate(ResumeSource.LIVE, mPlaybackSession.lastKnownPositionMs);
+                mPlaybackSession.select(ResumeSource.LIVE, mPlaybackSession.lastKnownPositionMs);
+                break;
+            case NONE:
+                break;
+        }
         if (log.isDebugEnabled()) log.debug("onStart() {}", mUri);
         mStreamingUri = IntentCompat.getParcelableExtra(intent, KEY_STREAMING_URI, Uri.class);
         if(mPlayerFrontend!=null)
@@ -674,27 +795,50 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     } */ 
 
 
-    private int getLastPosition(VideoDbInfo videoInfo, int resume) {
-        int lastPosition = 0;
+    private void updateResumeCandidates(VideoDbInfo localInfo, VideoDbInfo networkInfo) {
+        if (localInfo != null) {
+            boolean eligible = PlaybackResumePolicy.isDatabaseResumeEligible(
+                    localInfo.lastTimePlayed, mResume, RESUME_FROM_REMOTE_POS);
+            mPlaybackSession.setCandidate(ResumeSource.LOCAL, localInfo.resume, eligible);
+            mPlaybackSession.setCandidate(ResumeSource.BOOKMARK, localInfo.bookmark, eligible);
+            int traktPosition = localInfo.duration > 0
+                    ? Math.abs((int) (localInfo.traktResume * (double) localInfo.duration / 100))
+                    : 0;
+            mPlaybackSession.setCandidate(ResumeSource.TRAKT, traktPosition);
+        }
+        if (networkInfo != null) {
+            boolean eligible = PlaybackResumePolicy.isDatabaseResumeEligible(
+                    networkInfo.lastTimePlayed, mResume, RESUME_FROM_REMOTE_POS);
+            mPlaybackSession.setCandidate(ResumeSource.NETWORK, networkInfo.resume, eligible);
+        }
+    }
 
-        // If an explicit position was passed from intent (e.g., from floating player), use it
-        if (mExplicitPosition > 0) {
-            if (log.isDebugEnabled()) log.debug("getLastPosition: Using explicit position={}", mExplicitPosition);
-            return mExplicitPosition;
+    public int getResumeCandidate(ResumeSource source) {
+        return mPlaybackSession.getCandidate(source);
+    }
+
+    private void selectInitialResumePosition(VideoDbInfo videoInfo, ResumeSource requestedSource) {
+        ResumeSource source = requestedSource;
+        int position = mPlaybackSession.getCandidate(source);
+
+        if (mPlaybackSession.getCandidate(ResumeSource.EXPLICIT) > 0) {
+            source = ResumeSource.EXPLICIT;
+            position = mPlaybackSession.getCandidate(source);
+        } else if (source == ResumeSource.NONE) {
+            if (mResume == RESUME_FROM_BOOKMARK) source = ResumeSource.BOOKMARK;
+            else if (mResume == RESUME_FROM_REMOTE_POS) source = ResumeSource.NETWORK;
+            else if (mResume == RESUME_FROM_LAST_POS || mResume == RESUME_FROM_LOCAL_POS) source = ResumeSource.LOCAL;
+            position = mPlaybackSession.getCandidate(source);
         }
 
-        if (resume != RESUME_NO && (videoInfo.lastTimePlayed > 0 || resume == RESUME_FROM_REMOTE_POS)) {
-            if (mResume == RESUME_FROM_LAST_POS || mResume == RESUME_FROM_REMOTE_POS || mResume ==  RESUME_FROM_LOCAL_POS) {
-                lastPosition = videoInfo.resume;
-            } else if (mResume == RESUME_FROM_BOOKMARK) {
-                lastPosition = videoInfo.bookmark;
-            }
-            if (lastPosition <= 0) {
-                return 0;
-            }
-        } else {
+        boolean videoInfoEligible = videoInfo != null
+                && PlaybackResumePolicy.isDatabaseResumeEligible(
+                        videoInfo.lastTimePlayed, mResume, RESUME_FROM_REMOTE_POS);
+        if (position <= 0 && videoInfoEligible && mResume != RESUME_NO) {
+            position = mResume == RESUME_FROM_BOOKMARK ? videoInfo.bookmark : videoInfo.resume;
         }
-        return lastPosition;
+        mPlaybackSession.select(source, Math.max(position, 0));
+        if (log.isDebugEnabled()) log.debug("selectInitialResumePosition: source={} position={}", source, position);
     }
 
     private void onDataUriOK() {
@@ -919,36 +1063,82 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
     }
 
-    /**
-     *
-     * @return player progress in milli when available
-     */
-    private int getBookmarkPosition() {
-        if (mPlayer.getDuration() != 0) {
-            /* resume a little before */
-            int position = mPlayer.getCurrentPosition();
-            return position > 3000 ? position - 1000 : 0;
-        } else {
-            return mPlayer.getRelativePosition();
+    private int captureCurrentPosition(boolean rewindForResume) {
+        int position = mPlaybackSession.lastKnownPositionMs;
+        boolean capturedFromPlayer = mPlayer != null && mPlayer.isInPlaybackState();
+        if (capturedFromPlayer) {
+            position = mPlayer.getDuration() != 0
+                    ? mPlayer.getCurrentPosition()
+                    : mPlayer.getRelativePosition();
         }
+        if (position < 0) position = 0;
+        if (capturedFromPlayer && rewindForResume && position > 3000) position -= 1000;
+        mPlaybackSession.lastKnownPositionMs = position;
+        mPlaybackSession.setCandidate(ResumeSource.LIVE, position);
+        return position;
+    }
+
+    public PlaybackSnapshot getPlaybackSnapshot() {
+        int position = captureCurrentPosition(false);
+        int duration = mVideoInfo != null ? mVideoInfo.duration : -1;
+        if (mPlayer != null && mPlayer.isInPlaybackState() && mPlayer.getDuration() > 0) {
+            duration = mPlayer.getDuration();
+        }
+        boolean paused = mPlayer != null && mPlayer.isPaused();
+        return new PlaybackSnapshot(position, duration, mPlaybackSession.completed,
+                paused, mPlaybackSession.selectedSource);
+    }
+
+    /** Store a service-owned checkpoint in a frontend intent before the service may be recreated. */
+    public void checkpointPlaybackIntent(Intent intent) {
+        if (intent == null || mPlaybackSession.uri == null || !mPlaybackSession.startPositionApplied
+                || mPlaybackSession.completed
+                || mPlayerState == PlayerState.INIT || mPlayerState == PlayerState.PREPARING) {
+            return;
+        }
+        intent.putExtra(SESSION_POSITION, captureCurrentPosition(false));
+    }
+
+    private static void clearPositionExtras(Intent intent) {
+        intent.removeExtra(SESSION_POSITION);
+        intent.removeExtra(ExternalResumeIntent.FLOATING_POSITION);
+        intent.removeExtra(ExternalResumeIntent.START_FROM);
+        intent.removeExtra(ExternalResumeIntent.POSITION);
+        intent.removeExtra(ExternalResumeIntent.RESUME_POSITION);
+    }
+
+    public int prepareRetryFromCurrentPosition() {
+        int position = captureCurrentPosition(true);
+        mPlaybackSession.select(ResumeSource.LIVE, position);
+        if (mVideoInfo != null) {
+            mVideoInfo.resume = position;
+            if (mPlayer != null && mPlayer.getDuration() > 0) mVideoInfo.duration = mPlayer.getDuration();
+        }
+        return position;
+    }
+
+    public void persistVideoInfoFromFrontend(VideoDbInfo videoInfo) {
+        if (videoInfo == null || mIndexHelper == null) return;
+        if (Objects.equals(mPlaybackSession.uri, videoInfo.uri)) {
+            int position = mPlaybackSession.completed
+                    ? LAST_POSITION_END
+                    : captureCurrentPosition(mPlayer != null && !mPlayer.isPaused());
+            videoInfo.resume = position;
+        }
+        mIndexHelper.writeVideoInfo(videoInfo, mNetworkBookmarksEnabled);
     }
 
     public void saveVideoStateIfReady(){
         if(mIndexHelper!=null) {
             if ((mPlayerState != PlayerState.INIT && mPlayerState != PlayerState.PREPARING)) {// if it has really been played at least once, otherwise it would overwrite lastresume with 0
                 if (log.isDebugEnabled()) log.debug("saveVideoStateIfReady");
-                if (mLastPosition != LAST_POSITION_END) {//if last position, we went there through "onCompletion"
-                    // If player is paused, save its exact position; otherwise update to bookmark position
-                    if (mPlayer != null && mPlayer.isPaused()) {
-                        mLastPosition = mPlayer.getCurrentPosition();
-                        if (log.isDebugEnabled()) log.debug("saveVideoStateIfReady: player paused, updated to exact position {}", mLastPosition);
-                    } else {
-                        mLastPosition = getBookmarkPosition();
-                        if (log.isDebugEnabled()) log.debug("saveVideoStateIfReady: player playing, updated to bookmark position {}", mLastPosition);
-                    }
-                }
+                int resumePosition = mPlaybackSession.completed
+                        ? LAST_POSITION_END
+                        : captureCurrentPosition(mPlayer != null && !mPlayer.isPaused());
+                if (log.isDebugEnabled()) log.debug("saveVideoStateIfReady: source={} position={} completed={}",
+                        mPlaybackSession.selectedSource, resumePosition, mPlaybackSession.completed);
                 if (mVideoInfo != null && !PrivateMode.isActive()) {
-                    mVideoInfo.resume = mLastPosition;
+                    mVideoInfo.resume = resumePosition;
                     int duration = mPlayer.getDuration();
                     if (duration > 0)
                         mVideoInfo.duration = duration;
@@ -1043,7 +1233,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (log.isDebugEnabled()) log.debug("getPlayerProgress");
         if (Player.sPlayer == null || mVideoInfo == null)
             return 0;
-        if (mLastPosition == LAST_POSITION_END)
+        if (mPlaybackSession.completed)
             return 100;
         int progress = 0;
         int position = Player.sPlayer.getCurrentPosition();
@@ -1321,6 +1511,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      * @param videoInfo
      */
     public void setVideoInfo(VideoDbInfo videoInfo){
+        setVideoInfo(videoInfo, ResumeSource.NONE);
+    }
+
+    public void setVideoInfo(VideoDbInfo videoInfo, ResumeSource resumeSource){
         if (log.isDebugEnabled()) log.debug("setVideoInfo: videoInfo.id={}, videoInfo.uri={}", (videoInfo != null ? videoInfo.id : "null"), (videoInfo != null ? videoInfo.uri : "null"));
         mVideoInfo = videoInfo;
         if (mVideoInfo != null) {
@@ -1328,7 +1522,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             CustomApplication.setLastVideoPlayedId(mVideoInfo.id);
             CustomApplication.setLastVideoPlayedUri(mVideoInfo.uri);
         }
-        mLastPosition = getLastPosition(mVideoInfo, mResume);
+        // Network metadata is a separate resume candidate; do not overwrite the local candidate
+        // when the user chooses it.
+        if (resumeSource != ResumeSource.NETWORK) updateResumeCandidates(mVideoInfo, null);
+        boolean retainedLivePosition = PlaybackResumePolicy.shouldPreserveLiveSelection(
+                resumeSource == ResumeSource.NONE,
+                mPlaybackSession.selectedSource == ResumeSource.LIVE);
+        if (resumeSource != ResumeSource.NONE
+                || (!mPlaybackSession.startPositionApplied && !retainedLivePosition)) {
+            selectInitialResumePosition(mVideoInfo, resumeSource);
+        }
         // Do not write videoInfo here to avoid race condition overwriting resume position
         // when returning quickly from screensaver (issue #1590). The lastTimePlayed will
         // be updated when the video is actually stopped via saveVideoStateIfReady().
@@ -1381,6 +1584,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onVideoDb(VideoDbInfo info, VideoDbInfo remoteInfo) {
         if(mDestroyed) //will perhaps fix some weird crashes on playstore console
             return;
+        updateResumeCandidates(info, remoteInfo);
         if(mPlayerFrontend!=null) {
             if (log.isDebugEnabled()) log.debug("onVideoDb: mPlayerFrontend.onVideoDb");
             mPlayerFrontend.onVideoDb(info, remoteInfo);
@@ -1393,10 +1597,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private void postPreparedAndVideoDb() {
         if (log.isDebugEnabled()) log.debug("postPreparedAndVideoDb");
         if(mVideoInfo!=null&&mPlayerState==PlayerState.PREPARED) {
-            if (mLastPosition == mPlayer.getDuration())
-                mLastPosition = 0;
-            if (log.isDebugEnabled()) log.debug("postPreparedAndVideoDb: seeking to position {}", mLastPosition);
-            Player.sPlayer.seekTo(mLastPosition); //mLastPosition = mVideoInfo.resume when first start of service OR position on stop when switching player
+            int startPosition = mPlaybackSession.selectedStartPositionMs;
+            if (startPosition == mPlayer.getDuration()) startPosition = 0;
+            mPlaybackSession.lastKnownPositionMs = startPosition;
+            if (log.isDebugEnabled()) log.debug("postPreparedAndVideoDb: seeking to {} position {}",
+                    mPlaybackSession.selectedSource, startPosition);
+            Player.sPlayer.seekTo(startPosition);
+            mPlaybackSession.startPositionApplied = true;
+            // Explicit intent positions are one-shot inputs. Keep the selected source for
+            // diagnostics, but do not let a later metadata refresh seek backward again.
+            mPlaybackSession.setCandidate(ResumeSource.EXPLICIT, 0);
             setAudioDelay(mAudioDelay, true);
             // no audio_speed if in passthrough
             if (log.isDebugEnabled()) log.debug("postPreparedAndVideoDb: setAudioSpeed force {}", mAudioSpeed);
@@ -1621,7 +1831,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
             updateNowPlayingState();
         }
-        mLastPosition = LAST_POSITION_END;
+        mPlaybackSession.completed = true;
         if (mNextUri != null) {
             if (log.isDebugEnabled()) log.debug("onCompletion: we have a new video {}", mNextUri);
             stopAndSaveVideoState();
@@ -1633,11 +1843,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mIntent.setData(mUri);
             mIntent.putExtra(KEY_STREAMING_URI, mStreamingUri);
             mIntent.putExtra(RESUME, RESUME_NO);
-            mIntent.putExtra("position", -1);       //Must reset the position after a playback, we dont resume next episode at same point as this one was!
+            clearPositionExtras(mIntent); // Never carry a resume point into the next playback.
             mVideoId = mNextVideoId;
             mNextUri = null;
             mNextVideoId = -1;
-            mLastPosition = 0;
+            // Repeat-single legitimately starts the same URI, but it is still a new playback.
+            mPlaybackSession.reset(null);
             onStart(mIntent);
             // onStart() cleared the flag; mark that this episode was auto-advanced into, so recap
             // auto-skip may apply (it additionally requires PLAYMODE_BINGE).

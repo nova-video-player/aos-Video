@@ -165,8 +165,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public static final int RESUME_FROM_REMOTE_POS = 3;
     public static final int RESUME_FROM_LOCAL_POS = 4;
     public static final String RESUME = "resume";
-    public static final int LAST_POSITION_UNKNOWN = -1;
-    public static final int LAST_POSITION_END = -2;
+    // Kept as API aliases for browser/database code; runtime position is owned by PlayerService.
+    public static final int LAST_POSITION_UNKNOWN = PlayerService.LAST_POSITION_UNKNOWN;
+    public static final int LAST_POSITION_END = PlayerService.LAST_POSITION_END;
 
     public static final String STARTED_VIDEO_INTENT = "archos.intent.video.started";
     public static final String STOPPED_VIDEO_INTENT = "archos.intent.video.stopped";
@@ -370,8 +371,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     // State maintained for proper onPause/OnResume behaviour.
     private boolean mResumeFromLast;
     private boolean mNetworkBookmarksEnabled;
-    private int mRemotePosition =-1;
-    private int mLastPosition;
 
     // External player result reporting
     private boolean mIsExternalPlayer = false;
@@ -1025,7 +1024,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         getIntent().putExtra(LAUNCH_FROM_FLOATING_PLAYER, false);
     }
 
-    @SuppressWarnings("deprecation") // Bundle.get(key): position extras accept Integer or Long from external apps — instanceof dispatch required; headersBundle is untyped passthrough
+    @SuppressWarnings("deprecation") // Bundle.get(key) is required for the untyped external header bundle.
     private void postOnPlayerServiceBind() {
         if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: START, mResumeFromLast={}", mResumeFromLast);
         if (!mResumeFromLast && getSharedPreferences("player", 0).getInt("lastintent", 0) == getIntent().hashCode()) {
@@ -1033,9 +1032,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
              * (when resumed from history for example)
              * NOTE: Skip this check when used as external player with position extras to respect caller's position
              */
-            boolean hasPositionExtras = getIntent().hasExtra("startfrom") ||
-                                       getIntent().hasExtra("position") ||
-                                       getIntent().hasExtra("resume_position");
+            boolean hasPositionExtras = ExternalResumeIntent.hasPositionExtra(getIntent());
             if (!(mIsExternalPlayer && hasPositionExtras)) {
                 mResumeFromLast = true;
                 if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: Set mResumeFromLast=true due to lastintent match");
@@ -1053,59 +1050,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: Retrieved mResume from intent, value={}", mResume);
             // Check for external resume position if no other resume mode is set
             if (mResume == RESUME_NO) {
-                if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: mResume==RESUME_NO, checking for position extras");
-                if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: resume from extra");
-                // Debug: dump all intent extras
-                if (log.isTraceEnabled()) {
-                    if (getIntent().getExtras() != null) {
-                        if (log.isDebugEnabled()) log.debug("Intent extras dump:");
-                        for (String key : getIntent().getExtras().keySet()) {
-                            Object value = getIntent().getExtras().get(key);
-                            String valueType = value != null ? value.getClass().getSimpleName() : "null";
-                            if (log.isDebugEnabled()) log.debug("  {} = {} ({})", key, value, valueType);
-                        }
-                    } else {
-                        if (log.isDebugEnabled()) log.debug("Intent extras: null");
-                    }
-                }
-                if (getIntent().hasExtra("startfrom")) {
-                    Object positionExtra = getIntent().getExtras().get("startfrom");
-                    if (positionExtra instanceof Integer) {
-                        mRemotePosition = (Integer) positionExtra;
-                    } else if (positionExtra instanceof Long) {
-                        mRemotePosition = ((Long) positionExtra).intValue();
-                    }
-                    if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: found startfrom extra, mRemotePosition={}", mRemotePosition);
-                } else if (getIntent().hasExtra("position")) {
-                    Object positionExtra = getIntent().getExtras().get("position");
-                    if (positionExtra instanceof Integer) {
-                        mRemotePosition = (Integer) positionExtra;
-                    } else if (positionExtra instanceof Long) {
-                        mRemotePosition = ((Long) positionExtra).intValue();
-                    }
-                    if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: found position extra, mRemotePosition={}", mRemotePosition);
-                } else if (getIntent().hasExtra("resume_position")) {
-                    Object positionExtra = getIntent().getExtras().get("resume_position");
-                    if (positionExtra instanceof Integer) {
-                        mRemotePosition = (Integer) positionExtra;
-                    } else if (positionExtra instanceof Long) {
-                        mRemotePosition = ((Long) positionExtra).intValue();
-                    }
-                    if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: found resume_position extra, mRemotePosition={}", mRemotePosition);
-                }
-                if (mRemotePosition > 0) {
+                // Presence alone is not sufficient: position=0 and malformed values historically
+                // mean "start from the beginning", not "select the remote bookmark".
+                if (ExternalResumeIntent.hasValidLaunchPosition(getIntent())) {
                     mResume = RESUME_FROM_REMOTE_POS;
                     getIntent().putExtra(RESUME, mResume);
-                    if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: set mResume=RESUME_FROM_REMOTE_POS({}) and updated intent", RESUME_FROM_REMOTE_POS);
-                    // Set the remote position in VideoDbInfo for playback
-                    if (mVideoInfo != null) {
-                        mVideoInfo.resume = mRemotePosition;
-                        if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: Set mVideoInfo.resume={}", mRemotePosition);
-                    } else {
-                        if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: mVideoInfo is null, cannot set resume position yet");
-                    }
-                } else {
-                    if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: mRemotePosition not > 0, value={}", mRemotePosition);
+                    if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: explicit position is owned by PlayerService");
                 }
             }
         }
@@ -1127,11 +1077,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         } else {
             if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: no HTTP headers in external intent");
         }
-        if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: uri={}, mExtraMap={}", getIntent().getData(), mExtraMap);
+        // Header values may contain bearer tokens; log only their names.
+        if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: uri={} headerNames={}",
+                getIntent().getData(), mExtraMap != null ? mExtraMap.keySet() : null);
 
         Intent intent = new Intent();
         intent.putExtras(getIntent());
         intent.setData(getIntent().getData());
+        // Internal marker lets the service distinguish a new external ACTION_VIEW command from
+        // a frontend handoff. It is paired with SESSION_POSITION for lifecycle reattachment.
+        intent.putExtra(ExternalResumeIntent.EXTERNAL_PLAYER_LAUNCH, mIsExternalPlayer);
 
         PlayerService.sPlayerService.switchPlayerFrontend(mPlayerListener);
         Player.sPlayer = mPlayer;
@@ -1139,6 +1094,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         if(mPermissionChecker.hasExternalPermission(this)) {
             if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: hasExternalPermission");
             PlayerService.sPlayerService.onStart(intent);
+            mUserPausedVideo = !PlayerService.sPlayerService.isPlayOnResume();
             PlayerService.sPlayerService.setIndexHelper(mIndexHelper);
             start();
         }
@@ -1200,10 +1156,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         super.onPause();
         if (log.isDebugEnabled()) log.debug("onPause");
 
-        // Update last position for external player result reporting
-        if (mIsExternalPlayer && mPlayer != null && mPlayer.isInPlaybackState()) {
-            mLastPosition = mPlayer.getCurrentPosition();
-        }
         // Clock (for leanback devices only)
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK) || isChromeOS(mContext)) {
             unregisterReceiver(mClockReceiver);
@@ -1226,20 +1178,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
         mPaused = true;
 
+        if (PlayerService.sPlayerService != null) {
+            PlayerService.sPlayerService.checkpointPlaybackIntent(getIntent());
+        }
+
         // If player is paused when activity pauses (screen off), preserve pause state
         if (mPlayer != null && mPlayer.isPaused() && PlayerService.sPlayerService != null) {
             if (log.isDebugEnabled()) log.debug("onPause (activity): player is paused, setting mPlayOnResume = false");
             PlayerService.sPlayerService.setPlayOnResume(false);
         }
 
-        //Update the playback time for proper restore when resumed.
-        if (mLastPosition != LAST_POSITION_END) {
-                mLastPosition = mPlayer.getCurrentPosition();
-                if (log.isDebugEnabled()) log.debug("onPause: player activity paused, saving exact position {}", mLastPosition);
-                Intent intent = getIntent();
-                if (intent.hasExtra("position"))
-                    intent.putExtra("position", mLastPosition);
-        }
     }
 
     @SuppressWarnings("deprecation") // onVisibleBehindCanceled: deprecated API 26, no replacement for Android TV
@@ -1255,8 +1203,15 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         super.onStop();
         if (log.isDebugEnabled()) log.debug("onStop");
 
-        // Send external player result when stopping (before onDestroy)
-        sendExternalPlayerResult();
+        // Refresh the service-owned handoff position in case playback continued behind Home.
+        if (PlayerService.sPlayerService != null) {
+            PlayerService.sPlayerService.checkpointPlaybackIntent(getIntent());
+        }
+
+        // Home and screensavers also call onStop(). They are session checkpoints, not an
+        // external-player completion, so do not publish a stale result here. Every deliberate
+        // exit goes through finish(), which reports the latest service-owned snapshot.
+        if (isFinishing()) sendExternalPlayerResult();
 
         if (mStopped)
             return;
@@ -1275,16 +1230,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         mPlayerController.hide();
 
-        if (mLastPosition != LAST_POSITION_END) {
-            // If player is paused, save exact position; otherwise save bookmark position
-            if (mPlayer.isPaused()) {
-                mLastPosition = mPlayer.getCurrentPosition();
-                if (log.isDebugEnabled()) log.debug("onStop: player paused, saving exact position {}", mLastPosition);
-            } else {
-                mLastPosition = getBookmarkPosition();
-                if (log.isDebugEnabled()) log.debug("onStop: player playing, saving bookmark position {}", mLastPosition);
-            }
-        }
         stop();
         if(PlayerService.sPlayerService !=null)
             PlayerService.sPlayerService.removePlayerFrontend(mPlayerListener, mLaunchFloatingPlayer);
@@ -1306,16 +1251,21 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     protected void onDestroy() {
         if (log.isDebugEnabled()) log.debug("onDestroy");
 
-        // Send external player result if we haven't already
-        sendExternalPlayerResult();
+        // System-driven destruction after Home/screensaver is not an external-player exit.
+        // finish() normally sends first; this guarded fallback covers framework finish paths.
+        if (isFinishing()) sendExternalPlayerResult();
 
         stopDialog();
         removeNetworkListener();
 
-        // Clear the pause state preference when activity is destroyed
-        // This ensures fresh start when opening the video again
-        mPreferences.edit().putBoolean("user_paused_video", false).apply();
-        if (log.isDebugEnabled()) log.debug("onDestroy: cleared user_paused_video preference");
+        // System/screensaver recreation must retain a user pause. A deliberate finish ends it.
+        if (isFinishing()) {
+            mPreferences.edit()
+                    .putBoolean(PlayerService.PREFERENCE_USER_PAUSED_VIDEO, false)
+                    .remove(PlayerService.PREFERENCE_USER_PAUSED_URI)
+                    .apply();
+            if (log.isDebugEnabled()) log.debug("onDestroy: cleared finished paused session");
+        }
 
         // Unregister DisplayListener to prevent memory leak
         if (mDisplayManager != null && mDisplayListener != null) {
@@ -2479,8 +2429,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public void bookmark() {
         if (mVideoInfo != null) {
             mVideoInfo.bookmark = getBookmarkPosition();
-            mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
+            persistVideoInfo();
             mPlayerController.updateBookmarkToast(mPlayer.getCurrentPosition());
+        }
+    }
+
+    private void persistVideoInfo() {
+        if (PlayerService.sPlayerService != null) {
+            PlayerService.sPlayerService.persistVideoInfoFromFrontend(mVideoInfo);
+        } else if (mIndexHelper != null && mVideoInfo != null) {
+            mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
         }
     }
 
@@ -2629,10 +2587,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     displayFloatingWindowPermissionDialog();
                 else {
                     Intent floatingIntent = new Intent(this, FloatingPlayerService.class);
-                    // Pass current playback position to floating player
-                    if (mPlayer != null) {
-                        int currentPos = mPlayer.getCurrentPosition();
-                        floatingIntent.putExtra("floating_player_position", currentPos);
+                    // Pass a service-owned snapshot to the new frontend.
+                    if (PlayerService.sPlayerService != null) {
+                        int currentPos = PlayerService.sPlayerService.getPlaybackSnapshot().getPositionMs();
+                        floatingIntent.putExtra(ExternalResumeIntent.FLOATING_POSITION, currentPos);
                         floatingIntent.putExtra("floating_player_size", mPlayerController.floatingPlayerSize);            //FLOATING PLAYER SIZE
                     }
                     startService(floatingIntent);
@@ -2645,7 +2603,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             case MENU_BOOKMARK_ID:
                 if (mVideoInfo != null) {
                     mVideoInfo.bookmark = getBookmarkPosition();
-                    mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
+                    persistVideoInfo();
                     mPlayerController.updateBookmarkToast(mPlayer.getCurrentPosition());
                 }
                 return true;
@@ -3185,19 +3143,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             postOnPlayerServiceBind();
     }
 
-    private int getLastPosition(VideoDbInfo videoInfo, int resume) {
-        int lastPosition = 0;
-        if (resume != RESUME_NO && (videoInfo.lastTimePlayed > 0 || resume == RESUME_FROM_REMOTE_POS)) {
-            if (mResume == RESUME_FROM_LAST_POS || mResume == RESUME_FROM_REMOTE_POS || mResume ==  RESUME_FROM_LOCAL_POS)
-                lastPosition = videoInfo.resume;
-            else if (mResume == RESUME_FROM_BOOKMARK)
-                lastPosition = videoInfo.bookmark;
-            if (lastPosition <= 0)
-                return 0;
-        }
-        return lastPosition;
-    }
-
     private final static String SHOW_FORMAT = "%s  -  S%02dE%02d  -  %s";
 
     public void setVideoInfo(VideoDbInfo info){
@@ -3214,10 +3159,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mUri = mVideoInfo.uri;
             if (log.isDebugEnabled()) log.debug("setVideoInfo mVideoId: {}", mVideoId);
 
-            applyRemotePositionIfNeeded();
-
-            // get resume position only if video was played
-            mLastPosition = getLastPosition(mVideoInfo, mResume);
             if (!mCling && !TextUtils.isEmpty(mVideoInfo.title)) {
                 mTitle = mVideoInfo.title;
             }
@@ -3323,40 +3264,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public void onVideoDb(final VideoDbInfo localVideoInfo, final VideoDbInfo remoteVideoInfo) {
     }
 
-    public void showTraktResumeDialog(final int localTraktPosition, VideoDbInfo localVideoInfo) {
-        mVideoInfo = localVideoInfo;
-
-        applyRemotePositionIfNeeded();
-
-        if(PlayerService.sPlayerService!=null){
-            PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
+    private void selectVideoInfo(VideoDbInfo videoInfo, PlayerService.ResumeSource resumeSource) {
+        mVideoInfo = videoInfo;
+        if (PlayerService.sPlayerService != null) {
+            PlayerService.sPlayerService.setVideoInfo(mVideoInfo, resumeSource);
             PlayerService.sPlayerService.requestIndexAndScrap();
         }
-    	// if we want to display a dialog for trakt resume, uncomment this
-    	/* if (log.isDebugEnabled()) log.debug("onVideoDb: trakt: into dialog");
-    	if(localTraktPosition>0&&
-        		(localTraktPosition<localVideoInfo.resume-60000||localTraktPosition>localVideoInfo.resume+60000)){
-    		if (log.isDebugEnabled()) log.debug("onVideoDb: trakt: showing dialog");
-        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.use_trakt_resume)
-            .setCancelable(false)
-            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    mVideoInfo.resume = localTraktPosition;
-                    postStart();
-                }
-            })
-            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            
-                            postStart();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
-    	else */
-        if (log.isDebugEnabled()) log.debug("showTraktResumeDialog: call setVideoInfo");
         setVideoInfo(mVideoInfo);
     }
 
@@ -3387,7 +3300,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             return;
         }
 
-        mLastPosition = intent.getIntExtra("position", -1);
         mShowingDialogId = DIALOG_NO;
         if (mForceAudioTrack != -1) {
             mVideoInfo.audioTrack = mForceAudioTrack;
@@ -3647,7 +3559,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mPlayer.setSubtitleDelay(mVideoInfo.subtitleDelay);
             mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
             // Save the subtitle delay and ratio to the database for persistence across resume
-            mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
+            persistVideoInfo();
             if (log.isDebugEnabled()) log.debug("onDelayChange: saved subtitleDelay={} subtitleRatio={} to database", mVideoInfo.subtitleDelay, mVideoInfo.subtitleRatio);
         }
     }
@@ -3901,7 +3813,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (ret) {
                     mVideoInfo.audioTrack = position;
                     // Save the audio track selection to the database for persistence across resume
-                    mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
+                    persistVideoInfo();
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: saved audioTrack {} to database", mVideoInfo.audioTrack);
                 }
             } else if (at == null || !at.supported){
@@ -3935,7 +3847,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                     setSubtitleVpos("onTrackSelected");
                     // Save the subtitle track selection to the database for persistence across resume
-                    mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
+                    persistVideoInfo();
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: saved subtitleTrack {} to database", mVideoInfo.subtitleTrack);
                 } else {
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: player failed to get to subtitletrack {}", positionToSubtitleTrack(position, mVideoInfo.nbSubtitles));
@@ -4074,10 +3986,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
 
                 // Check if we have external player indicators
-                boolean hasExternalIndicators = returnResult ||
-                        intent.hasExtra("position") ||
-                        intent.hasExtra("resume_position") ||
-                        intent.hasExtra("startfrom");
+                boolean hasExternalIndicators = returnResult
+                        || ExternalResumeIntent.hasPositionExtra(intent);
 
                 // Detect external player mode if:
                 // 1. We have a calling package that's different from Nova, OR
@@ -4102,14 +4012,23 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         resultIntent.setAction("com.mxtech.intent.result.VIEW");
 
         // Get current position - use last known position or current player position
-        int currentPosition = mLastPosition;
-        if (mPlayer != null && mPlayer.isInPlaybackState()) {
+        PlayerService.PlaybackSnapshot snapshot = PlayerService.sPlayerService != null
+                ? PlayerService.sPlayerService.getPlaybackSnapshot()
+                : null;
+        int currentPosition;
+        if (snapshot != null) {
+            currentPosition = snapshot.getPositionMs();
+        } else if (mPlayer != null && mPlayer.isInPlaybackState()) {
             currentPosition = mPlayer.getCurrentPosition();
+        } else {
+            currentPosition = 0;
         }
 
         // Get duration
         int duration = -1;
-        if (mVideoInfo != null && mVideoInfo.duration > 0) {
+        if (snapshot != null && snapshot.getDurationMs() > 0) {
+            duration = snapshot.getDurationMs();
+        } else if (mVideoInfo != null && mVideoInfo.duration > 0) {
             duration = mVideoInfo.duration;
         } else if (mPlayer != null && mPlayer.isInPlaybackState()) {
             duration = mPlayer.getDuration();
@@ -4202,9 +4121,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     /* If we get a corrupted file error, if the file is from the network,
                      * and if we are still connected, try to reopen the video one time.
                      */
-                    mVideoInfo.resume = mLastPosition = getBookmarkPosition();
-                    mVideoInfo.duration = mPlayer.getDuration();
-                    if (mLastPosition != 0) {
+                    int retryPosition = PlayerService.sPlayerService != null
+                            ? PlayerService.sPlayerService.prepareRetryFromCurrentPosition()
+                            : getBookmarkPosition();
+                    if (PlayerService.sPlayerService == null) {
+                        mVideoInfo.resume = retryPosition;
+                        mVideoInfo.duration = mPlayer.getDuration();
+                    }
+                    if (retryPosition != 0) {
                         mNetworkFailed = true;
                         stop();
                         mResumeFromLast = true;
@@ -4213,7 +4137,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                 }
             }
-            mLastPosition = LAST_POSITION_UNKNOWN;
             stop();
             mErrorCode = errorCode;
             mErrorQualCode = errorQualCode;
@@ -4258,7 +4181,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mUserPausedVideo = false;
                 PlayerService.sPlayerService.setPlayOnResume(true);
                 // Clear the pause state preference
-                mPreferences.edit().putBoolean("user_paused_video", false).apply();
+                mPreferences.edit()
+                        .putBoolean(PlayerService.PREFERENCE_USER_PAUSED_VIDEO, false)
+                        .remove(PlayerService.PREFERENCE_USER_PAUSED_URI)
+                        .apply();
             }
         }
         public void onFirstPlay() {
@@ -4280,7 +4206,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mUserPausedVideo = true;
                 PlayerService.sPlayerService.setPlayOnResume(false);
                 // Save pause state to preferences to survive activity recreation
-                mPreferences.edit().putBoolean("user_paused_video", true).apply();
+                mPreferences.edit()
+                        .putBoolean(PlayerService.PREFERENCE_USER_PAUSED_VIDEO, true)
+                        .putString(PlayerService.PREFERENCE_USER_PAUSED_URI,
+                                mUri != null ? mUri.toString() : null)
+                        .apply();
             }
         }
 
@@ -4456,39 +4386,32 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     } else fileHasAlreadyPlayed = true;
                 }
             } else fileHasAlreadyPlayed = false;
-            if (localVideoInfo != null) {
-                final int localTraktPosition = Math.abs(localVideoInfo.duration>0 ? (int)(localVideoInfo.traktResume * (double) localVideoInfo.duration / 100) : 0);
-                log.info("onVideoDb: trakt calc: "+ localTraktPosition+ " local "+ localVideoInfo.resume);
+            if (localVideoInfo != null && PlayerService.sPlayerService != null) {
+                int explicitPosition = PlayerService.sPlayerService.getResumeCandidate(PlayerService.ResumeSource.EXPLICIT);
+                if (explicitPosition > 0) {
+                    selectVideoInfo(localVideoInfo, PlayerService.ResumeSource.EXPLICIT);
+                    return;
+                }
 
-                if (localVideoInfo != null && remoteVideoInfo != null && mResume != RESUME_NO&& mResume !=  RESUME_FROM_LOCAL_POS) {
+                if (remoteVideoInfo != null && mResume != RESUME_NO && mResume != RESUME_FROM_LOCAL_POS) {
                     if (log.isDebugEnabled()) log.debug("hasRemoteVideoInfo");
                     // Don't show resume dialog if user explicitly paused the video
                     // Use mUserPausedVideo flag which is set by onPause listener and cleared by onPlay
                     if (log.isDebugEnabled()) log.debug("onVideoDb: mUserPausedVideo={}", mUserPausedVideo);
 
                     if (!mUserPausedVideo) {
-                        int localLastPosition = getLastPosition(localVideoInfo, mResume);
-                        int remoteLastPosition = getLastPosition(remoteVideoInfo, mResume);
+                        int localLastPosition = PlayerService.sPlayerService.getResumeCandidate(PlayerService.ResumeSource.LOCAL);
+                        int remoteLastPosition = PlayerService.sPlayerService.getResumeCandidate(PlayerService.ResumeSource.NETWORK);
 
                         if (localLastPosition != remoteLastPosition && remoteLastPosition > 0) {
                             //do not display dialog if remote position is the only available
                             if (localLastPosition <= 0) {
                                 if (log.isDebugEnabled()) log.debug("use remoteVideoInfo");
-                                showTraktResumeDialog(localTraktPosition,remoteVideoInfo);
+                                selectVideoInfo(remoteVideoInfo, PlayerService.ResumeSource.NETWORK);
 
                             } else {
                                 if(mResume ==  RESUME_FROM_REMOTE_POS){ //use only remote
-                                    mVideoInfo = remoteVideoInfo;
-                                    // Apply remote position BEFORE calling PlayerService.setVideoInfo()
-                                    if (mRemotePosition > 0) {
-                                        mVideoInfo.resume = mRemotePosition;
-                                    }
-                                    if(PlayerService.sPlayerService!=null){
-                                        PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
-                                        PlayerService.sPlayerService.requestIndexAndScrap();
-                                    }
-                                    if (log.isDebugEnabled()) log.debug("onVideoDb: call setVideoInfo");
-                                    setVideoInfo(mVideoInfo);
+                                    selectVideoInfo(remoteVideoInfo, PlayerService.ResumeSource.NETWORK);
                                 }
                                 else {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(PlayerActivity.this);
@@ -4496,19 +4419,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                                             .setCancelable(false)
                                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
-                                                    mVideoInfo = remoteVideoInfo;
-                                                    applyRemotePositionIfNeeded();
-                                                    if(PlayerService.sPlayerService!=null){
-                                                        PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
-                                                        PlayerService.sPlayerService.requestIndexAndScrap();
-                                                    }
-                                                    if (log.isDebugEnabled()) log.debug("onVideoDb: call setVideoInfo");
-                                                    setVideoInfo(mVideoInfo);
+                                                    selectVideoInfo(remoteVideoInfo, PlayerService.ResumeSource.NETWORK);
                                                 }
                                             })
                                             .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
-                                                    showTraktResumeDialog(localTraktPosition, localVideoInfo);
+                                                    selectVideoInfo(localVideoInfo, PlayerService.ResumeSource.LOCAL);
                                                 }
                                     });
                                     AlertDialog alert = builder.create();
@@ -4522,21 +4438,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         if (log.isDebugEnabled()) log.debug("onVideoDb: player is paused, skipping resume dialog");
                     }
                 }
-                //	showTraktResumeDialog(localTraktPosition,localVideoInfo);
-                //return ;
             }
 
             // this provides the video info to the player based on localVideoInfo (keeping subtrack etc...)
             if (log.isDebugEnabled()) log.debug("onVideoDb: call setVideoInfo for playerActivity and playerService");
-            mVideoInfo = localVideoInfo;
-
-            applyRemotePositionIfNeeded();
-
-            if(PlayerService.sPlayerService!=null){
-                PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
-                PlayerService.sPlayerService.requestIndexAndScrap();
-            }
-            setVideoInfo(mVideoInfo);
+            selectVideoInfo(localVideoInfo, PlayerService.ResumeSource.NONE);
         }
 
         @Override
@@ -4604,17 +4510,4 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public static int getScreenWidth() { return mScreenWidth; }
     public static int getScreenHeight() { return mScreenHeight; }
 
-    /**
-     * Apply remote position to VideoDbInfo if we're in remote resume mode
-     */
-    private void applyRemotePositionIfNeeded() {
-        if (log.isDebugEnabled()) log.debug("applyRemotePositionIfNeeded: mResume={}, mRemotePosition={}, mVideoInfo={}", mResume, mRemotePosition, mVideoInfo != null ? "not null" : "null");
-        if (mResume == RESUME_FROM_REMOTE_POS && mRemotePosition > 0 && mVideoInfo != null) {
-            mVideoInfo.resume = mRemotePosition;
-            if (log.isDebugEnabled()) log.debug("applyRemotePositionIfNeeded: Applied mRemotePosition={} to mVideoInfo.resume", mRemotePosition);
-        } else {
-            if (log.isDebugEnabled()) log.debug("applyRemotePositionIfNeeded: Conditions not met. mResume==RESUME_FROM_REMOTE_POS? {}, mRemotePosition>0? {}, mVideoInfo!=null? {}",
-                    mResume == RESUME_FROM_REMOTE_POS, mRemotePosition > 0, mVideoInfo != null);
-        }
-    }
 }
