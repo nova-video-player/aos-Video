@@ -938,12 +938,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if ((mPlayerState != PlayerState.INIT && mPlayerState != PlayerState.PREPARING)) {// if it has really been played at least once, otherwise it would overwrite lastresume with 0
                 if (log.isDebugEnabled()) log.debug("saveVideoStateIfReady");
                 if (mLastPosition != LAST_POSITION_END) {//if last position, we went there through "onCompletion"
-                    // If player is paused, keep exact position; otherwise update to bookmark position
-                    if (mPlayer != null && !mPlayer.isPaused()) {
+                    // If player is paused, save its exact position; otherwise update to bookmark position
+                    if (mPlayer != null && mPlayer.isPaused()) {
+                        mLastPosition = mPlayer.getCurrentPosition();
+                        if (log.isDebugEnabled()) log.debug("saveVideoStateIfReady: player paused, updated to exact position {}", mLastPosition);
+                    } else {
                         mLastPosition = getBookmarkPosition();
                         if (log.isDebugEnabled()) log.debug("saveVideoStateIfReady: player playing, updated to bookmark position {}", mLastPosition);
-                    } else {
-                        if (log.isDebugEnabled()) log.debug("saveVideoStateIfReady: player paused, keeping exact position {}", mLastPosition);
                     }
                 }
                 if (mVideoInfo != null && !PrivateMode.isActive()) {
