@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<included>
+    <!--
+      This file is created once and is never overwritten. Logger overrides
+      added here are reloaded automatically. Example:
+
+      <logger name="com.archos.mediacenter.video.player.Player" level="DEBUG"/>
+    -->
+</included>

@@ -91,9 +91,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.beans.PropertyChangeListener;
-import java.net.URL;
 import java.security.Provider;
 import java.security.Security;
 import java.util.Arrays;
@@ -109,7 +110,9 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
 
     private static final String LOGBACK_DIR_PROPERTY = "nova.logback.dir";
     private static final String LOGBACK_BOOTSTRAP_CONFIG = "logback.xml";
-    private static final String LOGBACK_FULL_CONFIG = "logback-full.xml";
+    private static final String LOGBACK_FULL_CONFIG_FILE = "logback-full.xml";
+    private static final String LOGBACK_USER_CONFIG_FILE = "logback.xml";
+    private static final String LOGBACK_CONFIG_CACHE_DIR = "logback-config";
 
     private static Logger log = null;
 
@@ -809,11 +812,19 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 }
 
                 File logDirectory = new File(externalFilesDir, "logback");
+                if (!logDirectory.isDirectory() && !logDirectory.mkdirs()) {
+                    throw new IOException("Could not create logging directory: " + logDirectory);
+                }
+                ensureUserLoggingConfiguration(logDirectory);
                 System.setProperty(LOGBACK_DIR_PROPERTY, logDirectory.getAbsolutePath());
 
                 loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
                 synchronized (loggerContext) {
-                    configureLogging(loggerContext, LOGBACK_FULL_CONFIG);
+                    File configurationFile = new File(
+                            new File(getCacheDir(), LOGBACK_CONFIG_CACHE_DIR),
+                            LOGBACK_FULL_CONFIG_FILE);
+                    copyRawResource(R.raw.logback_full, configurationFile);
+                    configureLogging(loggerContext, configurationFile);
                 }
             } catch (Exception e) {
                 Log.e("CustomApplication", "Could not enable full logging; restoring Logcat-only logging", e);
@@ -824,16 +835,44 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         loggingInitThread.start();
     }
 
-    private void configureLogging(LoggerContext loggerContext, String assetName) throws IOException, JoranException {
-        URL configurationUrl = getClassLoader().getResource("assets/" + assetName);
-        if (configurationUrl == null) {
-            throw new IOException("Missing logging configuration asset: " + assetName);
+    private void ensureUserLoggingConfiguration(File logDirectory) throws IOException {
+        File userConfiguration = new File(logDirectory, LOGBACK_USER_CONFIG_FILE);
+        if (!userConfiguration.exists()) {
+            copyRawResource(R.raw.logback_user, userConfiguration);
         }
+    }
 
+    private void copyRawResource(int resourceId, File destination) throws IOException {
+        File parent = destination.getParentFile();
+        if (parent == null || (!parent.isDirectory() && !parent.mkdirs())) {
+            throw new IOException("Could not create logging configuration directory: " + parent);
+        }
+        try (InputStream input = getResources().openRawResource(resourceId);
+             FileOutputStream output = new FileOutputStream(destination)) {
+            byte[] buffer = new byte[8192];
+            int count;
+            while ((count = input.read(buffer)) != -1) {
+                output.write(buffer, 0, count);
+            }
+        }
+    }
+
+    private void configureLogging(LoggerContext loggerContext, File configurationFile)
+            throws JoranException {
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(loggerContext);
         loggerContext.reset();
-        configurator.doConfigure(configurationUrl);
+        configurator.doConfigure(configurationFile);
+    }
+
+    private void configureBootstrapLogging(LoggerContext loggerContext)
+            throws IOException, JoranException {
+        try (InputStream input = getAssets().open(LOGBACK_BOOTSTRAP_CONFIG)) {
+            JoranConfigurator configurator = new JoranConfigurator();
+            configurator.setContext(loggerContext);
+            loggerContext.reset();
+            configurator.doConfigure(input);
+        }
     }
 
     private void restoreBootstrapLogging(LoggerContext loggerContext) {
@@ -842,7 +881,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         }
         synchronized (loggerContext) {
             try {
-                configureLogging(loggerContext, LOGBACK_BOOTSTRAP_CONFIG);
+                configureBootstrapLogging(loggerContext);
             } catch (Exception fallbackError) {
                 Log.e("CustomApplication", "Could not restore Logcat-only logging", fallbackError);
             }
