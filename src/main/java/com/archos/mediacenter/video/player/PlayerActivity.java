@@ -1476,15 +1476,22 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         if (log.isDebugEnabled()) log.debug("CONFIG setOrientationFromPreference: {}", orientation);
         switch (orientation) {
             case "portrait":
+                resetRotationLockState();
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
                 break;
             case "landscape":
+                resetRotationLockState();
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                 break;
             default:
                 setLockRotation(mLockRotation);
                 break;
         }
+    }
+
+    private void resetRotationLockState() {
+        mIsRotationLocked = false;
+        mLockedRotation = Surface.ROTATION_0;
     }
 
     @SuppressWarnings("deprecation") // getDefaultDisplay: API 30+ uses getDisplay()
@@ -2625,6 +2632,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mBookmarkMenuItem.setVisible(canSetBookmark());
         if (menu.findItem(MENU_S3D_ID) != null)
             menu.findItem(MENU_S3D_ID).setVisible(isStereoEffectOn());
+        if (menu.findItem(MENU_LOCK_ROTATION_ID) != null) {
+            menu.findItem(MENU_LOCK_ROTATION_ID).setVisible("auto".equals(mPreferences.getString(KEY_VIDEO_ORIENTATION, "auto")));
+        }
         if (menu.findItem(MENU_SPATIALIZATION_ID) != null) {
             menu.findItem(MENU_SPATIALIZATION_ID).setChecked(isSpatializationEnabledForPlayback());
             menu.findItem(MENU_SPATIALIZATION_ID).setEnabled(isSpatializationToggleAvailable());

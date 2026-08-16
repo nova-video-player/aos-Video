@@ -191,9 +191,10 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
                 filterGroup((PreferenceGroup) child, q);
                 anyVisible |= child.isVisible();
             } else {
-                boolean childVisible = matchesQuery(child, q);
-                child.setVisible(childVisible);
-                anyVisible |= childVisible;
+                Boolean originalVisible = mOriginalVisibility.get(child);
+                boolean visible = matchesQuery(child, q) && (originalVisible == null || originalVisible);
+                child.setVisible(visible);
+                anyVisible |= visible;
             }
         }
         group.setVisible(anyVisible);
