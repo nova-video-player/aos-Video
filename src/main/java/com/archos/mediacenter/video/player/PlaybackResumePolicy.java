@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.player;
 
+import java.util.Objects;
+
 /** Pure resume decisions kept outside Android lifecycle code so regressions can be unit tested. */
 final class PlaybackResumePolicy {
 
@@ -48,6 +50,18 @@ final class PlaybackResumePolicy {
         // A lifecycle reattachment carries the service checkpoint. Without it, an external
         // ACTION_VIEW is a new command even when it happens to target the same URI.
         return checkpointPosition < 0 && externalPlayerLaunch;
+    }
+
+    static boolean isContinuingLaunch(boolean sameUri, String currentGeneration,
+                                      String incomingGeneration) {
+        return sameUri && Objects.equals(currentGeneration, incomingGeneration);
+    }
+
+    static boolean mayRestoreCheckpoint(boolean hasCurrentSession, String currentGeneration,
+                                        String incomingGeneration) {
+        // With no in-memory session (for example after service recreation), the checkpoint is
+        // the continuity proof. While another session is active, only its generation may restore.
+        return !hasCurrentSession || Objects.equals(currentGeneration, incomingGeneration);
     }
 
     static boolean shouldPromoteSameUriToLastPosition(int resumeMode, int remoteResumeMode,

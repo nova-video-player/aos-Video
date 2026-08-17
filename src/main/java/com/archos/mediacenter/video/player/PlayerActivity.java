@@ -150,6 +150,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.archos.environment.ArchosFeatures.isChromeOS;
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
@@ -661,6 +662,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
         );
         mContext = this;
+
+        ensureLaunchGeneration(getIntent());
 
         // Detect if we're being used as an external player
         detectExternalPlayerMode();
@@ -1488,12 +1491,20 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     @Override
     protected void onNewIntent(Intent intent) {
         if (log.isDebugEnabled()) log.debug("onNewIntent: {}", intent);
+        ensureLaunchGeneration(intent);
         setIntent(intent);
         if(mWasInPictureInPicture) {
             if (PlayerService.sPlayerService != null) {
                 PlayerService.sPlayerService.stopAndSaveVideoState();
                 postOnPlayerServiceBind();
             }
+        }
+    }
+
+    /** Assign once per command; lifecycle recreation and floating-player handoffs retain it. */
+    private static void ensureLaunchGeneration(Intent intent) {
+        if (intent != null && !intent.hasExtra(PlayerService.LAUNCH_GENERATION)) {
+            intent.putExtra(PlayerService.LAUNCH_GENERATION, UUID.randomUUID().toString());
         }
     }
 

@@ -85,6 +85,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
@@ -140,6 +141,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final int RESUME_FROM_REMOTE_POS = 3;
     public static final int RESUME_FROM_LOCAL_POS = 4;
     public static final String RESUME = "resume";
+    public static final String LAUNCH_GENERATION = "player_service_launch_generation";
     public static final String SESSION_POSITION = "player_service_session_position";
     public static final String PREFERENCE_USER_PAUSED_VIDEO = "user_paused_video";
     public static final String PREFERENCE_USER_PAUSED_URI = "user_paused_video_uri";
@@ -190,6 +192,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     private static final class PlaybackSession {
         private Uri uri;
+        private String launchGeneration;
         private final EnumMap<ResumeSource, Integer> resumeCandidates =
                 new EnumMap<>(ResumeSource.class);
         private final EnumMap<ResumeSource, Boolean> eligibleCandidates =
@@ -200,8 +203,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         private boolean completed;
         private boolean startPositionApplied;
 
-        private void reset(Uri newUri) {
+        private void reset(Uri newUri, String newLaunchGeneration) {
             uri = newUri;
+            launchGeneration = newLaunchGeneration;
             resumeCandidates.clear();
             eligibleCandidates.clear();
             selectedSource = ResumeSource.NONE;
@@ -590,6 +594,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 ExternalResumeIntent.describeForTrace(intent));
         int sessionPosition = ExternalResumeIntent.readPosition(intent, SESSION_POSITION);
         int explicitPosition = ExternalResumeIntent.readLaunchPosition(intent);
+        String launchGeneration = intent.getStringExtra(LAUNCH_GENERATION);
         boolean externalPlayerLaunch = intent.getBooleanExtra(
                 ExternalResumeIntent.EXTERNAL_PLAYER_LAUNCH, false);
         // This marker describes this command, not the reusable intent retained for frontend
@@ -603,6 +608,14 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
         mUri = Uri.parse(removeFileSlashSlash(mUri.toString())); // we need to remove "file://"
 
+        boolean hasCurrentSession = mPlaybackSession.uri != null;
+        if (!PlaybackResumePolicy.mayRestoreCheckpoint(hasCurrentSession,
+                mPlaybackSession.launchGeneration, launchGeneration)) {
+            // A checkpoint from an older Activity must not override a newer command which has
+            // already taken ownership of the service, even when both commands use the same URI.
+            sessionPosition = LAST_POSITION_UNKNOWN;
+        }
+
         boolean userPausedVideo = mPreferences.getBoolean(PREFERENCE_USER_PAUSED_VIDEO, false);
         String pausedUri = mPreferences.getString(PREFERENCE_USER_PAUSED_URI, null);
         // A scoped checkpoint distinguishes lifecycle recreation from a fresh launch of the
@@ -613,7 +626,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (log.isDebugEnabled()) log.debug("PlayerService.onStart: pausedSession={} pausedUri={} uri={}",
                 pausedSession, pausedUri, mUri);
 
-        boolean continuingSession = Objects.equals(mPlaybackSession.uri, mUri);
+        boolean continuingSession = PlaybackResumePolicy.isContinuingLaunch(
+                Objects.equals(mPlaybackSession.uri, mUri),
+                mPlaybackSession.launchGeneration, launchGeneration);
         // An external application may issue a second command for the same URI. Treat it as a
         // fresh playback (including position=0/start-over); only a service checkpoint identifies
         // Home/screensaver reattachment and is allowed to retain the live session instead.
@@ -625,7 +640,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             continuingSession = false;
         }
         if (!continuingSession) {
-            mPlaybackSession.reset(mUri);
+            mPlaybackSession.reset(mUri, launchGeneration);
         }
         PlaybackResumePolicy.StartupSource startupSource = PlaybackResumePolicy.chooseStartupSource(
                 continuingSession, sessionPosition, explicitPosition,
@@ -1103,6 +1118,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             return;
         }
         intent.putExtra(SESSION_POSITION, captureCurrentPosition(false));
+        if (mPlaybackSession.launchGeneration != null) {
+            intent.putExtra(LAUNCH_GENERATION, mPlaybackSession.launchGeneration);
+        }
     }
 
     private static void clearPositionExtras(Intent intent) {
@@ -1850,11 +1868,14 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mIntent.putExtra(KEY_STREAMING_URI, mStreamingUri);
             mIntent.putExtra(RESUME, RESUME_NO);
             clearPositionExtras(mIntent); // Never carry a resume point into the next playback.
+            // Auto-next and repeat are new playback sessions too. Rotate the generation so a
+            // delayed checkpoint from the completed item cannot reattach to the new session.
+            mIntent.putExtra(LAUNCH_GENERATION, UUID.randomUUID().toString());
             mVideoId = mNextVideoId;
             mNextUri = null;
             mNextVideoId = -1;
             // Repeat-single legitimately starts the same URI, but it is still a new playback.
-            mPlaybackSession.reset(null);
+            mPlaybackSession.reset(null, null);
             onStart(mIntent);
             // onStart() cleared the flag; mark that this episode was auto-advanced into, so recap
             // auto-skip may apply (it additionally requires PLAYMODE_BINGE).

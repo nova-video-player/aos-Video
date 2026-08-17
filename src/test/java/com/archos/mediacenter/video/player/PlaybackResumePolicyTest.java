@@ -54,6 +54,18 @@ public class PlaybackResumePolicyTest {
     }
 
     @Test
+    public void launchGenerationDistinguishesSameUriCommandFromReattachment() {
+        assertTrue(PlaybackResumePolicy.isContinuingLaunch(true, "launch-a", "launch-a"));
+        assertFalse(PlaybackResumePolicy.isContinuingLaunch(true, "launch-a", "launch-b"));
+        assertFalse(PlaybackResumePolicy.isContinuingLaunch(false, "launch-a", "launch-a"));
+        assertTrue(PlaybackResumePolicy.isContinuingLaunch(true, null, null));
+
+        assertTrue(PlaybackResumePolicy.mayRestoreCheckpoint(false, null, "launch-a"));
+        assertTrue(PlaybackResumePolicy.mayRestoreCheckpoint(true, "launch-a", "launch-a"));
+        assertFalse(PlaybackResumePolicy.mayRestoreCheckpoint(true, "launch-b", "launch-a"));
+    }
+
+    @Test
     public void externalStartOverIsNotReplacedBySameUriDatabaseResume() {
         assertFalse(PlaybackResumePolicy.shouldPromoteSameUriToLastPosition(0, 3, true));
         assertTrue(PlaybackResumePolicy.shouldPromoteSameUriToLastPosition(0, 3, false));
