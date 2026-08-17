@@ -1831,16 +1831,19 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
     //this will be sent by activity
     public boolean onTouch(MotionEvent event){
+        if (event == null) return false;
         if (isTVMenuDisplayed) mLastTouchEventTime = event.getEventTime();
         return false;
     }
 
     public boolean onTouch(View v, MotionEvent event) {
+        if (event == null) return false;
         return gestureDetector.onTouchEvent(event);
     }
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
+        if (event == null) return false;
         if (log.isDebugEnabled()) log.debug("onSingleTapConfirmed");
         if (isTVMenuDisplayed) mLastTouchEventTime = event.getEventTime();
         if(mControllerViewLeft!=null){
@@ -1959,6 +1962,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     public boolean onSingleTapUp(MotionEvent e) { return false; }
 
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        if (e1 == null || e2 == null) return false;
 
         if(mIsLocked){
             showUnlockInstructions(true);
