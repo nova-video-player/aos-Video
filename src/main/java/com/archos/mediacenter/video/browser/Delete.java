@@ -97,37 +97,38 @@ public class Delete {
             // sometimes we will want to delete parent folder, when empty or only filled with little files like subtitles or nfo
             // then, ask the user
             if (mListener != null) {
+                new Thread(() -> {
+                    if (isLocal(fileUri)) { // record if this is a directory being deleted for later
+                        if (log.isDebugEnabled()) log.debug("deleteOK: locale file/folder trying to delete if directory");
+                        LocalStorageFileEditor editor = new LocalStorageFileEditor(fileUri, mContext);
+                        editor.deleteDir(fileUri);
+                    }
 
-                if (isLocal(fileUri)) { // record if this is a directory being deleted for later
-                    if (log.isDebugEnabled()) log.debug("deleteOK: locale file/folder trying to delete if directory");
-                    LocalStorageFileEditor editor = new LocalStorageFileEditor(fileUri, mContext);
-                    editor.deleteDir(fileUri);
-                }
-
-                if (isLocal(fileUri) &&
-                        !LocalStorageFileEditor.checkIfShouldNotTouchFolder(FileUtils.getParentUrl(fileUri))) {
-                    long shouldIDelete = getFolderSizeAndStopOnMax(FileUtils.getParentUrl(fileUri), MAX_FOLDER_SIZE, 0, 0);
-                    if ((currentVideoFileToDeleteSize > MIN_FILE_SIZE || shouldIDelete == 0) && MAX_FOLDER_SIZE > shouldIDelete && shouldIDelete >= 0) {
-                        mHandler.post(() -> {
-                            if (log.isDebugEnabled()) log.debug("deleteOK onVideoFileRemoved ask for folder removal {}", fileUri);
-                            mListener.onVideoFileRemoved(fileUri, true, FileUtils.getParentUrl(fileUri));
-                        });
+                    if (isLocal(fileUri) &&
+                            !LocalStorageFileEditor.checkIfShouldNotTouchFolder(FileUtils.getParentUrl(fileUri))) {
+                        long shouldIDelete = getFolderSizeAndStopOnMax(FileUtils.getParentUrl(fileUri), MAX_FOLDER_SIZE, 0, 0);
+                        if ((currentVideoFileToDeleteSize > MIN_FILE_SIZE || shouldIDelete == 0) && MAX_FOLDER_SIZE > shouldIDelete && shouldIDelete >= 0) {
+                            mHandler.post(() -> {
+                                if (log.isDebugEnabled()) log.debug("deleteOK onVideoFileRemoved ask for folder removal {}", fileUri);
+                                mListener.onVideoFileRemoved(fileUri, true, FileUtils.getParentUrl(fileUri));
+                            });
+                        } else {
+                            mHandler.post(() -> {
+                                if (log.isDebugEnabled()) log.debug("deleteOK onVideoFileRemoved {}", fileUri);
+                                mListener.onVideoFileRemoved(fileUri, false, null);
+                            });
+                        }
                     } else {
                         mHandler.post(() -> {
                             if (log.isDebugEnabled()) log.debug("deleteOK onVideoFileRemoved {}", fileUri);
                             mListener.onVideoFileRemoved(fileUri, false, null);
                         });
                     }
-                } else {
                     mHandler.post(() -> {
-                        if (log.isDebugEnabled()) log.debug("deleteOK onVideoFileRemoved {}", fileUri);
-                        mListener.onVideoFileRemoved(fileUri, false, null);
+                        if (log.isDebugEnabled()) log.debug("deleteOK onDeleteSuccess {}", fileUri);
+                        mListener.onDeleteSuccess();
                     });
-                }
-                mHandler.post(() -> {
-                    if (log.isDebugEnabled()) log.debug("deleteOK onDeleteSuccess {}", fileUri);
-                    mListener.onDeleteSuccess();
-                });
+                }).start();
             }
         }
     }
