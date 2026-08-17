@@ -31,6 +31,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.preference.PreferenceManager;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.widget.ArrayObjectAdapter;
@@ -818,14 +820,19 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     public void onFileDelete(Uri file) {
 
-        if(file.toString().endsWith("/")&&!mUri.toString().endsWith("/")&&file.toString().equals(mUri.toString()+"/")|| mUri.equals(file)) { //if current listed uri
-            if (isAdded()) getActivity().getOnBackPressedDispatcher().onBackPressed();
-        }
-        else{ //if parent uri
+        if (file.toString().endsWith("/") && !mUri.toString().endsWith("/") && file.toString().equals(mUri.toString() + "/") || mUri.equals(file)) { // if current listed uri
+            if (isAdded() && getActivity() != null) {
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    if (isAdded() && getActivity() != null) {
+                        getActivity().getOnBackPressedDispatcher().onBackPressed();
+                    }
+                });
+            }
+        } else { // if parent uri
             Uri parent = FileUtils.getParentUrl(file);
-            if(parent.toString().endsWith("/")&&!mUri.toString().endsWith("/")&&parent.toString().equals(mUri.toString()+"/") || mUri.equals(parent)){
+            if (parent != null && (parent.toString().endsWith("/") && !mUri.toString().endsWith("/") && parent.toString().equals(mUri.toString() + "/") || mUri.equals(parent))) {
                 // we need to refresh
-                if(isAdded())
+                if (isAdded())
                     startListing(mUri);
                 else
                     mRefreshOnNextResume = true;
