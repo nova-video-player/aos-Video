@@ -1338,8 +1338,10 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             // all needed ciphers, we substitute it with a known BC bundled in the app.
             // Android's BC has its package rewritten to "com.android.org.bouncycastle" and because
             // of that it's possible to have another BC implementation loaded in VM.
+            // Instantiate new provider first (heavy work) while system BC provider is still registered
+            final Provider newProvider = new BouncyCastleProvider();
             Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
-            Security.insertProviderAt(new BouncyCastleProvider(), 1);
+            Security.insertProviderAt(newProvider, 1);
         } catch (Throwable t) {
             log.error("setupBouncyCastle: failed to register BouncyCastleProvider", t);
         }
