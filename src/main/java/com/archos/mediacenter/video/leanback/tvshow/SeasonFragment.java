@@ -285,7 +285,8 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
         PrivateModeUIHelper.updatePrivateModeIndicator(getView());
 
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
-        bgMngr.attach(getActivity().getWindow());
+        if (!bgMngr.isAttached())
+            bgMngr.attach(getActivity().getWindow());
 
         if (PrivateMode.isActive()) {
             int privateModeColor = ThemeManager.getInstance(getActivity()).getPrivateModeColor();
