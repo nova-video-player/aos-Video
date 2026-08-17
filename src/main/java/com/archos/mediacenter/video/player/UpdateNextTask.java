@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -408,7 +409,7 @@ public class UpdateNextTask {
                         }
                     });
                 }
-            } catch (ExecutionException | InterruptedException e) {
+            } catch (ExecutionException | InterruptedException | CancellationException e) {
                 if (!isCancelled) log.error("UpdateNextTask error", e);
             } finally {
                 executor.shutdown();
@@ -424,6 +425,10 @@ public class UpdateNextTask {
     }
 
     public Result get() throws ExecutionException, InterruptedException {
-        return mFuture != null ? mFuture.get() : null;
+        try {
+            return mFuture != null ? mFuture.get() : null;
+        } catch (CancellationException e) {
+            return null;
+        }
     }
 }
