@@ -30,6 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
+import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.video.R;
 
 import org.slf4j.Logger;
@@ -120,20 +121,38 @@ public class ExternalPlayerService extends Service {
     }
 
     private static Intent createServiceIntent(Context context) {
-        return new Intent(context, ExternalPlayerService.class);
+        Context ctx = context != null ? context : ArchosUtils.getGlobalContext();
+        if (ctx == null) return null;
+        return new Intent(ctx, ExternalPlayerService.class);
     }
 
     public static void startService(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            final Intent intent = createServiceIntent(context);
-            context.startForegroundService(intent);
+            Context ctx = context != null ? context : ArchosUtils.getGlobalContext();
+            if (ctx == null) return;
+            final Intent intent = createServiceIntent(ctx);
+            if (intent != null) {
+                try {
+                    ctx.startForegroundService(intent);
+                } catch (Exception e) {
+                    log.error("startService: failed to start foreground service", e);
+                }
+            }
         }
     }
 
     public static void stopService(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            final Intent intent = createServiceIntent(context);
-            context.stopService(intent);
+            Context ctx = context != null ? context : ArchosUtils.getGlobalContext();
+            if (ctx == null) return;
+            final Intent intent = createServiceIntent(ctx);
+            if (intent != null) {
+                try {
+                    ctx.stopService(intent);
+                } catch (Exception e) {
+                    log.error("stopService: failed to stop service", e);
+                }
+            }
         }
     }
 
