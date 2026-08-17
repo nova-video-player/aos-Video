@@ -681,7 +681,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         // must be done after context is available
         log = LoggerFactory.getLogger(CustomApplication.class);
         configureFullLoggingAsync();
-        setupBouncyCastle();
+        new Thread(this::setupBouncyCastle, "bouncycastle-setup").start();
 
         systemLocale = Locale.getDefault();
         getDefaultLocale();
