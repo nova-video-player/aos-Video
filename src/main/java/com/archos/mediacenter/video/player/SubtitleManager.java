@@ -480,37 +480,40 @@ public class SubtitleManager {
 
                 // outside of synchronized since sleep does NOT release the lock
                 // go to sleep if we have still have mSubtitleDisplayLeft
-                if (mSubtitleDisplayLeft > 0) { // we have a subtitle to display and at this point mCurrentSubtitle != null
-                    if (log.isDebugEnabled()) log.debug("DispSubtitleThread after displaying mCurrentSubtitle={}+{}ms, sleep for {}", mCurrentSubtitle.getPosition(), mCurrentSubtitle.getDuration(), mSubtitleDisplayLeft);
+                Subtitle currentSub = mCurrentSubtitle;
+                if (mSubtitleDisplayLeft > 0 && currentSub != null) { // we have a subtitle to display
+                    if (log.isDebugEnabled()) log.debug("DispSubtitleThread after displaying mCurrentSubtitle={}+{}ms, sleep for {}", currentSub.getPosition(), currentSub.getDuration(), mSubtitleDisplayLeft);
                     long sleepStart = System.currentTimeMillis();
                     try {
                         sleep(mSubtitleDisplayLeft);
-                    } catch (InterruptedException e) { // wake up from sleep thus mCurrentSubtitle exists
+                    } catch (InterruptedException e) { // wake up from sleep
                         interrupted = true;
                         long elapsedTime = System.currentTimeMillis() - sleepStart;
+                        Subtitle curSub = mCurrentSubtitle;
+                        Subtitle nxtSub = mNextSubtitle;
                         if (log.isDebugEnabled()) log.debug("DispSubtitleThread sleep interrupt, waking up after {}ms, mCurrentSubtitle={}+{}ms, mNextSubtitle={}+{}ms, old mSubtitleDisplayLeft={}",
                                 elapsedTime,
-                                mCurrentSubtitle != null ? mCurrentSubtitle.getPosition() : "null",
-                                mCurrentSubtitle != null ? mCurrentSubtitle.getDuration() : "null",
-                                mNextSubtitle != null ? mNextSubtitle.getPosition() : "null",
-                                mNextSubtitle != null ? mNextSubtitle.getDuration() : "null",
+                                curSub != null ? curSub.getPosition() : "null",
+                                curSub != null ? curSub.getDuration() : "null",
+                                nxtSub != null ? nxtSub.getPosition() : "null",
+                                nxtSub != null ? nxtSub.getDuration() : "null",
                                 mSubtitleDisplayLeft);
-                        if (mCurrentSubtitle != null && mNextSubtitle != null) {
+                        if (curSub != null && nxtSub != null) {
                             // woke up from sleep by interrupt because getting new subtitle
-                            int currentPosition = mCurrentSubtitle.getPosition() + (int) elapsedTime;
+                            int currentPosition = curSub.getPosition() + (int) elapsedTime;
                             int realCurrentSubtitleDuration;
                             // need to correct time left only if the next subtitle starts before the current one ends
-                            if (mCurrentSubtitle.getPosition() + mCurrentSubtitle.getDuration() > mNextSubtitle.getPosition()) {
+                            if (curSub.getPosition() + curSub.getDuration() > nxtSub.getPosition()) {
                                 if (log.isDebugEnabled()) log.debug("DispSubtitleThread: cannot sleep after mNextSubtitle, adjust");
-                                realCurrentSubtitleDuration = mNextSubtitle.getPosition() - mCurrentSubtitle.getPosition();
-                                mCurrentSubtitle.setDuration(realCurrentSubtitleDuration);
-                                mSubtitleDisplayLeft = mNextSubtitle.getPosition() - currentPosition;
+                                realCurrentSubtitleDuration = nxtSub.getPosition() - curSub.getPosition();
+                                curSub.setDuration(realCurrentSubtitleDuration);
+                                mSubtitleDisplayLeft = nxtSub.getPosition() - currentPosition;
                             } else {
-                                realCurrentSubtitleDuration = mCurrentSubtitle.getDuration();
+                                realCurrentSubtitleDuration = curSub.getDuration();
                                 mSubtitleDisplayLeft -= (int) (System.currentTimeMillis() - sleepStart);
                             }
                             if (log.isDebugEnabled()) log.debug("DispSubtitleThread sleep interrupt bcoz received new subtitle, recompute duration currentPosition={}, realCurrentSubtitleDuration={}, updated mSubtitleDisplayLeft={}", currentPosition, realCurrentSubtitleDuration, mSubtitleDisplayLeft);
-                            if (mNextSubtitle.getDuration() == 0) { // this is an empty subtitle that is used to provide the correct duration
+                            if (nxtSub.getDuration() == 0) { // this is an empty subtitle that is used to provide the correct duration
                                 if (log.isDebugEnabled()) log.debug("DispSubtitleThread sleep interrupt bcoz received empty Subtitle, dismiss mNextSubtitle");
                                 mNextSubtitle = null; // remove the empty subtitle
                             }
