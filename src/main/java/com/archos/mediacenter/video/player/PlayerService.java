@@ -2072,6 +2072,26 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     @Override
+    public void onAudioTrackSelectionCompleted(int track, boolean success) {
+        if (success || mVideoInfo == null || mVideoInfo.audioTrack != track) {
+            return;
+        }
+
+        log.error("onAudioTrackSelectionCompleted: failed to apply track {}", track);
+        int fallbackTrack = 0;
+        mVideoInfo.audioTrack = fallbackTrack;
+        mNewAudioTrack = fallbackTrack;
+        if (track != fallbackTrack && !mPlayer.setAudioTrack(fallbackTrack)) {
+            log.error("onAudioTrackSelectionCompleted: failed to queue fallback track {}", fallbackTrack);
+        }
+
+        VideoMetadata.AudioTrack audioTrack = mPlayer.getVideoMetadata().getAudioTrack(fallbackTrack);
+        if (mPlayerFrontend != null) {
+            mPlayerFrontend.onAudioError(true, audioTrack != null ? audioTrack.format : "unknown");
+        }
+    }
+
+    @Override
     public void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int newSubtitleTrack) {
         // note: if mIsPreparingSubs = true, onSubtitleMetadataUpdated can be called even if in not final state
         // subs could be still being copied in cache directory
@@ -2257,6 +2277,22 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // Cache the AVOS metadata result for future playback within 10 second TTL
         SubtitleManager.cacheProcessedMetadata(mUri, vMetadata);
         if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: cached AVOS metadata for {}", mUri);
+    }
+
+    @Override
+    public void onSubtitleTrackSelectionCompleted(int track, boolean success) {
+        if (success || mVideoInfo == null || mVideoInfo.subtitleTrack != track) {
+            return;
+        }
+
+        int noneTrack = mPlayer.getVideoMetadata().getSubtitleTrackNb();
+        log.error("onSubtitleTrackSelectionCompleted: failed to apply track {}, falling back to none", track);
+        mVideoInfo.subtitleTrack = noneTrack;
+        mVideoInfo.subtitleLanguage = null;
+        mNewSubtitleTrack = noneTrack;
+        if (track != noneTrack && !mPlayer.setSubtitleTrack(noneTrack)) {
+            log.error("onSubtitleTrackSelectionCompleted: failed to queue none-track fallback {}", noneTrack);
+        }
     }
 
     private static boolean isGenericTextSubtitleFormat(String lang) {
@@ -2499,15 +2535,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mAudioSpeed = speed;
             if ((AUDIO_SPEED_ON_THE_FLY && VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences)) || force) {
                 mPlayer.setAvSpeed(mAudioSpeed);
-                // When using AudioTrack-based speed (not atempo), check if native actually applied the speed.
-                // If AudioTrack creation failed, native reverts to 1x without notifying Java.
-                if (mPreferences.getBoolean(KEY_AUDIO_SPEED_AUDIOTRACK, false)) {
-                    float appliedSpeed = LibAvos.getAudioSpeed();
-                    if (Math.abs(appliedSpeed - mAudioSpeed) > 1e-5f) {
-                        if (log.isWarnEnabled()) log.warn("setAudioSpeed: AudioTrack speed change failed, reverted from {} to {}", mAudioSpeed, appliedSpeed);
-                        mAudioSpeed = appliedSpeed;
-                    }
-                }
             }
         }
         if (!VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences)) {
@@ -2528,6 +2555,17 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (log.isDebugEnabled()) log.debug("getAudioSpeed: {}", 1.0f);
             return 1.0f;
         }
+    }
+
+    @Override
+    public void onAudioSpeedApplied(float appliedSpeed) {
+        if (Math.abs(appliedSpeed - mAudioSpeed) > 1e-5f) {
+            if (log.isWarnEnabled()) log.warn("onAudioSpeedApplied: native applied {} instead of requested {}",
+                    appliedSpeed, mAudioSpeed);
+        } else if (log.isDebugEnabled()) {
+            log.debug("onAudioSpeedApplied: {}", appliedSpeed);
+        }
+        mAudioSpeed = appliedSpeed;
     }
 
     public float getAudioSpeedFromPreferences() { // no audio_speed if audio speed disabled

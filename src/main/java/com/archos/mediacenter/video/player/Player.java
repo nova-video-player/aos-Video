@@ -1291,6 +1291,27 @@ public class Player implements IPlayerControl,
                 handleMetadata(mp);
             }
             return true;
+        case IMediaPlayer.MEDIA_INFO_AUDIO_SPEED_APPLIED:
+            float appliedSpeed = extra / 1000.0f;
+            if (log.isDebugEnabled()) log.debug("onInfo: audio speed applied {}", appliedSpeed);
+            if (mPlayerListener != null) {
+                mPlayerListener.onAudioSpeedApplied(appliedSpeed);
+            }
+            return true;
+        case IMediaPlayer.MEDIA_INFO_AUDIO_TRACK_APPLIED:
+        case IMediaPlayer.MEDIA_INFO_AUDIO_TRACK_FAILED:
+            if (mPlayerListener != null) {
+                mPlayerListener.onAudioTrackSelectionCompleted(extra,
+                        what == IMediaPlayer.MEDIA_INFO_AUDIO_TRACK_APPLIED);
+            }
+            return true;
+        case IMediaPlayer.MEDIA_INFO_SUBTITLE_TRACK_APPLIED:
+        case IMediaPlayer.MEDIA_INFO_SUBTITLE_TRACK_FAILED:
+            if (mPlayerListener != null) {
+                mPlayerListener.onSubtitleTrackSelectionCompleted(extra,
+                        what == IMediaPlayer.MEDIA_INFO_SUBTITLE_TRACK_APPLIED);
+            }
+            return true;
         default:
             return false;
         }
@@ -1349,6 +1370,9 @@ public class Player implements IPlayerControl,
         void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int currentSubtitle);
         void onBufferingUpdate(int percent);
         void onSubtitle(Subtitle subtitle);
+        default void onAudioSpeedApplied(float speed) {}
+        default void onAudioTrackSelectionCompleted(int track, boolean success) {}
+        default void onSubtitleTrackSelectionCompleted(int track, boolean success) {}
     }
 
     public void finishActivity() {
