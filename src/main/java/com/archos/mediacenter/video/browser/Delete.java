@@ -211,7 +211,7 @@ public class Delete {
     public Delete(DeleteListener listener, Context context){
         mHandler = new Handler(Looper.getMainLooper());
         mListener = listener;
-        mContext = context;
+        mContext = context != null ? context.getApplicationContext() : null;
     }
 
     public void deleteAssociatedNfoFiles(final Uri fileUri){ //when deleting a description, also delete Nfo
