@@ -681,7 +681,11 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         // must be done after context is available
         log = LoggerFactory.getLogger(CustomApplication.class);
         configureFullLoggingAsync();
-        new Thread(this::setupBouncyCastle, "bouncycastle-setup").start();
+        new Thread(() -> {
+            setupBouncyCastle();
+            // BC now registered globally: safe to decrypt stored credentials (Blowfish)
+            NetworkCredentialsDatabase.getInstance().loadCredentials(mContext);
+        }, "bouncycastle-credentials-init").start();
 
         systemLocale = Locale.getDefault();
         getDefaultLocale();
@@ -783,7 +787,6 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             public void run() {
                 Trakt.initApiKeys(appContext);
                 launchSambaDiscovery();
-                NetworkCredentialsDatabase.getInstance().loadCredentials(appContext);
                 if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
                 upgradeActions(appContext);
                 if (Build.VERSION.SDK_INT >= 23) {
