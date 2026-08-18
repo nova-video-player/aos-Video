@@ -2008,12 +2008,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                                     }
                                 });
                                 button.setText(trailer.mName);
-                                Drawable img = ContextCompat.getDrawable(getContext(), TrailerServiceIconFactory.getIconForService(trailer.mSite));
-                                img.setBounds(0, 0, 60, 60);
-                                button.setCompoundDrawablePadding(10);
+                                int iconRes = TrailerServiceIconFactory.getIconForService(trailer.mSite);
+                                if (iconRes > 0 && getContext() != null) {
+                                    Drawable img = ContextCompat.getDrawable(getContext(), iconRes);
+                                    if (img != null) {
+                                        img.setBounds(0, 0, 60, 60);
+                                        button.setCompoundDrawablePadding(10);
+                                        button.setCompoundDrawables(img, null, null, null);
+                                    }
+                                }
                                 button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                                 button.setBackgroundResource(R.drawable.transparent_ripple);
-                                button.setCompoundDrawables(img, null, null, null);
                                 button.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                                 mScrapTrailers.addView(button);
                             }

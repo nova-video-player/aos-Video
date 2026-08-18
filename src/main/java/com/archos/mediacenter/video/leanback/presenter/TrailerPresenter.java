@@ -51,7 +51,13 @@ public class TrailerPresenter extends PosterImageCardPresenter {
         final VideoViewHolder vh = (VideoViewHolder)viewHolder;
 
         final ImageCardView card = vh.getImageCardView();
-        card.setMainImage(ContextCompat.getDrawable(mContext, TrailerServiceIconFactory.getIconForService(box.mSite)), false);
+        int iconRes = TrailerServiceIconFactory.getIconForService(box.mSite);
+        if (iconRes > 0) {
+            Drawable iconDrawable = ContextCompat.getDrawable(mContext, iconRes);
+            if (iconDrawable != null) {
+                card.setMainImage(iconDrawable, false);
+            }
+        }
         card.setMainImageScaleType(ImageView.ScaleType.CENTER);
         card.setTitleText(box.mName);
 
