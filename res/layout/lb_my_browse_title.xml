@@ -18,4 +18,6 @@
     android:id="@+id/browse_title_group"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     style="?attr/browseTitleViewStyle" />
