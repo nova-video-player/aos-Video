@@ -29,14 +29,6 @@
         app:srcCompat="@null"
         android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/title_text"
-        style="?attr/browseTitleTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"/>
-
     <androidx.leanback.widget.SearchOrbView
         android:id="@+id/title_orb"
         android:layout_width="wrap_content"
@@ -69,6 +61,7 @@
         android:layout_marginEnd="28dip"
         android:transitionGroup="true"
         android:visibility="visible" />
+
     <androidx.leanback.widget.SearchOrbView
         android:id="@+id/title_orb4"
         android:layout_width="wrap_content"
@@ -89,6 +82,22 @@
         android:layout_toEndOf="@id/title_orb4"
         android:transitionGroup="true"
         android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/title_text"
+        style="?attr/browseTitleTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/title_orb5"
+        android:layout_marginStart="16dp"
+        android:layout_centerVertical="true"
+        android:gravity="end|center_vertical"
+        android:maxLines="1"
+        android:ellipsize="none"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="6sp"
+        app:autoSizeStepGranularity="1sp" />
 
     <com.archos.mediacenter.video.leanback.widget.HintView
         android:id="@+id/hint_view"
