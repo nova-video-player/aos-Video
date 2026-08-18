@@ -109,6 +109,18 @@
         <item>system</item>
     </string-array>
 
+    <string-array name="video_orientation_entries">
+        <item>@string/pref_video_orientation_auto</item>
+        <item>@string/pref_video_orientation_landscape</item>
+        <item>@string/pref_video_orientation_portrait</item>
+    </string-array>
+
+    <string-array name="video_orientation_entryvalues">
+        <item>auto</item>
+        <item>landscape</item>
+        <item>portrait</item>
+    </string-array>
+
     <string-array name="dec_choice_entries">
         <item>@string/dec_any</item>
         <item>@string/dec_hw_mediacodec</item>
