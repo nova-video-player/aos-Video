@@ -17,9 +17,7 @@ package com.archos.mediacenter.video.info;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import com.archos.mediacenter.video.utils.MiscUtils;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -56,16 +54,8 @@ public class VideoInfoScraperActivity extends FragmentActivity {
     }
 
     private void applySystemInsets(View root) {
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
-            Insets systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            Insets cutoutInsets = insets.getInsets(WindowInsetsCompat.Type.displayCutout());
-            v.setPadding(
-                    Math.max(systemBarsInsets.left, cutoutInsets.left),
-                    Math.max(systemBarsInsets.top, cutoutInsets.top),
-                    Math.max(systemBarsInsets.right, cutoutInsets.right),
-                    Math.max(systemBarsInsets.bottom, cutoutInsets.bottom));
-            return insets;
-        });
+        MiscUtils.applySystemWindowInsets(root, true, (v, left, top, right, bottom) ->
+                v.setPadding(left, top, right, bottom));
     }
 
     @Override

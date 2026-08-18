@@ -551,4 +551,62 @@ public class MiscUtils {
             }
         }
     }
+
+    public interface OnSystemInsetsListener {
+        void onApplyInsets(View v, int left, int top, int right, int bottom);
+    }
+
+    public static void applySystemWindowInsets(View view) {
+        applySystemWindowInsets(view, false, (v, left, top, right, bottom) ->
+                v.setPadding(left, top, right, bottom));
+    }
+
+    public static void applySystemWindowInsets(View view, boolean includeCutout, OnSystemInsetsListener listener) {
+        if (view == null) return;
+        view.setOnApplyWindowInsetsListener((v, insets) -> {
+            int left = 0, top = 0, right = 0, bottom = 0;
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    Insets systemBars = insets.getInsets(WindowInsets.Type.systemBars());
+                    left = systemBars.left;
+                    top = systemBars.top;
+                    right = systemBars.right;
+                    bottom = systemBars.bottom;
+                    if (includeCutout) {
+                        Insets cutout = insets.getInsets(WindowInsets.Type.displayCutout());
+                        left = Math.max(left, cutout.left);
+                        top = Math.max(top, cutout.top);
+                        right = Math.max(right, cutout.right);
+                        bottom = Math.max(bottom, cutout.bottom);
+                    }
+                } else {
+                    WindowInsetsCompat insetsCompat = WindowInsetsCompat.toWindowInsetsCompat(insets);
+                    androidx.core.graphics.Insets systemBars = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars());
+                    left = systemBars.left;
+                    top = systemBars.top;
+                    right = systemBars.right;
+                    bottom = systemBars.bottom;
+                    if (includeCutout) {
+                        androidx.core.graphics.Insets cutout = insetsCompat.getInsets(WindowInsetsCompat.Type.displayCutout());
+                        left = Math.max(left, cutout.left);
+                        top = Math.max(top, cutout.top);
+                        right = Math.max(right, cutout.right);
+                        bottom = Math.max(bottom, cutout.bottom);
+                    }
+                }
+            } catch (Throwable t) {
+                if (log.isDebugEnabled()) log.debug("applySystemWindowInsets: caught exception getting insets", t);
+                try {
+                    left = insets.getSystemWindowInsetLeft();
+                    top = insets.getSystemWindowInsetTop();
+                    right = insets.getSystemWindowInsetRight();
+                    bottom = insets.getSystemWindowInsetBottom();
+                } catch (Throwable ignored) {}
+            }
+            if (listener != null) {
+                listener.onApplyInsets(v, left, top, right, bottom);
+            }
+            return insets;
+        });
+    }
 }

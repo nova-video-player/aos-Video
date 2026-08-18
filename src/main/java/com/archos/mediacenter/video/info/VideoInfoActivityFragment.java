@@ -61,7 +61,7 @@ import androidx.appcompat.widget.ToolbarWidgetWrapper;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import com.archos.mediacenter.video.utils.MiscUtils;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
@@ -653,11 +653,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Adjust padding for edge-to-edge
-        ViewCompat.setOnApplyWindowInsetsListener(view, (v, insets) -> {
-            androidx.core.graphics.Insets systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBarsInsets.left, systemBarsInsets.top, systemBarsInsets.right, systemBarsInsets.bottom);
-            return insets;
-        });
+        MiscUtils.applySystemWindowInsets(view);
     }
 
     private void updateHeaderHeight() {
