@@ -290,10 +290,10 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             public void handleOnBackPressed() {
                 int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
                 if (backStackCount <= 1) {
-                    if (mDrawerLayout == null || mDrawerLayout.isDrawerOpen(GravityCompat.START))
+                    if (mDrawerLayout == null || safeIsDrawerOpen())
                         supportFinishAfterTransition();
                     else {
-                        mDrawerLayout.openDrawer(GravityCompat.START);
+                        safeOpenDrawer();
                     }
                 } else {
                     // Get the fragment that is currently at the top of the back stack
@@ -356,14 +356,18 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         getSupportActionBar().setHomeButtonEnabled(true);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null){
-            mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.string.drawer_open, R.string.drawer_close);
-            mDrawerToggle.setDrawerIndicatorEnabled(true);
-            mDrawerToggle.syncState();
+            try {
+                mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                        R.string.drawer_open, R.string.drawer_close);
+                mDrawerToggle.setDrawerIndicatorEnabled(true);
+                mDrawerToggle.syncState();
 
-            if(savedInstanceState==null && !isShortcutIntent())
-                mDrawerLayout.openDrawer(GravityCompat.START);
-
+                if (savedInstanceState == null && !isShortcutIntent())
+                    safeOpenDrawer();
+            } catch (Throwable t) {
+                log.error("onCreate: caught exception setting up drawer, locking drawer closed", t);
+                disableDrawer();
+            }
         }
 
         // determine if display has cutouts
@@ -744,7 +748,15 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 //setHomeButton();
                 break;
             case android.R.id.home:
-                if (mDrawerLayout == null || !mDrawerToggle.onOptionsItemSelected(item))
+                boolean drawerHandled = false;
+                if (mDrawerLayout != null && mDrawerToggle != null) {
+                    try {
+                        drawerHandled = mDrawerToggle.onOptionsItemSelected(item);
+                    } catch (Throwable t) {
+                        log.error("onOptionsItemSelected: caught exception in drawer toggle", t);
+                    }
+                }
+                if (!drawerHandled)
                     onBackPressed();
                 break;
 
@@ -773,17 +785,64 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     }
 
     public void updateHomeIcon(boolean show) {
-        if(mDrawerLayout!=null){
-             mDrawerToggle.setDrawerIndicatorEnabled(!show);
-            return;
+        if (mDrawerLayout != null && mDrawerToggle != null) {
+            try {
+                mDrawerToggle.setDrawerIndicatorEnabled(!show);
+                return;
+            } catch (Throwable t) {
+                log.error("updateHomeIcon: caught exception", t);
+                disableDrawer();
+            }
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(show);
         getSupportActionBar().setHomeButtonEnabled(show);
     }
 
     public void closeDrawer() {
-        if(mDrawerLayout!=null)
-            mDrawerLayout.closeDrawer(GravityCompat.START);
+        safeCloseDrawer();
+    }
+
+    private void disableDrawer() {
+        if (mDrawerLayout != null) {
+            try {
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            } catch (Throwable ignored) {}
+        }
+        mDrawerToggle = null;
+    }
+
+    private void safeOpenDrawer() {
+        if (mDrawerLayout != null) {
+            try {
+                mDrawerLayout.openDrawer(GravityCompat.START);
+            } catch (Throwable t) {
+                log.error("safeOpenDrawer: caught exception opening drawer", t);
+                disableDrawer();
+            }
+        }
+    }
+
+    private void safeCloseDrawer() {
+        if (mDrawerLayout != null) {
+            try {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            } catch (Throwable t) {
+                log.error("safeCloseDrawer: caught exception closing drawer", t);
+                disableDrawer();
+            }
+        }
+    }
+
+    private boolean safeIsDrawerOpen() {
+        if (mDrawerLayout != null) {
+            try {
+                return mDrawerLayout.isDrawerOpen(GravityCompat.START);
+            } catch (Throwable t) {
+                log.error("safeIsDrawerOpen: caught exception checking drawer state", t);
+                disableDrawer();
+            }
+        }
+        return false;
     }
 
     public void hideSeachView() {
