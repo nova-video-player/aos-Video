@@ -155,6 +155,7 @@
     <string name="date_view_year">Year</string>
     <string name="all_movies_and_tv_shows">Movies and TV shows</string>
     <string name="non_scraped_videos">Non scraped videos</string>
+    <string name="non_scraped_videos_format">Non scraped videos  -  %d</string>
 
     <string name="no_server">No media server found</string>
     <string name="cannot_open_video">Cannot open this video</string>

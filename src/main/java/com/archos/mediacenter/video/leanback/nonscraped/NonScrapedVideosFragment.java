@@ -305,6 +305,8 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
         if (cursorLoader.getId()==0) {
             mNonScrapedAdapter.swapCursor(cursor);
             setEmptyViewVisiblity(cursor.getCount()<1);
+
+            setTitle(getString(R.string.non_scraped_videos_format, cursor.getCount()));
         }
     }
 
