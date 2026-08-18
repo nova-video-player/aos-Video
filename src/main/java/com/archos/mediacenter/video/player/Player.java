@@ -241,6 +241,13 @@ public class Player implements IPlayerControl,
         return mSubtitleEngine;
     }
 
+    // Mirrors getSubtitleEngine() above: lets SubtitleEngine reach back into the effect
+    // renderer to wake its draw loop after a paused-3D style change (see
+    // VideoEffectRenderer.wakeDrawLoop()'s doc comment for why that hop is needed).
+    public VideoEffectRenderer getEffectRenderer() {
+        return mEffectRenderer;
+    }
+
     /**
      * Explicit, one-time teardown for this Player instance. Call this (and ONLY this) when
      * whoever holds this Player -- currently always via the Player.sPlayer static, see

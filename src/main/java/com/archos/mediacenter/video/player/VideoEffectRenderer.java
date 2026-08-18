@@ -191,6 +191,14 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
             c.drawColor(0x0);
             mUISurface.unlockCanvasAndPost(c);
         } catch (Exception e) { }
+
+        // Register this Surface/size with SubtitleEngine right away, before the first real
+        // video frame necessarily arrives. Without this, a style change made while a video
+        // is opened already paused would have no cached redraw target until onFrameAvailable
+        // fires at least once -- see SubtitleEngine.primeThreeDSurface()'s doc comment.
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().primeThreeDSurface(mUISurface, mViewWidth, mViewHeight);
+        }
         }
         notifyInit();
     }
@@ -219,6 +227,32 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
     public Surface getUISurface()
     {
         return mUISurface;
+    }
+
+    /**
+     * Wakes the GL draw loop for one pass without a real video frame having arrived.
+     *
+     * Queuing a fresh buffer into mUISurfaceTexture (what SubtitleEngine.draw3DSubtitles()
+     * does via lockCanvas()/unlockCanvasAndPost()) is only HALF the pipeline. Nothing
+     * actually CONSUMES that buffer -- mUISurfaceTexture.updateTexImage() + mEffect.draw()
+     * (the GL composite) + the eventual eglSwapBuffers() that puts it on screen -- unless
+     * draw() below runs, and draw() is gated entirely behind mSourceFrameAvailable.take(),
+     * which normally only the video decoder's onFrameAvailable() feeds. While the video is
+     * paused, that callback never fires, so a style change's freshly-queued subtitle buffer
+     * just sits in the queue, unseen, no matter how promptly the native/Java side produced
+     * it -- this is what SubtitleEngine.redraw3DIfNeeded() alone could not fix.
+     *
+     * Call this AFTER the fresh subtitle buffer has already been queued (SubtitleEngine
+     * does so before calling here). This method doesn't draw anything itself, it only
+     * unblocks the consumer side, mirroring exactly what onFrameAvailable() does for a real
+     * video frame. Re-latching the same (frozen) video frame via
+     * mVideoSurfaceTexture.updateTexImage() when nothing new has arrived is safe -- it just
+     * re-presents whatever's already there.
+     */
+    public void wakeDrawLoop() {
+        try {
+            mSourceFrameAvailable.put(mTrue);
+        } catch (InterruptedException ie) {}
     }
 
     @Override

@@ -24,6 +24,21 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
     private int mLast2DWidth = 1920;
     private int mLast2DHeight = 1080;
 
+    // Cached target for the "redraw right now" path used by style setters while paused in
+    // 3D mode (see redraw3DIfNeeded() below). Kept in sync every time draw3DSubtitles() runs
+    // -- either from the video-frame-driven path (VideoEffectRenderer.onFrameAvailable) or
+    // from primeThreeDSurface() (called once up front so a style change made before the
+    // very first video frame arrives still has somewhere to redraw onto). volatile because
+    // these are written from the SurfaceTexture callback thread and read from the UI thread.
+    private volatile Surface mLast3DSurface = null;
+    private volatile int mLast3DWidth = 0;
+    private volatile int mLast3DHeight = 0;
+
+    // Guards draw3DSubtitles(): it can now be invoked both from the SurfaceTexture callback
+    // thread (real video frames) and the UI thread (style setters while paused), and both
+    // paths lockCanvas() the same Surface and touch the same mSoftBitmap.
+    private final Object m3DDrawLock = new Object();
+
     public SubtitleEngine() {
         // Initialize the native C engine and store its memory pointer
         mNativeEngineHandle = nativeCreate();
@@ -129,52 +144,113 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
     }
 
     /**
-     * Called synchronously by VideoEffectRenderer.onFrameAvailable()
-     * This guarantees subtitle rendering is flawlessly locked to the video frame clock.
+     * Called synchronously by VideoEffectRenderer.onFrameAvailable() for every real video
+     * frame. This guarantees subtitle rendering is flawlessly locked to the video frame
+     * clock. Uses the cheap passive pull (nativeFillBitmap) -- called 30-60x/sec during
+     * playback, the render thread has already been ticking on its own independent of us.
      */
      public void draw3DSubtitles(Surface uiSurface, int viewWidth, int viewHeight) {
-        if (mNativeEngineHandle == 0 || uiSurface == null || !uiSurface.isValid()) return;
-        if (viewWidth <= 0 || viewHeight <= 0) return;
+        draw3DSubtitlesInternal(uiSurface, viewWidth, viewHeight, /*forceSync=*/false);
+    }
 
-        // Give Libass the FULL physical screen size. No 3D halving!
-        if (mSoftBitmap == null || mSoftBitmap.getWidth() != viewWidth || mSoftBitmap.getHeight() != viewHeight) {
-            if (mSoftBitmap != null) mSoftBitmap.recycle();
-            mSoftBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
-            nativeSurfaceChanged(mNativeEngineHandle, viewWidth, viewHeight);
-        }
+    /**
+     * Registers the Surface/size VideoEffectRenderer will later drive via draw3DSubtitles(),
+     * before the first real video frame has necessarily arrived. Lets redraw3DIfNeeded()
+     * (called by style setters) work even for a video opened already paused, where
+     * onFrameAvailable() may not have fired yet. Superseded by the next real
+     * draw3DSubtitles() call as usual. Safe to call from initGLComponents() before playback
+     * starts.
+     */
+    public void primeThreeDSurface(Surface uiSurface, int viewWidth, int viewHeight) {
+        if (uiSurface == null || !uiSurface.isValid() || viewWidth <= 0 || viewHeight <= 0) return;
+        mLast3DSurface = uiSurface;
+        mLast3DWidth = viewWidth;
+        mLast3DHeight = viewHeight;
+    }
 
-        boolean hasSubs = nativeFillBitmap(mNativeEngineHandle, mSoftBitmap);
-
-        try {
-            Canvas c = uiSurface.lockCanvas(null);
-            if (c != null) {
-                c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-
-                if (hasSubs) {
-                    // Draw the full 1920x1080 image ONCE. The 3D Shader duplicates it!
-                    c.drawBitmap(mSoftBitmap, 0, 0, null);
-                }
-                uiSurface.unlockCanvasAndPost(c);
-            }
-        } catch (Exception e) {
-            log.error("Failed to draw 3D subtitles to Canvas", e);
+    /**
+     * Forces one immediate 3D subtitle redraw using the last Surface/size we know about
+     * (see mLast3DSurface above). Style setters call this so a change made while the video
+     * is PAUSED -- and therefore not ticking VideoEffectRenderer.onFrameAvailable, the only
+     * other caller of draw3DSubtitles() -- still shows up right away instead of waiting for
+     * the next real video frame. See the class-level push-vs-pull note on draw3DSubtitles()
+     * for the full story. No-ops in 2D mode (the native EGL thread already pushes those
+     * instantly) and before any Surface/size is known yet.
+     *
+     * Queuing a fresh buffer (draw3DSubtitlesInternal, below) is necessary but NOT
+     * sufficient on its own: nothing consumes that buffer -- updateTexImage() + the GL
+     * composite + the actual screen swap -- while paused, since VideoEffectRenderer's draw
+     * loop is normally driven entirely by real video frames. wakeDrawLoop() is the other
+     * half: it unblocks that consumer for one pass. See its doc comment for the full story.
+     */
+    private void redraw3DIfNeeded() {
+        if (!is3DMode() || mLast3DSurface == null) return;
+        draw3DSubtitlesInternal(mLast3DSurface, mLast3DWidth, mLast3DHeight, /*forceSync=*/true);
+        if (Player.sPlayer != null && Player.sPlayer.getEffectRenderer() != null) {
+            Player.sPlayer.getEffectRenderer().wakeDrawLoop();
         }
     }
 
-    public void setFontSize(float pt) { if (mNativeEngineHandle != 0) nativeSetFontSize(mNativeEngineHandle, pt); }
-    public void setFontScale(float scale) { if (mNativeEngineHandle != 0) nativeSetFontScale(mNativeEngineHandle, scale); }
-    public void setFontFamily(String familyName) { if (mNativeEngineHandle != 0) nativeSetFontFamily(mNativeEngineHandle, familyName); }
-    public void setBold(boolean bold) { if (mNativeEngineHandle != 0) nativeSetBold(mNativeEngineHandle, bold); }
-    public void setTextColor(int color) { if (mNativeEngineHandle != 0) nativeSetTextColor(mNativeEngineHandle, color); }
-    public void setOutlineColor(int color) { if (mNativeEngineHandle != 0) nativeSetOutlineColor(mNativeEngineHandle, color); }
-    public void setOutlineWidth(float px) { if (mNativeEngineHandle != 0) nativeSetOutlineWidth(mNativeEngineHandle, px); }
-    public void setShadowWidth(float px) { if (mNativeEngineHandle != 0) nativeSetShadowWidth(mNativeEngineHandle, px); }
-    public void setShadowColor(int color) { if (mNativeEngineHandle != 0) nativeSetShadowColor(mNativeEngineHandle, color); }
-    public void setBackgroundMode(int mode) { if (mNativeEngineHandle != 0) nativeSetBackgroundMode(mNativeEngineHandle, mode); }
-    public void setBackgroundColor(int color) { if (mNativeEngineHandle != 0) nativeSetBackgroundColor(mNativeEngineHandle, color); }
-    public void setBackgroundOpacity(float opacity) { if (mNativeEngineHandle != 0) nativeSetBackgroundOpacity(mNativeEngineHandle, opacity); }
-    public void setVerticalOffset(float pixels) { if (mNativeEngineHandle != 0) nativeSetVerticalOffset(mNativeEngineHandle, pixels); }
-    public void setOverrideMode(int mode) { if (mNativeEngineHandle != 0) nativeSetOverrideMode(mNativeEngineHandle, mode); }
+    private void draw3DSubtitlesInternal(Surface uiSurface, int viewWidth, int viewHeight, boolean forceSync) {
+        if (mNativeEngineHandle == 0 || uiSurface == null || !uiSurface.isValid()) return;
+        if (viewWidth <= 0 || viewHeight <= 0) return;
+
+        mLast3DSurface = uiSurface;
+        mLast3DWidth = viewWidth;
+        mLast3DHeight = viewHeight;
+
+        synchronized (m3DDrawLock) {
+            // Give Libass the FULL physical screen size. No 3D halving!
+            if (mSoftBitmap == null || mSoftBitmap.getWidth() != viewWidth || mSoftBitmap.getHeight() != viewHeight) {
+                if (mSoftBitmap != null) mSoftBitmap.recycle();
+                mSoftBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
+                nativeSurfaceChanged(mNativeEngineHandle, viewWidth, viewHeight);
+            }
+
+            // forceSync=true (style-change redraw path only) forces a fresh render and
+            // blocks briefly for the render thread to actually apply it first -- closes the
+            // race where force_wake() from the setter hasn't been picked up by the render
+            // thread yet. forceSync=false (the per-video-frame path) stays a cheap passive
+            // read, since the render thread is already ticking on its own in that case.
+            boolean hasSubs = forceSync
+                    ? nativeSyncFillBitmap(mNativeEngineHandle, mSoftBitmap)
+                    : nativeFillBitmap(mNativeEngineHandle, mSoftBitmap);
+
+            try {
+                Canvas c = uiSurface.lockCanvas(null);
+                if (c != null) {
+                    c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+
+                    if (hasSubs) {
+                        // Draw the full 1920x1080 image ONCE. The 3D Shader duplicates it!
+                        c.drawBitmap(mSoftBitmap, 0, 0, null);
+                    }
+                    uiSurface.unlockCanvasAndPost(c);
+                }
+            } catch (Exception e) {
+                log.error("Failed to draw 3D subtitles to Canvas", e);
+            }
+        }
+    }
+
+    // Each of these calls redraw3DIfNeeded() after the native setter so a change made while
+    // paused in 3D mode shows up immediately instead of waiting for the next real video
+    // frame (see redraw3DIfNeeded()'s doc comment). It's a no-op in 2D mode or while playing,
+    // so this costs nothing outside the specific paused+3D case it's fixing.
+    public void setFontSize(float pt) { if (mNativeEngineHandle != 0) { nativeSetFontSize(mNativeEngineHandle, pt); redraw3DIfNeeded(); } }
+    public void setFontScale(float scale) { if (mNativeEngineHandle != 0) { nativeSetFontScale(mNativeEngineHandle, scale); redraw3DIfNeeded(); } }
+    public void setFontFamily(String familyName) { if (mNativeEngineHandle != 0) { nativeSetFontFamily(mNativeEngineHandle, familyName); redraw3DIfNeeded(); } }
+    public void setBold(boolean bold) { if (mNativeEngineHandle != 0) { nativeSetBold(mNativeEngineHandle, bold); redraw3DIfNeeded(); } }
+    public void setTextColor(int color) { if (mNativeEngineHandle != 0) { nativeSetTextColor(mNativeEngineHandle, color); redraw3DIfNeeded(); } }
+    public void setOutlineColor(int color) { if (mNativeEngineHandle != 0) { nativeSetOutlineColor(mNativeEngineHandle, color); redraw3DIfNeeded(); } }
+    public void setOutlineWidth(float px) { if (mNativeEngineHandle != 0) { nativeSetOutlineWidth(mNativeEngineHandle, px); redraw3DIfNeeded(); } }
+    public void setShadowWidth(float px) { if (mNativeEngineHandle != 0) { nativeSetShadowWidth(mNativeEngineHandle, px); redraw3DIfNeeded(); } }
+    public void setShadowColor(int color) { if (mNativeEngineHandle != 0) { nativeSetShadowColor(mNativeEngineHandle, color); redraw3DIfNeeded(); } }
+    public void setBackgroundMode(int mode) { if (mNativeEngineHandle != 0) { nativeSetBackgroundMode(mNativeEngineHandle, mode); redraw3DIfNeeded(); } }
+    public void setBackgroundColor(int color) { if (mNativeEngineHandle != 0) { nativeSetBackgroundColor(mNativeEngineHandle, color); redraw3DIfNeeded(); } }
+    public void setBackgroundOpacity(float opacity) { if (mNativeEngineHandle != 0) { nativeSetBackgroundOpacity(mNativeEngineHandle, opacity); redraw3DIfNeeded(); } }
+    public void setVerticalOffset(float pixels) { if (mNativeEngineHandle != 0) { nativeSetVerticalOffset(mNativeEngineHandle, pixels); redraw3DIfNeeded(); } }
+    public void setOverrideMode(int mode) { if (mNativeEngineHandle != 0) { nativeSetOverrideMode(mNativeEngineHandle, mode); redraw3DIfNeeded(); } }
 
     /**
      * Points the native engine at a custom fonts folder (MX Player / mpv-android style
@@ -214,6 +290,10 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
 
     // 3D Bridge Hook
     private native boolean nativeFillBitmap(long handle, Bitmap bitmap);
+    // Same pull as nativeFillBitmap, but forces a fresh render and blocks (bounded) until
+    // the render thread has applied it -- used only by redraw3DIfNeeded()'s style-change
+    // path. See jni_sub_engine.c for why this is a separate entry point from the plain one.
+    private native boolean nativeSyncFillBitmap(long handle, Bitmap bitmap);
     private native void nativeSetUIMode(long handle, int mode);
 
     /* ── Typography & Master Control ── */
