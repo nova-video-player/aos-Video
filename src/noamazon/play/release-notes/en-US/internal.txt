@@ -1,12 +1,6 @@
-- intro/outro autoskip
-- better lipsync, passthrough, downmix, seamless audio speed
-- AC3 universal audio passthrough
-- display cutout & projector/aspect ratio modes
-- faster trakt sync logic
-- faster media scraping & jcifs-ng SMB streaming
-- avoid USB rescans & medialib loss
-- subtitle fixes & custom background rendering
-- smart categories: new to watch & continue watching
-- dark theme & UI layout refinements with new gestures
-- media library backup/restore
-- spatial audio on supported devices
+- Restore media info retrieval on cellular network
+- Restore SAMBA SMBv1 server compatibility by protocol level detection
+- Smarter TV show and movie media scraping
+- Playback Fixes: accurate playback position resuming, aspect ratio distortion over HDMI, and improved Bluetooth sync
+- UI: added "Next Episode" button on mobile, network scan progress overlay on TV
+- Many stability enhancement
