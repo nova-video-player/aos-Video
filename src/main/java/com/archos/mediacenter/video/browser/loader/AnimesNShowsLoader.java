@@ -119,7 +119,8 @@ ORDER BY uName ASC
         // collections and movies not in collections that are not animes
         if (sb.length()>0) { sb.append(" AND "); }
         sb.append("(m_id IS NOT NULL OR s_id IS NOT NULL)" +
-                " AND (m_genres  LIKE '%Animation%' OR s_genres LIKE '%Animation%')" +
+                " AND (m_genres LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'" +
+                " OR s_genres LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%')" +
                 " AND (s_po_large_file IS NOT NULL OR m_po_large_file IS NOT NULL)"
         );
         if (!mShowWatched) {
