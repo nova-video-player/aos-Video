@@ -14,6 +14,10 @@
 
 package com.archos.mediacenter.video.leanback.overlay;
 
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,8 +28,10 @@ import android.widget.TextView;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.ImportState;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
+import com.archos.mediaprovider.video.NetworkScannerServiceVideo;
 import com.archos.mediascraper.AutoScrapeService;
 import com.archos.mediaprovider.video.LoaderUtils;
+import androidx.core.content.ContextCompat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +49,8 @@ public class ScannerAndScraperProgress {
     final private ProgressBar mProgressWheel;
     final private TextView mCount;
     final private String mInitialScanMessage;
+    final private int mDefaultTextColor;
+    final private int mScannerTextColor;
     final Handler mRepeatHandler = new Handler(Looper.getMainLooper());
 
 
@@ -56,6 +64,8 @@ public class ScannerAndScraperProgress {
         mProgressGroup = overlayContainer.findViewById(R.id.progress_group);
         mProgressWheel = (ProgressBar) mProgressGroup.findViewById(R.id.progress);
         mCount = (TextView) mProgressGroup.findViewById(R.id.count);
+        mDefaultTextColor = mCount.getCurrentTextColor();
+        mScannerTextColor = ContextCompat.getColor(context, R.color.scanner_progress_text);
         if (log.isDebugEnabled()) log.debug("ScannerAndScraperProgress: creation");
         mInitialScanMessage = context.getString(R.string.initial_scan);
         mRepeatHandler.post(mRepeatRunnable);
@@ -106,28 +116,33 @@ public class ScannerAndScraperProgress {
 
     /** update the counter TextView */
     private void updateCount() {
-        String msg = String.valueOf("");
-        int count = 0;
+        int scanCount = 0;
+        int scrapeCount = 0;
+        int initialImportCount = 0;
 
-        // First check initial import count
+        if (NetworkScannerReceiver.isScannerWorking()) {
+            scanCount = NetworkScannerServiceVideo.getFilesFoundCount();
+        }
+
         if (ImportState.VIDEO.isInitialImport()) {
-            msg = mInitialScanMessage+"\n";
-            count = ImportState.VIDEO.getNumberOfFilesRemainingToImport();
-            if (log.isTraceEnabled()) log.trace("updateCount: initial import count {}", count);
-        }
-        // If not initial import count, check autoscraper count
-        if (count==0) {
-            count = AutoScrapeService.getNumberOfFilesRemainingToProcess();
-            if (log.isTraceEnabled()) log.trace("updateCount: not initial import count {}", count);
+            initialImportCount = ImportState.VIDEO.getNumberOfFilesRemainingToImport();
+        } else {
+            scrapeCount = AutoScrapeService.getNumberOfFilesRemainingToProcess();
         }
 
-        // Display count only if greater than zero
-        if (count > 0) {
-            if (log.isTraceEnabled()) log.trace("updateCount: visible {}", count);
-            mCount.setText(msg+Integer.toString(count));
+        if (scanCount > 0) {
+            // Phase 1: Network scanning active - display increasing count in Dimmed Gray
+            mCount.setTextColor(mScannerTextColor);
+            mCount.setText(String.valueOf(scanCount));
+            mCount.setVisibility(View.VISIBLE);
+        } else if (initialImportCount > 0 || scrapeCount > 0) {
+            // Phase 2: Metadata scraping / Import active - display decreasing count in Default White
+            int count = initialImportCount > 0 ? initialImportCount : scrapeCount;
+            String msg = initialImportCount > 0 ? mInitialScanMessage + "\n" : "";
+            mCount.setTextColor(mDefaultTextColor);
+            mCount.setText(msg + count);
             mCount.setVisibility(View.VISIBLE);
         } else {
-            if (log.isTraceEnabled()) log.trace("updateCount: invisible");
             mCount.setVisibility(View.INVISIBLE);
         }
     }
