@@ -838,6 +838,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void showActionBar(boolean show) {
+        if (isTVMode || TVUtils.isTV(mContext)) show = false;
         if (mActionBarShowing != show || mActionBar.isShowing() != show) {
             if (show) mActionBar.show();
             else mActionBar.hide();
@@ -2340,6 +2341,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 } else if (event.getAction() == KeyEvent.ACTION_UP) {
                     switch(keyCode) {
                         case KeyEvent.KEYCODE_MENU:
+                            if (isTVMode || TVUtils.isTV(mContext)) {
+                                return true;
+                            }
                             if (Player.sPlayer.isBusy()) {
                                 /* Don't show the menu if the MediaPlayer is busy */
                                 return true;
@@ -2455,6 +2459,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void switchMode(boolean tv) {
+        if (TVUtils.isTV(mContext)) {
+            tv = true;
+        }
         isTVMode=tv;
         // TODO Auto-generated method stub
         //for view not to be split before window attached
@@ -2488,7 +2495,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             
         }
 
-        if(mContext instanceof PlayerActivity&&!tv)
+        if(mContext instanceof PlayerActivity)
             ((PlayerActivity)mContext).switchMode(tv);
     }
     

@@ -662,6 +662,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
         );
         mContext = this;
+        isTVMode = TVUtils.isTV(this);
 
         ensureLaunchGeneration(getIntent());
 
