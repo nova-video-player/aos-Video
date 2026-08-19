@@ -511,6 +511,7 @@ public class SubtitleManager {
                         if(FileUtils.isLocal(target)){
                             try {
                                 Intent intent = new Intent(ArchosMediaIntent.ACTION_VIDEO_SCANNER_METADATA_UPDATE, target);
+                                intent.setPackage(mContext.getPackageName());
                                 mContext.sendBroadcast(intent);
                             } catch (Exception e) {}//catching all exceptions for now for quick release
                         }

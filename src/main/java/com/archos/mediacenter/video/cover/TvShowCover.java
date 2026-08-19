@@ -257,6 +257,7 @@ public class TvShowCover extends Cover {
                 args.putLong(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID, mScraperId);
                 args.putString("subcategoryName", mName);
                 i.putExtra(BrowserActivity.FRAGMENT_ARGS, args);
+                i.setPackage(context.getPackageName());
                 context.sendBroadcast(i);
             }
         };
