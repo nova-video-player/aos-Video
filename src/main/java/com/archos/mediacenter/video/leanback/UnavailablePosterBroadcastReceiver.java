@@ -67,6 +67,7 @@ public class UnavailablePosterBroadcastReceiver extends BroadcastReceiver{
     }
     public static void sendBroadcast(Context context, long videoId){
         Intent intent = new Intent(ACTION_CHECK_POSTER);
+        intent.setPackage(context.getPackageName());
         intent.putExtra("VIDEO_ID", videoId);
         context.sendBroadcast(intent);
     }
