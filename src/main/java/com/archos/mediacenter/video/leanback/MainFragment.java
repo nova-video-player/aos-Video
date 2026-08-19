@@ -582,7 +582,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             if (mShowAnimesRow) restartAnimesLoader = true;
             else if (mSeparateAnimeFromShowMovie) updateAnimesRow(null, true);
         } else
-            if (! mShowAnimesRow && mSeparateAnimeFromShowMovie && firstTimeLoad) updateAnimesRow(null, true);
+            if (! mShowAnimesRow && mSeparateAnimeFromShowMovie && firstTimeLoad) updateAnimesRow(null, false);
         String newAnimesSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_ANIMES_SORT_ORDER, AnimesLoader.DEFAULT_SORT);
         if (mShowAnimesRow && !newAnimesSortOrder.equals(mAnimesSortOrder) && mSeparateAnimeFromShowMovie) {
             if (log.isDebugEnabled()) log.debug("onResume: preference changed, showing animes row and sort order changed -> updating");
@@ -594,7 +594,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
             restartAnimesLoader = false;
             Bundle args = new Bundle();
             args.putString("sort", mAnimesSortOrder);
-            LoaderManager.getInstance(this).initLoader(LOADER_ID_ALL_ANIMES, args, this);
+            LoaderManager.getInstance(this).restartLoader(LOADER_ID_ALL_ANIMES, args, this);
         }
 
         firstTimeLoad = false;
@@ -611,7 +611,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         wasInPause = true;
         if (mShowLastAddedRow) restartLastAddedLoader = true;
         if (mShowLastPlayedRow) restartLastPlayedLoader = true;
-        if (mShowLastPlayedRow) restartMoviesLoader = true;
+        if (mShowMoviesRow) restartMoviesLoader = true;
         if (mShowTvshowsRow) restartTvshowsLoader = true;
         if (mShowAnimesRow) restartAnimesLoader = true;
 

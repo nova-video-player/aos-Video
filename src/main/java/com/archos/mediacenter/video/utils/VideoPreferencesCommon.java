@@ -782,6 +782,13 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mSeparateAnimeMoviePreference = (CheckBoxPreference) findPreference(KEY_SEPARATE_ANIME_MOVIE_SHOW);
         mShowAllAnimesRowPreference = (CheckBoxPreference) findPreference(KEY_SHOW_ALL_ANIMES_ROW);
         mAnimesSortOrderPreference = (ListPreference) findPreference(KEY_ANIMES_SORT_ORDER);
+
+        boolean separateAnime = mSharedPreferences.getBoolean(KEY_SEPARATE_ANIME_MOVIE_SHOW, SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+        PreferenceCategory leanbackCategory = (PreferenceCategory) findPreference("category_leanback_user_interface");
+        if (!separateAnime && leanbackCategory != null) {
+            if (mShowAllAnimesRowPreference != null) leanbackCategory.removePreference(mShowAllAnimesRowPreference);
+            if (mAnimesSortOrderPreference != null) leanbackCategory.removePreference(mAnimesSortOrderPreference);
+        }
         mAboutPreferences = (PreferenceCategory) findPreference(KEY_ABOUT_PREFERENCES);
         Preference novaVersion = (Preference) findPreference("preferences_version");
         novaVersion.setTitle(mSharedPreferences.getString("nova_version", "@string/APP_INFO"));
@@ -972,20 +979,18 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         });
 
         mSeparateAnimeMoviePreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            boolean oldValue = getPreferenceManager().getSharedPreferences().getBoolean(KEY_SEPARATE_ANIME_MOVIE_SHOW, SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
-            // !oldValue is the new value...
-            mSeparateAnimeMoviePreference.setChecked(!oldValue);
+            boolean separate = (Boolean) newValue;
             PreferenceCategory prefCategory = (PreferenceCategory) findPreference("category_leanback_user_interface");
-            if (!oldValue) {
-                // set visible
-                prefCategory.addPreference(mShowAllAnimesRowPreference);
-                prefCategory.addPreference(mAnimesSortOrderPreference);
-            } else {
-                // set not visible
-                prefCategory.removePreference(mShowAllAnimesRowPreference);
-                prefCategory.removePreference(mAnimesSortOrderPreference);
+            if (prefCategory != null) {
+                if (separate) {
+                    if (mShowAllAnimesRowPreference != null) prefCategory.addPreference(mShowAllAnimesRowPreference);
+                    if (mAnimesSortOrderPreference != null) prefCategory.addPreference(mAnimesSortOrderPreference);
+                } else {
+                    if (mShowAllAnimesRowPreference != null) prefCategory.removePreference(mShowAllAnimesRowPreference);
+                    if (mAnimesSortOrderPreference != null) prefCategory.removePreference(mAnimesSortOrderPreference);
+                }
             }
-            return false;
+            return true;
         });
 
         Preference p = findPreference(KEY_ADVANCED_VIDEO_QUIT);
