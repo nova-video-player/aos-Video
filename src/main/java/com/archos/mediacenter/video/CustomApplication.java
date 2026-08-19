@@ -105,6 +105,8 @@ import java.util.regex.Pattern;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CustomApplication extends Application implements DefaultLifecycleObserver {
 
@@ -711,6 +713,14 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         }.start();
 
         // Initialize picasso thumbnail extension
+        // Bound Picasso's background thread pool so poster decoding/FidelityTransformation
+        // work does not compete with the main/render thread during the leanback MainFragment
+        // initial browse screen transition (several rows of posters loading at once).
+        // Fixed (not core-count-relative): Picasso's own default executor already scales
+        // itself up to 4 threads on WiFi/Ethernet (see PicassoExecutorService.adjustThreadCount),
+        // so a cores-based cap gives no real headroom on hexa/octa-core boxes. Cap at 2 regardless
+        // of core count to guarantee slack for the UI thread during that launch burst.
+        ExecutorService picassoExecutor = Executors.newFixedThreadPool(2);
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
             // for Android versions below 7.1.1 we need to trust letsencrypt certificates
             Picasso.setSingletonInstance(
@@ -718,6 +728,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                             .addRequestHandler(new ThumbnailRequestHandler(mContext))
                             .addRequestHandler(new SmbRequestHandler(mContext))
                             .downloader(new TrustingOkHttp3Downloader(mContext))
+                            .executor(picassoExecutor)
                             .build()
             );
         } else {
@@ -725,6 +736,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                     new Picasso.Builder(mContext)
                             .addRequestHandler(new ThumbnailRequestHandler(mContext))
                             .addRequestHandler(new SmbRequestHandler(mContext))
+                            .executor(picassoExecutor)
                             .build()
             );
         }
