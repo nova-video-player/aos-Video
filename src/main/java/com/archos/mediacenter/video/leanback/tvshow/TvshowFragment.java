@@ -399,15 +399,19 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         // Start loading the detailed info about the show if needed
         if (mTvshow.getShowTags()==null) {
             if (DBG) Log.d(TAG, "onResume: mTvshow.getShowTags()==null -> FullScraperTagsTask");
+            if (mFullScraperTagsTask != null) {
+                mFullScraperTagsTask.cancel();
+            }
             mFullScraperTagsTask = new FullScraperTagsTask();
             mFullScraperTagsTask.execute(mTvshow);
+        } else {
+            if (mBackdropTask!=null) {
+                if (DBG) Log.d(TAG, "onResume: mBackdropTask!=null -> cancel");
+                mBackdropTask.cancel();
+            }
+            if (DBG) Log.d(TAG, "onResume: new backdropTask");
+            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mTvshow.getShowTags());
         }
-        if (mBackdropTask!=null) {
-            if (DBG) Log.d(TAG, "onResume: mBackdropTask!=null -> cancel");
-            mBackdropTask.cancel();
-        }
-        if (DBG) Log.d(TAG, "onResume: new backdropTask");
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mTvshow.getShowTags());
     }
 
     @Override
