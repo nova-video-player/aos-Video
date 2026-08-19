@@ -1338,11 +1338,15 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
                 ListPreference animesSortOrderPref = (ListPreference)findPreference(KEY_ANIMES_SORT_ORDER);
 
-                animesSortOrderPref.setEntries(AnimesSortOrderEntry.getSortOrderEntries(getActivity(), AllAnimesGridFragment.sortOrderIndexer));
-                animesSortOrderPref.setEntryValues(AnimesSortOrderEntry.getSortOrderEntryValues(getActivity(), AllAnimesGridFragment.sortOrderIndexer));
+                // animesSortOrderPref can be null when "separate anime/movie/show" is disabled
+                // since it gets removed from the leanback category earlier
+                if (animesSortOrderPref != null) {
+                    animesSortOrderPref.setEntries(AnimesSortOrderEntry.getSortOrderEntries(getActivity(), AllAnimesGridFragment.sortOrderIndexer));
+                    animesSortOrderPref.setEntryValues(AnimesSortOrderEntry.getSortOrderEntryValues(getActivity(), AllAnimesGridFragment.sortOrderIndexer));
 
-                if (animesSortOrderPref.getValue() == null)
-                    animesSortOrderPref.setValue(AnimeShowSortOrderEntries.DEFAULT_SORT);
+                    if (animesSortOrderPref.getValue() == null)
+                        animesSortOrderPref.setValue(AnimeShowSortOrderEntries.DEFAULT_SORT);
+                }
 
                 findPreference(KEY_SHOW_ALL_TV_SHOWS_ROW).setOnPreferenceClickListener(preference -> {
                     // Check click speed
