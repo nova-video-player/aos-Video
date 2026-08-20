@@ -637,8 +637,6 @@ Copertina (rotolo di copertina)</string>
     <string name="audio_decoder_choice_title">Scegli decoder audio</string>
     <string name="audio_decoder_choice_summary">Scegli se preferire la decodifica audio con FFmpeg o MediaCodec.</string>
     <string name="audio_decoder_auto">Automatico</string>
-    <string name="audio_decoder_prefer_ffmpeg">Preferisci FFmpeg</string>
-    <string name="audio_decoder_prefer_mediacodec">Preferisci MediaCodec</string>
     <string name="audio_interface_opensles">Forza OpenSL ES</string>
     <string name="audio_interface_audiotrack">Forza Audiotrack</string>
     <string name="audio_interface_any">Logica predefinita</string>

@@ -320,7 +320,6 @@
     <string name="pref_play_mode_entry_repeat_single">Potwórz pojedynczy</string>
     <string name="pref_play_mode_entry_binge">Odcinek po odcinku</string>
     <string name="pref_introdb_autoskip_title">Pomiń wstęp/zakończenie</string>
-    <string name="pref_introdb_skip_recap_title">Pomiń podsumowanie</string>
     <string name="introdb_autoskip_on">Autopomijanie włączone</string>
     <string name="introdb_autoskip_off">Autopomijanie wyłączone</string>
     <string name="introdb_autoskip">Autopomijanie</string>

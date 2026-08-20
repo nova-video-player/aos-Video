@@ -732,8 +732,6 @@ desteklenmiyor.</string>
     <string name="audio_decoder_choice_title">Ses kod çözücüsünü seç</string>
     <string name="audio_decoder_choice_summary">Ses kod çözme işlemi için FFmpeg mi yoksa MediaCodec mi tercih edileceğini belirler.</string>
     <string name="audio_decoder_auto">Otomatik</string>
-    <string name="audio_decoder_prefer_ffmpeg">FFmpeg\'i tercih et</string>
-    <string name="audio_decoder_prefer_mediacodec">MediaCodec\'i tercih et</string>
     <string name="audio_interface_opensles">OpenSL ES\'yi Zorla</string>
     <string name="audio_interface_audiotrack">Ses İzini Zorla</string>
     <string name="audio_interface_any">Varsayılan mantık</string>

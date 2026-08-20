@@ -138,6 +138,7 @@
     <string name="date_view_year">年</string>
     <string name="all_movies_and_tv_shows">电影和电视节目</string>
     <string name="non_scraped_videos">未刮削的视频</string>
+    <string name="non_scraped_videos_format">未刮削的视频  -  %d</string>
     <string name="no_server">没有找到媒体服务器</string>
     <string name="cannot_open_video">无法打开此视频</string>
     <string name="confirm_delete">你确定要删除吗？</string>
@@ -305,7 +306,6 @@
     <string name="pref_play_mode_entry_repeat_single">单次重复</string>
     <string name="pref_play_mode_entry_binge">连续播放</string>
     <string name="pref_introdb_autoskip_title">跳过片头/片尾</string>
-    <string name="pref_introdb_skip_recap_title">跳过前情提要（连续播放）</string>
     <string name="introdb_autoskip_on">自动跳过已启用</string>
     <string name="introdb_autoskip_off">自动跳过已禁用</string>
     <string name="introdb_autoskip">自动跳过</string>
@@ -872,6 +872,7 @@
     <string name="trakt_device_auth_invalid_code">无法从 Trakt 获取有效的设备代码。请重试。</string>
     <string name="trakt_device_auth_timeout">代码已过期。请重试。</string>
     <string name="trakt_account_locked">Trakt 账号已锁定。请前往 trakt.tv 解锁或稍后重试。</string>
+    <string name="trakt_social_signin_unsupported">此处不支持使用 Google/Facebook/Apple 账号登录。请改用您的 Trakt 用户名和密码登录。</string>
     <string name="connect_trakt">连接到 Trakt</string>
     <string name="trakt_sync_status_never">尚未同步</string>
     <string name="trakt_sync_status_ok">上次同步：%1$s 前</string>

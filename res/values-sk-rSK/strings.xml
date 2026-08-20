@@ -141,6 +141,7 @@
     <string name="date_view_year">Rok</string>
     <string name="all_movies_and_tv_shows">Filmy a Seriály</string>
     <string name="non_scraped_videos">Videá bez získaných informácií</string>
+    <string name="non_scraped_videos_format">Videá bez stiahnutia  -  %d</string>
     <string name="no_server">Nenašiel sa žiadny mediálny server</string>
     <string name="cannot_open_video">Nie je možné otvoriť video</string>
     <string name="confirm_delete">Naozaj ho chcete odstrániť?</string>
@@ -320,7 +321,6 @@
     <string name="pref_play_mode_entry_repeat_single">Opakovanie jednej položky</string>
     <string name="pref_play_mode_entry_binge">Nepretržité sledovanie</string>
     <string name="pref_introdb_autoskip_title">Preskočiť úvod/záverečnú časť</string>
-    <string name="pref_introdb_skip_recap_title">Preskočiť zhrnutie (maratónové sledovanie)</string>
     <string name="introdb_autoskip_on">Automatické preskakovanie je zapnuté</string>
     <string name="introdb_autoskip_off">Automatické preskakovanie je vypnuté</string>
     <string name="introdb_autoskip">Automatické preskočenie</string>
@@ -887,6 +887,7 @@
     <string name="trakt_device_auth_invalid_code">Nepodarilo sa získať platný kód zariadenia od služby Trakt. Skúste to prosím znova.</string>
     <string name="trakt_device_auth_timeout">Kód vypršal. Skúste to znovu.</string>
     <string name="trakt_account_locked">Účet Trakt je uzamknutý. Odomknite ho na trakt.tv alebo to skúste neskôr.</string>
+    <string name="trakt_social_signin_unsupported">Prihlásenie cez Google/Facebook/Apple nie je podporované. Prihláste sa prosím pomocou svojho používateľského mena a hesla pre Trakt.</string>
     <string name="connect_trakt">Pripojiť sa k Trakt</string>
     <string name="trakt_sync_status_never">Ešte nie je synchronizované</string>
     <string name="trakt_sync_status_ok">Posledná synchronizácia: pred %1$s</string>
@@ -915,7 +916,7 @@
         - Bod obnovenia\n
         - Synchronizácia služby Trakt</string>
     <string name="dont_show_again">Nezobrazovať znova</string>
-    <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Sieť &amp; Súbory</string>
+    <string name="leanback_browsing" comment="header for network, internal, usb, sdcard">Sieť a súbory</string>
     <string name="leanback_subtitles_integrated">Integrované titulky</string>
     <string name="leanback_subtitles_external">Externé titulky</string>
     <string name="leanback_posters_header">Plagáty</string>

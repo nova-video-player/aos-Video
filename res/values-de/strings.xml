@@ -139,6 +139,7 @@
     <string name="date_view_year">Jahr</string>
     <string name="all_movies_and_tv_shows">Filme und TV-Serien</string>
     <string name="non_scraped_videos">Nicht gescrapte Videos</string>
+    <string name="non_scraped_videos_format">Nicht gescrapte Videos - %d</string>
     <string name="no_server">Kein Medienserver gefunden</string>
     <string name="cannot_open_video">Dieses Video kann nicht geöffnet werden</string>
     <string name="confirm_delete">Möchten Sie dies wirklich löschen?</string>
@@ -730,8 +731,6 @@
     <string name="audio_decoder_choice_title">Audio-Decodierer auswählen</string>
     <string name="audio_decoder_choice_summary">Legt fest, ob die Audio-Dekodierung FFmpeg oder MediaCodec bevorzugt.</string>
     <string name="audio_decoder_auto">Automatisch</string>
-    <string name="audio_decoder_prefer_ffmpeg">FFmpeg bevorzugen</string>
-    <string name="audio_decoder_prefer_mediacodec">MediaCodec bevorzugen</string>
     <string name="audio_interface_opensles">OpenSL ES erzwingen</string>
     <string name="audio_interface_audiotrack">Audiospur erzwingen</string>
     <string name="audio_interface_any">Standardlogik</string>

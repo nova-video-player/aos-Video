@@ -139,6 +139,7 @@
     <string name="date_view_year">Année</string>
     <string name="all_movies_and_tv_shows">Films et séries</string>
     <string name="non_scraped_videos">Vidéos sans description</string>
+    <string name="non_scraped_videos_format">Vidéos sans description -  %d</string>
     <string name="no_server">Pas de serveur de media trouvé</string>
     <string name="cannot_open_video">Cette vidéo n\'a pas pu être lue</string>
     <string name="confirm_delete">Êtes vous sûr de vouloir le supprimer?</string>
@@ -310,7 +311,6 @@
     <string name="pref_play_mode_entry_repeat_single">Répétition du fichier</string>
     <string name="pref_play_mode_entry_binge">Rafale (binge)</string>
     <string name="pref_introdb_autoskip_title">Passer l\'intro/l\'outro</string>
-    <string name="pref_introdb_skip_recap_title">Passer le récap (rafale)</string>
     <string name="introdb_autoskip_on">Saut automatique activé</string>
     <string name="introdb_autoskip_off">Saut automatique désactivé</string>
     <string name="introdb_autoskip">Saut automatique</string>
@@ -877,6 +877,7 @@
     <string name="trakt_device_auth_invalid_code">Impossible d\'obtenir un code d\'appareil valide de Trakt. Veuillez réessayer.</string>
     <string name="trakt_device_auth_timeout">Le code a expiré. Veuillez réessayer.</string>
     <string name="trakt_account_locked">Compte Trakt verrouillé. Déverrouillez sur trakt.tv ou essayez plus tard.</string>
+    <string name="trakt_social_signin_unsupported">Connectez-vous avec Google/Facebook/Apple n\'est pas pris en charge ici. Veuillez vous connecter avec votre nom d\'utilisateur et votre mot de passe Trakt.</string>
     <string name="connect_trakt">Connexion à Trakt</string>
     <string name="trakt_sync_status_never">Pas encore synchronisé</string>
     <string name="trakt_sync_status_ok">Dernière synchronisation : il y a %1$s</string>

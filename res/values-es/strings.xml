@@ -139,6 +139,7 @@
     <string name="date_view_year">Año</string>
     <string name="all_movies_and_tv_shows">Películas y series</string>
     <string name="non_scraped_videos">Videos no indexados</string>
+    <string name="non_scraped_videos_format">Vídeos no indexados -  %d</string>
     <string name="no_server">No se encontró ningún servidor multimedia</string>
     <string name="cannot_open_video">No se puede abrir este vídeo</string>
     <string name="confirm_delete">¿Realmente quieres eliminarlo?</string>
@@ -237,7 +238,7 @@
     <string name="scraper_no_movie_button_label">Buscar información en línea de la película</string>
     <string name="scraper_no_tv_show_text">Actualmente no tienes cartel e información para tus series</string>
     <string name="scraper_no_tv_show_button_label">Buscar información en línea de la serie</string>
-    <string name="imdb_title_url">https://www.imdb.com</string>
+    <string name="imdb_title_url">https://www.imdb.com/title/</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Almacenamiento</string>
     <string name="rescan_storage">Volver a escanear almacenamiento</string>
@@ -310,7 +311,6 @@
     <string name="pref_play_mode_entry_repeat_single">Repetir único</string>
     <string name="pref_play_mode_entry_binge">Maratón de series</string>
     <string name="pref_introdb_autoskip_title">Saltar cabecera/cierre</string>
-    <string name="pref_introdb_skip_recap_title">Saltar resumen (maratón)</string>
     <string name="introdb_autoskip_on">Autosalto activado</string>
     <string name="introdb_autoskip_off">Autosalto desactivado</string>
     <string name="introdb_autoskip">Autosalto</string>
@@ -580,6 +580,8 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="preferences_tv_refreshrate_switch_disabled">Desactivado</string>
     <string name="preferences_tv_refreshrate_switch_mode_selection">Mostrar modo de selección que coincide con fps de vídeo</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">Función de coincidencia de ratio de fotogramas para Android 12 +</string>
+    <string name="preference_dolby_vision_mode">Modo Dolby Vision</string>
+    <string name="preference_force_dolby_vision">Forzar Dolby Vision</string>
     <string name="preference_remove_dolby_vision">Desactivar Dolby Vision</string>
     <string name="preference_remove_dolby_vision_summary">Usa códecs de vídeo estándar sobre los de Dolby Visión</string>
     <string name="preference_cutout_short_edges">Pantalla completa con recortes de pantalla</string>
@@ -677,6 +679,8 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="network_thumbnails">Crear miniaturas remotas</string>
     <string name="network_thumbnails_summary">Crea miniaturas de vídeos remotos cuando no hay carteles disponibles</string>
     <string name="network_bookmarks_summary">Guarda y comprueba cuando sea posible los puntos de reanudación y los marcadores de posición en la red</string>
+    <string name="share_folders_smbj">Usar implementación alternativa de SMB (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Habilita la implementación alternativa de SMB limitando el soporte al protocolo anterior a la versión 2. Advertencia: puede ser más lento en algunos dispositivos.</string>
     <string name="share_folders_sshj">Usar nueva implementación de SFTP</string>
     <string name="share_folders_sshj_summary">Habilita la nueva implementación para enlaces SFTP</string>
     <string name="share_folders_smbv2">Activar soporte para SMBv2</string>
@@ -774,13 +778,13 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="preferences_show_watching_up_next_row_summary">Marcar para mostrar fila con lo que se esta viendo y lo siguiente</string>
     <string name="preferences_show_watching_up_next_row">Mostrar fila viendo/próximos</string>
     <string name="preferences_show_last_added_row_summary">Marcar para mostrar una fila con tus últimos medios añadidos</string>
-    <string name="preferences_show_last_added_row">Mostrar fila último añadido</string>
+    <string name="preferences_show_last_added_row">Mostrar fila Recién añadido</string>
     <string name="preferences_show_last_played_row_summary">Marcar para mostrar fila con últimos medios reproducidos</string>
-    <string name="preferences_show_last_played_row">Mostrar fila último visto</string>
-    <string name="preferences_reset_last_played_row">Restablecer fila último visto</string>
-    <string name="reset_last_played_row_in_progress">Restableciendo fila último visto</string>
+    <string name="preferences_show_last_played_row">Mostrar fila Recién visto</string>
+    <string name="preferences_reset_last_played_row">Restablecer fila Recién visto</string>
+    <string name="reset_last_played_row_in_progress">Restableciendo fila Recién visto</string>
     <string name="pref_smart_recently_rows_title">Categorías inteligentes recientes</string>
-    <string name="pref_declutter_home_rows_summary">Mostrar sólo contenido no visto en Recien añadido y evitar duplicados en Recien visto</string>
+    <string name="pref_declutter_home_rows_summary">Mostrar sólo contenido no visto en Recién añadido y evitar duplicados en Recién visto</string>
     <string name="preferences_show_all_movies_row_summary">Marcar para mostrar una fila con todas tus películas en lugar de la fila de categorías de la película</string>
     <string name="preferences_show_all_movies_row">Mostrar fila Todas las películas</string>
     <string name="preferences_movie_sort_order_summary">Selecciona el orden de la fila Todas las películas</string>
@@ -874,6 +878,7 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="trakt_device_auth_invalid_code">Error al obtener un código de dispositivo válido desde Trakt. Por favor, inténtalo de nuevo.</string>
     <string name="trakt_device_auth_timeout">Código caducado. Por favor, inténtalo de nuevo.</string>
     <string name="trakt_account_locked">Cuenta de Trakt bloqueada. Desbloquea en trakt.tv o inténtalo más tarde.</string>
+    <string name="trakt_social_signin_unsupported">Iniciar sesión con Google/Facebook/Apple no es posible aquí. Por favor, inicia sesión con tu nombre de usuario y contraseña de Trakt.</string>
     <string name="connect_trakt">Conectar a Trakt</string>
     <string name="trakt_sync_status_never">Aún no sincronizado</string>
     <string name="trakt_sync_status_ok">Última sincronización: hace %1$s</string>
@@ -952,7 +957,7 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="scheduled_rescan_period_every_hour">Cada hora</string>
     <string name="scheduled_rescan_time">Tiempo para volver a escanear</string>
     <string name="rescan_when_opening_application">Re-escanear al abrir la aplicación</string>
-    <string name="last_rescan_occured">Ocurrido en último re-escaneo:</string>
+    <string name="last_rescan_occured">Último re-escaneo realizado:</string>
     <string name="error_permission_display_over_apps">El modo ventana necesita permisos especiales para que Nova Video Player sea mostrado por delante de otras aplicaciones. Por favor, concede este permiso al reproductor de vídeo Nova para cambiar al modo ventana.</string>
     <string name="intro_overlay_text">Toca para enviar vídeos a tu TV</string>
     <string name="drawer_open">abrir panel de navegación</string>

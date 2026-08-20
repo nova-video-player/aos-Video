@@ -734,8 +734,6 @@
     <string name="audio_decoder_choice_title">Вибір аудіодекодера</string>
     <string name="audio_decoder_choice_summary">Визначає, чому надається перевага для декодування аудіо: FFmpeg чи MediaCodec.</string>
     <string name="audio_decoder_auto">Автоматично</string>
-    <string name="audio_decoder_prefer_ffmpeg">Надавати перевагу FFmpeg</string>
-    <string name="audio_decoder_prefer_mediacodec">Надавати перевагу MediaCodec</string>
     <string name="audio_interface_opensles">Примусово OpenSL ES</string>
     <string name="audio_interface_audiotrack">Примусова аудіодоріжка</string>
     <string name="audio_interface_any">За замовчуванням</string>
