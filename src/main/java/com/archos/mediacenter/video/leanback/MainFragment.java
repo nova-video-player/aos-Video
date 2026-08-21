@@ -837,8 +837,14 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         setAdapter(mRowsAdapter);
         // A cold start creates banner placeholders.  Schedule their composite-icon replacement
-        // even when no scanner-finished broadcast is delivered for this process.
-        scheduleBoxRefreshAfterScannerQuietPeriod("initial rows attached");
+        // when no import is underway.  An active import will send the scanner-finished broadcast;
+        // using that authoritative signal avoids building the same icons once before and once
+        // after the import completes.
+        if (isVideoImportRunning()) {
+            if (log.isDebugEnabled()) log.debug("initial box refresh: waiting for active import to finish");
+        } else {
+            scheduleBoxRefreshAfterScannerQuietPeriod("initial rows attached");
+        }
     }
 
     private boolean isCursorCountChanged(Cursor oldCursor, Cursor newCursor) {
@@ -862,6 +868,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         if (log.isDebugEnabled()) log.debug("scanner box refresh: {} - waiting {}ms", reason, SCANNER_BOX_REFRESH_DEBOUNCE_MS);
         mScannerBoxRefreshHandler.removeCallbacks(mRefreshBoxesAfterScannerQuietPeriod);
         mScannerBoxRefreshHandler.postDelayed(mRefreshBoxesAfterScannerQuietPeriod, SCANNER_BOX_REFRESH_DEBOUNCE_MS);
+    }
+
+    private boolean isVideoImportRunning() {
+        return ImportState.VIDEO.isInitialImport() || ImportState.VIDEO.isRegularImport();
     }
 
     private void buildAllMoviesBox(Boolean buildIcons) {
@@ -1478,7 +1488,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (updateActivity("onLoadFinished") == null) return;
-        boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || LoaderUtils.getScrapeInProgress() || ImportState.VIDEO.isInitialImport();
+        boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || LoaderUtils.getScrapeInProgress() || isVideoImportRunning();
         if (log.isDebugEnabled()) log.debug("onLoadFinished: cursor id={}, scanningOnGoing={}", cursorLoader.getId(), scanningOnGoing);
 
         // Check if this loader has completed its initial load
