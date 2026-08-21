@@ -152,7 +152,7 @@ public class  UpdateRecommendationsService extends IntentService implements Defa
 							.setContext(getApplicationContext())
 							.setSmallIcon(R.mipmap.nova);
 					final String scraperCover = c.getString(c.getColumnIndexOrThrow(Columns.COVER_PATH));
-					Bitmap bitmap = BitmapFactory.decodeFile(scraperCover);
+					Bitmap bitmap = com.archos.mediacenter.utils.BitmapUtils.decodeSampledBitmapFromFile(scraperCover, 500, 750);
 					if (bitmap == null&&c.getLong(mIDColumns) >= 0) {
 						BitmapFactory.Options options = new BitmapFactory.Options();
 						options.inSampleSize = 2;

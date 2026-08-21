@@ -945,7 +945,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                         int index_name = scraperCursor
                                 .getColumnIndex(ScraperStore.AllVideos.MOVIE_OR_SHOW_NAME);
 
-                        thumbnail = BitmapFactory.decodeFile(scraperCursor.getString(index_cover));
+                        thumbnail = com.archos.mediacenter.utils.BitmapUtils.decodeSampledBitmapFromFile(scraperCursor.getString(index_cover), 300, 450);
 
                         if (scraperType == com.archos.mediascraper.BaseTags.MOVIE) {
                             name = scraperCursor.getString(index_name);

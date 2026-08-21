@@ -3621,7 +3621,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     Bitmap result = null;
                     boolean foundPoster = false;
                     if (posterPath != null) {
-                        Bitmap bm = BitmapFactory.decodeFile(posterPath);
+                        Bitmap bm = com.archos.mediacenter.utils.BitmapUtils.decodeSampledBitmapFromFile(posterPath, 150, 225);
                         if (bm != null) {
                             float scaleFactor = (float)100 / (float)bm.getWidth();
                             result = Bitmap.createScaledBitmap(bm, (int)(scaleFactor * (float)bm.getWidth()), (int)(scaleFactor * (float)bm.getHeight()), true);

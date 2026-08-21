@@ -2474,7 +2474,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         Bitmap bitmap = null;
         if (mVideoInfo.scraperCover != null && !mVideoInfo.scraperCover.isEmpty()) {
             // Video has a poster, try to decode it
-            bitmap = BitmapFactory.decodeFile(mVideoInfo.scraperCover);
+            bitmap = com.archos.mediacenter.utils.BitmapUtils.decodeSampledBitmapFromFile(mVideoInfo.scraperCover, 512, 512);
         }
         if (bitmap == null && mVideoInfo.id >= 0 && (mVideoInfo.scraperCover == null || mVideoInfo.scraperCover.isEmpty())) {
             // No poster available, generate thumbnail
