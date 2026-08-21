@@ -133,6 +133,12 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private static final Logger log = LoggerFactory.getLogger(MainFragment.class);
 
+    /**
+     * A scan can finish several roots in quick succession.  Rebuilding every category box for
+     * each broadcast competes with the main/render thread exactly when the browse UI is busy.
+     */
+    private static final long SCANNER_BOX_REFRESH_DEBOUNCE_MS = 1500;
+
     // /!\ FIXME cannot be enabled since on large collection of videos viewed, loader takes forever to complete
     // this causes VideoLoader that has only a poolsize of one to not process any other loaders
     public final static boolean FEATURE_WATCH_UP_NEXT = false;
@@ -239,6 +245,12 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private BuildBoxIconTask mBuildAllCollectionsBoxTask;
     private BuildBoxIconTask mBuildAllAnimeCollectionsBoxTask;
     private BuildBoxIconTask mBuildAllAnimeShowsBoxTask;
+
+    private final Handler mScannerBoxRefreshHandler = new Handler(Looper.getMainLooper());
+    private final Runnable mRefreshBoxesAfterScannerQuietPeriod = () -> {
+        if (log.isDebugEnabled()) log.debug("scanner box refresh: quiet period elapsed");
+        refreshAllBoxes();
+    };
 
     private Activity mActivity;
 
@@ -365,6 +377,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     public void onDestroyView() {
         if (log.isDebugEnabled()) log.debug("onDestroyView");
         mRowsSelectionHandler.removeCallbacks(mClearRowPendingSelection);
+        mScannerBoxRefreshHandler.removeCallbacks(mRefreshBoxesAfterScannerQuietPeriod);
         mRowPendingSelection = null;
         if (mBuildAllMoviesBoxTask != null) mBuildAllMoviesBoxTask.cancel();
         if (mBuildAllAnimesBoxTask != null) mBuildAllAnimesBoxTask.cancel();
@@ -606,6 +619,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     public void onPause() {
         super.onPause();
         mOverlay.pause();
+        mScannerBoxRefreshHandler.removeCallbacks(mRefreshBoxesAfterScannerQuietPeriod);
 
         // be sure to reload loaders and iconBoxes in onResume after an onPause
         wasInPause = true;
@@ -1681,8 +1695,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         public void onReceive(Context context, Intent intent) {
             if (log.isDebugEnabled()) log.debug("mUpdateReceiver: received intent!!!");
             if (context != null && intent != null && intent.getAction().equals(ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED)) {
-                if (log.isDebugEnabled()) log.debug("mUpdateReceiver: update all boxes");
-                refreshAllBoxes();
+                if (log.isDebugEnabled()) log.debug("mUpdateReceiver: debounce all-box refresh by {}ms", SCANNER_BOX_REFRESH_DEBOUNCE_MS);
+                mScannerBoxRefreshHandler.removeCallbacks(mRefreshBoxesAfterScannerQuietPeriod);
+                mScannerBoxRefreshHandler.postDelayed(mRefreshBoxesAfterScannerQuietPeriod, SCANNER_BOX_REFRESH_DEBOUNCE_MS);
             }
         }
     };
