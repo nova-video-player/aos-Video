@@ -57,6 +57,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,6 +78,9 @@ import androidx.loader.app.LoaderManager;
 import androidx.preference.PreferenceManager;
 
 import com.archos.filecorelibrary.FileUtils;
+import com.archos.mediaprovider.ImportState;
+import com.archos.mediaprovider.video.LoaderUtils;
+import com.archos.mediaprovider.video.NetworkScannerReceiver;
 import com.archos.mediacenter.utils.GlobalResumeView;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.CustomApplication;
@@ -94,6 +98,7 @@ import com.archos.mediacenter.video.browser.filebrowsing.BrowserByVideoFolder;
 import com.archos.mediacenter.video.info.SingleVideoLoader;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.utils.ActiveOperationMonitor;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.MiscUtils;
@@ -580,6 +585,15 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
+    private final Handler mKeepScreenOnHandler = new Handler(Looper.getMainLooper());
+    private final Runnable mKeepScreenOnRunnable = new Runnable() {
+        @Override
+        public void run() {
+            ActiveOperationMonitor.updateKeepScreenOn(MainActivity.this);
+            mKeepScreenOnHandler.postDelayed(this, 1000);
+        }
+    };
+
     @Override
     public void onResume() {
         super.onResume();
@@ -599,11 +613,14 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         getContentResolver().registerContentObserver(VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
                 false, mGlobalResumeContentObserver);
         LoaderManager.getInstance(this).restartLoader(0, null, mNewVideosActionProvider);
+        mKeepScreenOnHandler.post(mKeepScreenOnRunnable);
     }
 
 
     @Override
     public void onPause() {
+        mKeepScreenOnHandler.removeCallbacks(mKeepScreenOnRunnable);
+        ActiveOperationMonitor.clearKeepScreenOn(this);
         unregisterReceiver(mTraktRelogBroadcastReceiver);
         if (mGlobalResumeContentObserver != null) {
             getContentResolver().unregisterContentObserver(mGlobalResumeContentObserver);

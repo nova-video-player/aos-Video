@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.overlay;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -22,10 +23,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.utils.ActiveOperationMonitor;
 import com.archos.mediaprovider.ImportState;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
 import com.archos.mediaprovider.video.NetworkScannerServiceVideo;
@@ -45,6 +48,7 @@ public class ScannerAndScraperProgress {
     // For now i'm doing some basic polling...
     final static int REPEAT_PERIOD_MS = 1000;
 
+    final private Context mContext;
     final private View mProgressGroup;
     final private ProgressBar mProgressWheel;
     final private TextView mCount;
@@ -61,6 +65,7 @@ public class ScannerAndScraperProgress {
     private int mStatusVisibility = View.GONE;
 
     public ScannerAndScraperProgress(Context context, View overlayContainer) {
+        mContext = context;
         mProgressGroup = overlayContainer.findViewById(R.id.progress_group);
         mProgressWheel = (ProgressBar) mProgressGroup.findViewById(R.id.progress);
         mCount = (TextView) mProgressGroup.findViewById(R.id.count);
@@ -89,6 +94,9 @@ public class ScannerAndScraperProgress {
         mGeneralVisibility = View.GONE;
         updateVisibility();
         mRepeatHandler.removeCallbacks(mRepeatRunnable);
+        if (mContext instanceof Activity) {
+            ActiveOperationMonitor.clearKeepScreenOn((Activity) mContext);
+        }
     }
 
     private Runnable mRepeatRunnable = new Runnable() {
@@ -97,6 +105,9 @@ public class ScannerAndScraperProgress {
             boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || LoaderUtils.getScrapeInProgress() || ImportState.VIDEO.isInitialImport() || ImportState.VIDEO.isRegularImport();
             mStatusVisibility = scanningOnGoing ? View.VISIBLE : View.GONE;
             if (log.isTraceEnabled()) log.trace("mRepeatRunnable: visibility {} because scanningOngoing {} due to networkScanner {} due to autoScrapeService {} due to isInitialImport {} due to isRegularImport {}", mStatusVisibility, scanningOnGoing, NetworkScannerReceiver.isScannerWorking(), LoaderUtils.getScrapeInProgress(), ImportState.VIDEO.isInitialImport(), ImportState.VIDEO.isRegularImport());
+            if (mContext instanceof Activity) {
+                ActiveOperationMonitor.updateKeepScreenOn((Activity) mContext);
+            }
             updateCount();
             updateVisibility();
             mRepeatHandler.postDelayed(this, REPEAT_PERIOD_MS);
