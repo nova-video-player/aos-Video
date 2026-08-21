@@ -80,6 +80,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
         super.onCreate(icicle);
 
         setContentView(R.layout.subtitles_wizard_main);
+        applySystemInsets(findViewById(R.id.root));
 
         mWizardCommon.onCreate();
 
@@ -106,6 +107,15 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
         
         // Handle the message to display when there are no files
         enableEmptyView(mWizardCommon.getAvailableFilesCount() == 0 && mWizardCommon.getCurrentFilesCount() == 0);
+    }
+
+    private void applySystemInsets(View root) {
+        final int initialLeft = root.getPaddingLeft();
+        final int initialTop = root.getPaddingTop();
+        final int initialRight = root.getPaddingRight();
+        final int initialBottom = root.getPaddingBottom();
+        MiscUtils.applySystemWindowInsets(root, true, (v, left, top, right, bottom) ->
+                v.setPadding(initialLeft + left, initialTop + top, initialRight + right, initialBottom + bottom));
     }
 
     private void enableEmptyView(boolean empty) {

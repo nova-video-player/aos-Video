@@ -17,8 +17,10 @@ package com.archos.mediacenter.video.utils.credentialsmanager;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.utils.MiscUtils;
 
 
 public class CredentialsManagerPreferenceActivity extends AppCompatActivity {
@@ -27,9 +29,15 @@ public class CredentialsManagerPreferenceActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.credentials_manager_activity);
+        applySystemInsets(findViewById(R.id.root));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportFragmentManager().beginTransaction().add(R.id.root,new CredentialsManagerPreferencesFragment()).commit();
+    }
+
+    private void applySystemInsets(View root) {
+        MiscUtils.applySystemWindowInsets(root, true, (v, left, top, right, bottom) ->
+                v.setPadding(left, top, right, bottom));
     }
     
     @Override
