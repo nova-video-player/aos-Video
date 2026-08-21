@@ -16,7 +16,9 @@ package com.archos.mediacenter.video.leanback.details;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -28,13 +30,25 @@ import com.archos.mediacenter.video.leanback.LeanbackActivity;
 
 public class VideoDetailsActivity extends LeanbackActivity {
 
+    private static final String TAG = "VideoDetailsActivity";
+
     public static final String SHARED_ELEMENT_NAME = "hero";
     public static final String SLIDE_TRANSITION_EXTRA = "slide_transition";
     public static final String SLIDE_DIRECTION_EXTRA = "slide_direction";
 
+    private void traceDetails(String event) {
+        long launchUptimeMs = getIntent().getLongExtra(
+                VideoDetailsFragment.EXTRA_DETAILS_LAUNCH_UPTIME_MS, -1);
+        String elapsed = launchUptimeMs >= 0
+                ? String.valueOf(SystemClock.elapsedRealtime() - launchUptimeMs)
+                : "n/a";
+        Log.d(TAG, "details-timing: event=" + event + ", sinceTapMs=" + elapsed);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        traceDetails("activity-onCreate");
 
         // Lollipop only :-(
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
@@ -52,12 +66,14 @@ public class VideoDetailsActivity extends LeanbackActivity {
     }
 
     public void onPause(){
+        traceDetails("activity-onPause");
         super.onPause();
         if(getIntent().getBooleanExtra(VideoDetailsFragment.EXTRA_LAUNCHED_FROM_PLAYER, false))
             TorrentObserverService.paused(this);
     }
     public void onResume(){
         super.onResume();
+        traceDetails("activity-onResume");
         if(getIntent().getBooleanExtra(VideoDetailsFragment.EXTRA_LAUNCHED_FROM_PLAYER, false))
             TorrentObserverService.resumed(this);
     }

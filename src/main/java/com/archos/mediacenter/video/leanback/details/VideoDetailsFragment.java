@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.transition.Slide;
 import android.util.Pair;
 import android.view.Gravity;
@@ -172,6 +173,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public static final String EXTRA_LAUNCHED_FROM_PLAYER = VideoInfoActivity.EXTRA_LAUNCHED_FROM_PLAYER;
 
     public static final String EXTRA_SHOULD_LOAD_BACKDROP = "should_load_backdrop";
+    public static final String EXTRA_DETAILS_LAUNCH_UPTIME_MS = "details_launch_uptime_ms";
 
 
     public static final int REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY = 985;
@@ -220,6 +222,17 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private boolean mResumeFromPlayer;
 
     private boolean mFirstOnResume = true;
+
+    /** Monotonic start time supplied by the clicked card; -1 for non-card entry points. */
+    private long mDetailsLaunchUptimeMs = -1;
+
+    private void traceDetails(String event) {
+        if (log.isDebugEnabled()) {
+            long now = SystemClock.elapsedRealtime();
+            String elapsed = mDetailsLaunchUptimeMs >= 0 ? String.valueOf(now - mDetailsLaunchUptimeMs) : "n/a";
+            log.debug("details-timing: event={}, sinceTapMs={}", event, elapsed);
+        }
+    }
 
     private Overlay mOverlay;
 
@@ -325,6 +338,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDetailsLaunchUptimeMs = getActivity().getIntent()
+                .getLongExtra(EXTRA_DETAILS_LAUNCH_UPTIME_MS, -1);
+        traceDetails("fragment-onCreate");
         if (log.isDebugEnabled()) log.debug("onCreate");
         // pass the right deleteLauncher linked to activity
         FileUtilsQ.setDeleteLauncher(deleteLauncher);
@@ -340,12 +356,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             TransitionHelper.addTransitionListener(transition, new TransitionListener() {
                 @Override
                 public void onTransitionStart(Object transition) {
+                    traceDetails("enter-transition-start");
                     mAnimationIsRunning = true;
                     mOverlay.hide();
                 }
 
                 @Override
                 public void onTransitionEnd(Object transition) {
+                    traceDetails("enter-transition-end");
                     mAnimationIsRunning = false;
                     if (mThumbnail != null) {
                         mDetailsOverviewRow.setImageBitmap(getActivity(), mThumbnail);
@@ -366,7 +384,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mOverviewRowPresenter = new ArchosDetailsOverviewRowPresenter(mDescriptionPresenter);
         //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
         FullWidthDetailsOverviewSharedElementHelper helper = new FullWidthDetailsOverviewSharedElementHelper();
-        helper.setSharedElementEnterTransition(getActivity(), VideoDetailsActivity.SHARED_ELEMENT_NAME, 1000);
+        // The overview row is now created from the intent before the DB reload, so a short
+        // layout grace period is sufficient; the former 1s timeout visibly held every open.
+        helper.setSharedElementEnterTransition(getActivity(), VideoDetailsActivity.SHARED_ELEMENT_NAME, 200);
         mOverviewRowPresenter.setListener(helper);
         mOverviewRowPresenter.setBackgroundColor(ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor());
         mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor()));
@@ -540,6 +560,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mOverlay = new Overlay(this);
+
+        // The clicked card already provides a Video.  Build a provisional overview immediately
+        // so the shared-element helper has a destination hero view before the DB reload and
+        // poster decode complete.  onLoadFinished remains the authoritative progressive update.
+        if (mVideo != null && mAdapter == null) {
+            traceDetails("initial-overview-from-intent");
+            fullyReloadVideo(mVideo, null, false);
+        }
     }
 
     @Override
@@ -571,6 +599,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onResume() {
         super.onResume();
+        traceDetails("fragment-onResume");
         if (log.isDebugEnabled()) log.debug("onResume");
         mShouldUpdateRemoteResume = true;
         mOverlay.resume();
@@ -622,6 +651,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     mThumbnailAsyncTask.cancel();
             }
             // We start the loader in all cases to get DB updates that will trigger details update if need be
+            traceDetails("details-loader-restart-requested");
             LoaderManager.getInstance(this).restartLoader(1, null, this);
         }
         // Update the details when back from player (we may have miss some DB updates while in background)
@@ -846,6 +876,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     //--------------------------------------------------------------------
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        traceDetails("details-loader-created");
         // If we don't have the video object
         if (mVideo==null) {
             if (mVideoIdFromPlayer >=0) {
@@ -909,6 +940,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (getActivity() == null) return;
+        traceDetails("details-loader-finished");
         long start = System.currentTimeMillis();
         Video oldVideoObject = mVideo;
         List<Video> oldVideoList = new ArrayList<>(mVideoList);
@@ -1001,6 +1033,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if (mThumbnailAsyncTask != null)
                 mThumbnailAsyncTask.cancel();
             mDetailRowBuilderTask = new DetailRowBuilderTask();
+            traceDetails("detail-row-builder-queued");
             mDetailRowBuilderTask.execute(mVideo);
         }
 
@@ -1272,6 +1305,16 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
      */
 
     private void fullyReloadVideo(Video video, Bitmap poster) {
+        fullyReloadVideo(video, poster, true);
+    }
+
+    /**
+     * @param showFallbackPoster whether a missing poster should show the generic file icon.
+     *                          The provisional shared-element row must stay empty so Android can
+     *                          carry the clicked card's poster into it without a visible icon flash.
+     */
+    private void fullyReloadVideo(Video video, Bitmap poster, boolean showFallbackPoster) {
+        traceDetails("details-row-build-start");
         if (log.isDebugEnabled()) log.debug("fullyReloadVideo: mShouldLoadBackdrop={}", mShouldLoadBackdrop);
         if(mShouldLoadBackdrop)
             BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
@@ -1294,9 +1337,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             ps.addClassPresenter(CastRow.class, new CastRowPresenter(14,mColor)); // 14 lines max to fit on screen
             mAdapter = new ArrayObjectAdapter(ps);
             setAdapter(mAdapter);
+            traceDetails("details-adapter-set");
             // Buttons
 
             mAdapter.add(INDEX_MAIN, mDetailsOverviewRow);
+            traceDetails("details-overview-row-added");
             if(mVideoList.size()>1) {
                 mAdapter.add(INDEX_FILELIST, mFileListRow);
                 INDEX_SUBTITLES ++;
@@ -1397,7 +1442,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         if (poster == null) {
             if (log.isDebugEnabled()) log.debug("fullyReloadVideo: no poster, generate it");
 
-            mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
+            if (showFallbackPoster)
+                mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
+            else
+                mDetailsOverviewRow.setImageDrawable(null);
             mDetailsOverviewRow.setImageScaleUpAllowed(false);
             mThumbnailAsyncTask = new ThumbnailAsyncTask();
             mThumbnailAsyncTask.execute(mVideo);
@@ -1419,6 +1467,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         void execute(Video video) {
             executor.execute(() -> {
+                traceDetails("detail-row-builder-started");
                 Bitmap result = null;
                 try {
                     if (isCancelled || Thread.currentThread().isInterrupted()) return;
@@ -1436,6 +1485,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         int width = getResources().getDimensionPixelSize(R.dimen.details_poster_width);
                         int height = getResources().getDimensionPixelSize(R.dimen.details_poster_height);
                         try {
+                            traceDetails("details-poster-decode-start");
                             Bitmap bitmap = Picasso.get().load(imageUri)
                                     .noFade() // no fade since we are using activity transition anyway
                                     .config(Bitmap.Config.ARGB_8888)
@@ -1444,6 +1494,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                                     .onlyScaleDown()
                                     .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(width, height))
                                     .get();
+                            traceDetails("details-poster-decode-finished");
                             if(bitmap!=null) {
                                 result = bitmap;
                             }
@@ -1460,6 +1511,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 final Bitmap finalResult = result;
                 handler.post(() -> {
                     if (isCancelled) return;
+                    traceDetails("detail-row-builder-main-thread");
                     mPoster = finalResult;
                     if(finalResult!=null) {
                         Palette palette = Palette.from(finalResult).generate();

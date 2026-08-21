@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.leanback;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -76,6 +77,9 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
         intent.putExtra(VideoDetailsFragment.EXTRA_LIST_ID, listId);
         intent.putExtra(VideoDetailsFragment.EXTRA_FORCE_VIDEO_SELECTION, forceSelection);
         intent.putExtra(VideoDetailsFragment.EXTRA_SHOULD_LOAD_BACKDROP, shouldLoadBackdrop);
+        // Carries one monotonic origin through the transition so the details screen can
+        // report where a cold-start delay is spent.
+        intent.putExtra(VideoDetailsFragment.EXTRA_DETAILS_LAUNCH_UPTIME_MS, SystemClock.elapsedRealtime());
         View sourceView = null;
         if (itemViewHolder.view instanceof ImageCardView) {
             sourceView = ((ImageCardView) itemViewHolder.view).getMainImageView();
