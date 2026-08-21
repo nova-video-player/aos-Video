@@ -38,6 +38,7 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import android.view.WindowMetrics;
 
 import static android.view.RoundedCorner.POSITION_BOTTOM_LEFT;
@@ -559,6 +560,20 @@ public class MiscUtils {
     public static void applySystemWindowInsets(View view) {
         applySystemWindowInsets(view, false, (v, left, top, right, bottom) ->
                 v.setPadding(left, top, right, bottom));
+    }
+
+    /**
+     * Sets the status/navigation bar icon appearance to stay legible against the given
+     * background color: dark icons on a light background, light (white) icons on a dark
+     * background.
+     * NOTE: setAppearanceLightStatusBars(true) means "the bar background is light, so use
+     * dark icons" - callers must pass whether the background is LIGHT, not whether it is dark.
+     */
+    public static void applyStatusBarIconContrast(WindowInsetsControllerCompat insetsController, int backgroundColor) {
+        if (insetsController == null) return;
+        boolean isBackgroundLight = !VideoUtils.isColorDark(backgroundColor);
+        insetsController.setAppearanceLightStatusBars(isBackgroundLight);
+        insetsController.setAppearanceLightNavigationBars(isBackgroundLight);
     }
 
     public static void applySystemWindowInsets(View view, boolean includeCutout, OnSystemInsetsListener listener) {

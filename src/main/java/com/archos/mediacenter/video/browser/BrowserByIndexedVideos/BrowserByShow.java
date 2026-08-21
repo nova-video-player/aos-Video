@@ -15,8 +15,6 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
-import static com.archos.mediacenter.video.utils.VideoUtils.isColorDark;
-
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -49,6 +47,7 @@ import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
 import com.archos.mediacenter.video.browser.presenter.EpisodeListDetailedPresenter;
 import com.archos.mediacenter.video.browser.presenter.EpisodePresenter;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
+import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.mediacenter.video.utils.ThemeManager;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
@@ -241,8 +240,7 @@ public class BrowserByShow extends BrowserWithShowHeader {
             WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
             WindowInsetsControllerCompat insetsController = new WindowInsetsControllerCompat(getActivity().getWindow(), getActivity().getWindow().getDecorView());
             insetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-            insetsController.setAppearanceLightStatusBars(isColorDark(darkColor));
-            insetsController.setAppearanceLightNavigationBars(isColorDark(darkColor));
+            MiscUtils.applyStatusBarIconContrast(insetsController, darkColor);
         } else {
             WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

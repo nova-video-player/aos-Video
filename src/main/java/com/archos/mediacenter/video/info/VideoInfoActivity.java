@@ -14,8 +14,6 @@
 
 package com.archos.mediacenter.video.info;
 
-import static com.archos.mediacenter.video.utils.VideoUtils.isColorDark;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -39,6 +37,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.utils.MiscUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -143,8 +142,7 @@ public class VideoInfoActivity extends AppCompatActivity {
             WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
             WindowInsetsControllerCompat insetsController = new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
             insetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-            insetsController.setAppearanceLightStatusBars(isColorDark(color));
-            insetsController.setAppearanceLightNavigationBars(isColorDark(color));
+            MiscUtils.applyStatusBarIconContrast(insetsController, color);
         } else {
             // For older APIs (API < 29), setStatusBarColor/setNavigationBarColor are the only option
             getWindow().setNavigationBarColor(color);
