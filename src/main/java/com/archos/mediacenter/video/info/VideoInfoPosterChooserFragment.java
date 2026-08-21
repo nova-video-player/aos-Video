@@ -374,7 +374,7 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
                     String file = image.getLargeFile();
                     if (file != null) {
                         image.download(mContext);
-                        taskItem.result.bitmap = BitmapFactory.decodeFile(file);
+                        taskItem.result.bitmap = com.archos.mediacenter.utils.BitmapUtils.decodeSampledBitmapFromFile(file, 300, 450);
                     }
                     taskItem.result.status = taskItem.result.bitmap != null ?
                             Status.LOAD_OK : Status.LOAD_ERROR;

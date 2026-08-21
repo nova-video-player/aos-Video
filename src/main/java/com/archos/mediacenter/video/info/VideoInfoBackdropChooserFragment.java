@@ -353,7 +353,7 @@ public class VideoInfoBackdropChooserFragment extends Fragment implements
                     String file = image.getThumbFile();
                     if (file != null) {
                         image.downloadThumb(mContext, mWidth, mHeight);
-                        taskItem.result.bitmap = BitmapFactory.decodeFile(file);
+                        taskItem.result.bitmap = com.archos.mediacenter.utils.BitmapUtils.decodeSampledBitmapFromFile(file, mWidth, mHeight);
                     }
                     taskItem.result.status = taskItem.result.bitmap != null ?
                             Status.LOAD_OK : Status.LOAD_ERROR;
