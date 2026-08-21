@@ -252,7 +252,7 @@ android {
         println("buildTypes archivesBaseName : " + archivesNameValue)
         release {
             minifyEnabled = true
-            shrinkResources = false
+            shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt'
         }
     }

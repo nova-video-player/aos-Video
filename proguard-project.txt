@@ -1,12 +1,7 @@
-# R8 is invoked with tree-shrinking, optimization, and obfuscation all disabled.
-# These rules protect JNI-bound members and keep stack traces readable.
-# The -keep rules also serve as documentation: if -dontshrink is ever removed,
-# they are the minimum set needed to keep the app working.
+# R8 is configured with tree-shrinking (minification) and optimization enabled,
+# while obfuscation remains disabled (-dontobfuscate) to preserve readable stack traces.
 
--dontshrink
--dontoptimize
 -dontobfuscate
--dontrepackage
 
 -keepattributes SourceFile,LineNumberTable,Exceptions,InnerClasses,Signature,EnclosingMethod,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
 
