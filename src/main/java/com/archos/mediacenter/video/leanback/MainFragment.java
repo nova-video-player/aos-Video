@@ -139,6 +139,10 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
      */
     private static final long SCANNER_BOX_REFRESH_DEBOUNCE_MS = 1500;
 
+    // Composite category icons are non-interactive decoration.  Building several at once after a
+    // scan causes CPU/GPU pressure that can delay activity and shared-element transitions.
+    private static final ExecutorService BOX_ICON_BUILD_EXECUTOR = Executors.newSingleThreadExecutor();
+
     // /!\ FIXME cannot be enabled since on large collection of videos viewed, loader takes forever to complete
     // this causes VideoLoader that has only a poolsize of one to not process any other loaders
     public final static boolean FEATURE_WATCH_UP_NEXT = false;
@@ -984,20 +988,17 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         interface Work { Bitmap run(); }
         interface Done { void run(Bitmap bitmap); }
 
-        private final ExecutorService executor = Executors.newSingleThreadExecutor();
         private final Handler handler = new Handler(Looper.getMainLooper());
         private volatile boolean isCancelled = false;
 
         void execute(Work work, Done done) {
-            executor.execute(() -> {
+            BOX_ICON_BUILD_EXECUTOR.execute(() -> {
                 Bitmap result = null;
                 try {
                     if (isCancelled || Thread.currentThread().isInterrupted()) return;
                     result = work.run();
                 } catch (Exception e) {
                     log.error("BuildBoxIconTask failed", e);
-                } finally {
-                    executor.shutdown();
                 }
                 if (isCancelled) return;
                 final Bitmap finalResult = result;
@@ -1010,7 +1011,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         void cancel() {
             isCancelled = true;
-            executor.shutdownNow();
         }
     }
 
