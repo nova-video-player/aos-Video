@@ -82,6 +82,7 @@ import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.Delete;
 import com.archos.mediacenter.video.browser.FileManagerService;
+import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.adapters.object.Episode;
 import com.archos.mediacenter.video.browser.adapters.object.NonIndexedVideo;
@@ -307,10 +308,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private Button mResumeLocalButton;
     private Button mPlayButton;
     private Button mNextEpisodeButton;
+    private Button mListEpisodesButton;
     private ImageView mPosterImageView;
 
     /** The next episode, if there is one. */
     private Episode mNextEpisode;
+
+    /** The id of the show the current episode belongs to, if any. */
+    private long mShowId = -1;
 
 
     //
@@ -464,10 +469,12 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mResumeLocalButton = (Button) mRoot.findViewById(R.id.resume);
         mPlayButton = (Button) mRoot.findViewById(R.id.play);
         mNextEpisodeButton = (Button) mRoot.findViewById(R.id.next_episode);
+        mListEpisodesButton = (Button) mRoot.findViewById(R.id.list_episodes);
         mActionButtonsContainer = (CardView) mRoot.findViewById(R.id.action_buttons_container);
         mResumeLocalButton.setOnClickListener(this);
         mPlayButton.setOnClickListener(this);
         mNextEpisodeButton.setOnClickListener(this);
+        mListEpisodesButton.setOnClickListener(this);
         mRemoteResumeButton = (Button) mRoot.findViewById(R.id.remote_resume);
         mRemoteResumeButton.setOnClickListener(this);
         mSourceLayout = (LinearLayout)mRoot.findViewById(R.id.source_layout);
@@ -810,6 +817,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             mCurrentVideo = video;
             mNextEpisode = null;
             mNextEpisodeButton.setVisibility(View.GONE);
+            mShowId = -1;
+            mListEpisodesButton.setVisibility(View.GONE);
             String name = null;
             if(video instanceof Episode){
                 if (log.isDebugEnabled()) log.debug( "setCurrentVideo: new video and it is an episode");
@@ -1201,6 +1210,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         else if (view == mNextEpisodeButton && mNextEpisode != null) {
             VideoInfoActivity.startInstance(getActivity(), mNextEpisode,
                     mNextEpisode.getFileUri(), mNextEpisode.getId());
+            getActivity().finish();
+        }
+        else if (view == mListEpisodesButton && mShowId >= 0) {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("show:///" + mShowId));
+            startActivity(intent);
             getActivity().finish();
         }
         else if(view == mIndexButton){
@@ -1863,6 +1880,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         private final Activity mActivity;
         private List<ScraperTrailer> mTrailers;
         private Episode mNextEpisodeResult;
+        private long mShowIdResult = -1;
 
         FullScraperTagsTask(Activity activity) {
             mActivity = activity;
@@ -1892,6 +1910,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                             }
                             cursor.close();
                         }
+                        // Match the TV details screen: allow navigating to the show's season list.
+                        mShowIdResult = ((EpisodeTags) result).getShowId();
                     }
                     if (result != null && !isCancelled)
                         mTrailers = result.getAllTrailersInDb(getActivity());
@@ -1910,6 +1930,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mTags = finalTags;
                     mNextEpisode = mNextEpisodeResult;
                     mNextEpisodeButton.setVisibility(mNextEpisode != null ? View.VISIBLE : View.GONE);
+                    mShowId = mShowIdResult;
+                    mListEpisodesButton.setVisibility(mShowId >= 0 ? View.VISIBLE : View.GONE);
                     if (finalTags != null) {
                         // Plot & Genres
                         final String plot = finalTags.getPlot();
