@@ -566,7 +566,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         // poster decode complete.  onLoadFinished remains the authoritative progressive update.
         if (mVideo != null && mAdapter == null) {
             traceDetails("initial-overview-from-intent");
-            fullyReloadVideo(mVideo, null, false);
+            Bitmap transitionPoster = VideoDetailsTransitionPosterCache.take(mDetailsLaunchUptimeMs);
+            if (transitionPoster != null) traceDetails("transition-poster-reused");
+            fullyReloadVideo(mVideo, transitionPoster, false);
         }
     }
 

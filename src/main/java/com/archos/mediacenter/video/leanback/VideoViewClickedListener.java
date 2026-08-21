@@ -16,9 +16,11 @@ package com.archos.mediacenter.video.leanback;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.core.app.ActivityOptionsCompat;
@@ -36,6 +38,7 @@ import com.archos.mediacenter.video.leanback.collections.CollectionActivity;
 import com.archos.mediacenter.video.leanback.collections.CollectionFragment;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsActivity;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsFragment;
+import com.archos.mediacenter.video.leanback.details.VideoDetailsTransitionPosterCache;
 import com.archos.mediacenter.video.leanback.presenter.ListPresenter;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
@@ -79,12 +82,17 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
         intent.putExtra(VideoDetailsFragment.EXTRA_SHOULD_LOAD_BACKDROP, shouldLoadBackdrop);
         // Carries one monotonic origin through the transition so the details screen can
         // report where a cold-start delay is spent.
-        intent.putExtra(VideoDetailsFragment.EXTRA_DETAILS_LAUNCH_UPTIME_MS, SystemClock.elapsedRealtime());
+        long launchUptimeMs = SystemClock.elapsedRealtime();
+        intent.putExtra(VideoDetailsFragment.EXTRA_DETAILS_LAUNCH_UPTIME_MS, launchUptimeMs);
         View sourceView = null;
         if (itemViewHolder.view instanceof ImageCardView) {
             sourceView = ((ImageCardView) itemViewHolder.view).getMainImageView();
         } else if (itemViewHolder instanceof ListPresenter.ListViewHolder){
             sourceView = ((ListPresenter.ListViewHolder)itemViewHolder).getImageView();
+        }
+        if (sourceView instanceof ImageView) {
+            Drawable drawable = ((ImageView) sourceView).getDrawable();
+            VideoDetailsTransitionPosterCache.put(launchUptimeMs, drawable);
         }
         if (animate) {
             ActivityOptionsCompat opts = ActivityOptionsCompat.makeSceneTransitionAnimation(
