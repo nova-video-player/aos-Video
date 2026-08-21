@@ -836,6 +836,9 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 mPreferencesRowAdapter));
 
         setAdapter(mRowsAdapter);
+        // A cold start creates banner placeholders.  Schedule their composite-icon replacement
+        // even when no scanner-finished broadcast is delivered for this process.
+        scheduleBoxRefreshAfterScannerQuietPeriod("initial rows attached");
     }
 
     private boolean isCursorCountChanged(Cursor oldCursor, Cursor newCursor) {
@@ -853,6 +856,12 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         refreshAllAnimesBox();
         refreshAllAnimeShowsBox();
         refreshAllAnimeCollectionsBox();
+    }
+
+    private void scheduleBoxRefreshAfterScannerQuietPeriod(String reason) {
+        if (log.isDebugEnabled()) log.debug("scanner box refresh: {} - waiting {}ms", reason, SCANNER_BOX_REFRESH_DEBOUNCE_MS);
+        mScannerBoxRefreshHandler.removeCallbacks(mRefreshBoxesAfterScannerQuietPeriod);
+        mScannerBoxRefreshHandler.postDelayed(mRefreshBoxesAfterScannerQuietPeriod, SCANNER_BOX_REFRESH_DEBOUNCE_MS);
     }
 
     private void buildAllMoviesBox(Boolean buildIcons) {
@@ -1695,9 +1704,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         public void onReceive(Context context, Intent intent) {
             if (log.isDebugEnabled()) log.debug("mUpdateReceiver: received intent!!!");
             if (context != null && intent != null && intent.getAction().equals(ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED)) {
-                if (log.isDebugEnabled()) log.debug("mUpdateReceiver: debounce all-box refresh by {}ms", SCANNER_BOX_REFRESH_DEBOUNCE_MS);
-                mScannerBoxRefreshHandler.removeCallbacks(mRefreshBoxesAfterScannerQuietPeriod);
-                mScannerBoxRefreshHandler.postDelayed(mRefreshBoxesAfterScannerQuietPeriod, SCANNER_BOX_REFRESH_DEBOUNCE_MS);
+                scheduleBoxRefreshAfterScannerQuietPeriod("scanner finished");
             }
         }
     };
