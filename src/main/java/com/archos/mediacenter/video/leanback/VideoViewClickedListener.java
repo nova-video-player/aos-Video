@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -48,7 +49,20 @@ import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
  */
 public class VideoViewClickedListener implements OnItemViewClickedListener {
 
+    private static final String TAG = "VideoDetailsLaunch";
+
     final private Activity mActivity;
+
+    private static void traceVideoDetailsLaunch(long launchUptimeMs, String event) {
+        Log.d(TAG, "details-timing: event=" + event + ", sinceTapMs="
+                + (SystemClock.elapsedRealtime() - launchUptimeMs));
+    }
+
+    private static void traceNextSourceFrame(View sourceView, long launchUptimeMs) {
+        if (sourceView == null) return;
+        sourceView.postOnAnimation(() -> traceVideoDetailsLaunch(launchUptimeMs,
+                "source-next-frame-after-launch-request"));
+    }
 
     public VideoViewClickedListener(Activity activity) {
         mActivity = activity;
@@ -84,6 +98,7 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
         // report where a cold-start delay is spent.
         long launchUptimeMs = SystemClock.elapsedRealtime();
         intent.putExtra(VideoDetailsFragment.EXTRA_DETAILS_LAUNCH_UPTIME_MS, launchUptimeMs);
+        traceVideoDetailsLaunch(launchUptimeMs, "source-click-handler");
         View sourceView = null;
         if (itemViewHolder.view instanceof ImageCardView) {
             sourceView = ((ImageCardView) itemViewHolder.view).getMainImageView();
@@ -95,12 +110,21 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
             VideoDetailsTransitionPosterCache.put(launchUptimeMs, drawable);
         }
         if (animate) {
+            traceVideoDetailsLaunch(launchUptimeMs, "source-transition-options-start");
             ActivityOptionsCompat opts = ActivityOptionsCompat.makeSceneTransitionAnimation(
                     activity, sourceView, VideoDetailsActivity.SHARED_ELEMENT_NAME);
-            if (launcher != null)
+            Bundle optionsBundle = opts.toBundle();
+            traceVideoDetailsLaunch(launchUptimeMs, "source-transition-options-ready");
+            traceNextSourceFrame(sourceView, launchUptimeMs);
+            if (launcher != null) {
+                traceVideoDetailsLaunch(launchUptimeMs, "source-before-launcher-launch");
                 launcher.launch(intent, opts);
-            else
-                activity.startActivity(intent, opts.toBundle());
+                traceVideoDetailsLaunch(launchUptimeMs, "source-after-launcher-launch");
+            } else {
+                traceVideoDetailsLaunch(launchUptimeMs, "source-before-startActivity");
+                activity.startActivity(intent, optionsBundle);
+                traceVideoDetailsLaunch(launchUptimeMs, "source-after-startActivity");
+            }
         } else {
             if (launcher != null)
                 launcher.launch(intent);

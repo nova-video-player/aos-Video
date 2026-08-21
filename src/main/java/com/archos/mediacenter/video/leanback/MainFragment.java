@@ -28,6 +28,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Bundle;
+import android.os.Process;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -141,7 +142,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     // Composite category icons are non-interactive decoration.  Building several at once after a
     // scan causes CPU/GPU pressure that can delay activity and shared-element transitions.
-    private static final ExecutorService BOX_ICON_BUILD_EXECUTOR = Executors.newSingleThreadExecutor();
+    private static final ExecutorService BOX_ICON_BUILD_EXECUTOR = Executors.newSingleThreadExecutor(runnable -> {
+        Thread thread = new Thread(() -> {
+            // Category composites are decoration.  Do not let their bitmap composition contend
+            // with focus, rendering, or an activity launch after a scan.
+            Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+            runnable.run();
+        }, "MainFragment-box-icons");
+        return thread;
+    });
 
     // /!\ FIXME cannot be enabled since on large collection of videos viewed, loader takes forever to complete
     // this causes VideoLoader that has only a poolsize of one to not process any other loaders
@@ -252,6 +261,13 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
     private final Handler mScannerBoxRefreshHandler = new Handler(Looper.getMainLooper());
     private final Runnable mRefreshBoxesAfterScannerQuietPeriod = () -> {
+        // ImportState can turn true after rows are attached but before the startup fallback
+        // reaches its debounce deadline.  In that case the scan-finished broadcast will schedule
+        // the only refresh that reflects the completed import.
+        if (isVideoImportRunning()) {
+            if (log.isDebugEnabled()) log.debug("scanner box refresh: import still active, waiting for scanner finished");
+            return;
+        }
         if (log.isDebugEnabled()) log.debug("scanner box refresh: quiet period elapsed");
         refreshAllBoxes();
     };
