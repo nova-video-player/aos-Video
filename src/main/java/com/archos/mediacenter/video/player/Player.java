@@ -184,11 +184,14 @@ public class Player implements IPlayerControl,
         public void run() {
             if (log.isDebugEnabled()) log.debug("mRefreshRateCheckerAsync");
             if (mCurrentState == STATE_PREPARED) {
-                if (mWaitForNewRate) {
+                if (mWaitForNewRate && mWindow != null) {
                     View v = mWindow.getDecorView();
-                    Display d = v.getDisplay();
+                    Display d = v != null ? v.getDisplay() : null;
+                    if (d == null) return;
                     if (Build.VERSION.SDK_INT >= 23) {
-                        int currentModeId = d.getMode().getModeId();
+                        Display.Mode currentMode = d.getMode();
+                        if (currentMode == null) return;
+                        int currentModeId = currentMode.getModeId();
                         if (numberRetries > 0) { // only try NUMBER_RETRIES
                             if (currentModeId != wantedModeId) {
                                 if (log.isDebugEnabled()) log.debug("CONFIG current modeId rate is {} trying to switch to {}, number of retries={}", currentModeId, wantedModeId, numberRetries);
@@ -1380,13 +1383,18 @@ public class Player implements IPlayerControl,
     }
 
     public String getSupportedRefreshRates() {
-        StringBuilder refreshRates = new StringBuilder();
+        if (mWindow == null) return "";
         View view = mWindow.getDecorView();
+        if (view == null) return "";
         Display display = view.getDisplay();
+        if (display == null) return "";
+        StringBuilder refreshRates = new StringBuilder();
 
         if (Build.VERSION.SDK_INT >= 23) { // For API 23 and above
-            Display.Mode[] supportedModes = display.getSupportedModes();
             Display.Mode currentMode = display.getMode();
+            if (currentMode == null) return "";
+            Display.Mode[] supportedModes = display.getSupportedModes();
+            if (supportedModes == null) return "";
             if (mCurrentRefreshRate < 1) mCurrentRefreshRate = currentMode.getRefreshRate();
             int currentWidth = currentMode.getPhysicalWidth();
             int currentHeight = currentMode.getPhysicalHeight();
@@ -1405,6 +1413,7 @@ public class Player implements IPlayerControl,
             }
         } else { // For API levels below 23
             float[] supportedRates = display.getSupportedRefreshRates();
+            if (supportedRates == null) return "";
             mCurrentRefreshRate = display.getRefreshRate();
             // Use TreeSet to maintain sorted order
             Set<Float> uniqueRefreshRates = new TreeSet<>();
@@ -1440,33 +1449,35 @@ public class Player implements IPlayerControl,
         if (mWindow != null) {
 
             View v = mWindow.getDecorView();
-            Display d = v.getDisplay();
+            Display d = v != null ? v.getDisplay() : null;
 
-            if (Build.VERSION.SDK_INT >= 24) { // HDR capability check
+            if (Build.VERSION.SDK_INT >= 24 && d != null) { // HDR capability check
 
                 if (Build.VERSION.SDK_INT >= 26 && d.isHdr()) if (log.isDebugEnabled()) log.debug("CONFIG HDR display detected");
 
                 Display.HdrCapabilities hdrCapabilities = d.getHdrCapabilities();
                 if (hdrCapabilities != null) {
                     int[] hdrSupportedTypes = hdrCapabilities.getSupportedHdrTypes();
-                    for (int hdrSupportedType : hdrSupportedTypes) {
-                        switch (hdrSupportedType) {
-                            case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
-                                if (log.isDebugEnabled()) log.debug("CONFIG HDR dolby vision supported");
-                                displaySupportsDoVi(true);
-                                break;
-                            case Display.HdrCapabilities.HDR_TYPE_HDR10:
-                                if (log.isDebugEnabled()) log.debug("CONFIG HDR10 supported");
-                                displaySupportsHdr10(true);
-                                break;
-                            case Display.HdrCapabilities.HDR_TYPE_HLG:
-                                if (log.isDebugEnabled()) log.debug("CONFIG HDR HLG supported");
-                                displaySupportsHdrHLG(true);
-                                break;
-                            case Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS:
-                                if (log.isDebugEnabled()) log.debug("CONFIG HDR10+ supported");
-                                displaySupportsHdr10Plus(true);
-                                break;
+                    if (hdrSupportedTypes != null) {
+                        for (int hdrSupportedType : hdrSupportedTypes) {
+                            switch (hdrSupportedType) {
+                                case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
+                                    if (log.isDebugEnabled()) log.debug("CONFIG HDR dolby vision supported");
+                                    displaySupportsDoVi(true);
+                                    break;
+                                case Display.HdrCapabilities.HDR_TYPE_HDR10:
+                                    if (log.isDebugEnabled()) log.debug("CONFIG HDR10 supported");
+                                    displaySupportsHdr10(true);
+                                    break;
+                                case Display.HdrCapabilities.HDR_TYPE_HLG:
+                                    if (log.isDebugEnabled()) log.debug("CONFIG HDR HLG supported");
+                                    displaySupportsHdrHLG(true);
+                                    break;
+                                case Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS:
+                                    if (log.isDebugEnabled()) log.debug("CONFIG HDR10+ supported");
+                                    displaySupportsHdr10Plus(true);
+                                    break;
+                            }
                         }
                     }
                 }
@@ -1512,10 +1523,22 @@ public class Player implements IPlayerControl,
             return "";
         }
         View v = mWindow.getDecorView();
+        if (v == null) {
+            return "";
+        }
         Display d = v.getDisplay();
-        int hdrBitMask = 0;
+        if (d == null) {
+            return "";
+        }
         Display.Mode currentMode = d.getMode();
+        if (currentMode == null) {
+            return "";
+        }
         int[] hdrSupportedTypes = currentMode.getSupportedHdrTypes();
+        if (hdrSupportedTypes == null) {
+            return "";
+        }
+        int hdrBitMask = 0;
         for (int hdrSupportedType : hdrSupportedTypes) {
             switch (hdrSupportedType) {
                 case Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION:
