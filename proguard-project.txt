@@ -5,28 +5,9 @@
 
 -keepattributes SourceFile,LineNumberTable,Exceptions,InnerClasses,Signature,EnclosingMethod,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
 
-#### JNI-bound classes (native callbacks and field handles) ####
--keep class com.archos.medialib.AvosMediaPlayer {
-  private void postEventFromNative(java.lang.Object, int, int, int, java.lang.Object);
-  private long mMediaPlayerHandle;
-  private long mNativeWindowHandle;
-}
--keep class com.archos.medialib.Subtitle {
-  public java.lang.Object createTimedTextSubtitle(int, int, java.lang.String);
-  public java.lang.Object createTimedBitmapSubtitle(int, int, int, int, int, int, android.graphics.Bitmap);
-}
--keep class com.archos.medialib.AvosMediaMetadataRetriever {
-  private long mMediaMetadataRetrieverHandle;
-}
--keep class com.archos.medialib.AvosBitmapHelper {
-  public android.graphics.Bitmap createRGBBitmap(int[], int, int, int, int, int, int);
-}
-
-#### Application entry points ####
--keep public class org.courville.nova.CustomApplication { *; }
--keep class com.archos.mediacenter.LibAvosReceiver
--keep class com.archos.mediacenter.video.utils.CodecDiscovery { *; }
--keep class com.archos.mediacenter.video.browser.Browser** { *; }
+#### Application & project internal classes ####
+-keep class com.archos.mediacenter.** { *; }
+-keep class org.courville.nova.** { *; }
 
 #### Serializable ####
 -keepclassmembers class * implements java.io.Serializable {
