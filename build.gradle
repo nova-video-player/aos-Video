@@ -12,8 +12,8 @@ buildscript {
 }
 
 plugins {
-    id "com.github.triplet.play" version "4.0.0" apply false
-    id "io.sentry.android.gradle" version "6.15.0" apply false
+    id "com.github.triplet.play" version "4.1.1" apply false
+    id "io.sentry.android.gradle" version "6.19.0" apply false
     //id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
@@ -368,11 +368,11 @@ dependencies {
     implementation 'androidx.core:core:1.19.0'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
-    implementation 'androidx.fragment:fragment:1.8.9'
+    implementation 'androidx.fragment:fragment:1.9.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.appcompat:appcompat:1.8.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation ('com.github.ksoichiro:android-observablescrollview:1.6.0') {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
@@ -382,17 +382,17 @@ dependencies {
     implementation 'androidx.leanback:leanback:1.2.0'
     implementation 'androidx.leanback:leanback-preference:1.2.0'
     implementation 'androidx.tvprovider:tvprovider:1.1.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:5.4.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.5.0'
     implementation 'com.github.tony19:logback-android:3.0.0'
-    implementation 'io.sentry:sentry-android:8.49.0'
-    implementation 'io.sentry:sentry:8.49.0'
+    implementation 'io.sentry:sentry-android:8.53.0'
+    implementation 'io.sentry:sentry:8.53.0'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.23.0'
     testImplementation 'org.robolectric:robolectric:4.16.1'
     testImplementation 'androidx.test:core:1.7.0'
     testImplementation 'org.slf4j:slf4j-api:2.0.18'
-    testImplementation 'ch.qos.logback:logback-classic:1.5.38'
+    testImplementation 'ch.qos.logback:logback-classic:1.6.3'
 }
 
 configurations { // try to exclude device specific libraries interfering
