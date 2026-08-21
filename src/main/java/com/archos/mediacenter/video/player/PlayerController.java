@@ -296,7 +296,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
         mSystemUiVisibility = 0;
         WindowCompat.setDecorFitsSystemWindows(mWindow, false);
-        mWindow.setStatusBarColor(Color.TRANSPARENT); // FLAG_TRANSLUCENT_STATUS replacement: keep status bar transparent when visible
+        // setStatusBarColor is deprecated and ignored on Android 15+ (edge-to-edge enforced,
+        // bar is already transparent there)
+        if (Build.VERSION.SDK_INT < 35) {
+            mWindow.setStatusBarColor(Color.TRANSPARENT); // FLAG_TRANSLUCENT_STATUS replacement: keep status bar transparent when visible
+        }
         mInsetsController = WindowCompat.getInsetsController(mWindow, mWindow.getDecorView());
         mInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         // Do not hide bars here — old code only set LAYOUT_* flags + IMMERSIVE behavior, not FULLSCREEN|HIDE_NAVIGATION.

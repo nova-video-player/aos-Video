@@ -120,7 +120,11 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
             );
             WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getActivity().getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+            // setStatusBarColor is deprecated and ignored on Android 15+ (edge-to-edge enforced,
+            // bar is already transparent there)
+            if (Build.VERSION.SDK_INT < 35) {
+                getActivity().getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+            }
         }
         // Unregister theme change listener
         if (mThemeChangeListener != null) {
