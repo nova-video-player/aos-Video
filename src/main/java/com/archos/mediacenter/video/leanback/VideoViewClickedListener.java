@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -44,22 +43,27 @@ import com.archos.mediacenter.video.leanback.presenter.ListPresenter;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by vapillon on 13/04/15.
  */
 public class VideoViewClickedListener implements OnItemViewClickedListener {
 
-    private static final String TAG = "VideoDetailsLaunch";
+    private static final Logger log = LoggerFactory.getLogger(VideoViewClickedListener.class);
 
     final private Activity mActivity;
 
     private static void traceVideoDetailsLaunch(long launchUptimeMs, String event) {
-        Log.d(TAG, "details-timing: event=" + event + ", sinceTapMs="
-                + (SystemClock.elapsedRealtime() - launchUptimeMs));
+        if (log.isDebugEnabled()) {
+            log.debug("details timing: event={}, sinceTapMs={}", event,
+                    SystemClock.elapsedRealtime() - launchUptimeMs);
+        }
     }
 
     private static void traceNextSourceFrame(View sourceView, long launchUptimeMs) {
-        if (sourceView == null) return;
+        if (sourceView == null || !log.isDebugEnabled()) return;
         sourceView.postOnAnimation(() -> traceVideoDetailsLaunch(launchUptimeMs,
                 "source-next-frame-after-launch-request"));
     }

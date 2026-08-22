@@ -18,7 +18,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.transition.Slide;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -28,21 +27,25 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediacenter.video.leanback.LeanbackActivity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class VideoDetailsActivity extends LeanbackActivity {
 
-    private static final String TAG = "VideoDetailsActivity";
+    private static final Logger log = LoggerFactory.getLogger(VideoDetailsActivity.class);
 
     public static final String SHARED_ELEMENT_NAME = "hero";
     public static final String SLIDE_TRANSITION_EXTRA = "slide_transition";
     public static final String SLIDE_DIRECTION_EXTRA = "slide_direction";
 
     private void traceDetails(String event) {
+        if (!log.isDebugEnabled()) return;
         long launchUptimeMs = getIntent().getLongExtra(
                 VideoDetailsFragment.EXTRA_DETAILS_LAUNCH_UPTIME_MS, -1);
         String elapsed = launchUptimeMs >= 0
                 ? String.valueOf(SystemClock.elapsedRealtime() - launchUptimeMs)
                 : "n/a";
-        Log.d(TAG, "details-timing: event=" + event + ", sinceTapMs=" + elapsed);
+        log.debug("details timing: event={}, sinceTapMs={}", event, elapsed);
     }
 
     @Override
