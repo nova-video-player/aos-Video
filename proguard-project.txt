@@ -19,12 +19,7 @@
     java.lang.Object readResolve();
 }
 
-#### Network / protocol libraries ####
--keep class com.hierynomus.smbj.** { *; }
--keep class org.slf4j.** { *; }
--keep class org.eclipse.jetty.** { *; }
-
-#### Suppress warnings from optional/platform-specific code ####
+#### Suppress warnings from optional/platform-specific third-party libraries ####
 -dontwarn javax.**
 -dontwarn com.sun.**
 -dontwarn org.apache.**
@@ -40,16 +35,5 @@
 -dontwarn org.bouncycastle.crypto.DefaultBufferedBlockCipher
 -dontwarn org.bouncycastle.crypto.modes.CBCModeCipher
 -dontwarn org.bouncycastle.crypto.modes.CTRModeCipher
-
-#### Retrofit ####
--keepclassmembers,allowshrinking,allowobfuscation interface * {
-    @retrofit2.http.* <methods>;
-}
--if interface * { @retrofit2.http.* <methods>; }
--keep,allowobfuscation interface <1>
--dontwarn kotlin.Unit
--dontwarn retrofit2.KotlinExtensions$*
-
-#### jupnp / OSGi ####
 -dontwarn org.osgi.framework.**
 -dontwarn org.osgi.service.**
