@@ -24,9 +24,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -568,7 +570,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             traceDetails("initial-overview-from-intent");
             Bitmap transitionPoster = VideoDetailsTransitionPosterCache.take(mDetailsLaunchUptimeMs);
             if (transitionPoster != null) traceDetails("transition-poster-reused");
-            fullyReloadVideo(mVideo, transitionPoster, false);
+            fullyReloadVideo(mVideo, transitionPoster, false, transitionPoster != null);
         }
     }
 
@@ -1316,6 +1318,16 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
      *                          carry the clicked card's poster into it without a visible icon flash.
      */
     private void fullyReloadVideo(Video video, Bitmap poster, boolean showFallbackPoster) {
+        fullyReloadVideo(video, poster, showFallbackPoster, false);
+    }
+
+    /**
+     * @param useDetailsPosterSize makes a reused source-card bitmap report the dimensions of the
+     *                              details poster.  The shared-element target is then laid out at
+     *                              its final size from the first frame, without copying or scaling
+     *                              the bitmap on the UI thread.
+     */
+    private void fullyReloadVideo(Video video, Bitmap poster, boolean showFallbackPoster, boolean useDetailsPosterSize) {
         traceDetails("details-row-build-start");
         if (log.isDebugEnabled()) log.debug("fullyReloadVideo: mShouldLoadBackdrop={}", mShouldLoadBackdrop);
         if(mShouldLoadBackdrop)
@@ -1455,10 +1467,43 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             if (log.isDebugEnabled()) log.debug("fullyReloadVideo: should put watched mark on poster {}", (mVideo.isWatched() || mIsVideoWatched));
             if (mVideo.isWatched() || mIsVideoWatched)
                 poster = PresenterUtils.addWatchedMark(poster, getContext());
-            mDetailsOverviewRow.setImageBitmap(getActivity(), poster);
+            if (useDetailsPosterSize) {
+                int width = getResources().getDimensionPixelSize(R.dimen.details_poster_width);
+                int height = getResources().getDimensionPixelSize(R.dimen.details_poster_height);
+                traceDetails("transition-poster-details-size");
+                mDetailsOverviewRow.setImageDrawable(new DetailsPosterSizedBitmapDrawable(getResources(), poster, width, height));
+            } else {
+                mDetailsOverviewRow.setImageBitmap(getActivity(), poster);
+            }
             mDetailsOverviewRow.setImageScaleUpAllowed(true);
         }
 
+    }
+
+    /**
+     * Draws the original bitmap normally while reporting the dimensions used by the details row.
+     * BitmapDrawable draws to its bounds, so this avoids allocating a scaled bitmap just for the
+     * provisional shared-element target.
+     */
+    private static final class DetailsPosterSizedBitmapDrawable extends BitmapDrawable {
+        private final int mIntrinsicWidth;
+        private final int mIntrinsicHeight;
+
+        DetailsPosterSizedBitmapDrawable(Resources resources, Bitmap bitmap, int intrinsicWidth, int intrinsicHeight) {
+            super(resources, bitmap);
+            mIntrinsicWidth = intrinsicWidth;
+            mIntrinsicHeight = intrinsicHeight;
+        }
+
+        @Override
+        public int getIntrinsicWidth() {
+            return mIntrinsicWidth;
+        }
+
+        @Override
+        public int getIntrinsicHeight() {
+            return mIntrinsicHeight;
+        }
     }
 
     //--------- ------------------------------------------
