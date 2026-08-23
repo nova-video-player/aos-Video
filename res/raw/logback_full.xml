@@ -60,8 +60,8 @@
     <!-- Debug permissions -->
     <logger name="com.archos.mediacenter.video.browser.PermissionChecker" level="INFO"/>
 
-    <logger name="com.archos.filecorelibrary.FileUtils" level="INFO"/>
-    <logger name="com.archos.filecorelibrary.FileUtilsQ" level="INFO"/>
+    <logger name="com.archos.filecorelibrary.FileUtils" level="DEBUG"/>
+    <logger name="com.archos.filecorelibrary.FileUtilsQ" level="DEBUG"/>
 
     <!-- Debug network shares -->
     <logger name="com.archos.filecorelibrary.sshj" level="INFO"/>
