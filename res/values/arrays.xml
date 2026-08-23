@@ -226,6 +226,7 @@
         <item>EXT</item>
         <item>MOV TEXT</item>
         <item>PGS</item>
+        <item>WEBVTT</item>
     </string-array>
 
     <string-array name="display_hdr">
