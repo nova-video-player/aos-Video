@@ -65,9 +65,9 @@
 
     <!-- Debug network shares -->
     <logger name="com.archos.filecorelibrary.sshj" level="INFO"/>
-    <logger name="com.archos.filecorelibrary.smbj" level="INFO"/>
-    <logger name="com.hierynomus.smbj" level="INFO"/>
-    <logger name="com.hierynomus.smbj.share.SmbjPrefetchInputStream" level="INFO"/>
+    <logger name="com.archos.filecorelibrary.smbj" level="DEBUG"/>
+    <logger name="com.hierynomus.smbj" level="DEBUG"/>
+    <logger name="com.hierynomus.smbj.share.SmbjPrefetchInputStream" level="DEBUG"/>
     <logger name="com.archos.filecorelibrary.webdav" level="INFO"/>
 
     <logger name="com.archos.mediacenter.video.browser.filebrowsing.BrowserByFolder" level="INFO"/>
@@ -78,7 +78,7 @@
     <logger name="org.jupnp" level="ERROR"/>
     <logger name="org.jupnp.transport.impl.DatagramIOImpl" level="OFF"/>
     <logger name="org.jupnp.android.AndroidRouter" level="WARN"/>
-    <logger name="com.archos.filecorelibrary.samba.NetworkCredentialsDatabase" level="INFO"/>
+    <logger name="com.archos.filecorelibrary.samba.NetworkCredentialsDatabase" level="DEBUG"/>
     <logger name="com.archos.mediacenter.video.leanback.network.NetworkServerCredentialsDialog" level="INFO"/>
 
     <!-- bookmarks (also in PlayerService -->
@@ -114,19 +114,22 @@
     <logger name="com.archos.medialib.SmbProxy" level="INFO"/>
     <logger name="com.archos.filecorelibrary.StreamOverHttp" level="INFO"/>
 
-    <!-- Debug jcifs -->
+    <!-- Debug jcifs & smbj -->
     <logger name="jcifs" level="INFO"/>
     <logger name="com.archos.filecorelibrary.jcifs" level="INFO"/>
     <logger name="com.archos.filecorelibrary.jcifs.JcifsFileEditor" level="INFO"/>
-    <logger name="com.archos.filecorelibrary.smbj.SmbjFileEditor" level="INFO"/>
-    <logger name="com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser" level="INFO"/>
+    <logger name="com.archos.filecorelibrary.smbj.SmbjFileEditor" level="DEBUG"/>
+    <logger name="com.archos.filecorelibrary.smbj.SmbjListingEngine" level="DEBUG"/>
+    <logger name="com.archos.filecorelibrary.smbj.SmbjRawLister" level="DEBUG"/>
+    <logger name="com.archos.filecorelibrary.smbj.SmbjUtils" level="DEBUG"/>
+    <logger name="com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser" level="DEBUG"/>
     <logger name="jcifs.netbios.UdpDiscovery" level="INFO"/>
     <logger name="jcifs.netbios.NameServiceClientImpl" level="WARN"/>
     <logger name="jcifs.smb.SmbSession" level="INFO"/>
     <logger name="jcifs.smb.SmbSessionImpl" level="INFO"/>
     <logger name="jcifs.util.transport.Transport" level="INFO"/>
     <logger name="jcifs.smb.SmbTransportImpl" level="INFO"/>
-    <logger name="com.archos.filecorelibrary.samba" level="INFO"/>
+    <logger name="com.archos.filecorelibrary.samba" level="DEBUG"/>
 
     <!-- Debug IntroDB skip intro/outro -->
     <logger name="com.archos.mediacenter.utils.introdb.IntroDbApiHelper" level="INFO"/>
