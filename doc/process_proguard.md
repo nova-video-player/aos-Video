@@ -43,6 +43,7 @@ Google Play Console flags 4 optimization areas:
 
 #### Network & Protocol Libraries ####
 -keep class com.hierynomus.smbj.** { *; }
+-keep class net.engio.mbassy.** { *; }
 -keep class net.schmizz.sshj.** { *; }
 -keep class com.jcraft.jsch.** { *; }
 -keep class com.thegrizzlylabs.sardineandroid.** { *; }
