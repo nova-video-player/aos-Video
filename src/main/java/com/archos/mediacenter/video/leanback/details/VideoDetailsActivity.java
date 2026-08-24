@@ -66,6 +66,28 @@ public class VideoDetailsActivity extends LeanbackActivity {
         }
 
         setContentView(R.layout.androidtv_details_activity);
+
+        android.widget.ImageView backdropView = findViewById(R.id.details_backdrop);
+        if (backdropView != null) {
+            long launchUptimeMs = getIntent().getLongExtra(VideoDetailsFragment.EXTRA_DETAILS_LAUNCH_UPTIME_MS, -1);
+            if (launchUptimeMs != -1) {
+                VideoDetailsTransitionBackdropCache.Entry entry = VideoDetailsTransitionBackdropCache.takeEntry(launchUptimeMs);
+                if (entry != null) {
+                    android.graphics.Bitmap transitionBackdrop = entry.getBitmap();
+                    if (transitionBackdrop != null && !transitionBackdrop.isRecycled()) {
+                        backdropView.setImageBitmap(transitionBackdrop);
+                        backdropView.setVisibility(android.view.View.VISIBLE);
+                        backdropView.setAlpha(1.0f);
+                    }
+                    if (entry.file != null) {
+                        androidx.fragment.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_browse_fragment);
+                        if (fragment instanceof VideoDetailsFragment) {
+                            ((VideoDetailsFragment) fragment).setCurrentlyDisplayedBackdropFile(entry.file);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void onPause(){

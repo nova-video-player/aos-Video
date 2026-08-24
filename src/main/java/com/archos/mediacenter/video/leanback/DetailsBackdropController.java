@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import androidx.annotation.IdRes;
 import androidx.leanback.app.BackgroundManager;
 
+import java.io.File;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +43,7 @@ public final class DetailsBackdropController {
 
     private BackdropTask mTask;
     private Object mRestoreInput;
+    private File mCurrentlyDisplayedFile;
     private boolean mRequestStarted;
     private boolean mNeedsRestore;
 
@@ -76,6 +79,19 @@ public final class DetailsBackdropController {
         start(input);
     }
 
+    /** Evaluates input for backdrop changes, retaining identical images and cross-fading different ones. */
+    public void replaceIfDifferent(Object input) {
+        if (mTask != null) {
+            if (mTask.getLoadedFile() != null) {
+                mCurrentlyDisplayedFile = mTask.getLoadedFile();
+            }
+            mTask.cancelTaskOnly();
+            mTask = null;
+        }
+        mRequestStarted = true;
+        start(input);
+    }
+
     /** Cancels work when stopped and remembers the current input for a genuine restore. */
     public void onStop(boolean restoreNeeded, Object restoreInput) {
         if (mTask != null) {
@@ -96,6 +112,17 @@ public final class DetailsBackdropController {
         }
     }
 
+    public void setCurrentlyDisplayedFile(File file) {
+        mCurrentlyDisplayedFile = file;
+    }
+
+    public File getCurrentlyDisplayedFile() {
+        if (mTask != null && mTask.getLoadedFile() != null) {
+            mCurrentlyDisplayedFile = mTask.getLoadedFile();
+        }
+        return mCurrentlyDisplayedFile;
+    }
+
     public void cancel() {
         cancelCurrent();
     }
@@ -103,16 +130,27 @@ public final class DetailsBackdropController {
     private void start(Object input) {
         ImageView backdropView = mActivity.findViewById(mBackdropViewId);
         if (backdropView == null) {
-            // A migrated activity must provide its layer.  Do not silently fall back to the old
-            // BackgroundManager bitmap path, which would reintroduce the race this class prevents.
             log.error("details backdrop view {} is unavailable", mBackdropViewId);
             return;
         }
-        mTask = new BackdropTask(mActivity, backdropView, mFallbackColor).execute(input);
+        if (mTask != null && mTask.getLoadedFile() != null) {
+            mCurrentlyDisplayedFile = mTask.getLoadedFile();
+        }
+        mTask = new BackdropTask(mActivity, backdropView, mFallbackColor, mCurrentlyDisplayedFile) {
+            @Override
+            public BackdropTask execute(Object in) {
+                super.execute(in);
+                return this;
+            }
+        };
+        mTask.execute(input);
     }
 
     private void cancelCurrent() {
         if (mTask != null) {
+            if (mTask.getLoadedFile() != null) {
+                mCurrentlyDisplayedFile = mTask.getLoadedFile();
+            }
             mTask.cancel();
             mTask = null;
         }

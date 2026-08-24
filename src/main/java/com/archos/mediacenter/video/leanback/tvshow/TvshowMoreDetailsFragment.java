@@ -91,6 +91,10 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     private ArrayObjectAdapter mRowsAdapter;
 
     private DetailsBackdropController mBackdropController;
+
+    public DetailsBackdropController getBackdropController() {
+        return mBackdropController;
+    }
     private FullScraperTagsTask mFullScraperTagsTask;
     private BuildRowsTask mBuildRowsTask;
     private ShowPosterSaverTask mShowPosterSaverTask;

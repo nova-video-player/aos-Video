@@ -31,6 +31,7 @@ import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
 
+import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -38,10 +39,13 @@ import com.archos.mediacenter.video.leanback.collections.CollectionActivity;
 import com.archos.mediacenter.video.leanback.collections.CollectionFragment;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsActivity;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsFragment;
+import com.archos.mediacenter.video.leanback.details.VideoDetailsTransitionBackdropCache;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsTransitionPosterCache;
 import com.archos.mediacenter.video.leanback.presenter.ListPresenter;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
+import com.archos.mediacenter.video.leanback.tvshow.TvshowMoreDetailsActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
+import com.archos.mediacenter.video.leanback.tvshow.TvshowMoreDetailsFragment;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +116,21 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
         if (sourceView instanceof ImageView) {
             Drawable drawable = ((ImageView) sourceView).getDrawable();
             VideoDetailsTransitionPosterCache.put(launchUptimeMs, drawable);
+        }
+        if (activity instanceof TvshowActivity || activity instanceof TvshowMoreDetailsActivity) {
+            ImageView backdropView = activity.findViewById(R.id.details_backdrop);
+            java.io.File backdropFile = null;
+            if (activity instanceof androidx.fragment.app.FragmentActivity) {
+                androidx.fragment.app.Fragment fragment = ((androidx.fragment.app.FragmentActivity) activity).getSupportFragmentManager().findFragmentById(R.id.main_browse_fragment);
+                if (fragment instanceof TvshowFragment) {
+                    backdropFile = ((TvshowFragment) fragment).getBackdropController().getCurrentlyDisplayedFile();
+                } else if (fragment instanceof TvshowMoreDetailsFragment) {
+                    backdropFile = ((TvshowMoreDetailsFragment) fragment).getBackdropController().getCurrentlyDisplayedFile();
+                }
+            }
+            if (backdropView != null && backdropView.getDrawable() != null) {
+                VideoDetailsTransitionBackdropCache.put(launchUptimeMs, backdropView.getDrawable(), backdropFile);
+            }
         }
         if (animate) {
             traceVideoDetailsLaunch(launchUptimeMs, "source-transition-options-start");

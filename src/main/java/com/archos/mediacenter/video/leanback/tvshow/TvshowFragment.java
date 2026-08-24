@@ -138,6 +138,10 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     private SparseArray<CursorObjectAdapter> mSeasonAdapters;
 
     private DetailsBackdropController mBackdropController;
+
+    public DetailsBackdropController getBackdropController() {
+        return mBackdropController;
+    }
     private FullScraperTagsTask mFullScraperTagsTask;
     private DetailRowBuilderTask mDetailRowBuilderTask;
     private RefreshTvshowBitmapTask mRefreshTvshowBitmapTask;

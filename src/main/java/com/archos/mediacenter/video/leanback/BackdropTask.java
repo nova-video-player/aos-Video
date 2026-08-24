@@ -71,19 +71,33 @@ public class BackdropTask {
         }
         mBackgroundTarget = new PicassoBackgroundManagerTarget(backgroundManager);
         mBackdropView = null;
+        mCurrentFile = null;
     }
+
+    private final File mCurrentFile;
 
     /**
      * Details-screen variant. The view is activity-owned and therefore remains a strong Picasso
      * target for the complete screen lifetime; it avoids BackgroundManager's fixed slow fade.
      */
-    public BackdropTask(Activity activity, ImageView backdropView, int backgroundDefaultColor) {
+    public BackdropTask(Activity activity, ImageView backdropView, int backgroundDefaultColor, File currentFile) {
         if (log.isDebugEnabled()) log.debug("details backdrop task created");
         mContext = activity;
         mDefaultBackground = new ColorDrawable(backgroundDefaultColor);
         mMetrics = activity.getResources().getDisplayMetrics();
         mBackgroundTarget = null;
         mBackdropView = backdropView;
+        mCurrentFile = currentFile;
+    }
+
+    public BackdropTask(Activity activity, ImageView backdropView, int backgroundDefaultColor) {
+        this(activity, backdropView, backgroundDefaultColor, null);
+    }
+
+    private volatile File mLoadedFile = null;
+
+    public File getLoadedFile() {
+        return mLoadedFile;
     }
 
     public BackdropTask execute(Object input) {
@@ -103,6 +117,16 @@ public class BackdropTask {
             handler.post(() -> {
                 if (isCancelled || mContext.isDestroyed()) return;
                 if (finalResult != null) {
+                    boolean isSameFile = mCurrentFile != null && mCurrentFile.equals(finalResult);
+                    if (isSameFile) {
+                        mLoadedFile = finalResult;
+                        if (log.isDebugEnabled()) log.debug("details backdrop is identical to current: retaining without reload file={}", finalResult.getPath());
+                        if (mBackdropView != null) {
+                            mBackdropView.setVisibility(View.VISIBLE);
+                            mBackdropView.setAlpha(1f);
+                        }
+                        return;
+                    }
                     if (log.isDebugEnabled()) log.debug("backdrop Picasso decode requested: file={}", finalResult.getPath());
                     com.squareup.picasso.RequestCreator request = Picasso.get()
                             .load(finalResult)
@@ -115,6 +139,7 @@ public class BackdropTask {
                             @Override
                             public void onSuccess() {
                                 if (isCancelled || mContext.isDestroyed()) return;
+                                mLoadedFile = finalResult;
                                 if (log.isDebugEnabled()) log.debug("details backdrop bitmap displayed");
                                 mBackdropView.animate().cancel();
                                 mBackdropView.setVisibility(View.VISIBLE);
@@ -135,7 +160,7 @@ public class BackdropTask {
                     if (log.isDebugEnabled()) log.debug("backdrop file unavailable; using fallback color");
                     if (mBackdropView != null) {
                         clearBackdropView();
-                    } else {
+                    } else if (mBackgroundTarget != null) {
                         mBackgroundTarget.setFallbackDrawable(mDefaultBackground);
                     }
                 }
@@ -172,16 +197,31 @@ public class BackdropTask {
         }
     }
 
-    public void cancel() {
+    public void cancelTaskOnly() {
         isCancelled = true;
-        if (log.isDebugEnabled()) log.debug("backdrop request cancelled");
+        if (log.isDebugEnabled()) log.debug("backdrop request cancelled (view preserved)");
         if (mBackdropView != null) {
             Picasso.get().cancelRequest(mBackdropView);
-            clearBackdropView();
-        } else {
+        } else if (mBackgroundTarget != null) {
             Picasso.get().cancelRequest(mBackgroundTarget);
         }
         executor.shutdownNow();
+    }
+
+    public void cancelAndClear() {
+        isCancelled = true;
+        if (log.isDebugEnabled()) log.debug("backdrop request cancelled and cleared");
+        if (mBackdropView != null) {
+            Picasso.get().cancelRequest(mBackdropView);
+            clearBackdropView();
+        } else if (mBackgroundTarget != null) {
+            Picasso.get().cancelRequest(mBackgroundTarget);
+        }
+        executor.shutdownNow();
+    }
+
+    public void cancel() {
+        cancelAndClear();
     }
 
     private void clearBackdropView() {
@@ -192,7 +232,7 @@ public class BackdropTask {
     }
 
     /** Applies the existing dark scrim while Picasso is still decoding, not on the UI thread. */
-    private static final class BackdropDarkeningTransformation implements Transformation {
+    public static final class BackdropDarkeningTransformation implements Transformation {
         @Override
         public Bitmap transform(Bitmap source) {
             Bitmap.Config config = source.getConfig() != null ? source.getConfig() : Bitmap.Config.ARGB_8888;

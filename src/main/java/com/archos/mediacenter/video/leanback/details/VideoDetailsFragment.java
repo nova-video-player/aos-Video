@@ -250,6 +250,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     private DetailRowBuilderTask mDetailRowBuilderTask;
     private DetailsBackdropController mBackdropController;
+
+    public void setCurrentlyDisplayedBackdropFile(java.io.File file) {
+        if (mBackdropController != null) {
+            mBackdropController.setCurrentlyDisplayedFile(file);
+        }
+    }
     private VideoInfoTask mVideoInfoTask;
     private FullScraperTagsTask mFullScraperTagsTask;
     private SubtitleFilesListerTask mSubtitleFilesListerTask;
@@ -781,20 +787,20 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 }
             }
             else if (action.getId() == VideoActionAdapter.ACTION_NEXT_EPISODE) {
-                final Intent intent = new Intent(getActivity(), VideoDetailsActivity.class);
-                intent.putExtra(VideoDetailsFragment.EXTRA_VIDEO, mNextEpisode);
-                intent.putExtra(VideoDetailsActivity.SLIDE_TRANSITION_EXTRA, true);
-                // Launch next activity with slide animation
-                // Starting from lollipop we need to give an empty "SceneTransitionAnimation" for this to work
-                mOverlay.hide(); // hide the top-right overlay else it slides across the screen!
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                // Delay the finish the "old" activity, else it breaks the animation
-                mHandler.postDelayed(new Runnable() {
-                    public void run() {
-                        if (getActivity()!=null) // better safe than sorry
-                            getActivity().finish();
+                if (mNextEpisode != null) {
+                    Video nextEp = mNextEpisode;
+                    if (log.isDebugEnabled()) log.debug("ACTION_NEXT_EPISODE: in-place reload from {} to {}", mVideo, nextEp);
+                    cancelPendingEpisodeTasks();
+                    mVideo = nextEp;
+                    mIsVideoWatched = nextEp.isWatched();
+                    mShouldUpdateRemoteResume = true;
+                    mNextEpisode = null;
+                    mShouldLoadBackdrop = true;
+                    fullyReloadVideo(nextEp, null, false);
+                    if (isAdded()) {
+                        LoaderManager.getInstance(VideoDetailsFragment.this).restartLoader(1, null, VideoDetailsFragment.this);
                     }
-                }, 1000);
+                }
             }
             else if (action.getId() == VideoActionAdapter.ACTION_INDEX) {
                 VideoStore.requestIndexing(mVideo.getFileUri(), getActivity());
@@ -1229,6 +1235,29 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
     }
 
+    private void cancelPendingEpisodeTasks() {
+        if (mDetailRowBuilderTask != null) {
+            mDetailRowBuilderTask.cancel();
+            mDetailRowBuilderTask = null;
+        }
+        if (mThumbnailAsyncTask != null) {
+            mThumbnailAsyncTask.cancel();
+            mThumbnailAsyncTask = null;
+        }
+        if (mSubtitleFilesListerTask != null) {
+            mSubtitleFilesListerTask.cancel();
+            mSubtitleFilesListerTask = null;
+        }
+        if (mVideoInfoTask != null) {
+            mVideoInfoTask.cancel();
+            mVideoInfoTask = null;
+        }
+        if (mFullScraperTagsTask != null) {
+            mFullScraperTagsTask.cancel();
+            mFullScraperTagsTask = null;
+        }
+    }
+
     //putting in thread to avoid async tasks to be locked
 
     private class ThumbnailAsyncTask {
@@ -1454,11 +1483,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         if (poster == null) {
             if (log.isDebugEnabled()) log.debug("fullyReloadVideo: no poster, generate it");
 
-            if (showFallbackPoster)
+            if (showFallbackPoster) {
                 mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
-            else
-                mDetailsOverviewRow.setImageDrawable(null);
-            mDetailsOverviewRow.setImageScaleUpAllowed(false);
+                mDetailsOverviewRow.setImageScaleUpAllowed(false);
+            }
             mThumbnailAsyncTask = new ThumbnailAsyncTask();
             mThumbnailAsyncTask.execute(mVideo);
         }else{
@@ -1733,7 +1761,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     if (finalTags!=null && !mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
                         if(mShouldLoadBackdrop) {
                             if (log.isDebugEnabled()) log.debug("onPostExecute: loading backdrop");
-                            mBackdropController.loadIfIdle(finalTags);
+                            mBackdropController.replaceIfDifferent(finalTags);
                             mShouldLoadBackdrop = false;
                         } else {
                             if (log.isDebugEnabled()) log.debug("onPostExecute: should not load backdrop");
