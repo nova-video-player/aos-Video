@@ -132,7 +132,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     public static final int SEEK_LONG_INIT_DELAY = 200;
     public static final int SEEK_LONG_DELAY = 50;
-    private static final int SEEK_ACCEL_MSECS[]  = { 2000, 6000, 30000, 60000};
+    private static final int SEEK_ACCEL_MSECS[]  = {5000, 15000, 30000, 60000};
     private static final int SEEK_SHORT_MSEC     = SEEK_ACCEL_MSECS[0];
     private static final int SEEK_ACCEL_PERMIL[] = {10, 20, 40, 80};
     private static final int SEEK_SHORT_PERMIL   = SEEK_ACCEL_PERMIL[0];
