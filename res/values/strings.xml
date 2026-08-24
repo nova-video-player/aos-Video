@@ -437,7 +437,7 @@
     <string name="subtitle_style_text">Style:</string>
     <string name="subtitle_vert_text">Vertical Position:</string>
     <string name="subtitle_outline">Outline subtitles</string>
-    <string name="subtitle_background_text">Subtitle background</string>
+    <string name="subtitle_background_text">Subtitle Background:</string>
     <string name="subtitle_bg_opacity_text">Background Opacity:</string>
 
     <!-- Subtitle Settings Dialog — libass styling system additions -->
@@ -451,10 +451,9 @@
     <string name="subtitle_text_color_text">Text color:</string>
     <string name="subtitle_scale_text">Scale:</string>
 
-    <string name="subtitle_bg_mode_text">Background Style:</string>
-    <string name="subtitle_bg_mode_floating">Floating</string>
-    <string name="subtitle_bg_mode_boxed_line">Boxed Line</string>
-    <string name="subtitle_bg_mode_boxed_block">Boxed Block</string>
+    <string name="subtitle_bg_mode_floating">No Background</string>
+    <string name="subtitle_bg_mode_boxed_line">Line Background</string>
+    <string name="subtitle_bg_mode_boxed_block">Block Background</string>
 
     <string name="subtitle_outline_width_text">Outline Width:</string>
     <string name="subtitle_outline_color_text">Outline Color:</string>

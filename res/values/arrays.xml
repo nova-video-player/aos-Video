@@ -258,4 +258,29 @@
         <item>blue</item>
         <item>black</item>
     </string-array>
+
+    <string-array name="pref_subtitle_override_mode_entries" translatable="false">
+        <item>@string/subtitle_override_embedded</item>
+        <item>@string/subtitle_override_custom</item>
+        <item>@string/subtitle_override_scale_only</item>
+    </string-array>
+
+    <string-array name="pref_subtitle_override_mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="pref_subtitle_bg_mode_entries" translatable="false">
+        <item>@string/subtitle_bg_mode_floating</item>
+        <item>@string/subtitle_bg_mode_boxed_line</item>
+        <item>@string/subtitle_bg_mode_boxed_block</item>
+    </string-array>
+
+    <string-array name="pref_subtitle_bg_mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 </resources>

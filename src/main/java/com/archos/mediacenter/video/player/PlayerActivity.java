@@ -1908,11 +1908,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 SubtitleManager.OVERRIDE_CUSTOM,
                 SubtitleManager.OVERRIDE_SCALE_ONLY
         };
-        final String[] overrideLabels = {
-                getString(R.string.subtitle_override_embedded),
-                getString(R.string.subtitle_override_custom),
-                getString(R.string.subtitle_override_scale_only)
-        };
+        final String[] overrideLabels = getResources().getStringArray(R.array.pref_subtitle_override_mode_entries);
         int overrideIdx = 1; // default Custom
         for (int i = 0; i < overrideModes.length; i++) if (overrideModes[i] == mSubtitleManager.getOverrideMode()) overrideIdx = i;
         final int currentOverrideIdx = overrideIdx;
@@ -2022,16 +2018,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     SubtitleManager.BG_MODE_BOXED_LINE,
                     SubtitleManager.BG_MODE_BOXED_BLOCK
             };
-            final String[] bgLabels = {
-                    getString(R.string.subtitle_bg_mode_floating),
-                    getString(R.string.subtitle_bg_mode_boxed_line),
-                    getString(R.string.subtitle_bg_mode_boxed_block)
-            };
+            final String[] bgLabels = getResources().getStringArray(R.array.pref_subtitle_bg_mode_entries);
             int bgIdx = 0;
             for (int i = 0; i < bgModes.length; i++) if (bgModes[i] == mSubtitleManager.getBgMode()) bgIdx = i;
             final int currentBgIdx = bgIdx;
 
-            final String bgPrefix = getString(R.string.subtitle_bg_mode_text);
+            final String bgPrefix = getString(R.string.subtitle_background_text);
             bgModePicker = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
                     .inflate(R.layout.subtitle_delay_tv_picker, null);
             bgModePicker.setStep(1);

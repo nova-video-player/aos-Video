@@ -264,7 +264,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/subtitles_settings_dialog_margin_small"
-                    android:text="@string/subtitle_bg_mode_text" />
+                    android:text="@string/subtitle_background_text" />
 
                 <RadioGroup
                     android:id="@+id/subtitle_bg_mode_group"
