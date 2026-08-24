@@ -1928,6 +1928,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.setClass(getActivity(), SubtitlesDownloaderActivity2.class);
         intent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, mVideo.getFilePath());
+        if (mVideo != null && mVideo.getName() != null) {
+            intent.putExtra(SubtitlesDownloaderActivity2.FILE_NAME, mVideo.getName());
+        }
         subtitleLauncher.launch(intent);
     }
 

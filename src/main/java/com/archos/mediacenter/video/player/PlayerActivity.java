@@ -3920,6 +3920,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         Intent subIntent = new Intent(Intent.ACTION_MAIN);
         subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
         subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, PlayerService.sPlayerService.getStreamingUri().toString());
+        if (mTitle != null) {
+            subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_NAME, mTitle);
+        }
         subtitleLauncher.launch(subIntent);
     }
 
@@ -4478,6 +4481,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             final String scheme = mUri.getScheme();
             if (getIntent().getStringExtra("title") != null)
                 mTitle = getIntent().getStringExtra("title");
+            else if (getIntent().getStringExtra(Intent.EXTRA_TITLE) != null)
+                mTitle = getIntent().getStringExtra(Intent.EXTRA_TITLE);
+            else if (getIntent().getStringExtra("extra_name") != null)
+                mTitle = getIntent().getStringExtra("extra_name");
             else if (scheme == null || !scheme.equals("content"))
                 mTitle = FileUtils.getName(mUri);
             invalidateOptionsMenu();

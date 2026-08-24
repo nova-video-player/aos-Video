@@ -1240,6 +1240,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.setClass(getActivity(), SubtitlesDownloaderActivity2.class);
             intent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, mCurrentVideo.getFilePath());
+            if (mCurrentVideo != null && mCurrentVideo.getName() != null) {
+                intent.putExtra(SubtitlesDownloaderActivity2.FILE_NAME, mCurrentVideo.getName());
+            }
             subtitleLauncher.launch(intent);
         }else if(view == mTMDBIcon){
             // Format TMDB URL with movie ID and preferred language
