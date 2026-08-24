@@ -368,6 +368,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if (mPlayPauseTouchZone != null) {
             mPlayPauseTouchZone.setVisibility(View.INVISIBLE);
         }
+        if (mClock != null) {
+            mClock.setText(getDateFormat().format(new Date()));
+        }
     }
 
     public void addToMenuContainer(View v){

@@ -19,6 +19,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -48,6 +50,14 @@ public class Clock {
     final private TextView mClockTextView;
     final private SimpleDateFormat mDateFormat;
 
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Runnable mRecheckRunnable = new Runnable() {
+        @Override
+        public void run() {
+            updateClock();
+        }
+    };
+
     public Clock(Context context, View overlayContainer) {
         mContext = context;
 
@@ -66,15 +76,19 @@ public class Clock {
     }
 
     public void destroy() {
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     public void resume() {
         mContext.registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         updateClock();
+        // One-shot 500ms re-check to catch async playback stops during activity transitions
+        mHandler.postDelayed(mRecheckRunnable, 500);
     }
 
     public void pause() {
         // We do not change the visibility of the clock here to have a smooth transition between fragments with clock
+        mHandler.removeCallbacksAndMessages(null);
         mContext.unregisterReceiver(mReceiver);
     }
 
@@ -87,6 +101,7 @@ public class Clock {
     };
 
     private void updateClock() {
+        mHandler.removeCallbacks(mRecheckRunnable);
         long now = System.currentTimeMillis();
         String currentClockText = mDateFormat.format(new Date(now));
         if (PlayerService.sPlayerService != null && Player.sPlayer != null && Player.sPlayer.isPlaying()) {
