@@ -117,7 +117,8 @@ public class BackdropTask {
             handler.post(() -> {
                 if (isCancelled || mContext.isDestroyed()) return;
                 if (finalResult != null) {
-                    boolean isSameFile = mCurrentFile != null && mCurrentFile.equals(finalResult);
+                    boolean isSameFile = mCurrentFile != null && mCurrentFile.equals(finalResult)
+                            && (mBackdropView == null || mBackdropView.getDrawable() != null);
                     if (isSameFile) {
                         mLoadedFile = finalResult;
                         if (log.isDebugEnabled()) log.debug("details backdrop is identical to current: retaining without reload file={}", finalResult.getPath());

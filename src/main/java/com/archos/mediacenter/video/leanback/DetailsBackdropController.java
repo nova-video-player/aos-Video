@@ -94,7 +94,7 @@ public final class DetailsBackdropController {
 
     /** Cancels work when stopped and remembers the current input for a genuine restore. */
     public void onStop(boolean restoreNeeded, Object restoreInput) {
-        if (mTask != null) {
+        if (mTask != null || mCurrentlyDisplayedFile != null) {
             cancelCurrent();
             mNeedsRestore = restoreNeeded;
             mRestoreInput = restoreInput;
@@ -108,7 +108,7 @@ public final class DetailsBackdropController {
         mNeedsRestore = false;
         if (mRestoreInput != null) {
             if (log.isDebugEnabled()) log.debug("restoring details backdrop after stopped state");
-            loadIfIdle(mRestoreInput);
+            replaceIfDifferent(mRestoreInput);
         }
     }
 
