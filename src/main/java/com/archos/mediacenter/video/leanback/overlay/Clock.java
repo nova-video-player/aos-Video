@@ -26,6 +26,9 @@ import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
 
+import com.archos.mediacenter.video.player.Player;
+import com.archos.mediacenter.video.player.PlayerService;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -36,6 +39,10 @@ public class Clock {
 
     private static final String TAG = "Clock";
     private final static boolean DBG = false;
+
+    public static String formatTimeWithArrow(String startText, String endText) {
+        return startText + " → " + endText;
+    }
 
     final Context mContext;
     final private TextView mClockTextView;
@@ -80,6 +87,21 @@ public class Clock {
     };
 
     private void updateClock() {
-        mClockTextView.setText(mDateFormat.format(new Date()));
+        long now = System.currentTimeMillis();
+        String currentClockText = mDateFormat.format(new Date(now));
+        if (PlayerService.sPlayerService != null && Player.sPlayer != null && Player.sPlayer.isPlaying()) {
+            int duration = Player.sPlayer.getDuration();
+            int position = Player.sPlayer.getCurrentPosition();
+            float speed = PlayerService.sPlayerService.getAudioSpeed();
+            if (speed <= 0f) speed = 1.0f;
+
+            if (duration > 0 && duration > position) {
+                long remainingMs = (long) ((duration - position) / speed);
+                String endClockText = mDateFormat.format(new Date(now + remainingMs));
+                mClockTextView.setText(formatTimeWithArrow(currentClockText, endClockText));
+                return;
+            }
+        }
+        mClockTextView.setText(currentClockText);
     }
 }

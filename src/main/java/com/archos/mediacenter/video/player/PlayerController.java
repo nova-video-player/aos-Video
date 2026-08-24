@@ -35,6 +35,8 @@ import android.os.Message;
 import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.ActionBar;
 
+import com.archos.mediacenter.video.leanback.overlay.Clock;
+
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
@@ -1268,7 +1270,20 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
                 boolean makeTimeNegative = prefs.getBoolean(VideoPreferencesCommon.KEY_MAKE_TIME_NEGATIVE, VideoPreferencesCommon.MAKE_TIME_NEGATIVE_DEFAULT);
 
-                endText = (!makeTimeNegative ? "" : "-") + stringForTime(duration-position > 0 ? duration-position : 0);
+                int remaining = duration - position > 0 ? duration - position : 0;
+                String remainingText = (!makeTimeNegative ? "" : "-") + stringForTime(remaining);
+
+                boolean isLeanback = mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK);
+                if (!isLeanback && duration > 0 && remaining > 0 && Player.sPlayer != null && (Player.sPlayer.isPlaying() || Player.sPlayer.isPaused())) {
+                    long now = System.currentTimeMillis();
+                    float speed = PlayerService.sPlayerService != null ? PlayerService.sPlayerService.getAudioSpeed() : 1.0f;
+                    if (speed <= 0f) speed = 1.0f;
+                    long remainingMs = (long) (remaining / speed);
+                    String endClockText = getDateFormat().format(new Date(now + remainingMs));
+                    endText = Clock.formatTimeWithArrow(remainingText, endClockText);
+                } else {
+                    endText = remainingText;
+                }
             } else {
                 if (mDragging || !mSeekComplete) {
                     mProgress.setProgress(position);
@@ -1306,6 +1321,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             if(mCurrentTime2!=null)
                 mCurrentTime2.setText(currentText);
         }
+        updateClock();
 
         return position;
     }
@@ -2759,9 +2775,35 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
 
+    private SimpleDateFormat getDateFormat() {
+        if (mDateFormat == null) {
+            if (DateFormat.is24HourFormat(mContext)) {
+                mDateFormat = new SimpleDateFormat("HH:mm");
+            } else {
+                mDateFormat = new SimpleDateFormat("h:mm");
+            }
+        }
+        return mDateFormat;
+    }
+
     public void updateClock() {
-        if (mClock!=null) {
-            mClock.setText(mDateFormat.format(new Date()));
+        if (mClock != null) {
+            long now = System.currentTimeMillis();
+            String currentClockText = getDateFormat().format(new Date(now));
+            if (Player.sPlayer != null && (Player.sPlayer.isPlaying() || Player.sPlayer.isPaused())) {
+                int duration = Player.sPlayer.getDuration();
+                int position = Player.sPlayer.getCurrentPosition();
+                float speed = PlayerService.sPlayerService != null ? PlayerService.sPlayerService.getAudioSpeed() : 1.0f;
+                if (speed <= 0f) speed = 1.0f;
+
+                if (duration > 0 && duration > position) {
+                    long remainingMs = (long) ((duration - position) / speed);
+                    String endClockText = getDateFormat().format(new Date(now + remainingMs));
+                    mClock.setText(Clock.formatTimeWithArrow(currentClockText, endClockText));
+                    return;
+                }
+            }
+            mClock.setText(currentClockText);
         }
     }
 
