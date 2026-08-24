@@ -1,6 +1,9 @@
+- Add provisional video end time on OSD
+- 5s seek base granularity and smoother backward seek
+- Fix judder on some HEVC videos
+- Keep screen awake during active scanning, scraping
+- Improve edge-to-edge display support
 - Restore media info retrieval on cellular network
 - Restore SAMBA SMBv1 server compatibility by protocol level detection
 - Smarter TV show and movie media scraping
-- Playback Fixes: accurate playback position resuming, aspect ratio distortion over HDMI, and improved Bluetooth sync
-- UI: added "Next Episode" button on mobile, network scan progress overlay on TV
 - Many stability enhancement
