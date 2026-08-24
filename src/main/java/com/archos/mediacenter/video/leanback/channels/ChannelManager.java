@@ -351,6 +351,11 @@ public class ChannelManager {
     
                         if (!mChannels.containsKey(channel.getDisplayName()))
                             mContext.getContentResolver().delete(TvContractCompat.buildChannelUri(channel.getId()), null, null);
+                        else {
+                            ChannelData internalChannel = mChannels.get(channel.getDisplayName());
+                            if (internalChannel != null)
+                                internalChannel.setId(channel.getId());
+                        }
                     }
                 }
                 finally {
@@ -462,6 +467,7 @@ public class ChannelManager {
                 long id = ContentUris.parseId(uri);
 
                 ChannelLogoUtils.storeChannelLogo(mContext, id, BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.nova));
+                TvContractCompat.requestChannelBrowsable(mContext, id);
 
                 return id;
             } catch (Exception e) {
@@ -510,14 +516,12 @@ public class ChannelManager {
         private void doRefresh(ChannelData channel) {
             if (DBG) Log.d(TAG, "Refreshing " + channel.getName());
 
-            boolean isVisible = isChannelVisible(channel);
-
-            if (!isVisible) {
-                deletePrograms(channel);
+            if (channel.getLoader() == null)
                 return;
-            }
 
             Cursor cursor = channel.getLoader().loadInBackground();
+            if (cursor == null)
+                return;
 
             try {
                 ArrayList<Long> oldVideoOrTvShowIds = getVideoOrTvShowIds(channel);
@@ -673,29 +677,6 @@ public class ChannelManager {
             finally {
                 cursor.close();
             }
-        }
-
-        private boolean isChannelVisible(ChannelData internalChannel) {
-            Cursor cursor = mContext.getContentResolver().query(TvContractCompat.Channels.CONTENT_URI, new String[] { TvContractCompat.Channels._ID, TvContractCompat.Channels.COLUMN_BROWSABLE }, null, null, null);
-
-            if (cursor != null) {
-                try {
-                    while (cursor.moveToNext()) {
-                        Channel channel = Channel.fromCursor(cursor);
-    
-                        if (channel.getId() == internalChannel.getId()) {
-                            cursor.close();
-
-                            return channel.isBrowsable();
-                        } 
-                    }
-                }
-                finally {
-                    cursor.close();
-                }
-            }
-
-            return false;
         }
 
         private void deletePrograms(ChannelData channel) {
