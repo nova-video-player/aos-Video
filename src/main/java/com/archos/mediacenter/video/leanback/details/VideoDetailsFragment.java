@@ -29,7 +29,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,7 +48,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.DetailsFragmentWithLessTopOffset;
 import androidx.leanback.transition.TransitionHelper;
 import androidx.leanback.transition.TransitionListener;
@@ -104,8 +102,8 @@ import com.archos.mediacenter.video.info.MultipleVideoLoader;
 import com.archos.mediacenter.video.info.SortByFavoriteSources;
 import com.archos.mediacenter.video.info.VideoInfoActivity;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
-import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
+import com.archos.mediacenter.video.leanback.DetailsBackdropController;
 import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
 import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
@@ -251,7 +249,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private DetailsOverviewRow mDetailsOverviewRow;
 
     private DetailRowBuilderTask mDetailRowBuilderTask;
-    private BackdropTask mBackdropTask;
+    private DetailsBackdropController mBackdropController;
     private VideoInfoTask mVideoInfoTask;
     private FullScraperTagsTask mFullScraperTagsTask;
     private SubtitleFilesListerTask mSubtitleFilesListerTask;
@@ -271,7 +269,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private ThumbnailAsyncTask mThumbnailAsyncTask;
     private Bitmap mThumbnail;
     private boolean mAnimationIsRunning;
-
     private int mColor;
     private static int dominantColor = 0;
     private ArrayList<Video> mVideoList;
@@ -352,7 +349,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mVideoMetadateCache = new HashMap<>();
         mShouldDisplayRemoveFromList = getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1) != -1;
 
-        Object transition = TransitionHelper.getEnterTransition(getActivity().getWindow());
+        Object transition = TransitionHelper.getSharedElementEnterTransition(getActivity().getWindow());
         if(transition!=null) {
             mAnimationIsRunning = false;
             TransitionHelper.addTransitionListener(transition, new TransitionListener() {
@@ -373,6 +370,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
                     }
                     mOverlay.show();
+                }
+
+                @Override
+                public void onTransitionCancel(Object transition) {
+                    mAnimationIsRunning = false;
                 }
             });
         }
@@ -441,10 +443,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 ? intent.getSerializableExtra(VideoInfoActivity.EXTRA_USE_VIDEO_METADATA, VideoMetadata.class)
                 : (VideoMetadata) intent.getSerializableExtra(VideoInfoActivity.EXTRA_USE_VIDEO_METADATA);
         
-        // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
-        // else it does not work later.
-        // --> This instance of BackdropTask() will not be used but it must be created here!
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        mBackdropController = new DetailsBackdropController(getActivity(), R.id.details_backdrop,
+                VideoInfoCommonClass.getDarkerColor(mColor));
+        mBackdropController.attach();
 
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
@@ -585,7 +586,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         // Cancel all the async tasks
         // please be aware that even after stopping, the async task continues until background task has finished
         if (mDetailRowBuilderTask != null) mDetailRowBuilderTask.cancel();
-        if (mBackdropTask != null) mBackdropTask.cancel();
+        mBackdropController.onStop(!mLaunchedFromPlayer && mVideo != null, mVideo);
         if (mVideoInfoTask != null) mVideoInfoTask.cancel();
         if (mFullScraperTagsTask != null) mFullScraperTagsTask.cancel();
         if (mSubtitleFilesListerTask != null) mSubtitleFilesListerTask.cancel();
@@ -674,12 +675,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mResumeFromPlayer = false;
         mFirstOnResume = false;
 
-        if (mBackdropTask!=null) {
-            mBackdropTask.cancel();
-        }
-        if (!mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
-            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mVideo);
-        }
+        // The details update below owns the initial backdrop request.  Starting one here as well
+        // used to race the scraper-tag request and could replace the backdrop during the enter animation.
+        if (!mLaunchedFromPlayer) mBackdropController.restoreIfNeeded();
 
     }
 
@@ -1154,7 +1152,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     }
                 }
                 // this is required to remove backdrop after removal of description
-                if (needToUpdateDetailsOverview) mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(currentVideo);
+                if (needToUpdateDetailsOverview) mBackdropController.replace(currentVideo);
 
             }
         }else {
@@ -1331,7 +1329,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         traceDetails("details-row-build-start");
         if (log.isDebugEnabled()) log.debug("fullyReloadVideo: mShouldLoadBackdrop={}", mShouldLoadBackdrop);
         if(mShouldLoadBackdrop)
-            BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
+            mBackdropController.setFallbackColor(VideoInfoCommonClass.getDarkerColor(mColor));
         mSubtitlesDetailsRow = new SubtitlesDetailsRow(getActivity(), video, null);
         mFileDetailsRow = new FileDetailsRow(getActivity(), video, mPlayerType);
         if(mDetailsOverviewRow==null)
@@ -1422,7 +1420,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
         else {
             // Backdrop must be done in non-scrap case because there may be a backdrop remaining from previous scrap data than need to be removed (when removing scrap data)
-            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(video);
+            mBackdropController.replace(video);
         }
 
         // Check subtitles. Better to do it before VideoInfoTask because it should be quicker and it is displayed higher in the Fragment
@@ -1729,14 +1727,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     // Update the action adapter if there is a next episode
                     ((VideoActionAdapter) mDetailsOverviewRow.getActionsAdapter()).setNextEpisodeStatus(mNextEpisode != null);
                     ((VideoActionAdapter) mDetailsOverviewRow.getActionsAdapter()).setListEpisodesStatus(mIsTvEpisode);
-                    // Launch backdrop task in BaseTags-as-arguments mode
-                    if (mBackdropTask!=null) {
-                        mBackdropTask.cancel();
-                    }
+                    // Launch backdrop task in BaseTags-as-arguments mode.  A later scraper callback
+                    // may decide that the backdrop is already loading; it must not cancel that
+                    // in-flight request and then leave the details screen without a backdrop.
                     if (finalTags!=null && !mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
                         if(mShouldLoadBackdrop) {
                             if (log.isDebugEnabled()) log.debug("onPostExecute: loading backdrop");
-                            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(finalTags);
+                            mBackdropController.loadIfIdle(finalTags);
                             mShouldLoadBackdrop = false;
                         } else {
                             if (log.isDebugEnabled()) log.debug("onPostExecute: should not load backdrop");
@@ -2098,11 +2095,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 handler.post(() -> {
                     if (isCancelled) return;
                     // Update backdrop
-                    if (mBackdropTask!=null) {
-                        mBackdropTask.cancel();
-                    }
                     if (!mLaunchedFromPlayer) { // in player case the player is displayed in the background, not the backdrop
-                        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mVideo);
+                        mBackdropController.replace(mVideo);
                     }
                     Toast.makeText(getActivity(), R.string.leanback_backdrop_changed, Toast.LENGTH_SHORT).show();
                     getActivity().setResult(Activity.RESULT_OK);

@@ -43,7 +43,7 @@ import android.widget.Toast;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 import com.archos.mediacenter.video.utils.ThemeManager;
-import com.archos.mediacenter.video.leanback.BackdropTask;
+import com.archos.mediacenter.video.leanback.DetailsBackdropController;
 import com.archos.mediacenter.video.leanback.adapter.object.WebPageLink;
 import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.details.BackgroundColorPresenter;
@@ -90,7 +90,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     private ListRow mWebLinksRow;
     private ArrayObjectAdapter mRowsAdapter;
 
-    private BackdropTask mBackdropTask;
+    private DetailsBackdropController mBackdropController;
     private FullScraperTagsTask mFullScraperTagsTask;
     private BuildRowsTask mBuildRowsTask;
     private ShowPosterSaverTask mShowPosterSaverTask;
@@ -144,10 +144,9 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             }
         });
 
-        // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
-        // else it does not work later.
-        // --> This instance of BackdropTask() will not be used but it must be created here!
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        mBackdropController = new DetailsBackdropController(getActivity(), R.id.details_backdrop,
+                VideoInfoCommonClass.getDarkerColor(mColor));
+        mBackdropController.attach();
     }
 
     @Override
@@ -220,7 +219,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     @Override
     public void onStop() {
         // Cancel all the async tasks
-        if (mBackdropTask != null) mBackdropTask.cancel();
+        mBackdropController.onStop(mShowTags != null, mShowTags);
         if (mFullScraperTagsTask != null) mFullScraperTagsTask.cancel();
         if (mBuildRowsTask != null) mBuildRowsTask.cancel();
         if (mShowPosterSaverTask != null) mShowPosterSaverTask.cancel();
@@ -232,6 +231,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     public void onResume() {
         super.onResume();
         mOverlay.resume();
+        mBackdropController.restoreIfNeeded();
 
         // Start loading the detailed info about the show if needed
         if (mShowTags==null) {
@@ -239,10 +239,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             mFullScraperTagsTask.execute(mShowId);
         }
 
-        if (mBackdropTask!=null) {
-            mBackdropTask.cancel();
-        }
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mShowTags);
+        if (mShowTags != null) mBackdropController.loadIfIdle(mShowTags);
     }
 
     @Override
@@ -276,11 +273,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                     if (isCancelled) return;
                     mShowTags = finalResult;
 
-                    // Launch backdrop task in BaseTags-as-arguments mode
-                    if (mBackdropTask != null) {
-                        mBackdropTask.cancel();
-                    }
-                    mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(finalResult);
+                    mBackdropController.loadIfIdle(finalResult);
 
                     // Build and load the rows
                     if (mBuildRowsTask != null) {
@@ -544,11 +537,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                     if (isCancelled) return;
                     mShowTags = finalResult;
 
-                    // Update backdrop
-                    if (mBackdropTask != null) {
-                        mBackdropTask.cancel();
-                    }
-                    mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mShowTags);
+                    mBackdropController.replace(mShowTags);
                     Toast.makeText(getActivity(), R.string.leanback_backdrop_changed, Toast.LENGTH_SHORT).show();
 
                     // The activity result is set to OK if the poster or backdrop is changed

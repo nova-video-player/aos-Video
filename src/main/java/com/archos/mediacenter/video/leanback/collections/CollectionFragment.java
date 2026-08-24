@@ -32,14 +32,12 @@ import androidx.loader.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.preference.PreferenceManager;
-import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.DetailsFragmentWithLessTopOffset;
 import androidx.leanback.widget.Action;
 import androidx.leanback.widget.ArrayObjectAdapter;
@@ -84,8 +82,8 @@ import com.archos.mediacenter.video.browser.loader.CollectionLoader;
 import com.archos.mediacenter.video.browser.loader.MovieCollectionLoader;
 import com.archos.mediacenter.video.collections.CollectionsSortOrderEntries;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
-import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
+import com.archos.mediacenter.video.leanback.DetailsBackdropController;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
 import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
@@ -133,7 +131,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     private ArrayObjectAdapter mRowsAdapter;
     private MovieCollectionAdapter mMovieCollectionAdapter;
 
-    private BackdropTask mBackdropTask;
+    private DetailsBackdropController mBackdropController;
     private DetailRowBuilderTask mDetailRowBuilderTask;
     private RefreshCollectionBitmapTask mRefreshCollectionBitmapTask;
 
@@ -277,10 +275,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         mRowsAdapter = new ArrayObjectAdapter(ps);
         mHasDetailRow = false;
 
-        // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
-        // else it does not work later.
-        // --> This instance of BackdropTask() will not be used but it must be created here!
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        mBackdropController = new DetailsBackdropController(getActivity(), R.id.details_backdrop,
+                VideoInfoCommonClass.getDarkerColor(mColor));
+        mBackdropController.attach();
 
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
@@ -422,7 +419,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     @Override
     public void onStop() {
         if (log.isDebugEnabled()) log.debug("onStop");
-        if (mBackdropTask != null) mBackdropTask.cancel();
+        mBackdropController.onStop(mCollection != null, mCollection);
         if (mDetailRowBuilderTask!=null) {
             mDetailRowBuilderTask.cancel();
         }
@@ -435,6 +432,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         if (log.isDebugEnabled()) log.debug("onResume");
         super.onResume();
         mOverlay.resume();
+        mBackdropController.restoreIfNeeded();
 
         // Load the details view
         if (mDetailRowBuilderTask != null) {
@@ -443,12 +441,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         mDetailRowBuilderTask = new DetailRowBuilderTask();
         mDetailRowBuilderTask.execute(mCollection);
 
-        // Launch backdrop task in BaseTags-as-arguments mode
-        if (mBackdropTask!=null) {
-            mBackdropTask.cancel();
-        }
-        // what we need here is the backdrop i.e. the image generated
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mCollection);
+        mBackdropController.loadIfIdle(mCollection);
 
         // Start loading the list of seasons
         LoaderManager.getInstance(CollectionFragment.this).restartLoader(COLLECTION_LOADER_ID, null, CollectionFragment.this);
@@ -544,7 +537,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     if (log.isDebugEnabled()) log.debug("mHasDetailRow = {}", mHasDetailRow);
                     if (!mHasDetailRow) {
                         if (log.isDebugEnabled()) log.debug("mHasDetailRow is false adding detailOverviewRow");
-                        BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
+                        mBackdropController.setFallbackColor(VideoInfoCommonClass.getDarkerColor(mColor));
                         mRowsAdapter.add(INDEX_DETAILS, mDetailsOverviewRow);
                         setAdapter(mRowsAdapter);
                         mHasDetailRow = true;

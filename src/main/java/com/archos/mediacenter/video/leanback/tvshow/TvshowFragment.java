@@ -26,14 +26,12 @@ import androidx.loader.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.preference.PreferenceManager;
-import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.DetailsFragmentWithLessTopOffset;
 import androidx.leanback.widget.Action;
 import androidx.leanback.widget.ArrayObjectAdapter;
@@ -77,8 +75,8 @@ import com.archos.mediacenter.video.browser.loader.SeasonsLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowLoader;
 import com.archos.mediacenter.video.browser.loader.VideoLoader;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
-import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
+import com.archos.mediacenter.video.leanback.DetailsBackdropController;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
 import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.overlay.Overlay;
@@ -139,7 +137,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     private ArrayObjectAdapter mRowsAdapter;
     private SparseArray<CursorObjectAdapter> mSeasonAdapters;
 
-    private BackdropTask mBackdropTask;
+    private DetailsBackdropController mBackdropController;
     private FullScraperTagsTask mFullScraperTagsTask;
     private DetailRowBuilderTask mDetailRowBuilderTask;
     private RefreshTvshowBitmapTask mRefreshTvshowBitmapTask;
@@ -277,10 +275,9 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         mRowsAdapter = new ArrayObjectAdapter(ps);
         mHasDetailRow = false;
 
-        // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
-        // else it does not work later.
-        // --> This instance of BackdropTask() will not be used but it must be created here!
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        mBackdropController = new DetailsBackdropController(getActivity(), R.id.details_backdrop,
+                VideoInfoCommonClass.getDarkerColor(mColor));
+        mBackdropController.attach();
 
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
@@ -380,7 +377,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     @Override
     public void onStop() {
         if (DBG) Log.d(TAG, "onStop");
-        if (mBackdropTask != null) mBackdropTask.cancel();
+        mBackdropController.onStop(mTvshow != null, mTvshow == null ? null : mTvshow.getShowTags());
         if (mFullScraperTagsTask!=null) {
             mFullScraperTagsTask.cancel();
         }
@@ -396,6 +393,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         if (DBG) Log.d(TAG, "onResume");
         super.onResume();
         mOverlay.resume();
+        mBackdropController.restoreIfNeeded();
         // Start loading the detailed info about the show if needed
         if (mTvshow.getShowTags()==null) {
             if (DBG) Log.d(TAG, "onResume: mTvshow.getShowTags()==null -> FullScraperTagsTask");
@@ -404,14 +402,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             }
             mFullScraperTagsTask = new FullScraperTagsTask();
             mFullScraperTagsTask.execute(mTvshow);
-        } else {
-            if (mBackdropTask!=null) {
-                if (DBG) Log.d(TAG, "onResume: mBackdropTask!=null -> cancel");
-                mBackdropTask.cancel();
-            }
-            if (DBG) Log.d(TAG, "onResume: new backdropTask");
-            mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mTvshow.getShowTags());
-        }
+        } else mBackdropController.loadIfIdle(mTvshow.getShowTags());
     }
 
     @Override
@@ -543,11 +534,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     mDetailRowBuilderTask = new DetailRowBuilderTask();
                     mDetailRowBuilderTask.execute(finalResult);
 
-                    // Launch backdrop task in BaseTags-as-arguments mode
-                    if (mBackdropTask != null) {
-                        mBackdropTask.cancel();
-                    }
-                    mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(finalResult.getShowTags());
+                    mBackdropController.loadIfIdle(finalResult.getShowTags());
 
                     // Start loading the list of seasons
                     LoaderManager.getInstance(TvshowFragment.this).restartLoader(SEASONS_LOADER_ID, null, TvshowFragment.this);
@@ -711,7 +698,7 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
                     }
 
                     if (!mHasDetailRow) {
-                        BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
+                        mBackdropController.setFallbackColor(VideoInfoCommonClass.getDarkerColor(mColor));
                         mRowsAdapter.add(INDEX_DETAILS, mDetailsOverviewRow);
 
                         setAdapter(mRowsAdapter);
