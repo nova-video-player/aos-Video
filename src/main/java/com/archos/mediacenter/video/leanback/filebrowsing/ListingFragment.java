@@ -669,11 +669,13 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         }
         for (int position = 0; position < mFilesAdapter.size(); position++) {
             if (selectedItemUri.equals(getItemUri(mFilesAdapter.get(position)))) {
-                mSelectedItemUri = selectedItemUri;
                 if (getSelectedPosition() != position) {
                     if (log.isDebugEnabled()) log.debug("restoreSelectedItem: restoring {} at position {}", selectedItemUri, position);
                     setSelectedPosition(position);
                 }
+                // one-shot: consume it so later spurious adapter refreshes (e.g. background
+                // AutoScrapeService DB notifications) don't keep forcing focus back here
+                mSelectedItemUri = null;
                 return;
             }
         }
