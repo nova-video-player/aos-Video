@@ -248,11 +248,17 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
      * video frame. Re-latching the same (frozen) video frame via
      * mVideoSurfaceTexture.updateTexImage() when nothing new has arrived is safe -- it just
      * re-presents whatever's already there.
+     *
+     * Uses offer() rather than put(): mSourceFrameAvailable is a one-element wake latch, not
+     * a work queue, so a wake that's already pending makes any further wake redundant -- the
+     * draw loop is going to run and pick up the latest queued buffer regardless. put() would
+     * block this (UI) thread until draw() drains the queue, which can stall a style-setter
+     * call for no benefit; offer() drops the duplicate instead and returns immediately. This
+     * is also what makes it safe to call wakeDrawLoop() while the renderer is stopping/paused
+     * and nothing is draining the queue -- offer() simply returns false rather than hanging.
      */
     public void wakeDrawLoop() {
-        try {
-            mSourceFrameAvailable.put(mTrue);
-        } catch (InterruptedException ie) {}
+        mSourceFrameAvailable.offer(mTrue);
     }
 
     @Override

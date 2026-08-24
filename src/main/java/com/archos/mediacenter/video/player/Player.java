@@ -267,6 +267,22 @@ public class Player implements IPlayerControl,
         if (mIsReleased) return;
         mIsReleased = true;
         stopPlayback();
+
+        // stopPlayback() above only pauses mEffectRenderer -- its SurfaceTexture frame
+        // callback (onFrameAvailable(), which drives SubtitleEngine.draw3DSubtitles() in 3D
+        // mode) keeps running until the renderer is actually stopped. stop() (as opposed to
+        // pause()) is what tears that callback down; assumed to block until any in-flight
+        // callback invocation has returned, i.e. join semantics. Doing this BEFORE
+        // mSubtitleEngine.release() below is what closes the onFrameAvailable() side of the
+        // native-engine-freed-while-in-use race: once stop() returns, no new
+        // draw3DSubtitles() call can start from that thread, so release() (which still
+        // separately synchronizes with SubtitleEngine's own m3DDrawLock, covering the
+        // remaining UI-thread redraw3DIfNeeded() path) has nothing left to race against.
+        if (mEffectRenderer != null) {
+            mEffectRenderer.stop();
+            mEffectRenderer = null;
+        }
+
         if (mSubtitleEngine != null) {
             mSubtitleEngine.release();
             mSubtitleEngine = null;

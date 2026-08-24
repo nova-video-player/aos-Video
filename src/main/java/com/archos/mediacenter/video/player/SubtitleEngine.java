@@ -37,21 +37,53 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
     // Guards draw3DSubtitles(): it can now be invoked both from the SurfaceTexture callback
     // thread (real video frames) and the UI thread (style setters while paused), and both
     // paths lockCanvas() the same Surface and touch the same mSoftBitmap.
+    //
+    // release() also takes this lock (see below), which is what makes it safe to tear down
+    // the native engine and mSoftBitmap concurrently with either draw path: whichever side
+    // gets the lock first either finishes its native call/bitmap use before teardown can
+    // start, or (if release() gets there first) observes mReleased and bails out before
+    // touching a freed handle or a recycled bitmap.
     private final Object m3DDrawLock = new Object();
+
+    // Set (under m3DDrawLock) at the start of release(), before the native handle is
+    // destroyed or mSoftBitmap is recycled. Checked (also under m3DDrawLock) at the top of
+    // draw3DSubtitlesInternal() so a draw call that was already blocked waiting for the lock
+    // -- or arrives afterwards -- safely no-ops instead of calling into freed native memory
+    // or drawing into a recycled Bitmap. volatile so the plain is3DMode()/no-lock early-outs
+    // elsewhere (e.g. redraw3DIfNeeded()'s is3DMode() check) still see a fresh value.
+    private volatile boolean mReleased = false;
 
     public SubtitleEngine() {
         // Initialize the native C engine and store its memory pointer
         mNativeEngineHandle = nativeCreate();
     }
 
+    /**
+     * Tears down the native engine and the 3D soft-render bitmap.
+     *
+     * MUST be called only after the video-frame callback that drives the 3D draw path
+     * (VideoEffectRenderer's SurfaceTexture.OnFrameAvailableListener) has been stopped and
+     * joined -- see Player.releasePlayer(), which now calls mEffectRenderer.stop() (not just
+     * pause()) before this. That alone closes the onFrameAvailable() side of the race.
+     *
+     * The remaining side is the UI-thread style-setter path (redraw3DIfNeeded()), which isn't
+     * a background thread and can't be "joined" the same way. m3DDrawLock below handles that:
+     * taking it here means release() cannot run while draw3DSubtitlesInternal() is mid-flight
+     * (e.g. inside nativeFillBitmap()/nativeSyncFillBitmap() or drawing to the Canvas), and
+     * mReleased, checked first thing inside that same lock on the draw side, stops any call
+     * that was queued up behind us -- or arrives after -- from proceeding at all.
+     */
     public void release() {
-        if (mNativeEngineHandle != 0) {
-            nativeDestroy(mNativeEngineHandle);
-            mNativeEngineHandle = 0;
-        }
-        if (mSoftBitmap != null) {
-            mSoftBitmap.recycle();
-            mSoftBitmap = null;
+        synchronized (m3DDrawLock) {
+            mReleased = true;
+            if (mNativeEngineHandle != 0) {
+                nativeDestroy(mNativeEngineHandle);
+                mNativeEngineHandle = 0;
+            }
+            if (mSoftBitmap != null) {
+                mSoftBitmap.recycle();
+                mSoftBitmap = null;
+            }
         }
     }
 
@@ -200,6 +232,14 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
         mLast3DHeight = viewHeight;
 
         synchronized (m3DDrawLock) {
+            // Must be re-checked here, under the lock: release() takes this same lock before
+            // destroying mNativeEngineHandle and recycling mSoftBitmap, so if release() won
+            // the race to acquire it first, mReleased is now true and neither of those is
+            // safe to touch any more. The mNativeEngineHandle==0 check above is not enough
+            // on its own -- it happens before this lock is acquired, so a release() that
+            // starts (and finishes) in between would slip past it undetected.
+            if (mReleased) return;
+
             // Give Libass the FULL physical screen size. No 3D halving!
             if (mSoftBitmap == null || mSoftBitmap.getWidth() != viewWidth || mSoftBitmap.getHeight() != viewHeight) {
                 if (mSoftBitmap != null) mSoftBitmap.recycle();
