@@ -427,7 +427,7 @@
     <string name="sub_force_all">您所有的视频已经有至少一个字幕轨。您想要强制下载新的字幕轨吗？</string>
     <string name="dialog_subloader_nonetwork_title">没有网络连接</string>
     <string name="dialog_subloader_nonetwork_message">下载字幕需要互联网连接</string>
-    <string name="dialog_subloader_connecting">正在连接到 www.opensubtitles.org…</string>
+    <string name="dialog_subloader_connecting">正在连接到 www.opensubtitles.com…</string>
     <string name="opensubtitles_quota_download_remaining">OpenSubtitles 下载配额：剩余 %1$d/%2$d</string>
     <string name="dialog_subloader_credentials">Opensubtitles 用户凭据</string>
     <string name="dialog_subloader_credentials_empty">你必须指定一个有效的用户名和密码！</string>
@@ -585,7 +585,7 @@
     <string name="preference_enable_cutout_both_sidesx_summary">两侧等距裁剪显示区域，使屏幕对称。</string>
     <string name="category_languages">字幕</string>
     <string name="subtitles_hide_default">默认隐藏字幕</string>
-    <string name="subtitles_hide_default_summary">如果您想要默认隐藏字幕，请勾选此项。</string>
+    <string name="subtitles_hide_default_summary">如果您想要默认隐藏字幕，请勾选此项</string>
     <string name="subtitles_credentials_title">OpenSubtitles 用户凭据</string>
     <string name="subtitles_credentials_summary">提供你的 opensubtitles 用户凭据以下载字幕</string>
     <string name="preferences_languages">字幕下载语言</string>
@@ -764,8 +764,8 @@
     <string name="preferences_display_resume_box">显示恢复播放窗口</string>
     <string name="reset_brightness_on_start">记住视频亮度。</string>
     <string name="reset_brightness_on_start_summary">记住上次打开应用程序时使用的亮度设置。关闭此功能将使用系统亮度。</string>
-    <string name="hide_controls_on_pause">暂停时隐藏控件。</string>
-    <string name="hide_controls_on_pause_summary">视频暂停 5 秒后隐藏播放器控件。</string>
+    <string name="hide_controls_on_pause">暂停时隐藏控件</string>
+    <string name="hide_controls_on_pause_summary">视频暂停 5 秒后隐藏播放器控件</string>
     <string name="preferences_leanback_user_interface">电视用户界面</string>
     <string name="preferences_separate_animation_from_movies_summary">选中以将动画视频与电影和电视节目分开添加一个动画行</string>
     <string name="preferences_separate_animation_from_movies">将动画与电影和电视节目分开。</string>

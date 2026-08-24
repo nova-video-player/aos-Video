@@ -141,6 +141,7 @@
     <string name="date_view_year">Rok</string>
     <string name="all_movies_and_tv_shows">Filmy i seriale</string>
     <string name="non_scraped_videos">Nierozpoznane pliki wideo</string>
+    <string name="non_scraped_videos_format">Nierozpoznane pliki wideo  -  %d</string>
     <string name="no_server">Nie znaleziono serwera mediów</string>
     <string name="cannot_open_video">Nie można otworzyć filmu</string>
     <string name="confirm_delete">Czy na pewno chcesz usunąć wybrany element?</string>
@@ -886,6 +887,7 @@
     <string name="trakt_device_auth_invalid_code">Nie udało się uzyskać poprawnego kodu urządzenia z Trakt. Spróbuj ponownie.</string>
     <string name="trakt_device_auth_timeout">Kod wygasł. Spróbuj ponownie.</string>
     <string name="trakt_account_locked">Konto Trakt zablokowane. Odblokuj na Trakt.tv lub spróbuj później.</string>
+    <string name="trakt_social_signin_unsupported">Logowanie za pomocą Google/Facebook/Apple nie jest obsługiwane. Zaloguj się za pomocą nazwy użytkownika i hasła z Trakt.</string>
     <string name="connect_trakt">Połącz z Trakt.tv</string>
     <string name="trakt_sync_status_never">Jeszcze nie zsynchronizowano</string>
     <string name="trakt_sync_status_ok">Zsynchronizowano: %1$s temu</string>
