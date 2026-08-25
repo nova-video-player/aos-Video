@@ -154,7 +154,7 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
 
         ActionItem rescanAction = new ActionItem();
         rescanAction.setTitle(getString(R.string.add_to_library));
-        rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_menu_refresh));
+        rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_menu_add));
         rescanAction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 addToIndexed(uri, name);
