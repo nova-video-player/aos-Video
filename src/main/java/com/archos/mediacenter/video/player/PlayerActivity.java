@@ -2477,7 +2477,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
 
-        if (!isTVMode) {
+        if (!isTVMode && !TVUtils.isTV(this)) {
             MenuItem menuItem;
 
             //------------------------------------------------------------------

@@ -860,7 +860,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void showActionBar(boolean show) {
-        if ((isTVMode || TVUtils.isTV(mContext)) && Player.sPlayer != null && Player.sPlayer.isPlaying()) show = false;
+        if (isTVMode || TVUtils.isTV(mContext)) {
+            if (!mControlBarShowing || Player.sPlayer == null) show = false;
+        }
         if (mActionBarShowing != show || mActionBar.isShowing() != show) {
             if (show) mActionBar.show();
             else mActionBar.hide();
