@@ -53,6 +53,16 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
     // elsewhere (e.g. redraw3DIfNeeded()'s is3DMode() check) still see a fresh value.
     private volatile boolean mReleased = false;
 
+    // Generation of the subtitle content last successfully posted to the Canvas by
+    // draw3DSubtitlesInternal(). Compared against nativeGetSubtitleGeneration() at the top
+    // of the per-video-frame (forceSync=false) path so a run of onFrameAvailable() calls
+    // where the subtitle content hasn't actually changed can skip the clear+blend
+    // (nativeFillBitmap) and the lockCanvas/drawBitmap/unlockCanvasAndPost work entirely,
+    // instead of repeating all of it 30-60x/sec regardless of whether anything on screen
+    // is different. -1 is not a valid generation (see sub_render_gl.c), so it always forces
+    // the first draw through. Only ever read/written from within m3DDrawLock.
+    private long mLastPostedGeneration = -1;
+
     public SubtitleEngine() {
         // Initialize the native C engine and store its memory pointer
         mNativeEngineHandle = nativeCreate();
@@ -241,10 +251,27 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
             if (mReleased) return;
 
             // Give Libass the FULL physical screen size. No 3D halving!
+            boolean surfaceChanged = false;
             if (mSoftBitmap == null || mSoftBitmap.getWidth() != viewWidth || mSoftBitmap.getHeight() != viewHeight) {
                 if (mSoftBitmap != null) mSoftBitmap.recycle();
                 mSoftBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
                 nativeSurfaceChanged(mNativeEngineHandle, viewWidth, viewHeight);
+                surfaceChanged = true; // new bitmap is blank -- must redraw regardless of generation
+            }
+
+            // Cheap pre-check: skip the clear+blend (nativeFillBitmap) and the Canvas
+            // lock/draw/post entirely when the subtitle content hasn't changed since the
+            // last frame we actually posted. Only safe for the passive per-video-frame path
+            // (forceSync=false) -- forceSync=true is the style-change path, where the pixels
+            // legitimately differ (new font/color/size/etc.) even though the underlying cue
+            // and its frame_generation haven't changed, so that path must always redraw.
+            // Also skipped right after a bitmap resize (surfaceChanged), since the new
+            // bitmap starts blank and needs a real draw no matter what the generation says.
+            if (!forceSync && !surfaceChanged) {
+                long gen = nativeGetSubtitleGeneration(mNativeEngineHandle);
+                if (gen == mLastPostedGeneration) {
+                    return; // nothing changed on screen since the last post -- nothing to do
+                }
             }
 
             // forceSync=true (style-change redraw path only) forces a fresh render and
@@ -266,6 +293,9 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
                         c.drawBitmap(mSoftBitmap, 0, 0, null);
                     }
                     uiSurface.unlockCanvasAndPost(c);
+                    // Record what we just posted so the next passive-path call can skip
+                    // redundant work if nothing has changed by then.
+                    mLastPostedGeneration = nativeGetSubtitleGeneration(mNativeEngineHandle);
                 }
             } catch (Exception e) {
                 log.error("Failed to draw 3D subtitles to Canvas", e);
@@ -334,6 +364,9 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
     // the render thread has applied it -- used only by redraw3DIfNeeded()'s style-change
     // path. See jni_sub_engine.c for why this is a separate entry point from the plain one.
     private native boolean nativeSyncFillBitmap(long handle, Bitmap bitmap);
+    // Cheap change-detection pre-check for the passive per-video-frame draw path -- see
+    // mLastPostedGeneration's doc comment.
+    private native long nativeGetSubtitleGeneration(long handle);
     private native void nativeSetUIMode(long handle, int mode);
 
     /* ── Typography & Master Control ── */
