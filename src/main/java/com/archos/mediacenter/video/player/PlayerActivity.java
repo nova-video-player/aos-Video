@@ -802,6 +802,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mAudioInfoController = new TrackInfoController(mContext, getLayoutInflater(), menuAnchor, actionBar);
         mAudioInfoController.setListener(this);
         mSubtitleManager = new SubtitleManager(mContext, (ViewGroup)mRootView, getWindow().getWindowManager(),false);
+        mPlayerController.setOnControlBarVisibilityListener(visible -> {
+            if (mSubtitleManager != null) {
+                mSubtitleManager.onControlBarVisibilityChanged();
+            }
+        });
         mSubtitleInfoController = new TrackInfoController(mContext, getLayoutInflater(), menuAnchor, actionBar);
         mSubtitleInfoController.setListener(this);
         mSubtitleInfoController.setAlwayDisplay(true);

@@ -386,7 +386,7 @@ public class MiscUtils {
         int left, top, right, bottom;
         left = top = right = bottom = 0;
         int systemBarLeft, systemBarTop, systemBarRight, systemBarBottom;
-        boolean navAreaPresentOnBottom = (isGestureAreaShowing || (isNavBarOnBottom && navigationBarShowing));
+        boolean navAreaPresentOnBottom = (isGestureAreaShowing && controlBarShowing) || (isNavBarOnBottom && navigationBarShowing);
         int rotation;
         if (PlayerActivity.isRotationLocked()) {
             rotation = PlayerActivity.getLockedRotation();
@@ -453,11 +453,17 @@ public class MiscUtils {
             bottom = calcMarginAvoidEdge(bottom, top, 0);
         }
         int uncompressibleBottom = bottom; // keep it for later since it represents the bottom margin that cannot be compressed i.e. not influenced by OSD playerController or system bars
+        int effectiveBottomInset = systemBarBottom;
+        if (isGestureAreaShowing && controlBarShowing) {
+            effectiveBottomInset = Math.max(systemBarBottom, MiscUtils.getGestureAreaHeight(context));
+        } else if (isNavBarOnBottom && navigationBarShowing) {
+            effectiveBottomInset = Math.max(systemBarBottom, MiscUtils.getNavigationBarHeight(context));
+        }
         // only shift if not already overlapping
         if (adjustLeft && systemBarShowing && left < systemBarLeft) left += systemBarLeft - left;
         if (adjustTop && systemBarShowing && top < systemBarTop) top += systemBarTop - top;
         if (adjustRight && systemBarShowing && right < systemBarRight) right += systemBarRight - right;
-        if (adjustBottom && navAreaPresentOnBottom && bottom < systemBarBottom) bottom += systemBarBottom - bottom; // bottom margin is 0 if no navigation bar
+        if (adjustBottom && navAreaPresentOnBottom && bottom < effectiveBottomInset) bottom += effectiveBottomInset - bottom; // bottom margin is 0 if no navigation bar
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) viewLayout.getLayoutParams();
         int prevLeft, prevTop, prevRight, prevBottom;
         prevLeft = layoutParams.leftMargin; prevTop = layoutParams.topMargin; prevRight = layoutParams.rightMargin; prevBottom = layoutParams.bottomMargin;
@@ -473,7 +479,7 @@ public class MiscUtils {
                 viewName, prevLeft, prevTop, prevRight, prevBottom,
                 left, top, right, shiftBottom, applyGlobalShift, globalShiftLeft, globalShiftUp, centerLeftMargin, centerTopMargin);
         // do not delay when having a gfx subtitle or floating player hence ! applyGlobalShift
-        if (! applyGlobalShift && prevBottom > uncompressibleBottom && shiftBottom == uncompressibleBottom && navAreaPresentOnBottom) {
+        if (! isGestureAreaShowing && ! applyGlobalShift && prevBottom > uncompressibleBottom && shiftBottom == uncompressibleBottom && navAreaPresentOnBottom) {
             if (log.isDebugEnabled()) log.debug("adjustViewLayoutForInsets: Delaying relayout due to give time to navigation bar to fade out");
             // Schedule the delayed relayout
             if (relayoutRunnable != null) {
@@ -498,12 +504,7 @@ public class MiscUtils {
                 viewLayout.requestLayout();
                 if (log.isDebugEnabled()) log.debug("adjustViewLayoutForInsets: Delayed relayout applied");
             };
-            int delay = 0;
-            if (isGestureAreaShowing) {
-                delay = DELAY_MILLIS_GESTURE_NAVIGATION;
-            } else if (isNavBarOnBottom && navigationBarShowing) {
-                delay = DELAY_MILLIS_NORMAL;
-            }
+            int delay = (isNavBarOnBottom && navigationBarShowing) ? DELAY_MILLIS_NORMAL : 0;
             // wait a little: avoid a glitch (subtitles being displayed under the system bar for x ms), note that gesture bar fades away slowly
             getHandler().postDelayed(relayoutRunnable, delay);
         } else {

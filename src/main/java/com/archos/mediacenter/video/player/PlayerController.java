@@ -273,6 +273,16 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         void setSubtitleDelay(int delay);
     }
 
+    public interface OnControlBarVisibilityListener {
+        void onControlBarVisibilityChanged(boolean visible);
+    }
+
+    private OnControlBarVisibilityListener mOnControlBarVisibilityListener;
+
+    public void setOnControlBarVisibilityListener(OnControlBarVisibilityListener listener) {
+        mOnControlBarVisibilityListener = listener;
+    }
+
     public PlayerController(Context context, Window window, ViewGroup playerView, SurfaceController surfaceController, Settings settings, ActionBar actionBar) {
         mContext = context;
         mSurfaceController = surfaceController;
@@ -749,6 +759,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void adjustView() {
+        if (mControlBar != null) {
+            mControlBarHeight = (mNavigationBarShowing || mIsGestureAreaShowing ? mControlBar.getHeight() : 0);
+        }
         MiscUtils.adjustViewLayoutForInsets(mContext, mRootView, mControllerView,"mControllerView",
                 mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mControlBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing,
                 0, 0,
@@ -880,6 +893,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if (mControlBar != null && (mControlBarShowing != show
                 || mControlBar.getVisibility() != (show ? View.VISIBLE : View.GONE))) {
             if (log.isDebugEnabled()) log.debug("showControlBar {}", String.valueOf(show));
+            mControlBarShowing = show;
+            adjustView();
             setVisibility(mControlBar, show, true);
             if(mPlayPauseTouchZone!=null){
                 setVisibility(mPlayPauseTouchZone, show, false);
@@ -900,7 +915,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 updateFormat();
             }
 
-            mControlBarShowing = show;
+            if (mOnControlBarVisibilityListener != null) {
+                mOnControlBarVisibilityListener.onControlBarVisibilityChanged(show);
+            }
         }
     }
 

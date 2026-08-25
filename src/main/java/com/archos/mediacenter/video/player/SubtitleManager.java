@@ -719,6 +719,10 @@ public class SubtitleManager {
                 avoidCutout, avoidCutout, avoidCutout, avoidCutout, ! mIsSubtitleGfx, mIsSubtitleGfx && ! isFloatingPlayer);
     }
 
+    public void onControlBarVisibilityChanged() {
+        if (! isFirstTime) adjustView();
+    }
+
     private void detachWindow() {
         if (mSubtitleLayout == null)
             return;
