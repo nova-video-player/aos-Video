@@ -173,6 +173,7 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
                 menu.add(0, R.string.manually_create_share, Menu.NONE, R.string.manually_create_share).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                 onContributeMenu(menu);
             }
+            @SuppressWarnings("deprecation") // setRetainInstance: keeps dialog listener instance until ViewModel refactor
             @Override
             public boolean onMenuItemSelected(MenuItem item) {
                 if (item.getItemId() == R.string.rescan_indexed_folders) {

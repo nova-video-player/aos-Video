@@ -75,6 +75,7 @@ abstract public class BrowserActivity extends AppCompatActivity {
 
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
+    @SuppressWarnings("deprecation") // getLastCustomNonConfigurationInstance: CoverRoll GL context retention
     public void onCreate(Bundle savedInstanceState) {
         ThemeManager.getInstance(this).applyWindowTheme(this);
         super.onCreate(savedInstanceState);
@@ -153,6 +154,7 @@ abstract public class BrowserActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @SuppressWarnings("deprecation") // onRetainCustomNonConfigurationInstance: CoverRoll GL context retention
     public Object onRetainCustomNonConfigurationInstance() {
         NonConfigurationInstance nci = new NonConfigurationInstance();
         if (mCoverRoll != null) 

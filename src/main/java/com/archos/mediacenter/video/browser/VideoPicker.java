@@ -19,7 +19,6 @@ import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.video.VideoStore;
 
-import android.app.ListActivity;
 import android.content.AsyncQueryHandler;
 import android.content.ContentUris;
 import android.content.Context;
@@ -29,16 +28,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.os.BundleCompat;
+import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 
@@ -46,7 +45,7 @@ import android.widget.TextView;
  * Activity allowing the user to select a video on the device, and
  * return it to its caller. 
  */
-public class VideoPicker extends ListActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class VideoPicker extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     private static final boolean DBG = false;
     private static final String TAG = "VideoPicker";
 
@@ -68,6 +67,7 @@ public class VideoPicker extends ListActivity implements AdapterView.OnItemClick
     private Parcelable mListState = null;
     private boolean mListHasFocus;
     private Cursor mCursor;
+    private ListView mListView;
 
     private View mProgressContainer;
     private View mListContainer;
@@ -109,19 +109,19 @@ public class VideoPicker extends ListActivity implements AdapterView.OnItemClick
 
         setContentView(R.layout.video_picker);
 
-        final ListView listView = getListView();
-        listView.setItemsCanFocus(false);
-        listView.setTextFilterEnabled(true);
-        listView.setOnItemClickListener(this);
+        mListView = findViewById(android.R.id.list);
+        mListView.setItemsCanFocus(false);
+        mListView.setTextFilterEnabled(true);
+        mListView.setOnItemClickListener(this);
 
-        mAdapter = new VideoListAdapter(this, listView,
+        mAdapter = new VideoListAdapter(this, mListView,
                 R.layout.video_picker_item, new String[] {},
                 new int[] {});
 
-        setListAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
         
         // We manually save/restore the listview state
-        listView.setSaveEnabled(false);
+        mListView.setSaveEnabled(false);
 
         mQueryHandler = new QueryHandler(this);
 
@@ -174,8 +174,10 @@ public class VideoPicker extends ListActivity implements AdapterView.OnItemClick
         super.onSaveInstanceState(icicle);
         // Save list state in the bundle so we can restore it after the
         // QueryHandler has run
-        icicle.putParcelable(LIST_STATE_KEY, getListView().onSaveInstanceState());
-        icicle.putBoolean(FOCUS_KEY, getListView().hasFocus());
+        if (mListView != null) {
+            icicle.putParcelable(LIST_STATE_KEY, mListView.onSaveInstanceState());
+            icicle.putBoolean(FOCUS_KEY, mListView.hasFocus());
+        }
     }
 
  
@@ -228,13 +230,12 @@ public class VideoPicker extends ListActivity implements AdapterView.OnItemClick
                 // a new cursor for it.
                 mAdapter.setLoading(false);
                 mAdapter.changeCursor(cursor);
-                setProgressBarIndeterminateVisibility(false);
     
                 // Now that the cursor is populated again, it's possible to restore the list state
-                if (mListState != null) {
-                    getListView().onRestoreInstanceState(mListState);
+                if (mListState != null && mListView != null) {
+                    mListView.onRestoreInstanceState(mListState);
                     if (mListHasFocus) {
-                        getListView().requestFocus();
+                        mListView.requestFocus();
                     }
                     mListHasFocus = false;
                     mListState = null;
@@ -271,7 +272,6 @@ public class VideoPicker extends ListActivity implements AdapterView.OnItemClick
         }
         else {
             mAdapter.setLoading(true);
-            setProgressBarIndeterminateVisibility(true);
             mQueryHandler.startQuery(MY_QUERY_TOKEN, null, mBaseUri, CURSOR_COLS, null, null, VideoStore.Video.Media.DEFAULT_SORT_ORDER);
         }
         return null;
@@ -304,7 +304,7 @@ public class VideoPicker extends ListActivity implements AdapterView.OnItemClick
         }
 
         VideoListAdapter(Context context, ListView listView, int layout, String[] from, int[] to) {
-            super(context, layout, null, from, to);
+            super(context, layout, null, from, to, 0);
 
             mListView = listView;
             mUnknownVideo = context.getString(R.string.unknown_video_name);

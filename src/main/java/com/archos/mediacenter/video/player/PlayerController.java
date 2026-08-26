@@ -283,6 +283,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mOnControlBarVisibilityListener = listener;
     }
 
+    @SuppressWarnings("deprecation") // setStatusBarColor: pre-API 35 fallback
     public PlayerController(Context context, Window window, ViewGroup playerView, SurfaceController surfaceController, Settings settings, ActionBar actionBar) {
         mContext = context;
         mSurfaceController = surfaceController;

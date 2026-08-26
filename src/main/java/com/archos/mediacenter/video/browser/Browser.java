@@ -16,8 +16,6 @@
 package com.archos.mediacenter.video.browser;
 
 
-import static androidx.core.app.ActivityCompat.invalidateOptionsMenu;
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -280,7 +278,9 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                     } else if (mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
                         applySelectedViewMode(VideoUtils.VIEW_MODE_LIST);
                     }
-                    invalidateOptionsMenu(getActivity());
+                    if (getActivity() != null) {
+                        getActivity().invalidateOptionsMenu();
+                    }
                     return true;
                 }
                 return false;

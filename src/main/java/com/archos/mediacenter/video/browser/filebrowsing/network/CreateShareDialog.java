@@ -61,7 +61,7 @@ public class CreateShareDialog extends DialogFragment implements DialogInterface
         Dialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.manually_create_share)
                 .setView(v)
                 .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(android.R.string.yes, this).create();
+                .setPositiveButton(android.R.string.ok, this).create();
 
         // Put the cursor at the end of "smb://"
         // This must be done after the dialog is created, else it does not work
