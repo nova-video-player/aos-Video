@@ -20,8 +20,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
-import android.text.Html;
+import androidx.core.text.HtmlCompat;
 
 import com.archos.filecorelibrary.FileEditor;
 import com.archos.filecorelibrary.FileUtils;
@@ -202,11 +201,7 @@ public class VideoInfoCommonClass {
                     sb.append(resources.getText(R.string.info_audio_vbr)).append(SEP);
                 }
             }
-            if (Build.VERSION.SDK_INT >= 24) {
-                return Html.fromHtml(sb.toString(), Html.FROM_HTML_MODE_LEGACY);
-            } else {
-                return Html.fromHtml(sb.toString());
-            }
+            return HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY);
         } else {
             return null;
         }

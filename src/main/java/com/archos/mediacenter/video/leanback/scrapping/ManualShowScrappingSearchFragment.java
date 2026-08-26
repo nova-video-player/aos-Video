@@ -446,6 +446,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             return newEpTag;
         }
 
+        @SuppressWarnings("deprecation") // getParcelable: API 33+ branch uses typed form; else branch suppressed
         private HashMap<String, EpisodeTags> toMap(Bundle b) {
             int size = (b!=null) ? b.size() : 0;
             HashMap<String, EpisodeTags> result = new HashMap<String, EpisodeTags>(size);

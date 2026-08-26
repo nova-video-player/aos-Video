@@ -129,6 +129,7 @@ public class MiscUtils {
                 || Build.PRODUCT.contains("simulator");
     }
 
+    @SuppressWarnings("deprecation") // bundle.get: debug dumping only
     public static void dumpBundle(Bundle bundle, String TAG, Boolean isDebug) {
         if (isDebug) {
             if (bundle != null) {

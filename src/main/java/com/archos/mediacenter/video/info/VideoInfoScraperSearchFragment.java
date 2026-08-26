@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.info;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -132,12 +133,18 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
         mScraper = null;
     }
 
+    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (log.isDebugEnabled()) log.debug("onCreate this={}  savedInstanceState={}", this, savedInstanceState);
-        setInfo((Video) getActivity().getIntent().getExtras().get(VideoInfoScraperActivity.EXTRA_VIDEO));
-        setRetainInstance(false); // keep fragment instance when rotating screen
+        if (getActivity() != null && getActivity().getIntent() != null) {
+            if (Build.VERSION.SDK_INT >= 33) {
+                setInfo(getActivity().getIntent().getSerializableExtra(VideoInfoScraperActivity.EXTRA_VIDEO, Video.class));
+            } else {
+                setInfo((Video) getActivity().getIntent().getSerializableExtra(VideoInfoScraperActivity.EXTRA_VIDEO));
+            }
+        }
     }
 
     @Override

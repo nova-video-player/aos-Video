@@ -43,6 +43,7 @@ public class CredentialsEditorDialog extends DialogFragment {
     }
     public CredentialsEditorDialog(){
     }
+    @SuppressWarnings("deprecation") // getSerializable: API 33+ branch uses typed form; else branch suppressed
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle arg = getArguments();

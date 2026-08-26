@@ -1648,8 +1648,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         if (headersBundle != null && !headersBundle.isEmpty()) {
                             headers = new java.util.HashMap<>();
                             for (String key : headersBundle.keySet()) {
-                                Object val = headersBundle.get(key);
-                                if (val instanceof String) headers.put(key, (String) val);
+                                String val = headersBundle.getString(key);
+                                if (val != null) headers.put(key, val);
                             }
                             if (log.isDebugEnabled()) log.debug("VideoInfoTask: using {} HTTP headers from intent", headers.size());
                         } else {

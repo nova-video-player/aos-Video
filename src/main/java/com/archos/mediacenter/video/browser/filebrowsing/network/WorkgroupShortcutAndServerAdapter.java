@@ -140,7 +140,7 @@ public abstract class WorkgroupShortcutAndServerAdapter extends RootFragmentAdap
      * Restore the state that has been saved in a bundle
      * @param inState
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "deprecation"})
     public void onRestoreInstanceState(Bundle inState) {
         mShares = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
                 ? (ArrayList<GenericShare>) inState.getSerializable("mShares", ArrayList.class)

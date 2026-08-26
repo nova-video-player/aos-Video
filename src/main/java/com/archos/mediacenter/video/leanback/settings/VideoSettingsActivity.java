@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.settings;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -26,6 +27,7 @@ import com.archos.mediacenter.video.utils.ThemeManager;
 
 public class VideoSettingsActivity extends LeanbackActivity {
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // Apply black theme variant for leanback preferences when in black theme
@@ -34,7 +36,11 @@ public class VideoSettingsActivity extends LeanbackActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_settings);
-        overridePendingTransition(R.anim.slide_in_from_right, 0);
+        if (Build.VERSION.SDK_INT >= 34) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, R.anim.slide_in_from_right, 0);
+        } else {
+            overridePendingTransition(R.anim.slide_in_from_right, 0);
+        }
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -46,7 +52,11 @@ public class VideoSettingsActivity extends LeanbackActivity {
                     return;
                 }
                 finish();
-                overridePendingTransition(0, R.anim.slide_out_to_right);
+                if (Build.VERSION.SDK_INT >= 34) {
+                    overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, 0, R.anim.slide_out_to_right);
+                } else {
+                    overridePendingTransition(0, R.anim.slide_out_to_right);
+                }
             }
         });
     }

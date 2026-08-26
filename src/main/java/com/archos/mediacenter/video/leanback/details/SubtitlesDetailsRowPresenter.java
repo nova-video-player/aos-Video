@@ -22,8 +22,7 @@ import android.net.Uri;
 import androidx.leanback.widget.RowHeaderPresenter;
 import androidx.leanback.widget.RowPresenter;
 
-import android.os.Build;
-import android.text.Html;
+import androidx.core.text.HtmlCompat;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -226,11 +225,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
               .append(generateTrackName(c, track.name, track.language, format, track.disposition, false)).append(SEP);
         }
 
-        if (Build.VERSION.SDK_INT >= 24) {
-            return Html.fromHtml(sb.toString(), Html.FROM_HTML_MODE_LEGACY);
-        } else {
-            return Html.fromHtml(sb.toString());
-        }
+        return HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY);
     }
 
     private CharSequence getFormattedExternalSubList(int number, int offset, List<SubtitleManager.SubtitleFile> list) {
@@ -245,11 +240,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
               .append(capitalizeFirstLetter(list.get(index).mName)).append(SEP);
         }
 
-        if (Build.VERSION.SDK_INT >= 24) {
-            return Html.fromHtml(sb.toString(), Html.FROM_HTML_MODE_LEGACY);
-        } else {
-            return Html.fromHtml(sb.toString());
-        }
+        return HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY);
     }
 
 }

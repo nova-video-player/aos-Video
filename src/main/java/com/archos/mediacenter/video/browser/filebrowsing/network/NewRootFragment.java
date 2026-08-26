@@ -142,8 +142,6 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
 
     public NewRootFragment() {
         if (log.isDebugEnabled()) log.debug("SambaDiscoveryFragment() constructor {}", this);
-        setRetainInstance(false);
-
     }
     @Override
     public void onAttach(Context context){

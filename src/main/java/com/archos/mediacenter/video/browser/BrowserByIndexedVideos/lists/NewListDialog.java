@@ -42,6 +42,7 @@ public class NewListDialog extends DialogFragment {
 
     private View mView;
 
+    @SuppressWarnings("deprecation") // getSerializable: API 33+ branch uses typed form; else branch suppressed
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

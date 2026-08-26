@@ -261,7 +261,7 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
      * Restore the state that has been saved in a bundle
      * @param inState
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "deprecation"})
     public void onRestoreInstanceState(Bundle inState) {
         mAvailableShares = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
                 ? (List<String>) inState.getSerializable("mAvailableShares", ArrayList.class)

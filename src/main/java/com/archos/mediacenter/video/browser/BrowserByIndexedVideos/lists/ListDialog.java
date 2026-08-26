@@ -18,6 +18,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,9 +88,16 @@ public class ListDialog extends DialogFragment {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mVideo = (Video) getArguments().get(EXTRA_VIDEO);
+        if (getArguments() != null) {
+            if (Build.VERSION.SDK_INT >= 33) {
+                mVideo = getArguments().getSerializable(EXTRA_VIDEO, Video.class);
+            } else {
+                mVideo = (Video) getArguments().getSerializable(EXTRA_VIDEO);
+            }
+        }
         return getAlertDialog();
     }
 

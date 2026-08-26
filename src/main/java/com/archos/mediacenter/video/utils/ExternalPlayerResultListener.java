@@ -103,6 +103,7 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
         }
     }
 
+    @SuppressWarnings("deprecation") // bundle.get: debug dumping only
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (log.isDebugEnabled()) log.debug("onActivityResult: requestCode={}, resultCode={}, mVideoDbInfo!=null {}, mPlayerUri {}", requestCode, resultCode, (mVideoDbInfo!=null), mPlayerUri        );
