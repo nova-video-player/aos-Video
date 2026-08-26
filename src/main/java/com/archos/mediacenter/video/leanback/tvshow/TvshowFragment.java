@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import androidx.activity.result.ActivityResultLauncher;
@@ -52,6 +51,7 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import android.transition.Slide;
+import android.transition.Transition;
 import android.util.Log;
 import android.util.Pair;
 import android.util.SparseArray;
@@ -59,8 +59,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
-import androidx.leanback.transition.TransitionHelper;
-import androidx.leanback.transition.TransitionListener;
 import androidx.loader.content.CursorLoader;
 
 import com.archos.mediacenter.video.R;
@@ -177,30 +175,38 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         }
     }
 
-    // TransitionHelper/TransitionListener are marked @RestrictTo(LIBRARY_GROUP) in
-    // androidx.leanback, but they are the only public way to attach a listener to the
-    // opaque Object transition returned by Fragment window transition getters across the
-    // framework/support Transition backends; this is the pattern used by AOSP's own
-    // leanback reference sources (see TitleHelper.java), so it's the sanctioned usage, not
-    // an internal-only call.
-    @SuppressLint("RestrictedApi")
     @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (DBG) Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
-        Object transition = TransitionHelper.getEnterTransition(getActivity().getWindow());
+        // minSdk is 23 (> 21), so Window.getEnterTransition()/Transition.addListener() -
+        // both public android.transition APIs - are always available; no need for
+        // androidx.leanback's restricted TransitionHelper/TransitionListener wrappers.
+        Transition transition = getActivity().getWindow().getEnterTransition();
         if(transition!=null) {
-            TransitionHelper.addTransitionListener(transition, new TransitionListener() {
+            transition.addListener(new Transition.TransitionListener() {
                 @Override
-                public void onTransitionStart(Object transition) {
+                public void onTransitionStart(Transition transition) {
                     mOverlay.hide();
                 }
 
                 @Override
-                public void onTransitionEnd(Object transition) {
+                public void onTransitionEnd(Transition transition) {
                     mOverlay.show();
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
                 }
             });
         }

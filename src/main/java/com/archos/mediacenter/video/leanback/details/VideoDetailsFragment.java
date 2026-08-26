@@ -15,7 +15,6 @@
 
 package com.archos.mediacenter.video.leanback.details;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Dialog;
@@ -38,6 +37,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.transition.Slide;
+import android.transition.Transition;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -51,8 +51,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.leanback.app.DetailsFragmentWithLessTopOffset;
-import androidx.leanback.transition.TransitionHelper;
-import androidx.leanback.transition.TransitionListener;
 import androidx.leanback.widget.Action;
 import androidx.leanback.widget.ArrayObjectAdapter;
 import androidx.leanback.widget.ClassPresenterSelector;
@@ -341,13 +339,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 }
             });
 
-    // TransitionHelper/TransitionListener are marked @RestrictTo(LIBRARY_GROUP) in
-    // androidx.leanback, but they are the only public way to attach a listener to the
-    // opaque Object transition returned by Fragment shared-element transition getters
-    // across the framework/support Transition backends; this is the pattern used by
-    // AOSP's own leanback reference sources (see TitleHelper.java), so it's the sanctioned
-    // usage, not an internal-only call.
-    @SuppressLint("RestrictedApi")
     @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -364,19 +355,23 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mVideoMetadateCache = new HashMap<>();
         mShouldDisplayRemoveFromList = getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1) != -1;
 
-        Object transition = TransitionHelper.getSharedElementEnterTransition(getActivity().getWindow());
+        // minSdk is 23 (> 21), so Window.getSharedElementEnterTransition()/
+        // Transition.addListener() - both public android.transition APIs - are always
+        // available; no need for androidx.leanback's restricted TransitionHelper/
+        // TransitionListener wrappers.
+        Transition transition = getActivity().getWindow().getSharedElementEnterTransition();
         if(transition!=null) {
             mAnimationIsRunning = false;
-            TransitionHelper.addTransitionListener(transition, new TransitionListener() {
+            transition.addListener(new Transition.TransitionListener() {
                 @Override
-                public void onTransitionStart(Object transition) {
+                public void onTransitionStart(Transition transition) {
                     traceDetails("enter-transition-start");
                     mAnimationIsRunning = true;
                     mOverlay.hide();
                 }
 
                 @Override
-                public void onTransitionEnd(Object transition) {
+                public void onTransitionEnd(Transition transition) {
                     traceDetails("enter-transition-end");
                     mAnimationIsRunning = false;
                     if (mThumbnail != null) {
@@ -388,8 +383,16 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 }
 
                 @Override
-                public void onTransitionCancel(Object transition) {
+                public void onTransitionCancel(Transition transition) {
                     mAnimationIsRunning = false;
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
                 }
             });
         }

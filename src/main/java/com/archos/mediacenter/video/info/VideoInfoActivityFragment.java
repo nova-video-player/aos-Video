@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.info;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -55,10 +54,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.widget.ToolbarWidgetWrapper;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
@@ -367,10 +365,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private Uri mLastIndexed;   //keep last index uri to avoid asking it twice (for example when leaving fragment and coming back while video hasn't yet been indexed)
     private VideoMetadata mVideoMetadataFromPlayer;
     private TextView mFileError;
-    // See onCreateView() below for why this androidx.appcompat @RestrictTo is kept suppressed
-    // rather than migrated.
-    @SuppressLint("RestrictedApi")
-    private ToolbarWidgetWrapper mToolbarWidgetWrapper;
 
     private boolean isFilePlayable = true;
 
@@ -406,16 +400,6 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
     }
 
-    // ToolbarWidgetWrapper is marked @RestrictTo(LIBRARY_GROUP) in androidx.appcompat: it is
-    // an internal helper normally used by WindowDecorActionBar to back setSupportActionBar().
-    // The public replacement (AppCompatActivity.setSupportActionBar() + ActionBar
-    // display options) would also hook this Toolbar into the activity's options-menu
-    // dispatch and title handling, which this fragment manages itself via
-    // setOnMenuItemClickListener()/its own nav click listener below, so switching would
-    // risk behavior changes that can't be verified without manual UI testing. Usage here
-    // is narrowly scoped to setting the home-as-up display option (to show the "up" icon),
-    // so it is kept with this explicit suppression rather than migrated.
-    @SuppressLint("RestrictedApi")
     @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -445,8 +429,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         }
         mTitleBar.setOnMenuItemClickListener(this);
-        mToolbarWidgetWrapper = new ToolbarWidgetWrapper(mTitleBar, false);
-        mToolbarWidgetWrapper.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP);
+        // Public Toolbar API equivalent of ToolbarWidgetWrapper.setDisplayOptions(DISPLAY_HOME_AS_UP):
+        // shows the same themed "up" arrow (abc_ic_ab_back_material, tinted via
+        // ?attr/colorControlNormal) that AppCompat's ActionBar/ToolbarWidgetWrapper use by
+        // default, without hooking this Toolbar into setSupportActionBar()'s menu/title
+        // dispatch, which this fragment already manages itself below.
+        mTitleBar.setNavigationIcon(AppCompatResources.getDrawable(getContext(),
+                androidx.appcompat.R.drawable.abc_ic_ab_back_material));
+        mTitleBar.setNavigationContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description);
         mTitleBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

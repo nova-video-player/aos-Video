@@ -16,13 +16,16 @@
 
 package com.archos.customizedleanback.widget;
 
-import androidx.leanback.transition.LeanbackTransitionHelper;
-import androidx.leanback.transition.TransitionHelper;
 import androidx.leanback.widget.BrowseFrameLayout;
 import androidx.core.view.ViewCompat;
-import android.annotation.SuppressLint;
+import android.transition.Scene;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionManager;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 
 /**
  * Helper for managing {@link androidx.leanback.widget.TitleView}, including
@@ -33,10 +36,10 @@ public class TitleHelper {
 
     private ViewGroup mSceneRoot;
     private MyTitleView mTitleView;
-    private Object mTitleUpTransition;
-    private Object mTitleDownTransition;
-    private Object mSceneWithTitle;
-    private Object mSceneWithoutTitle;
+    private Transition mTitleUpTransition;
+    private Transition mTitleDownTransition;
+    private Scene mSceneWithTitle;
+    private Scene mSceneWithoutTitle;
 
     // When moving focus off the TitleView, this focus search listener assumes that the view that
     // should take focus comes before the TitleView in a focus search starting at the scene root.
@@ -66,24 +69,31 @@ public class TitleHelper {
         createTransitions();
     }
 
-    // LeanbackTransitionHelper/TransitionHelper are marked @RestrictTo(LIBRARY_GROUP) in
-    // androidx.leanback, but this class is itself a copy of AOSP's own leanback reference
-    // TitleHelper (see header above), which is the sanctioned pattern for driving title
-    // show/hide transitions across the framework/support Transition backends; there is no
-    // public replacement API.
-    @SuppressLint("RestrictedApi")
+    // Inlines what androidx.leanback.transition.LeanbackTransitionHelper/TransitionHelper
+    // do internally (both @RestrictTo(LIBRARY_GROUP)): since minSdk is 23 (> 21), their
+    // pre-API21 fallback branches are dead code, and the API21+ branch just builds a
+    // Slide transition targeting the title view (leanback's lb_title_in/lb_title_out
+    // transition resources do the same, but are flagged PrivateResource since they are
+    // not part of leanback's public API surface). Building the Slide transition
+    // programmatically with the public android.transition APIs and targeting mTitleView
+    // directly reproduces the same slide-down/slide-up-off-the-top behavior without
+    // depending on any restricted or private leanback surface.
     private void createTransitions() {
-        mTitleUpTransition = LeanbackTransitionHelper.loadTitleOutTransition(
-                mSceneRoot.getContext());
-        mTitleDownTransition = LeanbackTransitionHelper.loadTitleInTransition(
-                mSceneRoot.getContext());
-        mSceneWithTitle = TransitionHelper.createScene(mSceneRoot, new Runnable() {
+        mTitleUpTransition = new Slide(Gravity.TOP);
+        mTitleUpTransition.setInterpolator(new DecelerateInterpolator());
+        mTitleUpTransition.addTarget(mTitleView);
+        mTitleDownTransition = new Slide(Gravity.TOP);
+        mTitleDownTransition.setInterpolator(new DecelerateInterpolator());
+        mTitleDownTransition.addTarget(mTitleView);
+        mSceneWithTitle = new Scene(mSceneRoot);
+        mSceneWithTitle.setEnterAction(new Runnable() {
             @Override
             public void run() {
                 mTitleView.setVisibility(View.VISIBLE);
             }
         });
-        mSceneWithoutTitle = TransitionHelper.createScene(mSceneRoot, new Runnable() {
+        mSceneWithoutTitle = new Scene(mSceneRoot);
+        mSceneWithoutTitle.setEnterAction(new Runnable() {
             @Override
             public void run() {
                 mTitleView.setVisibility(View.INVISIBLE);
@@ -94,14 +104,11 @@ public class TitleHelper {
     /**
      * Shows the title.
      */
-    // See createTransitions() above for why this androidx.leanback @RestrictTo is a false
-    // positive here.
-    @SuppressLint("RestrictedApi")
     public void showTitle(boolean show) {
         if (show) {
-            TransitionHelper.runTransition(mSceneWithTitle, mTitleDownTransition);
+            TransitionManager.go(mSceneWithTitle, mTitleDownTransition);
         } else {
-            TransitionHelper.runTransition(mSceneWithoutTitle, mTitleUpTransition);
+            TransitionManager.go(mSceneWithoutTitle, mTitleUpTransition);
         }
     }
 
