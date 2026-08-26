@@ -110,6 +110,7 @@ public class VideoPicker extends AppCompatActivity implements AdapterView.OnItem
         setContentView(R.layout.video_picker);
 
         mListView = findViewById(android.R.id.list);
+        mListView.setEmptyView(findViewById(android.R.id.empty));
         mListView.setItemsCanFocus(false);
         mListView.setTextFilterEnabled(true);
         mListView.setOnItemClickListener(this);
