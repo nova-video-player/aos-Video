@@ -1302,7 +1302,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     if (speed <= 0f) speed = 1.0f;
                     long remainingMs = (long) (remaining / speed);
                     String endClockText = getDateFormat().format(new Date(now + remainingMs));
-                    endText = Clock.formatTimeWithArrow(remainingText, endClockText);
+                    endText = remainingText + " → 🕖 " + endClockText;
                 } else {
                     endText = remainingText;
                 }
