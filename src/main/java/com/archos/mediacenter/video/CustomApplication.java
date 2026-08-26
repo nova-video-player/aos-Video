@@ -43,6 +43,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ProcessLifecycleOwner;
@@ -943,11 +944,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 final IntentFilter intentFilter = new IntentFilter();
                 intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
                 intentFilter.addDataScheme("file");
-                if (Build.VERSION.SDK_INT >= 33) {
-                    registerReceiver(videoStoreImportReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
-                } else {
-                    registerReceiver(videoStoreImportReceiver, intentFilter);
-                }
+                ContextCompat.registerReceiver(this, videoStoreImportReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
                 isVideStoreImportReceiverRegistered = true;
                 ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in ForeGround register videoStoreImportReceiver");
             } else {

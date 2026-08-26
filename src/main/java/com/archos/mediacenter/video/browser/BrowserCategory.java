@@ -30,6 +30,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -315,11 +316,7 @@ abstract public class BrowserCategory extends ListFragment {
         intentFilter.addAction(ExtStorageReceiver.ACTION_MEDIA_CHANGED);
         intentFilter.addDataScheme(ExtStorageReceiver.ARCHOS_FILE_SCHEME);//new android nougat send UriExposureException when scheme = file
         intentFilter.addDataScheme("file");
-        if (Build.VERSION.SDK_INT >= 33) {
-            getActivity().registerReceiver(mExternalStorageReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            getActivity().registerReceiver(mExternalStorageReceiver, intentFilter);
-        }
+        ContextCompat.registerReceiver(getActivity(), mExternalStorageReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
         addNetworkListener();
         // Remove non constant category items.
         for (int index = mCategoryList.size() - 1; index >= mLibrarySize; index--)

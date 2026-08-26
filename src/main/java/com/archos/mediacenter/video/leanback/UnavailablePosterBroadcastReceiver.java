@@ -24,6 +24,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 
+import androidx.core.content.ContextCompat;
+
 import com.archos.filecorelibrary.FileEditorFactory;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.ScraperStore;
@@ -59,11 +61,7 @@ public class UnavailablePosterBroadcastReceiver extends BroadcastReceiver{
             sReceiver = new UnavailablePosterBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_CHECK_POSTER);
-        if (Build.VERSION.SDK_INT >= 33) {
-            context.registerReceiver(sReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            context.registerReceiver(sReceiver, filter);
-        }
+        ContextCompat.registerReceiver(context, sReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
     }
     public static void unregisterReceiver(Context context){
         if(sReceiver != null) {

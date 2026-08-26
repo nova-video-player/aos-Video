@@ -448,19 +448,11 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         intentFilter.addAction(ExtStorageReceiver.ACTION_MEDIA_CHANGED);
         intentFilter.addDataScheme("file");
         intentFilter.addDataScheme(ExtStorageReceiver.ARCHOS_FILE_SCHEME);//new android nougat send UriExposureException when scheme = file
-        if (Build.VERSION.SDK_INT >= 33) {
-            mActivity.registerReceiver(mExternalStorageReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            mActivity.registerReceiver(mExternalStorageReceiver, intentFilter);
-        }
+        ContextCompat.registerReceiver(mActivity, mExternalStorageReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
         mUpdateFilter = new IntentFilter(ArchosMediaIntent.ACTION_VIDEO_SCANNER_SCAN_FINISHED);
         // VideoStoreImportService sends null scheme thus do not filter for specific scheme
         //for (String scheme : UriUtils.sIndexableSchemes) mUpdateFilter.addDataScheme(scheme);
-        if (Build.VERSION.SDK_INT >= 33) {
-            mActivity.registerReceiver(mUpdateReceiver, mUpdateFilter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            mActivity.registerReceiver(mUpdateReceiver, mUpdateFilter);
-        }
+        ContextCompat.registerReceiver(mActivity, mUpdateReceiver, mUpdateFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
         // check if resuming we have a change of parameters and update everything accordingly
         restartWatchingUpNextLoader = false;

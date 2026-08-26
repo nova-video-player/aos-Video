@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -121,11 +122,7 @@ abstract public class BrowserActivity extends AppCompatActivity {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Cover.LAUNCH_CONTENT_BROWSER_INTENT);
-        if (Build.VERSION.SDK_INT >= 33) {
-            registerReceiver(mCoverLaunchListener, filter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            registerReceiver(mCoverLaunchListener, filter);
-        }
+        ContextCompat.registerReceiver(this, mCoverLaunchListener, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
         updateGlobalResume();
 

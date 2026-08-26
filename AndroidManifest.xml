@@ -221,7 +221,6 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme=""/>
                 <data android:scheme="smb" />
                 <data android:scheme="smbj" />
                 <data android:scheme="ftps" />
@@ -255,7 +254,6 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme=""/>
                 <data android:scheme="file"/>
                 <data android:scheme="content"/>
                 <data android:scheme="http"/>
@@ -288,7 +286,6 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme=""/>
                 <data android:scheme="file"/>
                 <data android:scheme="content"/>
                 <data android:scheme="http"/>
@@ -329,7 +326,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme=""/>                 
                 <data android:scheme="content" />
                 <data android:scheme="file" />
                 <data android:scheme="http" />
@@ -687,13 +683,12 @@
             <!--
             Need to repeat it all over again for the applications not declaring any mimeType
             -->
-            <intent-filter android:autoVerify="true">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme=""/>                 
                 <data android:scheme="content" />
                 <data android:scheme="file" />
                 <data android:scheme="http" />
@@ -1377,7 +1372,7 @@
                 <data android:host="*" />
                 <data android:pathPattern=".*\\.torrent" />
             </intent-filter>
-            <intent-filter android:autoVerify="true">
+            <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />

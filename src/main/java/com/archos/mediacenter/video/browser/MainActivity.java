@@ -605,11 +605,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         LoaderUtils.mMustHideWatchedVideo = mPreferences.getBoolean("hide_watched", false);
         LoaderUtils.mSmartRecentlyRows = mPreferences.getBoolean("smart_recently_rows", false);
 
-        if (Build.VERSION.SDK_INT >= 33) {
-            registerReceiver(mTraktRelogBroadcastReceiver,new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN), Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            registerReceiver(mTraktRelogBroadcastReceiver,new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN));
-        }
+        ContextCompat.registerReceiver(this, mTraktRelogBroadcastReceiver, new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN), ContextCompat.RECEIVER_NOT_EXPORTED);
         getContentResolver().registerContentObserver(VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
                 false, mGlobalResumeContentObserver);
         LoaderManager.getInstance(this).restartLoader(0, null, mNewVideosActionProvider);

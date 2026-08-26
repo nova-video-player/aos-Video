@@ -87,6 +87,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
@@ -949,11 +950,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
         intentFilter.addAction(PlayerService.PLAYER_SERVICE_STARTED);
         intentFilter.addAction(ACTION_HDMI_PLUGGED);
-        if (Build.VERSION.SDK_INT >= 33) {
-            registerReceiver(mReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            registerReceiver(mReceiver, intentFilter);
-        }
+        ContextCompat.registerReceiver(this, mReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
         isTVMode = TVUtils.isTV(mContext);
         mLockRotation = mPreferences.getBoolean(KEY_LOCK_ROTATION, false);
         mNetworkBookmarksEnabled = mPreferences.getBoolean(KEY_NETWORK_BOOKMARKS, true);

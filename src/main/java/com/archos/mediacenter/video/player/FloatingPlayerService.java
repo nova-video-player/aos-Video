@@ -36,6 +36,7 @@ import android.os.Looper;
 import android.os.Message;
 import androidx.preference.PreferenceManager;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -164,12 +165,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
                 }
             }
         }        ;
-        if (Build.VERSION.SDK_INT >= 33) {
-            registerReceiver(mReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            registerReceiver(mReceiver, filter);
-        }
-
+        ContextCompat.registerReceiver(this, mReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
     }
     @Override
     public int onStartCommand(Intent intent,int flags, int startID){

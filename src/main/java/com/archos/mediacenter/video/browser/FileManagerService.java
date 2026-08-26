@@ -34,6 +34,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import android.text.format.Formatter;
 import android.widget.Toast;
 
@@ -149,8 +150,7 @@ public class FileManagerService extends Service implements OperationEngineListen
         IntentFilter filter = new IntentFilter();
         filter.addAction("CANCEL");
         filter.addAction("OPEN");
-        if (Build.VERSION.SDK_INT >= 33) registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
-        else registerReceiver(receiver, filter);
+        ContextCompat.registerReceiver(this, receiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
         isReceiverRegistered = true;
         // Register as a lifecycle observer
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
