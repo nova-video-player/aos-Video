@@ -770,7 +770,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                     }
                 }
                 if (!drawerHandled)
-                    onBackPressed();
+                    getOnBackPressedDispatcher().onBackPressed();
                 break;
 
             }

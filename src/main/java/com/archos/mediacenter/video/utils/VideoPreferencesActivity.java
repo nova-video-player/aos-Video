@@ -78,13 +78,11 @@ public class VideoPreferencesActivity extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        boolean ret = super.onOptionsItemSelected(item);
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                    onBackPressed();
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
-        return ret;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

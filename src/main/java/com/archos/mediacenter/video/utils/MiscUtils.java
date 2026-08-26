@@ -578,6 +578,7 @@ public class MiscUtils {
         insetsController.setAppearanceLightNavigationBars(isBackgroundLight);
     }
 
+    @SuppressWarnings("deprecation") // getSystemWindowInset*: pre-R fallback
     public static void applySystemWindowInsets(View view, boolean includeCutout, OnSystemInsetsListener listener) {
         if (view == null) return;
         view.setOnApplyWindowInsetsListener((v, insets) -> {
