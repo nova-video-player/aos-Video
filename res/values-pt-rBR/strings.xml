@@ -139,7 +139,7 @@
     <string name="date_view_year">Ano</string>
     <string name="all_movies_and_tv_shows">Filmes e Séries</string>
     <string name="non_scraped_videos">Vídeos sem metadados</string>
-    <string name="non_scraped_videos_format">Vídeos sem metadados</string>
+    <string name="non_scraped_videos_format">Vídeos sem metadados - %d</string>
     <string name="no_server">Nenhum servidor de mídia encontrado</string>
     <string name="cannot_open_video">Não é possível abrir este vídeo</string>
     <string name="confirm_delete">Tem certeza de que deseja excluí-lo?</string>

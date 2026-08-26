@@ -108,7 +108,7 @@
         <item quantity="other">videné filmy</item>
     </plurals>
     <string name="not_watched_movies_format">Nevidené - %d</string>
-    <string name="not_watched_animes_format">Nepozerané</string>
+    <string name="not_watched_animes_format">Nepozerané - %d</string>
     <string name="no_movie_watched">Žiadny nepozretý film</string>
     <string name="all_movies_watched">Všetky nepozreté filmy</string>
     <string name="movies_by_alpha">Filmy podľa abecedy</string>
@@ -179,7 +179,7 @@
     <string name="scrap_rating">Hodnotenie</string>
     <string name="scrap_rating_format">Hodnotenie: %s</string>
     <string name="scrap_year">Rok</string>
-    <string name="scrap_year_format">Rok:</string>
+    <string name="scrap_year_format">Rok: %d</string>
     <string name="scrap_studio">Štúdio</string>
     <string name="scrap_plot">Zápletka</string>
     <string name="scrap_trailer">Upútavka </string>
