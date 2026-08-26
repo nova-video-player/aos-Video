@@ -95,7 +95,7 @@ public class DensityTweak {
         Resources res = mActivity.getResources();
         DisplayMetrics displayMetrics = res.getDisplayMetrics();
         Configuration config = res.getConfiguration();
-        displayMetrics.densityDpi = DisplayMetrics.DENSITY_DEFAULT;
+        displayMetrics.densityDpi = DisplayMetrics.DENSITY_MEDIUM;
         config.densityDpi = Configuration.DENSITY_DPI_UNDEFINED;
         res.updateConfiguration(config, displayMetrics);
     }

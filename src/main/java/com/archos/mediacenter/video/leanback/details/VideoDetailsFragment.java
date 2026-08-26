@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -459,7 +460,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 if(item instanceof ScraperTrailer){
                     // Breaks AndroidTV acceptance but needed to launch scraper in Youtube app instead of browser
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, ((ScraperTrailer)item).getUrl());
-                    ActivityInfo activityInfo = browserIntent.resolveActivityInfo(getActivity().getPackageManager(), browserIntent.getFlags());
+                    ActivityInfo activityInfo = browserIntent.resolveActivityInfo(getActivity().getPackageManager(), PackageManager.MATCH_DEFAULT_ONLY);
                     if (activityInfo == null) if (log.isDebugEnabled()) log.debug("onCreate.onItemClicked: activity identified null");
                     else if (log.isDebugEnabled()) log.debug("onCreate.onItemClicked: activity identified {}", activityInfo.processName);
                     if (activityInfo != null) {
@@ -2326,12 +2327,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             //log.debug("tags.getOnlineId() = {}", onlineId);
             if (onlineId > 0) {
                 final String language = Scraper.getLanguage(getActivity());
-                list.add(String.format(getResources().getString(R.string.tmdb_movie_title_url), onlineId, language));
+                list.add(String.format(getResources().getString(R.string.tmdb_movie_title_url), Long.toString(onlineId), language));
             }
         } else if (tags instanceof EpisodeTags) {
             if (mOnlineId >0) {
                 final String language = Scraper.getLanguage(getActivity());
-                list.add(String.format(getResources().getString(R.string.tmdb_tvshow_title_url), mOnlineId, language));
+                list.add(String.format(getResources().getString(R.string.tmdb_tvshow_title_url), Long.toString(mOnlineId), language));
             }
         }
 

@@ -79,7 +79,7 @@
     <string name="other_storage">Disk</string>
     <string name="network_media_servers">Servery médií (UPnP)</string>
     <string name="network_shared_folders">Zdieľané priečinky (SMB)</string>
-    <string name="network_connected_as">Pripojené ako</string>
+    <string name="network_connected_as">Pripojené ako %s</string>
     <string name="network_guest">Hosť</string>
     <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (Experimentálne)</string>

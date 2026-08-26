@@ -344,7 +344,7 @@ public class VideoPicker extends ListActivity implements AdapterView.OnItemClick
             }
             int len = builder.length();
             builder.append('\n');
-            builder.getChars(0, len, vh.buffer2, 0);
+            builder.toString().getChars(0, len, vh.buffer2, 0);
             vh.line2.setText(vh.buffer2, 0, len);
         }
 
