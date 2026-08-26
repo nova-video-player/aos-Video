@@ -29,6 +29,5 @@
     <dimen name="video_info_poster_height">270dip</dimen>
 
     <dimen name="video_info_poster_chooser_width">140dip</dimen>
-    <dimen name="video_info_poster_chooserheight">210dip</dimen>
 
 </resources>
