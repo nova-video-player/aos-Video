@@ -409,7 +409,12 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 finish();
                 return;
             }
-            downloadSubtitles(subUrl, fileUrl, getFriendlyFilename(fileUrl), searchResult.getLanguage());
+            // The friendly name is for the OpenSubtitles query only.  Saved subtitles
+            // must retain the video URL's basename so SubtitleManager can associate
+            // them with the currently playing video.
+            downloadSubtitles(subUrl, fileUrl,
+                    FileUtils.getFileNameWithoutExtension(Uri.parse(fileUrl)),
+                    searchResult.getLanguage());
             setResult(Activity.RESULT_OK);
             finish();
         }
