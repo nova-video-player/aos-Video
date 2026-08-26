@@ -144,7 +144,6 @@ import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.medialib.IMediaPlayer;
 import com.archos.medialib.LibAvos;
-import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ScrapeDetailResult;
 
@@ -4916,8 +4915,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mBufferView.setText(" "+percent+"%");
             }
         }
-
-        public void onSubtitle(Subtitle subtitle) {}
 
         @Override
         public void onAudioError(boolean isNotSupported,String msg) {

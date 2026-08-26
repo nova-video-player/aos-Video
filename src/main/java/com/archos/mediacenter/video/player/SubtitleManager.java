@@ -17,7 +17,6 @@ package com.archos.mediacenter.video.player;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
-import com.archos.medialib.Subtitle;
 
 import android.content.Context;
 import android.content.res.Resources;
