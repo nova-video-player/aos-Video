@@ -5,7 +5,7 @@ buildscript {
         maven { url = 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:9.1.1'
+        classpath 'com.android.tools.build:gradle:9.3.2'
         //classpath 'app.brant:amazonappstorepublisher:0.1.0'
         //classpath 'com.github.BrantApps.gradle-amazon-app-store-publisher:amazonappstorepublisher:master-SNAPSHOT'
     }
@@ -57,7 +57,7 @@ allprojects {
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile).tap {
             configureEach {
-                options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+                options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Xmaxwarns" << "10000"
             }
         }
         // check tasks to add via ./gradlew tasks --all | grep DuplicateClasses
@@ -302,6 +302,7 @@ android {
     lint {
         abortOnError true
         checkReleaseBuilds false
+        showAll true
         disable 'MissingTranslation', 'ExtraTranslation', 'MissingQuantity', 'ImpliedQuantity'
         enable 'SuspiciousIndentation'
     }
