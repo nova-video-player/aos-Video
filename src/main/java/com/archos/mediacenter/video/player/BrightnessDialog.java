@@ -117,6 +117,7 @@ public class BrightnessDialog extends AlertDialog implements SeekBar.OnSeekBarCh
      * settings which may have been modified by the user outside the video player 
      */
     public void onStart() {
+        super.onStart();
         // Update the current brightness value
         int currentBrightness;
         mSeekBar.setEnabled(true);

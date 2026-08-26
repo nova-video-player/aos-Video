@@ -1496,6 +1496,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         if (log.isDebugEnabled()) log.debug("onNewIntent: {}", intent);
         ensureLaunchGeneration(intent);
         setIntent(intent);
@@ -3371,6 +3372,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 

@@ -110,6 +110,7 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
 
     @Override
     public void onStop() {
+        super.onStop();
         log.error("onStop");
         mHandler.removeCallbacksAndMessages(null);
         if (mCallBack != null) {

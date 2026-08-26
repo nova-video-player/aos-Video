@@ -90,6 +90,7 @@ public class AudioSpeedPickerDialog extends AlertDialog implements OnClickListen
 
     @Override
     public void onStop() {
+        super.onStop();
         mHandler.removeCallbacksAndMessages(null);
         if (mCallBack != null) {
             mCallBack.onAudioSpeedChange(mAudioSpeedPicker, mAudioSpeedPicker.getSpeed());

@@ -108,6 +108,7 @@ public class SubtitleDelayPickerDialog extends AlertDialog implements OnClickLis
 
     @Override
     public void onStop() {
+        super.onStop();
         mHandler.removeCallbacksAndMessages(null);
         if (mCallBack != null) {
             mCallBack.onDelayChange(mSubtitleDelayPicker, mSubtitleDelayPicker.getDelay(), mRatio);
