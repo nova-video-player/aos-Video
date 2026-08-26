@@ -1780,7 +1780,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
                 Video video =  (Video) cursorMapper.publicBind(cursor);
                 if (log.isDebugEnabled()) log.debug("onLoadFinished: {}", ((video == null) ? "null" : video.getFilePath()) );
-                mOnlineId = cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID));
+                int onlineIdColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID);
+                mOnlineId = onlineIdColumn >= 0 ? cursor.getLong(onlineIdColumn) : -1;
                 if (log.isDebugEnabled()) log.debug("online id {}", mOnlineId);
                 mVideoList.add(video);
                 video.setMetadata(mVideoMetadateCache.get(video.getFilePath()));

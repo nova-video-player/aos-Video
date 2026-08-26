@@ -108,7 +108,9 @@ public class ListDialog extends DialogFragment {
                     listDialog.show(getParentFragmentManager(), "");
                 }
                 else{
-                    int id = mAdapter.getCursor().getInt(mAdapter.getCursor().getColumnIndex(VideoStore.List.Columns.ID));
+                    int idColumn = mAdapter.getCursor().getColumnIndex(VideoStore.List.Columns.ID);
+                    if (idColumn < 0) return;
+                    int id = mAdapter.getCursor().getInt(idColumn);
                     BaseTags metadata = mVideo.getFullScraperTags(getActivity());
                     boolean isEpisode = metadata instanceof EpisodeTags;
                     VideoStore.VideoList.VideoItem videoItem  =

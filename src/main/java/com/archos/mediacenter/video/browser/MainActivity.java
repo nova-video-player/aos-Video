@@ -931,8 +931,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 int scraperId = c.getInt(index_scraper_id);
 
                 if (scraperId > 0) {
-                    int scraperType = c
-                            .getInt(c.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE));
+                    int scraperTypeColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE);
+                    int scraperType = scraperTypeColumn >= 0 ? c.getInt(scraperTypeColumn) : -1;
                     String[] selectionArgs = new String[] {
                             String.valueOf(scraperType), String.valueOf(scraperId)
                     };

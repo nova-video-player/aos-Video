@@ -125,7 +125,8 @@ public class UnavailablePosterBroadcastReceiver extends BroadcastReceiver{
                 int titleColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.TITLE);
                 int idMovieColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID);
                 int idEpisodeColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_EPISODE_ID);
-                final int scraperType = c.getInt(c.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE));
+                int scraperTypeColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE);
+                final int scraperType = scraperTypeColumn >= 0 ? c.getInt(scraperTypeColumn) : -1;
                 if(c.getString(coverColumn)!=null){
                     String path = c.getString(coverColumn);
                     Uri posterUri = Uri.parse(path);

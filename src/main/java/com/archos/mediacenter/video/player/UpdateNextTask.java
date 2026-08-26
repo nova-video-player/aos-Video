@@ -151,7 +151,8 @@ public class UpdateNextTask {
                 int uri = cursor2.getColumnIndex(VideoStore.MediaColumns.DATA);
                 Uri uri2 = Uri.parse(cursor2.getString(uri));
                 int id2 = cursor2.getInt(id);
-                if (log.isDebugEnabled()) log.debug("findEpisode: found new episode {} {}", (cursor2.getInt(cursor2.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE))), cursor2.getString(uri));
+                int episodeColumn = cursor2.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
+                if (log.isDebugEnabled()) log.debug("findEpisode: found new episode {} {}", (episodeColumn >= 0 ? cursor2.getInt(episodeColumn) : -1), cursor2.getString(uri));
                 cursor2.close();
                 return new Result(uri2, id2);
             }
@@ -189,7 +190,8 @@ public class UpdateNextTask {
                     Cursor c = loader.loadInBackground();
                     if (c.getCount()>0) {
                         c.moveToFirst();
-                        nextUri = Uri.parse(c.getString(c.getColumnIndex(VideoStore.MediaColumns.DATA)));
+                        int dataColumn = c.getColumnIndex(VideoStore.MediaColumns.DATA);
+                        if (dataColumn >= 0) nextUri = Uri.parse(c.getString(dataColumn));
                     }
                     c.close();
                     if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result binge mode {}", nextUri);
@@ -230,8 +232,11 @@ public class UpdateNextTask {
                         } else if (currentMovieId != -1 && currentMovieId == movieId) {
                             useNextVideo = true;
                         } else if (useNextVideo) { //previous was our video, this one is different, use Uri
-                            nextUri = Uri.parse(cursor.getString(cursor.getColumnIndex(VideoStore.MediaColumns.DATA)));
-                            return new Result(nextUri, nextId);
+                            int dataColumn = cursor.getColumnIndex(VideoStore.MediaColumns.DATA);
+                            if (dataColumn >= 0) {
+                                nextUri = Uri.parse(cursor.getString(dataColumn));
+                                return new Result(nextUri, nextId);
+                            }
                         }
                     }
                 } else {
@@ -294,8 +299,10 @@ public class UpdateNextTask {
                 if (cursor != null) {
                     try {
                         if (cursor.moveToFirst()) {
-                            nextUri = Uri.parse(cursor.getString(cursor.getColumnIndex(VideoStore.Files.FileColumns.DATA)));
-                            nextId = cursor.getInt(cursor.getColumnIndex(VideoStore.Files.FileColumns._ID));
+                            int dataColumn = cursor.getColumnIndex(VideoStore.Files.FileColumns.DATA);
+                            int idColumn = cursor.getColumnIndex(VideoStore.Files.FileColumns._ID);
+                            if (dataColumn >= 0) nextUri = Uri.parse(cursor.getString(dataColumn));
+                            if (idColumn >= 0) nextId = cursor.getInt(idColumn);
                             if (log.isDebugEnabled()) log.debug("updateNextVideo({}) - next via getNextInBucket(DB):{}", repeatFolder, nextUri);
                             return new Result(nextUri, nextId);
                         } else {
@@ -314,8 +321,10 @@ public class UpdateNextTask {
                     if (cursor != null) {
                         try {
                             if (cursor.moveToFirst()) {
-                                nextUri = Uri.parse(cursor.getString(cursor.getColumnIndex(VideoStore.Files.FileColumns.DATA)));
-                                nextId = cursor.getInt(cursor.getColumnIndex(VideoStore.Files.FileColumns._ID));
+                                int dataColumn = cursor.getColumnIndex(VideoStore.Files.FileColumns.DATA);
+                                int idColumn = cursor.getColumnIndex(VideoStore.Files.FileColumns._ID);
+                                if (dataColumn >= 0) nextUri = Uri.parse(cursor.getString(dataColumn));
+                                if (idColumn >= 0) nextId = cursor.getInt(idColumn);
                                 if (log.isDebugEnabled()) log.debug("updateNextVideo({}) - next via getFirstInBucket(DB):{}", repeatFolder, nextUri);
                                 return new Result(nextUri, nextId);
                             } else if (log.isDebugEnabled()) log.debug("updateNextVideo({}) - getNextInBucket empty cursor!?", repeatFolder);

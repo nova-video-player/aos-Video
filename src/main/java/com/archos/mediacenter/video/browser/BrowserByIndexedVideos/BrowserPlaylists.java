@@ -110,8 +110,10 @@ public class BrowserPlaylists extends BrowserMoviesBy {
         Cursor cursor = ((GroupOfMovieAdapter)mBrowserAdapter).getCursor();
         if (cursor.getCount() > 0 && pos < cursor.getCount()) {
             cursor.moveToPosition(pos);
-            args.putString(BrowserVideosInPlaylist.EXTRA_MAP_MOVIES, cursor.getString(cursor.getColumnIndex(VideosByListLoader.COLUMN_MAP_MOVIE_ID)));
-            args.putString(BrowserVideosInPlaylist.EXTRA_MAP_EPISODES, cursor.getString(cursor.getColumnIndex(VideosByListLoader.COLUMN_MAP_EPISODE_ID)));
+            int movieIdColumn = cursor.getColumnIndex(VideosByListLoader.COLUMN_MAP_MOVIE_ID);
+            int episodeIdColumn = cursor.getColumnIndex(VideosByListLoader.COLUMN_MAP_EPISODE_ID);
+            args.putString(BrowserVideosInPlaylist.EXTRA_MAP_MOVIES, movieIdColumn >= 0 ? cursor.getString(movieIdColumn) : null);
+            args.putString(BrowserVideosInPlaylist.EXTRA_MAP_EPISODES, episodeIdColumn >= 0 ? cursor.getString(episodeIdColumn) : null);
         }
         args.putLong(BrowserVideosInPlaylist.EXTRA_PLAYLIST_ID, mBrowserAdapter.getItemId(pos));
     }

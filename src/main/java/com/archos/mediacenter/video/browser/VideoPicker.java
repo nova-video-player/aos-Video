@@ -200,7 +200,8 @@ public class VideoPicker extends ListActivity implements AdapterView.OnItemClick
     public void onItemClick(AdapterView parent, View v, int position, long id) {
         mCursor.moveToPosition(position);
 
-        mSelectedId = mCursor.getLong(mCursor.getColumnIndex(VideoStore.Video.Media._ID));
+        int idColumn = mCursor.getColumnIndex(VideoStore.Video.Media._ID);
+        mSelectedId = idColumn >= 0 ? mCursor.getLong(idColumn) : -1;
         mSelectedUri = ContentUris.withAppendedId(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, mSelectedId);
 
         if (mSelectedId >= 0) {

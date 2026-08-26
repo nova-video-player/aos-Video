@@ -990,7 +990,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 Video video =  (Video) cursorMapper.publicBind(cursor);
                 if(video.is3D())
                     mVideoBadgePresenter.setDisplay3dBadge(true);
-                mOnlineId = cursor.getLong(cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID));
+                int onlineIdColumn = cursor.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID);
+                mOnlineId = onlineIdColumn >= 0 ? cursor.getLong(onlineIdColumn) : -1;
                 if (log.isDebugEnabled()) log.debug("onLoadFinished: online id {}", mOnlineId);
                 mVideoList.add(video);
                 if (log.isDebugEnabled()) log.debug("onLoadFinished: found video : {}", video.getFileUri());

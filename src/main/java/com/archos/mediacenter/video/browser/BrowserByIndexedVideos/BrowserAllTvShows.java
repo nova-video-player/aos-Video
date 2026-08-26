@@ -240,7 +240,8 @@ public class BrowserAllTvShows extends CursorBrowserByVideo {
 	public Uri getRealPathUriFromPosition(int position){
 
 		mCursor.moveToPosition(position);
-		return Uri.parse(mCursor.getString(mCursor.getColumnIndex(VideoStore.MediaColumns.DATA)));
+		int dataColumn = mCursor.getColumnIndex(VideoStore.MediaColumns.DATA);
+		return dataColumn >= 0 ? Uri.parse(mCursor.getString(dataColumn)) : null;
 	}
 
 	private static String itemid2sortorder(int itemid) {

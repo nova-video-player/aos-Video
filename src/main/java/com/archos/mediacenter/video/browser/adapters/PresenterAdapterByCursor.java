@@ -136,7 +136,8 @@ public abstract class PresenterAdapterByCursor extends CursorAdapter implements 
 
 
     public String getCover() {
-        return getCursor().getString(getCursor().getColumnIndex(COVER_PATH));
+        int coverColumn = getCursor().getColumnIndex(COVER_PATH);
+        return coverColumn >= 0 ? getCursor().getString(coverColumn) : null;
     }
     // check for local stored subtitles
     private void buildAvailableSubtitlesFileList() {
