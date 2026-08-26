@@ -59,7 +59,6 @@ import com.archos.mediacenter.utils.seekbar.ArchosProgressSlider;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.VideoMetadata;
-import com.archos.medialib.Subtitle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -770,9 +769,6 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
     @Override
     public void onBufferingUpdate(int percent) {   }
-
-    @Override
-    public void onSubtitle(Subtitle subtitle) {   }
 
     public void setUIExternalSurface(Surface uiSurface) {
        // mSubtitleManager.setUIExternalSurface(uiSurface); do not enable this with floating player
