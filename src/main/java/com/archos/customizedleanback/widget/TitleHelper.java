@@ -80,7 +80,10 @@ public class TitleHelper {
     // depending on any restricted or private leanback surface.
     private void createTransitions() {
         mTitleUpTransition = new Slide(Gravity.TOP);
-        mTitleUpTransition.setInterpolator(new DecelerateInterpolator());
+        // lb_title_out uses lb_decelerator_2 (DecelerateInterpolator(2.0f)), a stronger
+        // deceleration than the default factor used by lb_title_in's
+        // android:anim/decelerate_interpolator.
+        mTitleUpTransition.setInterpolator(new DecelerateInterpolator(2f));
         mTitleUpTransition.addTarget(mTitleView);
         mTitleDownTransition = new Slide(Gravity.TOP);
         mTitleDownTransition.setInterpolator(new DecelerateInterpolator());
