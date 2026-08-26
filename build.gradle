@@ -300,12 +300,10 @@ android {
         }
     }
     lint {
-        abortOnError false // Set to false to only fail on fatal issues
-        disable 'all'
-        enable 'NewApi'
-        fatal 'NewApi'
-        warning 'MissingSuperCall' // Downgrade MissingSuperCall to a warning
-        disable 'MissingTranslation'
+        abortOnError true
+        checkReleaseBuilds false
+        disable 'MissingTranslation', 'ExtraTranslation', 'MissingQuantity', 'ImpliedQuantity'
+        enable 'SuspiciousIndentation'
     }
 
     testOptions {
