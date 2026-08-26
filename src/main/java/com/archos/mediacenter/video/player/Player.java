@@ -56,7 +56,6 @@ import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.IMediaPlayer;
 import com.archos.medialib.MediaFactory;
 import com.archos.medialib.MediaMetadata;
-import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.ArchosMediaCommon;
 
 import java.io.IOException;
@@ -89,7 +88,6 @@ public class Player implements IPlayerControl,
                                IMediaPlayer.OnRelativePositionUpdateListener,
                                IMediaPlayer.OnSeekCompleteListener,
                                IMediaPlayer.OnVideoSizeChangedListener,
-                               IMediaPlayer.OnSubtitleListener,
                                SurfaceHolder.Callback,
                                TextureView.SurfaceTextureListener{
 
@@ -687,7 +685,6 @@ public class Player implements IPlayerControl,
         player.setOnRelativePositionUpdateListener(this);
         player.setOnSeekCompleteListener(this);
         player.setOnVideoSizeChangedListener(this);
-        player.setOnSubtitleListener(this);
         mAudioOutputSignature = CustomApplication.getAudioOutputSignature();
         CustomApplication.applyAudioOutputToNative(mContext);
         new Thread(() -> {
@@ -1479,14 +1476,6 @@ public class Player implements IPlayerControl,
         }
     }
 
-    public void onSubtitle(IMediaPlayer mp, Subtitle subtitle) {
-        if (mp != mMediaPlayer) return;
-        if (log.isDebugEnabled()) log.debug("onSubtitle");
-        if (mPlayerListener != null) {
-            mPlayerListener.onSubtitle(subtitle);
-        }
-    }
-
     public void setListener(Listener listener) {
         mPlayerListener = listener;
     }
@@ -1505,7 +1494,6 @@ public class Player implements IPlayerControl,
         void onAudioMetadataUpdated(VideoMetadata vMetadata, int currentAudio);
         void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int currentSubtitle);
         void onBufferingUpdate(int percent);
-        void onSubtitle(Subtitle subtitle);
         default void onAudioSpeedApplied(float speed) {}
         default void onAudioTrackSelectionCompleted(int track, boolean success) {}
         default void onSubtitleTrackSelectionCompleted(int track, boolean success) {}

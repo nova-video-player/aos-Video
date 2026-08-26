@@ -74,7 +74,6 @@ import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediacenter.video.utils.AdditionalServiceSingleton;
-import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
 import com.archos.mediascraper.BaseTags;
@@ -2595,13 +2594,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onBufferingUpdate(int percent) {
         if(mPlayerFrontend!=null) {
             mPlayerFrontend.onBufferingUpdate(percent);
-        }
-    }
-
-    @Override
-    public void onSubtitle(Subtitle subtitle) {
-        if(mPlayerFrontend!=null) {
-            mPlayerFrontend.onSubtitle(subtitle);
         }
     }
 
