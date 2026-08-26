@@ -33,6 +33,9 @@ import com.archos.mediascraper.BaseTags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * Created by alexandre on 21/12/15.
  */
@@ -43,6 +46,11 @@ public class UnavailablePosterBroadcastReceiver extends BroadcastReceiver{
     private static UnavailablePosterBroadcastReceiver sReceiver;
     private static String ACTION_CHECK_POSTER = "ACTION_CHECK_POSTER";
     public static final String COLUMN_COVER_PATH = "cover";
+    private static final ExecutorService POSTER_CHECK_EXECUTOR = Executors.newSingleThreadExecutor(runnable -> {
+        Thread thread = new Thread(runnable, "UnavailablePosterCheck");
+        thread.setPriority(Thread.MIN_PRIORITY);
+        return thread;
+    });
 
     //delete poster from DB when can't be loaded
 
@@ -75,20 +83,44 @@ public class UnavailablePosterBroadcastReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
         if (log.isDebugEnabled()) log.debug("onReceive");
-        if(ACTION_CHECK_POSTER.equals(intent.getAction())&&intent.getLongExtra("VIDEO_ID",-1)!=-1){
-            if (log.isDebugEnabled()) log.debug("onReceive2");
-            StringBuilder sb = new StringBuilder();
-            if (LoaderUtils.mustHideUserHiddenObjects()) {
-                sb.append(LoaderUtils.HIDE_USER_HIDDEN_FILTER);
-                sb.append(" AND ");
-            }
-            sb.append(VideoStore.Video.VideoColumns._ID + " = ? ");
+        if (context == null || intent == null || !ACTION_CHECK_POSTER.equals(intent.getAction())) return;
 
-            String[] arg = new String[]{Long.toString(intent.getLongExtra("VIDEO_ID",-1))};
-            String where = sb.toString();
-            Cursor c = context.getContentResolver().query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, new String[]{COLUMN_COVER_PATH,VideoStore.Video.VideoColumns.TITLE, VideoStore.Video.VideoColumns.SCRAPER_EPISODE_ID, VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID,VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE}, where, arg, null);
-            if(c!=null&&c.getCount()>0){
-                c.moveToFirst();
+        long videoId = intent.getLongExtra("VIDEO_ID", -1);
+        if (videoId == -1) return;
+
+        // BroadcastReceiver.onReceive() runs on the main thread. Both the
+        // provider access and the file checks can block behind a network scan's
+        // SQLite writer, so retain the broadcast while doing all work off-main.
+        PendingResult pendingResult = goAsync();
+        Context appContext = context.getApplicationContext();
+        if (appContext == null) appContext = context;
+        final Context finalContext = appContext;
+        POSTER_CHECK_EXECUTOR.execute(() -> {
+            try {
+                checkPoster(finalContext, videoId);
+            } catch (Exception e) {
+                log.error("Unable to check poster for videoId={}", videoId, e);
+            } finally {
+                pendingResult.finish();
+            }
+        });
+    }
+
+    private static void checkPoster(Context context, long videoId) {
+        if (log.isDebugEnabled()) log.debug("checkPoster: videoId={}", videoId);
+        StringBuilder sb = new StringBuilder();
+        if (LoaderUtils.mustHideUserHiddenObjects()) {
+            sb.append(LoaderUtils.HIDE_USER_HIDDEN_FILTER);
+            sb.append(" AND ");
+        }
+        sb.append(VideoStore.Video.VideoColumns._ID + " = ? ");
+
+        String[] arg = new String[]{Long.toString(videoId)};
+        String where = sb.toString();
+        Cursor c = null;
+        try {
+            c = context.getContentResolver().query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, new String[]{COLUMN_COVER_PATH,VideoStore.Video.VideoColumns.TITLE, VideoStore.Video.VideoColumns.SCRAPER_EPISODE_ID, VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID,VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE}, where, arg, null);
+            if (c != null && c.moveToFirst()) {
                 int coverColumn = c.getColumnIndex(COLUMN_COVER_PATH);
                 int titleColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.TITLE);
                 int idMovieColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID);
@@ -128,7 +160,7 @@ public class UnavailablePosterBroadcastReceiver extends BroadcastReceiver{
                             cv.put(ScraperStore.Episode.POSTER_ID, -1);
                             cv.putNull(ScraperStore.Episode.COVER);
                             log.warn("Cached episode poster missing or corrupted: path={}, title={}, videoId={}, episodeId={}, reason={} - clearing and triggering re-scrape",
-                                    path, c.getString(titleColumn), intent.getLongExtra("VIDEO_ID",-1), scraperId, reason);
+                                    path, c.getString(titleColumn), videoId, scraperId, reason);
                         }
                         else {
                             scraperId = c.getLong(idMovieColumn);
@@ -136,7 +168,7 @@ public class UnavailablePosterBroadcastReceiver extends BroadcastReceiver{
                             cv.put(ScraperStore.Movie.POSTER_ID, -1);
                             cv.putNull(ScraperStore.Movie.COVER);
                             log.warn("Cached movie poster missing or corrupted: path={}, title={}, videoId={}, movieId={}, reason={}  - clearing and triggering re-scrape",
-                                    path, c.getString(titleColumn), intent.getLongExtra("VIDEO_ID",-1), scraperId, reason);
+                                    path, c.getString(titleColumn), videoId, scraperId, reason);
                         }
                         int n = context.getContentResolver().update(uri,cv,null,null);
                         if (log.isDebugEnabled()) log.debug("{} DB records updated for {}, poster cleared to trigger re-download", n, (scraperType == BaseTags.TV_SHOW ? "episode" : "movie"));
@@ -144,11 +176,11 @@ public class UnavailablePosterBroadcastReceiver extends BroadcastReceiver{
                     }
                 }
                 else {
-                    if (log.isDebugEnabled()) log.debug("Video has no poster path in DB: title={}, videoId={}", c.getString(titleColumn), intent.getLongExtra("VIDEO_ID",-1));
+                    if (log.isDebugEnabled()) log.debug("Video has no poster path in DB: title={}, videoId={}", c.getString(titleColumn), videoId);
                 }
             }
-            if (c!=null)
-                c.close();
+        } finally {
+            if (c != null) c.close();
         }
     }
 }
