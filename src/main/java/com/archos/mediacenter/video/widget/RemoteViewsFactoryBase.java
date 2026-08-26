@@ -196,13 +196,13 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
             int season,episode;
             try {
                 showId = mCursor.getLong(mCursor.getColumnIndexOrThrow(VideoColumns.SCRAPER_SHOW_ID));
-        	    season = mCursor.getInt(mCursor.getColumnIndexOrThrow(VideoColumns.SCRAPER_E_SEASON));
-    		    episode = mCursor.getInt(mCursor.getColumnIndexOrThrow(VideoColumns.SCRAPER_E_EPISODE));
-    		    // This item is a TV show episode => the poster allows to identify the TV show
-    		    // but it is useful to display the season and episode numbers
-    		    rv.setTextViewText(R.id.single_line, "S"+season+"E"+episode);
-    		    textVisibility = View.VISIBLE;
-        	} catch(IllegalArgumentException e) {
+                season = mCursor.getInt(mCursor.getColumnIndexOrThrow(VideoColumns.SCRAPER_E_SEASON));
+                episode = mCursor.getInt(mCursor.getColumnIndexOrThrow(VideoColumns.SCRAPER_E_EPISODE));
+                // This item is a TV show episode => the poster allows to identify the TV show
+                // but it is useful to display the season and episode numbers
+                rv.setTextViewText(R.id.single_line, "S"+season+"E"+episode);
+                textVisibility = View.VISIBLE;
+            } catch(IllegalArgumentException e) {
                 // happens in case this is not show
                 if (log.isDebugEnabled()) log.debug("getViewAt: caught IllegalArgumentException ", e);
             }
@@ -213,7 +213,7 @@ abstract class RemoteViewsFactoryBase implements RemoteViewsService.RemoteViewsF
             textVisibility = View.VISIBLE;
         }
 
-       	rv.setViewVisibility(R.id.single_line, textVisibility);
+        rv.setViewVisibility(R.id.single_line, textVisibility);
 
         // Next, we set a fill-intent which will be used to fill-in the pending intent template
         // which is set on the collection view in WidgetProviderVideo.

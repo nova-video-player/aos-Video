@@ -280,9 +280,9 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
     }
 
     public boolean isViewInCard(View v){
-    	ViewParent p;
-    	if(v==this)
-        	return true;
+        ViewParent p;
+        if(v==this)
+            return true;
         while(v!=null&&(p=v.getParent())!=null){
             if(p==this){
                 return true;

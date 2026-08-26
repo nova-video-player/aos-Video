@@ -152,7 +152,7 @@ public class SurfaceController {
         }
         mView.setVisibility(View.VISIBLE);
         mEffectEnable = enable;
-    	updateSurface();
+        updateSurface();
     }
     synchronized public void setMediaPlayer(IMediaPlayer player) {
         mMediaPlayer = player;

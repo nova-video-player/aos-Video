@@ -54,10 +54,10 @@ public class MovieCover extends BaseVideoCover {
 	private static TextView sMovieDuration = null;
 
 	public MovieCover(long videoId, String filepath, long durationMs, long scraperId) {
-    	super(videoId, filepath, durationMs);
+		super(videoId, filepath, durationMs);
 		if (DBG) Log.d(TAG, "MovieCover(" + videoId +"|"+filepath+"|"+durationMs+"|"+scraperId);
-        mScraperId = scraperId;
-    }
+		mScraperId = scraperId;
+	}
 
 	@Override
 	public String getCoverID() {

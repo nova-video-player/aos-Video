@@ -253,25 +253,25 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 	        return;
 	    }
 
-		// Some stuff to do in the parent class
-		super.createContextMenu(activity,menu);
+	    // Some stuff to do in the parent class
+	    super.createContextMenu(activity,menu);
 
 	    // Special case: TvShow covers have only info in context menu.
 	    if (c instanceof TvShowCover) {
-            menu.add(R.string.info);
+	        menu.add(R.string.info);
 	        return;
 	    }
 
-		menu.add(0, R.string.play_selection, 0, R.string.play_selection).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+	    menu.add(0, R.string.play_selection, 0, R.string.play_selection).setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			public boolean onMenuItemClick(MenuItem item) {
 				mLayout.getFrontCover().play(getContext());
 				return true;
 			}
 		});
 
-		if (!(c instanceof BaseVideoCover)) {
-			throw new IllegalStateException("CoverRoll3DVideo must only contain instances of BaseVideoCover!");
-		}
+	    if (!(c instanceof BaseVideoCover)) {
+	        throw new IllegalStateException("CoverRoll3DVideo must only contain instances of BaseVideoCover!");
+	    }
 
 		// Then add video specific stuff
 
@@ -309,10 +309,10 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 		//Delete
 		menu.add(R.string.delete).setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			public boolean onMenuItemClick(MenuItem item) {
-                // Forbid deleting in DemoMode
-                if (ArchosSettings.isDemoModeActive(mActivity)) {
-                    mActivity.startService(new Intent(ArchosIntents.ACTION_DEMO_MODE_FEATURE_DISABLED));
-                } else {
+				// Forbid deleting in DemoMode
+				if (ArchosSettings.isDemoModeActive(mActivity)) {
+					mActivity.startService(new Intent(ArchosIntents.ACTION_DEMO_MODE_FEATURE_DISABLED));
+				} else {
 					AlertDialog.Builder b = new AlertDialog.Builder(activity).setTitle("");
 					b.setIcon(R.drawable.filetype_new_video);
 					b.setMessage(R.string.confirm_delete);
@@ -341,7 +341,7 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 									delete.startDeleteProcess(Uri.parse(((BaseVideoCover) c).getFilePath()));
 								}
 							}).show();
-                }
+				}
 				return true;
 			}
 		});
@@ -372,11 +372,11 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 
                 });
         //Info
-		menu.add(R.string.info).setOnMenuItemClickListener(new OnMenuItemClickListener() {
-			public boolean onMenuItemClick(MenuItem item) {
-				openInfoActivity(mLayout.getFrontCoverIndex());
-				return true;
-			}});
+        menu.add(R.string.info).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                openInfoActivity(mLayout.getFrontCoverIndex());
+                return true;
+            }});
 
 	}
 

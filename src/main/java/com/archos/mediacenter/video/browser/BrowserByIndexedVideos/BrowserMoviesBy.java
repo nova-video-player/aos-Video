@@ -91,10 +91,10 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 		.putString(getSortOrderParamKey(), mSortOrder)
 		.apply();
 
-        super.onDestroy();
-        if (mCursor != null && ! mCursor.isClosed()) {
-            mCursor.close();
-        }
+		super.onDestroy();
+		if (mCursor != null && ! mCursor.isClosed()) {
+			mCursor.close();
+		}
 		mCursor = null;
 	}
 
@@ -246,7 +246,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
         args.putString(BrowserByVideoSelection.LIST_OF_IDS, ((GroupOfMovieAdapter)mBrowserAdapter).getListOfMoviesIds(position));
         if (DBG) Log.d(TAG, "onItemClick: Selection: "+((GroupOfMovieAdapter)mBrowserAdapter).getListOfMoviesIds(position));
         args.putString(CursorBrowserByVideo.SUBCATEGORY_NAME, ((GroupOfMovieAdapter)mBrowserAdapter).getName(position));
-		completeNewFragmentBundle(args, position);
+        completeNewFragmentBundle(args, position);
         //Load fragment
         BrowserCategory category = (BrowserCategory) getParentFragmentManager().findFragmentById(R.id.category);
         Fragment newfragment = new BrowserAllMovies();
@@ -254,7 +254,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
         category.startContent(newfragment);
         
         // Remove the navigation drop down from the actionbar when opening a child fragment
-		((MainActivity)getActivity()).setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        ((MainActivity)getActivity()).setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     }
 
 	protected void completeNewFragmentBundle(Bundle args, int pos) {
@@ -284,7 +284,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
     public static ThumbnailRequestVideo getMultiposterThumbnailRequest(Cursor c, int position, long id) {
 		if(c==null)
 			return null;
-        if (c.moveToPosition(position)) {
+		if (c.moveToPosition(position)) {
             String posterFileListString = c.getString(c.getColumnIndexOrThrow(COLUMN_LIST_OF_POSTER_FILES));
             if (posterFileListString==null) {
                 return null;

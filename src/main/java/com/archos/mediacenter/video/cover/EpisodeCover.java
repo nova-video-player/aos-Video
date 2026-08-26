@@ -59,8 +59,8 @@ public class EpisodeCover extends BaseVideoCover {
 	public EpisodeCover(long videoId, String filepath, long durationMs, long scraperId) {
 		super(videoId, filepath, durationMs);
 		if (DBG) Log.d(TAG, "EpisodeCover(" + videoId +"|"+filepath+"|"+durationMs+"|"+scraperId);
-        mScraperId = scraperId;
-    }
+		mScraperId = scraperId;
+	}
 
 	@Override
 	public String getCoverID() {
@@ -185,20 +185,20 @@ public class EpisodeCover extends BaseVideoCover {
 	public Bitmap getDescription( ArtworkFactory factory ) {
 		View view;
 
-        // Inflate the layout in case it has not been inflated yet for this Cover class
-        if (sDescriptionViewTVShow==null) {
-            inflateDescriptionLayoutTVShow(factory);
-        }
-        view = sDescriptionViewTVShow;
+		// Inflate the layout in case it has not been inflated yet for this Cover class
+		if (sDescriptionViewTVShow==null) {
+			inflateDescriptionLayoutTVShow(factory);
+		}
+		view = sDescriptionViewTVShow;
 
-        if (checkScraperInfo(factory)) {
-	        sTVShowName.setText(mEpisodeInfo.getShowTitle());
-            sTVShowSeasonAndEpisode.setText(EpisodeInfo.getEpisodeIdentificationString(factory.getContext().getResources(),
-                                                                                 mEpisodeInfo.getSeasonNumber(),
-                                                                                 mEpisodeInfo.getEpisodeNumber()));
-            String episodeNameFormat = factory.getContext().getString(R.string.quotation_format);
-	        sTVShowEpisodeName.setText(String.format(episodeNameFormat, mEpisodeInfo.getEpisodeTitle()));
-        }
+		if (checkScraperInfo(factory)) {
+			sTVShowName.setText(mEpisodeInfo.getShowTitle());
+			sTVShowSeasonAndEpisode.setText(EpisodeInfo.getEpisodeIdentificationString(factory.getContext().getResources(),
+					mEpisodeInfo.getSeasonNumber(),
+					mEpisodeInfo.getEpisodeNumber()));
+			String episodeNameFormat = factory.getContext().getString(R.string.quotation_format);
+			sTVShowEpisodeName.setText(String.format(episodeNameFormat, mEpisodeInfo.getEpisodeTitle()));
+		}
 		else {
 			// Scraper info not available or not valid => fall-back on filename (this is not a common expected use-case...)
 			sTVShowName.setText(factory.removeFilenameExtension((new File(mFilepath)).getName()));
@@ -206,7 +206,7 @@ public class EpisodeCover extends BaseVideoCover {
 			sTVShowEpisodeName.setText("-");
 		}
 
-        sTVShowDuration.setText(MediaUtils.formatTime(mDurationMs));
+		sTVShowDuration.setText(MediaUtils.formatTime(mDurationMs));
 
 		// Update the layout setup to take care of the updated text views
 		view.measure(View.MeasureSpec.makeMeasureSpec(DESCRIPTION_TEXTURE_WIDTH, View.MeasureSpec.EXACTLY),

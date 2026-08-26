@@ -72,7 +72,7 @@ public class VideoCover extends BaseVideoCover {
 	    sVideoDuration = null;
 	    
 	    sOverlayDescriptionView = null;
-		sOverlayDescriptionText = null;
+	    sOverlayDescriptionText = null;
 	}
 
     @Override
@@ -90,7 +90,7 @@ public class VideoCover extends BaseVideoCover {
             final float scaleFactor = THUMBNAIL_SHRINK_FACTOR;
 
             if (coverBitmap == null) {
-            	if(DBG) Log.d(TAG, "Failed to get the video bitmap");
+                if(DBG) Log.d(TAG, "Failed to get the video bitmap");
                 return null;
             }
 

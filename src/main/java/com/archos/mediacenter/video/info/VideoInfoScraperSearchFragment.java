@@ -134,8 +134,8 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
-    	if (log.isDebugEnabled()) log.debug("onCreate this={}  savedInstanceState={}", this, savedInstanceState);
+        super.onCreate(savedInstanceState);
+        if (log.isDebugEnabled()) log.debug("onCreate this={}  savedInstanceState={}", this, savedInstanceState);
         setInfo((Video) getActivity().getIntent().getExtras().get(VideoInfoScraperActivity.EXTRA_VIDEO));
         setRetainInstance(false); // keep fragment instance when rotating screen
     }
@@ -148,13 +148,13 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
             mSelectionThread.pause();
         }
         
-    	mSavedState = new SavedState();
-    	mSavedState.mHeaderMessageVisibility = mHeaderMessage.getVisibility();
-    	mSavedState.mMessageVisibility = mMessage.getVisibility();
-    	mSavedState.mCustomSearchContainerVisibility = mCustomSearchContainer.getVisibility();
-    	mSavedState.mProgressGroupVisibility = mProgressGroup.getVisibility();
-    	mSavedState.mResultsVisibility = mResultsGroup.getVisibility();
-    	
+        mSavedState = new SavedState();
+        mSavedState.mHeaderMessageVisibility = mHeaderMessage.getVisibility();
+        mSavedState.mMessageVisibility = mMessage.getVisibility();
+        mSavedState.mCustomSearchContainerVisibility = mCustomSearchContainer.getVisibility();
+        mSavedState.mProgressGroupVisibility = mProgressGroup.getVisibility();
+        mSavedState.mResultsVisibility = mResultsGroup.getVisibility();
+
         super.onDestroyView();
     }
 
@@ -190,30 +190,30 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
                 // Start searching
-				search();
-			}
-		});
+                search();
+            }
+        });
         mCustomSearchEditText.setOnEditorActionListener(mEditorActionListener);
 
-    	// update UI visibility
+        // update UI visibility
         if (mSavedState!=null && !mHasSaved) {
-        	mHeaderMessage.setVisibility(mSavedState.mHeaderMessageVisibility);
-    		mMessage.setVisibility(mSavedState.mMessageVisibility);
-        	mCustomSearchContainer.setVisibility(mSavedState.mCustomSearchContainerVisibility);
-        	mProgressGroup.setVisibility(mSavedState.mProgressGroupVisibility);
-        	mResultsGroup.setVisibility(mSavedState.mResultsVisibility);
-        	
-        	// Reload list adapter
-        	mList.setAdapter(mScraperResultsAdapter);
-    	}
-    	else {
-    		initVisibilities();
+            mHeaderMessage.setVisibility(mSavedState.mHeaderMessageVisibility);
+            mMessage.setVisibility(mSavedState.mMessageVisibility);
+            mCustomSearchContainer.setVisibility(mSavedState.mCustomSearchContainerVisibility);
+            mProgressGroup.setVisibility(mSavedState.mProgressGroupVisibility);
+            mResultsGroup.setVisibility(mSavedState.mResultsVisibility);
+
+            // Reload list adapter
+            mList.setAdapter(mScraperResultsAdapter);
+        }
+        else {
+            initVisibilities();
             mHasSaved = false;
-    	}
-    	
-    	// search result list click listener
-    	mList.setOnItemClickListener(new OnItemClickListener() {
-    		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        }
+
+        // search result list click listener
+        mList.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (log.isDebugEnabled()) log.debug("onClick : select item {} (items already processed={})", position, mSelectionItemsProcessed);
 
                 if (mSelectionThread != null && mSelectionThread.isAlive()) {
@@ -264,26 +264,26 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                         mHandler.obtainMessage(MESSAGE_WRITE_TAGS_TO_DB, itemTags).sendToTarget();
                     }
                 }
-    		}
-		});
+            }
+        });
 
-    	// Check if everything is ready to setup the fragment
-    	setupIfReady();
+        // Check if everything is ready to setup the fragment
+        setupIfReady();
 
-    	// The activity was destroyed while the selection thread was running => now that
-    	// the data are restored we can tell the thread that the activity has changed
-    	if (mSelectionThread != null) {
-    		if (log.isDebugEnabled()) log.debug("onViewCreated: unpause mSelectionThread");
-    		mSelectionThread.unpause();
-    	}
+        // The activity was destroyed while the selection thread was running => now that
+        // the data are restored we can tell the thread that the activity has changed
+        if (mSelectionThread != null) {
+            if (log.isDebugEnabled()) log.debug("onViewCreated: unpause mSelectionThread");
+            mSelectionThread.unpause();
+        }
     }
 
     private void initVisibilities() {
     	mHeaderMessage.setVisibility(View.VISIBLE);
-		mMessage.setVisibility(View.GONE);
-		mCustomSearchContainer.setVisibility( mDisableOnlineUpdate ? View.GONE : View.VISIBLE);
-		mProgressGroup.setVisibility(View.GONE);
-		mResultsGroup.setVisibility(View.GONE);
+    	mMessage.setVisibility(View.GONE);
+    	mCustomSearchContainer.setVisibility( mDisableOnlineUpdate ? View.GONE : View.VISIBLE);
+    	mProgressGroup.setVisibility(View.GONE);
+    	mResultsGroup.setVisibility(View.GONE);
     }
 
     public void setInfo(Video video) {
@@ -304,7 +304,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
             (mView!=null) &&       // View has been created
             (getActivity()!=null)) // is Attached to an activity
         {
-        	if (log.isDebugEnabled()) log.debug("setupIfReady: READY!");
+            if (log.isDebugEnabled()) log.debug("setupIfReady: READY!");
 
             mSearchInfo = SearchPreprocessor.instance().parseFileBased(mUri, mTitle!=null&&!mTitle.isEmpty()?Uri.parse("/"+mTitle):mUri);
             String searchText = mSearchInfo.getSearchSuggestion();
@@ -341,10 +341,10 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
 
         if (log.isDebugEnabled()) log.debug("search: start a new search");
 
-    	// update UI visibility
-    	mMessage.setVisibility(View.GONE);
-    	mProgressGroup.setVisibility(View.VISIBLE);
-    	mResultsGroup.setVisibility(View.GONE);
+        // update UI visibility
+        mMessage.setVisibility(View.GONE);
+        mProgressGroup.setVisibility(View.VISIBLE);
+        mResultsGroup.setVisibility(View.GONE);
 
         mResThread = new ScraperMatchesThread();
         mResThread.start();
@@ -410,11 +410,11 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
             	mMessage.setText(R.string.scrap_no_network);
             }
 
-        	// update UI visibility
-        	mMessage.setVisibility(View.VISIBLE);
-        	mCustomSearchContainer.setVisibility(mDisableOnlineUpdate ? View.GONE : View.VISIBLE);
-        	mProgressGroup.setVisibility(View.GONE);
-        	mResultsGroup.setVisibility(View.GONE);
+            // update UI visibility
+            mMessage.setVisibility(View.VISIBLE);
+            mCustomSearchContainer.setVisibility(mDisableOnlineUpdate ? View.GONE : View.VISIBLE);
+            mProgressGroup.setVisibility(View.GONE);
+            mResultsGroup.setVisibility(View.GONE);
         }
         else if (mResults.size() == 1&&mNfoTag==null||mNfoTag!=null&&mResults.size() == 0) {
             //----------------------------------------------------------------
@@ -436,8 +436,8 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
             
             // update UI visibility
             mMessage.setVisibility(View.GONE);
-        	mProgressGroup.setVisibility(View.GONE);
-        	mResultsGroup.setVisibility(View.VISIBLE);
+            mProgressGroup.setVisibility(View.GONE);
+            mResultsGroup.setVisibility(View.VISIBLE);
 
             // Get info from the online database for all the items of the list not
             // processed yet in order to update the dialog display (poster, year, actors, ...)

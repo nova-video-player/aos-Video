@@ -77,8 +77,8 @@ public class OAuthDialog extends Dialog {
 	 */
 	public OAuthDialog(Context context, OAuthCallback o,OAuthData oa, OAuthClientRequest req) {
 		super(context);
-        if (log.isDebugEnabled()) log.debug("OAuthDialog");
-        mdata = oa;
+		if (log.isDebugEnabled()) log.debug("OAuthDialog");
+		mdata = oa;
 		mReq = req;
 		mListener=o;
 	}
@@ -102,8 +102,8 @@ public class OAuthDialog extends Dialog {
 		super.onCreate(savedInstanceState);
 		if (log.isDebugEnabled()) log.debug("onCreate");
 
-        // get another progress dialog while loading the page in this dialog
-        mProgress = NovaProgressDialog.show(getContext(), "", getContext().getResources().getString(R.string.loading), true);
+		// get another progress dialog while loading the page in this dialog
+		mProgress = NovaProgressDialog.show(getContext(), "", getContext().getResources().getString(R.string.loading), true);
 		mProgress.setCancelable(true);
 		mProgress.setCanceledOnTouchOutside(false);
 
@@ -192,16 +192,16 @@ public class OAuthDialog extends Dialog {
 				log.warn("OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
 			}
 			Uri uri = Uri.parse(urldecode);
-            if (!"localhost".equals(uri.getHost()) && !"auth".equals(uri.getHost())) {
-                // Enhanced validation for OAuth callback - allow only Trakt domain, localhost, or nova.trakt://auth
-                if (uri.getHost() != null && (uri.getHost().endsWith("trakt.tv") || uri.getHost().equals("localhost") || uri.getHost().equals("auth"))) {
-                    if (log.isDebugEnabled()) log.debug("shouldOverrideUrlLoading API21-23: allowing Trakt domain or custom auth host: {}", uri.getHost());
-                    return false; // Continue loading
-                } else {
-                    log.warn("shouldOverrideUrlLoading API21-23: blocking non-Trakt domain: {}", uri.getHost());
-                    return true; // Block navigation to non-Trakt domains
-                }
-            }
+			if (!"localhost".equals(uri.getHost()) && !"auth".equals(uri.getHost())) {
+				// Enhanced validation for OAuth callback - allow only Trakt domain, localhost, or nova.trakt://auth
+				if (uri.getHost() != null && (uri.getHost().endsWith("trakt.tv") || uri.getHost().equals("localhost") || uri.getHost().equals("auth"))) {
+					if (log.isDebugEnabled()) log.debug("shouldOverrideUrlLoading API21-23: allowing Trakt domain or custom auth host: {}", uri.getHost());
+					return false; // Continue loading
+				} else {
+					log.warn("shouldOverrideUrlLoading API21-23: blocking non-Trakt domain: {}", uri.getHost());
+					return true; // Block navigation to non-Trakt domains
+				}
+			}
 			mdata.code = uri.getQueryParameter("code");
 			OAuthDialog.this.dismiss();
 			mListener.onFinished(mdata);
@@ -218,20 +218,20 @@ public class OAuthDialog extends Dialog {
 			String urldecode = null;
 			try {
 				urldecode = URLDecoder.decode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            log.warn("OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
-        }
-        Uri uri = Uri.parse(urldecode);
-        if (!"localhost".equals(uri.getHost()) && !"auth".equals(uri.getHost())) {
-            // Enhanced validation for OAuth callback - allow only Trakt domain, localhost, or nova.trakt://auth
-            if (uri.getHost() != null && (uri.getHost().endsWith("trakt.tv") || uri.getHost().equals("localhost") || uri.getHost().equals("auth"))) {
-                if (log.isDebugEnabled()) log.debug("shouldOverrideUrlLoading API24+: allowing Trakt domain or custom auth host: {}", uri.getHost());
-                return false; // Continue loading
-            } else {
-                log.warn("shouldOverrideUrlLoading API24+: blocking non-Trakt domain: {}", uri.getHost());
-                return true; // Block navigation to non-Trakt domains
-            }
-        }
+			} catch (UnsupportedEncodingException e) {
+				log.warn("OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
+			}
+			Uri uri = Uri.parse(urldecode);
+			if (!"localhost".equals(uri.getHost()) && !"auth".equals(uri.getHost())) {
+				// Enhanced validation for OAuth callback - allow only Trakt domain, localhost, or nova.trakt://auth
+				if (uri.getHost() != null && (uri.getHost().endsWith("trakt.tv") || uri.getHost().equals("localhost") || uri.getHost().equals("auth"))) {
+					if (log.isDebugEnabled()) log.debug("shouldOverrideUrlLoading API24+: allowing Trakt domain or custom auth host: {}", uri.getHost());
+					return false; // Continue loading
+				} else {
+					log.warn("shouldOverrideUrlLoading API24+: blocking non-Trakt domain: {}", uri.getHost());
+					return true; // Block navigation to non-Trakt domains
+				}
+			}
 			mdata.code = uri.getQueryParameter("code");
 			OAuthDialog.this.dismiss();
 			mListener.onFinished(mdata);
@@ -240,20 +240,20 @@ public class OAuthDialog extends Dialog {
 		}
 
 
-        /*
-        **  Catch the error if an error occurs
-        ** 
-        */
-        // for Android 21-22
-        @SuppressWarnings("deprecation")
-        @Override
-        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
-        {
-            super.onReceivedError(view, errorCode, description, failingUrl);
+		/*
+		**  Catch the error if an error occurs
+		**
+		*/
+		// for Android 21-22
+		@SuppressWarnings("deprecation")
+		@Override
+		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
+		{
+			super.onReceivedError(view, errorCode, description, failingUrl);
 			if (log.isDebugEnabled()) log.debug("onReceivedError API21,22 for url {}", failingUrl);
-        	if(mListener!=null)
-        		mListener.onFinished(mdata);
-            OAuthDialog.this.dismiss();
+			if(mListener!=null)
+				mListener.onFinished(mdata);
+			OAuthDialog.this.dismiss();
 			log.warn("onReceivedError: error code={}, description={}, failingUrl={}", errorCode, description, failingUrl);
 			// ERR_FAILED (-1) often indicates SSL certificate issues or DNS resolution failures
 			String errorMsg = "No Internet";

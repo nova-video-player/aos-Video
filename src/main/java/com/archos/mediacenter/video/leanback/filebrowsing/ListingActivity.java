@@ -22,6 +22,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.content.IntentCompat;
 import androidx.fragment.app.Fragment;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -226,6 +227,9 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
         }
     }
 
+    // onKeyLongPress handles a BACK long-press (quit shortcut), which has no equivalent in
+    // OnBackPressedCallback/predictive-back (that API only covers single back gestures/presses).
+    @SuppressLint("GestureBackNavigation")
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
 

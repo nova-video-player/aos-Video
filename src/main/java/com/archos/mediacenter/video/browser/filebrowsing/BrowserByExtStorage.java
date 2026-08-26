@@ -141,7 +141,7 @@ public class BrowserByExtStorage extends BrowserByLocalFolder {
     @Override
     public void onPause() {
         if(mHasRegisteredReceiver)
-        getActivity().unregisterReceiver(mSdCardReceiver);
+            getActivity().unregisterReceiver(mSdCardReceiver);
         mHasRegisteredReceiver = false;
         super.onPause();
     }

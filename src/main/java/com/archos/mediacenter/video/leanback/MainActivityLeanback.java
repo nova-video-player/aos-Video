@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback;
 
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
@@ -238,6 +239,10 @@ public class MainActivityLeanback extends LeanbackActivity {
         preferencesLauncher.launch(new Intent(this, VideoSettingsActivity.class));
     }
 
+    // onKeyLongPress handles a BACK long-press (open settings shortcut), which has no
+    // equivalent in OnBackPressedCallback/predictive-back (that API only covers single back
+    // gestures/presses).
+    @SuppressLint("GestureBackNavigation")
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

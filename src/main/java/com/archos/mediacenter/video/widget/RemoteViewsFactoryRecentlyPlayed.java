@@ -37,6 +37,6 @@ class RemoteViewsFactoryRecentlyPlayed extends RemoteViewsFactoryBase {
     	String where = VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "!=0 AND " + WHERE_NOT_HIDDEN;
         ContentResolver resolver = context.getContentResolver();
         mCursor = resolver.query(MEDIA_DB_CONTENT_URI, VIDEO_FILES_COLUMNS, where, null, sortOrder);
-		return (mCursor !=null);
+        return (mCursor !=null);
     }
 }

@@ -126,23 +126,23 @@ public class Paste extends AlertDialog implements FileManagerService.ServiceList
         FileManagerService service = FileManagerService.fileManagerService;
         if(service == null) return;
 
-            if(service.getPasteTotalSize()>0)
-                mProgress.setProgress((int) (MAX_PROGRESS *  service.getPasteTotalProgress() / service.getPasteTotalSize()));
-            if( service.getPasteTotalProgress() != service.getPasteTotalSize()){
-                if(service.getFilesToPaste().size()>0) {
-                    setMessage(service.getFilesToPaste().get(service.getCurrentFile()).getName());
-                    if (service.getFilesToPaste().size() > 1) {
-                        mProgressText.setText(mContext.getResources().getString(com.archos.filecorelibrary.R.string.pasting_copy_many,
-                                service.getCurrentFile()+1, service.getFilesToPaste().size(),
-                                Formatter.formatShortFileSize(mContext, service.getPasteTotalProgress()), Formatter.formatShortFileSize(mContext, service.getPasteTotalSize())));
-                    } else {
-                        mProgressText.setText(mContext.getResources().getString(com.archos.filecorelibrary.R.string.pasting_copy_one,
-                                Formatter.formatShortFileSize(mContext, service.getPasteTotalProgress()), Formatter.formatShortFileSize(mContext, service.getPasteTotalSize())));
-                    }
+        if(service.getPasteTotalSize()>0)
+            mProgress.setProgress((int) (MAX_PROGRESS *  service.getPasteTotalProgress() / service.getPasteTotalSize()));
+        if( service.getPasteTotalProgress() != service.getPasteTotalSize()){
+            if(service.getFilesToPaste().size()>0) {
+                setMessage(service.getFilesToPaste().get(service.getCurrentFile()).getName());
+                if (service.getFilesToPaste().size() > 1) {
+                    mProgressText.setText(mContext.getResources().getString(com.archos.filecorelibrary.R.string.pasting_copy_many,
+                            service.getCurrentFile()+1, service.getFilesToPaste().size(),
+                            Formatter.formatShortFileSize(mContext, service.getPasteTotalProgress()), Formatter.formatShortFileSize(mContext, service.getPasteTotalSize())));
+                } else {
+                    mProgressText.setText(mContext.getResources().getString(com.archos.filecorelibrary.R.string.pasting_copy_one,
+                            Formatter.formatShortFileSize(mContext, service.getPasteTotalProgress()), Formatter.formatShortFileSize(mContext, service.getPasteTotalSize())));
                 }
             }
-            else
-                mProgressText.setText(mContext.getResources().getString(com.archos.filecorelibrary.R.string.pasting_done));
+        }
+        else
+            mProgressText.setText(mContext.getResources().getString(com.archos.filecorelibrary.R.string.pasting_done));
 
 
     }

@@ -1082,6 +1082,10 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     // ====================== UiChoiceDialog ====================
 
+    // Only used to skip the UiChoiceDialog check for a few hardware keys; it does not consume
+    // or otherwise intercept the BACK event (always delegates to super), so there is no
+    // OnBackPressedCallback/predictive-back equivalent to migrate to here.
+    @SuppressLint("GestureBackNavigation")
     @Override
     public boolean dispatchKeyEvent(KeyEvent ev) {
         boolean ignore = false;

@@ -320,7 +320,7 @@ public class SubtitleDelayTVPicker extends SubtitleDelayPickerAbstract implement
             slaveView.setFocusable(false);
             slaveView.setText(getText());
             if(textSize!=-1)
-            slaveView.setTextSize(textSize);
+                slaveView.setTextSize(textSize);
             ((ImageView)slaveView.findViewById(R.id.image_previous)).setVisibility(((ImageView)findViewById(R.id.image_previous)).getVisibility());
             ((ImageView)slaveView.findViewById(R.id.image_next)).setVisibility(((ImageView)findViewById(R.id.image_next)).getVisibility());
             ((ImageView)slaveView.findViewById(R.id.image_previous)).setImageDrawable(((ImageView)findViewById(R.id.image_previous)).getDrawable());

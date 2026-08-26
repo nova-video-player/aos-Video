@@ -515,7 +515,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onCreate() {
         super.onCreate();
 
-	AdditionalServiceSingleton.getInstance().bindToService(getApplicationContext());
+        AdditionalServiceSingleton.getInstance().bindToService(getApplicationContext());
         if (log.isDebugEnabled()) log.debug("onCreate()");
         sPlayerService = this;
         mHandler = new Handler(Looper.getMainLooper());
