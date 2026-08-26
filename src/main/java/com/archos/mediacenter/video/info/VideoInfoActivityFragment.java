@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.info;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -366,6 +367,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     private Uri mLastIndexed;   //keep last index uri to avoid asking it twice (for example when leaving fragment and coming back while video hasn't yet been indexed)
     private VideoMetadata mVideoMetadataFromPlayer;
     private TextView mFileError;
+    // See onCreateView() below for why this androidx.appcompat @RestrictTo is kept suppressed
+    // rather than migrated.
+    @SuppressLint("RestrictedApi")
     private ToolbarWidgetWrapper mToolbarWidgetWrapper;
 
     private boolean isFilePlayable = true;
@@ -402,6 +406,16 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
     }
 
+    // ToolbarWidgetWrapper is marked @RestrictTo(LIBRARY_GROUP) in androidx.appcompat: it is
+    // an internal helper normally used by WindowDecorActionBar to back setSupportActionBar().
+    // The public replacement (AppCompatActivity.setSupportActionBar() + ActionBar
+    // display options) would also hook this Toolbar into the activity's options-menu
+    // dispatch and title handling, which this fragment manages itself via
+    // setOnMenuItemClickListener()/its own nav click listener below, so switching would
+    // risk behavior changes that can't be verified without manual UI testing. Usage here
+    // is narrowly scoped to setting the home-as-up display option (to show the "up" icon),
+    // so it is kept with this explicit suppression rather than migrated.
+    @SuppressLint("RestrictedApi")
     @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

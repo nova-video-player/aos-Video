@@ -20,6 +20,7 @@ import androidx.leanback.transition.LeanbackTransitionHelper;
 import androidx.leanback.transition.TransitionHelper;
 import androidx.leanback.widget.BrowseFrameLayout;
 import androidx.core.view.ViewCompat;
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -65,6 +66,12 @@ public class TitleHelper {
         createTransitions();
     }
 
+    // LeanbackTransitionHelper/TransitionHelper are marked @RestrictTo(LIBRARY_GROUP) in
+    // androidx.leanback, but this class is itself a copy of AOSP's own leanback reference
+    // TitleHelper (see header above), which is the sanctioned pattern for driving title
+    // show/hide transitions across the framework/support Transition backends; there is no
+    // public replacement API.
+    @SuppressLint("RestrictedApi")
     private void createTransitions() {
         mTitleUpTransition = LeanbackTransitionHelper.loadTitleOutTransition(
                 mSceneRoot.getContext());
@@ -87,6 +94,9 @@ public class TitleHelper {
     /**
      * Shows the title.
      */
+    // See createTransitions() above for why this androidx.leanback @RestrictTo is a false
+    // positive here.
+    @SuppressLint("RestrictedApi")
     public void showTitle(boolean show) {
         if (show) {
             TransitionHelper.runTransition(mSceneWithTitle, mTitleDownTransition);

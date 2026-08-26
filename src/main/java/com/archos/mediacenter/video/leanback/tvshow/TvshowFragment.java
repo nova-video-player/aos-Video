@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import androidx.activity.result.ActivityResultLauncher;
@@ -176,6 +177,13 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         }
     }
 
+    // TransitionHelper/TransitionListener are marked @RestrictTo(LIBRARY_GROUP) in
+    // androidx.leanback, but they are the only public way to attach a listener to the
+    // opaque Object transition returned by Fragment window transition getters across the
+    // framework/support Transition backends; this is the pattern used by AOSP's own
+    // leanback reference sources (see TitleHelper.java), so it's the sanctioned usage, not
+    // an internal-only call.
+    @SuppressLint("RestrictedApi")
     @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback.channels;
 
 import static com.archos.mediacenter.utils.MediaUtils.getExternalCacheDir;
 
+import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -513,6 +514,12 @@ public class ChannelManager {
             executor.shutdownNow();
         }
 
+        // PreviewProgram.Builder setters/getters are inherited from BaseProgram.Builder /
+        // BasePreviewProgram.Builder which are marked @RestrictTo(LIBRARY_GROUP) in
+        // androidx.tvprovider, but PreviewProgram.Builder is the only public, documented way
+        // to build a TV "Channels" preview program (see Android TV Recommendations Channel
+        // API docs/samples), so this is the sanctioned usage, not an internal-only call.
+        @SuppressLint("RestrictedApi")
         private void doRefresh(ChannelData channel) {
             if (DBG) Log.d(TAG, "Refreshing " + channel.getName());
 
@@ -679,6 +686,10 @@ public class ChannelManager {
             }
         }
 
+        // BaseProgram.getId() is the only public way to read the id of a PreviewProgram
+        // obtained via PreviewProgram.fromCursor(); see doRefresh() above for why this
+        // androidx.tvprovider @RestrictTo is a false positive here.
+        @SuppressLint("RestrictedApi")
         private void deletePrograms(ChannelData channel) {
             Cursor cursor = mContext.getContentResolver().query(TvContractCompat.PreviewPrograms.CONTENT_URI, new String[] { TvContractCompat.Programs._ID, TvContractCompat.Programs.COLUMN_CHANNEL_ID }, null, null, null);
             
@@ -697,6 +708,10 @@ public class ChannelManager {
             }
         }
 
+        // BasePreviewProgram.getIntent() is the only public way to read back the Intent stored
+        // on a PreviewProgram; see doRefresh() above for why this androidx.tvprovider
+        // @RestrictTo is a false positive here.
+        @SuppressLint("RestrictedApi")
         private ArrayList<Long> getVideoOrTvShowIds(ChannelData channel) {
             ArrayList<Long> videoOrTvShowIds = new ArrayList<>();
             Cursor cursor = mContext.getContentResolver().query(TvContractCompat.PreviewPrograms.CONTENT_URI, new String[] { TvContractCompat.Programs._ID, TvContractCompat.Programs.COLUMN_CHANNEL_ID, TvContractCompat.PreviewPrograms.COLUMN_INTENT_URI }, null, null, null);
@@ -757,6 +772,10 @@ public class ChannelManager {
             return videoOrTvShowIds;
         }
 
+        // ProgramColumns.COLUMN_POSTER_ART_URI / BaseProgram.getPosterArtUri() are the only
+        // public way to query/read the poster uri of a PreviewProgram; see doRefresh() above
+        // for why this androidx.tvprovider @RestrictTo is a false positive here.
+        @SuppressLint("RestrictedApi")
         private ArrayList<Long> getPosterIds(ChannelData channel) {
             ArrayList<Long> posterIds = new ArrayList<>();
             Cursor cursor = mContext.getContentResolver().query(TvContractCompat.PreviewPrograms.CONTENT_URI, new String[] { TvContractCompat.Programs._ID, TvContractCompat.Programs.COLUMN_CHANNEL_ID, TvContractCompat.PreviewPrograms.COLUMN_POSTER_ART_URI }, null, null, null);
