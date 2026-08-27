@@ -355,6 +355,7 @@ public class UpdateRecommendationsService extends Service implements DefaultLife
 	@Override
 	public void onDestroy() {
 		if (DBG) Log.d(TAG, "onDestroy()");
+		ProcessLifecycleOwner.get().getLifecycle().removeObserver(this);
 		if (mServiceLooper != null) {
 			mServiceLooper.quit();
 		}
