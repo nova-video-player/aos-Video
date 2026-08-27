@@ -158,8 +158,8 @@ public class FolderPicker extends FragmentActivity {
 
         public static final String FRAGMENT_TAG = "FolderPickerDialogFragment";
 
-        private static ListingEngine mListingEngine = null;
-        private static LayoutInflater mLayoutInflater = null;
+        private ListingEngine mListingEngine = null;
+        private LayoutInflater mLayoutInflater = null;
 
         private class Item {
             public Object mHolder;

@@ -81,7 +81,6 @@ public class PlayUtils implements IndexHelper.Listener {
         public void onDownloadStart(SubtitleManager engine);
         public void onDownloadEnd();
     }
-    private static PlayUtils sPlayUtils = null;
 
     static public void startTorrent(Context context, MetaFile2 torrentFile, int resume) {
         startTorrent(context, torrentFile.getUri(), torrentFile.getMimeType(),resume);
@@ -110,8 +109,7 @@ public class PlayUtils implements IndexHelper.Listener {
                                   final long playlistId)
                                     {
 
-        if(sPlayUtils==null)
-            sPlayUtils = new PlayUtils();
+        final PlayUtils playUtils = new PlayUtils();
         if (video == null) {
             log.warn("startVideo: video is null!");
             Toast.makeText(context, "Error video is null", Toast.LENGTH_SHORT).show();
@@ -145,18 +143,18 @@ public class PlayUtils implements IndexHelper.Listener {
                 @Override
                 public void onUriFound(Uri uri) {
                     video.setStreamingUri(uri);
-                    sPlayUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, playlistId);
+                    playUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, playlistId);
                 }
 
                 @Override
                 public void onError() {
-                    sPlayUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, playlistId);
+                    playUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, playlistId);
                 }
             });
             uriFinder.start();
         }
         else
-            sPlayUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, playlistId);
+            playUtils.startPlayer(context, video, finalMimetype, resume, legacyPlayer, resumePosition, externalPlayerWithResultStarter, playlistId);
     }
 
     private void startPlayer(Context context,
