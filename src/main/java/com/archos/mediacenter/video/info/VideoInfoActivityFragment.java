@@ -400,7 +400,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
     }
 
-    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
+    @SuppressWarnings({"deprecation", "unchecked"}) // getSerializableExtra/getSerializable: API 33+ branch uses typed form; else branch suppressed
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

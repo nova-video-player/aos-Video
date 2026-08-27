@@ -71,7 +71,7 @@ public class VideoInfoActivity extends AppCompatActivity {
     private Fragment mCurrentFragment;
 
 
-    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
+    @SuppressWarnings({"deprecation", "unchecked"}) // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (DBG) Log.d(TAG,"onCreate");

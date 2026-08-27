@@ -555,9 +555,11 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
      * for example hide DB xml files and change resume with remotes resumes
      * @param mListedFiles
      * @param indexedVideosMap
+     * @return filtered/updated list of files
      */
-    protected void updateVideosMapAndFileList(List<? extends MetaFile2> mListedFiles, HashMap<String, Video> indexedVideosMap) {
+    protected List<? extends MetaFile2> updateVideosMapAndFileList(List<? extends MetaFile2> mListedFiles, HashMap<String, Video> indexedVideosMap) {
         // used by smblistingfragmnet
+        return mListedFiles;
     }
 
     /**
@@ -584,7 +586,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
             }
             // Must not close the cursor here, else it fails when recreating the fragment from backstack (i.e. when back from a sub-directory)
 
-            updateVideosMapAndFileList(mListedFiles, indexedVideosMap); // I'm sorry, but this is specially made for smb to update resume with remotes ones;
+            mListedFiles = updateVideosMapAndFileList(mListedFiles, indexedVideosMap); // I'm sorry, but this is specially made for smb to update resume with remotes ones;
 
             int positionInAdapter = 0;
             for (MetaFile2 file : mListedFiles) {

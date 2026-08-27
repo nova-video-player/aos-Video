@@ -173,7 +173,7 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
         mSortOrder = mPreferences.getString(SORT_PARAM_KEY, DEFAULT_SORT);
         if (mCurrentDirectory == null)
             mCurrentDirectory = getDefaultDirectory();
-        mFileList = new ArrayList();
+        mFileList = new ArrayList<>();
         mFullFileList = new ArrayList<>();
         // close mCursor before initLoader
         if (mCursor != null && ! mCursor.isClosed()) {

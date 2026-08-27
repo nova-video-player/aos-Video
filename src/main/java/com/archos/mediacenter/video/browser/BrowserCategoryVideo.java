@@ -63,6 +63,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
             R.string.movies_by_genre,
     };
 
+    @SuppressWarnings("unchecked")
     static final Class<? extends Fragment> MOVIE_CATEGORIES_CLASSES[] = new Class[]{
             BrowserAllMovies.class,
             BrowserMoviesByYear.class,
@@ -268,7 +269,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
         for (int i=0; i<MOVIE_CATEGORIES_NAMES_ID.length; i++) {
             movieCategoriesNames[i] = getResources().getString(MOVIE_CATEGORIES_NAMES_ID[i]);
         }
-        ab.setListNavigationCallbacks( new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, movieCategoriesNames), this);
+        ab.setListNavigationCallbacks( new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, movieCategoriesNames), this);
 
         // Set default value
         int defaultListPosition = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(KEY_ACTIONBAR_NAVIGATION_POSITION, KEY_ACTIONBAR_NAVIGATION_POSITION_DEFAULT);
