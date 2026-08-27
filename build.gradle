@@ -300,9 +300,9 @@ android {
         }
     }
     lint {
-        abortOnError true
-        checkReleaseBuilds false
-        showAll true
+        abortOnError = true
+        checkReleaseBuilds = false
+        showAll = true
         disable 'MissingTranslation', 'ExtraTranslation', 'MissingQuantity', 'ImpliedQuantity'
         enable 'SuspiciousIndentation'
     }
