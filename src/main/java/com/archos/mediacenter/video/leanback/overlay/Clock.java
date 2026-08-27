@@ -19,10 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,6 +27,9 @@ import com.archos.mediacenter.video.R;
 
 import com.archos.mediacenter.video.player.Player;
 import com.archos.mediacenter.video.player.PlayerService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,8 +39,7 @@ import java.util.Date;
  */
 public class Clock {
 
-    private static final String TAG = "Clock";
-    private final static boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(Clock.class);
 
     public static String formatTimeWithArrow(String startText, String endText) {
         return startText + " → " + endText;
@@ -49,14 +48,6 @@ public class Clock {
     final Context mContext;
     final private TextView mClockTextView;
     final private SimpleDateFormat mDateFormat;
-
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
-    private final Runnable mRecheckRunnable = new Runnable() {
-        @Override
-        public void run() {
-            updateClock();
-        }
-    };
 
     public Clock(Context context, View overlayContainer) {
         mContext = context;
@@ -76,35 +67,45 @@ public class Clock {
     }
 
     public void destroy() {
-        mHandler.removeCallbacksAndMessages(null);
     }
 
     public void resume() {
+        if (log.isDebugEnabled()) log.debug("resume");
         mContext.registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         updateClock();
-        // One-shot 500ms re-check to catch async playback stops during activity transitions
-        mHandler.postDelayed(mRecheckRunnable, 500);
     }
 
     public void pause() {
+        if (log.isDebugEnabled()) log.debug("pause");
         // We do not change the visibility of the clock here to have a smooth transition between fragments with clock
-        mHandler.removeCallbacksAndMessages(null);
         mContext.unregisterReceiver(mReceiver);
     }
 
     final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (DBG) Log.d(TAG, "onReceive " + intent);
+            if (log.isDebugEnabled()) log.debug("onReceive: {}", intent);
             updateClock();
         }
     };
 
     private void updateClock() {
-        mHandler.removeCallbacks(mRecheckRunnable);
         long now = System.currentTimeMillis();
         String currentClockText = mDateFormat.format(new Date(now));
-        if (PlayerService.sPlayerService != null && Player.sPlayer != null && Player.sPlayer.isPlaying()) {
+        boolean hasFloatingPlayer = PlayerService.sPlayerService != null
+                && Player.sPlayer != null
+                && Player.sPlayer.isFloatingPlayer()
+                && Player.sPlayer.isPlaying();
+
+        if (log.isDebugEnabled()) {
+            log.debug("updateClock: hasFloatingPlayer={}, sPlayerService={}, sPlayer={}, isPlaying={}",
+                    hasFloatingPlayer,
+                    PlayerService.sPlayerService != null,
+                    Player.sPlayer != null,
+                    Player.sPlayer != null ? Player.sPlayer.isPlaying() : false);
+        }
+
+        if (hasFloatingPlayer) {
             int duration = Player.sPlayer.getDuration();
             int position = Player.sPlayer.getCurrentPosition();
             float speed = PlayerService.sPlayerService.getAudioSpeed();
