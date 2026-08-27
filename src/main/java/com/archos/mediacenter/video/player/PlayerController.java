@@ -1309,10 +1309,14 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 }
             } else {
                 if (mDragging || !mSeekComplete) {
-                    mProgress.setProgress(position);
-                    if(mProgress2!=null)
-                        mProgress2.setProgress(position);
-                    currentText = String.valueOf(position / 10) + "%";
+                    if (mLastRelativePosition != -1 && position <= 1000) {
+                        mProgress.setProgress(position);
+                        if(mProgress2!=null)
+                            mProgress2.setProgress(position);
+                        currentText = String.valueOf(position / 10) + "%";
+                    } else {
+                        currentText = stringForTime(position);
+                    }
                 } else {
                     int relativePosition = Player.sPlayer.getRelativePosition();
                     if (relativePosition != mLastRelativePosition && relativePosition >= 0) {
