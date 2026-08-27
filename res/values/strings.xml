@@ -24,7 +24,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Refresh server list</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">Enable network shares</string>
 
 
     <string name="initial_scan">Initial scan</string>
@@ -52,19 +51,11 @@
     <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">Duration</string>
 
 
     <string name="video_sources">Sources</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">Movie</string>
-    <string name="info_tab_show">Show</string>
-    <string name="info_tab_episode">Episode</string>
-    <string name="info_tab_video">Video</string>
     <string name="info_tab_file">File info</string>
-    <string name="info_tab_backdrop_chooser">Backdrop chooser</string>
-    <string name="info_tab_poster_chooser">Poster chooser</string>
-    <string name="info_tab_share">Share</string>
     <string name="info_menu_backdrop_select">Backdrop</string>
     <string name="info_menu_series_backdrop_select">Series Backdrop</string>
     <string name="info_menu_poster_select">Select another poster</string>
@@ -93,13 +84,10 @@
     <string name="network_shared_folders">Shared folders (SMB)</string>
     <string name="network_connected_as">Connected as %s</string>
     <string name="network_guest">guest</string>
-    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (Experimental)</string>
     <string name="network_cling">UPNP (Experimental)</string>
-    <string name="recordings_storage">Recordings</string>
     <string name="root_storage">Internal storage</string>
 
-    <string name="cannot_list">Cannot list content</string>
 
     <!-- VIDEO -->
     <string name="videos">Videos</string>
@@ -113,17 +101,9 @@
     <string name="all_animes_format">Animation movies  -  %d</string>
     <string name="all_collections">All collections</string>
     <string name="all_collections_format">All collections  -  %d</string>
-    <string name="all_collection_watched">All collection watched</string>
-    <string name="all_collection_unwatched">Collection not watched</string>
-    <plurals name="n_movies_watched">
-        <item quantity="one">%d movie watched</item>
-        <item quantity="other">%d movies watched</item>
-    </plurals>
     <string name="not_watched_movies_format">Not watched  -  %d</string>
     <string name="not_watched_animes_format">Not watched  -  %d</string>
 
-    <string name="no_movie_watched">No movie watched</string>
-    <string name="all_movies_watched">All movies watched</string>
 
     <string name="movies_by_alpha">Movies alphabetical</string>
     <string name="movies_by_genre">Movies by genre</string>
@@ -136,9 +116,7 @@
     <string name="all_animes">All animation movies</string>
     <string name="all_animes_row">All animations</string>
     <string name="all_animeshows">All animation TV shows</string>
-    <string name="animes_by_alpha">Animation movies alphabetical</string>
     <string name="animes_by_genre">Animation movies by genre</string>
-    <string name="animes_by_rating">Animation movies by rating</string>
     <string name="animes_by_year">Animation movies by year</string>
     <string name="all_tvshows_format">All TV shows  -  %d</string>
     <string name="not_watched_tvshows_format">Not watched  -  %d</string>
@@ -157,24 +135,18 @@
     <string name="non_scraped_videos">Non scraped videos</string>
     <string name="non_scraped_videos_format">Non scraped videos  -  %d</string>
 
-    <string name="no_server">No media server found</string>
     <string name="cannot_open_video">Cannot open this video</string>
     <string name="confirm_delete">Do you really want to delete it?</string>
     <string name="deleting">Please wait while deleting…</string>
-    <string name="cannot_delete_directory">Cannot delete the folder</string>
-    <string name="cannot_delete_file">Cannot delete the file</string>
     <string name="directory_deleted">The folder was deleted</string>
-    <string name="file_deleted">The file was deleted</string>
     <string name="resume">Resume</string>
     <string name="remote_resume">Remote resume</string>
     <string name="bookmark">Bookmark</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete_short">Confirm deletion</string>
     <string name="delete_resume">Delete resume</string>
-    <string name="delete_bookmark">Delete bookmark</string>
     <string name="mark_as_watched">Mark watched</string>
     <string name="mark_as_not_watched">Mark not watched</string>
-    <string name="upnp_not_allowed">You are not allowed to access this UPnP server. Please change your access configuration first.</string>
 
     <string name="scrap_no_info">You have no movie or TV show description for this video.</string>
     <string name="scrap_remove">Remove info</string>
@@ -203,15 +175,11 @@
     <string name="scrap_cast">Cast</string>
     <string name="scrap_cast_format">Cast: %s</string>
     <string name="scrap_genre">Genre</string>
-    <string name="scrap_genre_format">Genres: %s</string>
     <string name="scrap_genre_title">Genres</string>
     <string name="scrap_aired">Aired</string>
     <string name="scrap_aired_format">Aired: %s</string>
-    <string name="scrap_guests">Guests</string>
-    <string name="scrap_premiered">Premiered</string>
 
     <!-- Specific strings for TV shows -->
-    <string name="show_network">Network</string>
     <string name="episode_name">Episode</string>
     <string name="episode_season">Season</string>
     <string name="episode_specials">Specials</string>
@@ -222,9 +190,6 @@
     <string name="how_to_mark_season_watched">Click on a season to mark all its episodes watched or unwatched</string>
     <string name="how_to_unindex_season">Click on a season to remove all its episodes from library</string>
     <string name="how_to_delete_season">Click on a season to delete all its episodes</string>
-    <string name="mark_show_watched">Mark all episodes watched or unwatched</string>
-    <string name="unindex_show">Remove all episodes from library</string>
-    <string name="delete_show">Delete all episodes</string>
     <string name="no_episode_watched">No episode watched</string>
     <string name="all_episodes_watched">All episodes watched</string>
     <plurals name="n_episodes_watched">
@@ -271,13 +236,9 @@
     <string name="preference_display_all_files">Display all files in browser</string>
     <string name="preference_display_all_files_summary">Display non-video files too</string>
     <string name="info_processing">Checking media properties…</string>
-    <string name="info_video">Video</string>
     <string name="info_audio">Audio</string>
     <string name="info_audio_vbr">VBR</string>
-    <string name="info_plugin_required">(plugin required)</string>
     <string name="info_subtitle">Subtitle</string>
-    <string name="info_resume">Resume position</string>
-    <string name="info_bookmark">Bookmark position</string>
     <string name="info_file">File info</string>
     <string name="use_remote_resume">Use network resume position?</string>
     <!-- VIDEO COVER ROLL -->
@@ -314,9 +275,6 @@
     <string name="mediacenterlabel">Media Center</string>
 
     <string name="view_mode">Display mode</string>
-    <string name="view_mode_list">List</string>
-    <string name="view_mode_grid">Posters</string>
-    <string name="view_mode_details">Details</string>
     <string name="switch_to_list">List</string>
     <string name="switch_to_grid">Grid</string>
 
@@ -347,8 +305,6 @@
     <string name="pref_play_mode_entry_repeat_single">Repeat single</string>
     <string name="pref_play_mode_entry_binge">Binge watching</string>
     <string name="pref_introdb_autoskip_title">Skip intro/outro</string>
-    <string name="introdb_autoskip_on">Auto-skip enabled</string>
-    <string name="introdb_autoskip_off">Auto-skip disabled</string>
     <string name="introdb_autoskip">Auto-skip</string>
     <string name="introdb_segment_intro">Intro</string>
     <string name="introdb_segment_recap">Recap</string>
@@ -380,7 +336,6 @@
 
     <string name="unlock_instructions">Long press on icon to unlock</string>
     <string name="seek_to_percentage">Seeking to %s%%</string>
-    <string name="set_audio_speed_to">Audio speed %s</string>
     <!-- Subtitles/Audio languages -->
 
     <!-- Subtitles in filename HI = Hearing Impaired -->
@@ -412,8 +367,6 @@
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Cannot play video</string>
     <string name="player_err_cantplaysound">Cannot play audio track</string>
-    <string name="audiocodec_not_supported">This audio format (<xliff:g id="codec">%s</xliff:g>) is not supported.</string>
-    <string name="videocodec_not_supported">This video format (<xliff:g id="codec">%s</xliff:g>) is not supported.</string>
     <string name="player_err_file">The Video file doesn\'t exist.</string>
     <string name="player_err_sizetoobig">Video size too big</string>
     <string name="player_err_unknown">Unknown error.</string>
@@ -431,19 +384,10 @@
     <string name="player_err_interlaced">Interlaced</string>
 
     <!-- Player plug-in -->
-    <string name="player_plugin_cinema_title">Cinema plug-in</string>
-    <string name="player_plugin_cinema">Cinema plug-in (DVD, MPEG-2, AC3)</string>
-    <string name="player_plugin_ac3_title">AC3 plug-in</string>
-    <string name="player_plugin_ac3">AC3 plug-in</string>
-    <string name="player_plugin_mpeg2_title">MPEG-2 plug-in</string>
-    <string name="player_plugin_mpeg2">MPEG-2 plug-in (DVD)</string>
     <string name="player_plugin_video_msg">This file contains an <xliff:g id="video">%1$s</xliff:g> video format.</string>
     <string name="player_plugin_audio_msg">This file contains an <xliff:g id="audio">%1$s</xliff:g> audio format.</string>
     <string name="player_plugin_video_audio_msg">This file contains an <xliff:g id="video">%1$s</xliff:g> video format and an <xliff:g id="audio">%2$s</xliff:g> audio format.</string>
-    <string name="player_plugin_purchase_msg">You need to purchase the <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">Go to the Store</string>
-    <string name="player_plugin_purchase_archos_msg">You can purchase additional codec plug-ins on www.archos.com.</string>
-    <string name="player_plugin_purchase_google_play_msg">You can purchase additional codec plug-ins on Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Go to Google Play</string>
     <string name="plugin_update_required_title">Codec update required</string>
     <string name="plugin_update_required_message">It looks like you already have additional codecs installed for Nova Video Player.\n\nThis new version of Nova Video Player requires an update of these codecs.\n\nPlease go to Google Play to update and re-install the codecs.</string>
@@ -463,17 +407,9 @@
 
     <!-- Subloader -->
     <string name="get_subtitles_online">Get subtitles online</string>
-    <string name="toast_subloader_sub_found">Subtitles track found for this language</string>
-    <string name="toast_subloader_sub_not_found">Subtitles track not found for this language</string>
     <string name="toast_subloader_service_unreachable">Subtitles web service outage</string>
-    <string name="menu_subloader_allfolder">Get missing subtitles</string>
     <string name="dialog_subloader_copying">Copying subtitles…</string>
-    <string name="dialog_subloader_downloading">Downloading subtitles…</string>
-    <string name="dialog_subloader_sumup">Download finished</string>
-    <string name="dialog_subloader_success">Subtitles found for:</string>
     <string name="dialog_subloader_fails">Subtitles not found for:</string>
-    <string name="sub_force_all_title">Force subtitles download</string>
-    <string name="sub_force_all">All your videos already have at least one subtitles track. Do you want to force download of new subtitles tracks?</string>
     <string name="dialog_subloader_nonetwork_title">No Internet connection</string>
     <string name="dialog_subloader_nonetwork_message">An internet connection is required to download subtitles</string>
     <string name="dialog_subloader_connecting">Connecting to opensubtitles service…</string>
@@ -494,7 +430,6 @@
     <string name="opensubtitles_summary_status">%1$s · %2$s</string>
 
     <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_settings_title">Subtitle Settings</string>
     <string name="subtitle_sample_text">\"sample\"</string>
     <string name="subtitle_size_text">Size:</string>
     <string name="subtitle_style_text">Style:</string>
@@ -527,26 +462,17 @@
     <string name="loading_torrent">Loading torrent…</string>
     <string name="error_no_video_file">No video files</string>
     <string name="torrent_file_to_play">Choose a file to play</string>
-    <string name="torrent_buy_premium_message">Torrent streaming is only available on paid version</string>
-    <string name="torrent_buy_premium">Buy premium version</string>
 
     <!-- Shortcuts -->
     <string name="browse_net_server">Browse a network share</string>
-    <string name="add_smb_server">Browse an SMB server</string>
-    <string name="add_network_server">Add a network share</string>
-    <string name="add_to_shortcuts">Create a shortcut</string>
     <string name="add_ssh_server">Browse an FTP server</string>
     <string name="add_ssh_shortcut">Add as shortcut</string>
     <string name="ssh_prompt">FTP type</string>
     <string name="protocol_prompt">Protocol type</string>
-    <string name="ssh_empty_view"> "You can browse and play from your own ftp server"</string>
     <string name="remove_from_shortcuts">Remove the shortcut</string>
-    <string name="shortcut_added">Shortcut %s created</string>
     <string name="shortcut_removed">Shortcut %s removed</string>
     <string name="server_not_available">The server is currently not available</string>
-    <string name="cannot_open_shortcut">The content of this shortcut is currently not available.\nPlease check that you have the required permissions.</string>
     <string name="network_shortcuts">Network shortcuts</string>
-    <string name="media_servers">Media servers</string>
     <string name="shortcut_list_empty">No network shortcuts created.\n\nTo create shortcuts to your favorite remote folders long-click on the target folders and select \"%s\" in the top action bar.</string>
     <string name="ftp_shortcut_list_empty">To create shortcuts to your favorite remote folders, select \"%s\" in the top action bar when browsing a server.</string>
     <string name="indexed_folders">Indexed folders</string>
@@ -572,7 +498,6 @@
     <string name="upnp_indexing_warning_title">UPnP indexing</string>
     <string name="upnp_indexing_warning_message">UPnP indexing does not allow as many features as SMB indexing.\nIt is recommended to index a SMB folder instead if your server or PC supports it.\n</string>
 
-    <string name="ssh_error">Unable to connect : please, check your connection and credentials</string>
     <string name="ssh_remote_address">Remote address</string>
     <string name="ssh_port">Port</string>
     <string name="ssh_password">Password</string>
@@ -582,11 +507,8 @@
     <!-- Preferences -->
     <string name="preferences">Preferences</string>
 
-    <string name="get_the_ad_free_version">Get the ad-free version on Google Play</string>
     <string name="upgrade_to_add_free_version">Upgrade to ad-free version</string>
-    <string name="upgrade_to_add_free_version_description">Buy the application license to remove the ads and enable all the features</string>
     <string name="preferences_about">About</string>
-    <string name="preferences_category_complete">Full version</string>
     <string name="preferences_category_video">Video</string>
     <string name="preferences_force_software_decoding">Force software decoding</string>
     <string name="preferences_force_software_decoding_summary">You may try this option if some videos are not playing correctly</string>
@@ -620,8 +542,6 @@
     <string name="preferences_allow_3rd_party_player_summary">Other compatible video player applications will be proposed by Android when launching a video playback. Be aware that some features will not work (resume, bookmarks, etc.)</string>
     <string name="preference_tv_3d_automatic_switch">Enable automatic 3D TV switch</string>
     <string name="preference_tv_3d_automatic_switch_summary">Use this feature only if your 3D TV supports it</string>
-    <string name="enable_android_frame_timing">Enable Android frame timing</string>
-    <string name="enable_android_frame_timing_summary">Delegate to Android the frame blit timing for smoother playback (experimental)</string>
     <string name="hide_watched_videos">Hide watched videos</string>
     <string name="hide_watched_videos_summary">Hide videos from the media Library if they are marked as watched.</string>
     <string name="enable_projector_mode">Enable projector mode</string>
@@ -634,7 +554,6 @@
     <string name="preference_dolby_vision_mode">Dolby Vision mode</string>
     <string name="preference_force_dolby_vision">Force Dolby Vision</string>
     <string name="preference_remove_dolby_vision">Disable dolby vision</string>
-    <string name="preference_remove_dolby_vision_summary">Use standard video codecs over dolby vision ones</string>
     <string name="preference_cutout_short_edges">Fullscreen video with display cutouts</string>
     <string name="preference_cutout_short_edges_summary">Allow landscape fullscreen video on display with cutouts</string>
     <string name="toast_cutout_aspect_ratio_fix">Turn on fullscreen video with cutouts for correct aspect ratio.</string>
@@ -664,7 +583,6 @@
     <string name="preferences_video_about">About</string>
     <string name="preferences_video_os_text">Subtitles provided by</string>
     <string name="preferences_video_tmdb_text">Movie/TV Show information provided by</string>
-    <string name="preferences_video_tvdb_text">TV Show informations provided by</string>
     <string name="preferences_video_trakt_text">Video scrobbler provided by</string>
     <string name="preferences_video_licenses">Licenses</string>
     <string name="preferences_network_mobile_vpn_summary">Use it only with VPN configuration, and beware of your data usage.</string>
@@ -678,8 +596,6 @@
     <string name="preferences_video_advanced_quit_summary">Get back to regular preferences</string>
     <string name="trakt_change">A modification on Trakt API requires a reconnection.</string>
 
-    <string name="tv_scraper">TV Shows</string>
-    <string name="movie_scraper">Movies</string>
     <string name="enable_auto_scrap">Automatically get info for new videos</string>
 
     <string name="enable_scrape_from_db_title">Use already scraped Information</string>
@@ -705,11 +621,7 @@
     <string name="video_info_custom_search_show_hint">Name of the TV show</string>
 
     <string name="scrap_show_no_result">No matching show found online.</string>
-    <string name="video_info_backdrop_select">Select another picture</string>
-    <string name="video_info_backdrop_remove">Remove</string>
-    <string name="video_info_backdrop_set_as">Set picture as</string>
 
-    <string name="video_info_share_message">"I\'ve been watching the video \"%1$s\" on my Nova %2$s"</string>
 
     <string name="notification_mode">Notifications</string>
     <string name="notifications_all">All notifications</string>
@@ -725,8 +637,6 @@
     <string name="format_169">16:9</string>
     <string name="format_185">1.85:1</string>
     <string name="format_239">2.39:1</string>
-    <string name="stereo_dive_enable">Stereo dive effect</string>
-    <string name="stereo_dive_disable">Disable stereo dive effect</string>
     <string name="rotation_unlock">Enable automatic screen rotation</string>
     <string name="rotation_locked">Automatic screen rotation disabled</string>
     <string name="rotation_unlocked">Automatic screen rotation enabled</string>
@@ -735,10 +645,8 @@
 
     <!-- Help overlay -->
     <string name="help_overlay_menu">Press the UP arrow key\nto display the TV menu</string>
-    <string name="help_overlay_ssh_indexing_text">Select the \"Add as shortcut\" option to quickly come back to your server.</string>
 
     <string name="help_overlay_network_indexing_text1">Press this menu item to integrate the content of this folder and its subfolders to the Video Library.</string>
-    <string name="help_overlay_network_indexing_text1_lb">Use the + button to integrate the content of this folder and its sub-folders to the Video Library.</string>
     <string name="help_overlay_network_indexing_text2">It will allow you to get posters and descriptions for the movies and TV shows.</string>
     <string name="help_overlay_scraper_text">Press this menu item to search posters and descriptions online for your videos. </string>
     <string name="help_overlay_network_shortcut_text1_lb">Use the + button to add this folder as a network shortcut and have the option to add its content and those of its sub-folders to the Video Library.</string>
@@ -762,19 +670,14 @@
     <string name="share_folders_smb_disable_udp_discovery_summary">Disable UDP discovery if you experience unstable Wi-Fi on some devices (e.g Fire 10 HD).</string>
     <string name="share_folders_smb_disable_mdns_discovery">Disable SMB mDNS discovery</string>
     <string name="share_folders_smb_disable_mdns_discovery_summary">Disable mDNS discovery if you experience unstable Wi-Fi on some devices.</string>
-    <string name="share_folders_smb_discovery_limited_to_mdsn">Limit SMB discovery to mDNS</string>
-    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Disable UDP/TCP discovery if you experience unstable Wi-Fi on some devices (e.g Fire 10 HD). ⚠ Will prevent proper discovery on ChromeOS.</string>
     <string name="connection_abnormally_long">Connection seems abnormally long. Would you like to reset it?</string>
     <string name="connection_reset">Reset</string>
 
     <!-- Info dialog, not indexed file -->
-    <string name="video_info_unindexed_message">This file is currently not indexed in your video library.\nSearching for posters and information is only available for indexed files.\nDo you want to index it now?</string>
-    <string name="video_info_unindexed_message2">File is being processed. This can take a while.</string>
     <string name="video_browser_index_file">Add to library</string>
     <string name="video_browser_unindex_file">Remove from library</string>
 
     <!-- Brightness -->
-    <string name="auto_brightness_message">Brightness cannot be changed because automatic brightness mode is currently enabled.</string>
 
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">Process \'.nfo\' files</string>
@@ -914,7 +817,6 @@
     <string name="torrent_blocklist">Blocklist</string>
     <string name="blocklist_empty">URL shouldn\'t be empty</string>
     <string name="blocklist_invalid">Blocklist invalid</string>
-    <string name="blocklist_downloading">Downloading blocklist</string>
     <string name="blocklist_file_not_found">File not found</string>
     <string name="blocklist_success">Blocklist refresh success</string>
     <string name="blocklist_unknown_error">Unknown</string>
@@ -927,18 +829,14 @@
     <string name="share_path">Path</string>
 
     <string name="category_trakt">Trakt</string>
-    <string name="trakt_user">Username</string>
-    <string name="trakt_password">Password</string>
     <string name="trakt_signin">Sign in</string>
     <string name="trakt_list_signin">Sign into Trakt</string>
-    <string name="trakt_status_login">Signing in&#8230;</string>
     <string name="trakt_signin_summary_logged">Signed in</string>
     <string name="trakt_signin_summary_logged_error">Authentication error</string>
     <string name="trakt_signin_summary">Not signed in</string>
     <string name="trakt_relog_description">An issue with Trakt has been detected and credentials must be reset, please login again.</string>
     <string name="trakt_signin_dialog_title">Sign in</string>
     <string name="trakt_signin_title">Sign In</string>
-    <string name="trakt_wipe_dialog_title">Sign out of Trakt.tv\?</string>
     <string name="trakt_wipe_title">Sign out of Trakt.tv</string>
     <string name="trakt_live_scrobbling_title">Live scrobbler</string>
     <string name="trakt_live_scrobbling_summary">Share videos being watched on Trakt</string>
@@ -1007,7 +905,6 @@
     <string name="leanback_scrap">Get info</string>
     <string name="leanback_scrap_choose_the_description">Choose info</string>
     <string name="leanback_scrap_choose_the_description_for">"Choose info for \"%s\""</string>
-    <string name="leanback_scrap_searching_general_hint">Name of the movie or TV show</string>
     <string name="leanback_scrap_searching_tvshow_hint">Name of the TV show</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Legacy interface</string>
@@ -1048,7 +945,6 @@
     <string name="last_rescan_occured">Last re-scan occurred:</string>
     <string name="error_permission_display_over_apps">Window mode needs special permissions to be displayed in front of other apps. Please, grant Nova Video Player this permission to switch to window mode.</string>
 
-    <string name="intro_overlay_text">Touch to cast videos to your TV</string>
 
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
@@ -1088,49 +984,27 @@
     <string name="system">System</string>
     <string name="keep_setting">Keep this setting globally</string>
     <string name="select_sub_file"><![CDATA[Exact subtitles not found for file <font color=#29b6f6><i>%s</i></font><br />Please try among this list:]]></string>
-    <string name="switch_remote_empty_message">Switching to remote display mode might give more track options</string>
-    <string name="cast_stream_mode">Stream mode</string>
-    <string name="cast_remote_display_mode">Remote display</string>
-    <string name="cast_remote_display_mode_description">every format supported by nova video player can be played using remote display. However, quality can be deteriorated.</string>
-    <string name="cast_stream_mode_description">Optimal quality but some format cannot be supported</string>
 
     <string name="sleep_timer_title">Sleep timer</string>
     <string name="sleep_timer_description">Stop video after: </string>
-    <string name="cast_mode">Cast mode</string>
-    <string name="cast_info">Info</string>
-    <string name="troubleshoot_streammode_msg">Nova video player is currently in stream cast mode.
-        \nThis results to a good video quality but might rise issues with audiotracks and subtitles.
-        Try switching to Remote display cast mode.</string>
-    <string name="troubleshoot_remotemode_msg">Nova video player is currently in remote display mode.
-        \nDepending on your device and your network quality, you might experience some quality loss and performance issues. </string>
     <string name="picture_in_picture">Picture in picture</string>
     <string name="cast">Cast</string>
-    <string name="cast_warning">Cast support is limited due to the codec limitations of Chromecast. To mitigate these limitations, 2 cast modes are implemented: Chromecast and Screencast (with automatic fallback). Note that performance and quality issues can also be due to network or device limitations.</string>
-    <string name="cast_warning_title">Experimental feature</string>
-    <string name="cast_fallback_message">Error: fallback to screen cast</string>
-    <string name="cast_introduction">New experimental feature : \nGoogle cast</string>
-    <string name="cast_select_for_full_control">Touch to expand controller</string>
     <string name="cast_audio_background">Sound won\'t work while Nova Video Player is in background</string>
     <string name="help_faq">Help / FAQ</string>
     <string name="provider_folders">Cloud</string>
-    <string name="learn_more">Learn more</string>
-    <string name="learn_more_about_codecs">Nova Video Player can only play videos supported by your device. Due to license issues, some formats cannot be legally included, some other can be purchased on Google Play Store.</string>
-    <string name="base64_encoded_publicKey" />
-    <string name="rate_us">If you like this app, please support us by rating us 5 stars</string>
     <string name="rate_us_title">☆ Support us</string>
+    <string name="rate_us">If you like this application, consider supporting us by giving 5 stars</string>
     <string name="create_new_list">Create new list</string>
     <string name="add_to_list">Add to list</string>
     <string name="no_resume_available">No resume currently available</string>
     <string name="no_list_detected">No list currently detected. List can be created by adding new items directly from video info, or can be synced with your trakt account.</string>
     <string name="not_available_during_media_scanning">Not available during media scanning.</string>
-    <string name="premium_already_purchased">Premium has already been purchased</string>
     <string name="remove_from_list">Remove from list</string>
     <string name="warning_swdec">Warning: hardware decoding disabled!</string>
 
     <string name="list_title">List title</string>
 
     <string name="loading">Loading…</string>
-    <string name="connecting">Connecting…</string>
 
     <string name="refreshrate_failed">Failed to set desired refresh rate</string>
     <string name="sponsor">Sponsor Nova</string>
@@ -1146,8 +1020,6 @@
     <string name="upgrade_info">Upgrade information</string>
     <string name="v5_v6_upgrade_info">WARNING: this Nova major update requires to rescan all video collection for multimedia information re-aquisition.
         It is strongly advised to restart from a clean install to avoid problems. Please check FAQ for details.</string>
-    <string name="networks">Networks:</string>
-    <string name="premiered">Premiered:</string>
 
     <string name="external_player_service_title">External player playback</string>
     <string name="external_player_service_description">Nova Video Player provides content for an external player</string>

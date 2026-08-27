@@ -23,7 +23,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">ᱥᱮᱨᱵᱷᱟᱨ ᱛᱟᱞᱠᱟ ᱨᱤᱯᱷᱨᱮᱥ ᱢᱮ</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">ᱱᱮᱴᱣᱟᱨᱠ ᱦᱟᱹᱴᱤᱧ ᱠᱚ ᱪᱟᱹᱞᱩᱭ ᱢᱮ</string>
     <string name="initial_scan">ᱮᱛᱚᱦᱚᱵ ᱥᱠᱮᱱ</string>
     <!-- Library screen, menu item -->
     <string name="search_title">ᱥᱮᱸᱫᱽᱨᱟ</string>
@@ -44,17 +43,9 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020ᱚᱛᱜᱝᱞᱟᱠᱡᱢᱣᱤᱥᱦᱧᱨᱩᱪᱫᱬᱭᱮᱯᱰᱱᱲᱳᱴᱵᱶᱷᱸᱹᱻ-ᱽ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">ᱚᱠᱛᱚ ᱥᱤᱢᱟᱹ</string>
     <string name="video_sources">ᱯᱷᱮᱰᱟᱛ</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">ᱪᱚᱞᱚᱱᱪᱤᱛᱟᱹᱨ </string>
-    <string name="info_tab_show">ᱫᱮᱠᱷᱟᱣ ᱢᱮ</string>
-    <string name="info_tab_episode">ᱮᱯᱤᱥᱚᱰ</string>
-    <string name="info_tab_video">ᱵᱷᱤᱰᱤᱭᱳ </string>
     <string name="info_tab_file">ᱨᱮᱫ ᱵᱤᱵᱨᱚᱬ</string>
-    <string name="info_tab_backdrop_chooser">ᱵᱮᱠᱰᱨᱚᱯ ᱵᱟᱪᱷᱟᱣᱤᱡ</string>
-    <string name="info_tab_poster_chooser">ᱯᱳᱥᱴᱟᱨ ᱵᱟᱪᱷᱟᱣᱤᱡ</string>
-    <string name="info_tab_share">ᱦᱟᱴᱤᱧ ᱢᱮ </string>
     <string name="info_menu_backdrop_select">ᱵᱮᱠᱰᱨᱚᱯ</string>
     <string name="info_menu_series_backdrop_select">ᱥᱮᱨᱤᱡᱽ ᱵᱮᱠᱰᱨᱚᱯ</string>
     <string name="info_menu_poster_select">ᱮᱴᱟᱜ ᱯᱳᱥᱴᱟᱨ ᱵᱟᱪᱷᱟᱣ ᱢᱮ</string>
@@ -81,12 +72,9 @@
     <string name="network_shared_folders">ᱦᱟᱹᱴᱤᱧ ᱟᱠᱟᱱ ᱯᱷᱚᱞᱰᱟᱨ (SMB)</string>
     <string name="network_connected_as">%s ᱞᱮᱠᱟᱛᱮ ᱡᱚᱯᱲᱟᱣ ᱟᱠᱟᱱᱟ</string>
     <string name="network_guest">ᱯᱮᱲᱟ</string>
-    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">ᱥᱟᱢᱵᱟ (ᱵᱮᱵᱷᱟᱨ)</string>
     <string name="network_cling">UPNP (ᱵᱮᱵᱷᱟᱨ)</string>
-    <string name="recordings_storage">ᱨᱮᱠᱚᱰᱤᱝ ᱠᱚ </string>
     <string name="root_storage">ᱵᱷᱤᱛᱨᱤ ᱥᱴᱳᱨᱮᱡᱽ</string>
-    <string name="cannot_list">ᱡᱤᱱᱤᱥ ᱠᱚ ᱥᱩᱪᱤ ᱵᱟᱝ ᱦᱩᱭ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
     <!-- VIDEO -->
     <string name="videos">ᱵᱷᱤᱰᱤᱭᱳ ᱠᱚ </string>
     <string name="all_videos">ᱥᱟᱱᱟᱢ ᱵᱷᱤᱰᱤᱭᱳ</string>
@@ -99,12 +87,8 @@
     <string name="all_animes_format">ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ ᱠᱚ - %d</string>
     <string name="all_collections">ᱥᱟᱱᱟᱢ ᱡᱟᱣᱨᱟ</string>
     <string name="all_collections_format">ᱥᱟᱱᱟᱢ ᱡᱟᱣᱨᱟ - %d</string>
-    <string name="all_collection_watched">ᱥᱟᱱᱟᱢ ᱠᱟᱞᱮᱠᱥᱚᱱ ᱧᱮᱞ ᱦᱩᱭ ᱮᱱᱟ</string>
-    <string name="all_collection_unwatched">ᱠᱟᱞᱮᱠᱥᱚᱱ ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ</string>
     <string name="not_watched_movies_format">ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ - %d</string>
     <string name="not_watched_animes_format">ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ - %d</string>
-    <string name="no_movie_watched">ᱪᱮᱫ ᱯᱷᱤᱞᱤᱢ ᱦᱚᱸ ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ</string>
-    <string name="all_movies_watched">ᱥᱟᱱᱟᱢ ᱯᱷᱤᱞᱤᱢ ᱠᱚ ᱧᱮᱞ ᱮᱱᱟ</string>
     <string name="movies_by_alpha">ᱯᱷᱤᱞᱤᱢ ᱠᱚ ᱪᱤᱠᱤ ᱞᱮᱠᱟᱛᱮ</string>
     <string name="movies_by_genre">ᱦᱟᱹᱴᱤᱧ ᱞᱮᱠᱟᱛᱮ ᱯᱷᱤᱞᱤᱢ</string>
     <string name="movies_by_rating">ᱨᱮᱴᱤᱝ ᱞᱮᱠᱟᱛᱮ ᱯᱷᱤᱞᱤᱢ</string>
@@ -116,9 +100,7 @@
     <string name="all_animes">ᱥᱟᱱᱟᱢ ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ</string>
     <string name="all_animes_row">ᱥᱟᱱᱟᱢ ᱮᱱᱤᱢᱮᱥᱚᱱ ᱠᱚ</string>
     <string name="all_animeshows">ᱥᱟᱱᱟᱢ ᱮᱱᱤᱢᱮᱥᱚᱱ ᱴᱤᱵᱷᱤ ᱥᱚ</string>
-    <string name="animes_by_alpha">ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ ᱠᱚ ᱪᱤᱠᱤ ᱞᱮᱠᱟᱛᱮ</string>
     <string name="animes_by_genre">ᱦᱟᱹᱴᱤᱧ ᱞᱮᱠᱟᱛᱮ ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ</string>
-    <string name="animes_by_rating">ᱨᱮᱴᱤᱝ ᱞᱮᱠᱟᱛᱮ ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ</string>
     <string name="animes_by_year">ᱥᱮᱨᱢᱟ ᱞᱮᱠᱟᱛᱮ ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ</string>
     <string name="all_tvshows_format">ᱥᱟᱱᱟᱢ TV ᱥᱚ ᱠᱚ - %d</string>
     <string name="not_watched_tvshows_format">ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ - %d</string>
@@ -135,24 +117,18 @@
     <string name="date_view_year">ᱥᱮᱨᱢᱟ</string>
     <string name="all_movies_and_tv_shows">ᱯᱷᱤᱞᱤᱢ ᱟᱨ ᱴᱤᱵᱷᱤ ᱥᱚ</string>
     <string name="non_scraped_videos">ᱵᱟᱝ ᱥᱠᱨᱮᱯ ᱵᱷᱤᱰᱤᱭᱳ ᱠᱚ</string>
-    <string name="no_server">ᱪᱮᱫ ᱢᱤᱰᱤᱭᱟ ᱥᱮᱨᱵᱷᱟᱨ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ</string>
     <string name="cannot_open_video">ᱱᱚᱣᱟ ᱵᱷᱤᱰᱤᱭᱳ ᱵᱟᱝ ᱡᱷᱤᱡᱽ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
     <string name="confirm_delete">ᱪᱮᱫ ᱟᱢ ᱥᱟᱹᱨᱤ ᱜᱮ ᱱᱚᱣᱟ ᱰᱤᱞᱤᱴ ᱥᱟᱱᱟᱭᱮᱫ ᱢᱮᱭᱟ?</string>
     <string name="deleting">ᱰᱤᱞᱤᱴ ᱚᱠᱛᱚ ᱫᱟᱭᱟ ᱠᱟᱛᱮ ᱛᱟᱺᱜᱤᱭ ᱢᱮ...</string>
-    <string name="cannot_delete_directory">ᱯᱷᱚᱞᱰᱟᱨ ᱵᱟᱝ ᱰᱤᱞᱤᱴ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
-    <string name="cannot_delete_file">ᱨᱮᱫ ᱵᱟᱝ ᱢᱮᱴᱟᱣ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
     <string name="directory_deleted">ᱯᱷᱚᱞᱰᱟᱨ ᱫᱚ ᱰᱤᱞᱤᱴ ᱮᱱᱟ</string>
-    <string name="file_deleted">ᱨᱮᱫ ᱫᱚ ᱰᱤᱞᱤᱴ ᱟᱠᱟᱱᱟ</string>
     <string name="resume">ᱮᱦᱳᱵ ᱟᱨᱩ</string>
     <string name="remote_resume">ᱨᱤᱢᱚᱴ ᱨᱮᱡᱩᱢ</string>
     <string name="bookmark">ᱵᱩᱠᱢᱟᱨᱠ</string>
     <string name="delete">ᱢᱮᱴᱟᱣ ᱢᱮ </string>
     <string name="confirm_delete_short">ᱢᱮᱴᱟᱣ ᱴᱷᱟᱹᱣᱠᱟᱹ ᱢᱮ</string>
     <string name="delete_resume">ᱨᱤᱡᱩᱢ ᱢᱮᱴᱟᱣ ᱢᱮ</string>
-    <string name="delete_bookmark">ᱵᱩᱠᱢᱟᱨᱠ ᱰᱤᱞᱤᱴ ᱢᱮ</string>
     <string name="mark_as_watched">ᱢᱟᱨᱠ ᱧᱮᱞ ᱠᱮᱫᱟᱭ</string>
     <string name="mark_as_not_watched">ᱢᱟᱨᱠ ᱵᱟᱭ ᱧᱮᱞ ᱟᱠᱟᱫᱟ</string>
-    <string name="upnp_not_allowed">ᱟᱢ ᱱᱚᱣᱟ UPnP ᱥᱮᱨᱵᱷᱟᱨ ᱮᱠᱥᱮᱥ ᱞᱟᱹᱜᱤᱫ ᱫᱟᱣ ᱵᱟᱝ ᱧᱟᱢ ᱟᱠᱟᱱᱟᱢ ᱾  ᱫᱟᱭᱟ ᱠᱟᱛᱮ ᱞᱟᱦᱟᱨᱮ ᱟᱢᱟᱜ ᱮᱠᱥᱮᱥ ᱠᱚᱱᱯᱷᱤᱜᱟᱨᱮᱥᱚᱱ ᱵᱚᱫᱚᱞ ᱢᱮ᱾</string>
     <string name="scrap_no_info">ᱱᱚᱣᱟ ᱵᱷᱤᱰᱤᱭᱳ ᱞᱟᱹᱜᱤᱫ ᱟᱢ ᱴᱷᱮᱱ ᱪᱮᱫ ᱢᱩᱵᱷᱤ ᱵᱟᱝᱠᱷᱟᱱ ᱴᱤᱵᱷᱤ ᱥᱚ ᱨᱮᱭᱟᱜ ᱵᱤᱵᱨᱚᱬ ᱵᱟᱹᱱᱩᱜᱼᱟ ᱾</string>
     <string name="scrap_remove">ᱵᱟᱰᱟᱭ ᱚᱪᱚᱜᱽ ᱢᱮ</string>
     <string name="scrap_remove_short">ᱚᱪᱚᱜᱽ ᱢᱮᱸ</string>
@@ -190,13 +166,9 @@
     <string name="preference_display_all_files">ᱵᱽᱨᱟᱣᱩᱡᱟᱨ ᱨᱮ ᱥᱟᱱᱟᱢ ᱨᱮᱫ ᱠᱚ ᱩᱫᱩᱜ ᱢᱮ</string>
     <string name="preference_display_all_files_summary">ᱱᱚᱱ-ᱵᱷᱤᱰᱤᱭᱳ ᱨᱮᱫ ᱠᱚ ᱦᱚᱸ ᱩᱫᱩᱜ ᱢᱮ</string>
     <string name="info_processing">ᱢᱤᱰᱤᱭᱟ ᱜᱩᱱ ᱠᱚ ᱧᱮᱞ ᱵᱤᱰᱟᱹᱣ...</string>
-    <string name="info_video">ᱵᱷᱤᱰᱤᱭᱳ </string>
     <string name="info_audio">ᱚᱰᱤᱭᱚ</string>
     <string name="info_audio_vbr">VBR</string>
-    <string name="info_plugin_required">(ᱯᱞᱟᱜᱤᱱ ᱞᱟᱹᱠᱛᱤᱜ ᱠᱟᱱᱟ)</string>
     <string name="info_subtitle">ᱥᱟᱵᱽᱴᱟᱭᱤᱴᱟᱞ</string>
-    <string name="info_resume">ᱨᱤᱡᱩᱢ ᱟᱜ ᱯᱚᱡᱤᱥᱚᱱ</string>
-    <string name="info_bookmark">ᱵᱩᱠᱢᱟᱨᱠ ᱯᱚᱡᱤᱥᱚᱱ</string>
     <string name="info_file">ᱨᱮᱫ ᱵᱤᱵᱨᱚᱬ</string>
     <string name="use_remote_resume">ᱱᱮᱴᱣᱟᱨᱠ ᱨᱮᱡᱩᱢ ᱯᱚᱡᱤᱥᱚᱱ ᱵᱮᱵᱷᱟᱨ ᱢᱮ?</string>
     <!-- VIDEO COVER ROLL -->
@@ -214,9 +186,6 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">ᱢᱤᱰᱤᱭᱟ ᱛᱟᱞᱢᱟ</string>
     <string name="view_mode">ᱰᱤᱥᱯᱞᱮ ᱢᱚᱰ</string>
-    <string name="view_mode_list">ᱞᱤᱥᱴ</string>
-    <string name="view_mode_grid">ᱞᱤᱥᱴ ᱠᱚ</string>
-    <string name="view_mode_details">ᱵᱤᱵᱚᱨᱚᱱ</string>
     <string name="switch_to_list">ᱞᱤᱥᱴ</string>
     <string name="switch_to_grid">ᱜᱽᱨᱤᱰ</string>
     <!-- VideoPlayer -->
@@ -243,8 +212,6 @@
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">ᱵᱷᱤᱰᱤᱭᱚ ᱵᱟᱝ ᱪᱟᱹᱞᱩ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
     <string name="player_err_cantplaysound">ᱚᱰᱤᱭᱚ ᱴᱨᱟᱠ ᱵᱟᱝ ᱪᱟᱹᱞᱩ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
-    <string name="audiocodec_not_supported">ᱱᱚᱣᱟ ᱚᱰᱤᱭᱚ ᱨᱩᱯ (<xliff:g id="codec">%s</xliff:g>) ᱵᱟᱝ ᱜᱚᱲᱚ ᱫᱟᱲᱮᱟᱜᱼᱟ ᱾</string>
-    <string name="videocodec_not_supported">ᱱᱚᱣᱟ ᱵᱷᱤᱰᱤᱭᱳ ᱨᱩᱯ (<xliff:g id="codec">%s</xliff:g>) ᱵᱟᱝ ᱜᱚᱲᱚ ᱟᱭᱟ ᱾</string>
     <string name="player_err_file">ᱵᱷᱤᱰᱤᱭᱚ ᱨᱮᱫ ᱫᱚ ᱵᱟᱹᱱᱩᱜᱼᱟ ᱾</string>
     <string name="player_err_sizetoobig">ᱵᱷᱤᱰᱤᱭᱚ ᱥᱟᱭᱤᱡᱽ ᱟᱹᱰᱤ ᱢᱟᱨᱟᱝᱟ</string>
     <string name="player_err_unknown">ᱵᱟᱝ ᱵᱟᱰᱟᱭᱟᱱ ᱵᱷᱩᱞ᱾</string>
@@ -261,19 +228,10 @@
     <string name="player_err_profile_and_level">\"ᱯᱨᱚᱯᱷᱟᱭᱤᱞ\" ᱟᱨ \"ᱞᱮᱵᱮᱞ\"</string>
     <string name="player_err_interlaced">ᱤᱱᱴᱟᱨᱞᱮᱥᱰ</string>
     <!-- Player plug-in -->
-    <string name="player_plugin_cinema_title">ᱥᱤᱱᱮᱢᱟ ᱯᱞᱟᱜᱽ-ᱤᱱ ᱢᱮ</string>
-    <string name="player_plugin_cinema">ᱥᱤᱱᱮᱢᱟ ᱯᱞᱟᱜᱽ-ᱤᱱ ᱢᱮ (DVD, MPEG-2, AC3)</string>
-    <string name="player_plugin_ac3_title">AC3 ᱯᱞᱟᱜᱽ-ᱤᱱ</string>
-    <string name="player_plugin_ac3">AC3 ᱯᱞᱟᱜᱽ-ᱤᱱ ᱢᱮ</string>
-    <string name="player_plugin_mpeg2_title">MPEG-2 ᱯᱞᱟᱜᱽ-ᱤᱱ</string>
-    <string name="player_plugin_mpeg2">MPEG-2 ᱯᱞᱟᱜᱽ-ᱤᱱ ᱢᱮ (DVD)</string>
     <string name="player_plugin_video_msg">ᱱᱚᱣᱟ ᱨᱮᱫ ᱨᱮ ᱢᱤᱫ <xliff:g id="ᱵᱷᱤᱰᱤᱭᱳ">%1$s</xliff:g> ᱵᱷᱤᱰᱤᱭᱳ ᱨᱩᱯ ᱢᱮᱱᱟᱜᱼᱟ |</string>
     <string name="player_plugin_audio_msg">ᱱᱚᱣᱟ ᱨᱮᱫ ᱨᱮ ᱢᱤᱫ <xliff:g id="ᱚᱰᱤᱭᱚ">%1$s</xliff:g> ᱚᱰᱤᱭᱚ ᱨᱩᱯ ᱢᱮᱱᱟᱜᱼᱟ |</string>
     <string name="player_plugin_video_audio_msg">ᱱᱚᱣᱟ ᱨᱮᱫ ᱨᱮ ᱢᱤᱫ <xliff:g id="video">%1$s</xliff:g> ᱵᱷᱤᱰᱤᱭᱚ ᱨᱩᱯ ᱟᱨ ᱢᱤᱫ <xliff:g id="audio">%2$s</xliff:g> ᱚᱰᱤᱭᱚ ᱨᱩᱯ ᱢᱮᱱᱟᱜᱼᱟ ᱾</string>
-    <string name="player_plugin_purchase_msg">ᱟᱢ <xliff:g id="ᱯᱞᱟᱜᱤᱱ">%1$s</xliff:g> ᱠᱤᱨᱤᱧ ᱞᱟᱹᱠᱛᱤᱜ ᱠᱟᱱᱟ</string>
     <string name="player_plugin_purchase">ᱥᱴᱳᱨ ᱛᱮ ᱥᱮᱱᱚᱜ ᱢᱮ</string>
-    <string name="player_plugin_purchase_archos_msg">ᱟᱢ www.archos.com ᱨᱮ ᱵᱟᱹᱲᱛᱤ ᱠᱚᱰᱮᱠ ᱯᱞᱟᱜᱽ-ᱤᱱ ᱠᱤᱨᱤᱧ ᱫᱟᱲᱮᱭᱟᱜᱼᱟᱢ᱾</string>
-    <string name="player_plugin_purchase_google_play_msg">ᱟᱢ ᱜᱩᱜᱚᱞ ᱯᱞᱮ ᱨᱮ ᱵᱟᱹᱲᱛᱤ ᱠᱚᱰᱮᱠ ᱯᱞᱟᱜᱽ-ᱤᱱ ᱠᱤᱨᱤᱧ ᱫᱟᱲᱮᱭᱟᱜᱼᱟᱢ᱾</string>
     <string name="player_plugin_purchase_google_play_button">ᱜᱩᱜᱚᱞ ᱯᱞᱮ ᱛᱮ ᱪᱟᱞᱟᱜ ᱢᱮ</string>
     <string name="plugin_update_required_title">ᱠᱚᱰᱮᱠ ᱟᱯᱰᱮᱴ ᱞᱟᱹᱠᱛᱤᱜ ᱠᱟᱱᱟ</string>
     <string name="plugin_update_required_message">ᱱᱚᱶᱟ ᱧᱮᱞᱚᱜ ᱠᱟᱱᱟ ᱡᱮ ᱟᱢ ᱴᱷᱮᱱ Nova Video Player ᱞᱟᱹᱜᱤᱫ ᱵᱟᱹᱲᱛᱤ codecs ᱠᱚ ᱞᱟᱦᱟ ᱠᱷᱚᱱ ᱜᱮ ᱢᱮᱱᱟᱜᱼᱟ ᱾
@@ -298,21 +256,14 @@
     not visible otherwise -->
     <!-- torrent -->
     <!-- Shortcuts -->
-    <string name="add_smb_server">ᱢᱤᱫ SMB ᱥᱮᱨᱵᱷᱟᱨ ᱵᱽᱨᱟᱣᱩᱡᱽ ᱢᱮ</string>
-    <string name="add_network_server">ᱢᱤᱫ ᱱᱮᱴᱣᱟᱨᱠ ᱦᱟᱹᱴᱤᱧ ᱥᱮᱞᱮᱫ ᱢᱮ</string>
-    <string name="add_to_shortcuts">ᱢᱤᱫ ᱠᱷᱟᱴᱚᱢᱟᱪᱷᱟ ᱵᱮᱱᱟᱣ ᱢᱮ</string>
     <string name="add_ssh_server">ᱢᱤᱫ FTP ᱥᱮᱨᱵᱷᱟᱨ ᱵᱽᱨᱟᱣᱩᱡᱽ ᱢᱮ</string>
     <string name="add_ssh_shortcut">ᱥᱚᱴᱠᱟᱴ ᱞᱮᱠᱟᱛᱮ ᱥᱮᱞᱮᱫ ᱢᱮ</string>
     <string name="ssh_prompt">FTP ᱞᱮᱠᱟᱱ</string>
     <string name="protocol_prompt">ᱯᱨᱚᱴᱚᱠᱚᱞ ᱞᱮᱠᱟᱱ</string>
-    <string name="ssh_empty_view">\"ᱟᱢ ᱟᱢᱟᱜ ftp ᱥᱮᱨᱵᱷᱟᱨ ᱠᱷᱚᱱ ᱵᱽᱨᱟᱣᱩᱡᱽ ᱟᱨ ᱠᱷᱮᱞ ᱫᱟᱲᱮᱭᱟᱜᱼᱟᱢ\"</string>
     <string name="remove_from_shortcuts">ᱥᱚᱴᱠᱟᱴ ᱚᱪᱚᱜᱽ ᱢᱮ</string>
-    <string name="shortcut_added">ᱥᱚᱴᱠᱟᱴ % ᱛᱮᱭᱟᱨ ᱦᱩᱭ ᱟᱠᱟᱱᱟ</string>
     <string name="shortcut_removed">ᱥᱚᱴᱠᱟᱴ %s ᱚᱪᱚᱜ ᱟᱠᱟᱱᱟ</string>
     <string name="server_not_available">ᱥᱮᱨᱵᱷᱟᱨ ᱫᱚ ᱱᱤᱛᱚᱜ ᱵᱟᱝ ᱧᱟᱢᱚᱜ ᱠᱟᱱᱟ</string>
-    <string name="cannot_open_shortcut">ᱱᱚᱣᱟ ᱥᱚᱴᱠᱟᱴ ᱨᱮᱭᱟᱜ ᱡᱤᱱᱤᱥ ᱫᱚ ᱱᱤᱛᱚᱜ ᱵᱟᱝ ᱧᱟᱢᱚᱜ ᱠᱟᱱᱟ ᱾ \nᱫᱟᱭᱟ ᱠᱟᱛᱮ ᱧᱮᱞ ᱢᱮ ᱟᱢ ᱴᱷᱮᱱ ᱞᱟᱹᱠᱛᱤᱭᱟᱱ ᱟᱹᱭᱫᱟᱹᱨ ᱢᱮᱱᱟᱜᱼᱟ ᱥᱮ ᱵᱟᱝᱟ ᱾</string>
     <string name="network_shortcuts">ᱱᱮᱴᱣᱟᱨᱠ ᱥᱚᱴᱠᱟᱴ ᱠᱚ</string>
-    <string name="media_servers">ᱢᱤᱰᱤᱭᱟ ᱥᱮᱨᱵᱷᱟᱨ ᱠᱚ</string>
     <string name="shortcut_list_empty">ᱱᱮᱴᱣᱟᱨᱠ ᱥᱚᱴᱠᱟᱴ ᱵᱟᱝ ᱵᱮᱱᱟᱣ ᱟᱠᱟᱱᱟ᱾\n\nᱟᱢᱟᱜ ᱠᱩᱥᱤ ᱨᱤᱢᱚᱴ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮ ᱥᱚᱴᱠᱟᱴ ᱵᱮᱱᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱴᱟᱨᱜᱮᱴ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮ ᱞᱟᱹᱴᱩ ᱠᱷᱚᱱ ᱞᱤᱱ ᱢᱮ ᱟᱨ ᱪᱮᱛᱟᱱ ᱠᱟᱹᱢᱤ ᱵᱟᱨ ᱨᱮ \"%s\" ᱵᱟᱪᱷᱟᱣ ᱢᱮ᱾</string>
     <string name="ftp_shortcut_list_empty">ᱟᱢᱟᱜ ᱠᱩᱥᱤ ᱨᱤᱢᱚᱴ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮᱭᱟᱜ ᱥᱚᱴᱠᱟᱴ ᱵᱮᱱᱟᱣ ᱞᱟᱹᱜᱤᱫ, ᱥᱮᱨᱵᱷᱟᱨ ᱵᱽᱨᱟᱣᱩᱡᱽ ᱚᱠᱛᱚ ᱪᱮᱛᱟᱱ ᱠᱟᱹᱢᱤ ᱵᱟᱨ ᱨᱮ \"%s\" ᱵᱟᱪᱷᱟᱣ ᱢᱮ᱾</string>
     <string name="indexed_folders">ᱤᱱᱰᱮᱠᱥ ᱯᱷᱚᱞᱰᱟᱨ ᱠᱚ</string>

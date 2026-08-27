@@ -23,7 +23,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">تحديث قائمة الخادم</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">تمكين المشاركة علي الشبكة</string>
     <string name="initial_scan">Initial scan</string>
     <!-- Library screen, menu item -->
     <string name="search_title">بحث</string>
@@ -44,17 +43,9 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">أ ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">مدة:</string>
     <string name="video_sources">المصدر</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">فيلم</string>
-    <string name="info_tab_show">إظهار</string>
-    <string name="info_tab_episode">حلقة</string>
-    <string name="info_tab_video">فيديو</string>
     <string name="info_tab_file">معلومات الملف</string>
-    <string name="info_tab_backdrop_chooser">اختيار الخلفية</string>
-    <string name="info_tab_poster_chooser">اختيار الملصقة</string>
-    <string name="info_tab_share">مشاركة</string>
     <string name="info_menu_backdrop_select">الخلفية</string>
     <string name="info_menu_series_backdrop_select">الخلفيات</string>
     <string name="info_menu_poster_select">اختار ملصقة اخرى</string>
@@ -77,12 +68,9 @@
     <string name="network_shared_folders">المجلدات المشتركة (SMB)</string>
     <string name="network_connected_as">متصل ك %s</string>
     <string name="network_guest">زائر</string>
-    <string name="sftp_folders">بروتوكول نقل الملفات FTP</string>
     <string name="network_jcifs">بروتوكول نقل الملفات SAMBA (تجريبي)</string>
     <string name="network_cling">بروتوكول نقل الملفات UPNP (تجريبي)</string>
-    <string name="recordings_storage">تسجيل</string>
     <string name="root_storage">وحدة تخزين داخلية</string>
-    <string name="cannot_list">لا يمكن تسجيل المحتويات</string>
     <!-- VIDEO -->
     <string name="videos">الفيديوهات</string>
     <string name="all_videos">كل الفيديوهات</string>
@@ -95,7 +83,6 @@
     <string name="all_animes_format">أفلام الرسوم المتحركة  -  %d</string>
     <string name="all_collections">كافة المجموعات</string>
     <string name="all_collections_format">كافة المجموعات  -  %d</string>
-    <string name="all_collection_watched"></string>
     <string name="not_watched_movies_format">الأفلام التي لم يتم مشاهدتها  -  %d</string>
     <string name="movies_by_alpha">الأفلام بالترتيب الأبجدي</string>
     <string name="movies_by_genre">الأفلام بالنوع</string>
@@ -115,24 +102,18 @@
     <string name="date_view_year">السنة</string>
     <string name="all_movies_and_tv_shows">افلام و برامج تلفزيونية</string>
     <string name="non_scraped_videos">فيديوهات لم يتم تجميع معلوماتها</string>
-    <string name="no_server">لا يوجد خادم للوسائط</string>
     <string name="cannot_open_video">لا استطيع فتح الفيديو</string>
     <string name="confirm_delete">هل تريد الحذف ?</string>
     <string name="deleting">برجاء الانتظار حتى يتم الحذف…</string>
-    <string name="cannot_delete_directory">لا يمكن حذف هذه الحافظة</string>
-    <string name="cannot_delete_file">لا يمكن حذف هذا الملف</string>
     <string name="directory_deleted">تم حذف الحافظة</string>
-    <string name="file_deleted">تم حذف الملف</string>
     <string name="resume">إعادة</string>
     <string name="remote_resume">المتابعة من اخر مشاهدة</string>
     <string name="bookmark">المؤشر</string>
     <string name="delete">حذف</string>
     <string name="confirm_delete_short">تأكيد الحذف</string>
     <string name="delete_resume">حذف الإعادة</string>
-    <string name="delete_bookmark">حذف المؤشر</string>
     <string name="mark_as_watched">تحديد ك تم مشاهدته</string>
     <string name="mark_as_not_watched">تحديد ك لم يتم مشاهدته</string>
-    <string name="upnp_not_allowed"> UPnP لا يمكنك الوصول حاليا للخادم برجاء تغييرالتعريفات اولا.</string>
     <string name="scrap_no_info">ليس لديك معلومات عن الفيلم او المسلسل لهذا الفيديو</string>
     <string name="scrap_remove">حذف المعلومات</string>
     <string name="scrap_remove_short">حذف</string>
@@ -152,7 +133,6 @@
     <string name="scrap_genre">نوع:</string>
     <string name="scrap_aired">تم البث</string>
     <string name="scrap_aired_format">تم البث: %s</string>
-    <string name="scrap_guests">ضيوف</string>
     <!-- Specific strings for TV shows -->
     <string name="episode_name">حلقة</string>
     <string name="episode_season">موسم</string>
@@ -181,12 +161,8 @@
     <string name="scraper_suggest_message">\'يمكنك البحث على الإنترنت عن المعلومات والملصقات الاعلانية للفيديو الخاص بك عن طريق قائمة\'بحث عن المعلومات على الإنترنت.</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="info_processing">التحقق من خصائص الوسائط…</string>
-    <string name="info_video">فيديو:</string>
     <string name="info_audio">صوت:</string>
-    <string name="info_plugin_required">(المكونات الاضافية لازمة)</string>
     <string name="info_subtitle">ترجمة الفيلم:</string>
-    <string name="info_resume">أبدأ من نقطة إعادة التشغيل:</string>
-    <string name="info_bookmark">:إحفظ نقطة إعادة التشغيل</string>
     <!-- VIDEO COVER ROLL -->
     <string name="you_have_no_recently_added_video">لا يوجد فيديو تمت اضافتة موخراً</string>
     <string name="you_have_no_recently_played_video">لا يوجد فيديو تم تشيغيلة موخراً</string>
@@ -196,9 +172,6 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">مركز الوسائط</string>
     <string name="view_mode">وضع العرض</string>
-    <string name="view_mode_list">قائمة</string>
-    <string name="view_mode_grid">اعلانات ملصقة</string>
-    <string name="view_mode_details">تفاصيل</string>
     <string name="switch_to_list">قائمة</string>
     <string name="switch_to_grid">شبكة</string>
     <!-- VideoPlayer -->
@@ -250,8 +223,6 @@
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">لا يمكن عرض الفيديو</string>
     <string name="player_err_cantplaysound">لا يمكن تشغيل الصوت</string>
-    <string name="audiocodec_not_supported">ترميز الصوت غير مدعوم</string>
-    <string name="videocodec_not_supported">ترميز الفيديو غير مدعوم</string>
     <string name="player_err_file">ملف الفيديو غير موجود.</string>
     <string name="player_err_sizetoobig">حجم الفيديو كبير جدا</string>
     <string name="player_err_unknown">خطأ غير معروف.</string>
@@ -268,19 +239,10 @@
     <string name="player_err_profile_and_level">\"وضع\" و \"مستوى\"</string>
     <string name="player_err_interlaced">تشابك</string>
     <!-- Player plug-in -->
-    <string name="player_plugin_cinema_title">السينما من المكونات الإضافية</string>
-    <string name="player_plugin_cinema">السينما من المكونات الاضافية (DVD, MPEG-2, AC3)</string>
-    <string name="player_plugin_ac3_title">AC3 مكونات</string>
-    <string name="player_plugin_ac3">AC3 مكونات</string>
-    <string name="player_plugin_mpeg2_title">MPEG-2 مكونات</string>
-    <string name="player_plugin_mpeg2">MPEG-2 مكونات (DVD)</string>
     <string name="player_plugin_video_msg">هذا الملف يحتوي على<xliff:g id="video">%1$s</xliff:g> تصميم الفيديو.</string>
     <string name="player_plugin_audio_msg">هذا الملف يحتوي على<xliff:g id="audio">%1$s</xliff:g> تصميم الصوت.</string>
     <string name="player_plugin_video_audio_msg">هذا الملف يحتوى على<xliff:g id="video">%1$s</xliff:g> تصميم الفيديو و <xliff:g id="audio">%2$s</xliff:g>تصميم الصوت.</string>
-    <string name="player_plugin_purchase_msg">بحاجة لشراء <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">ذهاب الى المتجر</string>
-    <string name="player_plugin_purchase_archos_msg">يمكنك شراء ترميز إضافي من الموقع www.archos.com</string>
-    <string name="player_plugin_purchase_google_play_msg">يمكنك شراء ترميز إضافي من متجر جوجل</string>
     <string name="player_plugin_purchase_google_play_button">إذهب إلى متجر قوقل</string>
     <string name="plugin_update_required_title">مطلوب تحديث الترميز</string>
     <string name="plugin_update_required_message">يبدو انه يتواجد ترميز اضافي لمشغل الفيديو للتحميل اذهب الي متجر الجوجل</string>
@@ -298,22 +260,13 @@
     <string name="subtitles_wizard_cache">ذاكرة التخزين المؤقت</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">الحصول على الترجمة من على الإنترنت</string>
-    <string name="toast_subloader_sub_found">يوجد ترجمة لهذه اللغة</string>
-    <string name="toast_subloader_sub_not_found">لا توجد ترجمة لهذه اللغة</string>
     <string name="toast_subloader_service_unreachable">انقطاع خدمة الترجمة</string>
-    <string name="menu_subloader_allfolder">الحصول على الترجمة</string>
     <string name="dialog_subloader_copying">نسخ الترجمة</string>
-    <string name="dialog_subloader_downloading">….تحميل الترجمة </string>
-    <string name="dialog_subloader_sumup">تم انتهاء التحميل</string>
-    <string name="dialog_subloader_success">:الترجمة وجدت ل</string>
     <string name="dialog_subloader_fails">:الترجمة غير موجوده ل</string>
-    <string name="sub_force_all_title">إجبار تحميل الترجمة</string>
-    <string name="sub_force_all">كل الفيديوهات الموجوده لديك يوجد لها ملف ترجمة واحد على الأقل. هل تريد تحميل ترجمات أخرى؟</string>
     <string name="dialog_subloader_nonetwork_title">لا يوجد اتصال بالإنترنت</string>
     <string name="dialog_subloader_nonetwork_message">مطلوب اتصال بالإنترنت لتحميل الترجمة</string>
     <string name="dialog_subloader_connecting">الاتصال بموقع.opensubtitles…</string>
     <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_settings_title">إعدادات الترجمة</string>
     <string name="subtitle_sample_text">\"نموذج\"</string>
     <string name="subtitle_size_text">حجم:</string>
     <string name="subtitle_style_text">النمط</string>
@@ -338,21 +291,14 @@
     <string name="loading_torrent">تحميل البيانات</string>
     <string name="error_no_video_file">لا يوجد ملفات فيديو</string>
     <string name="torrent_file_to_play">إختار ملف للعرض</string>
-    <string name="torrent_buy_premium_message">عرض الفيديو عن طريق التورنت مسموح فقط في النسخة الغير مجانية</string>
-    <string name="torrent_buy_premium">اشتري الاصدار المتميز</string>
     <!-- Shortcuts -->
-    <string name="add_to_shortcuts">إختصار جديد</string>
     <string name="add_ssh_server">تصفح مخزن FTP</string>
     <string name="add_ssh_shortcut">إضافة اختصار</string>
     <string name="ssh_prompt">نوع FTP</string>
-    <string name="ssh_empty_view">يمكنك العرض و المشاهدة من مخزن ال FTP الخاص بك</string>
     <string name="remove_from_shortcuts">مسح الاختصار</string>
-    <string name="shortcut_added">%s تم إنشاء إختصار</string>
     <string name="shortcut_removed">%s تم مسح إختصار</string>
     <string name="server_not_available">الخادم غير متاح الآن</string>
-    <string name="cannot_open_shortcut">محتويات هذا الاختصار غير متوفرة حاليا.\nمن فضلك تأكد من توفر الصلاحيات المطلوبة</string>
     <string name="network_shortcuts">إختصارات الشبكة</string>
-    <string name="media_servers">خوادم الوسائط</string>
     <string name="shortcut_list_empty">لا يمكن إنشاء إختصار للشبكة.\n\nلإنشاء إختصار للمجلدات المفضلة، إضغط لفترة على المجلدات ثم اختر \"%s\" في أعلى قائمة المهام</string>
     <string name="indexed_folder_added">Folder %s added to indexed folders</string>
     <string name="remove_from_indexed_folders">Remove from indexed folders</string>
@@ -364,7 +310,6 @@
     <string name="summary_list_preference_primary">اختر اللغة لتحميل الترجمة</string>
     <string name="favSubLang_title">لغة قراءة الترجمة</string>
     <string name="favSubLang_summary"> اختر اللغة المفضلة لديك لقراءة الترجمة</string>
-    <string name="preferences_video_tvdb_text">معلومات المسلسلات يوفرها</string>
     <string name="preferences_video_trakt_text">معلومات الأفلام يوفرها</string>
     <string name="preferences_video_licenses">التراخيص</string>
     <string name="preferences_network_mobile_vpn_summary">استعملها فقط مع تعديل VPN، انتبه لإستهلاك البيانات.</string>
@@ -373,8 +318,6 @@
     <string name="preferences_video_advanced_quit_title">الإعدادات العادية</string>
     <string name="preferences_video_advanced_quit_summary">العودة للإعدادات العادية</string>
     <string name="trakt_change">تغيير ال API يتطلب إعادة الإتصال</string>
-    <string name="tv_scraper">TV برامج</string>
-    <string name="movie_scraper">افلام</string>
     <string name="enable_auto_scrap">تفعيل التحميل التلقائي لمعلومات الفيديو</string>
     <string name="locale">لغة النظام</string>
     <string name="yes">نعم</string>
@@ -386,10 +329,6 @@
     <string name="video_info_custom_search_file_hint">"\"الفلم\" او \"المسلسل ف01ح01\""</string>
     <string name="video_info_custom_search_show_hint">اسم المسلسل</string>
     <string name="scrap_show_no_result">لا يوجد مسلسل مشابه اونلاين</string>
-    <string name="video_info_backdrop_select">اختار ملصقة اخرى</string>
-    <string name="video_info_backdrop_remove">حذف</string>
-    <string name="video_info_backdrop_set_as">تعيين الصورة كـ</string>
-    <string name="video_info_share_message">"I've been watching the video \"%1$s\" on Nova %2$s"</string>
     <string name="notification_mode">التنبيهات</string>
     <string name="notifications_all">جميع الإشعارات</string>
     <string name="notifications_alerts">التنبيهات فقط</string>
@@ -398,8 +337,6 @@
     <string name="format_fullscreen">الشاشة كاملة</string>
     <string name="format_optimized">مُحسّن</string>
     <string name="format_original">الأصلي</string>
-    <string name="stereo_dive_enable">تفعبي تأثيرات ستيريو</string>
-    <string name="stereo_dive_disable">إلغاء تأثيرات ستيريو</string>
     <!-- Help overlay -->
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->

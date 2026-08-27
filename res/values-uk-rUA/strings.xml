@@ -23,7 +23,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Оновити список серверів</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">Увімкнути спільні мережеві сховища</string>
     <string name="initial_scan">Початкове сканування</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Пошук</string>
@@ -44,17 +43,9 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">Тривалість</string>
     <string name="video_sources">Джерела</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">Фільм</string>
-    <string name="info_tab_show">Серіал</string>
-    <string name="info_tab_episode">Епізод</string>
-    <string name="info_tab_video">Відео</string>
     <string name="info_tab_file">Відомості про файл</string>
-    <string name="info_tab_backdrop_chooser">Вибір фону</string>
-    <string name="info_tab_poster_chooser">Вибір постеру</string>
-    <string name="info_tab_share">Поділитись</string>
     <string name="info_menu_backdrop_select">Фон</string>
     <string name="info_menu_series_backdrop_select">Фон серіалу</string>
     <string name="info_menu_poster_select">Обрати інший постер</string>
@@ -81,12 +72,9 @@
     <string name="network_shared_folders">Спільні теки (SMB)</string>
     <string name="network_connected_as">Підключено як %s</string>
     <string name="network_guest">гість</string>
-    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (експериментально)</string>
     <string name="network_cling">UPNP (експериментально)</string>
-    <string name="recordings_storage">Записи</string>
     <string name="root_storage">Внутрішнє сховище</string>
-    <string name="cannot_list">Неможливо показати вміст</string>
     <!-- VIDEO -->
     <string name="videos">Відео</string>
     <string name="all_videos">Все відео</string>
@@ -99,18 +87,8 @@
     <string name="all_animes_format">Мультфільми - %d</string>
     <string name="all_collections">Колекції</string>
     <string name="all_collections_format">Колекції -  %d</string>
-    <string name="all_collection_watched">Всі колекції переглянуті</string>
-    <string name="all_collection_unwatched">Колекцію не переглянуто</string>
-    <plurals name="n_movies_watched">
-        <item quantity="one">Переглянуто %d фільм</item>
-        <item quantity="few">Переглянуто %d фільми</item>
-        <item quantity="many">Переглянуто %d фільмів</item>
-        <item quantity="other">Переглянуто %d фільмів</item>
-    </plurals>
     <string name="not_watched_movies_format">Не переглянуто - %d</string>
     <string name="not_watched_animes_format">Не переглянуто - %d</string>
-    <string name="no_movie_watched">Немає фільмів що переглянуто</string>
-    <string name="all_movies_watched">Всі переглянуті фільми</string>
     <string name="movies_by_alpha">Фільми за алфавітом</string>
     <string name="movies_by_genre">Фільми за жанром</string>
     <string name="movies_by_rating">Фільми за оцінкою</string>
@@ -122,9 +100,7 @@
     <string name="all_animes">Всі мультфільми</string>
     <string name="all_animes_row">Всі мультфільми</string>
     <string name="all_animeshows">Всі мультсеріали</string>
-    <string name="animes_by_alpha">Анімаційні фільми за алфавітом</string>
     <string name="animes_by_genre">Мультфільми за жанрами</string>
-    <string name="animes_by_rating">Мультфільми за рейтингом</string>
     <string name="animes_by_year">Мультфільми по роках</string>
     <string name="all_tvshows_format">Всі серіали - %d</string>
     <string name="not_watched_tvshows_format">Не переглянуто - %d</string>
@@ -141,24 +117,18 @@
     <string name="date_view_year">Рік</string>
     <string name="all_movies_and_tv_shows">Фільми та серіали</string>
     <string name="non_scraped_videos">Не додані до бібліотеки</string>
-    <string name="no_server">Медіасервер не знайдено</string>
     <string name="cannot_open_video">Неможливо відкрити це відео</string>
     <string name="confirm_delete">Ви дійсно хочете видалити?</string>
     <string name="deleting">Будь ласка, зачекайте…</string>
-    <string name="cannot_delete_directory">Неможливо видалити теку</string>
-    <string name="cannot_delete_file">Неможливо видалити файл</string>
     <string name="directory_deleted">Теку видалено</string>
-    <string name="file_deleted">Файл видалено</string>
     <string name="resume">Продовжити</string>
     <string name="remote_resume">Подовжити перегляд з іншого пристрою</string>
     <string name="bookmark">Закладка</string>
     <string name="delete">Видалити</string>
     <string name="confirm_delete_short">Підтвердити видалення</string>
     <string name="delete_resume">Відхилити продовження</string>
-    <string name="delete_bookmark">Видалити закладку</string>
     <string name="mark_as_watched">Переглянуто</string>
     <string name="mark_as_not_watched">Не переглянуто</string>
-    <string name="upnp_not_allowed">Доступ до сервера UPnP заборонено. Змініть налаштування доступу.</string>
     <string name="scrap_no_info">У вас немає опису для цього відео.</string>
     <string name="scrap_remove">Вилучити інформацію</string>
     <string name="scrap_remove_short">Вилучити</string>
@@ -185,14 +155,10 @@
     <string name="scrap_cast">У ролях</string>
     <string name="scrap_cast_format">У ролях: %s</string>
     <string name="scrap_genre">Жанр</string>
-    <string name="scrap_genre_format">Жанри: %s</string>
     <string name="scrap_genre_title">Жанри</string>
     <string name="scrap_aired">Дата виходу</string>
     <string name="scrap_aired_format">Дата виходу: %s</string>
-    <string name="scrap_guests">Гості</string>
-    <string name="scrap_premiered">Прем\'єра</string>
     <!-- Specific strings for TV shows -->
-    <string name="show_network">Мережа</string>
     <string name="episode_name">Серія</string>
     <string name="episode_season">Сезон</string>
     <string name="episode_specials">Спецвипуски</string>
@@ -203,9 +169,6 @@
     <string name="how_to_mark_season_watched">Натисніть на сезон, щоб позначити усі серії як переглянуто або не переглянуто</string>
     <string name="how_to_unindex_season">Натисніть на сезон, щоб видалити усі серії з бібліотеки</string>
     <string name="how_to_delete_season">Натисніть на сезон, щоб видалити усі серії з бібліотеки</string>
-    <string name="mark_show_watched">Позначити всі серії переглянутими або непроглянутими</string>
-    <string name="unindex_show">Позначити всі серії переглянутими або непроглянутими</string>
-    <string name="delete_show">Видалити всі серії</string>
     <string name="no_episode_watched">Нема переглянутих серій</string>
     <string name="all_episodes_watched">Всі серії переглянуто</string>
     <plurals name="n_episodes_watched">
@@ -250,13 +213,9 @@
     <string name="preference_display_all_files">Показувати всі файли в оглядачі</string>
     <string name="preference_display_all_files_summary">Показувати не відеофайли також</string>
     <string name="info_processing">Перевірка властивостей медіа…</string>
-    <string name="info_video">Відео</string>
     <string name="info_audio">Аудіо</string>
     <string name="info_audio_vbr">VBR</string>
-    <string name="info_plugin_required">(потрібен плагін)</string>
     <string name="info_subtitle">Субтитри</string>
-    <string name="info_resume">Відновити позицію</string>
-    <string name="info_bookmark">Додати позицію в закладки</string>
     <string name="info_file">Відомості про файл</string>
     <string name="use_remote_resume">Відновити позицію через мережу?</string>
     <!-- VIDEO COVER ROLL -->
@@ -294,9 +253,6 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">Медіацентр</string>
     <string name="view_mode">Режим</string>
-    <string name="view_mode_list">Список</string>
-    <string name="view_mode_grid">Постери</string>
-    <string name="view_mode_details">Подробиці</string>
     <string name="switch_to_list">Список</string>
     <string name="switch_to_grid">Сітка</string>
     <!-- VideoPlayer -->
@@ -341,7 +297,6 @@
     <string name="menu_change_folder_details">Виберіть теку для початку</string>
     <string name="unlock_instructions">Довге натискання на іконку для розблокування</string>
     <string name="seek_to_percentage">Пошук %s%%</string>
-    <string name="set_audio_speed_to">Швидкість аудіо %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
     <string name="subs_HI">Для глухих та з вадами слуху</string>
@@ -370,8 +325,6 @@
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Неможливо відтворити відеозапис</string>
     <string name="player_err_cantplaysound">Неможливо відтворити звукову доріжку</string>
-    <string name="audiocodec_not_supported">Цей аудіоформат (<xliff:g id="codec">%s</xliff:g>) не підтримується.</string>
-    <string name="videocodec_not_supported">Цей відеоформат (<xliff:g id="codec">%s</xliff:g>) не підтримується.</string>
     <string name="player_err_file">Відеофайл не існує.</string>
     <string name="player_err_sizetoobig">Розмір відеозапису завеликий</string>
     <string name="player_err_unknown">Невідома помилка.</string>
@@ -388,19 +341,10 @@
     <string name="player_err_profile_and_level">\"Профіль\" та \"Рівень\"</string>
     <string name="player_err_interlaced">Черезрядкова</string>
     <!-- Player plug-in -->
-    <string name="player_plugin_cinema_title">Плагін КІНО</string>
-    <string name="player_plugin_cinema">Плагін КІНО (DVD, MPEG-2, AC3)</string>
-    <string name="player_plugin_ac3_title">Плагін AC3</string>
-    <string name="player_plugin_ac3">Плагін AC3</string>
-    <string name="player_plugin_mpeg2_title">Плагін MPEG-2</string>
-    <string name="player_plugin_mpeg2">Плагін MPEG-2 (DVD)</string>
     <string name="player_plugin_video_msg">Цей файл містить <xliff:g id="video">%1$s</xliff:g> формат відео.</string>
     <string name="player_plugin_audio_msg">Цей файл містить <xliff:g id="audio">%1$s</xliff:g> формат аудіо.</string>
     <string name="player_plugin_video_audio_msg">Цей файл містить <xliff:g id="video">%1$s</xliff:g> формат відео та <xliff:g id="audio">%2$s</xliff:g> формат аудіо.</string>
-    <string name="player_plugin_purchase_msg">Необхідно придбати <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">Перейти до магазину</string>
-    <string name="player_plugin_purchase_archos_msg">Ви можете придбати додаткові плагіни на www.archos.com.</string>
-    <string name="player_plugin_purchase_google_play_msg">Ви можете придбати додаткові плагіни у Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Перейти до Google Play</string>
     <string name="plugin_update_required_title">Необхідне оновлення кодека</string>
     <string name="plugin_update_required_message">Схоже, що вже встановлені додаткові кодеки для Nova Video Player.\n\nНова версія Nova Video Player потребує оновлення кодеків.\n\nБудь ласка, перейдіть до Google Play, щоб оновити та повторно встановити кодеки.</string>
@@ -418,17 +362,9 @@
     <string name="subtitles_wizard_cache">Кеш</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Отримати субтитри онлайн</string>
-    <string name="toast_subloader_sub_found">Знайдено субтитри для цієї мови</string>
-    <string name="toast_subloader_sub_not_found">Субтитри не знайдено</string>
     <string name="toast_subloader_service_unreachable">Сервер з субтитрами недоступний</string>
-    <string name="menu_subloader_allfolder">Отримати відсутні субтитри</string>
     <string name="dialog_subloader_copying">Копіювання субтитрів…</string>
-    <string name="dialog_subloader_downloading">Завантаження субтитрів…</string>
-    <string name="dialog_subloader_sumup">Завантаження завершене</string>
-    <string name="dialog_subloader_success">Знайдено субтитри для:</string>
     <string name="dialog_subloader_fails">Субтитри не знайдено для:</string>
-    <string name="sub_force_all_title">Примусово завантажити субтитри</string>
-    <string name="sub_force_all">Всі ваші відео вже мають хоча б один набір субтитрів. Ви все одно бажаєте завантажити нові?</string>
     <string name="dialog_subloader_nonetwork_title">Немає підключення до Інтернету</string>
     <string name="dialog_subloader_nonetwork_message">Для завантаження субтитрів необхідне підключення до Інтернету</string>
     <string name="dialog_subloader_connecting">Підключення до OpenSubtitles…</string>
@@ -440,7 +376,6 @@
     <string name="toast_subloader_quota_exceeded">Перевищено квоту на завантаження OpenSubtitles</string>
     <string name="opensubtitles_quota_reset_time_remaining">Квота буде скинута через %s</string>
     <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_settings_title">Параметри субтитрів</string>
     <string name="subtitle_sample_text">\"зразок\"</string>
     <string name="subtitle_size_text">Розмір:</string>
     <string name="subtitle_style_text">Стиль:</string>
@@ -469,25 +404,16 @@
     <string name="loading_torrent">Завантаження торента…</string>
     <string name="error_no_video_file">Немає відеофайлів</string>
     <string name="torrent_file_to_play">Виберіть файл для відтворення</string>
-    <string name="torrent_buy_premium_message">Торент-стримінг доступний тільки в платній версії</string>
-    <string name="torrent_buy_premium">Придбати преміум-версію</string>
     <!-- Shortcuts -->
     <string name="browse_net_server">Перегляд мережевого ресурсу</string>
-    <string name="add_smb_server">Перегляд SMB-сервера</string>
-    <string name="add_network_server">Додати мережевий ресурс</string>
-    <string name="add_to_shortcuts">Зробити вибірку</string>
     <string name="add_ssh_server">Перегляд FTP-сервера</string>
     <string name="add_ssh_shortcut">Додати ярлик</string>
     <string name="ssh_prompt">Тип FTP</string>
     <string name="protocol_prompt">Тип протоколу</string>
-    <string name="ssh_empty_view"> \"Ви можете переглядати з власного FTP-сервера\"</string>
     <string name="remove_from_shortcuts">Видалити вибірку</string>
-    <string name="shortcut_added">Ярлик %s створено</string>
     <string name="shortcut_removed">Ярлик %s видалено</string>
     <string name="server_not_available">Сервер недоступний</string>
-    <string name="cannot_open_shortcut">Вміст цього ярлика недоступний.\nБудь ласка, перевірте, що у вас є необхідні дозволи.</string>
     <string name="network_shortcuts">Мережеві ярлики</string>
-    <string name="media_servers">Медіа-сервери</string>
     <string name="shortcut_list_empty">Не створено ярликів мережі.\n\nЩоб створити ярлики мережевої теки, натисніть на потрібну теку та виберіть \"%s\" у верхній панелі дій.</string>
     <string name="ftp_shortcut_list_empty">Щоб створити ярлик мережевої теки, виберіть \"%s\" у верхній панелі дій під час перегляду сервера.</string>
     <string name="indexed_folders">Індексовані теки</string>
@@ -510,7 +436,6 @@
     <string name="last_rescan_never">Ніколи</string>
     <string name="upnp_indexing_warning_title">Індексація UPnP</string>
     <string name="upnp_indexing_warning_message">Індексація UPnP має менше можливостей, ніж індексація SMB.\nРекомендується індексувати теку SMB, якщо ваш сервер або ПК підтримує.\n</string>
-    <string name="ssh_error">Не вдається підключитися: перевірте підключення та облікові дані</string>
     <string name="ssh_remote_address">Віддалена адреса</string>
     <string name="ssh_port">Порт</string>
     <string name="ssh_password">Пароль</string>
@@ -519,11 +444,8 @@
     <string name="smb_domain">Домен (необов\'язково)</string>
     <!-- Preferences -->
     <string name="preferences">Налаштування</string>
-    <string name="get_the_ad_free_version">Отримати версію без реклами в Google Play</string>
     <string name="upgrade_to_add_free_version">Оновити до версії без реклами</string>
-    <string name="upgrade_to_add_free_version_description">Придбайте ліцензію додатку, щоб прибрати рекламу та активувати всі функції</string>
     <string name="preferences_about">Про додаток</string>
-    <string name="preferences_category_complete">Повна версія</string>
     <string name="preferences_category_video">Відео</string>
     <string name="preferences_force_software_decoding">Примусове програмне декодування</string>
     <string name="preferences_force_software_decoding_summary">Можете спробувати цей параметр, якщо деякі відеозаписи не відтворюються коректно</string>
@@ -557,8 +479,6 @@
     <string name="preferences_allow_3rd_party_player_summary">При запуску відтворення буде запропоновано вибір інших програвачів. Деякі функції при цьому можуть не працювати (поновлення, закладки тощо)</string>
     <string name="preference_tv_3d_automatic_switch">Автоматичне перемикання режиму 3D</string>
     <string name="preference_tv_3d_automatic_switch_summary">Використовуйте цю функцію, лише якщо ваш 3D-телевізор її підтримує</string>
-    <string name="enable_android_frame_timing">Увімкнути синхронізацію кадрів Android</string>
-    <string name="enable_android_frame_timing_summary">Використовувати синхронізацію кадрів Android для більш плавного відтворення (експериментально)</string>
     <string name="hide_watched_videos">Приховувати переглянуті відео</string>
     <string name="hide_watched_videos_summary">Приховувати відео з медіатеки, якщо їх позначено як переглянуті.</string>
     <string name="enable_projector_mode">Увімкнути режим проєктора</string>
@@ -569,7 +489,6 @@
     <string name="preferences_tv_refreshrate_switch_mode_selection">Вибір режиму перемикання частоти кадрів</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">Функція перемикання частоти кадрів на Android 12+</string>
     <string name="preference_remove_dolby_vision">Вимкнути Dolby Vision</string>
-    <string name="preference_remove_dolby_vision_summary">Використовувати стандартні відеокодеки поверх кодеків Dolby Vision</string>
     <string name="preference_cutout_short_edges">Повноекранне відео на дисплеї з вирізами</string>
     <string name="preference_cutout_short_edges_summary">Дозволити повноекранне відео на дисплеї з вирізами</string>
     <string name="toast_cutout_aspect_ratio_fix">Увімкнути повноекранне відео для екранів із вирізом, щоб зберегти правильне співвідношення сторін.</string>
@@ -598,7 +517,6 @@
     <string name="preferences_video_about">Про додаток</string>
     <string name="preferences_video_os_text">Субтитри надано</string>
     <string name="preferences_video_tmdb_text">Інформацію про фільми/серіали надано</string>
-    <string name="preferences_video_tvdb_text">Інформацію про серіали надано</string>
     <string name="preferences_video_trakt_text">Відеоскроблер надано</string>
     <string name="preferences_video_licenses">Ліцензії</string>
     <string name="preferences_network_mobile_vpn_summary">Використовуйте лише з VPN і будьте обережні з використанням ваших даних.</string>
@@ -609,8 +527,6 @@
     <string name="preferences_video_advanced_quit_title">Основні налаштування</string>
     <string name="preferences_video_advanced_quit_summary">Повернутися до основних налаштувань</string>
     <string name="trakt_change">Через зміну Trakt API потрібне перепідключення.</string>
-    <string name="tv_scraper">Серіали</string>
-    <string name="movie_scraper">Фільми</string>
     <string name="enable_auto_scrap">Автоматично отримувати інформацію для нових відео</string>
     <string name="enable_scrape_from_db_title">Використовувати вже зібрані дані</string>
     <string name="enable_scrape_from_db_summary">Якщо буде знайдено дублікат відео, використовуватимуться вже зібрані дані. Вимкніть цю опцію, щоб пришвидшити початкове збирання даних!</string>
@@ -628,10 +544,6 @@
     <string name="video_info_custom_search_file_hint">"\"НазваФільму\" або \"НазваСеріалу S01E01\""</string>
     <string name="video_info_custom_search_show_hint">Назва серіалу</string>
     <string name="scrap_show_no_result">Відповідного серіалу не знайдено.</string>
-    <string name="video_info_backdrop_select">Вибрати інше зображення</string>
-    <string name="video_info_backdrop_remove">Вилучити</string>
-    <string name="video_info_backdrop_set_as">Встановити зображення як</string>
-    <string name="video_info_share_message">"Я дивлюся відео \"%1$s\" на своєму Nova %2$s"</string>
     <string name="notification_mode">Сповіщення</string>
     <string name="notifications_all">Усі сповіщення</string>
     <string name="notifications_alerts">Тільки сповіщення</string>
@@ -645,17 +557,13 @@
     <string name="format_169">16:9</string>
     <string name="format_185">1,85:1</string>
     <string name="format_239">2,39:1</string>
-    <string name="stereo_dive_enable">Ефект стерео</string>
-    <string name="stereo_dive_disable">Вимкнути ефект стерео</string>
     <string name="rotation_unlock">Увімкнути автоповорот екрана</string>
     <string name="rotation_locked">Автоповорот екрана вимкнено</string>
     <string name="rotation_unlocked">Автоповорот екрана увімкнено</string>
     <string name="network_reindex">Пересканувати вміст</string>
     <!-- Help overlay -->
     <string name="help_overlay_menu">Натисніть кнопку ВГОРУ\nдля відображення меню</string>
-    <string name="help_overlay_ssh_indexing_text">Виберіть опцію \"Додати як ярлик\", щоб швидко повернутися до сервера.</string>
     <string name="help_overlay_network_indexing_text1">Натисніть цю кнопку, щоб додати вміст цієї теки та всі вкладені підтеки в бібліотеку.</string>
-    <string name="help_overlay_network_indexing_text1_lb">Використовуйте кнопку +, щоб додати вміст цієї теки та всі вкладені підтеки до бібліотеки.</string>
     <string name="help_overlay_network_indexing_text2">Це дозволить вам отримати постери та описи для фільмів та серіалів.</string>
     <string name="help_overlay_scraper_text">Натисніть на цей пункт для онлайн пошуку постерів та опису відео. </string>
     <string name="help_overlay_network_shortcut_text1_lb">Використовуйте кнопку +, щоб додати цю теку як мережевий ярлик і мати можливість додати її вміст і вміст її вкладених тек до бібліотеки відео.</string>
@@ -677,17 +585,12 @@
     <string name="share_folders_smb_disable_udp_discovery_summary">Вимкніть виявлення UDP у разі нестабільної роботи Wi-Fi на деяких пристроях.</string>
     <string name="share_folders_smb_disable_mdns_discovery">Вимкнути виявлення SMB mDNS</string>
     <string name="share_folders_smb_disable_mdns_discovery_summary">Вимкніть виявлення mDNS у разі нестабільної роботи Wi-Fi на деяких пристроях.</string>
-    <string name="share_folders_smb_discovery_limited_to_mdsn">Обмежити виявлення SMB в mDNS</string>
-    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Вимкніть виявлення UDP/TCP, якщо Wi-Fi працює нестабільно на деяких пристроях. ⚠ Завадить правильному виявленню на ChromeOS.</string>
     <string name="connection_abnormally_long">З\'єднання занадто довге. Хочете перервати його?</string>
     <string name="connection_reset">Скинути</string>
     <!-- Info dialog, not indexed file -->
-    <string name="video_info_unindexed_message">Цей файл наразі не індексований у вашій бібліотеці.\nПошук постерів та інформації доступний тільки для індексованих файлів.\nХочете індексувати його зараз?</string>
-    <string name="video_info_unindexed_message2">Файл обробляється. Це може зайняти деякий час.</string>
     <string name="video_browser_index_file">Додати до бібліотеки</string>
     <string name="video_browser_unindex_file">Вилучити з бібліотеки</string>
     <!-- Brightness -->
-    <string name="auto_brightness_message">Яскравість не може бути змінена, оскільки ввімкнено автоматичний режим яскравості.</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">Обробити \'.nfo\' файли</string>
     <string name="network_nfo_parse_summary">Зчитувати.nfo файли Kodi під час сканування для отримання додаткової інформації.</string>
@@ -816,7 +719,6 @@
     <string name="torrent_blocklist">Чорний список</string>
     <string name="blocklist_empty">URL не повинен бути порожнім</string>
     <string name="blocklist_invalid">Неправильний чорний список</string>
-    <string name="blocklist_downloading">Завантаження чорного списку</string>
     <string name="blocklist_file_not_found">Файл не знайдено</string>
     <string name="blocklist_success">Чорний список успішно оновлено</string>
     <string name="blocklist_unknown_error">Невідомо</string>
@@ -827,18 +729,14 @@
     <string name="share_infos_incomplete">Необхідно заповнити шлях</string>
     <string name="share_path">Шлях</string>
     <string name="category_trakt">Trakt</string>
-    <string name="trakt_user">Імʼя користувача</string>
-    <string name="trakt_password">Пароль</string>
     <string name="trakt_signin">Увійти</string>
     <string name="trakt_list_signin">Увійти до Trakt</string>
-    <string name="trakt_status_login">Вхід в&#8230;</string>
     <string name="trakt_signin_summary_logged">Вхід виконано</string>
     <string name="trakt_signin_summary_logged_error">Помилка автентифікації</string>
     <string name="trakt_signin_summary">Вхід не виконано</string>
     <string name="trakt_relog_description">Виявлено проблему з Trakt і облікові дані потрібно скинути. Будь ласка, увійдіть знову.</string>
     <string name="trakt_signin_dialog_title">Увійти</string>
     <string name="trakt_signin_title">Увійти</string>
-    <string name="trakt_wipe_dialog_title">Вийти з Trakt.tv\?</string>
     <string name="trakt_wipe_title">Вийти з Trakt.tv</string>
     <string name="trakt_live_scrobbling_title">Скроблер</string>
     <string name="trakt_live_scrobbling_summary">Поділитися переглянутими відео в Trakt</string>
@@ -893,7 +791,6 @@
     <string name="leanback_scrap">Отримати інформацію</string>
     <string name="leanback_scrap_choose_the_description">Вибрати інформацію</string>
     <string name="leanback_scrap_choose_the_description_for">"Виберіть інформацію для \"%s\""</string>
-    <string name="leanback_scrap_searching_general_hint">Назва фільму або серіалу</string>
     <string name="leanback_scrap_searching_tvshow_hint">Назва серіалу</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Застарілий інтерфейс</string>
@@ -931,7 +828,6 @@
     <string name="rescan_when_opening_application">Пересканувати під час відкриття додатка</string>
     <string name="last_rescan_occured">Останнє сканування:</string>
     <string name="error_permission_display_over_apps">У віконному режимі потрібні спеціальні дозволи для відображення поверх інших додатків. Надайте Nova Video Player такий дозвіл для перемикання у віконний режим.</string>
-    <string name="intro_overlay_text">Натисніть, щоб транслювати відео на ТВ</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Детальніше</string>
@@ -969,32 +865,13 @@
     <string name="system">Система</string>
     <string name="keep_setting">Глобальне налаштування</string>
     <string name="select_sub_file"><![CDATA[Для файлу <font color=#29b6f6><i>%s</i></font><br /> не знайдено точної відповідності субтитрів. Спробуйте наступні варіанти:]]></string>
-    <string name="switch_remote_empty_message">Перемикання в режим віддаленого дисплея може надати більше можливостей</string>
-    <string name="cast_stream_mode">Режим потоку</string>
-    <string name="cast_remote_display_mode">Віддалений дисплей</string>
-    <string name="cast_remote_display_mode_description">У режимі віддаленого дисплея всі формати, підтримувані Nova Video Player, можуть бути відтворені. Однак якість може погіршитися.</string>
-    <string name="cast_stream_mode_description">Оптимальна якість, але деякі формати можуть не підтримуватися</string>
     <string name="sleep_timer_title">Таймер сну</string>
     <string name="sleep_timer_description">Зупинити відео через: </string>
-    <string name="cast_mode">Режим трансляції</string>
-    <string name="cast_info">Інформація</string>
-    <string name="troubleshoot_streammode_msg">Nova Video Player перебуває в режимі трансляції.
-        \nЦе призводить до хорошої якості відео, але може спричинити проблеми з перемиканням аудіо та субтитрами.
-        Спробуйте перейти в режим віддаленого дисплея.</string>
-    <string name="troubleshoot_remotemode_msg">Nova Video Player перебуває в режимі віддаленого дисплея.
-        \nЗалежно від пристрою та якості мережі, може виникати втрата якості та продуктивності. </string>
     <string name="picture_in_picture">Картинка в картинці</string>
     <string name="cast">Трансляція</string>
-    <string name="cast_warning">Підтримка трансляції обмежена через кодеки Chromecast. Для пом\'якшення цих обмежень реалізовано 2 режими трансляції: Chromecast і Screencast (з автоматичною відмовою). Залежно від пристрою та якості мережі може виникати втрата продуктивності та якості.</string>
-    <string name="cast_warning_title">Експериментальна функція</string>
-    <string name="cast_fallback_message">Помилка: fallback to screen cast</string>
-    <string name="cast_introduction">Нова експериментальна функція: \nGoogle Cast</string>
-    <string name="cast_select_for_full_control">Натисніть, щоб розширити контролер</string>
     <string name="cast_audio_background">Звук не працюватиме у фоновому режимі Nova Video Player</string>
     <string name="help_faq">Довідка/FAQ</string>
     <string name="provider_folders">Хмара</string>
-    <string name="learn_more">Докладніше</string>
-    <string name="learn_more_about_codecs">Nova Video Player може відтворювати тільки відео, що підтримуються Вашим пристроєм. Через ліцензійні обмеження деякі формати не можуть бути включені, деякі інші можуть бути придбані в Google Play.</string>
     <string name="rate_us">Якщо Вам подобається цей додаток, будь ласка, підтримайте нас, оцінивши на 5 зірок</string>
     <string name="rate_us_title">☆ Підтримайте нас</string>
     <string name="create_new_list">Створити новий список</string>
@@ -1002,12 +879,10 @@
     <string name="no_resume_available">Відновлення перегляду недоступне</string>
     <string name="no_list_detected">Списків не виявлено. Список може бути створений шляхом додавання з інформації про відео або синхронізований з обліковим записом Trakt.</string>
     <string name="not_available_during_media_scanning">Недоступно під час сканування медіатеки.</string>
-    <string name="premium_already_purchased">Преміум вже придбано</string>
     <string name="remove_from_list">Видалити зі списку</string>
     <string name="warning_swdec">Апаратне декодування вимкнено</string>
     <string name="list_title">Назва списку</string>
     <string name="loading">Завантаження…</string>
-    <string name="connecting">Підключення…</string>
     <string name="refreshrate_failed">Не вдалося задати бажану частоту оновлення</string>
     <string name="sponsor">Підтримати Nova</string>
     <string name="enable_sponsor_title">Посилання для підтримки Nova</string>
@@ -1019,8 +894,6 @@
     <string name="supported_refresh_rates">Підтримувані частоти оновлення:</string>
     <string name="upgrade_info">Інформація про оновлення</string>
     <string name="v5_v6_upgrade_info">УВАГА: Це оновлення Nova вимагає пересканування всієї бібліотеки. Щоб уникнути проблем, настійно рекомендується повністю перевстановити програму. Будь ласка, ознайомтеся з FAQ.</string>
-    <string name="networks">Мережі:</string>
-    <string name="premiered">Прем\'єра:</string>
     <string name="external_player_service_title">Відтворення у зовнішньому плеєрі</string>
     <string name="external_player_service_description">Nova Video Player надає вміст для зовнішнього плеєра</string>
     <string name="stop">Зупинити</string>

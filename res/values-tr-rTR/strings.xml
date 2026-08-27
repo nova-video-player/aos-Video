@@ -23,7 +23,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Sunucu listesini yenile</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">Ağ paylaşımlarını etkinleştir</string>
     <string name="initial_scan">İlk tarama</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Arama</string>
@@ -44,17 +43,9 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020ABCÇDEFGĞHIİJKLMNOÖPQRSŞTUÜVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">Süre</string>
     <string name="video_sources">Kaynaklar</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">Film</string>
-    <string name="info_tab_show">Göster</string>
-    <string name="info_tab_episode">Bölüm</string>
-    <string name="info_tab_video">Video</string>
     <string name="info_tab_file">Dosya bilgisi</string>
-    <string name="info_tab_backdrop_chooser">Arka plan seçici</string>
-    <string name="info_tab_poster_chooser">Afiş seçici</string>
-    <string name="info_tab_share">Paylaş</string>
     <string name="info_menu_backdrop_select">Arka plan</string>
     <string name="info_menu_series_backdrop_select">Dizi Arka Planı</string>
     <string name="info_menu_poster_select">Başka bir afiş seçin</string>
@@ -81,12 +72,9 @@
     <string name="network_shared_folders">Paylaşılan klasörler (SMB)</string>
     <string name="network_connected_as">%s olarak bağlandı</string>
     <string name="network_guest">konuk</string>
-    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (Deneysel)</string>
     <string name="network_cling">UPNP (Deneysel)</string>
-    <string name="recordings_storage">Kayıtlar</string>
     <string name="root_storage">Dahili depolama</string>
-    <string name="cannot_list">İçerik listelenemiyor</string>
     <!-- VIDEO -->
     <string name="videos">Videolar</string>
     <string name="all_videos">Tüm videolar</string>
@@ -99,16 +87,8 @@
     <string name="all_animes_format">Animasyon filmleri - %d</string>
     <string name="all_collections">Tüm koleksiyonlar</string>
     <string name="all_collections_format">Tüm koleksiyonlar - %d</string>
-    <string name="all_collection_watched">Tüm koleksiyon izlendi</string>
-    <string name="all_collection_unwatched">Koleksiyon izlenmedi</string>
-    <plurals name="n_movies_watched">
-        <item quantity="one">%d film izlendi</item>
-        <item quantity="other">%d film izlendi</item>
-    </plurals>
     <string name="not_watched_movies_format">İzlenmedi  -  %d</string>
     <string name="not_watched_animes_format">İzlenmedi - %d</string>
-    <string name="no_movie_watched">Hiç film izlenmedi</string>
-    <string name="all_movies_watched">İzlenen tüm filmler</string>
     <string name="movies_by_alpha">Filmler alfabetik sırayla</string>
     <string name="movies_by_genre">Türlere göre filmler</string>
     <string name="movies_by_rating">Derecelendirmeye göre filmler</string>
@@ -120,9 +100,7 @@
     <string name="all_animes">Tüm animasyon filmleri</string>
     <string name="all_animes_row">Tüm animasyonlar</string>
     <string name="all_animeshows">Tüm animasyon dizileri</string>
-    <string name="animes_by_alpha">Animasyon filmleri alfabetik sırayla</string>
     <string name="animes_by_genre">Türlere göre animasyon filmleri</string>
-    <string name="animes_by_rating">Derecelendirmeye göre animasyon filmleri</string>
     <string name="animes_by_year">Yıllara göre animasyon filmleri</string>
     <string name="all_tvshows_format">Tüm TV programları  -  %d</string>
     <string name="not_watched_tvshows_format">İzlenmedi - %d</string>
@@ -139,24 +117,18 @@
     <string name="date_view_year">Yıl</string>
     <string name="all_movies_and_tv_shows">Filmler ve diziler</string>
     <string name="non_scraped_videos">Tarama yapılamamış videolar</string>
-    <string name="no_server">Medya sunucusu bulunamadı</string>
     <string name="cannot_open_video">Bu video açılamıyor</string>
     <string name="confirm_delete">Gerçekten silmek istiyor musunuz?</string>
     <string name="deleting">Lütfen silerken bekleyin…</string>
-    <string name="cannot_delete_directory">Klasör silinemiyor</string>
-    <string name="cannot_delete_file">Dosya silinemiyor</string>
     <string name="directory_deleted">Klasör silindi</string>
-    <string name="file_deleted">Dosya silindi</string>
     <string name="resume">Devam et</string>
     <string name="remote_resume">Uzaktan devam et</string>
     <string name="bookmark">Yer imi</string>
     <string name="delete">Sil</string>
     <string name="confirm_delete_short">Silmeyi onayla</string>
     <string name="delete_resume">Devam etmeyi temizle</string>
-    <string name="delete_bookmark">Yerimini sil</string>
     <string name="mark_as_watched">İzlendi olarak işaretle</string>
     <string name="mark_as_not_watched">İzlenmedi olarak işaretle</string>
-    <string name="upnp_not_allowed">Bu UPnP sunucusuna erişim izniniz yok. Lütfen önce erişim yapılandırmanızı değiştirin.</string>
     <string name="scrap_no_info">Bu video için herhangi bir film veya dizi açıklaması bulunmuyor.</string>
     <string name="scrap_remove">Bilgileri kaldır</string>
     <string name="scrap_remove_short">Kaldır</string>
@@ -183,14 +155,10 @@
     <string name="scrap_cast">Oyuncular</string>
     <string name="scrap_cast_format">Oyuncular: %s</string>
     <string name="scrap_genre">Tür</string>
-    <string name="scrap_genre_format">Türler: %s</string>
     <string name="scrap_genre_title">Türler</string>
     <string name="scrap_aired">Yayınlandı</string>
     <string name="scrap_aired_format">Yayınlandı: %s</string>
-    <string name="scrap_guests">Konuklar</string>
-    <string name="scrap_premiered">İlk gösterim</string>
     <!-- Specific strings for TV shows -->
-    <string name="show_network">Ağ</string>
     <string name="episode_name">Bölüm</string>
     <string name="episode_season">Sezon</string>
     <string name="episode_specials">Özel Bölümler</string>
@@ -201,9 +169,6 @@
     <string name="how_to_mark_season_watched">Bir sezonu tıklayarak o sezonun tüm bölümlerini izlendi veya izlenmedi olarak işaretleyin</string>
     <string name="how_to_unindex_season">Bir sezonu tıklayarak kütüphaneden tüm bölümlerini sil</string>
     <string name="how_to_delete_season">Bir sezonu silmek için üzerine tıklayın</string>
-    <string name="mark_show_watched">Tüm bölümleri izlendi veya izlenmedi olarak işaretle</string>
-    <string name="unindex_show">Kütüphaneden tüm bölümleri sil</string>
-    <string name="delete_show">Tüm bölümleri sil</string>
     <string name="no_episode_watched">Hiçbir bölüm izlenmedi</string>
     <string name="all_episodes_watched">Tüm bölümler izlendi</string>
     <plurals name="n_episodes_watched">
@@ -246,13 +211,9 @@
     <string name="preference_display_all_files">Tüm dosyaları tarayıcıda göster</string>
     <string name="preference_display_all_files_summary">Video olmayan dosyaları da görüntüle</string>
     <string name="info_processing">Medya özellikleri kontrol ediliyor…</string>
-    <string name="info_video">Video</string>
     <string name="info_audio">Ses</string>
     <string name="info_audio_vbr">VBR</string>
-    <string name="info_plugin_required">(eklenti gerekli)</string>
     <string name="info_subtitle">Alt yazı</string>
-    <string name="info_resume">Durumu devam ettir</string>
-    <string name="info_bookmark">Yerimi konumu</string>
     <string name="info_file">Dosya bilgisi</string>
     <string name="use_remote_resume">Ağ bağlantısı için konum yenileme işlevi kullanılsın mı?</string>
     <!-- VIDEO COVER ROLL -->
@@ -284,9 +245,6 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">Medya Merkezi</string>
     <string name="view_mode">Görüntüleme modu</string>
-    <string name="view_mode_list">Liste</string>
-    <string name="view_mode_grid">Tablo</string>
-    <string name="view_mode_details">Ayrıntılar</string>
     <string name="switch_to_list">Liste</string>
     <string name="switch_to_grid">Izgara</string>
     <!-- VideoPlayer -->
@@ -331,7 +289,6 @@
     <string name="menu_change_folder_details">Başlayacağınız klasörü seçin</string>
     <string name="unlock_instructions">Kilidi açmak için simgeye uzun basın</string>
     <string name="seek_to_percentage">%s%% aranıyor</string>
-    <string name="set_audio_speed_to">Ses hızı %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
     <string name="subs_HI">İşitme Engelli</string>
@@ -360,10 +317,6 @@
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video oynatılamıyor</string>
     <string name="player_err_cantplaysound">Ses parçası çalınamıyor</string>
-    <string name="audiocodec_not_supported">Bu ses formatı (<xliff:g id="codec">%s</xliff:g>)
-desteklenmiyor.</string>
-    <string name="videocodec_not_supported">Bu video formatı (<xliff:g id="codec">%s</xliff:g>)
-desteklenmiyor.</string>
     <string name="player_err_file">Video dosyası mevcut değil.</string>
     <string name="player_err_sizetoobig">Video boyutu çok büyük</string>
     <string name="player_err_unknown">Bilinmeyen hata.</string>
@@ -380,19 +333,10 @@ desteklenmiyor.</string>
     <string name="player_err_profile_and_level">\"Profil\" ve \"Seviye\"</string>
     <string name="player_err_interlaced">Geçişli</string>
     <!-- Player plug-in -->
-    <string name="player_plugin_cinema_title">Sinema eklentisi</string>
-    <string name="player_plugin_cinema">Sinema eklentisi (DVD, MPEG-2, AC3)</string>
-    <string name="player_plugin_ac3_title">AC3 eklentisi</string>
-    <string name="player_plugin_ac3">AC3 eklentisi</string>
-    <string name="player_plugin_mpeg2_title">MPEG-2 eklentisi</string>
-    <string name="player_plugin_mpeg2">MPEG-2 eklentisi (DVD)</string>
     <string name="player_plugin_video_msg">Bu dosya bir <xliff:g id="video">%1$s</xliff:g> video formatı.</string>
     <string name="player_plugin_audio_msg">Bu dosya bir <xliff:g id="audio">%1$s</xliff:g> ses biçimi.</string>
     <string name="player_plugin_video_audio_msg">Bu dosya bir <xliff:g id="video">%1$s</xliff:g> video formatı ve <xliff:g id="audio">%2$s</xliff:g> ses biçimi.</string>
-    <string name="player_plugin_purchase_msg">Satın almanız gerekiyor: <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">Mağazaya Git</string>
-    <string name="player_plugin_purchase_archos_msg">Www.archos.com adresinden ek kodek eklentileri satın alabilirsiniz.</string>
-    <string name="player_plugin_purchase_google_play_msg">Google Play\'de ek kodek eklentileri satın alabilirsiniz.</string>
     <string name="player_plugin_purchase_google_play_button">Goggle Play\'e git</string>
     <string name="plugin_update_required_title">Kodek güncellemesi gerekli</string>
     <string name="plugin_update_required_message">Nova Video Player için zaten ek kodek bileşenleri yüklü gibi görünüyor. \n\nNova Video Player\'ın bu yeni sürümü için bu kodek bileşenlerinin güncellenmesi gerekiyor. \n\nLütfen kodek bileşenlerini güncellemek ve yeniden yüklemek için Google Play\'e gidin.</string>
@@ -410,17 +354,9 @@ desteklenmiyor.</string>
     <string name="subtitles_wizard_cache">Önbellek</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Çevrimiçi altyazı indir</string>
-    <string name="toast_subloader_sub_found">Bu dil için altyazı parçası bulundu</string>
-    <string name="toast_subloader_sub_not_found">Bu dil için altyazı parçası bulunamadı</string>
     <string name="toast_subloader_service_unreachable">Altyazı web hizmetinde kesinti</string>
-    <string name="menu_subloader_allfolder">Eksik altyazıları indir</string>
     <string name="dialog_subloader_copying">Altyazılar kopyalanıyor…</string>
-    <string name="dialog_subloader_downloading">Altyazılar indiriliyor…</string>
-    <string name="dialog_subloader_sumup">İndirme tamamlandı</string>
-    <string name="dialog_subloader_success">Şunun için altyazılar bulundu:</string>
     <string name="dialog_subloader_fails">Şunun için altyazılar bulunamadı:</string>
-    <string name="sub_force_all_title">Altyazıları indirmeye zorla</string>
-    <string name="sub_force_all">Tüm videolarınızda halihazırda en az bir altyazı parçası bulunuyor. Yeni altyazı parçalarının indirilmesini zorunlu kılmak istiyor musunuz?</string>
     <string name="dialog_subloader_nonetwork_title">İnternet bağlantısı yok</string>
     <string name="dialog_subloader_nonetwork_message">Altyazıları indirmek için internet bağlantısı gereklidir</string>
     <string name="dialog_subloader_connecting">Opensubtitles hizmetine bağlanılıyor…</string>
@@ -432,7 +368,6 @@ desteklenmiyor.</string>
     <string name="toast_subloader_quota_exceeded">OpenSubtitles indirme kotası aşıldı</string>
     <string name="opensubtitles_quota_reset_time_remaining">Kota %s içinde sıfırlanıyor</string>
     <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_settings_title">Altyazı Ayarları</string>
     <string name="subtitle_sample_text">\"örnekleme\"</string>
     <string name="subtitle_size_text">Boyut:</string>
     <string name="subtitle_style_text">Stil:</string>
@@ -463,25 +398,16 @@ desteklenmiyor.</string>
     <string name="loading_torrent">Torrent yükleniyor…</string>
     <string name="error_no_video_file">Video dosyası yok</string>
     <string name="torrent_file_to_play">Oynatmak için bir dosya seçin</string>
-    <string name="torrent_buy_premium_message">Torrent akışı yalnızca ücretli sürümde kullanılabilir</string>
-    <string name="torrent_buy_premium">Premium sürümü satın alın</string>
     <!-- Shortcuts -->
     <string name="browse_net_server">Bir ağ paylaşımına göz atın</string>
-    <string name="add_smb_server">Bir SMB sunucusuna göz atın</string>
-    <string name="add_network_server">Bir ağ paylaşımı ekleyin</string>
-    <string name="add_to_shortcuts">Kısayol oluştur</string>
     <string name="add_ssh_server">Bir FTP sunucusuna göz atın</string>
     <string name="add_ssh_shortcut">Kısayol olarak ekle</string>
     <string name="ssh_prompt">FTP türü</string>
     <string name="protocol_prompt">Protokol türü</string>
-    <string name="ssh_empty_view"> “Kendi Ftp sunucunuzdan dosyalara göz atabilir ve bunları oynatabilirsiniz”</string>
     <string name="remove_from_shortcuts">Kısayolu kaldır</string>
-    <string name="shortcut_added">%s kısayol oluşturuldu</string>
     <string name="shortcut_removed">%s kısayol kaldırıldı</string>
     <string name="server_not_available">Sunucu şu anda kullanılamıyor</string>
-    <string name="cannot_open_shortcut">Bu kısayolun içeriği şu anda kullanılamıyor.\nLütfen gerekli izinlere sahip olduğunuzu kontrol edin.</string>
     <string name="network_shortcuts">Ağ kısayolları</string>
-    <string name="media_servers">Medya sunucuları</string>
     <string name="shortcut_list_empty">Ağ kısayolları oluşturulmadı.\n\nFavori uzak klasörlerinize kısayollar oluşturmak için hedef klasörlere uzun basın ve üstteki eylem çubuğundan “%s” seçeneğini seçin.</string>
     <string name="ftp_shortcut_list_empty">Favori uzak klasörlerinize kısayollar oluşturmak için, bir sunucuya göz atarken üstteki eylem çubuğunda “%s” seçeneğini seçin.</string>
     <string name="indexed_folders">Dizinlenmiş klasörler</string>
@@ -504,7 +430,6 @@ desteklenmiyor.</string>
     <string name="last_rescan_never">Asla</string>
     <string name="upnp_indexing_warning_title">UPnP indeksleme</string>
     <string name="upnp_indexing_warning_message">UPnP dizinleme, SMB dizinleme kadar çok özelliğe izin vermez. \nSunucu veya bilgisayarınız destekliyorsa, SMB klasörünü dizine eklemeniz önerilir.\n</string>
-    <string name="ssh_error">Bağlantı kurulamıyor: lütfen bağlantınızı ve kimlik bilgilerinizi kontrol edin</string>
     <string name="ssh_remote_address">Uzak adres</string>
     <string name="ssh_port">Bağlantı noktası</string>
     <string name="ssh_password">Şifre</string>
@@ -513,11 +438,8 @@ desteklenmiyor.</string>
     <string name="smb_domain">Alan adı (isteğe bağlı)</string>
     <!-- Preferences -->
     <string name="preferences">Tercihler</string>
-    <string name="get_the_ad_free_version">Reklamsız sürümü Google Play\'de edinin</string>
     <string name="upgrade_to_add_free_version">Reklamsız sürüme geçin</string>
-    <string name="upgrade_to_add_free_version_description">Reklamları kaldırmak ve tüm özellikleri etkinleştirmek için uygulama lisansını satın alın</string>
     <string name="preferences_about">Hakkında</string>
-    <string name="preferences_category_complete">Tam sürüm</string>
     <string name="preferences_category_video">Video</string>
     <string name="preferences_force_software_decoding">Yazılımla kod çözme işlemini zorla</string>
     <string name="preferences_force_software_decoding_summary">Bazı videolar düzgün oynatılmıyorsa bu seçeneği deneyebilirsiniz</string>
@@ -551,8 +473,6 @@ desteklenmiyor.</string>
     <string name="preferences_allow_3rd_party_player_summary">Bir video oynatmayı başlattığınızda, Android size diğer uyumlu video oynatıcı uygulamalarını önerecektir. Bazı özelliklerin (oynatmaya devam etme, yer imleri vb.) çalışmayacağını lütfen unutmayınş</string>
     <string name="preference_tv_3d_automatic_switch">Otomatik 3D TV anahtarını etkinleştir</string>
     <string name="preference_tv_3d_automatic_switch_summary">Bu özelliği yalnızca 3D TV\'niz destekliyorsa kullanın</string>
-    <string name="enable_android_frame_timing">Android kare zamanlamasını etkinleştir</string>
-    <string name="enable_android_frame_timing_summary">Daha akıcı oynatma için kare blit zamanlamasını Android\'e devredin (deneysel)</string>
     <string name="hide_watched_videos">İzlenmiş videoları gizle</string>
     <string name="hide_watched_videos_summary">İzlendi olarak işaretlenmiş videoları Medya Kütüphanesi\'nden gizle.</string>
     <string name="enable_projector_mode">Projektör modunu etkinleştir</string>
@@ -565,7 +485,6 @@ desteklenmiyor.</string>
     <string name="preference_dolby_vision_mode">Dolby Vision Modu</string>
     <string name="preference_force_dolby_vision">Dolby Vision\'a zorla</string>
     <string name="preference_remove_dolby_vision">Dolby Vision\'ı devre dışı bırak</string>
-    <string name="preference_remove_dolby_vision_summary">Dolby vision yerine standart video kodeklerini kullanın</string>
     <string name="preference_cutout_short_edges">Ekran kesimli tam ekran video</string>
     <string name="preference_cutout_short_edges_summary">Kesikli yatay tam ekran videoya izin ver</string>
     <string name="toast_cutout_aspect_ratio_fix">Doğru en-boy oranına sahip kesikli tam ekran videoyu etkinleştirin.</string>
@@ -594,7 +513,6 @@ desteklenmiyor.</string>
     <string name="preferences_video_about">Hakkında</string>
     <string name="preferences_video_os_text">Alt Yazı Sağlayıcıları</string>
     <string name="preferences_video_tmdb_text">Film/TV Şovu bilgileri tarafından sağlanmıştır</string>
-    <string name="preferences_video_tvdb_text">TV Şovu tarafından sağlanan bilgiler</string>
     <string name="preferences_video_trakt_text">Video scrobbler tarafından sağlanmıştır</string>
     <string name="preferences_video_licenses">Lisanslar</string>
     <string name="preferences_network_mobile_vpn_summary">Yalnızca VPN yapılandırması ile kullanın ve veri kullanımınıza dikkat edin.</string>
@@ -605,8 +523,6 @@ desteklenmiyor.</string>
     <string name="preferences_video_advanced_quit_title">Düzenli tercihler</string>
     <string name="preferences_video_advanced_quit_summary">Düzenli tercihlere dönün</string>
     <string name="trakt_change">Trakt API\'sindeki bir değişiklik için yeniden bağlantı gerekir.</string>
-    <string name="tv_scraper">TV Şovları</string>
-    <string name="movie_scraper">Filmler</string>
     <string name="enable_auto_scrap">Yeni videolar için otomatik olarak bilgi alın</string>
     <string name="enable_scrape_from_db_title">Önceden toplanmış bilgileri kullan</string>
     <string name="enable_scrape_from_db_summary">Kopya bir video bulunursa, daha önceden alınmış bilgileri kullan. İlk veri alımını hızlandırmak için bu seçeneği devre dışı bırak!</string>
@@ -624,10 +540,6 @@ desteklenmiyor.</string>
     <string name="video_info_custom_search_file_hint">"\"Moviename\" or \"Showname S01E01\""</string>
     <string name="video_info_custom_search_show_hint">TV şovunun adı</string>
     <string name="scrap_show_no_result">Çevrimiçi eşleşen bir şov bulunamadı.</string>
-    <string name="video_info_backdrop_select">Başka bir resim seçin</string>
-    <string name="video_info_backdrop_remove">Kaldır</string>
-    <string name="video_info_backdrop_set_as">Resmi şu şekilde ayarla</string>
-    <string name="video_info_share_message">"Nova %2$s cihazımda \"%1$s\" videosunu izledim"</string>
     <string name="notification_mode">Bildirimler</string>
     <string name="notifications_all">Tüm bildirimler</string>
     <string name="notifications_alerts">Yalnızca bildirim uyarıları</string>
@@ -641,17 +553,13 @@ desteklenmiyor.</string>
     <string name="format_169">16:9</string>
     <string name="format_185">1.85:1</string>
     <string name="format_239">2.39:1</string>
-    <string name="stereo_dive_enable">Stereo dalış efekti</string>
-    <string name="stereo_dive_disable">Stereo dalış efektini devre dışı bırak</string>
     <string name="rotation_unlock">Otomatik ekran döndürmeyi etkinleştir</string>
     <string name="rotation_locked">Otomatik ekran döndürme devre dışı</string>
     <string name="rotation_unlocked">Otomatik ekran döndürme etkin</string>
     <string name="network_reindex">İçeriği yeniden tara</string>
     <!-- Help overlay -->
     <string name="help_overlay_menu">TV menüsünü görüntülemek için YUKARI ok tuşuna\nbasın</string>
-    <string name="help_overlay_ssh_indexing_text">Sunucunuza hızlı bir şekilde geri dönmek için \"Kısayol olarak ekle\" seçeneğini belirleyin.</string>
     <string name="help_overlay_network_indexing_text1">Bu klasörün ve alt klasörlerinin içeriğini Video Kütüphanesine entegre etmek için bu menü öğesine tıklayın.</string>
-    <string name="help_overlay_network_indexing_text1_lb">Bu klasörün ve alt klasörlerinin içeriğini Video Kitaplığına entegre etmek için + düğmesini kullanın.</string>
     <string name="help_overlay_network_indexing_text2">Filmler ve TV şovları için posterler ve açıklamalar almanızı sağlayacaktır.</string>
     <string name="help_overlay_scraper_text">Videolarınız için çevrimiçi poster ve açıklama aramak için bu menü öğesine basın. </string>
     <string name="help_overlay_network_shortcut_text1_lb">+ düğmesini kullanarak bu klasörü bir ağ kısayolu olarak ekleyin ve içeriğini ile alt klasörlerinin içeriğini Video Kütüphanesine ekleme seçeneğinden yararlanın.</string>
@@ -675,17 +583,12 @@ desteklenmiyor.</string>
     <string name="share_folders_smb_disable_udp_discovery_summary">Bazı cihazlarda (ör. Fire 10 HD) Wi-Fi bağlantısı dengesizse UDP arama özelliğini devre dışı bırakın.</string>
     <string name="share_folders_smb_disable_mdns_discovery">SMB mDNS arama özelliğini devre dışı bırak</string>
     <string name="share_folders_smb_disable_mdns_discovery_summary">Bazı cihazlarda Wi-Fi bağlantısı dengesizse mDNS arama özelliğini devre dışı bırakın.</string>
-    <string name="share_folders_smb_discovery_limited_to_mdsn">SMB arama işlemini mDNS ile sınırla</string>
-    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Bazı cihazlarda (ör. Fire 10 HD) Wi-Fi bağlantısı dengesizse UDP/TCP arama özelliğini devre dışı bırakın. ⚠ Bu, ChromeOS\'te doğru arama yapılmasını engelleyecektir.</string>
     <string name="connection_abnormally_long">Bağlantı anormal derecede uzun görünüyor. Sıfırlamak ister misiniz?</string>
     <string name="connection_reset">Sıfırla</string>
     <!-- Info dialog, not indexed file -->
-    <string name="video_info_unindexed_message">Bu dosya şu anda video kütüphanenizde indekslenmemiştir.\nAfiş ve bilgi araması yalnızca indekslenmiş dosyalar için kullanılabilir.\nŞimdi indekslemek ister misiniz?</string>
-    <string name="video_info_unindexed_message2">Dosya işleniyor. Bu biraz zaman alabilir.</string>
     <string name="video_browser_index_file">Kütüphaneye ekle</string>
     <string name="video_browser_unindex_file">Kütüphaneden kaldır</string>
     <!-- Brightness -->
-    <string name="auto_brightness_message">Otomatik parlaklık modu şu anda etkin olduğundan parlaklık değiştirilemiyor.</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">\'.Nfo\' dosyalarını işle</string>
     <string name="network_nfo_parse_summary">Medya bilgilerini ve posterleri toplamak için (yeniden) tarama sırasında Kodi \'.nfo\' dosyalarını okuyun.</string>
@@ -814,7 +717,6 @@ desteklenmiyor.</string>
     <string name="torrent_blocklist">Engelleme listesi</string>
     <string name="blocklist_empty">URL boş olmamalıdır</string>
     <string name="blocklist_invalid">Engelleme listesi geçersiz</string>
-    <string name="blocklist_downloading">Engellenenler listesi indiriliyor</string>
     <string name="blocklist_file_not_found">Dosya bulunamadı</string>
     <string name="blocklist_success">Engelleme listesi yenileme başarılı</string>
     <string name="blocklist_unknown_error">Bilinmeyen</string>
@@ -825,18 +727,14 @@ desteklenmiyor.</string>
     <string name="share_infos_incomplete">Yolu doldurman gerek</string>
     <string name="share_path">Yol</string>
     <string name="category_trakt">Trakt</string>
-    <string name="trakt_user">Kullanıcı Adı</string>
-    <string name="trakt_password">Şifre</string>
     <string name="trakt_signin">Oturum aç</string>
     <string name="trakt_list_signin">Trakt\'ta oturum açın</string>
-    <string name="trakt_status_login">Giriş yapılıyor&#8230;</string>
     <string name="trakt_signin_summary_logged">Giriş yapıldı</string>
     <string name="trakt_signin_summary_logged_error">Doğrulama hatası</string>
     <string name="trakt_signin_summary">Oturum açılmadı</string>
     <string name="trakt_relog_description">Trakt ile ilgili bir sorun algılandı ve kimlik bilgilerinin sıfırlanması gerekiyor, lütfen tekrar giriş yapın.</string>
     <string name="trakt_signin_dialog_title">Oturum aç</string>
     <string name="trakt_signin_title">Oturum Aç</string>
-    <string name="trakt_wipe_dialog_title">Trakt.tv\? Oturumunu kapat?</string>
     <string name="trakt_wipe_title">Trakt.tv oturumunu kapat</string>
     <string name="trakt_live_scrobbling_title">Canlı scrobbler</string>
     <string name="trakt_live_scrobbling_summary">Trakt\'ta izlenen videoları paylaşın</string>
@@ -891,7 +789,6 @@ desteklenmiyor.</string>
     <string name="leanback_scrap">Bilgi Al</string>
     <string name="leanback_scrap_choose_the_description">Bilgi seçin</string>
     <string name="leanback_scrap_choose_the_description_for">"\"%s\" için bilgi seçin"</string>
-    <string name="leanback_scrap_searching_general_hint">Filmin veya TV şovunun adı</string>
     <string name="leanback_scrap_searching_tvshow_hint">TV şovunun adı</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Eski arayüz</string>
@@ -929,7 +826,6 @@ desteklenmiyor.</string>
     <string name="rescan_when_opening_application">Uygulamayı açarken yeniden tara</string>
     <string name="last_rescan_occured">Son yeniden tarama gerçekleşti:</string>
     <string name="error_permission_display_over_apps">Pencere modu, diğer uygulamaların önünde görüntülenmek için özel izinlere ihtiyaç duyar. Lütfen Nova Video Player\'a pencere moduna geçmek için bu izni verin.</string>
-    <string name="intro_overlay_text">Videoları TV\'niz de yayınlamak için dokunun</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Daha fazla göster</string>
@@ -967,32 +863,13 @@ desteklenmiyor.</string>
     <string name="system">Sistem</string>
     <string name="keep_setting">Bu ayarı koru</string>
     <string name="select_sub_file"><![CDATA[Dosya için kesin altyazılar bulunamadı <font color=#29b6f6><i>%s</i></font><br />Please try among this list:]]></string>
-    <string name="switch_remote_empty_message">Uzaktan görüntü moduna geçmek daha fazla izleme seçeneği verebilir</string>
-    <string name="cast_stream_mode">Akış modu</string>
-    <string name="cast_remote_display_mode">Uzak ekran</string>
-    <string name="cast_remote_display_mode_description">nova video oynatıcı tarafından desteklenen her format uzak ekran kullanılarak oynatılabilir. Ancak, kalite bozulabilir.</string>
-    <string name="cast_stream_mode_description">En iyi kalite ancak bazı formatlar desteklenemiyor</string>
     <string name="sleep_timer_title">Uyku zamanlayıcısı</string>
     <string name="sleep_timer_description">Videoyu şu tarihten sonra durdur: </string>
-    <string name="cast_mode">Oyuncu modu</string>
-    <string name="cast_info">Bilgi</string>
-    <string name="troubleshoot_streammode_msg">Nova video oynatıcı şu anda akışlı yayın modunda.
-         \nBu, iyi bir video kalitesiyle sonuçlanır, ancak müzik parçalarında ve altyazılarda sorunlara yol açabilir.
-         Uzak ekran yayınlama moduna geçmeyi deneyin.</string>
-    <string name="troubleshoot_remotemode_msg">Nova video oynatıcı şu anda uzak ekran modunda.
-         \nCihazınıza ve ağ kalitenize bağlı olarak, bazı kalite kaybı ve performans sorunları yaşayabilirsiniz. </string>
     <string name="picture_in_picture">Fotoğraf içinde fotoğraf</string>
     <string name="cast">Yayın</string>
-    <string name="cast_warning">Chromecast\'in kodek sınırlamaları nedeniyle yayın desteği sınırlıdır. Bu sınırlamaları azaltmak için 2 yayın modu uygulanmıştır: Chromecast ve Screencast (otomatik alternatifli) Performans ve kalite sorunlarının ağ veya cihaz sınırlamalarından da kaynaklanabileceğini unutmayın.</string>
-    <string name="cast_warning_title">Deneysel özellik</string>
-    <string name="cast_fallback_message">Hata: Ekran yayınına geçiliyor</string>
-    <string name="cast_introduction">Yeni deneysel özellik : \nGoogle cast</string>
-    <string name="cast_select_for_full_control">Kontrol panelini genişletmek için dokunun</string>
     <string name="cast_audio_background">Nova Video Player arka plandayken ses çalışmaz</string>
     <string name="help_faq">Yardım / SSS</string>
     <string name="provider_folders">Bulut</string>
-    <string name="learn_more">Daha fazla bilgi edin</string>
-    <string name="learn_more_about_codecs">Nova Video Player, yalnızca cihazınız tarafından desteklenen videoları oynatabilir. Lisans sorunları nedeniyle bazı formatlar yasal olarak dahil edilememektedir; diğer bazı formatlar ise Google Play Store\'dan satın alınabilir.</string>
     <string name="rate_us">Bu uygulamayı beğendiyseniz, lütfen bize 5 yıldız vererek destek olun</string>
     <string name="rate_us_title">☆ Bize destek olun</string>
     <string name="create_new_list">Yeni liste oluştur</string>
@@ -1000,12 +877,10 @@ desteklenmiyor.</string>
     <string name="no_resume_available">Şu anda kullanılabilir devam etme yok</string>
     <string name="no_list_detected">Şu anda herhangi bir liste tespit edilmedi. Liste, video bilgilerine doğrudan yeni öğeler ekleyerek oluşturulabilir veya Trakt hesabınızla senkronize edilebilir.</string>
     <string name="not_available_during_media_scanning">Medya taraması sırasında kullanılamaz.</string>
-    <string name="premium_already_purchased">Premium zaten satın alınmış</string>
     <string name="remove_from_list">Listeden kaldır</string>
     <string name="warning_swdec">Uyarı: Donanım kod çözme devre dışı!</string>
     <string name="list_title">Liste başlığı</string>
     <string name="loading">Yükleniyor…</string>
-    <string name="connecting">Bağlanıyor…</string>
     <string name="refreshrate_failed">İstenen yenileme hızı ayarlanamadı</string>
     <string name="sponsor">Nova\'ya Sponsor Ol</string>
     <string name="enable_sponsor_title">Nova sponsor bağlantısını etkinleştir</string>
@@ -1018,8 +893,6 @@ desteklenmiyor.</string>
     <string name="upgrade_info">Güncelleme bilgileri</string>
     <string name="v5_v6_upgrade_info">UYARI: Bu Nova büyük güncellemesi, multimedya bilgilerinin yeniden alınması için tüm video koleksiyonunun yeniden taranmasını gerektirir.
         Sorun yaşamamak için sistemi temiz bir kurulumdan yeniden başlatmanız şiddetle tavsiye edilir. Ayrıntılar için lütfen SSS bölümüne bakın.</string>
-    <string name="networks">Ağlar:</string>
-    <string name="premiered">İlk gösterim:</string>
     <string name="external_player_service_title">Harici oynatıcıda oynatma</string>
     <string name="external_player_service_description">Nova Video Player, harici bir oynatıcıya içerik sağlar</string>
     <string name="stop">Dur</string>

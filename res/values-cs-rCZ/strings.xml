@@ -23,7 +23,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Aktualizovat seznam serverů</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">Aktivovat síťová úložiště</string>
     <string name="initial_scan">Úvodní skenování</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Hledat</string>
@@ -44,17 +43,9 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020AÁBCČDĎEÉĚFGHCHIÍJKLMNŇOÓPQRŘSŠTŤUÚVWXYÝZŽ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">Stopáž</string>
     <string name="video_sources">Zdroje</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">Film</string>
-    <string name="info_tab_show">Seriál</string>
-    <string name="info_tab_episode">Epizoda</string>
-    <string name="info_tab_video">Video</string>
     <string name="info_tab_file">Informace o souboru</string>
-    <string name="info_tab_backdrop_chooser">Výběr pozadí</string>
-    <string name="info_tab_poster_chooser">Výběr plakátu</string>
-    <string name="info_tab_share">Sdílet</string>
     <string name="info_menu_backdrop_select">Pozadí</string>
     <string name="info_menu_series_backdrop_select">Pozadí pro seriál</string>
     <string name="info_menu_poster_select">Vybrat jiný plakát</string>
@@ -77,12 +68,9 @@
     <string name="network_shared_folders">Sdílené složky (SMB)</string>
     <string name="network_connected_as">Připojeno jako %s</string>
     <string name="network_guest">host</string>
-    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">SMB (experimentální)</string>
     <string name="network_cling">UPnP (experimentální)</string>
-    <string name="recordings_storage">Záznamy</string>
     <string name="root_storage">Interní úložiště</string>
-    <string name="cannot_list">Nelze získat obsah</string>
     <!-- VIDEO -->
     <string name="videos">Videa</string>
     <string name="all_videos">Všechna videa</string>
@@ -95,12 +83,8 @@
     <string name="all_animes_format">Animované filmy - %d</string>
     <string name="all_collections">Všechny kolekce</string>
     <string name="all_collections_format">Všechny kolekce -  %d</string>
-    <string name="all_collection_watched">Všechny sbírky byly zhlédnuté</string>
-    <string name="all_collection_unwatched">Kolekce nebyla zhlédnuta</string>
     <string name="not_watched_movies_format">Nezhlédnuté - %d</string>
     <string name="not_watched_animes_format">Nezhlédnuté - %d</string>
-    <string name="no_movie_watched">Žádný film nebyl zhlédnutý</string>
-    <string name="all_movies_watched">Všechny filmy byly zhlédnuty</string>
     <string name="movies_by_alpha">Filmy abecedně</string>
     <string name="movies_by_genre">Filmy dle žánrů</string>
     <string name="movies_by_rating">Filmy dle hodnocení</string>
@@ -112,9 +96,7 @@
     <string name="all_animes">Všechny animované filmy</string>
     <string name="all_animes_row">Všechny animované</string>
     <string name="all_animeshows">Všechny animované seriály</string>
-    <string name="animes_by_alpha">Animované filmy abecedně</string>
     <string name="animes_by_genre">Animované filmy dle žánru</string>
-    <string name="animes_by_rating">Animované filmy dle hodnocení</string>
     <string name="animes_by_year">Animace filmů podle roku</string>
     <string name="all_tvshows_format">Všechny seriály - %d</string>
     <string name="not_watched_tvshows_format">Nezhlédnuté - %d</string>
@@ -131,24 +113,18 @@
     <string name="date_view_year">Rok</string>
     <string name="all_movies_and_tv_shows">Filmy a seriály</string>
     <string name="non_scraped_videos">Videa bez získaných informací</string>
-    <string name="no_server">Nebyl nalezen žádný mediální server</string>
     <string name="cannot_open_video">Video nelze otevřít</string>
     <string name="confirm_delete">Opravdu odstranit?</string>
     <string name="deleting">Probíhá odstraňování, prosím čekejte…</string>
-    <string name="cannot_delete_directory">Tuto složku nelze odstranit</string>
-    <string name="cannot_delete_file">Tento soubor nelze odstranit</string>
     <string name="directory_deleted">Složka byla odstraněna</string>
-    <string name="file_deleted">Soubor byl odstraněn</string>
     <string name="resume">Pokračovat</string>
     <string name="remote_resume">Obnovení pozice na síti</string>
     <string name="bookmark">Záložka</string>
     <string name="delete">Odstranit</string>
     <string name="confirm_delete_short">Potvrdit odstranění</string>
     <string name="delete_resume">Odstranit pozici obnovení</string>
-    <string name="delete_bookmark">Odstranit záložku</string>
     <string name="mark_as_watched">Označit jako zhlédnuté</string>
     <string name="mark_as_not_watched">Označit jako nezhlédnuté</string>
-    <string name="upnp_not_allowed">Nemáte oprávnění používat tento UPnP server. Prosím změňte vaší konfiguraci přístupu.</string>
     <string name="scrap_no_info">Pro toto video nemáte k dispozici žádné informace o filmu nebo seriálu.</string>
     <string name="scrap_remove">Odstranit popis</string>
     <string name="scrap_remove_short">Odstranit</string>
@@ -175,14 +151,10 @@
     <string name="scrap_cast">Obsazení</string>
     <string name="scrap_cast_format">Obsazení: %s</string>
     <string name="scrap_genre">Žánr</string>
-    <string name="scrap_genre_format">Žánrů: %s</string>
     <string name="scrap_genre_title">Žánry</string>
     <string name="scrap_aired">Vysíláno</string>
     <string name="scrap_aired_format">Vysíláno: %s</string>
-    <string name="scrap_guests">Hosté</string>
-    <string name="scrap_premiered">Premiéra</string>
     <!-- Specific strings for TV shows -->
-    <string name="show_network">Network</string>
     <string name="episode_name">Epizoda</string>
     <string name="episode_season">Sezóna</string>
     <string name="episode_specials">Speciály</string>
@@ -193,9 +165,6 @@
     <string name="how_to_mark_season_watched">Klikněte na sezónu pro označení všech jejích epizod jako zhlédnutých nebo nezhlédnutých</string>
     <string name="how_to_unindex_season">Klikněte na sezónu pro odebrání všech jejích epizod z knihovny</string>
     <string name="how_to_delete_season">Klikněte na sezónu pro odstranění všech jejích epizod</string>
-    <string name="mark_show_watched">Označení všech epizod jako zhlédnutých nebo nezhlédnutých</string>
-    <string name="unindex_show">Odebrat všechny epizody z knihovny</string>
-    <string name="delete_show">Odstranit všechny epizody</string>
     <string name="no_episode_watched">Žádná epizoda nebyla zhlédnuta</string>
     <string name="all_episodes_watched">Všechny epizody byly zhlédnuty</string>
     <string name="scrap_processing">Získávám metadata…</string>
@@ -234,13 +203,9 @@
     <string name="preference_display_all_files">Zobrazit všechny soubory v prohlížeči</string>
     <string name="preference_display_all_files_summary">Zobrazit i ostatní soubory (které neobsahují video)</string>
     <string name="info_processing">Kontrola vlastností médií…</string>
-    <string name="info_video">Video</string>
     <string name="info_audio">Audio</string>
     <string name="info_audio_vbr">VBR</string>
-    <string name="info_plugin_required">(je vyžadován plugin)</string>
     <string name="info_subtitle">Titulky</string>
-    <string name="info_resume">Obnovit pozici</string>
-    <string name="info_bookmark">Nastavit záložku</string>
     <string name="info_file">Informace o souboru</string>
     <string name="use_remote_resume">Použít funkci obnovení pozice pro síťová připojení?</string>
     <!-- VIDEO COVER ROLL -->
@@ -264,9 +229,6 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">Centrum médií</string>
     <string name="view_mode">Režim zobrazení</string>
-    <string name="view_mode_list">Seznam</string>
-    <string name="view_mode_grid">Plakáty</string>
-    <string name="view_mode_details">Podrobnosti</string>
     <string name="switch_to_list">Seznam</string>
     <string name="switch_to_grid">Mřížka</string>
     <!-- VideoPlayer -->
@@ -311,7 +273,6 @@
     <string name="menu_change_folder_details">Vyberte složku, kterou chcete začít</string>
     <string name="unlock_instructions">Dlouze stiskněte ikonu pro odemknutí</string>
     <string name="seek_to_percentage">Vyhledávám %s%%</string>
-    <string name="set_audio_speed_to">Rychlost zvuku %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
     <string name="subs_HI">Sluchově postižení</string>
@@ -337,8 +298,6 @@
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Video nelze přehrát</string>
     <string name="player_err_cantplaysound">Zvukovou stopu nelze přehrát</string>
-    <string name="audiocodec_not_supported">Audio formát (<xliff:g id="codec">%s</xliff:g>) není podporován.</string>
-    <string name="videocodec_not_supported">Video formát (<xliff:g id="codec">%s</xliff:g>) není podporován.</string>
     <string name="player_err_file">Soubor s videem neexistuje.</string>
     <string name="player_err_sizetoobig">Velikost videa je příliš velká</string>
     <string name="player_err_unknown">Neznámá chyba.</string>
@@ -355,19 +314,10 @@
     <string name="player_err_profile_and_level">\"Profil\" a \"Úroveň\"</string>
     <string name="player_err_interlaced">Prokládané</string>
     <!-- Player plug-in -->
-    <string name="player_plugin_cinema_title">Plugin Cinema</string>
-    <string name="player_plugin_cinema">Plugin Cinema (DVD, MPEG-2, AC3)</string>
-    <string name="player_plugin_ac3_title">Plugin AC3</string>
-    <string name="player_plugin_ac3">Plugin AC3</string>
-    <string name="player_plugin_mpeg2_title">Plugin MPEG-2</string>
-    <string name="player_plugin_mpeg2">Plugin MPEG-2 (DVD)</string>
     <string name="player_plugin_video_msg">Tento soubor obsahuje formát videa <xliff:g id="video">%1$s</xliff:g>.</string>
     <string name="player_plugin_audio_msg">Tento soubor obsahuje formát audia <xliff:g id="audio">%1$s</xliff:g>.</string>
     <string name="player_plugin_video_audio_msg">Tento soubor obsahuje formát videa <xliff:g id="video">%1$s</xliff:g> a formát audia <xliff:g id="audio">%2$s</xliff:g>.</string>
-    <string name="player_plugin_purchase_msg">Je nutné zakoupit <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">Přejít do obchodu</string>
-    <string name="player_plugin_purchase_archos_msg">Můžete dokoupit další pluginy s kodeky na www.archos.com.</string>
-    <string name="player_plugin_purchase_google_play_msg">Můžete dokoupit další pluginy s kodeky na Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Přejít na Google Play</string>
     <string name="plugin_update_required_title">Je vyžadována aktualizace kodeku</string>
     <string name="plugin_update_required_message">Zdá se, že do aplikace Nova Video Player již máte nainstalovány dodatečné kodeky.\n\nTato nová verze aplikace vyžaduje aktualizaci těchto kodeků.\n\nProsím použijte Google Play pro aktualizaci a opětovnou instalaci kodeků.</string>
@@ -385,17 +335,9 @@
     <string name="subtitles_wizard_cache">Cache</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Získat titulky online</string>
-    <string name="toast_subloader_sub_found">Byla nalezena stopa titulků pro tento jazyk</string>
-    <string name="toast_subloader_sub_not_found">Pro tento jazyk nebyla nalezena stopa titulků</string>
     <string name="toast_subloader_service_unreachable">webová služba pro titulky není dostupná</string>
-    <string name="menu_subloader_allfolder">Získat chybějící titulky</string>
     <string name="dialog_subloader_copying">Kopírování titulků…</string>
-    <string name="dialog_subloader_downloading">Stahování titulků…</string>
-    <string name="dialog_subloader_sumup">Stahování dokončeno</string>
-    <string name="dialog_subloader_success">Titulky nalezeny pro:</string>
     <string name="dialog_subloader_fails">Titulky nebyly nalezeny pro:</string>
-    <string name="sub_force_all_title">Vynutit stažení titulků</string>
-    <string name="sub_force_all">Všechna vaše videa mají alespoň jednu stopu s titulky. Chcete přesto zahájit vynucené stažení nových titulkových stop?</string>
     <string name="dialog_subloader_nonetwork_title">Připojení k internetu není k dispozici</string>
     <string name="dialog_subloader_nonetwork_message">Ke stažení titulků je vyžadováno připojení k internetu</string>
     <string name="dialog_subloader_connecting">Připojování na www.opensubtitles.com…</string>
@@ -407,7 +349,6 @@
     <string name="toast_subloader_quota_exceeded">Kvóta stahování na OpenSubtitles překročena</string>
     <string name="opensubtitles_quota_reset_time_remaining">Kvóta se resetuje za %s</string>
     <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_settings_title">Nastavení titulků</string>
     <string name="subtitle_sample_text">\"příklad\"</string>
     <string name="subtitle_size_text">Velikost:</string>
     <string name="subtitle_style_text">Styl:</string>
@@ -436,25 +377,16 @@
     <string name="loading_torrent">Načítám torrent…</string>
     <string name="error_no_video_file">Žádné video soubory</string>
     <string name="torrent_file_to_play">Vyberte soubor k přehrání</string>
-    <string name="torrent_buy_premium_message">Streamování torrentů je dostupné pouze v placené verzi</string>
-    <string name="torrent_buy_premium">Koupit prémiovou verzi</string>
     <!-- Shortcuts -->
     <string name="browse_net_server">Procházet síťová sdílení</string>
-    <string name="add_smb_server">Procházet SMB server</string>
-    <string name="add_network_server">Přidat síťové sdílení</string>
-    <string name="add_to_shortcuts">Vytvořit zástupce</string>
     <string name="add_ssh_server">Procházet FTP server</string>
     <string name="add_ssh_shortcut">Přidat jako zástupce</string>
     <string name="ssh_prompt">Typ FTP</string>
     <string name="protocol_prompt">Typ protokolu</string>
-    <string name="ssh_empty_view"> \"Můžete procházet a přehrávat z vašeho ftp serveru\"</string>
     <string name="remove_from_shortcuts">Odstranit zástupce</string>
-    <string name="shortcut_added">Zástupce %s vytvořen</string>
     <string name="shortcut_removed">Zástupce %s odstraněn</string>
     <string name="server_not_available">Server je momentálně nedostupný</string>
-    <string name="cannot_open_shortcut">Obsah tohoto zástupce není momentálně dostupný.\nProsím zkontrolujte zda máte požadovaná oprávnění.</string>
     <string name="network_shortcuts">Zástupci sítě</string>
-    <string name="media_servers">Mediální servery</string>
     <string name="shortcut_list_empty">Nebyly vytvořeny zástupce sítě.\n\nPro vytvoření zástupců pro vaše oblíbené vzdálené složky dlouze stiskněte vybranou cílovou složku a vyberte \"%s\" na panelu akcí v horní části.</string>
     <string name="ftp_shortcut_list_empty">Pro vytvoření zástupců pro vaše oblíbené vzdálené složky vyberte \"%s\" na panelu akcí v horní části při prohlížení obsahu serveru.</string>
     <string name="indexed_folders">Indexované složky</string>
@@ -477,7 +409,6 @@
     <string name="last_rescan_never">Nikdy</string>
     <string name="upnp_indexing_warning_title">Indexování UPnP</string>
     <string name="upnp_indexing_warning_message">Indexování zdroje UPnP neumožňuje využít tolik funkcí jako indexování SMB.\nDoporučujeme raději indexovat SMB složku pokud to váš server resp. PC podporuje.\n</string>
-    <string name="ssh_error">Nelze se připojit: prosím zkontrolujte vaše připojení a přihlašovací údaje</string>
     <string name="ssh_remote_address">Vzdálená adresa</string>
     <string name="ssh_port">Port</string>
     <string name="ssh_password">Heslo</string>
@@ -486,11 +417,8 @@
     <string name="smb_domain">Doména (volitelné)</string>
     <!-- Preferences -->
     <string name="preferences">Nastavení</string>
-    <string name="get_the_ad_free_version">Získejte verzi bez reklam na Google Play</string>
     <string name="upgrade_to_add_free_version">Upgradovat na verzi bez reklam</string>
-    <string name="upgrade_to_add_free_version_description">Koupit licenci k aplikaci pro odstranění reklam a aktivaci všech funkcí</string>
     <string name="preferences_about">O aplikaci</string>
-    <string name="preferences_category_complete">Plná verze</string>
     <string name="preferences_category_video">Video</string>
     <string name="preferences_force_software_decoding">Vynutit softwarové dekódování</string>
     <string name="preferences_force_software_decoding_summary">Můžete vyzkoušet tuto možnost pokud nejsou některá videa správně přehrávána</string>
@@ -519,7 +447,6 @@
     <string name="preferences_tv_refreshrate_switch_mode_selection">Zobrazit režim výběru přizpůsobení fps</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">Android 12+ funkce přizpůsobení snímkové frekvence</string>
     <string name="preference_remove_dolby_vision">Zakázat dolby vision</string>
-    <string name="preference_remove_dolby_vision_summary">Použít standardní video kodeky místo dolby vision</string>
     <string name="preference_cutout_short_edges">Celá obrazovka s výřezy displeje</string>
     <string name="preference_cutout_short_edges_summary">Povolit horizontální video na plnou obrazovku na displeji s výřezy</string>
     <string name="category_languages">Titulky</string>
@@ -541,7 +468,6 @@
     <string name="preferences_video_about">O aplikaci</string>
     <string name="preferences_video_os_text">Titulku poskytnuty z</string>
     <string name="preferences_video_tmdb_text">Informace o filmu/seriálu dodávány</string>
-    <string name="preferences_video_tvdb_text">Informace o seriálech poskytnuty z</string>
     <string name="preferences_video_trakt_text">Logování sledování videí (scrobbler) poskytnuto z</string>
     <string name="preferences_video_licenses">Licence</string>
     <string name="preferences_network_mobile_vpn_summary">Používejte pouze s VPN konfigurací a mějte na paměti využití vašich mobilních dat.</string>
@@ -552,8 +478,6 @@
     <string name="preferences_video_advanced_quit_title">Standardní nastavení</string>
     <string name="preferences_video_advanced_quit_summary">Zpět ke standardnímu nastavení</string>
     <string name="trakt_change">Změna na Trakt API vyžaduje opětovné připojení.</string>
-    <string name="tv_scraper">Seriály</string>
-    <string name="movie_scraper">Filmy</string>
     <string name="enable_auto_scrap">Automaticky získat informace pro nová videa</string>
     <string name="enable_adult_scrap_title">Získávání informací pro videa pro dospělé</string>
     <string name="enable_adult_scrap_summary">Povolit načítání informací pro videa pro dospělé (ve výchozím nastavení vypnuto)</string>
@@ -569,10 +493,6 @@
     <string name="video_info_custom_search_file_hint">"\"Název filmu\" nebo \"Název seriálu S01E01\""</string>
     <string name="video_info_custom_search_show_hint">Název seriálu</string>
     <string name="scrap_show_no_result">Nebyl nalezen žádný odpovídající seriál.</string>
-    <string name="video_info_backdrop_select">Vybrat jiný obrázek</string>
-    <string name="video_info_backdrop_remove">Odstranit</string>
-    <string name="video_info_backdrop_set_as">Nastavit obrázek jako</string>
-    <string name="video_info_share_message">"Sledoval jsem video %1$s na mém Nova %2$s"</string>
     <string name="notification_mode">Oznámení</string>
     <string name="notifications_all">Všechna oznámení</string>
     <string name="notifications_alerts">Pouze důležitá oznámení</string>
@@ -582,17 +502,13 @@
     <string name="format_optimized">Optimalizováno</string>
     <string name="format_original">Originální</string>
     <string name="format_stretched">Roztažené</string>
-    <string name="stereo_dive_enable">Efekt \"Stereo dive\"</string>
-    <string name="stereo_dive_disable">Vypnout efekt \"Stereo dive\"</string>
     <string name="rotation_unlock">Zapnout automatickou rotaci obrazovky</string>
     <string name="rotation_locked">Automatická rotace obrazovky vypnuta</string>
     <string name="rotation_unlocked">Automatický rotace obrazovky zapnuta</string>
     <string name="network_reindex">Znovu naskenovat obsah</string>
     <!-- Help overlay -->
     <string name="help_overlay_menu">Zmáčkněte tlačítko \"Nahoru\"\npro zobrazení menu TV</string>
-    <string name="help_overlay_ssh_indexing_text">Vyberte \"Přidat jako zástupce\" pro možnost rychlého návratu zpět na váš server.</string>
     <string name="help_overlay_network_indexing_text1">Vyberte tuto položku menu pro zahrnutí obsahu této složky a jejích podsložek to knihovny videí.</string>
-    <string name="help_overlay_network_indexing_text1_lb">Použijte tlačítko + pro zahrnutí obsahu této složky a jejích podsložek to knihovny videí.</string>
     <string name="help_overlay_network_indexing_text2">Tato funkce vám umožní získat plakáty a popisy k filmům a seriálům.</string>
     <string name="help_overlay_scraper_text">Zvolte tuto položku menu pro online vyhledání plakátů a informací k vašim videím. </string>
     <string name="help_overlay_network_shortcut_text1_lb">Použijte tlačítko + pro přidání této síťové složky jako zástupce a máte možnost přidat její obsah včetně podsložek do Knihovny videí.</string>
@@ -611,12 +527,9 @@
     <string name="connection_abnormally_long">Připojování trvá neobvykle dlouho. Chcete ho zresetovat?</string>
     <string name="connection_reset">Resetovat</string>
     <!-- Info dialog, not indexed file -->
-    <string name="video_info_unindexed_message">Tento soubor není indexován ve vaší knihovně videí.\nVyhledávání plakátů a informací je možné pouze pro indexované soubory.\nChcete soubor nyní indexovat?</string>
-    <string name="video_info_unindexed_message2">Soubor je zpracováván, může to chvíli trvat.</string>
     <string name="video_browser_index_file">Přidat do knihovny</string>
     <string name="video_browser_unindex_file">Odebrat z knihovny</string>
     <!-- Brightness -->
-    <string name="auto_brightness_message">Jas nemůže být změněn, protože je aktivní režim automatického jasu.</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">Zpracovat soubory \'nfo\'</string>
     <string name="network_nfo_parse_summary">Zpracovávat Boxee/XMBC soubory \'.nfo\' během skenování pro získání informací o médiích a plakátů.</string>
@@ -725,7 +638,6 @@
     <string name="torrent_blocklist">Seznam blokací</string>
     <string name="blocklist_empty">URL adresa nesmí být prázdná</string>
     <string name="blocklist_invalid">Seznam blokací je neplatný</string>
-    <string name="blocklist_downloading">Stahování seznamu blokací</string>
     <string name="blocklist_file_not_found">Soubor nebyl nalezen</string>
     <string name="blocklist_success">Aktualizace seznamu blokací dokončena</string>
     <string name="blocklist_unknown_error">Neznámý</string>
@@ -736,18 +648,14 @@
     <string name="share_infos_incomplete">Musíte vyplnit cestu</string>
     <string name="share_path">Cesta</string>
     <string name="category_trakt">Trakt</string>
-    <string name="trakt_user">Uživatelské jméno</string>
-    <string name="trakt_password">Heslo</string>
     <string name="trakt_signin">Přihlášení</string>
     <string name="trakt_list_signin">Přihlásit do Trakt</string>
-    <string name="trakt_status_login">Přihlašování do&#8230;</string>
     <string name="trakt_signin_summary_logged">Přihlášen/a</string>
     <string name="trakt_signin_summary_logged_error">Chyba ověření</string>
     <string name="trakt_signin_summary">Nepřihlášeno</string>
     <string name="trakt_relog_description">Byl detekován problém s Trakt a je nutné zresetovat přihlašovací údaje; prosím přihlaste se znovu.</string>
     <string name="trakt_signin_dialog_title">Přihlášení</string>
     <string name="trakt_signin_title">Přihlášení</string>
-    <string name="trakt_wipe_dialog_title">Odhlásit se z Trakt.tv\?</string>
     <string name="trakt_wipe_title">Odhlásit se z Trakt.tv</string>
     <string name="trakt_live_scrobbling_title">Živé logování sledování (scrobbler)</string>
     <string name="trakt_live_scrobbling_summary">Sdílení videí zhlédnutých v Trakt</string>
@@ -789,7 +697,6 @@
     <string name="leanback_scrap">Získat popis</string>
     <string name="leanback_scrap_choose_the_description">Vyberte popis</string>
     <string name="leanback_scrap_choose_the_description_for">"Vyberte popis pro \"%s\""</string>
-    <string name="leanback_scrap_searching_general_hint">Název filmu nebo seriálu</string>
     <string name="leanback_scrap_searching_tvshow_hint">Název seriálu</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Starší rozhraní</string>
@@ -825,7 +732,6 @@
     <string name="rescan_when_opening_application">Znovu naskenovat při otevření aplikace</string>
     <string name="last_rescan_occured">Poslední skenování proběhlo:</string>
     <string name="error_permission_display_over_apps">Režim okna vyžaduje speciální oprávnění, aby bylo možné aplikaci zobrazit navrch před všemi ostatními aplikacemi. Prosím nastavte aplikaci Nova Video Player oprávnění pro přepnutí do režimu okna.</string>
-    <string name="intro_overlay_text">Stiskněte pro zahájení vysílání (castování) videí do vaší TV</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Zobrazit více</string>
@@ -846,44 +752,23 @@
     <string name="system">Systém</string>
     <string name="keep_setting">Zapamatovat toto nastavení</string>
     <string name="select_sub_file"><![CDATA[Nebyly nalezeny přesné titulky pro soubor <font color=#29b6f6><i>%s</i></font><br />Prosím zkuste některé z následujícího seznamu:]]></string>
-    <string name="switch_remote_empty_message">Přepnutí do režimu vzdáleného displeje vám může nabídnout více možností sledování</string>
-    <string name="cast_stream_mode">Režim streamování</string>
-    <string name="cast_remote_display_mode">Vzdálený displej</string>
-    <string name="cast_remote_display_mode_description">Všechny formáty podporované přehrávačem archos video mohou být přehrány na vzdáleném displeji. Nicméně jejich kvalita může být snížena.</string>
-    <string name="cast_stream_mode_description">Optimální kvalita ale některé formáty nemusejí být podporovány</string>
     <string name="sleep_timer_title">Časovač uspání</string>
     <string name="sleep_timer_description">Zastavit video po: </string>
-    <string name="cast_mode">Režim vysílání (castování)</string>
-    <string name="cast_info">Informace</string>
-    <string name="troubleshoot_streammode_msg">Přehrávač Nova Video je nyní v režimu streamovaného vysílání (castování).
-        \nTento režim poskytuje dobrou kvalitu videa ale může způsobit problémy se zvukovými a titulkovými stopami.
-        Zkuste přepnout do režimu vzdáleného displeje.</string>
-    <string name="troubleshoot_remotemode_msg">Přehrávač Nova video je nyní v režimu vzdáleného displeje.
-        \nV závislosti na vašem zařízení a kvalitě síťového připojení může dojít ke snížení kvality nebo problémům s výkonností. </string>
     <string name="picture_in_picture">Obraz v obraze</string>
     <string name="cast">Vysílání (castování)</string>
-    <string name="cast_warning">Podpora pro vysílání (castování) je limitována z důvodu omezení kodeků pro Chromecast. Pro zmírnění těchto omezení jsou k dispozici 2 režimy: Chromecast a Screencast (s automatickým přepnutím na tento režim). Omezení výkonu a kvality může být také způsobeno zařízením a síťovým připojením.</string>
-    <string name="cast_warning_title">Experimentální funkce</string>
-    <string name="cast_fallback_message">Chyba: přepnutí na režim Screencast</string>
-    <string name="cast_introduction">Nová experimentální funkce :\nGoogle cast</string>
-    <string name="cast_select_for_full_control">Stiskněte pro zobrazení plného ovládání</string>
     <string name="cast_audio_background">Zvuk nebude fungovat dokud je Nova Video Player spuštěn na pozadí</string>
     <string name="help_faq">Nápověda / FAQ</string>
     <string name="provider_folders">Cloud</string>
-    <string name="learn_more">Dozvědět se více</string>
-    <string name="learn_more_about_codecs">Nova Video Player může přehrávat pouze videa podporovaná vaším zařízením. Některé formáty nemohou být zahrnuty z licenčních důvodů, podpora pro jiné může být zakoupena v obchodě Google Play.</string>
     <string name="rate_us">Pokud se vám tato aplikace líbí, prosím podpořte nás a ohodnoťte jí 5 hvězdičkami</string>
     <string name="rate_us_title">☆ Podpořte nás</string>
     <string name="create_new_list">Vytvořit nový playlist</string>
     <string name="add_to_list">Přidat do playlistu</string>
     <string name="no_resume_available">Není dostupná žádná pozice obnovení</string>
     <string name="no_list_detected">Nebyl nalezen žádný playlist. Playlist může být vytvořen přidáním nových položek přímo ze stránky s informacemi o videu nebo synchronizován s vaším účtem Trakt (pouze prémiová verze).</string>
-    <string name="premium_already_purchased">Prémiová verze byla již zakoupena</string>
     <string name="remove_from_list">Odebrat z playlistu</string>
     <string name="warning_swdec">Varování: hardwarové dekódování vypnuto!</string>
     <string name="list_title">Název</string>
     <string name="loading">Načítání…</string>
-    <string name="connecting">Připojování…</string>
     <string name="refreshrate_failed">Nepodařilo se nastavit požadovanou obnovovací frekvenci</string>
     <string name="sponsor">Podpořte aplikaci Nova</string>
     <string name="enable_sponsor_title">Aktivovat odkaz na sponzorské dary pro aplikaci Nova</string>
@@ -892,7 +777,5 @@
     <string name="supported_refresh_rates">Podporované obnovovací frekvence:</string>
     <string name="upgrade_info">Informace o aktualizaci</string>
     <string name="v5_v6_upgrade_info">VAROVÁNÍ: tato významná aktualizace aplikace vyžaduje opětovné naskenování všech videí pro opětovné získání popisných informací.         Pro vyvarování se problémů doporučujeme začít znovu s čistou instalací. Prosím přečtěte si časté otázky (FAQ) pro další detaily.</string>
-    <string name="networks">Sítě:</string>
-    <string name="premiered">Premiéra:</string>
     <string name="stop">Zastavit</string>
 </resources>
