@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.cover;
 
 import com.archos.mediacenter.cover.ArtworkFactory;
 import com.archos.mediacenter.cover.Cover;
+import com.archos.mediacenter.utils.BitmapUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserListOfSeasons;
 import com.archos.mediacenter.video.player.PlayerActivity;
@@ -122,7 +123,7 @@ public class TvShowCover extends Cover {
             // get the DVD-like art from the Scraper database
             if (mPosterPath!=null) {
                 if (DBG) Log.d(TAG, "try to decode mPosterPath=" + mPosterPath);
-                coverBitmap = BitmapFactory.decodeFile(mPosterPath);
+                coverBitmap = BitmapUtils.decodeSampledBitmapFromFile(mPosterPath, 500, 750);
             }
 
             if (coverBitmap == null) {

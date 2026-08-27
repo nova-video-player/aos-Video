@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.cover;
 
 import com.archos.mediacenter.cover.ArtworkFactory;
+import com.archos.mediacenter.utils.BitmapUtils;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.EpisodeInfo;
@@ -112,7 +113,7 @@ public class EpisodeCover extends BaseVideoCover {
 			    if (coverFile!=null) {
 			        final String coverPath = coverFile.getPath();
 			        if (DBG) Log.d(TAG, "try to decode coverPath=" + coverPath);
-			        coverBitmap = BitmapFactory.decodeFile(coverPath);
+			        coverBitmap = BitmapUtils.decodeSampledBitmapFromFile(coverPath, 500, 750);
 			    }
 			}
 

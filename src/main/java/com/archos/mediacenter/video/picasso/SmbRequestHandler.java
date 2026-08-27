@@ -61,6 +61,7 @@ public class SmbRequestHandler extends RequestHandler {
         }
 
         BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 1;
         if (request.hasSize()) {
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(inputStream, null, options);
