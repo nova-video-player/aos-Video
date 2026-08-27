@@ -218,29 +218,30 @@ public class UpdateNextTask {
                         " AND " + LoaderUtils.HIDE_USER_HIDDEN_FILTER +
                         " AND vl." + VideoStore.List.Columns.SYNC_STATUS + " != " + VideoStore.List.SyncStatus.STATUS_DELETED +
                         " AND vl." + VideoStore.VideoList.Columns.LIST_ID + " = ?)";
-                Cursor cursor = mResolver.query(VideoStore.RAW_QUERY, null, selection, new String[]{mPlaylistId + ""}, null);
-                if (cursor != null && cursor.getCount() > 0) {
-                    if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: cursor not null");
-                    int movieIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.M_ONLINE_ID);
-                    int episodeIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.E_ONLINE_ID);
-                    while (cursor.moveToNext()) {
-                        long episodeId = cursor.getLong(episodeIdColumn);
-                        long movieId = cursor.getLong(movieIdColumn);
-                        if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: episodeId {}, movieId {}", episodeId, movieId);
-                        if (currentEpisodeId != -1 && currentEpisodeId == episodeId) {
-                            useNextVideo = true;
-                        } else if (currentMovieId != -1 && currentMovieId == movieId) {
-                            useNextVideo = true;
-                        } else if (useNextVideo) { //previous was our video, this one is different, use Uri
-                            int dataColumn = cursor.getColumnIndex(VideoStore.MediaColumns.DATA);
-                            if (dataColumn >= 0) {
-                                nextUri = Uri.parse(cursor.getString(dataColumn));
-                                return new Result(nextUri, nextId);
+                try (Cursor cursor = mResolver.query(VideoStore.RAW_QUERY, null, selection, new String[]{mPlaylistId + ""}, null)) {
+                    if (cursor != null && cursor.getCount() > 0) {
+                        if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: cursor not null");
+                        int movieIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.M_ONLINE_ID);
+                        int episodeIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.E_ONLINE_ID);
+                        while (cursor.moveToNext()) {
+                            long episodeId = cursor.getLong(episodeIdColumn);
+                            long movieId = cursor.getLong(movieIdColumn);
+                            if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: episodeId {}, movieId {}", episodeId, movieId);
+                            if (currentEpisodeId != -1 && currentEpisodeId == episodeId) {
+                                useNextVideo = true;
+                            } else if (currentMovieId != -1 && currentMovieId == movieId) {
+                                useNextVideo = true;
+                            } else if (useNextVideo) { //previous was our video, this one is different, use Uri
+                                int dataColumn = cursor.getColumnIndex(VideoStore.MediaColumns.DATA);
+                                if (dataColumn >= 0) {
+                                    nextUri = Uri.parse(cursor.getString(dataColumn));
+                                    return new Result(nextUri, nextId);
+                                }
                             }
                         }
+                    } else {
+                        if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: cursor null");
                     }
-                } else {
-                    if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: cursor null");
                 }
                 if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: found nothing");
                 return null;

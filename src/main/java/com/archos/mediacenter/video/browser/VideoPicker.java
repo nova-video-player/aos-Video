@@ -19,6 +19,7 @@ import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediaprovider.video.VideoStore;
 
+import java.lang.ref.WeakReference;
 import android.content.AsyncQueryHandler;
 import android.content.ContentUris;
 import android.content.Context;
@@ -124,7 +125,7 @@ public class VideoPicker extends AppCompatActivity implements AdapterView.OnItem
         // We manually save/restore the listview state
         mListView.setSaveEnabled(false);
 
-        mQueryHandler = new QueryHandler(this);
+        mQueryHandler = new QueryHandler(this, this);
 
         mProgressContainer = findViewById(R.id.progressContainer);
         mListContainer = findViewById(R.id.listContainer);
@@ -219,29 +220,33 @@ public class VideoPicker extends AppCompatActivity implements AdapterView.OnItem
     ** Local methods
     ******************************************************************/
 
-    private final class QueryHandler extends AsyncQueryHandler {
-        public QueryHandler(Context context) {
+    private static final class QueryHandler extends AsyncQueryHandler {
+        private final WeakReference<VideoPicker> mActivityRef;
+
+        public QueryHandler(Context context, VideoPicker activity) {
             super(context.getContentResolver());
+            mActivityRef = new WeakReference<>(activity);
         }
 
         @Override
         protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-            if (!isFinishing()) {
+            VideoPicker activity = mActivityRef.get();
+            if (activity != null && !activity.isFinishing()) {
                 // Update the adapter: we are no longer loading, and have
                 // a new cursor for it.
-                mAdapter.setLoading(false);
-                mAdapter.changeCursor(cursor);
-    
+                activity.mAdapter.setLoading(false);
+                activity.mAdapter.changeCursor(cursor);
+
                 // Now that the cursor is populated again, it's possible to restore the list state
-                if (mListState != null && mListView != null) {
-                    mListView.onRestoreInstanceState(mListState);
-                    if (mListHasFocus) {
-                        mListView.requestFocus();
+                if (activity.mListState != null && activity.mListView != null) {
+                    activity.mListView.onRestoreInstanceState(activity.mListState);
+                    if (activity.mListHasFocus) {
+                        activity.mListView.requestFocus();
                     }
-                    mListHasFocus = false;
-                    mListState = null;
+                    activity.mListHasFocus = false;
+                    activity.mListState = null;
                 }
-            } else {
+            } else if (cursor != null) {
                 cursor.close();
             }
         }

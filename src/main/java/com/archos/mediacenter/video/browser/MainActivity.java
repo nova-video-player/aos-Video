@@ -517,18 +517,19 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         }
         else if(getString(R.string.action_resume).equals(intent.getAction())){
             ContentResolver contentResolver = getContentResolver();
-            Cursor c = contentResolver.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, CURSORS,
+            try (Cursor c = contentResolver.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, CURSORS,
                     VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "!=0" + (LoaderUtils.mustHideUserHiddenObjects() ? " AND " + LoaderUtils.HIDE_USER_HIDDEN_FILTER : ""), null,
-                    VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + " DESC LIMIT 1");
+                    VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + " DESC LIMIT 1")) {
 
-            if (c != null && c.getCount() != 0) {
-                int index_id = c.getColumnIndex(VideoStore.Video.VideoColumns._ID);
-                c.moveToFirst();
-                long resumeId = c.getLong(index_id);
-                Video video = getVideoFromId(resumeId);
-                PlayUtils.startVideo(this, video, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, this, -1);
-            }else
-                Toast.makeText(this, R.string.no_resume_available, Toast.LENGTH_LONG).show();
+                if (c != null && c.moveToFirst()) {
+                    int index_id = c.getColumnIndex(VideoStore.Video.VideoColumns._ID);
+                    long resumeId = c.getLong(index_id);
+                    Video video = getVideoFromId(resumeId);
+                    PlayUtils.startVideo(this, video, PlayerActivity.RESUME_FROM_LAST_POS, true, -1, this, -1);
+                } else {
+                    Toast.makeText(this, R.string.no_resume_available, Toast.LENGTH_LONG).show();
+                }
+            }
         }
         else if(getString(R.string.action_recently_added).equals(intent.getAction())){
             final BrowserCategoryVideo category = (BrowserCategoryVideo) getSupportFragmentManager().findFragmentById(R.id.category);

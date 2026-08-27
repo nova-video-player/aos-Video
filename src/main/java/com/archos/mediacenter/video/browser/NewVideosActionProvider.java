@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
+import java.lang.ref.WeakReference;
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -100,7 +101,7 @@ public class NewVideosActionProvider extends ActionProvider implements
         mHelpOverlayHorizontalOffset = mContext.getResources().getDimensionPixelSize(R.dimen.help_overlay_horizontal_offset);
         mHelpOverlayVerticalOffset = mContext.getResources().getDimensionPixelSize(R.dimen.help_overlay_vertical_offset);
 
-        mHelpOverlayHandler = new HelpOverlayHandler();
+        mHelpOverlayHandler = new HelpOverlayHandler(this);
 
         mPreferences = mContext.getSharedPreferences(MediaUtils.SHARED_PREFERENCES_NAME, AppCompatActivity.MODE_PRIVATE);
     }
@@ -230,19 +231,24 @@ public class NewVideosActionProvider extends ActionProvider implements
         return mPreferences.getBoolean(NEW_VIDEOS_HELP_OVERLAY_KEY, false);
     }
 
-    private class HelpOverlayHandler extends Handler {
-        public HelpOverlayHandler() {
+    private static class HelpOverlayHandler extends Handler {
+        private final WeakReference<NewVideosActionProvider> mProviderRef;
+
+        public HelpOverlayHandler(NewVideosActionProvider provider) {
             super(Looper.getMainLooper());
+            mProviderRef = new WeakReference<>(provider);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == MSG_START_HELP_OVERLAY && mItemView != null) {
+            NewVideosActionProvider provider = mProviderRef.get();
+            if (provider == null) return;
+            if (msg.what == MSG_START_HELP_OVERLAY && provider.mItemView != null) {
                 if (log.isDebugEnabled()) log.debug("handleMessage MSG_START_HELP_OVERLAY");
 
                 // Get the size of the action bar item
-                int itemWidth = mItemView.getWidth();
-                int itemHeight = mItemView.getHeight();
+                int itemWidth = provider.mItemView.getWidth();
+                int itemHeight = provider.mItemView.getHeight();
                 if (log.isDebugEnabled()) log.debug("item size={}x{}", itemWidth, itemHeight);
 
                 // Make sure the item is currently displayed in the action bar 
@@ -250,22 +256,22 @@ public class NewVideosActionProvider extends ActionProvider implements
                 if (itemWidth > 0 && itemHeight > 0) {
                     // Get the position of the action bar item
                     int[] location = new int[2];
-                    mItemView.getLocationOnScreen(location);
+                    provider.mItemView.getLocationOnScreen(location);
 
                     // Get the size of the window which will provide the height of the statusbar
                     // if it is displayed at the top of the screen
                     Rect windowFrame = new Rect();
-                    mItemView.getWindowVisibleDisplayFrame(windowFrame);
+                    provider.mItemView.getWindowVisibleDisplayFrame(windowFrame);
                     int windowWidth = windowFrame.right - windowFrame.left;
                     int windowHeight = windowFrame.bottom - windowFrame.top;
                     int statusbarHeight = windowFrame.top;
                     if (log.isDebugEnabled()) log.debug("windowFrame={}", windowFrame);
 
                     // Compute a target area a bit bigger than the item itself
-                    int left = location[0] - mHelpOverlayHorizontalOffset;
-                    int top = location[1] - mHelpOverlayVerticalOffset - statusbarHeight;
-                    int right = location[0] + itemWidth + mHelpOverlayHorizontalOffset;
-                    int bottom = location[1] + itemHeight + mHelpOverlayVerticalOffset - statusbarHeight;
+                    int left = location[0] - provider.mHelpOverlayHorizontalOffset;
+                    int top = location[1] - provider.mHelpOverlayVerticalOffset - statusbarHeight;
+                    int right = location[0] + itemWidth + provider.mHelpOverlayHorizontalOffset;
+                    int bottom = location[1] + itemHeight + provider.mHelpOverlayVerticalOffset - statusbarHeight;
 
                     // Check the target area bounds
                     if (right > windowWidth) {
@@ -284,16 +290,16 @@ public class NewVideosActionProvider extends ActionProvider implements
                     
                     // Start the help overlay activity with the selected target area
                     Intent hov = new Intent(Intent.ACTION_MAIN);
-                    hov.setComponent(new ComponentName(mContext, HelpOverlayActivity.class));
+                    hov.setComponent(new ComponentName(provider.mContext, HelpOverlayActivity.class));
                     hov.putExtra(HelpOverlayActivity.EXTRA_TARGET_AREA_LEFT, left);
                     hov.putExtra(HelpOverlayActivity.EXTRA_TARGET_AREA_TOP, top);
                     hov.putExtra(HelpOverlayActivity.EXTRA_TARGET_AREA_RIGHT, right);
                     hov.putExtra(HelpOverlayActivity.EXTRA_TARGET_AREA_BOTTOM, bottom);
                     hov.putExtra(HelpOverlayActivity.EXTRA_POPUP_CONTENT_LAYOUT_ID, R.layout.help_overlay_scraper);
-                    mContext.startActivity(hov);
+                    provider.mContext.startActivity(hov);
 
                     // Remember that the help overlay has been activated so that it won't be shown again in the future
-                    Editor ed = mPreferences.edit();
+                    Editor ed = provider.mPreferences.edit();
                     ed.putBoolean(NEW_VIDEOS_HELP_OVERLAY_KEY, true);
                     ed.apply();
                 }

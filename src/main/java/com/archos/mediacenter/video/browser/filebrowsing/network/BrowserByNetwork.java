@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import java.lang.ref.WeakReference;
 import android.os.Handler;
 import android.os.Message;
 import android.view.ContextMenu;
@@ -98,7 +99,7 @@ public class BrowserByNetwork extends BrowserByFolder {
     public void onListingUpdate(List<? extends MetaFile2>  list){
         super.onListingUpdate(list);
         if(mHelpOverlayHandler==null){
-            mHelpOverlayHandler = new HelpOverlayHandler();
+            mHelpOverlayHandler = new HelpOverlayHandler(this);
         }
         // Check if we need to display the help overlay
         if (UriUtils.isIndexable(mCurrentDirectory) &&
@@ -374,37 +375,43 @@ public class BrowserByNetwork extends BrowserByFolder {
         return mPreferences.getBoolean(SAMBA_INDEXING_HELP_OVERLAY_KEY, false);
     }
 
-    private class HelpOverlayHandler extends Handler {
-        HelpOverlayHandler() {
+    private static class HelpOverlayHandler extends Handler {
+        private final WeakReference<BrowserByNetwork> mBrowserRef;
+
+        HelpOverlayHandler(BrowserByNetwork browser) {
             super(Looper.getMainLooper());
+            mBrowserRef = new WeakReference<>(browser);
         }
+
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == MSG_START_HELP_OVERLAY && mIndexFolderActionView != null) {
+            BrowserByNetwork browser = mBrowserRef.get();
+            if (browser == null || browser.getActivity() == null) return;
+            if (msg.what == MSG_START_HELP_OVERLAY && browser.mIndexFolderActionView != null) {
                 // Get the size of the action bar item
-                int itemWidth = mIndexFolderActionView.getWidth();
-                int itemHeight = mIndexFolderActionView.getHeight();
+                int itemWidth = browser.mIndexFolderActionView.getWidth();
+                int itemHeight = browser.mIndexFolderActionView.getHeight();
 
                 // Make sure the item is currently displayed in the action bar
                 // (the size is 0x0 if the item is in the options menu)
                 if (itemWidth > 0 && itemHeight > 0) {
                     // Get the position of the action bar item
                     int[] location = new int[2];
-                    mIndexFolderActionView.getLocationOnScreen(location);
+                    browser.mIndexFolderActionView.getLocationOnScreen(location);
 
                     // Get the size of the window which will provide the height of the statusbar
                     // if it is displayed at the top of the screen
                     Rect windowFrame = new Rect();
-                    mIndexFolderActionView.getWindowVisibleDisplayFrame(windowFrame);
+                    browser.mIndexFolderActionView.getWindowVisibleDisplayFrame(windowFrame);
                     int windowWidth = windowFrame.right - windowFrame.left;
                     int windowHeight = windowFrame.bottom - windowFrame.top;
                     int statusbarHeight = windowFrame.top;
 
                     // Compute a target area a bit bigger than the item itself
-                    int left = location[0] - mHelpOverlayHorizontalOffset;
-                    int top = location[1] - mHelpOverlayVerticalOffset - statusbarHeight;
-                    int right = location[0] + itemWidth + mHelpOverlayHorizontalOffset;
-                    int bottom = location[1] + itemHeight + mHelpOverlayVerticalOffset - statusbarHeight;
+                    int left = location[0] - browser.mHelpOverlayHorizontalOffset;
+                    int top = location[1] - browser.mHelpOverlayVerticalOffset - statusbarHeight;
+                    int right = location[0] + itemWidth + browser.mHelpOverlayHorizontalOffset;
+                    int bottom = location[1] + itemHeight + browser.mHelpOverlayVerticalOffset - statusbarHeight;
 
                     // Check the target area bounds
                     if (right > windowWidth) {
@@ -422,17 +429,17 @@ public class BrowserByNetwork extends BrowserByFolder {
 
                     // Start the help overlay activity with the selected target area
                     Intent hov = new Intent(Intent.ACTION_MAIN);
-                    hov.setComponent(new ComponentName(getActivity(), HelpOverlayActivity.class));
+                    hov.setComponent(new ComponentName(browser.getActivity(), HelpOverlayActivity.class));
                     hov.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     hov.putExtra(HelpOverlayActivity.EXTRA_TARGET_AREA_LEFT, left);
                     hov.putExtra(HelpOverlayActivity.EXTRA_TARGET_AREA_TOP, top);
                     hov.putExtra(HelpOverlayActivity.EXTRA_TARGET_AREA_RIGHT, right);
                     hov.putExtra(HelpOverlayActivity.EXTRA_TARGET_AREA_BOTTOM, bottom);
                     hov.putExtra(HelpOverlayActivity.EXTRA_POPUP_CONTENT_LAYOUT_ID, R.layout.help_overlay_network_indexing);
-                    getActivity().startActivity(hov);
+                    browser.getActivity().startActivity(hov);
 
                     // Remember that the help overlay has been activated so that it won't be shown again in the future
-                    SharedPreferences.Editor ed = mPreferences.edit();
+                    SharedPreferences.Editor ed = browser.mPreferences.edit();
                     ed.putBoolean(SAMBA_INDEXING_HELP_OVERLAY_KEY, true);
                     ed.apply();
                 }
