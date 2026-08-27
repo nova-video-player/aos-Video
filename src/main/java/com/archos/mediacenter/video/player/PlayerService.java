@@ -31,8 +31,8 @@ import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaSessionCompat;
+import android.media.MediaMetadata;
+import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Binder;
@@ -265,7 +265,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private boolean mPlayOnResume;
     private long mVideoId;
     public PlayerState  mPlayerState = PlayerState.INIT;
-    private MediaSessionCompat mSession;
+    private MediaSession mSession;
     private UpdateNextTask mUpdateNextTask;
     private Uri mNextUri;
     private long mNextVideoId;
@@ -2363,8 +2363,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 99, intent,
                 ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
         if (mSession == null) {
-            mSession = new MediaSessionCompat(this, "PlayerActivity");
-            MediaSessionCompat.Callback mediaSessionCallback = new  MediaSessionCompat.Callback() {
+            mSession = new MediaSession(this, "PlayerActivity");
+            MediaSession.Callback mediaSessionCallback = new MediaSession.Callback() {
                 @Override
                 public void onPlay() {
                     super.onPlay();
@@ -2386,12 +2386,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 }
             };
             mSession.setCallback(mediaSessionCallback);
-            // deprecated and always true
-            //mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
             // Set initial stopped state to avoid reporting undefined/playing state
-            PlaybackStateCompat.Builder initialStateBuilder = new PlaybackStateCompat.Builder()
+            PlaybackState.Builder initialStateBuilder = new PlaybackState.Builder()
                     .setActions(getAvailableActions());
-            initialStateBuilder.setState(PlaybackStateCompat.STATE_NONE, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0.0f);
+            initialStateBuilder.setState(PlaybackState.STATE_NONE, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 0.0f);
             mSession.setPlaybackState(initialStateBuilder.build());
         }
 
@@ -2408,18 +2406,18 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (!mSession.isActive()) {
                 mSession.setActive(true);
             }
-            PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
+            PlaybackState.Builder stateBuilder = new PlaybackState.Builder()
                     .setActions(getAvailableActions());
-            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f);
+            stateBuilder.setState(PlaybackState.STATE_PLAYING, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 1.0f);
             mSession.setPlaybackState(stateBuilder.build());
         }
         else if (mPlayerState==PlayerState.PREPARING) {
             if (!mSession.isActive()) {
                 mSession.setActive(true);
             }
-            PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
+            PlaybackState.Builder stateBuilder = new PlaybackState.Builder()
                     .setActions(getAvailableActions());
-            stateBuilder.setState(PlaybackStateCompat.STATE_BUFFERING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f);
+            stateBuilder.setState(PlaybackState.STATE_BUFFERING, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 1.0f);
             mSession.setPlaybackState(stateBuilder.build());
         }
         else if (mPlayerState==PlayerState.PREPARED) {
@@ -2427,9 +2425,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (!mSession.isActive()) {
                 mSession.setActive(true);
             }
-            PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
+            PlaybackState.Builder stateBuilder = new PlaybackState.Builder()
                     .setActions(getAvailableActions());
-            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0.0f);
+            stateBuilder.setState(PlaybackState.STATE_PAUSED, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 0.0f);
             mSession.setPlaybackState(stateBuilder.build());
         }
         else if (mPlayer != null && mPlayer.isPaused()) {
@@ -2437,9 +2435,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (!mSession.isActive()) {
                 mSession.setActive(true);
             }
-            PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
+            PlaybackState.Builder stateBuilder = new PlaybackState.Builder()
                     .setActions(getAvailableActions());
-            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0.0f);
+            stateBuilder.setState(PlaybackState.STATE_PAUSED, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 0.0f);
             mSession.setPlaybackState(stateBuilder.build());
         }
         else stopNowPlayingCard();
@@ -2453,9 +2451,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             return;
         if (log.isDebugEnabled()) log.debug("stopNowPlayingCard");
 
-        PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
+        PlaybackState.Builder stateBuilder = new PlaybackState.Builder()
                 .setActions(getAvailableActions());
-        stateBuilder.setState(PlaybackStateCompat.STATE_NONE, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0.0f);
+        stateBuilder.setState(PlaybackState.STATE_NONE, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 0.0f);
         mSession.setPlaybackState(stateBuilder.build());
         mSession.setActive(false);
     }
@@ -2464,12 +2462,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      * Update title and pic on now playing card
      */
     private void updateNowPlayingMetadata() {
-        MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
+        MediaMetadata.Builder metadataBuilder = new MediaMetadata.Builder();
         String title = mVideoInfo.scraperTitle!=null?mVideoInfo.scraperTitle:mVideoInfo.title!=null?mVideoInfo.title:FileUtils.getFileNameWithoutExtension(mUri);
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE,
+        metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE,
                 title);
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,title);
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI,
+        metadataBuilder.putString(MediaMetadata.METADATA_KEY_TITLE,title);
+        metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI,
                 mVideoInfo.scraperCover);
         Bitmap bitmap = null;
         if (mVideoInfo.scraperCover != null && !mVideoInfo.scraperCover.isEmpty()) {
@@ -2485,7 +2483,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (bitmap == null) {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.widget_default_video);
         }
-        metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, bitmap);
+        metadataBuilder.putBitmap(MediaMetadata.METADATA_KEY_ART, bitmap);
         mSession.setMetadata(metadataBuilder.build());
     }
 
