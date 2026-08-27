@@ -18,13 +18,7 @@
 
     <!-- ============ VIDEO PLAYER ============ -->
     
-    <dimen name="video_title_marginTop">0dip</dimen>
-    <dimen name="volume_bar_marginTop">8dip</dimen>
-    <dimen name="volume_bar_marginBottom">-18dip</dimen> <!-- negative bottom margin to have the volume bar stick to the bottom of the screen in phone mode (while it is floating on tablets) -->
     <dimen name="volume_button_vertical_margin">0dip</dimen>
 
-    <dimen name="control_bar_margin_left">58dip</dimen>
-    <dimen name="control_bar_margin_right">-18dip</dimen>
-    <dimen name="control_bar_margin_bottom">-16dip</dimen> <!-- negative bottom margin to have the control bar stick to the bottom of the screen in phone mode (while it is floating on tablets) -->
 
 </resources>

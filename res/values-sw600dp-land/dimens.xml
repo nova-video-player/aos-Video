@@ -17,15 +17,9 @@
 <resources>
 
     <!-- ============ VIDEO PLAYER ============ -->
-    <dimen name="video_title_marginTop">0dip</dimen>
-    <dimen name="volume_bar_marginTop">56dip</dimen>
-    <dimen name="volume_bar_marginBottom">80dip</dimen>
     <dimen name="volume_button_vertical_margin">1dip</dimen>
 
 
-    <dimen name="control_bar_margin_left">100dip</dimen>
-    <dimen name="control_bar_margin_right">50dip</dimen>
-    <dimen name="control_bar_margin_bottom">0dip</dimen>
 
 
 </resources>
