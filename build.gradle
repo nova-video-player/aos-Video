@@ -320,6 +320,7 @@ android {
         }
     }
 
+
     dependenciesInfo {
         if (project.hasProperty("universal")) {
             // universal if for fdroid now with specific version(Name|Code) and oneapk for amazon
@@ -340,13 +341,16 @@ androidComponents {
             newName = newName.replace("-noamazon-", "-").replace("-manageexternalstorage-", "-")
             output.outputFileName.set(newName)
         }
+        List<String> outputInfo = []
+        variant.outputs.forEach { output ->
+            outputInfo.add("generated: " + output.outputFileName.get() + " (" + output.versionName.orNull + ", " + output.versionCode.orNull + ")")
+        }
+        String variantName = variant.name.capitalize()
         project.tasks.configureEach { task ->
-            if (task.name == "assemble${variant.name.capitalize()}") {
-                task.dependsOn("lint${variant.name.capitalize()}")
+            if (task.name == "assemble${variantName}") {
+                task.dependsOn("lint${variantName}")
                 task.doLast {
-                    variant.outputs.forEach { output ->
-                        println("generated: " + output.outputFileName.get() + " (" + output.versionName.orNull + ", " + output.versionCode.orNull + ")")
-                    }
+                    outputInfo.each { println(it) }
                 }
             }
         }
