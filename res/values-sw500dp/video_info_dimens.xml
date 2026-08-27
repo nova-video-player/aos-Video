@@ -16,9 +16,6 @@
 
 <resources>
 
-    <dimen name="video_info_left_border">50dip</dimen> <!-- the left (empty) border (margin) -->
-    <dimen name="video_info_right_border">50dip</dimen> <!-- the right border with arrows (margin) -->
-
     <!-- The following 4 values are to be used here and there in the video info layout, for consistancy -->
     <dimen name="video_info_margin_quarter">8dip</dimen>
     <dimen name="video_info_margin_half">16dip</dimen>
