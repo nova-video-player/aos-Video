@@ -76,14 +76,6 @@
     <!-- Player Settings -->
 
 
-    <!-- Info dialog -->
-    <style name="InfoDialogButton" parent="Widget.AppCompat.Button.Small">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingRight">15dip</item>
-        <item name="android:paddingLeft">15dip</item>
-    </style>
-
     <!-- Archos GridView theme for the browser -->
     <style name="ArchosGridView">
         <item name="android:id">@id/browser_items</item>
@@ -168,22 +160,8 @@
         <item name="android:paddingTop">0dip</item>
     </style>
 
-    <style name="BrowserText.Info.InfoBlue.Video">
-        <item name="android:paddingTop">5dip</item>
-    </style>
-
     <style name="BrowserText.Info.Video">
         <item name="android:paddingTop">5dip</item>
-    </style>
-
-    <style name="BrowserText.Number.Video" parent="MainLine">
-        <item name="android:singleLine">true</item>
-        <item name="android:paddingTop">8dip</item>
-        <item name="android:gravity">center_horizontal</item>
-    </style>
-
-    <style name="category_item_style">
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
     </style>
 
     <!-- Cover text descriptions -->
@@ -264,21 +242,12 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="VideoInfoFileInfo.Title">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/lightblue500</item>
-        <item name="android:drawablePadding">6dip</item>
-    </style>
-
     <style name="VideoInfoFileInfo.Title2">
         <item name="android:textColor">@color/white_text</item>
         <item name="android:alpha">0.5</item>
         <item name="android:drawablePadding">6dip</item>
         <item name="android:textSize">@dimen/video_info_small_text</item>
     </style>
-
-
 
     <style name="VideoInfoFileInfo.CardViewTitle" parent="VideoInfoFileInfo.Title2">
         <item name="android:paddingTop">8dip</item>
@@ -307,24 +276,11 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-    <!-- Base application theme. -->
-    <style name="toolbarStyle"  parent="Base.Widget.AppCompat.Toolbar">
-    </style>
 
-    <style name="textAppearanceVeryLarge" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">@dimen/video_info_very_big_text</item>
-        <item name="android:maxLines">3</item>
-    </style>
     <item name="browser_items" type="id" />
 
     <!-- Force same size for ToolbarTitle in portrait/landscape. -->
     <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
     </style>
-
-    <style name="AlertDialog">
-        <item name="progressLayout">@layout/progress_dialog</item>
-        <item name="horizontalProgressLayout">@layout/alert_dialog_progress</item>
-    </style>
-
 </resources>
