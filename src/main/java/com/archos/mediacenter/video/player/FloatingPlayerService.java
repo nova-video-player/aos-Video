@@ -181,6 +181,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     public void onDestroy(){
         super.onDestroy();
         sFloatingPlayerService = null;
+        mFloatingPlayerRootView = null;
         unbindService(mPlayerServiceConnection);
         unregisterReceiver(mReceiver);
     }

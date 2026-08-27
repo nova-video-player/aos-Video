@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.cover;
 
-import android.annotation.SuppressLint;
 
 import com.archos.mediacenter.cover.ArtworkFactory;
 import com.archos.mediacenter.utils.BitmapUtils;
@@ -48,19 +47,6 @@ public class MovieCover extends BaseVideoCover {
 	private MovieInfo mMovieInfo;
 	private boolean mScraperInfoHasBeenChecked = false;
 
-	// Layout stuff is done only once for all Cover instances
-	//MOVIE
-	@SuppressLint("StaticFieldLeak")
-    private static View sDescriptionViewMovie = null;
-	@SuppressLint("StaticFieldLeak")
-	private static TextView sMovieTitle = null;
-	@SuppressLint("StaticFieldLeak")
-	private static TextView sMovieDirector = null;
-	@SuppressLint("StaticFieldLeak")
-	private static TextView sMovieWriter = null;
-	@SuppressLint("StaticFieldLeak")
-    private static TextView sMovieDuration = null;
-
 	public MovieCover(long videoId, String filepath, long durationMs, long scraperId) {
 		super(videoId, filepath, durationMs);
 		if (DBG) Log.d(TAG, "MovieCover(" + videoId +"|"+filepath+"|"+durationMs+"|"+scraperId);
@@ -81,11 +67,6 @@ public class MovieCover extends BaseVideoCover {
 	 * Called when the screen size is changed, for example.
 	 */
 	public static void resetCachedGraphicStuff() {
-		sDescriptionViewMovie = null;
-		sMovieTitle = null;
-		sMovieDirector = null;
-		sMovieWriter = null;
-		sMovieDuration = null;
 	}
 
 	/**
@@ -176,42 +157,40 @@ public class MovieCover extends BaseVideoCover {
 
 	@Override
 	public Bitmap getDescription( ArtworkFactory factory ) {
-		View view;
-
-		// Inflate the layout in case it has not been inflated yet for this Cover class
-		if (sDescriptionViewMovie==null) {
-			inflateDescriptionLayoutMovie(factory);
-		}
-		view = sDescriptionViewMovie;
+		View view = factory.getCachedView(R.layout.cover_floating_description_movie);
+		TextView movieTitle = view.findViewById(R.id.movie_title);
+		TextView movieDirector = view.findViewById(R.id.director);
+		TextView movieWriter = view.findViewById(R.id.writer);
+		TextView movieDuration = view.findViewById(R.id.duration);
 
 		if (checkScraperInfo(factory)) {
-			sMovieTitle.setText(mMovieInfo.getTitle());
+			movieTitle.setText(mMovieInfo.getTitle());
 
 			if ((mMovieInfo.getDirectors()!=null) && mMovieInfo.getDirectors().length()>0) {
-				sMovieDirector.setText(mMovieInfo.getDirectors());
+				movieDirector.setText(mMovieInfo.getDirectors());
 			}
 			else { //fall-back on year if there is no director info
-				sMovieDirector.setText(Integer.toString(mMovieInfo.getYear()));
+				movieDirector.setText(Integer.toString(mMovieInfo.getYear()));
 			}
 
 			if ((mMovieInfo.getWriters()!=null) && mMovieInfo.getWriters().length()>0) {
-				sMovieWriter.setText(mMovieInfo.getWriters());
+				movieWriter.setText(mMovieInfo.getWriters());
 			}
 			else { //fall-back on year if there is no writer info
-				sMovieWriter.setText(Integer.toString(mMovieInfo.getYear()));
+				movieWriter.setText(Integer.toString(mMovieInfo.getYear()));
 			}
 		}
 		else {
 			// Scraper info not available or not valid => fall-back on filename (this is not a common expected use-case...)
-			sMovieTitle.setText(factory.removeFilenameExtension((new File(mFilepath)).getName()));
-			sMovieDirector.setText("-");
-			sMovieWriter.setText("-");
+			movieTitle.setText(factory.removeFilenameExtension((new File(mFilepath)).getName()));
+			movieDirector.setText("-");
+			movieWriter.setText("-");
 		}
 
 		if (mDurationMs!=0) {
-			sMovieDuration.setText(MediaUtils.formatTime(mDurationMs));
+			movieDuration.setText(MediaUtils.formatTime(mDurationMs));
 		} else {
-			sMovieDuration.setText("");
+			movieDuration.setText("");
 		}
 
 		// Update the layout setup to take care of the updated text views
@@ -220,18 +199,5 @@ public class MovieCover extends BaseVideoCover {
 		view.layout(0, 0, DESCRIPTION_TEXTURE_WIDTH, DESCRIPTION_TEXTURE_HEIGHT);
 
 		return factory.createViewBitmap(view, DESCRIPTION_TEXTURE_WIDTH, DESCRIPTION_TEXTURE_HEIGHT);
-	}
-
-	/**
-	 * Inflate the (static) layout used for the Movie description texture
-	 */
-	private static void inflateDescriptionLayoutMovie( ArtworkFactory factory ) {
-		sDescriptionViewMovie = factory.getLayoutInflater().inflate(R.layout.cover_floating_description_movie, null);
-		sMovieTitle = (TextView)sDescriptionViewMovie.findViewById(R.id.movie_title);
-		sMovieDirector = (TextView)sDescriptionViewMovie.findViewById(R.id.director);
-		sMovieWriter = (TextView)sDescriptionViewMovie.findViewById(R.id.writer);
-		sMovieDuration = (TextView)sDescriptionViewMovie.findViewById(R.id.duration);
-
-		sDescriptionViewMovie.setLayoutParams( new FrameLayout.LayoutParams(DESCRIPTION_TEXTURE_WIDTH,DESCRIPTION_TEXTURE_HEIGHT) );
 	}
 }

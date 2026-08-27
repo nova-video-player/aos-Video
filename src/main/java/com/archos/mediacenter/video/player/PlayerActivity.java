@@ -1295,6 +1295,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         VideoEffect.resetForcedMode();
         if (log.isDebugEnabled()) log.debug("onDestroy: setEffect");
         setEffect(VideoEffect.getDefaultMode());
+        if (Player.sPlayer == mPlayer) {
+            Player.sPlayer = null;
+        }
+        if (mPlayer != null) {
+            mPlayer.setListener(null);
+            mPlayer = null;
+        }
         super.onDestroy();
     }
 

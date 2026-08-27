@@ -410,5 +410,21 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 			return mCovers.get(cid).getOpenAction(getContext());
 	}
 
+	@Override
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		VideoCover.resetCachedGraphicStuff();
+		MovieCover.resetCachedGraphicStuff();
+		EpisodeCover.resetCachedGraphicStuff();
+		TvShowCover.resetCachedGraphicStuff();
+		super.surfaceDestroyed(holder);
+	}
 
+	@Override
+	protected void onDetachedFromWindow() {
+		VideoCover.resetCachedGraphicStuff();
+		MovieCover.resetCachedGraphicStuff();
+		EpisodeCover.resetCachedGraphicStuff();
+		TvShowCover.resetCachedGraphicStuff();
+		super.onDetachedFromWindow();
+	}
 }

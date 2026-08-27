@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.cover;
 
-import android.annotation.SuppressLint;
 
 import com.archos.mediacenter.cover.ArtworkFactory;
 import com.archos.mediacenter.utils.MediaUtils;
@@ -39,20 +38,6 @@ public class VideoCover extends BaseVideoCover {
     final static String TAG = "VideoCover";
     final static boolean DBG = false;
 
-    // Layout stuff is done only once for all Cover instances
-    //VIDEO
-    @SuppressLint("StaticFieldLeak")
-    private static View sDescriptionViewVideo = null;
-    @SuppressLint("StaticFieldLeak")
-    private static TextView sVideoFilename = null;
-    @SuppressLint("StaticFieldLeak")
-    private static TextView sVideoDuration = null;
-    
-    @SuppressLint("StaticFieldLeak")
-    private static View sOverlayDescriptionView = null;
-	@SuppressLint("StaticFieldLeak")
-    private static TextView sOverlayDescriptionText = null; // in case of overlay description with handle a single line of text
-
     private final String mTitle;
 
     public VideoCover(long videoId, String filepath, long durationMs, String title) {
@@ -74,12 +59,6 @@ public class VideoCover extends BaseVideoCover {
 	 * Called when the screen size is changed, for example.
 	 */
 	public static void resetCachedGraphicStuff() {
-	    sDescriptionViewVideo = null;
-	    sVideoFilename = null;
-	    sVideoDuration = null;
-	    
-	    sOverlayDescriptionView = null;
-	    sOverlayDescriptionText = null;
 	}
 
     @Override
@@ -124,11 +103,10 @@ public class VideoCover extends BaseVideoCover {
 	        // Description view
 	        View descriptionView = null;
 	        if (descriptionOnCover) {
-	    		if (sOverlayDescriptionView==null) {
-	    			inflateOverlayDescriptionLayout(factory);
-	    		}
-	    		sOverlayDescriptionText.setText(factory.removeFilenameExtension((new File(mFilepath)).getName()));
-	        	descriptionView = sOverlayDescriptionView;
+	    		View overlayView = factory.getCachedView(R.layout.cover_overlay_description_video);
+	    		TextView overlayText = overlayView.findViewById(R.id.main);
+	    		overlayText.setText(factory.removeFilenameExtension((new File(mFilepath)).getName()));
+	        	descriptionView = overlayView;
 	        }
 	        
             // Add the shadow effect
@@ -173,13 +151,11 @@ public class VideoCover extends BaseVideoCover {
             return null;
         }
 
-        // Inflate the layout for regular video file
-        if (sDescriptionViewVideo==null) {
-            inflateDescriptionLayoutVideo(factory);
-        }
-        View view = sDescriptionViewVideo;
-        sVideoFilename.setText(mTitle);
-        sVideoDuration.setText(MediaUtils.formatTime(mDurationMs));
+        View view = factory.getCachedView(R.layout.cover_floating_description_video);
+        TextView videoFilename = view.findViewById(R.id.filename);
+        TextView videoDuration = view.findViewById(R.id.duration);
+        videoFilename.setText(mTitle);
+        videoDuration.setText(MediaUtils.formatTime(mDurationMs));
 
         // Update the layout setup to take care of the updated text views
         view.measure(View.MeasureSpec.makeMeasureSpec(DESCRIPTION_TEXTURE_WIDTH, View.MeasureSpec.EXACTLY),
@@ -188,27 +164,4 @@ public class VideoCover extends BaseVideoCover {
 
         return factory.createViewBitmap(view, DESCRIPTION_TEXTURE_WIDTH, DESCRIPTION_TEXTURE_HEIGHT);
     }
-
-    /**
-     * Inflate the (static) layout used for the Video description texture 
-     */
-    private static void inflateDescriptionLayoutVideo( ArtworkFactory factory ) {
-        if (factory != null) {
-            sDescriptionViewVideo = factory.getLayoutInflater().inflate(R.layout.cover_floating_description_video, null);
-            sVideoFilename = (TextView)sDescriptionViewVideo.findViewById(R.id.filename);
-            sVideoDuration = (TextView)sDescriptionViewVideo.findViewById(R.id.duration);
-
-            sDescriptionViewVideo.setLayoutParams( new FrameLayout.LayoutParams(DESCRIPTION_TEXTURE_WIDTH,DESCRIPTION_TEXTURE_HEIGHT) );
-        }
-    }
-    
-	/**
-	 * Inflate the (static) layout used for the overlay description texture 
-	 */
-	private static void inflateOverlayDescriptionLayout( ArtworkFactory factory ) {
-        if (factory != null) {
-            sOverlayDescriptionView = factory.getLayoutInflater().inflate(R.layout.cover_overlay_description_video, null);
-            sOverlayDescriptionText = (TextView)sOverlayDescriptionView.findViewById(R.id.main);
-        }
-	}
 }

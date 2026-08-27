@@ -301,10 +301,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private int oldPos = 0;
     private int oldSelectedSubPosition = 0;
 
-    // need to be static otherwise ActivityResultLauncher find them null
-    @SuppressLint("StaticFieldLeak")
-    private static Delete delete;
-    private static List<Uri> deleteUrisList = null;
+    private Delete delete;
+    private List<Uri> deleteUrisList = null;
 
     private final ActivityResultLauncher<Intent> playLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -599,6 +597,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     @Override
     public void onDestroyView() {
         mOverlay.destroy();
+        delete = null;
+        deleteUrisList = null;
         super.onDestroyView();
     }
 

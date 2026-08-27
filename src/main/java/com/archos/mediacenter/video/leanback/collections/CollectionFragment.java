@@ -148,10 +148,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     private boolean mShouldDisplayConfirmDelete = false;
 
-    // need to be static otherwise ActivityResultLauncher find them null
-    @SuppressLint("StaticFieldLeak")
-    private static Delete delete;
-    private static List<Uri> deleteUrisList;
+    private Delete delete;
+    private List<Uri> deleteUrisList;
 
     private final ActivityResultLauncher<Intent> videoLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -430,6 +428,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     public void onDestroyView() {
         if (log.isDebugEnabled()) log.debug("onDestroyView");
         mOverlay.destroy();
+        delete = null;
+        deleteUrisList = null;
         super.onDestroyView();
     }
 

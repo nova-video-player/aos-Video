@@ -101,10 +101,8 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
     private Overlay mOverlay;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
-    // need to be static otherwise ActivityResultLauncher find them null
-    @SuppressLint("StaticFieldLeak")
-    private static Delete delete;
-    private static List<Uri> deleteUrisList;
+    private Delete delete;
+    private List<Uri> deleteUrisList;
 
     private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
@@ -276,6 +274,8 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
             mSeasonsAdapter.changeCursor(null);
         }
         mOverlay.destroy();
+        delete = null;
+        deleteUrisList = null;
         // Unregister theme change listener
         if (mThemeChangeListener != null) {
             ThemeManager.getInstance(getActivity()).unregisterThemeChangeListener(mThemeChangeListener);
