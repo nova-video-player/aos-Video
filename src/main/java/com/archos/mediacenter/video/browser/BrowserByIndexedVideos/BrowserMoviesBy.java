@@ -77,6 +77,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 		}
 	}
 
+	@SuppressWarnings("deprecation") // ActionBar navigation mode
 	@Override
 	public void onResume() {
 		((MainActivity)getActivity()).setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -239,6 +240,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 		return itemId;
 	}
 
+	@SuppressWarnings("deprecation") // ActionBar navigation mode
 	@Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
 	    // Prepare the list of movies and the title, to be given to the opened fragment

@@ -86,6 +86,7 @@ public class BrowserPlaylists extends BrowserMoviesBy {
         mHasLaunchedTrakt = true;
         return true;
     }
+    @SuppressWarnings("deprecation") // ActionBar navigation mode
     public void onResume(){
         super.onResume();
         ((MainActivity)getActivity()).setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);

@@ -864,6 +864,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     }
 
     //delegating to activity because getNavigationMode on support action bar doesn't work anymore
+    @SuppressWarnings("deprecation") // ActionBar navigation mode
     public void setNavigationMode(int navigationMode) {
         getSupportActionBar().setNavigationMode(navigationMode);
         mNavigationMode = navigationMode;

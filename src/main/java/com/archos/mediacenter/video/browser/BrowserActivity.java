@@ -189,6 +189,7 @@ abstract public class BrowserActivity extends AppCompatActivity {
     /**
      * Go back to the MediaCenter's main screen.
      */
+    @SuppressWarnings("deprecation") // ActionBar navigation mode
     public void goHome() {
         // Clear the back stack
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

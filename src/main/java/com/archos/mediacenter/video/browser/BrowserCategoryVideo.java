@@ -49,6 +49,7 @@ import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser.Upn
 
 import java.util.ArrayList;
 
+@SuppressWarnings("deprecation") // ActionBar navigation mode: legacy list navigation
 public class BrowserCategoryVideo extends BrowserCategory implements androidx.appcompat.app.ActionBar.OnNavigationListener {
     static final String TAG = "BrowserCategoryVideo";
 

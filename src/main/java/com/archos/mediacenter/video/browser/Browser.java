@@ -372,6 +372,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
      * May be overriden by child classes to have the ActionBar in NAVIGATION_MODE_LIST, for example
      * @return
      */
+    @SuppressWarnings("deprecation") // ActionBar navigation mode
     protected int getActionBarNavigationMode() {
         return ActionBar.NAVIGATION_MODE_STANDARD;
     }
