@@ -992,8 +992,8 @@
     <string name="cast_audio_background">Sound won\'t work while Nova Video Player is in background</string>
     <string name="help_faq">Help / FAQ</string>
     <string name="provider_folders">Cloud</string>
+    <string name="rate_us">If you like this app, please support us by rating us 5 stars</string>
     <string name="rate_us_title">☆ Support us</string>
-    <string name="rate_us">If you like this application, consider supporting us by giving 5 stars</string>
     <string name="create_new_list">Create new list</string>
     <string name="add_to_list">Add to list</string>
     <string name="no_resume_available">No resume currently available</string>
