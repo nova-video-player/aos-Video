@@ -56,7 +56,7 @@ public class BrowserByVideoFolder extends BrowserByLocalFolder {
                         if (f.isDirectory() && f.exists()) {
                             Editor ed = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
                             ed.putString(VideoPreferencesActivity.FOLDER_BROWSING_DEFAULT_FOLDER, f.getPath());
-                            ed.commit();
+                            ed.apply();
                             MainActivity bav = (MainActivity) getActivity();
                             bav.reloadBrowserByVideoFolder();
                         }

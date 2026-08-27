@@ -359,7 +359,7 @@ public class ThemeManager {
         }
 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        
+
         // setStatusBarColor/setNavigationBarColor are deprecated and ignored on Android 15+
         // (edge-to-edge is enforced and bars are transparent by default there): the window/
         // decor view background set above (phone mode) or the theme background (TV) already
