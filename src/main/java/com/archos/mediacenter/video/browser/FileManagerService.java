@@ -369,12 +369,14 @@ public class FileManagerService extends Service implements OperationEngineListen
         }
     }
 
+    private static final long WAKELOCK_TIMEOUT_MS = 10 * 60 * 1000L; // 10 minutes rolling timeout
+
     private void acquireWakeLock() {
         releaseWakeLock();
         if (log.isDebugEnabled()) log.debug("acquireWakeLock");
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Nova:FileManagerWakeLock");
-        mWakeLock.acquire(24 * 60 * 60 * 1000L); // 24 hours max timeout
+        mWakeLock.acquire(WAKELOCK_TIMEOUT_MS);
     }
     private void releaseWakeLock(){
         if (log.isDebugEnabled()) log.debug("releaseWakeLock");
@@ -428,6 +430,9 @@ public class FileManagerService extends Service implements OperationEngineListen
     @Override
     public void onProgress(int currentFile, long currentFileProgress,int currentRootFile, long currentRootFileProgress, long totalProgress, double currentSpeed) {
         mLastStatus = ActionStatusEnum.PROGRESS;
+        if (mWakeLock != null && mWakeLock.isHeld()) {
+            mWakeLock.acquire(WAKELOCK_TIMEOUT_MS);
+        }
         if(currentFile< mProcessedFiles.size()){
             mProgress.put(mProcessedFiles.get(currentFile), currentFileProgress);
         }

@@ -369,7 +369,13 @@ public class BrowserByNetwork extends BrowserByFolder {
         }, getViewLifecycleOwner());
     }
 
-
+    @Override
+    public void onDestroyView() {
+        if (mHelpOverlayHandler != null) {
+            mHelpOverlayHandler.removeMessages(MSG_START_HELP_OVERLAY);
+        }
+        super.onDestroyView();
+    }
 
     private boolean helpOverlayAlreadyActivated() {
         return mPreferences.getBoolean(SAMBA_INDEXING_HELP_OVERLAY_KEY, false);
