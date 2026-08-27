@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.collections;
 
+import java.util.Locale;
+
 import android.graphics.Paint;
 import androidx.leanback.widget.Presenter;
 
@@ -157,7 +159,7 @@ public class CollectionDetailsDescriptionPresenter extends Presenter {
 
     private String getYearFormatted(Date date) {
         if (date != null && date.getTime() > 0) {
-            return new SimpleDateFormat("yyyy").format(date);
+            return new SimpleDateFormat("yyyy", Locale.getDefault()).format(date);
         }
         return null;
     }

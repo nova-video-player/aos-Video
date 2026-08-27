@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,7 +52,7 @@ public class SmbWorkgroupShortcutAndServerAdapter extends WorkgroupShortcutAndSe
             for (Share share : w.getShares()) {
                 GenericShare s = new GenericShare(share.getDisplayName(), share.getWorkgroup(), share.toUri().toString());
                 mShares.add(s);
-                mAvailableShares.add(s.getName().toLowerCase());
+                mAvailableShares.add(s.getName().toLowerCase(Locale.ROOT));
                 mAvailableShares.add(Uri.parse(share.getAddress()).getHost()); // retrieve ip address from smb://ip/
             }
         }

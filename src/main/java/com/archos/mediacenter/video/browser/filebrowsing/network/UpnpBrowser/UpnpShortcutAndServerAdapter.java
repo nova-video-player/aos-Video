@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.net.Uri;
 
@@ -39,7 +41,7 @@ public class UpnpShortcutAndServerAdapter extends WorkgroupShortcutAndServerAdap
         mShares.addAll(devices);
         for (GenericShare s : mShares) {
             if(s!=null)
-                mAvailableShares.add(Uri.parse(s.getUri()).getHost().toLowerCase());
+                mAvailableShares.add(Uri.parse(s.getUri()).getHost().toLowerCase(Locale.ROOT));
         }
         resetData();
 

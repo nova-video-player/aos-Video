@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.channels;
 
+import java.util.Locale;
+
 import static com.archos.mediacenter.utils.MediaUtils.getExternalCacheDir;
 
 import android.annotation.SuppressLint;
@@ -617,7 +619,7 @@ public class ChannelManager {
                             long aired = cursor.getLong(dateColumn);
 
                             if (aired > 0)
-                                date = new SimpleDateFormat("yyyy-MM-dd").format(new Date(aired));
+                                date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date(aired));
                         }
                         else {
                             int year = cursor.getInt(dateColumn);
@@ -630,7 +632,7 @@ public class ChannelManager {
                         long premiered = cursor.getLong(dateColumn);
 
                         if (premiered > 0)
-                            date = new SimpleDateFormat("yyyy").format(new Date(premiered));
+                            date = new SimpleDateFormat("yyyy", Locale.US).format(new Date(premiered));
                     }
 
                     if (date != null && !date.isEmpty())

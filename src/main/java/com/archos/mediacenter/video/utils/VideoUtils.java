@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.utils;
 
+import java.util.Locale;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -105,7 +107,7 @@ public class VideoUtils {
                     //if(DBG) Log.d(TAG, "deleteAssociatedSubtitles: Match for " + fullName);
                     dotPos = fullName.lastIndexOf('.');
                     if (dotPos >= 0 && dotPos < fullName.length()) {
-                        String ext = fullName.substring(dotPos + 1).toLowerCase();
+                        String ext = fullName.substring(dotPos + 1).toLowerCase(Locale.ROOT);
                         if (getSubtitleExtensions().contains(ext)) {
                             if(DBG) Log.d(TAG, "deleteAssociatedSubtitles: deleting file " + f.getPath());
                             f.delete();

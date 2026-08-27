@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser;
 
+import java.util.Locale;
+
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -69,7 +71,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
             cursor.moveToFirst();
             do {
                 String path = cursor.getString(uriIndex);
-                if (((WorkgroupShortcutAndServerAdapter) mAdapter).getShares().contains(Uri.parse(path).getHost().toLowerCase())) {
+                if (((WorkgroupShortcutAndServerAdapter) mAdapter).getShares().contains(Uri.parse(path).getHost().toLowerCase(Locale.ROOT))) {
                     NetworkScanner.scanVideos(getActivity(), path);
                 }
             } while (cursor.moveToNext());
@@ -216,7 +218,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
                             if (isCancelled) return;
                             Uri uri = Uri.parse(shortcut.getUri());
                             if (log.isDebugEnabled()) log.debug("checkShortcutAvailability.doInBackground: checking {}", shortcut.getUri());
-                            if ((shares == null || !shares.contains(uri.getHost().toLowerCase()))
+                            if ((shares == null || !shares.contains(uri.getHost().toLowerCase(Locale.ROOT)))
                                     && !forcedShortcuts.contains(shortcut.getUri())
                                     && FileEditorFactory.getFileEditorForUrl(uri, getActivity()).exists()) {
                                 if (log.isDebugEnabled()) log.debug("checkShortcutAvailability.doInBackground: shortcut {} is available, display it!", shortcut.getUri());

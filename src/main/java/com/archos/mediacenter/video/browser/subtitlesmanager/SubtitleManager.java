@@ -624,7 +624,7 @@ public class SubtitleManager {
             if(metaFile2List!=null)
                 for (MetaFile2 item : metaFile2List){
                     name = item.getName();
-                    nameNoCase = name.toLowerCase();
+                    nameNoCase = name.toLowerCase(Locale.ROOT);
                     //list files in subs/ or sub/ etc
                     if(item.isDirectory()&&(
                             nameNoCase.equals("subs")||
@@ -796,7 +796,7 @@ public class SubtitleManager {
     private static final String HI = "(HI|SDH)";
 
     public static String convertYTSSubNamingExceptions(String name) {
-        String lowercaseName = name.toLowerCase();
+        String lowercaseName = name.toLowerCase(Locale.ROOT);
         if (lowercaseName.endsWith("simplified.chi") || lowercaseName.endsWith("zh-cn")) {
             return "s_chinese_simplified";
         } else if (lowercaseName.endsWith("traditional.chi") || lowercaseName.endsWith("zh-tw")) {

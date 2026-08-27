@@ -15,6 +15,8 @@
 
 package com.archos.mediacenter.video.browser;
 
+import java.util.Locale;
+
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -1244,7 +1246,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             return null;
         int dotPos = filename.lastIndexOf('.');
         if (dotPos >= 0 && dotPos < filename.length()) {
-            return filename.substring(dotPos + 1).toLowerCase();
+            return filename.substring(dotPos + 1).toLowerCase(Locale.ROOT);
         }
         return null;
     }

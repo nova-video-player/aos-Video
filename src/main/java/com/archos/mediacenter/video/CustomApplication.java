@@ -1210,8 +1210,8 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             try {
                 novaVersionArray = splitVersion(novaVersionName);
                 novaLongVersion = "Nova v" + novaVersionArray[0] + "." + novaVersionArray[1] + "." + novaVersionArray[2] +
-                        " (" + novaVersionArray[3] + String.format("%02d", novaVersionArray[4]) + String.format("%02d", novaVersionArray[5]) +
-                        "." + String.format("%02d", novaVersionArray[6]) + String.format("%02d", novaVersionArray[7]) + ")";
+                        " (" + novaVersionArray[3] + String.format(Locale.ROOT, "%02d", novaVersionArray[4]) + String.format(Locale.ROOT, "%02d", novaVersionArray[5]) +
+                        "." + String.format(Locale.ROOT, "%02d", novaVersionArray[6]) + String.format(Locale.ROOT, "%02d", novaVersionArray[7]) + ")";
                 novaShortVersion = "v" + novaVersionArray[0] + "." + novaVersionArray[1] + "." + novaVersionArray[2];
             } catch (IllegalArgumentException ie) {
                 novaVersionArray = new int[] { 0, 0, 0, 0, 0, 0, 0, 0};

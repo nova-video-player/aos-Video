@@ -591,9 +591,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     mClock.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
                     mClock.setTextColor(Color.WHITE);
                     if (DateFormat.is24HourFormat(mContext)) {
-                        mDateFormat = new SimpleDateFormat("HH:mm");
+                        mDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                     } else {
-                        mDateFormat = new SimpleDateFormat("h:mm");
+                        mDateFormat = new SimpleDateFormat("h:mm", Locale.getDefault());
                     }
                     updateClock();
                 }
@@ -2217,7 +2217,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     public void showAudioSpeedOSD(float audioSpeed) {
-        String speedText = String.format("%.2fx", audioSpeed);
+        String speedText = String.format(Locale.getDefault(), "%.2fx", audioSpeed);
         if (mOsdRightTextView != null) {
             mOsdRightTextView.setText(speedText);
             mOsdRightTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -2805,9 +2805,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private SimpleDateFormat getDateFormat() {
         if (mDateFormat == null) {
             if (DateFormat.is24HourFormat(mContext)) {
-                mDateFormat = new SimpleDateFormat("HH:mm");
+                mDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
             } else {
-                mDateFormat = new SimpleDateFormat("h:mm");
+                mDateFormat = new SimpleDateFormat("h:mm", Locale.getDefault());
             }
         }
         return mDateFormat;

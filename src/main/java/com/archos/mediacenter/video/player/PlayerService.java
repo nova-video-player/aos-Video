@@ -2124,8 +2124,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     } else {
                         currentLanguage = ISO639codes.getLanguageNameForLetterCode(trackAtIndex.language);
                     }
-                    String currentLang2Letter = extractLanguageCode(currentLanguage).toLowerCase();
-                    String savedLang2Letter = mVideoInfo.subtitleLanguage.toLowerCase();
+                    String currentLang2Letter = extractLanguageCode(currentLanguage).toLowerCase(Locale.ROOT);
+                    String savedLang2Letter = mVideoInfo.subtitleLanguage.toLowerCase(Locale.ROOT);
                     if (!savedLang2Letter.equals(currentLang2Letter)) {
                         if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: subtitle language mismatch at index {}: saved={}, current={}", mVideoInfo.subtitleTrack, savedLang2Letter, currentLang2Letter);
                         mVideoInfo.subtitleTrack = -1;
@@ -2164,7 +2164,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                             if (stringContainsForced(trackName)) {
                                 if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: skip track: {} with identified lang: {} because it contains forced sub", trackName, lang);
                             } else {
-                                if (lang.toLowerCase().contains(locale.getDisplayLanguage().toLowerCase())) {
+                                if (lang.toLowerCase(Locale.getDefault()).contains(locale.getDisplayLanguage().toLowerCase(Locale.getDefault()))) {
                                     if (languageMatchTrack == null) {
                                         if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: track {} identified lang: {} matches locale language {}", trackName, lang, locale.getDisplayLanguage());
                                         languageMatchTrack = i;
@@ -2233,7 +2233,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         } else {
                             language = ISO639codes.getLanguageNameForLetterCode(track.language);
                         }
-                        mVideoInfo.subtitleLanguage = extractLanguageCode(language).toLowerCase();
+                        mVideoInfo.subtitleLanguage = extractLanguageCode(language).toLowerCase(Locale.ROOT);
                         if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: auto-selected track {} with language={}", mVideoInfo.subtitleTrack, mVideoInfo.subtitleLanguage);
                     }
                 } else {
@@ -2317,19 +2317,19 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
         // Handle special cases for known subtitle formats (e.g. SRT, VTT)
         if (isGenericTextSubtitleFormat(languageStr)) {
-            return languageStr.toLowerCase();
+            return languageStr.toLowerCase(Locale.ROOT);
         }
         // Use ISO639codes utility to convert any format (2-letter, 3-letter, or full name) to 2-letter code
         String code = com.archos.mediacenter.utils.ISO639codes.getISO6391ForLetterCode(languageStr);
         if (code != null && !code.isEmpty()) {
-            return code.toLowerCase();
+            return code.toLowerCase(Locale.ROOT);
         }
         // Fallback: if it's already a 2-letter code, use it
         if (languageStr.length() == 2 && !languageStr.contains(" ")) {
-            return languageStr.toLowerCase();
+            return languageStr.toLowerCase(Locale.ROOT);
         }
         // Last resort: return first 2 chars
-        return languageStr.substring(0, Math.min(2, languageStr.length())).toLowerCase();
+        return languageStr.substring(0, Math.min(2, languageStr.length())).toLowerCase(Locale.ROOT);
     }
 
     @Override

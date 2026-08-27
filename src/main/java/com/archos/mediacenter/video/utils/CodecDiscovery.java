@@ -306,8 +306,8 @@ public class CodecDiscovery {
 			return codecInfo.isSoftwareOnly();
 		} else {
 			return codecInfo.getName().startsWith("OMX.google") ||
-					codecInfo.getName().toLowerCase().contains("sw") ||
-					codecInfo.getName().toLowerCase().startsWith("c2.android");
+					codecInfo.getName().toLowerCase(Locale.ROOT).contains("sw") ||
+					codecInfo.getName().toLowerCase(Locale.ROOT).startsWith("c2.android");
 		}
 	}
 

@@ -1242,7 +1242,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                         int epEpisode = epTags.getEpisode();
                         if (ttl != null && !ttl.isEmpty()) {
                             if (epSeason > 0 && epEpisode > 0) {
-                                ttl = String.format(EPISODE_FORMAT, ttl, epSeason, epEpisode);
+                                ttl = String.format(Locale.getDefault(), EPISODE_FORMAT, ttl, epSeason, epEpisode);
                             }
                             itemProperties.title = ttl;
                         }

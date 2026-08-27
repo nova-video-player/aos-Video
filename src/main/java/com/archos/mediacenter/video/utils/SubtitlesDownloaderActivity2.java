@@ -197,11 +197,11 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             // if no language is set, add default locale at least
             String defaultLanguage = Locale.getDefault().getLanguage();
             // if defaultLanguage is not equal ignoring case zh-cn or zh-tw replace by zh-cn since zh-cn and zh-tw are the only two known by opensubtitles
-            if (defaultLanguage.toLowerCase().startsWith("zh") && !defaultLanguage.equalsIgnoreCase("zh-cn") && !defaultLanguage.equalsIgnoreCase("zh-tw")) {
+            if (defaultLanguage.toLowerCase(Locale.ROOT).startsWith("zh") && !defaultLanguage.equalsIgnoreCase("zh-cn") && !defaultLanguage.equalsIgnoreCase("zh-tw")) {
                 log.warn("getSubLangValue: curing defaultLanguage={} to zh-cn", defaultLanguage);
                 defaultLanguage = "zh-cn";  // Simplified Chinese
             }
-            if (defaultLanguage.toLowerCase().startsWith("pt") && !defaultLanguage.equalsIgnoreCase("pt-br") && !defaultLanguage.equalsIgnoreCase("pt-pt")) {
+            if (defaultLanguage.toLowerCase(Locale.ROOT).startsWith("pt") && !defaultLanguage.equalsIgnoreCase("pt-br") && !defaultLanguage.equalsIgnoreCase("pt-pt")) {
                 log.warn("getSubLangValue: curing defaultLanguage={} to pt-pt", defaultLanguage);
                 defaultLanguage = "pt-pt";  // Portuguese
             }
@@ -213,12 +213,12 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         Set<String> toAdd = new HashSet<>();
         boolean modifiedList = false;
         for (String lang : existingLanguages) {
-            if (lang.toLowerCase().startsWith("zh") && !lang.equalsIgnoreCase("zh-cn") && !lang.equalsIgnoreCase("zh-tw")) {
+            if (lang.toLowerCase(Locale.ROOT).startsWith("zh") && !lang.equalsIgnoreCase("zh-cn") && !lang.equalsIgnoreCase("zh-tw")) {
                 toRemove.add(lang);
                 toAdd.add("zh-cn");
                 modifiedList = true;
             }
-            if (lang.toLowerCase().startsWith("pt") && !lang.equalsIgnoreCase("pt-pt") && !lang.equalsIgnoreCase("pt-br")) {
+            if (lang.toLowerCase(Locale.ROOT).startsWith("pt") && !lang.equalsIgnoreCase("pt-pt") && !lang.equalsIgnoreCase("pt-br")) {
                 toRemove.add(lang);
                 toAdd.add("pt-pt");
                 modifiedList = true;

@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.player;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
@@ -57,7 +59,7 @@ public abstract class AudioSpeedPickerAbstract extends FrameLayout {
     }
 
     public CharSequence getFormattedSpeed() {
-        return String.format("x %.2f", mSpeed);
+        return String.format(Locale.getDefault(), "x %.2f", mSpeed);
    }
 
     @Override

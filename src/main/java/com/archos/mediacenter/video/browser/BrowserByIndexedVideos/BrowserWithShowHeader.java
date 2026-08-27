@@ -15,6 +15,8 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
+import java.util.Locale;
+
 import android.app.Activity;
 import android.content.Intent;
 
@@ -392,7 +394,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
                     TextView Premiered = (TextView) mHeaderView.findViewById(R.id.premiered);
                     String pattern = "yyyy-MM-dd";
-                    DateFormat df = new SimpleDateFormat(pattern);
+                    DateFormat df = new SimpleDateFormat(pattern, Locale.getDefault());
                     String todayAsString = "";
                     if (result.tags != null) {
                         Date today = result.tags.getPremiered();

@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.player;
 
+import java.util.Locale;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.PictureInPictureParams;
@@ -3205,7 +3207,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mMovieOrShowName = mVideoInfo.scraperTitle;
                 if (mMovieOrShowName != null) {
                     if (mVideoInfo.isShow) {
-                        mTitle = String.format(SHOW_FORMAT, mMovieOrShowName, mVideoInfo.scraperSeasonNr, mVideoInfo.scraperEpisodeNr, mVideoInfo.scraperEpisodeName);
+                        mTitle = String.format(Locale.getDefault(), SHOW_FORMAT, mMovieOrShowName, mVideoInfo.scraperSeasonNr, mVideoInfo.scraperEpisodeNr, mVideoInfo.scraperEpisodeName);
                     } else {
                         mTitle = mMovieOrShowName;
                     }
@@ -3874,7 +3876,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                             } else {
                                 language = ISO639codes.getLanguageNameForLetterCode(track.language);
                             }
-                            mVideoInfo.subtitleLanguage = extractLanguageCode(language).toLowerCase();
+                            mVideoInfo.subtitleLanguage = extractLanguageCode(language).toLowerCase(Locale.ROOT);
                             if (log.isDebugEnabled()) log.debug("onTrackSelected: saved subtitleLanguage={} for track {}", mVideoInfo.subtitleLanguage, mVideoInfo.subtitleTrack);
                         }
                     } else {
@@ -3965,19 +3967,19 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
         // Handle special cases for known subtitle formats (e.g. SRT, VTT)
         if (isGenericTextSubtitleFormat(languageStr)) {
-            return languageStr.toLowerCase();
+            return languageStr.toLowerCase(Locale.ROOT);
         }
         // Use ISO639codes utility to convert any format (2-letter, 3-letter, or full name) to 2-letter code
         String code = com.archos.mediacenter.utils.ISO639codes.getISO6391ForLetterCode(languageStr);
         if (code != null && !code.isEmpty()) {
-            return code.toLowerCase();
+            return code.toLowerCase(Locale.ROOT);
         }
         // Fallback: if it's already a 2-letter code, use it
         if (languageStr.length() == 2 && !languageStr.contains(" ")) {
-            return languageStr.toLowerCase();
+            return languageStr.toLowerCase(Locale.ROOT);
         }
         // Last resort: return first 2 chars
-        return languageStr.substring(0, Math.min(2, languageStr.length())).toLowerCase();
+        return languageStr.substring(0, Math.min(2, languageStr.length())).toLowerCase(Locale.ROOT);
     }
 
     protected boolean forceExitOnTouch() {

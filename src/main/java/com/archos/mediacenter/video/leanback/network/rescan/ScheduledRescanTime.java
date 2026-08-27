@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.network.rescan;
 
+import java.util.Locale;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -71,9 +73,9 @@ public class ScheduledRescanTime extends GuidedStepSupportFragment {
             sTime=0;
         SimpleDateFormat format;
         if (DateFormat.is24HourFormat(getActivity())) {
-            format = new SimpleDateFormat("HH:mm");
+            format = new SimpleDateFormat("HH:mm", Locale.getDefault());
         } else {
-            format = new SimpleDateFormat("h:mm a");
+            format = new SimpleDateFormat("h:mm a", Locale.getDefault());
         }
 
         Calendar cal = new GregorianCalendar();

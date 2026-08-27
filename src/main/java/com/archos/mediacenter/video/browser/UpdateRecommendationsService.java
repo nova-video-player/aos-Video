@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser;
 
+import java.util.Locale;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -199,7 +201,7 @@ public class UpdateRecommendationsService extends Service implements DefaultLife
 					int episode = c.getInt(episodeColumns);
 					// TODO MARC format unification e%03?
 					if (season != 0 && episode != 0)
-						builder.setDescription(String.format("S%02dE%02d  -  %s", season, episode, c.getString(episodeNameColumns)));
+						builder.setDescription(String.format(Locale.getDefault(), "S%02dE%02d  -  %s", season, episode, c.getString(episodeNameColumns)));
 					Notification notification = builder.setTitle(c.getString(mNameColumn))
 							.setImage(bitmap)
 							.setMax(c.getInt(mDurationColumns))

@@ -562,7 +562,7 @@ public class OpenSubtitlesApiHelper {
     public static String getTimeRemainingFromUtc(String utcString) {
         if (utcString == null || utcString.isEmpty()) return "";
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date resetTime = dateFormat.parse(utcString);
             Date currentTime = new Date();
@@ -595,7 +595,7 @@ public class OpenSubtitlesApiHelper {
 
     public static boolean isCurrentTimeAfterResetTime() {
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date resetTime = dateFormat.parse(resetTimeUTC);
             Date currentTime = new Date();

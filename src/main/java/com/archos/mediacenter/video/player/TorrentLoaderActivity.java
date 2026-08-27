@@ -15,6 +15,8 @@
 
 package com.archos.mediacenter.video.player;
 
+import java.util.Locale;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -167,7 +169,7 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
             return null;
         int dotPos = filename.lastIndexOf('.');
         if (dotPos >= 0 && dotPos < filename.length()) {
-            return filename.substring(dotPos + 1).toLowerCase();
+            return filename.substring(dotPos + 1).toLowerCase(Locale.ROOT);
         }
         return null;
     }
@@ -181,7 +183,7 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
         boolean isTorrentReady = true;
         isClosingService = false;
         mTorrentURL = intent.getDataString();
-        if(mTorrentURL.toLowerCase().startsWith("file://"))
+        if(mTorrentURL.toLowerCase(Locale.ROOT).startsWith("file://"))
             mTorrentURL= intent.getData().getPath();
         mOriginalTorrentUri = mTorrentURL; //keep original uri, mTorrentUrl will be replaced after torrent file download
         mProgress = NovaProgressDialog.show(this, "", getString(R.string.loading_torrent), true, true, dialog -> TorrentLoaderActivity.this.finish());
@@ -232,7 +234,7 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
     }
 
     private void loadTorrent() {
-        if(mTorrentURL.toLowerCase().startsWith("/")){
+        if(mTorrentURL.toLowerCase(Locale.ROOT).startsWith("/")){
             InputStream is = null;
             FileOutputStream output = null;
             // mTorrentURL =  mTorrentURL.substring("file://".length());
@@ -319,7 +321,7 @@ public class TorrentLoaderActivity extends AppCompatActivity implements TorrentT
                     String tmp  = MimeUtils.guessMimeTypeFromExtension(extension);
                     mimeType = tmp!=null?tmp:mimeType;
                 }
-                if(mimeType.toLowerCase().startsWith("video")){
+                if(mimeType.toLowerCase(Locale.ROOT).startsWith("video")){
                     File f = new File(file);
                     mFiles.put(f.getName(), i);
                 }

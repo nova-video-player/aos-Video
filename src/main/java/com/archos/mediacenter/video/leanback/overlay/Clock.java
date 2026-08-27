@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.overlay;
 
+import java.util.Locale;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -53,9 +55,9 @@ public class Clock {
         mContext = context;
 
         if (DateFormat.is24HourFormat(mContext)) {
-            mDateFormat = new SimpleDateFormat("HH:mm");
+            mDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         } else {
-            mDateFormat = new SimpleDateFormat("h:mm");
+            mDateFormat = new SimpleDateFormat("h:mm", Locale.getDefault());
         }
 
         mClockTextView = (TextView)overlayContainer.findViewById(R.id.clock);

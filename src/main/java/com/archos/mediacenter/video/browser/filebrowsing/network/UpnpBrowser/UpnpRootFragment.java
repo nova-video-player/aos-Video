@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -143,7 +145,7 @@ public class UpnpRootFragment extends UpnpSmbCommonRootFragment implements UpnpS
             cursor.moveToFirst();
             do {
                 String path = cursor.getString(uriIndex);
-                if (((WorkgroupShortcutAndServerAdapter) mAdapter).getShares().contains(Uri.parse(path).getHost().toLowerCase())) {
+                if (((WorkgroupShortcutAndServerAdapter) mAdapter).getShares().contains(Uri.parse(path).getHost().toLowerCase(Locale.ROOT))) {
                     NetworkScanner.scanVideos(getActivity(), path);
                 }
             } while (cursor.moveToNext());

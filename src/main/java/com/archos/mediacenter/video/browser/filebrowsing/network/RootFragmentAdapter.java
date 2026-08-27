@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -305,7 +307,7 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
 
             // Set shortcut availability
 
-            boolean available = (mAvailableShares==null||mAvailableShares.contains(Uri.parse(shortcut.getUri()).getHost().toLowerCase())||mForcedEnabledShortcut.contains(shortcut.getUri()));
+            boolean available = (mAvailableShares==null||mAvailableShares.contains(Uri.parse(shortcut.getUri()).getHost().toLowerCase(Locale.ROOT))||mForcedEnabledShortcut.contains(shortcut.getUri()));
             sViewHolder.setAvailable(available);
             sViewHolder.setRefreshable(available && !NetworkScannerServiceVideo.isScannerAlive());
         }
