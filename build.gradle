@@ -198,9 +198,7 @@ android {
             buildConfigField "String", "SENTRY_DSN", "\"\"";
         }
         resValue "string", "VERSION_NAME", versionName
-        resValue "string", "APPLICATION_ID", applicationId
         resValue "string", "APP_INFO", "Nova v" + versionName + " (" + applicationId + ")"
-        resValue "string", "APP_VERSION", novaVersionName
     }
     bundle {
         language {
