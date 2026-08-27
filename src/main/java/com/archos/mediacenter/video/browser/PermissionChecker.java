@@ -97,8 +97,12 @@ public class PermissionChecker {
         // Environment.isExternalStorageManager() used to check MANAGE_EXTERNAL_STORAGE is for API>=30
         // for API>=34 FOREGROUND_SERVICE_DATA_SYNC (not granted for nova by google (yay!) and FOREGROUND_SERVICE_MEDIA_PLAYBACK are required
 
-        Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + mActivity.getPackageName()));
-        activityToRequestManageStorageExists = intent.resolveActivity(mActivity.getPackageManager()) != null;
+        if (Build.VERSION.SDK_INT >= 30) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + mActivity.getPackageName()));
+            activityToRequestManageStorageExists = intent.resolveActivity(mActivity.getPackageManager()) != null;
+        } else {
+            activityToRequestManageStorageExists = false;
+        }
         if (log.isDebugEnabled()) log.debug("checkAndRequestPermission: hasManageExternalStoragePermissionactivityToRequestManageStorageExists={}", activityToRequestManageStorageExists);
 
         if(Build.VERSION.SDK_INT >= 30 && hasManageExternalStoragePermission && activityToRequestManageStorageExists) { // MANAGE_EXTERNAL_STORAGE has it all and is introduced in API>=31 except for TV

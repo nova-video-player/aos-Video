@@ -367,7 +367,7 @@
     <string name="subtitles_wizard_empty_list">Nenašiel sa žiadny súbor</string>
     <string name="subtitles_wizard_add_files">Do tohto priečinka môžete skopírovať ďalšie súbory s titulkami a priradiť ich k tomuto videu.</string>
     <string name="subtitles_wizard_help">Vyberte niektorý z dostupných súborov s titulkami a priraďte ho k videu %s. Súbor sa premenuje tak, aby zodpovedal názvu videa.</string>
-    <string name="subtitles_wizard_empty_list_help">Nenašli sa žiadne súbory s titulkami. Do tohto priečinka musíte najprv skopírovať jeden alebo viac súborov s titulkami, aby ste ich mohli priradiť k videu .</string>
+    <string name="subtitles_wizard_empty_list_help">Nenašli sa žiadne súbory s titulkami. Do tohto priečinka musíte najprv skopírovať jeden alebo viac súborov s titulkami, aby ste ich mohli priradiť k videu %s.</string>
     <string name="subtitles_wizard_cache">Vyrovnávacia pamäť</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Získajte titulky online</string>

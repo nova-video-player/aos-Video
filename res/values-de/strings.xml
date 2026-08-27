@@ -851,7 +851,7 @@
     <string name="media_library_export_in_progress">Exportiere Medienbibliothek + Zugangsdaten + Verknüpfungen</string>
     <string name="media_library_import_in_progress">Importiere Medienbibliothek + Zugangsdaten + Verknüpfungen</string>
     <string name="media_library_export_success">Medienbibliothek, Zugangsdaten und Verknüpfungen erfolgreich exportiert in:\n%s</string>
-    <string name="media_library_import_success">Medienbibliothek, Zugangsdaten und Verknüpfungen erfolgreich importiert aus:\n%s...</string>
+    <string name="media_library_import_success">Medienbibliothek, Zugangsdaten und Verknüpfungen erfolgreich importiert. App wird neu gestartet...</string>
     <string name="media_library_import_error">Fehler beim Importieren der Medienbibliothek</string>
     <string name="media_library_export_error">Fehler beim Exportieren der Medienbibliothek</string>
     <string name="media_library_export_dir_not_found">Exportverzeichnis nicht gefunden</string>

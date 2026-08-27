@@ -374,7 +374,7 @@ public class FileManagerService extends Service implements OperationEngineListen
         if (log.isDebugEnabled()) log.debug("acquireWakeLock");
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Nova:FileManagerWakeLock");
-        mWakeLock.acquire();
+        mWakeLock.acquire(24 * 60 * 60 * 1000L); // 24 hours max timeout
     }
     private void releaseWakeLock(){
         if (log.isDebugEnabled()) log.debug("releaseWakeLock");

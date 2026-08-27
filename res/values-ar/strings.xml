@@ -255,7 +255,7 @@
     <string name="subtitles_wizard_delete">حذف هذا الملف</string>
     <string name="subtitles_wizard_empty_list">لا يوجد ملف</string>
     <string name="subtitles_wizard_add_files">يمكنك نسخأى من ملفات الترجمة إلى هذة الحافظة وذلك لربطها على الفيديو.</string>
-    <string name="subtitles_wizard_help">تحديد أي من ملفات الترجمة المتاحة لربطه مع الفيديو ٪ S. وسيتم تغيير اسم الملف من أجل تطابق اسم الفيديو.</string>
+    <string name="subtitles_wizard_help">تحديد أي من ملفات الترجمة المتاحة لربطه مع الفيديو %s. وسيتم تغيير اسم الملف من أجل تطابق اسم الفيديو.</string>
     <string name="subtitles_wizard_empty_list_help">لم يتم العثور على ملفات الترجمة. يجب عليك أولا نسخ واحد أو أكثر من ملفات الترجمة إلى هذة الحافظة وذلك لتواصلها مع الفيديو %s.</string>
     <string name="subtitles_wizard_cache">ذاكرة التخزين المؤقت</string>
     <!-- Subloader -->

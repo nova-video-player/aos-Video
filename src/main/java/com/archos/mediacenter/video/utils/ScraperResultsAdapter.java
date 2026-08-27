@@ -129,8 +129,7 @@ public class ScraperResultsAdapter extends BaseAdapter {
             convertView.setTag(holder);
 
             // Set the size of the poster
-            ImageView poster = (ImageView)convertView.findViewById(R.id.poster);
-            ViewGroup.LayoutParams lp = poster.getLayoutParams();
+            ViewGroup.LayoutParams lp = holder.poster.getLayoutParams();
             lp.width = mPosterWidth;
             lp.height = mPosterHeight;
         }
