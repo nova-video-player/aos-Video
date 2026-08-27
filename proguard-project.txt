@@ -1,7 +1,5 @@
-# R8 is configured with tree-shrinking (minification) and optimization enabled,
-# while obfuscation remains disabled (-dontobfuscate) to preserve readable stack traces.
-
--dontobfuscate
+# R8 obfuscates eligible third-party code. The Nova package rules below retain
+# readable names in user-provided logcat reports.
 
 -keepattributes SourceFile,LineNumberTable,Exceptions,InnerClasses,Signature,EnclosingMethod,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
 
