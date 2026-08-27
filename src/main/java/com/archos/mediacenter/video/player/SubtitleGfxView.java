@@ -57,6 +57,8 @@ public class SubtitleGfxView extends View {
     private Rect mSubtitleOriginalBounds;
     private Rect mScaledSubtitlesBounds;
     private Rect mSubtitleOriginalRect;
+    private final Rect mClipBounds = new Rect();
+    private final int[] mLocationOnScreen = new int[2];
     float mScaleFactor = 1.0f;
     int mVerticalMargin = 0;
     int mHorizontalMargin = 0;
@@ -302,17 +304,15 @@ public class SubtitleGfxView extends View {
             Canvas c = canvas;
             if (mExternalSurface != null) {
                 try {
-                    Rect r = new Rect();
-                    r = canvas.getClipBounds();
-                    int [] location = new int[2];
-                    getLocationOnScreen(location);
-                    r.offsetTo(location[0],location[1]);
-                    if (log.isDebugEnabled()) log.debug("onDraw: location={}, clipBounds={}", location, r);
+                    canvas.getClipBounds(mClipBounds);
+                    getLocationOnScreen(mLocationOnScreen);
+                    mClipBounds.offsetTo(mLocationOnScreen[0], mLocationOnScreen[1]);
+                    if (log.isDebugEnabled()) log.debug("onDraw: location={}, clipBounds={}", mLocationOnScreen, mClipBounds);
                     c = mExternalSurface.lockCanvas(null);
                     c.save();
                     c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                    c.clipRect(r);
-                    c.translate(location[0],location[1]);
+                    c.clipRect(mClipBounds);
+                    c.translate(mLocationOnScreen[0], mLocationOnScreen[1]);
                 } catch (Exception e) {
                     log.error("onDraw: cannot lock canvas!!!!");
                 }

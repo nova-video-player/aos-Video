@@ -31,6 +31,8 @@ public class SubtitleSpacerView extends View {
    
     private Surface mExternalSurface = null;
     private Drawable mBackground = null;
+    private final Rect mClipBounds = new Rect();
+    private final int[] mLocationOnScreen = new int[2];
    
     public SubtitleSpacerView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -70,17 +72,15 @@ public class SubtitleSpacerView extends View {
         Canvas c = canvas;
         if (mExternalSurface != null) {
             try {
-                Rect r = new Rect();
-                r = canvas.getClipBounds();
-                int [] location = new int[2];
-                getLocationOnScreen(location);
-                r.offsetTo(location[0],location[1]);
-//                 Log.d(TAG, "Spacer "+r.toString());
+                canvas.getClipBounds(mClipBounds);
+                getLocationOnScreen(mLocationOnScreen);
+                mClipBounds.offsetTo(mLocationOnScreen[0], mLocationOnScreen[1]);
+//                 Log.d(TAG, "Spacer "+mClipBounds.toString());
                 c = mExternalSurface.lockCanvas(null);
                 c.save();
                 c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                c.clipRect(r);
-                c.translate(location[0],location[1]);
+                c.clipRect(mClipBounds);
+                c.translate(mLocationOnScreen[0], mLocationOnScreen[1]);
                 if (mBackground != null)
                     mBackground.draw(c);
             } catch (Exception e) {
