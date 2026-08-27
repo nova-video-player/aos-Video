@@ -58,7 +58,6 @@ public class PermissionChecker {
     private static final int PERM_REQ_RW = 1;
     private static final int PERM_REQ_MANAGE = 2;
 
-    private static PermissionChecker sPermissionChecker;
     Activity mActivity;
 
     public boolean isDialogDisplayed = false;

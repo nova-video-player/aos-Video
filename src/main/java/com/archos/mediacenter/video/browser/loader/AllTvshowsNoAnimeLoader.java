@@ -33,7 +33,6 @@ public class AllTvshowsNoAnimeLoader extends VideoLoader {
     private String mSortOrder;
 
     private boolean mShowWatched;
-    private Context mContext;
 
     /**
      * List all shows
@@ -55,7 +54,6 @@ public class AllTvshowsNoAnimeLoader extends VideoLoader {
         super(context);
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
-        mContext = context;
         if (applyThrottleDelay) setUpdateThrottle(throttleDelay);
         init();
     }
@@ -109,7 +107,7 @@ public class AllTvshowsNoAnimeLoader extends VideoLoader {
         }
         sb.append(" AND ");
         sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " IS NULL OR " +
-                VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%' )");
+                VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " NOT LIKE '%" + getContext().getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%' )");
         sb.append(") GROUP BY (");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID);
         return sb.toString();

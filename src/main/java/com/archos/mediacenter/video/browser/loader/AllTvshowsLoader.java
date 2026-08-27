@@ -36,7 +36,6 @@ public class AllTvshowsLoader extends VideoLoader {
     private String mSortOrder;
 
     private boolean mShowWatched;
-    private Context mContext;
 
     /**
      * List all shows
@@ -58,7 +57,6 @@ public class AllTvshowsLoader extends VideoLoader {
         super(context);
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
-        mContext = context;
         if (applyThrottleDelay) setUpdateThrottle(throttleDelay);
         init();
     }

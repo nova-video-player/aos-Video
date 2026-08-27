@@ -28,7 +28,6 @@ public class FilmsLoader extends VideoLoader {
 
     private boolean mShowWatched;
 
-    private Context mContext;
 
     public FilmsLoader(Context context, boolean groupbyOnlineId) {
         this(context, DEFAULT_SORT, true, groupbyOnlineId, false, 0);
@@ -40,7 +39,6 @@ public class FilmsLoader extends VideoLoader {
 
     public FilmsLoader(Context context, String SortOrder, boolean showWatched, boolean groupByOnlineId, boolean applyThrottleDelay, int throttleDelay) {
         super(context);
-        mContext = context;
         mGroupByOnlineId = groupByOnlineId;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
@@ -83,7 +81,7 @@ public class FilmsLoader extends VideoLoader {
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL");
         sb.append(" AND ");
         sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " IS NULL OR " +
-                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%' )");
+                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%" + getContext().getString(com.archos.medialib.R.string.movie_genre_animation) + "%' )");
         if (!mShowWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);

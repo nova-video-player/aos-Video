@@ -29,7 +29,6 @@ public class AllAnimesLoader extends VideoLoader {
     static public String DEFAULT_SORT = "name COLLATE LOCALIZED ASC";
 
     private String mSortOrder;
-    private Context mContext;
     private boolean mShowWatched;
     private final boolean mGroupByOnlineId;
 
@@ -43,7 +42,6 @@ public class AllAnimesLoader extends VideoLoader {
 
     public AllAnimesLoader(Context context, String SortOrder, boolean showWatched, boolean groupByOnlineId) {
         super(context);
-        mContext = context;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
         mGroupByOnlineId = groupByOnlineId;
@@ -82,8 +80,8 @@ public class AllAnimesLoader extends VideoLoader {
         sb.append(super.getSelection()); // get common selection from the parent
 
         if (sb.length()>0) { sb.append(" AND "); }
-        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%' OR " +
-                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%' )");
+        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + getContext().getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%' OR " +
+                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%" + getContext().getString(com.archos.medialib.R.string.movie_genre_animation) + "%' )");
         if (!mShowWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);

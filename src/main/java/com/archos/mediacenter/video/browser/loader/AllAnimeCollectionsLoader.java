@@ -37,7 +37,6 @@ public class AllAnimeCollectionsLoader extends VideoLoader {
     public final static String COLUMN_COLLECTION_MOVIE_COUNT = "collection_movie_count";
     public final static String COLUMN_COLLECTION_MOVIE_WATCHED_COUNT = "collection_movie_watched_count";
     private String mSortOrder;
-    private Context mContext;
 
     private boolean mCollectionWatched;
 
@@ -51,7 +50,6 @@ public class AllAnimeCollectionsLoader extends VideoLoader {
 
     public AllAnimeCollectionsLoader(Context context, String SortOrder, boolean collectionWatched) {
         super(context);
-        mContext = context;
         mSortOrder = SortOrder;
         mCollectionWatched = collectionWatched;
         if (DBG) {
@@ -93,7 +91,7 @@ public class AllAnimeCollectionsLoader extends VideoLoader {
         if (sb.length()>0) { sb.append(" AND "); }
         sb.append( VideoStore.Video.VideoColumns.SCRAPER_C_ID + " > '0' AND " + VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE + " IS NOT NULL");
         sb.append(" AND ");
-        sb.append(VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'");
+        sb.append(VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%" + getContext().getString(com.archos.medialib.R.string.movie_genre_animation) + "%'");
         if (!mCollectionWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);

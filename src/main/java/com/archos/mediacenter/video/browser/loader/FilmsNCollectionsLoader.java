@@ -60,7 +60,6 @@ ORDER BY name ASC
 
     private boolean mShowWatched;
 
-    private Context mContext;
 
     public FilmsNCollectionsLoader(Context context, boolean groupbyOnlineId) {
         this(context, DEFAULT_SORT, true, groupbyOnlineId);
@@ -68,7 +67,6 @@ ORDER BY name ASC
 
     public FilmsNCollectionsLoader(Context context, String SortOrder, boolean showWatched, boolean groupByOnlineId) {
         super(context);
-        mContext = context;
         mGroupByOnlineId = groupByOnlineId;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;

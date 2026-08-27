@@ -72,7 +72,6 @@ ORDER BY uName ASC
 
     private boolean mShowWatched;
 
-    private Context mContext;
 
     public AnimesNShowsLoader(Context context) {
         this(context, DEFAULT_SORT, true, false, 0);
@@ -84,7 +83,6 @@ ORDER BY uName ASC
 
     public AnimesNShowsLoader(Context context, String SortOrder, boolean showWatched, boolean applyThrottleDelay, int throttleDelay) {
         super(context);
-        mContext = context;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
         init();
@@ -119,8 +117,8 @@ ORDER BY uName ASC
         // collections and movies not in collections that are not animes
         if (sb.length()>0) { sb.append(" AND "); }
         sb.append("(m_id IS NOT NULL OR s_id IS NOT NULL)" +
-                " AND (m_genres LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'" +
-                " OR s_genres LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%')" +
+                " AND (m_genres LIKE '%" + getContext().getString(com.archos.medialib.R.string.movie_genre_animation) + "%'" +
+                " OR s_genres LIKE '%" + getContext().getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%')" +
                 " AND (s_po_large_file IS NOT NULL OR m_po_large_file IS NOT NULL)"
         );
         if (!mShowWatched) {
