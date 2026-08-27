@@ -47,7 +47,7 @@
     <!-- Debug player -->
     <logger name="com.archos.mediacenter.video.player.Player" level="INFO"/>
     <logger name="com.archos.mediacenter.video.player.SurfaceController" level="INFO"/>
-    <logger name="com.archos.mediacenter.video.player.PlayerActivity" level="DEBUG"/>
+    <logger name="com.archos.mediacenter.video.player.PlayerActivity" level="INFO"/>
     <logger name="com.archos.mediacenter.video.player.PlayerController" level="INFO"/>
     <logger name="com.archos.mediacenter.video.player.PlayerService" level="INFO"/>
     <logger name="com.archos.mediacenter.video.player.ExternalPlayerService" level="INFO"/>
@@ -86,12 +86,12 @@
     <logger name="com.archos.mediacenter.utils.videodb.IndexHelper" level="INFO"/>
 
     <!-- Scraper store and database saving operations -->
-    <logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.VideoStoreImportService" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.VideoStoreImportImpl" level="DEBUG"/>
-    <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="DEBUG"/>
+    <logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="INFO"/>
+    <logger name="com.archos.mediaprovider.video.VideoStoreImportService" level="INFO"/>
+    <logger name="com.archos.mediaprovider.video.VideoStoreImportImpl" level="INFO"/>
+    <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="INFO"/>
     <!-- Auto-scrape workflow (checks if NFO parsing is enabled, saves tags) -->
-    <logger name="com.archos.mediascraper.AutoScrapeService" level="DEBUG"/>
+    <logger name="com.archos.mediascraper.AutoScrapeService" level="INFO"/>
 
     <!-- Local image lookup (findSeasonPoster, findShowPoster, findBackdrop) -->
     <logger name="com.archos.mediascraper.LocalImages" level="INFO"/>
@@ -175,8 +175,7 @@
     <logger name="com.archos.mediaprovider.video.VideoOpenHelper" level="INFO"/>
 
     <!-- Subtitles -->
-    <logger name="com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager" level="DEBUG"/>
+    <logger name="com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.ISO639codes" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.PlayUtils" level="INFO"/>
@@ -190,7 +189,7 @@
 
     <!-- Debug auto-scan refresh -->
     <logger name="com.archos.mediaprovider.video.NetworkRefreshJob" level="INFO"/>
-    <logger name="com.archos.mediaprovider.video.NetworkScannerUtil" level="DEBUG"/>
+    <logger name="com.archos.mediaprovider.video.NetworkScannerUtil" level="INFO"/>
     <logger name="com.archos.mediaprovider.video.NetworkAutoRefresh" level="INFO"/>
     <logger name="com.archos.mediaprovider.video.RemoteStateService" level="INFO"/>
     <logger name="com.archos.mediaprovider.video.VideoProvider" level="INFO"/>
