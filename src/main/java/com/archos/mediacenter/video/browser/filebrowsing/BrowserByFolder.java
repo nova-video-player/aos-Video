@@ -87,10 +87,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Observer;
 
 abstract public class BrowserByFolder extends BrowserByVideoObjects implements
-        Observer, LoaderManager.LoaderCallbacks<Cursor>, ListingEngine.Listener, VideoPresenter.ExtendedClickListener {
+        LoaderManager.LoaderCallbacks<Cursor>, ListingEngine.Listener, VideoPresenter.ExtendedClickListener {
 
     private static final Logger log = LoggerFactory.getLogger(BrowserByFolder.class);
 

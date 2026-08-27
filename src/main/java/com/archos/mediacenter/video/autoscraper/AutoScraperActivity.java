@@ -29,6 +29,7 @@ import android.database.MatrixCursor;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -1000,7 +1001,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
             if (Build.VERSION.SDK_INT >= 29) {
                 vh.initial_spinbar.getIndeterminateDrawable().setColorFilter(new BlendModeColorFilter(accentColor, BlendMode.MULTIPLY));
             } else {
-                vh.initial_spinbar.getIndeterminateDrawable().setColorFilter(accentColor, PorterDuff.Mode.MULTIPLY);
+                vh.initial_spinbar.getIndeterminateDrawable().setColorFilter(new PorterDuffColorFilter(accentColor, PorterDuff.Mode.MULTIPLY));
             }
             v.setTag(vh);
             return v;

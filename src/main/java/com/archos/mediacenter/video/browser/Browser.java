@@ -101,13 +101,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 public abstract class Browser extends Fragment implements AbsListView.OnScrollListener,
         View.OnTouchListener,
         AdapterView.OnItemClickListener,
-        Observer,
         ThumbnailEngine.Listener,
         ActionBarSubmenuListener, OnItemLongClickListener, Delete.DeleteListener, ExternalPlayerWithResultStarter {
 
@@ -1076,11 +1073,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             startActivity(intent);
         }
     }
-
-    @SuppressWarnings("unchecked")
-    public void update(Observable observable, Object data){
-    }
-
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         boolean ret = false;

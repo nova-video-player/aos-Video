@@ -359,6 +359,7 @@ public class MiscUtils {
 
 
     // this adjust margins but not view size
+    @SuppressWarnings("deprecation") // getDefaultDisplay: pre-R fallback
     public static void adjustViewLayoutForInsets(Context context, View rootView, View viewLayout, String viewName, boolean navigationBarShowing, boolean systemBarShowing, boolean actionBarShowing,
                                                  boolean controlBarShowing, boolean isNavBarOnBottom, boolean isGestureAreaShowing,
                                                  int additionalBottomMargin, int alreadyAppliedBottomMargin,

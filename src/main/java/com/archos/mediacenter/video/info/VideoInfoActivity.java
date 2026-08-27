@@ -229,6 +229,7 @@ public class VideoInfoActivity extends AppCompatActivity {
         startInstance(context,null,video, 0,paths,id, false, -1);
     }
 
+    @SuppressWarnings("deprecation") // FragmentStatePagerAdapter: pending ViewPager2 migration
     private static class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
         // Fields to hold the data previously accessed from the outer class
