@@ -4386,8 +4386,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
             refreshSubtitleTVMenu();
 
-            if (mPlayerController.isTVMenuDisplayed())
+            if (mPlayerController.isTVMenuDisplayed()) {
                 mPlayerController.showTVMenu(true);
+                // move focus to the currently selected subtitle track (e.g. the one just
+                // downloaded/auto-selected) instead of leaving it on whatever TV menu item had
+                // focus before the refresh (e.g. "Get subtitles online" that was just clicked)
+                if (nbTrack != 0) {
+                    View selectedTrackItem = mSubtitleTVMenu.getItem(mSubtitleInfoController.getTrack());
+                    if (selectedTrackItem != null) selectedTrackItem.requestFocus();
+                }
+            }
         }
 
         public void onBufferingUpdate(int percent) {
