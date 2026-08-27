@@ -515,7 +515,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public static boolean isAudioSpeedEnabled(SharedPreferences preferences) {
         if (preferences == null) return false;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return false;
         if (!preferences.getBoolean(KEY_PLAYBACK_SPEED, false)) return false;
         try {
             if (Integer.parseInt(preferences.getString("force_audio_passthrough_multiple", "0")) > 0) return false;
@@ -674,10 +673,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mForceAudioPassthroughMultiple.setSelectable(isPassthroughSupported);
 
         // Remove Mode 1 (IEC61937 manual wrapping) from options if not supported by device.
-        // On API < 23, EXTRA_ENCODINGS is unreliable on some TVs, so don't hide mode 1
-        // based solely on that signal.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !isIecEncapsulationCapable
+        if (!isIecEncapsulationCapable
                 && mForceAudioPassthroughMultiple != null) {
             removeMode1FromPassthroughOptions(mForceAudioPassthroughMultiple);
         }

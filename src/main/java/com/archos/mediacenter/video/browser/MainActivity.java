@@ -376,24 +376,22 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         }
 
         // determine if display has cutouts
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().getDecorView().setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
-                @SuppressLint("NewApi")
-                @Override
-                public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
-                        if (cutout != null) {
-                            if (log.isDebugEnabled()) log.debug("device with cutout");
-                            MiscUtils.hasCutout = true;
-                        } else
-                            if (log.isDebugEnabled()) log.debug("device without cutout");
-                    }
-                    getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
-                    return view.onApplyWindowInsets(insets);
+        getWindow().getDecorView().setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
+                    if (cutout != null) {
+                        if (log.isDebugEnabled()) log.debug("device with cutout");
+                        MiscUtils.hasCutout = true;
+                    } else
+                        if (log.isDebugEnabled()) log.debug("device without cutout");
                 }
-            });
-        }
+                getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
+                return view.onApplyWindowInsets(insets);
+            }
+        });
 
         mGlobalResumeViewStub = (ViewStub) findViewById(R.id.global_resume_stub);
         AutoScrapeService.registerObserver(this);

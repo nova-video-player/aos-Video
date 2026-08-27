@@ -542,7 +542,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
 
         Intent notificationIntent = new Intent(context, AutoScraperActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent,
-                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
+                PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Create a new notification builder
         mNotificationBuilder = new NotificationCompat.Builder(context, mNotifChannelId)

@@ -248,22 +248,20 @@ public class ThemeManager {
             window.setBackgroundDrawable(gradient);
             
             // Set status bar color to match gradient start (black) for cutout area
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                // setStatusBarColor/setNavigationBarColor are deprecated and ignored on Android 15+
-                // (edge-to-edge is enforced and bars are transparent by default there): the window/
-                // decor view gradient background set above already shows through in that case.
-                if (Build.VERSION.SDK_INT < 35) {
-                    window.setStatusBarColor(gradientStart);
-                    window.setNavigationBarColor(gradientEnd);
-                }
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            // setStatusBarColor/setNavigationBarColor are deprecated and ignored on Android 15+
+            // (edge-to-edge is enforced and bars are transparent by default there): the window/
+            // decor view gradient background set above already shows through in that case.
+            if (Build.VERSION.SDK_INT < 35) {
+                window.setStatusBarColor(gradientStart);
+                window.setNavigationBarColor(gradientEnd);
+            }
 
-                // Extend into display cutout area
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    WindowManager.LayoutParams params = window.getAttributes();
-                    params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-                    window.setAttributes(params);
-                }
+            // Extend into display cutout area
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                WindowManager.LayoutParams params = window.getAttributes();
+                params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                window.setAttributes(params);
             }
         }
         
@@ -360,32 +358,30 @@ public class ThemeManager {
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            
-            // setStatusBarColor/setNavigationBarColor are deprecated and ignored on Android 15+
-            // (edge-to-edge is enforced and bars are transparent by default there): the window/
-            // decor view background set above (phone mode) or the theme background (TV) already
-            // shows through in that case.
-            if (Build.VERSION.SDK_INT < 35) {
-                // Check if phone mode with black theme for special status bar handling
-                if (isBlackTheme() && isPhoneMode(activity)) {
-                    // Phone + Black theme: status bar = black (gradient start), nav bar = grey (gradient end)
-                    window.setStatusBarColor(getGradientStartColor());
-                    window.setNavigationBarColor(getGradientEndColor());
-                } else {
-                    // TV or Blue theme: use standard theme colors
-                    window.setStatusBarColor(getLeanbackBackgroundColor());
-                    window.setNavigationBarColor(getLeanbackBackgroundColor());
-                }
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        
+        // setStatusBarColor/setNavigationBarColor are deprecated and ignored on Android 15+
+        // (edge-to-edge is enforced and bars are transparent by default there): the window/
+        // decor view background set above (phone mode) or the theme background (TV) already
+        // shows through in that case.
+        if (Build.VERSION.SDK_INT < 35) {
+            // Check if phone mode with black theme for special status bar handling
+            if (isBlackTheme() && isPhoneMode(activity)) {
+                // Phone + Black theme: status bar = black (gradient start), nav bar = grey (gradient end)
+                window.setStatusBarColor(getGradientStartColor());
+                window.setNavigationBarColor(getGradientEndColor());
+            } else {
+                // TV or Blue theme: use standard theme colors
+                window.setStatusBarColor(getLeanbackBackgroundColor());
+                window.setNavigationBarColor(getLeanbackBackgroundColor());
             }
+        }
 
-            // Ensure the theme color extends into the display cutout area (notch/punch-hole)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                WindowManager.LayoutParams params = window.getAttributes();
-                params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-                window.setAttributes(params);
-            }
+        // Ensure the theme color extends into the display cutout area (notch/punch-hole)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            WindowManager.LayoutParams params = window.getAttributes();
+            params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            window.setAttributes(params);
         }
     }
     

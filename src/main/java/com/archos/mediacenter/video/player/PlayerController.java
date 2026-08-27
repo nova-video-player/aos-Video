@@ -2143,7 +2143,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     public boolean onGenericMotion(View v, MotionEvent event) {
         if(!isTVMenuDisplayed){
             if (log.isDebugEnabled()) log.debug("onGenericMotion : event={}", event);
-            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M&&event.getActionButton()==MotionEvent.BUTTON_PRIMARY) //
+            if (event.getActionButton() == MotionEvent.BUTTON_PRIMARY)
                 return false;
             int action = event.getAction();
 

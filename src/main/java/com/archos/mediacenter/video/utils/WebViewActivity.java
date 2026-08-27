@@ -95,7 +95,6 @@ public class WebViewActivity extends AppCompatActivity {
                 return false;
             }
             // this one is for Android API 24+
-            @RequiresApi(Build.VERSION_CODES.M)
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();

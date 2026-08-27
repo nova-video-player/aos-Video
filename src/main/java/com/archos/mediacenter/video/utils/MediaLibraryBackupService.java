@@ -593,9 +593,7 @@ public class MediaLibraryBackupService extends Service {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                 // Schedule app restart after a short delay
-                int pendingIntentFlags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                        ? android.app.PendingIntent.FLAG_UPDATE_CURRENT | android.app.PendingIntent.FLAG_IMMUTABLE
-                        : android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+                int pendingIntentFlags = android.app.PendingIntent.FLAG_UPDATE_CURRENT | android.app.PendingIntent.FLAG_IMMUTABLE;
 
                 android.app.PendingIntent pendingIntent = android.app.PendingIntent.getActivity(
                         this,

@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 class ShadowHelperJbmr2 {
 
     static class ShadowImpl {

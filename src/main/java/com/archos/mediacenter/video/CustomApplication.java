@@ -268,7 +268,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
      * the actual audio route.
      */
     private void refreshAudioOutputCapabilities(String reason) {
-        if (Build.VERSION.SDK_INT < 23 || mAudioManager == null) return;
+        if (mAudioManager == null) return;
 
         AudioDeviceInfo[] devices = mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         boolean foundHdmi = false;
@@ -396,16 +396,6 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     private static synchronized void refreshMediaCodecAudioCapabilities(String reason) {
-        if (Build.VERSION.SDK_INT < 23) {
-            mediaCodecAudioCapabilityFlag = 0;
-            mediaCodecAudioCapabilityFlagInitialized = true;
-            if (log != null && log.isDebugEnabled()) {
-                log.debug("refreshMediaCodecAudioCapabilities({}): API {} < 23, no MediaCodec audio capability scan",
-                        reason, Build.VERSION.SDK_INT);
-            }
-            return;
-        }
-
         mediaCodecAudioCapabilityFlag = CodecDiscovery.getMediaCodecAudioCapabilities(false);
         mediaCodecAudioCapabilityFlagInitialized = true;
         if (log != null) {
@@ -802,13 +792,9 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 launchSambaDiscovery();
                 if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
                 upgradeActions(appContext);
-                if (Build.VERSION.SDK_INT >= 23) {
-                    refreshAudioOutputCapabilities("onCreate");
-                    refreshMediaCodecAudioCapabilities("onCreate");
-                    refreshSpatializerCapabilities("onCreate");
-                } else {
-                    hasSpdif = true;
-                }
+                refreshAudioOutputCapabilities("onCreate");
+                refreshMediaCodecAudioCapabilities("onCreate");
+                refreshSpatializerCapabilities("onCreate");
             }
         }.start();
     }
@@ -996,38 +982,33 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     private void registerAudioDeviceCallback() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            mAudioDeviceCallback = new AudioDeviceCallback() {
-                @Override
-                public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
-                    for (AudioDeviceInfo device : addedDevices) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("registerAudioDeviceCallback:onAudioDevicesAdded: type={} name={}", device.getType(), device.getProductName());
-                        }
+        mAudioDeviceCallback = new AudioDeviceCallback() {
+            @Override
+            public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
+                for (AudioDeviceInfo device : addedDevices) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("registerAudioDeviceCallback:onAudioDevicesAdded: type={} name={}", device.getType(), device.getProductName());
                     }
-                    refreshAudioOutputCapabilities("devicesAdded");
-                    refreshSpatializerCapabilities("devicesAdded");
                 }
-                @Override
-                public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
-                    for (AudioDeviceInfo removedDevice : removedDevices) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("registerAudioDeviceCallback:onAudioDevicesRemoved: type={} name={}", removedDevice.getType(), removedDevice.getProductName());
-                        }
+                refreshAudioOutputCapabilities("devicesAdded");
+                refreshSpatializerCapabilities("devicesAdded");
+            }
+            @Override
+            public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
+                for (AudioDeviceInfo removedDevice : removedDevices) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("registerAudioDeviceCallback:onAudioDevicesRemoved: type={} name={}", removedDevice.getType(), removedDevice.getProductName());
                     }
-                    refreshAudioOutputCapabilities("devicesRemoved");
-                    refreshSpatializerCapabilities("devicesRemoved");
                 }
-            };
-            mAudioManager.registerAudioDeviceCallback(mAudioDeviceCallback, null);
-        } else {
-            // only set hasSpdif since hasHdmi should be caught by the broadcast receiver and be valid for lower APIs
-            hasSpdif = true;
-        }
+                refreshAudioOutputCapabilities("devicesRemoved");
+                refreshSpatializerCapabilities("devicesRemoved");
+            }
+        };
+        mAudioManager.registerAudioDeviceCallback(mAudioDeviceCallback, null);
     }
 
     private void unRegisterAudioDeviceCallback() {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (mAudioDeviceCallback != null) {
             mAudioManager.unregisterAudioDeviceCallback(mAudioDeviceCallback);
         }
     }
@@ -1043,7 +1024,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 final boolean isPlugged = intent.getIntExtra(AudioManager.EXTRA_AUDIO_PLUG_STATE, 0) == 1;
                 // On Android TV + ARC/eARC, the HDMI plug broadcast may not represent the active audio route.
                 // Prefer scanning AudioManager output devices (which include HDMI_ARC/HDMI_EARC).
-                if (Build.VERSION.SDK_INT >= 23 && mAudioManager != null) {
+                if (mAudioManager != null) {
                     refreshAudioOutputCapabilities("ACTION_HDMI_AUDIO_PLUG");
                     refreshSpatializerCapabilities("ACTION_HDMI_AUDIO_PLUG");
                     // If system reports plugged but device scan didn't find HDMI, fall back to intent values.
@@ -1054,22 +1035,9 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                         updateIecEncapsulationCapability();
                         updateDirectPcmMultichannelCapability();
                     }
-                } else {
-                    hasHdmi = isPlugged;
-                    hdmiAudioEncodingsFlags = intent.getIntArrayExtra(AudioManager.EXTRA_ENCODINGS);
-                    hdmiAudioEncodingFlag = !hasHdmi ? 0 : getEncodingFlags(hdmiAudioEncodingsFlags);
-                    updateIecEncapsulationCapability();
-                    updateDirectPcmMultichannelCapability();
-                }
-                final Integer isAudioPlugged = intent.getIntExtra(AudioManager.EXTRA_AUDIO_PLUG_STATE, 0);
-                if (isAudioPlugged != null) {
-                    // maxAudioChannelCount not exploited for now
-                    if (isAudioPlugged == 1) {
-                        maxAudioChannelCount = intent.getIntExtra(AudioManager.EXTRA_MAX_CHANNEL_COUNT, 2);
-                    }
                 }
 
-                if (log.isDebugEnabled()) log.debug("mHdmiAudioPlugReceiver: received ACTION_HDMI_AUDIO_PLUG, isAudioPlugged={}, hasHdmi={}, maxAudioChannelCount={}, hdmiAudioEncodingFlag={}, iecCapable={}", isAudioPlugged, hasHdmi, maxAudioChannelCount, hdmiAudioEncodingFlag, isIecEncapsulationCapable);
+                if (log.isDebugEnabled()) log.debug("mHdmiAudioPlugReceiver: received ACTION_HDMI_AUDIO_PLUG, isPlugged={}, hasHdmi={}, maxAudioChannelCount={}, hdmiAudioEncodingFlag={}, iecCapable={}", isPlugged, hasHdmi, maxAudioChannelCount, hdmiAudioEncodingFlag, isIecEncapsulationCapable);
             }
         }
     };

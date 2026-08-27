@@ -300,7 +300,7 @@ public class FileManagerService extends Service implements OperationEngineListen
     private PendingIntent getCancelIntent() {
         Intent intent = new Intent("CANCEL");
         return PendingIntent.getBroadcast(this, 0, intent,
-                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private Intent getOpenIntent() {
@@ -478,7 +478,7 @@ public class FileManagerService extends Service implements OperationEngineListen
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setAction(MainActivity.LAUNCH_DIALOG);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         nb.setContentTitle(getText(R.string.copying))
                 .setContentIntent(contentIntent)

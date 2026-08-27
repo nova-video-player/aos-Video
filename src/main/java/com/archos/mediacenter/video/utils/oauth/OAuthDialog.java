@@ -120,9 +120,7 @@ public class OAuthDialog extends Dialog {
 		// Essential JavaScript for OAuth flow
 		mWebView.getSettings().setJavaScriptEnabled(true);
 		// Allow mixed content (for OAuth callback URL handling)
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			mWebView.getSettings().setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-		}
+		mWebView.getSettings().setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 		// Enhanced security settings
 		mWebView.getSettings().setDomStorageEnabled(false);
 		mWebView.getSettings().setDatabaseEnabled(false);
@@ -151,9 +149,7 @@ public class OAuthDialog extends Dialog {
 		// Enable cookies for OAuth flow
 		CookieManager cookieManager = CookieManager.getInstance();
 		cookieManager.setAcceptCookie(true);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			cookieManager.setAcceptThirdPartyCookies(mWebView, true);
-		}
+		cookieManager.setAcceptThirdPartyCookies(mWebView, true);
 
 		mWebView.loadUrl(mReq.getLocationUri());
 
@@ -210,7 +206,6 @@ public class OAuthDialog extends Dialog {
 		}
 
         // this one is for Android API 24+
-        @RequiresApi(Build.VERSION_CODES.M)
         @Override
 		public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 			String url = request.getUrl().toString();
@@ -264,7 +259,6 @@ public class OAuthDialog extends Dialog {
 		}
 
         // for Android 23+
-        @RequiresApi(Build.VERSION_CODES.M)
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request,  WebResourceError error)
         {
@@ -306,7 +300,6 @@ public class OAuthDialog extends Dialog {
 		**  Handle HTTP errors (API 23+)
 		**
 		*/
-		@RequiresApi(Build.VERSION_CODES.M)
 		@Override
 		public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse)
 		{

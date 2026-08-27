@@ -20,7 +20,6 @@ import androidx.leanback.R;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 class RoundedRectHelperApi21 {
 
     private static int sCornerRadius;

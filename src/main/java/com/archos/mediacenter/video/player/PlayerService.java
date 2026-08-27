@@ -2359,7 +2359,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         intent.setClass(getApplicationContext(), PlayerActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 99, intent,
-                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         if (mSession == null) {
             mSession = new MediaSession(this, "PlayerActivity");
             MediaSession.Callback mediaSessionCallback = new MediaSession.Callback() {

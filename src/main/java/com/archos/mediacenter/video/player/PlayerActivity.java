@@ -732,23 +732,21 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         setContentView(R.layout.player);
         mRootView = findViewById(R.id.root);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mRootView.setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
-                @Override
-                public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
-                    //NOTE do not do updateSizes() here otherwise player controller is not displayed
-                    MiscUtils.setCutoutMetrics(insets, mRootView, PlayerActivity.this);
-                    mSurfaceController.setCutoutMetrics(mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom);
-                    if (log.isDebugEnabled()) log.debug("CONFIG onApplyWindowInsets: cutout=({},{},{},{})", mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom);
-                    getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
-                    // needed on Bravia for HDR content to avoid grey bars cf. issue #270
-                    // avoid emulator UI glitch
-                    if (!(isEmulator() || isChromeOS(mContext)))
-                        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    return view.onApplyWindowInsets(insets);
-                }
-            });
-        }
+        mRootView.setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
+                //NOTE do not do updateSizes() here otherwise player controller is not displayed
+                MiscUtils.setCutoutMetrics(insets, mRootView, PlayerActivity.this);
+                mSurfaceController.setCutoutMetrics(mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom);
+                if (log.isDebugEnabled()) log.debug("CONFIG onApplyWindowInsets: cutout=({},{},{},{})", mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom);
+                getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
+                // needed on Bravia for HDR content to avoid grey bars cf. issue #270
+                // avoid emulator UI glitch
+                if (!(isEmulator() || isChromeOS(mContext)))
+                    getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                return view.onApplyWindowInsets(insets);
+            }
+        });
 
         // needed otherwise the playerController does not appear
         mRootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -1139,7 +1137,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         if(!mWasInPictureInPicture){
             mPermissionChecker.checkAndRequestPermission(this);
             if (!isFinishing() && !isDestroyed()) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mHasAskedFloatingPermission&&Settings.canDrawOverlays(this)){ //permission has been granted
+                if (mHasAskedFloatingPermission && Settings.canDrawOverlays(this)) { //permission has been granted
                     startService(new Intent(this, FloatingPlayerService.class));
                 }
                 mHasAskedFloatingPermission = false;
@@ -2612,7 +2610,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 return true;
             case MENU_WINDOW_MODE:
                 mLaunchFloatingPlayer = true;
-                if(Build.VERSION.SDK_INT>=  Build.VERSION_CODES.M&&!Settings.canDrawOverlays(this))
+                if (!Settings.canDrawOverlays(this))
                     displayFloatingWindowPermissionDialog();
                 else {
                     Intent floatingIntent = new Intent(this, FloatingPlayerService.class);
@@ -4009,8 +4007,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 // Try to get calling package from multiple sources
                 mCallingPackage = getCallingPackage();
 
-                // API 22+: Try getReferrer() as fallback (more reliable than getCallingPackage)
-                if (mCallingPackage == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                // Try getReferrer() as fallback (more reliable than getCallingPackage)
+                if (mCallingPackage == null) {
                     Uri referrer = getReferrer();
                     if (referrer != null && "android-app".equals(referrer.getScheme())) {
                         mCallingPackage = referrer.getHost();

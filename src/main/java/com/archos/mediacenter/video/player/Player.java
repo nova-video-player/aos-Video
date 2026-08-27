@@ -188,38 +188,21 @@ public class Player implements IPlayerControl,
                     View v = mWindow.getDecorView();
                     Display d = v != null ? v.getDisplay() : null;
                     if (d == null) return;
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        Display.Mode currentMode = d.getMode();
-                        if (currentMode == null) return;
-                        int currentModeId = currentMode.getModeId();
-                        if (numberRetries > 0) { // only try NUMBER_RETRIES
-                            if (currentModeId != wantedModeId) {
-                                if (log.isDebugEnabled()) log.debug("CONFIG current modeId rate is {} trying to switch to {}, number of retries={}", currentModeId, wantedModeId, numberRetries);
-                                numberRetries--;
-                                mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
-                                return;
-                            }
-                            if (log.isDebugEnabled()) log.debug("CONFIG modeId before video start is {}", currentModeId);
-                            mCurrentRefreshRate = d.getRefreshRate();
-                        } else {
-                            log.warn("CONFIG failed to set modeId to {} it is still {}", wantedModeId, currentModeId);
-                            Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
+                    Display.Mode currentMode = d.getMode();
+                    if (currentMode == null) return;
+                    int currentModeId = currentMode.getModeId();
+                    if (numberRetries > 0) { // only try NUMBER_RETRIES
+                        if (currentModeId != wantedModeId) {
+                            if (log.isDebugEnabled()) log.debug("CONFIG current modeId rate is {} trying to switch to {}, number of retries={}", currentModeId, wantedModeId, numberRetries);
+                            numberRetries--;
+                            mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
+                            return;
                         }
+                        if (log.isDebugEnabled()) log.debug("CONFIG modeId before video start is {}", currentModeId);
+                        mCurrentRefreshRate = d.getRefreshRate();
                     } else {
-                        float currentRefreshRate = d.getRefreshRate();
-                        if (numberRetries > 0) { // only try NUMBER_RETRIES
-                            if (Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
-                                if (log.isDebugEnabled()) log.debug("CONFIG current refresh rate is {} trying to switch to {}, number of retries={}", currentRefreshRate, mRefreshRate, numberRetries);
-                                numberRetries--;
-                                mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
-                                return;
-                            }
-                            mRefreshRate = currentRefreshRate;
-                            if (log.isDebugEnabled()) log.debug("CONFIG refresh rate before video start is {}", currentRefreshRate);
-                        } else {
-                            log.warn("CONFIG failed to set refreshRate to {} it is still {}", mRefreshRate, currentRefreshRate);
-                            Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
-                        }
+                        log.warn("CONFIG failed to set modeId to {} it is still {}", wantedModeId, currentModeId);
+                        Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -1075,144 +1058,78 @@ public class Player implements IPlayerControl,
                             // Surface.CHANGE_FRAME_RATE_ALWAYS is needed to get the refresh rate switch
                             videoSurface.setFrameRate(wantedFps, Surface.FRAME_RATE_COMPATIBILITY_FIXED_SOURCE, Surface.CHANGE_FRAME_RATE_ALWAYS);
                         } else {
-                            if (Build.VERSION.SDK_INT >= 23) { // select display mode of highest refresh rate matching 0 modulo fps
-                                Display.Mode[] supportedModes = d.getSupportedModes();
-                                Display.Mode currentMode = d.getMode();
-                                int currentModeId = currentMode.getModeId();
-                                if (log.isDebugEnabled()) {
-                                    log.debug("CONFIG current display mode is {}", currentMode);
-                                    for (Mode mode : supportedModes)
-                                        if (log.isDebugEnabled()) log.debug("CONFIG display supported mode {}", mode);
+                            // select display mode of highest refresh rate matching 0 modulo fps
+                            Display.Mode[] supportedModes = d.getSupportedModes();
+                            Display.Mode currentMode = d.getMode();
+                            int currentModeId = currentMode.getModeId();
+                            if (log.isDebugEnabled()) {
+                                log.debug("CONFIG current display mode is {}", currentMode);
+                                for (Mode mode : supportedModes)
+                                    if (log.isDebugEnabled()) log.debug("CONFIG display supported mode {}", mode);
+                            }
+
+                            wantedModeId = 0;
+                            // find corresponding wantedModeId for wantedFps
+                            Mode sM;
+                            int metric = 0;
+                            boolean foundMatch = false;
+                            int fps = Math.round(1001 * wantedFps);
+                            int rhz = 0;
+                            int maxRhz = 0;
+
+                            // minimize judder in 2 passes selecting:
+                            // highest rr matching rr%fr=0
+                            // else highest rr maximizing number of glitches per second
+                            if (log.isDebugEnabled()) log.debug("CONFIG min judder targeting {} fps video", wantedFps);
+                            if (log.isDebugEnabled()) log.debug("CONFIG min judder: highest rr matching rr%fr=0 pass");
+                            for (int i = 0; i < supportedModes.length; i++) {
+                                sM = supportedModes[i];
+                                rhz = Math.round(1001 * sM.getRefreshRate());
+                                if (rhz >= fps) { // no frame drop
+                                    metric = rhz % fps;
+                                    if (log.isDebugEnabled()) log.debug("CONFIG evaluating {}x{}({}Hz) metric = {}", sM.getPhysicalWidth(), sM.getPhysicalHeight(), sM.getRefreshRate(), metric);
+                                    // be more tolerant on metric == 0 check since on firestick roundings make it not null
+                                    if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth() && sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
+                                            metric < 10 && rhz >= maxRhz) {
+                                        foundMatch = true;
+                                        maxRhz = rhz;
+                                        wantedModeId = sM.getModeId();
+                                        if (log.isDebugEnabled()) log.debug("CONFIG selecting modeId {} for {} Hz and {} fps (metric = {})", wantedModeId, rhz, fps, metric);
+                                    }
                                 }
+                            }
 
-                                wantedModeId = 0;
-                                // find corresponding wantedModeId for wantedFps
-                                Mode sM;
-                                int metric = 0;
-                                boolean foundMatch = false;
-                                int fps = Math.round(1001 * wantedFps);
-                                int rhz = 0;
-                                int maxRhz = 0;
-
-                                // minimize judder in 2 passes selecting:
-                                // highest rr matching rr%fr=0
-                                // else highest rr maximizing number of glitches per second
-                                if (log.isDebugEnabled()) log.debug("CONFIG min judder targeting {} fps video", wantedFps);
-                                if (log.isDebugEnabled()) log.debug("CONFIG min judder: highest rr matching rr%fr=0 pass");
+                            if (!foundMatch) {
+                                int k, kp, g;
+                                maxRhz = 0;
+                                int maxG = 0; // init with lowest number easy to beat
+                                if (log.isDebugEnabled()) log.debug("CONFIG min judder: highest rr maximizing number of glitches pass");
                                 for (int i = 0; i < supportedModes.length; i++) {
                                     sM = supportedModes[i];
                                     rhz = Math.round(1001 * sM.getRefreshRate());
                                     if (rhz >= fps) { // no frame drop
-                                        metric = rhz % fps;
-                                        if (log.isDebugEnabled()) log.debug("CONFIG evaluating {}x{}({}Hz) metric = {}", sM.getPhysicalWidth(), sM.getPhysicalHeight(), sM.getRefreshRate(), metric);
-                                        // be more tolerant on metric == 0 check since on firestick roundings make it not null
+                                        k = rhz % fps;
+                                        kp = fps - k;
+                                        g = Math.min(k, kp); // number of glitches (uneven image duration) in 1001s
+                                        if (log.isDebugEnabled()) log.debug("CONFIG evaluating {}x{}({}Hz) glitches = {}", sM.getPhysicalWidth(), sM.getPhysicalHeight(), sM.getRefreshRate(), g);
                                         if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth() && sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
-                                                metric < 10 && rhz >= maxRhz) {
+                                                g >= maxG && rhz >= maxRhz) {
                                             foundMatch = true;
                                             maxRhz = rhz;
+                                            maxG = g;
                                             wantedModeId = sM.getModeId();
-                                            if (log.isDebugEnabled()) log.debug("CONFIG selecting modeId {} for {} Hz and {} fps (metric = {})", wantedModeId, rhz, fps, metric);
+                                            if (log.isDebugEnabled()) log.debug("CONFIG selecting modeId {} for {} Hz and {} fps (glitches = {})", wantedModeId, rhz, fps, g);
                                         }
                                     }
                                 }
+                            }
 
-                                if (!foundMatch) {
-                                    int k, kp, g;
-                                    maxRhz = 0;
-                                    int maxG = 0; // init with lowest number easy to beat
-                                    if (log.isDebugEnabled()) log.debug("CONFIG min judder: highest rr maximizing number of glitches pass");
-                                    for (int i = 0; i < supportedModes.length; i++) {
-                                        sM = supportedModes[i];
-                                        rhz = Math.round(1001 * sM.getRefreshRate());
-                                        if (rhz >= fps) { // no frame drop
-                                            k = rhz % fps;
-                                            kp = fps - k;
-                                            g = Math.min(k, kp); // number of glitches (uneven image duration) in 1001s
-                                            if (log.isDebugEnabled()) log.debug("CONFIG evaluating {}x{}({}Hz) glitches = {}", sM.getPhysicalWidth(), sM.getPhysicalHeight(), sM.getRefreshRate(), g);
-                                            if (sM.getPhysicalWidth() == currentMode.getPhysicalWidth() && sM.getPhysicalHeight() == currentMode.getPhysicalHeight() &&
-                                                    g >= maxG && rhz >= maxRhz) {
-                                                foundMatch = true;
-                                                maxRhz = rhz;
-                                                maxG = g;
-                                                wantedModeId = sM.getModeId();
-                                                if (log.isDebugEnabled()) log.debug("CONFIG selecting modeId {} for {} Hz and {} fps (glitches = {})", wantedModeId, rhz, fps, g);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                if (wantedModeId != 0 && wantedModeId != currentModeId) {
-                                    // apply new display mode
-                                    mWaitForNewRate = true;
-                                    numberRetries = NUMBER_RETRIES;
-                                    lp.preferredDisplayModeId = wantedModeId;
-                                    mWindow.setAttributes(lp);
-                                }
-                            } else { // select highest refresh rate matching 0 modulo fps
-                                float[] supportedRates = d.getSupportedRefreshRates();
-                                float currentRefreshRate = d.getRefreshRate();
-                                Arrays.sort(supportedRates);
-                                if (log.isDebugEnabled())
-                                    for (float r : supportedRates)
-                                        log.debug("CONFIG Display supported refresh rate {}", r);
-                                mRefreshRate = 0f;
-
-                                int metric = 0;
-                                boolean foundMatch = false;
-                                int fps = Math.round(1001 * wantedFps);
-                                int rhz = 0;
-                                int maxRhz = 0;
-
-                                // minimize judder in 2 passes selecting:
-                                // highest rr matching rr%fr=0
-                                // else highest rr maximizing number of glitches per second
-                                if (log.isDebugEnabled()) log.debug("CONFIG min judder targeting {} fps video", wantedFps);
-                                if (log.isDebugEnabled()) log.debug("CONFIG min judder: highest rr matching rr%fr=0 pass");
-                                for (float rate : supportedRates) {
-                                    rhz = Math.round(1001 * rate);
-                                    if (rhz >= fps) { // no frame drop
-                                        metric = rhz % fps;
-                                        if (log.isDebugEnabled()) log.debug("CONFIG evaluating {}Hz metric = {}", rate, metric);
-                                        // be more tolerant on metric == 0 check since on firestick roundings make it not null
-                                        if (metric < 10 && rhz >= maxRhz) {
-                                            foundMatch = true;
-                                            maxRhz = rhz;
-                                            mRefreshRate = rate;
-                                            if (log.isDebugEnabled()) log.debug("CONFIG selecting {} Hz for {} fps (metric = {})", mRefreshRate, wantedFps, metric);
-                                        }
-                                    }
-                                }
-
-                                if (!foundMatch) {
-                                    int k, kp, g;
-                                    maxRhz = 0;
-                                    int maxG = 0; // init with lowest number easy to beat
-                                    if (log.isDebugEnabled()) log.debug("CONFIG min judder: highest rr maximizing number of glitches pass");
-                                    for (float rate : supportedRates) {
-                                        rhz = Math.round(1001 * rate);
-                                        if (rhz >= fps) { // no frame drop
-                                            k = rhz % fps;
-                                            kp = fps - k;
-                                            g = Math.min(k, kp); // number of glitches (uneven image duration) in 1001s
-                                            if (log.isDebugEnabled()) log.debug("CONFIG evaluating {}Hz metric = {}", rate, g);
-                                            if (g >= maxG && rhz >= maxRhz) {
-                                                foundMatch = true;
-                                                maxRhz = rhz;
-                                                maxG = g;
-                                                mRefreshRate = rate;
-                                                if (log.isDebugEnabled()) log.debug("CONFIG selecting {} Hz {} fps (glitches = {})", mRefreshRate, wantedFps, g);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                if (Math.abs(mRefreshRate) > 0 && Math.abs(mRefreshRate - currentRefreshRate) > REFRESH_RATE_EPSILON) {
-                                    // apply new refresh rate only if really new
-                                    mWaitForNewRate = true;
-                                    numberRetries = NUMBER_RETRIES;
-                                    lp.preferredRefreshRate = mRefreshRate;
-                                    mWindow.setAttributes(lp);
-                                }
+                            if (wantedModeId != 0 && wantedModeId != currentModeId) {
+                                // apply new display mode
+                                mWaitForNewRate = true;
+                                numberRetries = NUMBER_RETRIES;
+                                lp.preferredDisplayModeId = wantedModeId;
+                                mWindow.setAttributes(lp);
                             }
                         }
                     }
@@ -1390,40 +1307,25 @@ public class Player implements IPlayerControl,
         if (display == null) return "";
         StringBuilder refreshRates = new StringBuilder();
 
-        if (Build.VERSION.SDK_INT >= 23) { // For API 23 and above
-            Display.Mode currentMode = display.getMode();
-            if (currentMode == null) return "";
-            Display.Mode[] supportedModes = display.getSupportedModes();
-            if (supportedModes == null) return "";
-            if (mCurrentRefreshRate < 1) mCurrentRefreshRate = currentMode.getRefreshRate();
-            int currentWidth = currentMode.getPhysicalWidth();
-            int currentHeight = currentMode.getPhysicalHeight();
-            // Use TreeSet to maintain sorted order
-            Set<Float> uniqueRefreshRates = new TreeSet<>();
-            for (Display.Mode mode : supportedModes) {
-                if (mode.getPhysicalWidth() == currentWidth && mode.getPhysicalHeight() == currentHeight) {
-                    // round refreshRate to 2 decimal places
-                    float refreshRate = Math.round(mode.getRefreshRate() * 100.0f) / 100.0f;
-                    uniqueRefreshRates.add(refreshRate);
-                }
-            }
-            // Build the refresh rates string
-            for (Float rate : uniqueRefreshRates) {
-                refreshRates.append(rate).append("Hz, ");
-            }
-        } else { // For API levels below 23
-            float[] supportedRates = display.getSupportedRefreshRates();
-            if (supportedRates == null) return "";
-            mCurrentRefreshRate = display.getRefreshRate();
-            // Use TreeSet to maintain sorted order
-            Set<Float> uniqueRefreshRates = new TreeSet<>();
-            for (float rate : supportedRates) {
-                float refreshRate = Math.round(rate * 100.0f) / 100.0f;
+        Display.Mode currentMode = display.getMode();
+        if (currentMode == null) return "";
+        Display.Mode[] supportedModes = display.getSupportedModes();
+        if (supportedModes == null) return "";
+        if (mCurrentRefreshRate < 1) mCurrentRefreshRate = currentMode.getRefreshRate();
+        int currentWidth = currentMode.getPhysicalWidth();
+        int currentHeight = currentMode.getPhysicalHeight();
+        // Use TreeSet to maintain sorted order
+        Set<Float> uniqueRefreshRates = new TreeSet<>();
+        for (Display.Mode mode : supportedModes) {
+            if (mode.getPhysicalWidth() == currentWidth && mode.getPhysicalHeight() == currentHeight) {
+                // round refreshRate to 2 decimal places
+                float refreshRate = Math.round(mode.getRefreshRate() * 100.0f) / 100.0f;
                 uniqueRefreshRates.add(refreshRate);
             }
-            for (Float rate : uniqueRefreshRates) {
-                refreshRates.append(rate).append("Hz, ");
-            }
+        }
+        // Build the refresh rates string
+        for (Float rate : uniqueRefreshRates) {
+            refreshRates.append(rate).append("Hz, ");
         }
         // Remove trailing ", " in refreshRates and put the result into parenthesis i.e. ( at start and ) at end
         if (refreshRates.length() > 0) {

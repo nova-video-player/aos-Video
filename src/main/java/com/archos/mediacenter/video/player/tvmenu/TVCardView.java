@@ -405,7 +405,6 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
         }
 
     }
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void setElevation(long elevation){
         super.setElevation(elevation);
     }
