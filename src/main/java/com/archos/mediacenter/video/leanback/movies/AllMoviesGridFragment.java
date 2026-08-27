@@ -246,7 +246,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                         break;
                 }
                 // Save the new setting
-                mPrefs.edit().putInt(PREF_ALL_MOVIES_DISPLAY_MODE, mDisplayMode.ordinal()).commit();
+                mPrefs.edit().putInt(PREF_ALL_MOVIES_DISPLAY_MODE, mDisplayMode.ordinal()).apply();
                 // Reload a brand new fragment
                 getParentFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new AllMoviesGridFragment())
@@ -266,7 +266,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
                                     mSortOrderItem = which;
                                     mSortOrder = MoviesSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
                                     // Save the sort mode
-                                    mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
+                                    mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).apply();
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     args.putBoolean("showWatched", mShowWatched);
@@ -285,7 +285,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
             public void onClick(View view) {
                 mShowWatched = !mShowWatched;
                 // Save the new setting
-                mPrefs.edit().putBoolean(SHOW_WATCHED_KEY, mShowWatched).commit();
+                mPrefs.edit().putBoolean(SHOW_WATCHED_KEY, mShowWatched).apply();
 
                 if (mShowWatched)
                     getTitleView().setOrb4IconResId(R.drawable.orb_hide);

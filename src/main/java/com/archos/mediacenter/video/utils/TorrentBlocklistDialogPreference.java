@@ -278,7 +278,7 @@ public class TorrentBlocklistDialogPreference extends Preference {
                     if (200 <= finalResult && 300 > finalResult) {
                         setSummary(url);
                         mCurrentBlockList = url;
-                        getSharedPreferences().edit().putString(getKey(), url).commit();
+                        getSharedPreferences().edit().putString(getKey(), url).apply();
                         Toast.makeText(getContext(), getErrorString(200), Toast.LENGTH_SHORT).show();
                         mView.findViewById(R.id.button).setVisibility(View.VISIBLE);
                     } else {

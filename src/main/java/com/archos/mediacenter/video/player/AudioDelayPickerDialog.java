@@ -119,7 +119,7 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
         }
         if (log.isDebugEnabled()) log.debug("onStop: apply save setting {} delay {}", mSaveSettingCB.isChecked(), (mSaveSettingCB.isChecked()?PlayerService.sPlayerService.getAudioDelay():0));
         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putInt(getContext().getResources().getString(R.string.save_delay_setting_pref_key),
-                mSaveSettingCB.isChecked()?clampDelay(PlayerService.sPlayerService.getAudioDelay()):0).commit();
+                mSaveSettingCB.isChecked()?clampDelay(PlayerService.sPlayerService.getAudioDelay()):0).apply();
     }
 
     @Override

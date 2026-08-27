@@ -54,7 +54,7 @@ public class PrivateMode {
     private static void dontShowDialog(Context context) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putBoolean(DONT_SHOW_PRIVATE_MODE_DIALOG, true);
-        editor.commit();
+        editor.apply();
     }
 
     public static void showDialog(final Activity activity) {
@@ -77,7 +77,7 @@ public class PrivateMode {
     public static void resetDontShowDialog(Context context) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putBoolean(DONT_SHOW_PRIVATE_MODE_DIALOG, false);
-        editor.commit();
+        editor.apply();
     }
 
 }

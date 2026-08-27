@@ -179,7 +179,7 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
     @Override
     public void onDestroy() {
         // Save the sort mode
-        mPrefs.edit().putString(getSortOrderParamKey(), mSortOrder).commit();
+        mPrefs.edit().putString(getSortOrderParamKey(), mSortOrder).apply();
         super.onDestroy();
     }
 

@@ -314,7 +314,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         if (mViewMode!= VideoUtils.VIEW_MODE_GRID_SHORT && (viewMode == -1 || viewMode != mViewMode)) {
             Editor ed = mPreferences.edit();
             ed.putInt(getClass().getName(), mViewMode);
-            ed.commit();
+            ed.apply();
         }
 
         if (mDialogDeleting != null)

@@ -96,7 +96,7 @@ public class AudioSpeedPickerDialog extends AlertDialog implements OnClickListen
             mCallBack.onAudioSpeedChange(mAudioSpeedPicker, mAudioSpeedPicker.getSpeed());
         }
         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putFloat(getContext().getResources().getString(R.string.save_audio_speed_setting_pref_key),
-                mSaveSettingCB.isChecked()?PlayerService.sPlayerService.getAudioSpeed():1.0f).commit();
+                mSaveSettingCB.isChecked()?PlayerService.sPlayerService.getAudioSpeed():1.0f).apply();
     }
 
     @Override

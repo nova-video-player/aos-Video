@@ -76,7 +76,7 @@ public class EpisodesByDateFragment extends VideosByFragment {
                                 if (mDateView != which) {
                                     mDateView = which;
                                     // Save the view mode
-                                    mPrefs.edit().putInt(VIEW_PARAM_KEY, mDateView).commit();
+                                    mPrefs.edit().putInt(VIEW_PARAM_KEY, mDateView).apply();
                                     LoaderManager.getInstance(EpisodesByDateFragment.this).restartLoader(-1, null, EpisodesByDateFragment.this);
                                 }
                                 dialog.dismiss();

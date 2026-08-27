@@ -1091,7 +1091,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             // commit all the settings changes before restarting the activity
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
             editor.putString(KEY_UI_LANG, newLocale);
-            editor.commit();
+            editor.apply();
             // TODO MARC BUG: does not change the title string.preferences of preferences_video.xml but all the rest is ok
             restartActivity(); // not enough to clear all the cached fragments
             //restartApplication(); // not enough when returning to settings

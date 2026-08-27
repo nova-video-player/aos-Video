@@ -225,7 +225,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
                                     mSortOrderItem = which;
                                     mSortOrder = item2SortOrder(mSortOrderItem);
                                     // Save the sort mode
-                                    mPrefs.edit().putString(getSortOrderParamKey(), mSortOrder).commit();
+                                    mPrefs.edit().putString(getSortOrderParamKey(), mSortOrder).apply();
                                     boolean deferRowLoaders = shouldDeferRowLoadersDuringBackgroundWork() && isBackgroundWorkOngoing();
                                     loadCategoriesRows(mCurrentCategoriesCursor, !deferRowLoaders);
                                     mRowsLoadDeferred = deferRowLoaders;

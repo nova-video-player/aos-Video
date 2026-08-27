@@ -164,7 +164,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     public static boolean isNovaUpdated() { return novaUpdated; }
     public static void clearUpdatedFlag(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putBoolean("app_updated", false).commit();
+        sharedPreferences.edit().putBoolean("app_updated", false).apply();
         novaUpdated = false;
     }
 
@@ -1226,23 +1226,25 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             }
             if (previousVersion > 0) {
                 if (previousVersion != novaVersionCode) {
-                    // got upgraded, save version in current_versionCode and remember former version in previous_versionCode
-                    // and indicated that we got updated in app_updated until used and reset
-                    sharedPreferences.edit().putInt("current_versionCode", novaVersionCode).commit();
-                    sharedPreferences.edit().putInt("previous_versionCode", previousVersion).commit();
+                    sharedPreferences.edit()
+                            .putInt("current_versionCode", novaVersionCode)
+                            .putInt("previous_versionCode", previousVersion)
+                            .putBoolean("app_updated", true)
+                            .putString("current_versionName", novaVersionName)
+                            .putString("previous_versionName", previousVersionName)
+                            .apply();
                     novaUpdated = true;
-                    sharedPreferences.edit().putBoolean("app_updated", true).commit();
-                    sharedPreferences.edit().putString("current_versionName", novaVersionName).commit();
-                    sharedPreferences.edit().putString("previous_versionName", previousVersionName).commit();
                     if (log.isDebugEnabled()) log.debug("updateVersionState: update from {}({}) to {}({})", previousVersionName, previousVersion, novaVersionName, novaVersionCode);
                 }
             } else {
                 // save first app version
                 if (log.isDebugEnabled()) log.debug("updateVersionState: save first version {}", novaVersionCode);
-                sharedPreferences.edit().putInt("current_versionCode", novaVersionCode).commit();
-                sharedPreferences.edit().putInt("previous_versionCode", -1).commit();
-                sharedPreferences.edit().putString("current_versionName", novaVersionName).commit();
-                sharedPreferences.edit().putString("previous_versionName", "0.0.0").commit();
+                sharedPreferences.edit()
+                        .putInt("current_versionCode", novaVersionCode)
+                        .putInt("previous_versionCode", -1)
+                        .putString("current_versionName", novaVersionName)
+                        .putString("previous_versionName", "0.0.0")
+                        .apply();
             }
         } catch (PackageManager.NameNotFoundException e) {
             novaVersionArray = emptyVersionArray();

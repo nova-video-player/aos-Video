@@ -434,7 +434,7 @@ public class BrowserByNetwork extends BrowserByFolder {
                     // Remember that the help overlay has been activated so that it won't be shown again in the future
                     SharedPreferences.Editor ed = mPreferences.edit();
                     ed.putBoolean(SAMBA_INDEXING_HELP_OVERLAY_KEY, true);
-                    ed.commit();
+                    ed.apply();
                 }
             }
         }

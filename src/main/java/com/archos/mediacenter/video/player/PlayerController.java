@@ -751,7 +751,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     }
                     Editor ed = mPreferences.edit();
                     ed.putBoolean(PLAYER_HELP_OVERLAY_KEY, true);
-                    ed.commit();
+                    ed.apply();
                     sendOverlayFadeOut(6000);
                 }
             }

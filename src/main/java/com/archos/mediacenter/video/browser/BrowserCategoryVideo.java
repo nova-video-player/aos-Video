@@ -294,7 +294,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
         // Save the current position to the preferences
         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
         .putInt(KEY_ACTIONBAR_NAVIGATION_POSITION, itemPosition)
-        .commit();
+        .apply();
         return true;
     }
 

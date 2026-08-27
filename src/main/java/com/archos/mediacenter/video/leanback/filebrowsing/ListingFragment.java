@@ -384,7 +384,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
                         break;
                 }
                 // Save the new setting
-                mPrefs.edit().putInt(PREF_LISTING_DISPLAY_MODE, mDisplayMode.ordinal()).commit();
+                mPrefs.edit().putInt(PREF_LISTING_DISPLAY_MODE, mDisplayMode.ordinal()).apply();
                 // Update the display mode
                 updateGridOrList();
                 // update the orb icon from list/grid to grid/list

@@ -180,7 +180,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
                         break;
                 }
                 // Save the new setting
-                mPrefs.edit().putInt(PREF_NON_SCRAPED_VIDEOS_DISPLAY_MODE, mDisplayMode.ordinal()).commit();
+                mPrefs.edit().putInt(PREF_NON_SCRAPED_VIDEOS_DISPLAY_MODE, mDisplayMode.ordinal()).apply();
                 // Reload a brand new fragment
                 getParentFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new NonScrapedVideosFragment())
@@ -200,7 +200,7 @@ public class NonScrapedVideosFragment extends MyVerticalGridFragment implements 
                                     mSortOrderItem = which;
                                     mSortOrder = NonScrapedSortOrderEntry.item2SortOrder(mSortOrderItem, sortOrderIndexer);
                                     // Save the sort mode
-                                    mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).commit();
+                                    mPrefs.edit().putString(SORT_PARAM_KEY, mSortOrder).apply();
                                     Bundle args = new Bundle();
                                     args.putString("sort", mSortOrder);
                                     LoaderManager.getInstance(NonScrapedVideosFragment.this).restartLoader(0, args, NonScrapedVideosFragment.this);
