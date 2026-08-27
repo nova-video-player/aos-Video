@@ -15,6 +15,8 @@
 
 package com.archos.mediacenter.video.leanback.details;
 
+import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Dialog;
@@ -300,6 +302,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private int oldSelectedSubPosition = 0;
 
     // need to be static otherwise ActivityResultLauncher find them null
+    @SuppressLint("StaticFieldLeak")
     private static Delete delete;
     private static List<Uri> deleteUrisList = null;
 

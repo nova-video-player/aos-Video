@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
+import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -100,6 +102,7 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
     // need to be static otherwise ActivityResultLauncher find them null
+    @SuppressLint("StaticFieldLeak")
     private static Delete delete;
     private static List<Uri> deleteUrisList;
 

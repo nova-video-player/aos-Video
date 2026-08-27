@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video;
 
+import android.annotation.SuppressLint;
+
 
 import static com.archos.filecorelibrary.FileUtils.getPermissions;
 import static com.archos.filecorelibrary.FileUtils.hasPermission;
@@ -442,6 +444,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         return spatializerCapabilities;
     }
 
+    @SuppressLint("StaticFieldLeak")
     private static SambaDiscovery mSambaDiscovery = null;
 
     private PropertyChangeListener propertyChangeListener = null;
@@ -456,6 +459,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
 
     private static OpenSubtitlesApiHelper openSubtitlesApiHelper = null;
 
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext = null;
 
     public static Context getAppContext() {
@@ -1322,6 +1326,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             // of that it's possible to have another BC implementation loaded in VM.
             // Instantiate new provider first (heavy work) while system BC provider is still registered
             final Provider newProvider = new BouncyCastleProvider();
+
             Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
             Security.insertProviderAt(newProvider, 1);
         } catch (Throwable t) {

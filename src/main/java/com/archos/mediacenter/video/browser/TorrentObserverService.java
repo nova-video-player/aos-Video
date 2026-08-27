@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser;
 
+import android.annotation.SuppressLint;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -46,6 +48,7 @@ import org.slf4j.LoggerFactory;
 public class TorrentObserverService extends Service implements DefaultLifecycleObserver {
 
     private static final Logger log = LoggerFactory.getLogger(TorrentObserverService.class);
+    @SuppressLint("StaticFieldLeak")
     private static volatile TorrentObserverService sInstance;
 
     private static final String DEFAULT_TORRENT_PATH = "/sdcard/";

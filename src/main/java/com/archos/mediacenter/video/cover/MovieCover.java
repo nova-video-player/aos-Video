@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.cover;
 
+import android.annotation.SuppressLint;
+
 import com.archos.mediacenter.cover.ArtworkFactory;
 import com.archos.mediacenter.utils.BitmapUtils;
 import com.archos.mediacenter.utils.MediaUtils;
@@ -48,11 +50,16 @@ public class MovieCover extends BaseVideoCover {
 
 	// Layout stuff is done only once for all Cover instances
 	//MOVIE
-	private static View sDescriptionViewMovie = null;
+	@SuppressLint("StaticFieldLeak")
+    private static View sDescriptionViewMovie = null;
+	@SuppressLint("StaticFieldLeak")
 	private static TextView sMovieTitle = null;
+	@SuppressLint("StaticFieldLeak")
 	private static TextView sMovieDirector = null;
+	@SuppressLint("StaticFieldLeak")
 	private static TextView sMovieWriter = null;
-	private static TextView sMovieDuration = null;
+	@SuppressLint("StaticFieldLeak")
+    private static TextView sMovieDuration = null;
 
 	public MovieCover(long videoId, String filepath, long durationMs, long scraperId) {
 		super(videoId, filepath, durationMs);

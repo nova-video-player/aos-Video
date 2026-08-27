@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -46,6 +48,7 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
 
     private static final Logger log = LoggerFactory.getLogger(ExternalPlayerResultListener.class);
 
+    @SuppressLint("StaticFieldLeak")
     private static ExternalPlayerResultListener sExternalPlayerResultListener;
     private Context mContext;
     private TraktService.Client mTraktClient;

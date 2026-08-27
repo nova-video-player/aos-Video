@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.cover;
 
+import android.annotation.SuppressLint;
+
 import com.archos.mediacenter.cover.ArtworkFactory;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
@@ -39,12 +41,17 @@ public class VideoCover extends BaseVideoCover {
 
     // Layout stuff is done only once for all Cover instances
     //VIDEO
+    @SuppressLint("StaticFieldLeak")
     private static View sDescriptionViewVideo = null;
+    @SuppressLint("StaticFieldLeak")
     private static TextView sVideoFilename = null;
+    @SuppressLint("StaticFieldLeak")
     private static TextView sVideoDuration = null;
     
+    @SuppressLint("StaticFieldLeak")
     private static View sOverlayDescriptionView = null;
-	private static TextView sOverlayDescriptionText = null; // in case of overlay description with handle a single line of text
+	@SuppressLint("StaticFieldLeak")
+    private static TextView sOverlayDescriptionText = null; // in case of overlay description with handle a single line of text
 
     private final String mTitle;
 

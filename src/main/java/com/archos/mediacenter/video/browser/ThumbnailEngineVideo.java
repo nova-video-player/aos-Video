@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser;
 
+import android.annotation.SuppressLint;
+
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.BitmapUtils;
@@ -75,7 +77,8 @@ public class ThumbnailEngineVideo extends ThumbnailEngine {
 	/**
 	 * Thumbnail engine video is a singleton
 	 */
-	private static ThumbnailEngineVideo sThumbnailEngineVideo = null;
+	@SuppressLint("StaticFieldLeak")
+    private static ThumbnailEngineVideo sThumbnailEngineVideo = null;
 
 	/**
 	 * The type of the thumbnails currently in the pool.

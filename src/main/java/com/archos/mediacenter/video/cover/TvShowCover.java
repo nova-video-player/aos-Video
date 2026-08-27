@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.cover;
 
+import android.annotation.SuppressLint;
+
 import com.archos.mediacenter.cover.ArtworkFactory;
 import com.archos.mediacenter.cover.Cover;
 import com.archos.mediacenter.utils.BitmapUtils;
@@ -65,8 +67,11 @@ public class TvShowCover extends Cover {
 
     // Layout stuff is done only once for all Cover instances
     //TVSHOW
+    @SuppressLint("StaticFieldLeak")
     private static View sDescriptionViewTVShow = null;
+    @SuppressLint("StaticFieldLeak")
     private static TextView sTVShowName = null;
+    @SuppressLint("StaticFieldLeak")
     private static TextView sNumberOfSeasonsOrEpisodes = null;
     /** Formatting optimization to avoid creating many temporary objects. */
     private static StringBuilder sFormatBuilder;

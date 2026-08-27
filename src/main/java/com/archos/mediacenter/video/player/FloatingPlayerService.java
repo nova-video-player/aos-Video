@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.player;
 
+import android.annotation.SuppressLint;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -79,6 +81,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
     private WindowManager mWindowManager;
     private View mFloatingPlayerRootView;
+    @SuppressLint("StaticFieldLeak")
     public static FloatingPlayerService sFloatingPlayerService;
     private boolean contains;
     private SurfaceController mSurfaceController;

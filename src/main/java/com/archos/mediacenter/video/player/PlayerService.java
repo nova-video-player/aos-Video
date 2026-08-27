@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.player;
 
+import android.annotation.SuppressLint;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -251,11 +253,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final String PLAYLIST_ID = "playlist_id";
     public static final String VIDEO = "extra_video";
     private static final long AUTO_SAVE_INTERVAL = 30000;
+    @SuppressLint("StaticFieldLeak")
     public static PlayerService sPlayerService;
     private SharedPreferences mPreferences;
     private PlayerFrontend mPlayerFrontend;
     private Handler mHandler;
-    private static Player mPlayer;
+    private Player mPlayer;
     public static final String KEY_STREAMING_URI = "streaming_uri";
     private Uri mUri;
     private Uri mStreamingUri;
@@ -2610,20 +2613,20 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     public static void pausePlayer() {
-        if (mPlayer != null && mPlayer.isPlaying()) mPlayer.pause(PlayerController.STATE_NORMAL);
+        if (Player.sPlayer != null && Player.sPlayer.isPlaying()) Player.sPlayer.pause(PlayerController.STATE_NORMAL);
     }
 
     public static void playPausePlayer() {
-        if (mPlayer != null) {
-            if (mPlayer.isPlaying())
-                mPlayer.pause(PlayerController.STATE_NORMAL);
-            else if (mPlayer.isPaused())
-                mPlayer.start(PlayerController.STATE_NORMAL);
+        if (Player.sPlayer != null) {
+            if (Player.sPlayer.isPlaying())
+                Player.sPlayer.pause(PlayerController.STATE_NORMAL);
+            else if (Player.sPlayer.isPaused())
+                Player.sPlayer.start(PlayerController.STATE_NORMAL);
         }
     }
 
     public static void startPlayer() {
-        if (mPlayer != null && mPlayer.isPaused()) mPlayer.start(PlayerController.STATE_NORMAL);
+        if (Player.sPlayer != null && Player.sPlayer.isPaused()) Player.sPlayer.start(PlayerController.STATE_NORMAL);
     }
 
     // Pause when wired headset is disconnected

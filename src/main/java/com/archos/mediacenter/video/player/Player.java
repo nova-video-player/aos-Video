@@ -15,6 +15,8 @@
 
 package com.archos.mediacenter.video.player;
 
+import android.annotation.SuppressLint;
+
 import static com.archos.mediacenter.video.utils.CodecDiscovery.displaySupportsDoVi;
 import static com.archos.mediacenter.video.utils.CodecDiscovery.displaySupportsHdr10;
 import static com.archos.mediacenter.video.utils.CodecDiscovery.displaySupportsHdr10Plus;
@@ -91,6 +93,7 @@ public class Player implements IPlayerControl,
 
     private static final Logger log = LoggerFactory.getLogger(Player.class);
 
+    @SuppressLint("StaticFieldLeak")
     public static Player sPlayer;
     // settable by the client
     private Uri         mUri;

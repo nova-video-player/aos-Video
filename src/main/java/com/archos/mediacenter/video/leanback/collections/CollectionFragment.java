@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.collections;
 
+import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 
@@ -147,6 +149,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     private boolean mShouldDisplayConfirmDelete = false;
 
     // need to be static otherwise ActivityResultLauncher find them null
+    @SuppressLint("StaticFieldLeak")
     private static Delete delete;
     private static List<Uri> deleteUrisList;
 
