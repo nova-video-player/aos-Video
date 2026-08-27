@@ -840,6 +840,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     mNextEpisode = null;
                     mShouldLoadBackdrop = true;
                     fullyReloadVideo(nextEp, null, false);
+                    // focus stayed on the "Next Episode" button since the row/views are reused
+                    // (no new activity is created anymore), reset it to the first action
+                    // (Play/Resume) like a freshly created details screen would.
+                    mOverviewRowPresenter.setSelectedActionPosition(0);
                     if (isAdded()) {
                         LoaderManager.getInstance(VideoDetailsFragment.this).restartLoader(1, null, VideoDetailsFragment.this);
                     }
