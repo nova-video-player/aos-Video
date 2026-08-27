@@ -54,13 +54,6 @@ public class VideoCover extends BaseVideoCover {
         return "VFI"+libraryId; //Video FIle
     }
 
-	/**
-	 * Destroy all cached layout, bitmaps, etc.
-	 * Called when the screen size is changed, for example.
-	 */
-	public static void resetCachedGraphicStuff() {
-	}
-
     @Override
     public Bitmap getArtwork(ArtworkFactory factory, boolean descriptionOnCover) {
         if (DBG) Log.d(TAG, "getArtwork for " + mFilepath);
@@ -100,14 +93,14 @@ public class VideoCover extends BaseVideoCover {
                 }
             }
 
-	        // Description view
-	        View descriptionView = null;
-	        if (descriptionOnCover) {
-	    		View overlayView = factory.getCachedView(R.layout.cover_overlay_description_video);
-	    		TextView overlayText = overlayView.findViewById(R.id.main);
-	    		overlayText.setText(factory.removeFilenameExtension((new File(mFilepath)).getName()));
-	        	descriptionView = overlayView;
-	        }
+            // Description view
+            View descriptionView = null;
+            if (descriptionOnCover) {
+                View overlayView = factory.getCachedView(R.layout.cover_overlay_description_video);
+                TextView overlayText = overlayView.findViewById(R.id.main);
+                overlayText.setText(factory.removeFilenameExtension((new File(mFilepath)).getName()));
+                descriptionView = overlayView;
+            }
 	        
             // Add the shadow effect
             Bitmap shadowedCover = factory.addShadowAndDescription(coverBitmap, descriptionView, crop, scaleFactor, null);

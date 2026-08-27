@@ -63,13 +63,6 @@ public class EpisodeCover extends BaseVideoCover {
 	}
 
 	/**
-	 * Destroy all cached layout, bitmaps, etc.
-	 * Called when the screen size is changed, for example.
-	 */
-	public static void resetCachedGraphicStuff() {
-	}
-
-	/**
 	 * Get more info from the Scraper database, if needed
 	 * @return true if data is found
 	 */
@@ -132,14 +125,14 @@ public class EpisodeCover extends BaseVideoCover {
 				}
 			}
 
-	        // Description view
-	        View descriptionView = null;
-	        if (descriptionOnCover && (mEpisodeInfo.isValid())) {
-	    		View overlayView = factory.getCachedView(R.layout.cover_overlay_description_episode);
-	    		TextView overlayText = overlayView.findViewById(R.id.main);
-	    		overlayText.setText(mEpisodeInfo.getSXEY());
-	        	descriptionView = overlayView;
-	        }
+			// Description view
+			View descriptionView = null;
+			if (descriptionOnCover && (mEpisodeInfo.isValid())) {
+				View overlayView = factory.getCachedView(R.layout.cover_overlay_description_episode);
+				TextView overlayText = overlayView.findViewById(R.id.main);
+				overlayText.setText(mEpisodeInfo.getSXEY());
+				descriptionView = overlayView;
+			}
 
 			// Add the shadow effect
 	        Bitmap shadowedCover = factory.addShadowAndDescription(coverBitmap, descriptionView, crop, scaleFactor, null);

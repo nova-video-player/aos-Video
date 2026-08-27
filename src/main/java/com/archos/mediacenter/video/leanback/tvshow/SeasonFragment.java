@@ -14,8 +14,6 @@
 
 package com.archos.mediacenter.video.leanback.tvshow;
 
-import android.annotation.SuppressLint;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,6 +24,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -101,6 +100,8 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
     private Overlay mOverlay;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
+    private static final String SAVED_DELETE_URIS = "saved_delete_uris";
+
     private Delete delete;
     private List<Uri> deleteUrisList;
 
@@ -109,6 +110,9 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
             result -> { // result can be RESULT_OK, RESULT_CANCELED
                 Context context = getActivity();
                 if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: result {}", result.toString());
+                if (delete == null && getActivity() != null) {
+                    delete = new Delete(SeasonFragment.this, getActivity());
+                }
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: OK, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
                     if (delete != null && deleteUrisList != null && deleteUrisList.size() >= 1) {
@@ -122,9 +126,17 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
                 }
             });
 
+    @SuppressWarnings("deprecation") // getParcelableArrayList: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS, Uri.class);
+            } else {
+                deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS);
+            }
+        }
         // pass the right deleteLauncher linked to activity
         FileUtilsQ.setDeleteLauncher(deleteLauncher);
 
@@ -269,18 +281,32 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (deleteUrisList != null) {
+            outState.putParcelableArrayList(SAVED_DELETE_URIS, (deleteUrisList instanceof ArrayList) ? (ArrayList<Uri>) deleteUrisList : new ArrayList<>(deleteUrisList));
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         if (mSeasonsAdapter != null) {
             mSeasonsAdapter.changeCursor(null);
         }
         mOverlay.destroy();
         delete = null;
-        deleteUrisList = null;
         // Unregister theme change listener
         if (mThemeChangeListener != null) {
             ThemeManager.getInstance(getActivity()).unregisterThemeChangeListener(mThemeChangeListener);
         }
         super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        delete = null;
+        deleteUrisList = null;
+        super.onDestroy();
     }
 
     private void updateBackground() {

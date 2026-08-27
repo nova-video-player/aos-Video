@@ -109,9 +109,9 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 		// Reset the cached layout, bitmaps, etc. when the screen size is changed
-		VideoCover.resetCachedGraphicStuff();
-		MovieCover.resetCachedGraphicStuff();
-		EpisodeCover.resetCachedGraphicStuff();
+		if (mArtworkFactory != null) {
+			mArtworkFactory.clearCachedViews();
+		}
 		// Set the fine tuning of the layout
 		CoverRollLayout layout = (CoverRollLayout)mLayout; // layout shall always be a CoverRollLayout in that case;
 		layout.setFineTuningValues(CoverRollLayout.FINE_TUNE_FOR_VIDEO);
@@ -412,19 +412,17 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		VideoCover.resetCachedGraphicStuff();
-		MovieCover.resetCachedGraphicStuff();
-		EpisodeCover.resetCachedGraphicStuff();
-		TvShowCover.resetCachedGraphicStuff();
+		if (mArtworkFactory != null) {
+			mArtworkFactory.clearCachedViews();
+		}
 		super.surfaceDestroyed(holder);
 	}
 
 	@Override
 	protected void onDetachedFromWindow() {
-		VideoCover.resetCachedGraphicStuff();
-		MovieCover.resetCachedGraphicStuff();
-		EpisodeCover.resetCachedGraphicStuff();
-		TvShowCover.resetCachedGraphicStuff();
+		if (mArtworkFactory != null) {
+			mArtworkFactory.clearCachedViews();
+		}
 		super.onDetachedFromWindow();
 	}
 }

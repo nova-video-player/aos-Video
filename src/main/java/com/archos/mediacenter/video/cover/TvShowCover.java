@@ -92,13 +92,6 @@ public class TvShowCover extends Cover {
         return "TVS"+libraryId+"_"+NumberOfEpisodes; //TV Show
     }
 
-    /**
-     * Destroy all cached layout, bitmaps, etc.
-     * Called when the screen size is changed, for example.
-     */
-    public static void resetCachedGraphicStuff() {
-    }
-
     @Override
     public Bitmap getArtwork(ArtworkFactory factory, boolean descriptionOnCover) {
         if (DBG) Log.d(TAG, "getArtwork for " + mScraperId);
@@ -113,7 +106,7 @@ public class TvShowCover extends Cover {
             }
 
             if (coverBitmap == null) {
-                Log.d(TAG, "Failed to get the video bitmap");
+                Log.d(TAG, "Failed to get the poster bitmap");
                 return null;
             }
 

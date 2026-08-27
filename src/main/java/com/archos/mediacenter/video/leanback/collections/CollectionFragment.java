@@ -145,8 +145,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     private int oldPos = 0;
     private int oldSelectedSubPosition = 0;
     private boolean mHasDetailRow;
-
     private boolean mShouldDisplayConfirmDelete = false;
+
+    private static final String SAVED_DELETE_URIS = "saved_delete_uris";
 
     private Delete delete;
     private List<Uri> deleteUrisList;
@@ -160,6 +161,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
             result -> { // result can be RESULT_OK, RESULT_CANCELED
                 Context context = getActivity();
                 if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: result {}", result.toString());
+                if (delete == null && getActivity() != null) {
+                    delete = new Delete(CollectionFragment.this, getActivity());
+                }
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: OK, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
                     if (delete != null && deleteUrisList != null && deleteUrisList.size() >= 1) {
@@ -173,11 +177,18 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 }
             });
 
-    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
+    @SuppressWarnings("deprecation") // getSerializableExtra / getParcelableArrayList: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (log.isDebugEnabled()) log.debug("onCreate");
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS, Uri.class);
+            } else {
+                deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS);
+            }
+        }
         // pass the right deleteLauncher linked to activity
         FileUtilsQ.setDeleteLauncher(deleteLauncher);
         // minSdk is 23 (> 21), so Window.getEnterTransition()/Transition.addListener() -
@@ -425,12 +436,27 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (deleteUrisList != null) {
+            outState.putParcelableArrayList(SAVED_DELETE_URIS, (deleteUrisList instanceof ArrayList) ? (ArrayList<Uri>) deleteUrisList : new ArrayList<>(deleteUrisList));
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         if (log.isDebugEnabled()) log.debug("onDestroyView");
         mOverlay.destroy();
         delete = null;
-        deleteUrisList = null;
         super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (log.isDebugEnabled()) log.debug("onDestroy");
+        delete = null;
+        deleteUrisList = null;
+        super.onDestroy();
     }
 
     @Override

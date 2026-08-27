@@ -301,6 +301,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private int oldPos = 0;
     private int oldSelectedSubPosition = 0;
 
+    private static final String SAVED_DELETE_URIS = "saved_delete_uris";
+
     private Delete delete;
     private List<Uri> deleteUrisList = null;
 
@@ -327,6 +329,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             result -> { // result can be RESULT_OK, RESULT_CANCELED
                 Context context = getActivity();
                 if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: result {}", result.toString());
+                if (delete == null && getActivity() != null) {
+                    delete = new Delete(VideoDetailsFragment.this, getActivity());
+                }
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: OK, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
                     if (delete != null && deleteUrisList != null && deleteUrisList.size() >= 1) {
@@ -340,10 +345,17 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 }
             });
 
-    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
+    @SuppressWarnings("deprecation") // getSerializableExtra / getParcelableArrayList: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS, Uri.class);
+            } else {
+                deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS);
+            }
+        }
         mDetailsLaunchUptimeMs = getActivity().getIntent()
                 .getLongExtra(EXTRA_DETAILS_LAUNCH_UPTIME_MS, -1);
         traceDetails("fragment-onCreate");
@@ -565,9 +577,20 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (deleteUrisList != null) {
+            outState.putParcelableArrayList(SAVED_DELETE_URIS, (deleteUrisList instanceof ArrayList) ? (ArrayList<Uri>) deleteUrisList : new ArrayList<>(deleteUrisList));
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         mHandler.removeCallbacksAndMessages(null);
+
+        delete = null;
+        deleteUrisList = null;
 
         // Invalidate subtitle cache when fragment is destroyed to ensure fresh enumeration on next browse
         if (mVideo != null) {
@@ -598,7 +621,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public void onDestroyView() {
         mOverlay.destroy();
         delete = null;
-        deleteUrisList = null;
         super.onDestroyView();
     }
 
