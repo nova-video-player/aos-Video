@@ -18,6 +18,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import java.util.Locale;
 
 import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.ImageCardView;
@@ -81,8 +82,8 @@ public class TrailerPresenter extends PosterImageCardPresenter {
 
     private Uri getImageUrl(ScraperTrailer box) {
         String base = "https://img.youtube.com/vi/%s/0.jpg";
-        if (log.isDebugEnabled()) log.debug("getImageUrl: {}", String.format(base, box.mVideoKey));
-        return Uri.parse(String.format(base, box.mVideoKey));
+        if (log.isDebugEnabled()) log.debug("getImageUrl: {}", String.format(Locale.ROOT, base, box.mVideoKey));
+        return Uri.parse(String.format(Locale.ROOT, base, box.mVideoKey));
     }
 
     @Override

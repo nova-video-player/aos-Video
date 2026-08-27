@@ -39,6 +39,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.oauth.OAuthDialog;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * A dialog showing a progress indicator and an optional text message or view.
@@ -218,7 +219,7 @@ public class NovaProgressDialog extends AlertDialog {
                     int max = mProgress.getMax();
                     if (mProgressNumberFormat != null) {
                         String format = mProgressNumberFormat;
-                        mProgressNumber.setText(String.format(format, progress, max));
+                        mProgressNumber.setText(String.format(Locale.getDefault(), format, progress, max));
                     } else {
                         mProgressNumber.setText("");
                     }

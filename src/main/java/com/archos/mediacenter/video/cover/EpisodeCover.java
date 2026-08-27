@@ -31,6 +31,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * This class is used TV Show Episodes
@@ -170,7 +171,7 @@ public class EpisodeCover extends BaseVideoCover {
 					mEpisodeInfo.getSeasonNumber(),
 					mEpisodeInfo.getEpisodeNumber()));
 			String episodeNameFormat = factory.getContext().getString(R.string.quotation_format);
-			tvShowEpisodeName.setText(String.format(episodeNameFormat, mEpisodeInfo.getEpisodeTitle()));
+			tvShowEpisodeName.setText(String.format(Locale.getDefault(), episodeNameFormat, mEpisodeInfo.getEpisodeTitle()));
 		}
 		else {
 			// Scraper info not available or not valid => fall-back on filename (this is not a common expected use-case...)

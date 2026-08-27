@@ -46,6 +46,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -2373,12 +2375,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             //log.debug("tags.getOnlineId() = {}", onlineId);
             if (onlineId > 0) {
                 final String language = Scraper.getLanguage(getActivity());
-                list.add(String.format(getResources().getString(R.string.tmdb_movie_title_url), Long.toString(onlineId), language));
+                list.add(String.format(Locale.ROOT, getResources().getString(R.string.tmdb_movie_title_url), Long.toString(onlineId), language));
             }
         } else if (tags instanceof EpisodeTags) {
             if (mOnlineId >0) {
                 final String language = Scraper.getLanguage(getActivity());
-                list.add(String.format(getResources().getString(R.string.tmdb_tvshow_title_url), Long.toString(mOnlineId), language));
+                list.add(String.format(Locale.ROOT, getResources().getString(R.string.tmdb_tvshow_title_url), Long.toString(mOnlineId), language));
             }
         }
 

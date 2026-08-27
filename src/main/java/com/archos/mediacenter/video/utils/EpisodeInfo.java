@@ -154,7 +154,7 @@ public class EpisodeInfo extends BaseInfo {
             if (viewMode == VideoUtils.VIEW_MODE_LIST) {
                 // Append the episode name in italics: " <<episode name>>"
                 String episodeNameFormat = context.getString(R.string.quotation_format);
-                String episodeName = String.format(episodeNameFormat, mEpisodeTitle);
+                String episodeName = String.format(Locale.getDefault(), episodeNameFormat, mEpisodeTitle);
                 CharSequence formattedTitle;
                 formattedTitle = HtmlCompat.fromHtml(ret + " <i>" + episodeName + "</i>",
                         HtmlCompat.FROM_HTML_MODE_LEGACY);
@@ -245,7 +245,7 @@ public class EpisodeInfo extends BaseInfo {
 	        // read from R.string.quotation_format, keep a space on
 	        // the right side of the string
             String quotation = res.getString(R.string.quotation_format);
-            view.setText(String.format(quotation, mEpisodeTitle));
+            view.setText(String.format(Locale.getDefault(), quotation, mEpisodeTitle));
         }
         view.setSingleLine(true);
     }

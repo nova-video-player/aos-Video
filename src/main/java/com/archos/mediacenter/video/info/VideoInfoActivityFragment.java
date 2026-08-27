@@ -42,6 +42,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.Locale;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -1253,10 +1255,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             final String language, tmdbUrl;
             if (mIsVideoMovie) {
                 language = Scraper.getLanguage(getActivity());
-                tmdbUrl = String.format(getResources().getString(R.string.tmdb_movie_title_url), Long.toString(mTMDBId), language);
+                tmdbUrl = String.format(Locale.ROOT, getResources().getString(R.string.tmdb_movie_title_url), Long.toString(mTMDBId), language);
             } else {
                 language = Scraper.getLanguage(getActivity());
-                tmdbUrl = String.format(getResources().getString(R.string.tmdb_tvshow_title_url), Long.toString(mOnlineId), language);
+                tmdbUrl = String.format(Locale.ROOT, getResources().getString(R.string.tmdb_tvshow_title_url), Long.toString(mOnlineId), language);
             }
             if (log.isDebugEnabled()) log.debug("onClick: mTMDBId={}, tmdbUrl={}", mTMDBId, tmdbUrl);
             // Breaks AndroidTV acceptance
@@ -1267,7 +1269,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             final String language;
             // Format TVDB URL with movie ID and preferred language
             language = Scraper.getLanguage(getActivity());
-            final String tvdbUrl = String.format(getResources().getString(R.string.tvdb_title_url), Long.toString(mTVDBId), language);
+            final String tvdbUrl = String.format(Locale.ROOT, getResources().getString(R.string.tvdb_title_url), Long.toString(mTVDBId), language);
             // Breaks AndroidTV acceptance
             Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(tvdbUrl));
             startActivity(it);

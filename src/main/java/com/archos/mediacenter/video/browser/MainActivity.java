@@ -952,7 +952,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                                     .getColumnIndex(ScraperStore.AllVideos.EPISODE_SEASON_NUMBER);
                             int index_episode_name = scraperCursor
                                     .getColumnIndex(ScraperStore.AllVideos.EPISODE_NAME);
-                            String episodeName = String.format(getString(R.string.quotation_format),
+                            String episodeName = String.format(Locale.getDefault(), getString(R.string.quotation_format),
                                     scraperCursor.getString(index_episode_name));
                             name = HtmlCompat.fromHtml(String.format(Locale.ENGLISH,TITLE_FORMAT,
                                     scraperCursor.getString(index_name),
