@@ -15,26 +15,23 @@
 package com.archos.mediacenter.video.leanback.overlay;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.ActiveOperationMonitor;
 import com.archos.mediaprovider.ImportState;
+import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
 import com.archos.mediaprovider.video.NetworkScannerServiceVideo;
 import com.archos.mediascraper.AutoScrapeService;
-import com.archos.mediaprovider.video.LoaderUtils;
-import androidx.core.content.ContextCompat;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,12 +48,16 @@ public class ScannerAndScraperProgress {
     final private Context mContext;
     final private View mProgressGroup;
     final private ProgressBar mProgressWheel;
+    final private TextView mBadge;
     final private TextView mCount;
-    final private String mInitialScanMessage;
     final private int mDefaultTextColor;
     final private int mScannerTextColor;
+    final private String mBadgeDomainLocal;
+    final private String mBadgeDomainNetwork;
+    final private String mBadgeOpScan;
+    final private String mBadgeOpDelete;
+    final private String mBadgeOpIdentify;
     final Handler mRepeatHandler = new Handler(Looper.getMainLooper());
-
 
     /** the visibility due to the general state of the fragment */
     private int mGeneralVisibility = View.GONE;
@@ -68,11 +69,16 @@ public class ScannerAndScraperProgress {
         mContext = context;
         mProgressGroup = overlayContainer.findViewById(R.id.progress_group);
         mProgressWheel = (ProgressBar) mProgressGroup.findViewById(R.id.progress);
+        mBadge = (TextView) mProgressGroup.findViewById(R.id.badge);
         mCount = (TextView) mProgressGroup.findViewById(R.id.count);
         mDefaultTextColor = mCount.getCurrentTextColor();
         mScannerTextColor = ContextCompat.getColor(context, R.color.scanner_progress_text);
+        mBadgeDomainLocal = context.getString(R.string.badge_domain_local);
+        mBadgeDomainNetwork = context.getString(R.string.badge_domain_network);
+        mBadgeOpScan = context.getString(R.string.badge_op_scan);
+        mBadgeOpDelete = context.getString(R.string.badge_op_delete);
+        mBadgeOpIdentify = context.getString(R.string.badge_op_identify);
         if (log.isDebugEnabled()) log.debug("ScannerAndScraperProgress: creation");
-        mInitialScanMessage = context.getString(R.string.initial_scan);
         mRepeatHandler.post(mRepeatRunnable);
     }
 
@@ -114,7 +120,6 @@ public class ScannerAndScraperProgress {
         }
     };
 
-
     /** Compute the visibility of the progress group. Both mGeneralVisibility and mStatusVisibility must be VISIBLE for the view to be visible */
     private void updateVisibility() {
         if (log.isTraceEnabled()) log.trace("updateVisibility: (0 visible, 8 gone) mGeneralVisibility {}, mStatusVisibility {}", mGeneralVisibility, mStatusVisibility);
@@ -125,35 +130,45 @@ public class ScannerAndScraperProgress {
         }
     }
 
-    /** update the counter TextView */
+    /** update the counter TextView and badge */
     private void updateCount() {
-        int scanCount = 0;
-        int scrapeCount = 0;
-        int initialImportCount = 0;
+        String badge = "";
+        int count = 0;
+        int textColor = mDefaultTextColor;
 
         if (NetworkScannerReceiver.isScannerWorking()) {
-            scanCount = NetworkScannerServiceVideo.getFilesFoundCount();
+            if (NetworkScannerServiceVideo.isDeleting()) {
+                badge = mBadgeDomainNetwork + ":" + mBadgeOpDelete;
+                count = NetworkScannerServiceVideo.getRemainingDeletesCount();
+            } else {
+                badge = mBadgeDomainNetwork + ":" + mBadgeOpScan;
+                count = NetworkScannerServiceVideo.getFilesFoundCount();
+            }
+            textColor = mScannerTextColor;
+        } else if (ImportState.VIDEO.isInitialImport() || ImportState.VIDEO.isRegularImport()) {
+            if (ImportState.VIDEO.isDeleting()) {
+                badge = mBadgeDomainLocal + ":" + mBadgeOpDelete;
+                count = ImportState.VIDEO.getNumberOfFilesRemainingToDelete();
+            } else {
+                badge = mBadgeDomainLocal + ":" + mBadgeOpScan;
+                count = ImportState.VIDEO.getNumberOfFilesRemainingToImport();
+            }
+            textColor = mDefaultTextColor;
+        } else if (LoaderUtils.getScrapeInProgress() || AutoScrapeService.getNumberOfFilesRemainingToProcess() > 0) {
+            badge = mBadgeOpIdentify;
+            count = AutoScrapeService.getNumberOfFilesRemainingToProcess();
+            textColor = mDefaultTextColor;
         }
 
-        if (ImportState.VIDEO.isInitialImport()) {
-            initialImportCount = ImportState.VIDEO.getNumberOfFilesRemainingToImport();
-        } else {
-            scrapeCount = AutoScrapeService.getNumberOfFilesRemainingToProcess();
-        }
-
-        if (scanCount > 0) {
-            // Phase 1: Network scanning active - display increasing count in Dimmed Gray
-            mCount.setTextColor(mScannerTextColor);
-            mCount.setText(String.valueOf(scanCount));
-            mCount.setVisibility(View.VISIBLE);
-        } else if (initialImportCount > 0 || scrapeCount > 0) {
-            // Phase 2: Metadata scraping / Import active - display decreasing count in Default White
-            int count = initialImportCount > 0 ? initialImportCount : scrapeCount;
-            String msg = initialImportCount > 0 ? mInitialScanMessage + "\n" : "";
-            mCount.setTextColor(mDefaultTextColor);
-            mCount.setText(msg + count);
+        if (!badge.isEmpty()) {
+            mBadge.setTextColor(textColor);
+            mBadge.setText(badge);
+            mBadge.setVisibility(View.VISIBLE);
+            mCount.setTextColor(textColor);
+            mCount.setText(String.valueOf(count));
             mCount.setVisibility(View.VISIBLE);
         } else {
+            mBadge.setVisibility(View.GONE);
             mCount.setVisibility(View.INVISIBLE);
         }
     }
