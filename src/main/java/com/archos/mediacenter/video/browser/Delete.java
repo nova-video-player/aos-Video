@@ -71,6 +71,10 @@ public class Delete {
 
     private static final Logger log = LoggerFactory.getLogger(Delete.class);
 
+    public static final int OP_SINGLE_FILE = 1;
+    public static final int OP_MULTIPLE_FILES = 2;
+    public static final int OP_FOLDER = 3;
+
     private static final int MAX_DEPTH = 3;//for folder delete : do not delete
     private static final int MIN_FILE_SIZE = 300000000; //do not delete parent folder if currently deleted file is inferior to min file size
     private static final int MAX_FOLDER_SIZE = 30000000; //do not delete parent folder if this folder is bigger than that
@@ -83,6 +87,72 @@ public class Delete {
     private long currentVideoFileToDeleteSize;
 
     private Integer counter = 0; // only for video files not for associated files
+
+    public void completeSystemDelete(final List<Uri> uris, final boolean isSuccess, final int operationKind) {
+        if (log.isDebugEnabled()) log.debug("completeSystemDelete: isSuccess {}, kind {}, uris {}", isSuccess, operationKind, uris);
+        if (uris == null || uris.isEmpty()) {
+            return;
+        }
+        if (!isSuccess) {
+            if (mListener != null) {
+                mHandler.post(() -> {
+                    mListener.onDeleteVideoFailed(uris.get(0));
+                });
+            }
+            return;
+        }
+
+        if (operationKind == OP_FOLDER) {
+            deleteFolderOK(uris.get(0));
+            return;
+        }
+
+        if (operationKind == OP_MULTIPLE_FILES || uris.size() > 1) {
+            if (mListener != null) {
+                mHandler.post(() -> {
+                    if (log.isDebugEnabled()) log.debug("completeSystemDelete: multiple files deleted successfully");
+                    mListener.onDeleteSuccess();
+                });
+            }
+            return;
+        }
+
+        final Uri fileUri = uris.get(0);
+        if (mListener != null) {
+            new Thread(() -> {
+                if (isLocal(fileUri)) {
+                    if (log.isDebugEnabled()) log.debug("completeSystemDelete: local file/folder trying to delete if directory");
+                    LocalStorageFileEditor editor = new LocalStorageFileEditor(fileUri, mContext);
+                    editor.deleteDir(fileUri);
+                }
+
+                if (isLocal(fileUri) &&
+                        !LocalStorageFileEditor.checkIfShouldNotTouchFolder(FileUtils.getParentUrl(fileUri))) {
+                    long shouldIDelete = getFolderSizeAndStopOnMax(FileUtils.getParentUrl(fileUri), MAX_FOLDER_SIZE, 0, 0);
+                    if ((currentVideoFileToDeleteSize > MIN_FILE_SIZE || shouldIDelete == 0) && MAX_FOLDER_SIZE > shouldIDelete && shouldIDelete >= 0) {
+                        mHandler.post(() -> {
+                            if (log.isDebugEnabled()) log.debug("completeSystemDelete onVideoFileRemoved ask for folder removal {}", fileUri);
+                            mListener.onVideoFileRemoved(fileUri, true, FileUtils.getParentUrl(fileUri));
+                        });
+                    } else {
+                        mHandler.post(() -> {
+                            if (log.isDebugEnabled()) log.debug("completeSystemDelete onVideoFileRemoved {}", fileUri);
+                            mListener.onVideoFileRemoved(fileUri, false, null);
+                        });
+                    }
+                } else {
+                    mHandler.post(() -> {
+                        if (log.isDebugEnabled()) log.debug("completeSystemDelete onVideoFileRemoved {}", fileUri);
+                        mListener.onVideoFileRemoved(fileUri, false, null);
+                    });
+                }
+                mHandler.post(() -> {
+                    if (log.isDebugEnabled()) log.debug("completeSystemDelete onDeleteSuccess {}", fileUri);
+                    mListener.onDeleteSuccess();
+                });
+            }).start();
+        }
+    }
 
     public void deleteOK(List<Uri> fileUris) { // flush backlog
         if (log.isDebugEnabled()) log.debug("deleteOK: counter {}, fileUris {}", counter, fileUris);

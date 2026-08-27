@@ -148,9 +148,11 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     private boolean mShouldDisplayConfirmDelete = false;
 
     private static final String SAVED_DELETE_URIS = "saved_delete_uris";
+    private static final String SAVED_DELETE_OPERATION = "saved_delete_operation";
 
     private Delete delete;
     private List<Uri> deleteUrisList;
+    private int deleteOperation = Delete.OP_SINGLE_FILE;
 
     private final ActivityResultLauncher<Intent> videoLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -164,16 +166,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 if (delete == null && getActivity() != null) {
                     delete = new Delete(CollectionFragment.this, getActivity());
                 }
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: OK, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
-                    if (delete != null && deleteUrisList != null && deleteUrisList.size() >= 1) {
-                        if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: calling delete.deleteOK on {}", deleteUrisList.get(0));
-                        delete.deleteOK(deleteUrisList.get(0));
-                    }
-                } else {
-                    if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: NO, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
-                    if (delete != null && deleteUrisList != null && deleteUrisList.size() > 1)
-                        delete.deleteNOK(deleteUrisList.get(0));
+                if (delete != null && deleteUrisList != null && !deleteUrisList.isEmpty()) {
+                    boolean isSuccess = result.getResultCode() == Activity.RESULT_OK;
+                    delete.completeSystemDelete(deleteUrisList, isSuccess, deleteOperation);
                 }
             });
 
@@ -188,6 +183,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
             } else {
                 deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS);
             }
+            deleteOperation = savedInstanceState.getInt(SAVED_DELETE_OPERATION, Delete.OP_SINGLE_FILE);
         }
         // pass the right deleteLauncher linked to activity
         FileUtilsQ.setDeleteLauncher(deleteLauncher);
@@ -284,10 +280,13 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     }
                     delete = new Delete(CollectionFragment.this, getActivity());
                     deleteUrisList = uris;
-                    if (uris.size() == 1)
+                    if (uris.size() == 1) {
+                        deleteOperation = Delete.OP_SINGLE_FILE;
                         delete.startDeleteProcess(uris.get(0));
-                    else if (uris.size() > 1)
+                    } else if (uris.size() > 1) {
+                        deleteOperation = Delete.OP_MULTIPLE_FILES;
                         delete.startMultipleDeleteProcess(uris);
+                    }
                     mShouldDisplayConfirmDelete = false;
                     refreshActivity();
                 }
@@ -336,6 +335,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 delete = new Delete(CollectionFragment.this, activity);
+                                deleteOperation = Delete.OP_FOLDER;
                                 deleteUrisList = Collections.singletonList(folder);
                                 delete.deleteFolder(folder);
                             }
@@ -370,6 +370,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     @Override
     public void onDeleteSuccess() {
+        Activity activity = getActivity();
+        if (activity != null) activity.finish();
     }
 
     private void playMovie() {
@@ -440,6 +442,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         super.onSaveInstanceState(outState);
         if (deleteUrisList != null) {
             outState.putParcelableArrayList(SAVED_DELETE_URIS, (deleteUrisList instanceof ArrayList) ? (ArrayList<Uri>) deleteUrisList : new ArrayList<>(deleteUrisList));
+            outState.putInt(SAVED_DELETE_OPERATION, deleteOperation);
         }
     }
 

@@ -302,9 +302,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private int oldSelectedSubPosition = 0;
 
     private static final String SAVED_DELETE_URIS = "saved_delete_uris";
+    private static final String SAVED_DELETE_OPERATION = "saved_delete_operation";
 
     private Delete delete;
     private List<Uri> deleteUrisList = null;
+    private int deleteOperation = Delete.OP_SINGLE_FILE;
 
     private final ActivityResultLauncher<Intent> playLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -332,16 +334,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 if (delete == null && getActivity() != null) {
                     delete = new Delete(VideoDetailsFragment.this, getActivity());
                 }
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: OK, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
-                    if (delete != null && deleteUrisList != null && deleteUrisList.size() >= 1) {
-                        if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: calling delete.deleteOK on {}", deleteUrisList.get(0));
-                        delete.deleteOK(deleteUrisList.get(0));
-                    }
-                } else {
-                    if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: NO, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
-                    if (delete != null && deleteUrisList != null && deleteUrisList.size() > 1)
-                        delete.deleteNOK(deleteUrisList.get(0));
+                if (delete != null && deleteUrisList != null && !deleteUrisList.isEmpty()) {
+                    boolean isSuccess = result.getResultCode() == Activity.RESULT_OK;
+                    delete.completeSystemDelete(deleteUrisList, isSuccess, deleteOperation);
                 }
             });
 
@@ -355,6 +350,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             } else {
                 deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS);
             }
+            deleteOperation = savedInstanceState.getInt(SAVED_DELETE_OPERATION, Delete.OP_SINGLE_FILE);
         }
         mDetailsLaunchUptimeMs = getActivity().getIntent()
                 .getLongExtra(EXTRA_DETAILS_LAUNCH_UPTIME_MS, -1);
@@ -581,6 +577,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         super.onSaveInstanceState(outState);
         if (deleteUrisList != null) {
             outState.putParcelableArrayList(SAVED_DELETE_URIS, (deleteUrisList instanceof ArrayList) ? (ArrayList<Uri>) deleteUrisList : new ArrayList<>(deleteUrisList));
+            outState.putInt(SAVED_DELETE_OPERATION, deleteOperation);
         }
     }
 
@@ -2260,6 +2257,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 delete = new Delete(VideoDetailsFragment.this, getActivity());
+                                deleteOperation = Delete.OP_FOLDER;
                                 deleteUrisList = Collections.singletonList(folder);
                                 delete.deleteFolder(folder);
                             }
@@ -2315,6 +2313,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private void deleteFile_async(Video video) {
         if (log.isDebugEnabled()) log.debug("deleteFile_async: {}", video.getFileUri());
         delete = new Delete(this, getActivity());
+        deleteOperation = Delete.OP_SINGLE_FILE;
         deleteUrisList = new ArrayList<>(Arrays.asList(video.getFileUri()));
         delete.startDeleteProcess(video.getFileUri());
     }
