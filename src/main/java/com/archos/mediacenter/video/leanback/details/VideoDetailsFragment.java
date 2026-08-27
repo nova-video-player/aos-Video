@@ -303,10 +303,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     private static final String SAVED_DELETE_URIS = "saved_delete_uris";
     private static final String SAVED_DELETE_OPERATION = "saved_delete_operation";
+    private static final String SAVED_DELETE_FILE_SIZE = "saved_delete_file_size";
 
     private Delete delete;
     private List<Uri> deleteUrisList = null;
     private int deleteOperation = Delete.OP_SINGLE_FILE;
+    private long deleteFileSize = 0L;
 
     private final ActivityResultLauncher<Intent> playLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -336,7 +338,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 }
                 if (delete != null && deleteUrisList != null && !deleteUrisList.isEmpty()) {
                     boolean isSuccess = result.getResultCode() == Activity.RESULT_OK;
-                    delete.completeSystemDelete(deleteUrisList, isSuccess, deleteOperation);
+                    delete.completeSystemDelete(deleteUrisList, isSuccess, deleteOperation, deleteFileSize);
                 }
             });
 
@@ -351,6 +353,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS);
             }
             deleteOperation = savedInstanceState.getInt(SAVED_DELETE_OPERATION, Delete.OP_SINGLE_FILE);
+            deleteFileSize = savedInstanceState.getLong(SAVED_DELETE_FILE_SIZE, 0L);
         }
         mDetailsLaunchUptimeMs = getActivity().getIntent()
                 .getLongExtra(EXTRA_DETAILS_LAUNCH_UPTIME_MS, -1);
@@ -576,8 +579,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (deleteUrisList != null) {
+            if (delete != null && delete.getCurrentVideoFileToDeleteSize() > 0) {
+                deleteFileSize = delete.getCurrentVideoFileToDeleteSize();
+            }
             outState.putParcelableArrayList(SAVED_DELETE_URIS, (deleteUrisList instanceof ArrayList) ? (ArrayList<Uri>) deleteUrisList : new ArrayList<>(deleteUrisList));
             outState.putInt(SAVED_DELETE_OPERATION, deleteOperation);
+            outState.putLong(SAVED_DELETE_FILE_SIZE, deleteFileSize);
         }
     }
 
@@ -2314,6 +2321,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         if (log.isDebugEnabled()) log.debug("deleteFile_async: {}", video.getFileUri());
         delete = new Delete(this, getActivity());
         deleteOperation = Delete.OP_SINGLE_FILE;
+        deleteFileSize = video != null ? video.getSize() : 0L;
+        if (deleteFileSize > 0) {
+            delete.setCurrentVideoFileToDeleteSize(deleteFileSize);
+        }
         deleteUrisList = new ArrayList<>(Arrays.asList(video.getFileUri()));
         delete.startDeleteProcess(video.getFileUri());
     }

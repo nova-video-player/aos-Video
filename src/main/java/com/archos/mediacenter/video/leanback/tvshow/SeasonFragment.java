@@ -102,10 +102,12 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
 
     private static final String SAVED_DELETE_URIS = "saved_delete_uris";
     private static final String SAVED_DELETE_OPERATION = "saved_delete_operation";
+    private static final String SAVED_DELETE_FILE_SIZE = "saved_delete_file_size";
 
     private Delete delete;
     private List<Uri> deleteUrisList;
     private int deleteOperation = Delete.OP_SINGLE_FILE;
+    private long deleteFileSize = 0L;
 
     private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
@@ -117,7 +119,7 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
                 }
                 if (delete != null && deleteUrisList != null && !deleteUrisList.isEmpty()) {
                     boolean isSuccess = result.getResultCode() == Activity.RESULT_OK;
-                    delete.completeSystemDelete(deleteUrisList, isSuccess, deleteOperation);
+                    delete.completeSystemDelete(deleteUrisList, isSuccess, deleteOperation, deleteFileSize);
                 }
             });
 
@@ -132,6 +134,7 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
                 deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS);
             }
             deleteOperation = savedInstanceState.getInt(SAVED_DELETE_OPERATION, Delete.OP_SINGLE_FILE);
+            deleteFileSize = savedInstanceState.getLong(SAVED_DELETE_FILE_SIZE, 0L);
         }
         // pass the right deleteLauncher linked to activity
         FileUtilsQ.setDeleteLauncher(deleteLauncher);
@@ -286,8 +289,12 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (deleteUrisList != null) {
+            if (delete != null && delete.getCurrentVideoFileToDeleteSize() > 0) {
+                deleteFileSize = delete.getCurrentVideoFileToDeleteSize();
+            }
             outState.putParcelableArrayList(SAVED_DELETE_URIS, (deleteUrisList instanceof ArrayList) ? (ArrayList<Uri>) deleteUrisList : new ArrayList<>(deleteUrisList));
             outState.putInt(SAVED_DELETE_OPERATION, deleteOperation);
+            outState.putLong(SAVED_DELETE_FILE_SIZE, deleteFileSize);
         }
     }
 

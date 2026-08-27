@@ -88,10 +88,25 @@ public class Delete {
 
     private Integer counter = 0; // only for video files not for associated files
 
+    public long getCurrentVideoFileToDeleteSize() {
+        return currentVideoFileToDeleteSize;
+    }
+
+    public void setCurrentVideoFileToDeleteSize(long size) {
+        this.currentVideoFileToDeleteSize = size;
+    }
+
     public void completeSystemDelete(final List<Uri> uris, final boolean isSuccess, final int operationKind) {
-        if (log.isDebugEnabled()) log.debug("completeSystemDelete: isSuccess {}, kind {}, uris {}", isSuccess, operationKind, uris);
+        completeSystemDelete(uris, isSuccess, operationKind, currentVideoFileToDeleteSize);
+    }
+
+    public void completeSystemDelete(final List<Uri> uris, final boolean isSuccess, final int operationKind, final long deletedFileSize) {
+        if (log.isDebugEnabled()) log.debug("completeSystemDelete: isSuccess {}, kind {}, deletedFileSize {}, uris {}", isSuccess, operationKind, deletedFileSize, uris);
         if (uris == null || uris.isEmpty()) {
             return;
+        }
+        if (deletedFileSize > 0) {
+            this.currentVideoFileToDeleteSize = deletedFileSize;
         }
         if (!isSuccess) {
             if (mListener != null) {
