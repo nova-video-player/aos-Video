@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="bottom">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/action_buttons_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:layout_gravity="bottom"
+        card_view:cardCornerRadius="@dimen/video_info_cardview_corner"
+        card_view:cardElevation="@dimen/video_info_cardview_elevation"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/play"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/transparent_ripple"
+                android:drawableLeft="@drawable/button_icon_play"
+                android:gravity="center"
+                android:paddingLeft="20dip"
+                android:paddingTop="@dimen/video_info_action_button_padding_vertical"
+                android:paddingRight="15dip"
+                android:paddingBottom="@dimen/video_info_action_button_padding_vertical"
+                android:text="@string/play_from_beginning"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/resume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/transparent_ripple"
+                android:drawableLeft="@drawable/button_icon_resume"
+                android:gravity="center"
+                android:paddingLeft="20dip"
+                android:paddingTop="@dimen/video_info_action_button_padding_vertical"
+                android:paddingRight="15dip"
+                android:paddingBottom="@dimen/video_info_action_button_padding_vertical"
+                android:text="@string/resume"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/remote_resume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/transparent_ripple"
+                android:drawableLeft="@drawable/button_icon_network"
+                android:gravity="center"
+                android:paddingLeft="20dip"
+                android:paddingTop="@dimen/video_info_action_button_padding_vertical"
+                android:paddingRight="15dip"
+                android:paddingBottom="@dimen/video_info_action_button_padding_vertical"
+                android:text="@string/remote_resume"
+                android:visibility="visible" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/nav_action_buttons_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="@dimen/video_info_margin_simple"
+        android:gravity="left"
+        android:layout_gravity="bottom"
+        card_view:cardCornerRadius="@dimen/video_info_cardview_corner"
+        card_view:cardElevation="@dimen/video_info_cardview_elevation"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/next_episode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/transparent_ripple"
+                android:gravity="center"
+                android:paddingLeft="20dip"
+                android:paddingTop="@dimen/video_info_action_button_padding_vertical"
+                android:paddingRight="15dip"
+                android:paddingBottom="@dimen/video_info_action_button_padding_vertical"
+                android:text="@string/next_episode"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/list_episodes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/transparent_ripple"
+                android:gravity="center"
+                android:paddingLeft="20dip"
+                android:paddingTop="@dimen/video_info_action_button_padding_vertical"
+                android:paddingRight="15dip"
+                android:paddingBottom="@dimen/video_info_action_button_padding_vertical"
+                android:text="@string/list_episodes"
+                android:visibility="gone" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

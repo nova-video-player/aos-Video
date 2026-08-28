@@ -304,6 +304,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     //play buttons and poster
 
     private CardView mActionButtonsContainer;
+    private CardView mNavActionButtonsContainer;
     private Button mRemoteResumeButton;
     private FloatingActionButton mGenericPlayButton;
     private Button mResumeLocalButton;
@@ -477,6 +478,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mNextEpisodeButton = (Button) mRoot.findViewById(R.id.next_episode);
         mListEpisodesButton = (Button) mRoot.findViewById(R.id.list_episodes);
         mActionButtonsContainer = (CardView) mRoot.findViewById(R.id.action_buttons_container);
+        mNavActionButtonsContainer = (CardView) mRoot.findViewById(R.id.nav_action_buttons_container);
         mResumeLocalButton.setOnClickListener(this);
         mPlayButton.setOnClickListener(this);
         mNextEpisodeButton.setOnClickListener(this);
@@ -608,8 +610,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
         ((ObservableScrollView)mRoot.findViewById(R.id.scrollView)).setScrollViewCallbacks(this);
 
-        if(mIsLaunchFromPlayer) //hide play button
+        if(mIsLaunchFromPlayer) { //hide play button
             mActionButtonsContainer.setVisibility(View.GONE);
+            if (mNavActionButtonsContainer != null)
+                mNavActionButtonsContainer.setVisibility(View.GONE);
+        }
         return mRoot;
     }
 
@@ -801,6 +806,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         ((CardView)mPosterImageView.getParent().getParent()).setCardBackgroundColor(mColor);
         mScraperPlotContainer.setCardBackgroundColor(mColor);
         mActionButtonsContainer.setCardBackgroundColor(mColor);
+        if(mNavActionButtonsContainer!=null)
+            mNavActionButtonsContainer.setCardBackgroundColor(mColor);
         if(mSecondaryTitleBar!=null)
             mTitleBarContent.setBackgroundColor(mColor);
         if(!mIsLaunchFromPlayer)
@@ -825,6 +832,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             mNextEpisodeButton.setVisibility(View.GONE);
             mShowId = -1;
             mListEpisodesButton.setVisibility(View.GONE);
+            if (mNavActionButtonsContainer != null)
+                mNavActionButtonsContainer.setVisibility(View.GONE);
             String name = null;
             if(video instanceof Episode){
                 if (log.isDebugEnabled()) log.debug( "setCurrentVideo: new video and it is an episode");
@@ -1942,6 +1951,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     mNextEpisodeButton.setVisibility(mNextEpisode != null ? View.VISIBLE : View.GONE);
                     mShowId = mShowIdResult;
                     mListEpisodesButton.setVisibility(mShowId >= 0 ? View.VISIBLE : View.GONE);
+                    if (mNavActionButtonsContainer != null && !mIsLaunchFromPlayer) {
+                        mNavActionButtonsContainer.setVisibility((mNextEpisode != null || mShowId >= 0) ? View.VISIBLE : View.GONE);
+                    }
                     if (finalTags != null) {
                         // Plot & Genres
                         final String plot = finalTags.getPlot();

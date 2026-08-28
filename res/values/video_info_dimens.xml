@@ -22,6 +22,7 @@
     <dimen name="video_info_margin_double">32dip</dimen>
 
     <dimen name="video_info_cardview_top_margin">20dip</dimen>
+    <dimen name="video_info_action_button_padding_vertical">10dip</dimen>
     <dimen name="video_info_small_text">14sp</dimen>
     <dimen name="video_info_medium_text">18sp</dimen>
     <dimen name="video_info_big_text">22sp</dimen>
