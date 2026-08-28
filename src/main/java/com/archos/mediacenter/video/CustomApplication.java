@@ -86,7 +86,6 @@ import httpimage.HttpImageManager;
 import io.sentry.SentryLevel;
 import io.sentry.android.core.SentryAndroid;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
@@ -98,8 +97,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.beans.PropertyChangeListener;
-import java.security.Provider;
-import java.security.Security;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -678,11 +675,8 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         // must be done after context is available
         log = LoggerFactory.getLogger(CustomApplication.class);
         configureFullLoggingAsync();
-        new Thread(() -> {
-            setupBouncyCastle();
-            // BC now registered globally: safe to decrypt stored credentials (Blowfish)
-            NetworkCredentialsDatabase.getInstance().loadCredentials(mContext);
-        }, "bouncycastle-credentials-init").start();
+        new Thread(() -> NetworkCredentialsDatabase.getInstance().loadCredentials(mContext),
+                "network-credentials-init").start();
 
         systemLocale = Locale.getDefault();
         getDefaultLocale();
@@ -1308,30 +1302,6 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 }
             })
             .show();
-    }
-
-    private void setupBouncyCastle() {
-        try {
-            final Provider provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
-            if (provider == null) {
-                return;
-            }
-            if (provider.getClass().equals(BouncyCastleProvider.class)) {
-                // BC with same package name, shouldn't happen in real life.
-                return;
-            }
-            // Android registers its own BC provider. As it might be outdated and might not include
-            // all needed ciphers, we substitute it with a known BC bundled in the app.
-            // Android's BC has its package rewritten to "com.android.org.bouncycastle" and because
-            // of that it's possible to have another BC implementation loaded in VM.
-            // Instantiate new provider first (heavy work) while system BC provider is still registered
-            final Provider newProvider = new BouncyCastleProvider();
-
-            Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
-            Security.insertProviderAt(newProvider, 1);
-        } catch (Throwable t) {
-            log.error("setupBouncyCastle: failed to register BouncyCastleProvider", t);
-        }
     }
 
     static boolean DBG = false;
