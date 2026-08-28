@@ -44,7 +44,7 @@
 
         <FrameLayout
             android:id="@+id/counter_group"
-            android:layout_width="48dip"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ProgressBar
