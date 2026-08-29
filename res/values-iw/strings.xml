@@ -23,6 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">רענן רשימת שרתים</string>
     <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">אפשר שיתופי רשת</string>
     <string name="initial_scan">סריקה ראשונית</string>
     <!-- Library screen, menu item -->
     <string name="search_title">חיפוש</string>
@@ -43,9 +44,17 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">אורך</string>
     <string name="video_sources">מקורות</string>
     <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">סרט</string>
+    <string name="info_tab_show">תכנית</string>
+    <string name="info_tab_episode">פרק</string>
+    <string name="info_tab_video">וידאו</string>
     <string name="info_tab_file">מידע על הקובץ</string>
+    <string name="info_tab_backdrop_chooser">בוחר רקע</string>
+    <string name="info_tab_poster_chooser">בוחר פוסטר</string>
+    <string name="info_tab_share">שתף</string>
     <string name="info_menu_backdrop_select">רקע</string>
     <string name="info_menu_series_backdrop_select">רקע סדרה</string>
     <string name="info_menu_poster_select">בחר פוסטר נוסף</string>
@@ -68,9 +77,12 @@
     <string name="network_shared_folders">תיקיות משותפות (SMB)</string>
     <string name="network_connected_as">מחובר בתור %s</string>
     <string name="network_guest">אורח</string>
+    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (ניסיוני)</string>
     <string name="network_cling">UPNP (ניסיוני)</string>
+    <string name="recordings_storage">הקלטות</string>
     <string name="root_storage">אחסון פנימי</string>
+    <string name="cannot_list">לא ניתן להציג תוכן</string>
     <!-- VIDEO -->
     <string name="videos">וידאו</string>
     <string name="all_videos">כל הוידאו</string>
@@ -83,8 +95,18 @@
     <string name="all_animes_format">סרטי אנימציה - %d</string>
     <string name="all_collections">כל האוספים</string>
     <string name="all_collections_format">כל האוספים - %d</string>
+    <string name="all_collection_watched">כל האוספים שנצפו</string>
+    <string name="all_collection_unwatched">אוספים שלא נצפו</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">סרט אחד נצפה</item>
+        <item quantity="two">%d סרטים נצפו</item>
+        <item quantity="many">%d סרטים נצפו</item>
+        <item quantity="other">%d סרטים נצפו</item>
+    </plurals>
     <string name="not_watched_movies_format">לא נצפו - %d</string>
     <string name="not_watched_animes_format">לא נצפו - %d</string>
+    <string name="no_movie_watched">אין סרטים שנצפו</string>
+    <string name="all_movies_watched">כל הסרטים נצפו</string>
     <string name="movies_by_alpha">סרטים לפי א\"ב</string>
     <string name="movies_by_genre">סרטים לפי ז\'אנר</string>
     <string name="movies_by_rating">סרטים לפי דרוג</string>
@@ -96,7 +118,9 @@
     <string name="all_animes">כל סרטי האנימציה</string>
     <string name="all_animes_row">כל האנימציות</string>
     <string name="all_animeshows">כל סדרות האנימציה</string>
+    <string name="animes_by_alpha">סרטי אנימציה לפי א\"ב</string>
     <string name="animes_by_genre">סרטי אנימציה לפי ז\'אנר</string>
+    <string name="animes_by_rating">סרטי אנימציה לפי דרוג</string>
     <string name="animes_by_year">סרטי אנימציה לפי שנה</string>
     <string name="all_tvshows_format">כל הסדרות - %d</string>
     <string name="not_watched_tvshows_format">לא נצפו - %d</string>
@@ -113,18 +137,24 @@
     <string name="date_view_year">שנה</string>
     <string name="all_movies_and_tv_shows">סרטים וסדרות</string>
     <string name="non_scraped_videos">קבצי וידאו ללא מידע מדיה</string>
+    <string name="no_server">לא נמצא שרת מדיה</string>
     <string name="cannot_open_video">לא ניתן לפתוח וידאו זה</string>
     <string name="confirm_delete">האם אתה בטוח שברצונך למחוק אותו?</string>
     <string name="deleting">אנא המתן בזמן המחיקה…</string>
+    <string name="cannot_delete_directory">לא ניתן למחוק את התיקייה</string>
+    <string name="cannot_delete_file">לא ניתן למחוק את הקובץ</string>
     <string name="directory_deleted">התיקייה נמחקה</string>
+    <string name="file_deleted">הקובץ נמחק</string>
     <string name="resume">המשך</string>
     <string name="remote_resume">המשך מרוחק</string>
     <string name="bookmark">סימניה</string>
     <string name="delete">מחק</string>
     <string name="confirm_delete_short">אשר מחיקה</string>
     <string name="delete_resume">מחק המשך</string>
+    <string name="delete_bookmark">מחק סימניה</string>
     <string name="mark_as_watched">סמן כנצפה</string>
     <string name="mark_as_not_watched">סמן כלא נצפה</string>
+    <string name="upnp_not_allowed">אינך רשאי לגשת לשרת UPnP זה. אנא שנה קודם את הגדרות הגישה שלך.</string>
     <string name="scrap_no_info">אין תיאור של סרט או סדרה עבור וידאו זה.</string>
     <string name="scrap_remove">הסר מידע זה</string>
     <string name="scrap_remove_short">הסר</string>
@@ -151,10 +181,14 @@
     <string name="scrap_cast">שחקנים</string>
     <string name="scrap_cast_format">שחקנים: %s</string>
     <string name="scrap_genre">ז\'אנר</string>
+    <string name="scrap_genre_format">ז\'אנרים: %s</string>
     <string name="scrap_genre_title">ז\'אנרים</string>
     <string name="scrap_aired">שודר</string>
     <string name="scrap_aired_format">שודר: %s</string>
+    <string name="scrap_guests">אורחים</string>
+    <string name="scrap_premiered">שודר לראשונה</string>
     <!-- Specific strings for TV shows -->
+    <string name="show_network">רשת</string>
     <string name="episode_name">פרק</string>
     <string name="episode_season">עונה</string>
     <string name="episode_specials">מיוחדים</string>
@@ -165,6 +199,9 @@
     <string name="how_to_mark_season_watched">הקלק על עונה כדי לסמן את כל הפרקים שלה כנצפו או לא נצפו</string>
     <string name="how_to_unindex_season">הקלק על עונה כדי להסיר את כל הפרקים שלה מהספרייה</string>
     <string name="how_to_delete_season">הקלק על עונה כדי למחוק את כל הפרקים שלה</string>
+    <string name="mark_show_watched">סמן את כל הפרקים כנצפו או לא נצפו</string>
+    <string name="unindex_show">הסר את כל הפרקים מהספרייה</string>
+    <string name="delete_show">מחק את כל הפרקים</string>
     <string name="no_episode_watched">אין פרקים שנצפו</string>
     <string name="all_episodes_watched">כל הפרקים נצפו</string>
     <plurals name="n_episodes_watched">
@@ -209,9 +246,13 @@
     <string name="preference_display_all_files">הצג כל הקבצים בדפדפן</string>
     <string name="preference_display_all_files_summary">הצג גם קבצים שאינם וידאו</string>
     <string name="info_processing">בודק מאפייני מדיה…</string>
+    <string name="info_video">וידאו</string>
     <string name="info_audio">אודיו</string>
     <string name="info_audio_vbr">VBR</string>
+    <string name="info_plugin_required">(נדרש תוסף)</string>
     <string name="info_subtitle">כתוביות</string>
+    <string name="info_resume">נקודת המשך</string>
+    <string name="info_bookmark">הוסף סימניה במיקום</string>
     <string name="info_file">מידע קובץ</string>
     <string name="use_remote_resume">המשך מהנקודה שנשמרה דרך הרשת?</string>
     <!-- VIDEO COVER ROLL -->
@@ -249,6 +290,9 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">מרכז המדיה</string>
     <string name="view_mode">מצב תצוגה</string>
+    <string name="view_mode_list">רשימה</string>
+    <string name="view_mode_grid">פוסטרים</string>
+    <string name="view_mode_details">פרטים</string>
     <string name="switch_to_list">רשימה</string>
     <string name="switch_to_grid">רשת</string>
     <!-- VideoPlayer -->
@@ -293,6 +337,7 @@
     <string name="menu_change_folder_details">בחר תיקייה שממנה יש להתחיל</string>
     <string name="unlock_instructions">לחיצה ארוכה על הסמל כדי לשחרר נעילה</string>
     <string name="seek_to_percentage">סורק ל-%%%s</string>
+    <string name="set_audio_speed_to">מהירות אודיו %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
     <string name="subs_HI">לקויי שמיעה</string>
@@ -318,6 +363,8 @@
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">לא ניתן להפעיל וידאו</string>
     <string name="player_err_cantplaysound">אין אפשרות לנגן ערוץ שמע</string>
+    <string name="audiocodec_not_supported">פורמט אודיו זה (<xliff:g id="codec">%s</xliff:g>) אינו נתמך.</string>
+    <string name="videocodec_not_supported">פורמט וידאו זה (<xliff:g id="codec">%s</xliff:g>) אינו נתמך.</string>
     <string name="player_err_file">קובץ הוידאו אינו קיים.</string>
     <string name="player_err_sizetoobig">גודל הוידאו גדול מדי</string>
     <string name="player_err_unknown">שגיאה לא ידועה.</string>
@@ -334,10 +381,19 @@
     <string name="player_err_profile_and_level">\"Profile\" ו- \"Level\"</string>
     <string name="player_err_interlaced">משולב</string>
     <!-- Player plug-in -->
+    <string name="player_plugin_cinema_title">תוסף קולנוע</string>
+    <string name="player_plugin_cinema">תוסף קולנוע (DVD, MPEG-2, AC3)</string>
+    <string name="player_plugin_ac3_title">פלאגין AC3</string>
+    <string name="player_plugin_ac3">פלאגין AC3</string>
+    <string name="player_plugin_mpeg2_title">MפלאגיןMPEG-2 (DVD)</string>
+    <string name="player_plugin_mpeg2">פלאגיןMPEG-2 (DVD)</string>
     <string name="player_plugin_video_msg">קובץ זה מכיל תבנית וידאו של <xliff:g id="video">%1$s</xliff:g>.</string>
     <string name="player_plugin_audio_msg">קובץ זה מכיל תבנית שמע של <xliff:g id="audio">%1$s</xliff:g>.</string>
     <string name="player_plugin_video_audio_msg">קובץ זה מכיל תבנית וידאו של <xliff:g id="video">%1$s</xliff:g> ותבנית שמע של <xliff:g id="audio">%2$s</xliff:g>.</string>
+    <string name="player_plugin_purchase_msg">אתה צריך לרכוש את ה- <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">עבור לחנות</string>
+    <string name="player_plugin_purchase_archos_msg">ניתן לרכוש תוספי פיענוח נוספים ב- www.archos.com</string>
+    <string name="player_plugin_purchase_google_play_msg">ניתן לרכוש תוספי פיענוח נוספים ב- Google Play</string>
     <string name="player_plugin_purchase_google_play_button">עבור אל Google Play</string>
     <string name="plugin_update_required_title">נדרש עדכון מקודד</string>
     <string name="plugin_update_required_message">נראש שכבר מותקנים לך מקודדים נוספים עובר Nova Video Player.\n\n
@@ -357,9 +413,17 @@
     <string name="subtitles_wizard_cache">מטמון</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">קבל כתוביות באופן מקוון</string>
+    <string name="toast_subloader_sub_found">רצועת כתוביות נמצאה עבור שפה זו</string>
+    <string name="toast_subloader_sub_not_found">רצועת כתוביות לא נמצאה עבור שפה זו</string>
     <string name="toast_subloader_service_unreachable">הופסק שירות חיפוש כתוביות</string>
+    <string name="menu_subloader_allfolder">קבל כתוביות חסרות</string>
     <string name="dialog_subloader_copying">מעתיק כתוביות…</string>
+    <string name="dialog_subloader_downloading">מוריד כתוביות…</string>
+    <string name="dialog_subloader_sumup">ההורדה הסתיימה</string>
+    <string name="dialog_subloader_success">כתוביות נמצאו עבור:</string>
     <string name="dialog_subloader_fails">כתוביות לא נמצאו עבור:</string>
+    <string name="sub_force_all_title">כפה הורדת כתוביות</string>
+    <string name="sub_force_all">כל קבצי הוידאו מכילים לפחות רצועת כתוביות אחת. האם ברצונך לאלץ הורדת רצועת כתוביות חדשה?</string>
     <string name="dialog_subloader_nonetwork_title">אין חיבור אינטרנט</string>
     <string name="dialog_subloader_nonetwork_message">חיבור אינטרנט נדרש ע\"מ להוריד כתוביות</string>
     <string name="dialog_subloader_connecting">מתחבר אל www.opensubtitles.com…</string>
@@ -371,6 +435,7 @@
     <string name="toast_subloader_quota_exceeded">חריגה ממכסת ההורדה של OpenSubtitles</string>
     <string name="opensubtitles_quota_reset_time_remaining">מכסה מתאפסת תוך %s</string>
     <!-- Subtitle Settings Dialog -->
+    <string name="subtitle_settings_title">הגדרות כתוביות</string>
     <string name="subtitle_sample_text">\"דוגמא\"</string>
     <string name="subtitle_size_text">גודל:</string>
     <string name="subtitle_style_text">סגנון:‏</string>
@@ -399,16 +464,25 @@
     <string name="loading_torrent">טוען טורנט…</string>
     <string name="error_no_video_file">אין קבצי וידאו</string>
     <string name="torrent_file_to_play">בחר קובץ לניגון</string>
+    <string name="torrent_buy_premium_message">הזרמת טורנט זמינה רק בגירסה בתשלום</string>
+    <string name="torrent_buy_premium">קנה את גרסת הפרימיום</string>
     <!-- Shortcuts -->
     <string name="browse_net_server">דפדף בשיתוף רשת</string>
+    <string name="add_smb_server">דפדף בשרת SMB</string>
+    <string name="add_network_server">הוסף שיתוף רשת</string>
+    <string name="add_to_shortcuts">צור קיצור דרך</string>
     <string name="add_ssh_server">דפדף בשרת FTP</string>
     <string name="add_ssh_shortcut">הוסף כקיצור דרך</string>
     <string name="ssh_prompt">סוג FTP</string>
     <string name="protocol_prompt">סוג פרוטוקול</string>
+    <string name="ssh_empty_view"> \"אתה יכול לדפדף ולנגן משרת ה-FTP שלך\"</string>
     <string name="remove_from_shortcuts">הסר קיצור דרך</string>
+    <string name="shortcut_added">קיצור דרך %s נוצר</string>
     <string name="shortcut_removed">קיצור דרך %s הוסר</string>
     <string name="server_not_available">השרת כעת אינו זמין</string>
+    <string name="cannot_open_shortcut">תוכן קיצור הדרך אינו זמין כעת. \nאנא בדקו שיש לכם את ההרשאות המתאימות.</string>
     <string name="network_shortcuts">קיצורי דרך רשת</string>
+    <string name="media_servers">שרתי מדיה</string>
     <string name="shortcut_list_empty">לא נוצרו קיצורי דרך לרשת.\n\nכדי ליצור קיצורי דרך לתיקיות מרוחקות מועדפות, לחץ לחיצה ארוכה על תיקייה ובחר \"%s\" בתפריט הראשי.</string>
     <string name="ftp_shortcut_list_empty">כדי ליצור קיצורי דרך לתיקיות מרוחקות מועדפות, בחר \"%s\" בתפריט הראשי כאשר אתה מדפדף בשרת.</string>
     <string name="indexed_folders">תיקיות מקוטלגות</string>
@@ -431,6 +505,7 @@
     <string name="last_rescan_never">אף פעם</string>
     <string name="upnp_indexing_warning_title">קיטלוג UPnP</string>
     <string name="upnp_indexing_warning_message">קיטלוג UPnP לא מאפשר תכונות רבות כמו קיטלוג SMB.\nמומלץ לבצע במקום זה קיטלוג של תיקיית SMB אם השרת או המחשב שלך מאפשרים זאת.\n</string>
+    <string name="ssh_error">אין אפשרות להתחבר: אנא בדוק את החיבור ופרטי המשתמש</string>
     <string name="ssh_remote_address">כתובת מרוחקת</string>
     <string name="ssh_port">פורט</string>
     <string name="ssh_password">סיסמה</string>
@@ -439,8 +514,11 @@
     <string name="smb_domain">דומיין (אופציונלי)</string>
     <!-- Preferences -->
     <string name="preferences">העדפות</string>
+    <string name="get_the_ad_free_version">קבל את הגרסה ללא פרסומות ב-Google Play</string>
     <string name="upgrade_to_add_free_version">שדרג לגרסה ללא פרסומות</string>
+    <string name="upgrade_to_add_free_version_description">קנה את רישיון האפליקציה כדי להסיר פרסומות ולאפשר את כל התכונות</string>
     <string name="preferences_about">אודות</string>
+    <string name="preferences_category_complete">גרסה מלאה</string>
     <string name="preferences_category_video">וידאו</string>
     <string name="preferences_force_software_decoding">כפה פיענוח בתוכנה</string>
     <string name="preferences_force_software_decoding_summary">ניתן לנסות אפשרות זו אם חלק מקבצי הווידאו לא מנוגנים באופן תקין</string>
@@ -473,6 +551,7 @@
     <string name="preferences_tv_refreshrate_switch_mode_selection">בחירת קצב ריענון וידאו במצב תצוגה</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">תכונה של התאמת קצב ריענון באנדרואיד 12 ומעלה</string>
     <string name="preference_remove_dolby_vision">השבת Dolby vision</string>
+    <string name="preference_remove_dolby_vision_summary">השתמש במקודדים סטנדרטיים במקום Dolby vision</string>
     <string name="preference_cutout_short_edges">וידאו על מסך מלא עם חורים במסך</string>
     <string name="preference_cutout_short_edges_summary">אפשר תצוגה על מסך מלא במכשיר עם חורים במסך</string>
     <string name="category_languages">כתוביות</string>
@@ -491,6 +570,7 @@
     <string name="preferences_video_about">אודות</string>
     <string name="preferences_video_os_text">כתוביות מסופקות ע\"י</string>
     <string name="preferences_video_tmdb_text">מידע סרט/סדרה מסופק ע\"י</string>
+    <string name="preferences_video_tvdb_text">מידע סדרה מסופק ע\"י</string>
     <string name="preferences_video_trakt_text">מעקב צפייה מסופק ע\"י</string>
     <string name="preferences_video_licenses">רישיונות</string>
     <string name="preferences_network_mobile_vpn_summary">השתמש בזה רק בקונפיגורציית VPN, ושים לב לשימוש בנתונים.</string>
@@ -501,6 +581,8 @@
     <string name="preferences_video_advanced_quit_title">הגדרות רגילות</string>
     <string name="preferences_video_advanced_quit_summary">חזור להגדרות רגילות</string>
     <string name="trakt_change">שינוי ממשק Trakt מצריך חיבור מחדש.</string>
+    <string name="tv_scraper">סדרות</string>
+    <string name="movie_scraper">סרטים</string>
     <string name="enable_auto_scrap">קבל מידע עבור קבצי וידאו חדשים באופן אוטומטי</string>
     <string name="enable_adult_scrap_title">מידע מדיה של סרטים למבוגרים</string>
     <string name="enable_adult_scrap_summary">אפשר שליפת מידע עבור סרטים למבוגרים (לא מאופשר כברירת מחדל)</string>
@@ -516,6 +598,10 @@
     <string name="video_info_custom_search_file_hint">"\"Moviename\" או \"Showname S01E01\""</string>
     <string name="video_info_custom_search_show_hint">שם הסדרה</string>
     <string name="scrap_show_no_result">לא נמצאה תוכנית מתאימה ברשת</string>
+    <string name="video_info_backdrop_select">בחר תמונה נוספת</string>
+    <string name="video_info_backdrop_remove">הסר</string>
+    <string name="video_info_backdrop_set_as">קבע תמונה כ- </string>
+    <string name="video_info_share_message">"צפיתי בוידאו \"%1$s\" על ה- Nova %2$s שלי"</string>
     <string name="notification_mode">התראות</string>
     <string name="notifications_all">כל ההתראות</string>
     <string name="notifications_alerts">צלילי התראות בלבד</string>
@@ -525,13 +611,17 @@
     <string name="format_optimized">אופטימלי</string>
     <string name="format_original">מקורי</string>
     <string name="format_stretched">מתוח</string>
+    <string name="stereo_dive_enable">אפקט צלילה של סטריאו</string>
+    <string name="stereo_dive_disable">השבת אפקט צלילה של סטריאו</string>
     <string name="rotation_unlock">אפשר סיבוב מסך אוטומטי</string>
     <string name="rotation_locked">סיבוב מסך אוטומטי מושבת</string>
     <string name="rotation_unlocked">סיבוב מסך אוטומטי מופעל</string>
     <string name="network_reindex">סרוק מחדש את התוכן</string>
     <!-- Help overlay -->
     <string name="help_overlay_menu">לחץ על חץ למעלה\nכדי להציג את תפריט הטלוויזיה</string>
+    <string name="help_overlay_ssh_indexing_text">בחר באפשרות \"הוסף כקיצור דרך\" על מנת לחזור במהירות לשרת שלך.</string>
     <string name="help_overlay_network_indexing_text1">לחץ על תפריט זה כדי לשלב את תוכן תיקייה זו ותת-התיקיות שלה לספרית הוידאו.</string>
+    <string name="help_overlay_network_indexing_text1_lb">השתמש בכפתור + כדי לשלב את תוכן תיקייה זו ותת-התיקיות שלה לספרית הוידאו.</string>
     <string name="help_overlay_network_indexing_text2">יאפשר לך להשיג פוסטרים ותיאורים לסרטים וסדרות.</string>
     <string name="help_overlay_scraper_text">לחץ על תפריט זה כדי לחפש פוסטרים ותיאורים לוידאו שלך ברשת.</string>
     <string name="help_overlay_network_shortcut_text1_lb">השתמש בכפתור + כדי להוסיף תיקייה זו כקיצור דרך לרשת, כך שתהיה אפשרות להוסיף את התוכן שלה ושל תת-התיקיות שלה לספרית הוידאו.</string>
@@ -553,12 +643,17 @@
     <string name="share_folders_smb_disable_udp_discovery_summary">השבת גילוי דרך UDP במקרה של Wi-Fi לא יציב במכשירים מסוימים (למשל Fire 10 HD).</string>
     <string name="share_folders_smb_disable_mdns_discovery">השבת גילוי SMB דרך mDNS</string>
     <string name="share_folders_smb_disable_mdns_discovery_summary">השבת גילוי דרך mDNS במקרה של Wi-Fi לא יציב במכשירים מסוימים.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">הגבל גילוי SMB ל-mDNS</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">השבת גילוי דרך UDP/TCP במקרה של Wi-Fi לא יציב במכשירים מסוימים (למשל Fire 10 HD). ⚠ ימנע גילוי תקין ב-ChromeOS.</string>
     <string name="connection_abnormally_long">ההתחברות נמשכת זמן רב מאד. האם תרצה לאתחל את התהליך?</string>
     <string name="connection_reset">איפוס</string>
     <!-- Info dialog, not indexed file -->
+    <string name="video_info_unindexed_message">הקובץ הזה לא מקוטלג כרגע בסיפרייה שלך.\nחיפוש פוסטרים ומידע זמין רק עבור קבצים מקוטלגים.\nהאם אתה רוצה לקטלג עכשיו?</string>
+    <string name="video_info_unindexed_message2">הקובץ בתהליך עיבוד. זה יכול לקחת זמן.</string>
     <string name="video_browser_index_file">הוסף לספרייה</string>
     <string name="video_browser_unindex_file">הסר מהספרייה</string>
     <!-- Brightness -->
+    <string name="auto_brightness_message">לא ניתן לשנות בהירות כי מופעל מצב בהירות אוטומטית.</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">עבד קבצי NFO</string>
     <string name="network_nfo_parse_summary">קרא קבצי NFO של קודי במהלך הסריקה כדי לאסוף מידע מדיה ופוסטרים.</string>
@@ -667,6 +762,7 @@
     <string name="torrent_blocklist">רשימת חסימה</string>
     <string name="blocklist_empty">הכתובת לא צריכה להיות ריקה</string>
     <string name="blocklist_invalid">רשימת חסימה לא תקינה</string>
+    <string name="blocklist_downloading">מוריד רשימת חסימה</string>
     <string name="blocklist_file_not_found">הקובץ לא נמצא</string>
     <string name="blocklist_success">רענון רשימת חסימה הצליח</string>
     <string name="blocklist_unknown_error">לא ידוע</string>
@@ -677,14 +773,18 @@
     <string name="share_infos_incomplete">יש להזין נתיב</string>
     <string name="share_path">נתיב</string>
     <string name="category_trakt">Trakt</string>
+    <string name="trakt_user">שם משתמש</string>
+    <string name="trakt_password">סיסמה</string>
     <string name="trakt_signin">התחבר</string>
     <string name="trakt_list_signin">התחבר ל-Trakt</string>
+    <string name="trakt_status_login">מתחבר&#8230;</string>
     <string name="trakt_signin_summary_logged">מחובר</string>
     <string name="trakt_signin_summary_logged_error">שגיאת אימות</string>
     <string name="trakt_signin_summary">לא מחובר</string>
     <string name="trakt_relog_description">זוהתה בעיה עם Trakt ויש לאתחל את פרטי המשתמש, אנא התחבר מחדש.</string>
     <string name="trakt_signin_dialog_title">התחבר</string>
     <string name="trakt_signin_title">התחבר</string>
+    <string name="trakt_wipe_dialog_title">להתנתק מ-Trakt.tv?</string>
     <string name="trakt_wipe_title">התנתק מ-Trakt.tv</string>
     <string name="trakt_live_scrobbling_title">מעקב צפייה חי</string>
     <string name="trakt_live_scrobbling_summary">שתף קבצי וידאו נצפים ב-Trakt</string>
@@ -726,6 +826,7 @@
     <string name="leanback_scrap">קבל מידע</string>
     <string name="leanback_scrap_choose_the_description">בחר מידע</string>
     <string name="leanback_scrap_choose_the_description_for">"בחר מידע עבור \"%s\""</string>
+    <string name="leanback_scrap_searching_general_hint">שם של סרט או סדרה</string>
     <string name="leanback_scrap_searching_tvshow_hint">שם של סדרה</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">ממשק מקורי</string>
@@ -761,6 +862,7 @@
     <string name="rescan_when_opening_application">סריקה מחדש בפתיחת היישום</string>
     <string name="last_rescan_occured">סריקה אחרונה ב:</string>
     <string name="error_permission_display_over_apps">מצב חלון צריך הרשאה מיוחדת לצורך הצגה מעל יישומים אחרים. אנא הענק הרשאה זו ל-Nova Video Player כדי לעבור למצב חלון.</string>
+    <string name="intro_overlay_text">גע כדי להקרין קבצי וידאו לטלוויזיה שלך</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">ראה עוד</string>
@@ -781,23 +883,45 @@
     <string name="system">מערכת</string>
     <string name="keep_setting">שמור הגדרה זו גלובלית</string>
     <string name="select_sub_file"><![CDATA[לא נמצאו כתוביות מדויקות עבור הקובץ <font color=#29b6f6><i>%s</i></font><br />אנא נסה מתוך הרשימה:]]></string>
+    <string name="switch_remote_empty_message">מעבר למצב תצוגה מרוחקת יכול לתת יותר אפשרויות ערוצים</string>
+    <string name="cast_stream_mode">מצב הזרמה</string>
+    <string name="cast_remote_display_mode">תצוגה מרוחקת</string>
+    <string name="cast_remote_display_mode_description">כל הפורמטים הנתמכים על ידי הנגן ניתנים לניגון על המסך המרוחק. יחד עם זאת, תיתכן ירידה באיכות.</string>
+    <string name="cast_stream_mode_description">איכות אופטימלית אבל חלק מהפורמטים לא נתמכים.</string>
     <string name="sleep_timer_title">טיימר שינה</string>
     <string name="sleep_timer_description">הפסק וידאו אחרי: </string>
+    <string name="cast_mode">מצב הזרמה</string>
+    <string name="cast_info">מידע</string>
+    <string name="troubleshoot_streammode_msg">הנגן נמצע כרגע במצב הזרמה.
+\n        זה גורם לאיכות וידאו טובה אבל ייתכנו בעיות עם ערוצי אודיו וכתוביות.
+\n        נסה לעבור למצב תצוגה מרוחקת.</string>
+    <string name="troubleshoot_remotemode_msg">הנגן נמצא כרגע במצב תצוגה מרוחקת.
+\n        כתלות במכשיר שלך ואיכות הרשת, תיתכן ירידה מסוימת באיכות ובעיות ביצועים.</string>
     <string name="picture_in_picture">תמונה בתוך תמונה</string>
     <string name="cast">הקרנה</string>
+    <string name="cast_warning">התמיכה בהזרמה מוגבלת עקב מגבלות מפענח של Chromecast. כדי להתגבר על מגבלות אלו, מומשו 2 מודים של הזרמה: Chromecast והזרמת מסך (עם מעבר אוטומטי). שים לב שבעיות ביצועים ואיכות יכולות לנבוע גם ממגבלות המכשיר והרשת.</string>
+    <string name="cast_warning_title">תכונה ניסיונית</string>
+    <string name="cast_fallback_message">שגיאה: מעבר להזרמת מסך</string>
+    <string name="cast_introduction">תכונה ניסיונית חדשה :\n
+Google cast</string>
+    <string name="cast_select_for_full_control">גע כדי להרחיב</string>
     <string name="cast_audio_background">השמע לא יעבוד כאשר Nova Video Player רץ ברקע</string>
     <string name="help_faq">עזרה / שאלות נפוצות</string>
     <string name="provider_folders">ענן</string>
+    <string name="learn_more">מידע נוסף</string>
+    <string name="learn_more_about_codecs">Nova Video Player יכול לנגן רק קבצים שנתמכים על ידי המכשיר שלך. עקב ענייני רישוי, חלק מהפורמטים לא נכללים מסיבות חוקיות, ואחרים ניתנים לרכישה ב-Google Play Store.</string>
     <string name="rate_us">אם אתה אוהב את האפליקציה, אנא תמוך בנו עם דירוג של 5 כוכבים</string>
     <string name="rate_us_title">☆ תמוך בנו</string>
     <string name="create_new_list">צור רשימה חדשה</string>
     <string name="add_to_list">הוסף לרשימה</string>
     <string name="no_resume_available">אין נקודת המשך זמינה כרגע</string>
     <string name="no_list_detected">לא זוהתה רשימה. ניתן ליצור רשימה על ידי הוספת פריטים ישירות ממידע הוידאו, או על ידי סינכרון עם חשבון Trakt שלך.</string>
+    <string name="premium_already_purchased">גרסת הפרימיום כבר נרכשה</string>
     <string name="remove_from_list">הסר מהרשימה</string>
     <string name="warning_swdec">אזהרה: פענוח בחומרה מושבת!</string>
     <string name="list_title">כותרת רשימה</string>
     <string name="loading">טוען…</string>
+    <string name="connecting">מתחבר…</string>
     <string name="refreshrate_failed">קביעת קצב הרענון המבוקש נכשלה</string>
     <string name="sponsor">תן חסות</string>
     <string name="enable_sponsor_title">אפשר קישור מתן חסות</string>
@@ -805,4 +929,6 @@
     <string name="upgrade_info">מידע שדרוג</string>
     <string name="v5_v6_upgrade_info">אזהרה: עדכון משמעותי זה דורש סריקה מחדש של כל אוסף הוידאו על מנת לאסוף את פרטי המדיה.
         מאד מומלץ להתחיל מחדש עם התקנה נקייה כדי למנוע בעיות. לפרטים ראה שאלות נפוצות.</string>
+    <string name="networks">רשתות:</string>
+    <string name="premiered">שודר לראשונה:</string>
 </resources>

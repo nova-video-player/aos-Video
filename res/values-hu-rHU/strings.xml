@@ -23,6 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Szerverlista frissítése</string>
     <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Hálózati megosztások engedélyezése</string>
     <string name="initial_scan">Kezdeti keresés</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Keresés</string>
@@ -43,9 +44,17 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">Időtartam</string>
     <string name="video_sources">Források</string>
     <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Film</string>
+    <string name="info_tab_show">Sorozat</string>
+    <string name="info_tab_episode">Epizód</string>
+    <string name="info_tab_video">Videó</string>
     <string name="info_tab_file">Fájlinfó</string>
+    <string name="info_tab_backdrop_chooser">Háttér választó</string>
+    <string name="info_tab_poster_chooser">Poster választó</string>
+    <string name="info_tab_share">Megosztás</string>
     <string name="info_menu_backdrop_select">Háttér</string>
     <string name="info_menu_series_backdrop_select">Sorozatok háttere</string>
     <string name="info_menu_poster_select">Másik poszter választása</string>
@@ -72,9 +81,12 @@
     <string name="network_shared_folders">Megosztott mappák (SMB)</string>
     <string name="network_connected_as">Kapcsolódva mint %s</string>
     <string name="network_guest">vendég</string>
+    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (kísérleti)</string>
     <string name="network_cling">UPNP (kísérleti)</string>
+    <string name="recordings_storage">Felvételek</string>
     <string name="root_storage">Belső tárhely</string>
+    <string name="cannot_list">A tartalom nem listázható</string>
     <!-- VIDEO -->
     <string name="videos">Videók</string>
     <string name="all_videos">Összes videó</string>
@@ -87,8 +99,16 @@
     <string name="all_animes_format">Animációs filmek - %d</string>
     <string name="all_collections">Összes gyűjtemény</string>
     <string name="all_collections_format">Összes gyűjtemény - %d</string>
+    <string name="all_collection_watched">Összes gyűjtemény megnézve</string>
+    <string name="all_collection_unwatched">Gyűjtemény nem látott</string>
+    <plurals name="n_movies_watched">
+        <item quantity="one">%d film megnézve</item>
+        <item quantity="other">%d film megnézve</item>
+    </plurals>
     <string name="not_watched_movies_format">Nem látott - %d</string>
     <string name="not_watched_animes_format">Nem látott - %d</string>
+    <string name="no_movie_watched">Nincs megnézett film</string>
+    <string name="all_movies_watched">Összes film megnézve</string>
     <string name="movies_by_alpha">Filmek cím szerint</string>
     <string name="movies_by_genre">Filmek műfaj szerint</string>
     <string name="movies_by_rating">Filmek értékelés szerint</string>
@@ -100,7 +120,9 @@
     <string name="all_animes">Az összes animációs film</string>
     <string name="all_animes_row">Az összes animáció</string>
     <string name="all_animeshows">Az összes animációs sorozat</string>
+    <string name="animes_by_alpha">Animációs filmek betűsorrendben</string>
     <string name="animes_by_genre">Animációs filmek műfaj szerint</string>
+    <string name="animes_by_rating">Animációs filmek értékelés szerint</string>
     <string name="animes_by_year">Animációs filmek év szerint</string>
     <string name="all_tvshows_format">Összes sorozat - %d</string>
     <string name="not_watched_tvshows_format">Nem látott - %d</string>
@@ -117,18 +139,24 @@
     <string name="date_view_year">Év</string>
     <string name="all_movies_and_tv_shows">Filmek és Sorozatok</string>
     <string name="non_scraped_videos">Feldolgozatlan videók</string>
+    <string name="no_server">Nem található médiakiszolgáló</string>
     <string name="cannot_open_video">Ezt a videót nem lehet megnyitni</string>
     <string name="confirm_delete">Biztosan törli?</string>
     <string name="deleting">Kérjük, várjon a törlésig…</string>
+    <string name="cannot_delete_directory">Nem sikerült törölni a mappát</string>
+    <string name="cannot_delete_file">Nem sikerült törölni a fájlt</string>
     <string name="directory_deleted">Mappa törölve</string>
+    <string name="file_deleted">Fájl törölve</string>
     <string name="resume">Folytatás</string>
     <string name="remote_resume">Távoli folytatás</string>
     <string name="bookmark">Könyvjelző</string>
     <string name="delete">Törlés</string>
     <string name="confirm_delete_short">Törlés megerősítése</string>
     <string name="delete_resume">Folytatási pont törlése</string>
+    <string name="delete_bookmark">Könyvjelző törlése</string>
     <string name="mark_as_watched">Látottként jelölés</string>
     <string name="mark_as_not_watched">Nem látotként jelölés</string>
+    <string name="upnp_not_allowed">Nincs feljogosítva az UPNP szerver elérésére. Kérjük, előbb változtassa meg a hozzáférési beállításait.</string>
     <string name="scrap_no_info">Nincs film vagy sorozat leírás ehhez a videóhoz.</string>
     <string name="scrap_remove">Leírás eltávolítása</string>
     <string name="scrap_remove_short">Eltávolítás</string>
@@ -155,10 +183,14 @@
     <string name="scrap_cast">Szereplők</string>
     <string name="scrap_cast_format">Szereplők: %s</string>
     <string name="scrap_genre">Műfaj</string>
+    <string name="scrap_genre_format">Műfajok: %s</string>
     <string name="scrap_genre_title">Műfajok</string>
     <string name="scrap_aired">Sugározva</string>
     <string name="scrap_aired_format">Sugározva: %s</string>
+    <string name="scrap_guests">Vendégszereplők</string>
+    <string name="scrap_premiered">Bemutatva</string>
     <!-- Specific strings for TV shows -->
+    <string name="show_network">Hálózat</string>
     <string name="episode_name">Epizód</string>
     <string name="episode_season">Évad</string>
     <string name="episode_specials">Speciális részek</string>
@@ -169,6 +201,9 @@
     <string name="how_to_mark_season_watched">Kattintson egy évadra a benne lévő epizódok megnézettként vagy nem látottként jelöléshez</string>
     <string name="how_to_unindex_season">Kattints egy évadra, az összes epizód eltávolításához</string>
     <string name="how_to_delete_season">Kattints egy évadra, az összes epizód törléséhez</string>
+    <string name="mark_show_watched">Az összes epizód megjelölése látottnak vagy nem látottnak</string>
+    <string name="unindex_show">Összes epizód eltávolítása a könyvtárból</string>
+    <string name="delete_show">Összes epizód törlése</string>
     <string name="no_episode_watched">Nincs megnézett epizód</string>
     <string name="all_episodes_watched">Minden epizód megnézve</string>
     <plurals name="n_episodes_watched">
@@ -211,9 +246,13 @@
     <string name="preference_display_all_files">Az összes fájl megjelenítése a böngészőben</string>
     <string name="preference_display_all_files_summary">Nem csak videó fájlok mutatása</string>
     <string name="info_processing">Médiatulajdonságok ellenőrzése…</string>
+    <string name="info_video">Videó</string>
     <string name="info_audio">Audió</string>
     <string name="info_audio_vbr">VBR</string>
+    <string name="info_plugin_required">(bővitmény szükséges)</string>
     <string name="info_subtitle">Felirat</string>
+    <string name="info_resume">Folytatási pozíció</string>
+    <string name="info_bookmark">Pozíció megjelölése</string>
     <string name="info_file">Fájlinfó</string>
     <string name="use_remote_resume">Hálózati folytatás használata?</string>
     <!-- VIDEO COVER ROLL -->
@@ -245,6 +284,9 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">Médiaközpont</string>
     <string name="view_mode">Megjelenítési mód</string>
+    <string name="view_mode_list">Lista</string>
+    <string name="view_mode_grid">Poszterek</string>
+    <string name="view_mode_details">Részletek</string>
     <string name="switch_to_list">Lista</string>
     <string name="switch_to_grid">Rács</string>
     <!-- VideoPlayer -->
@@ -290,6 +332,7 @@
     <string name="menu_change_folder_details">Válassza ki az induló mappát</string>
     <string name="unlock_instructions">Nyomja hosszan az ikont a feloldáshoz</string>
     <string name="seek_to_percentage">Keresés alatt %s%%</string>
+    <string name="set_audio_speed_to">Hangsebesség %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
     <string name="subs_HI">Hallássérült</string>
@@ -318,6 +361,8 @@
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Nem lehet lejátszani a videót</string>
     <string name="player_err_cantplaysound">Nem lehet lejátszani az hangsávot</string>
+    <string name="audiocodec_not_supported">Ez a hangformátum (<xliff:g id="codec">%s</xliff:g>) nem támogatott.</string>
+    <string name="videocodec_not_supported">Ez a képformátum (<xliff:g id="codec">%s</xliff:g>) nem támogatott.</string>
     <string name="player_err_file">A videófájl nem létezik.</string>
     <string name="player_err_sizetoobig">A videó mérete túl nagy</string>
     <string name="player_err_unknown">Ismeretlen hiba.</string>
@@ -334,10 +379,19 @@
     <string name="player_err_profile_and_level">\"Profil\" és \"Szint\"</string>
     <string name="player_err_interlaced">Összefésülve</string>
     <!-- Player plug-in -->
+    <string name="player_plugin_cinema_title">Mozi bővítmény</string>
+    <string name="player_plugin_cinema">Mozi bővítmény (DVD, MPEG-2, AC3)</string>
+    <string name="player_plugin_ac3_title">AC3 bővítmény</string>
+    <string name="player_plugin_ac3">AC3 bővítmény</string>
+    <string name="player_plugin_mpeg2_title">MPEG-2 bővítmény</string>
+    <string name="player_plugin_mpeg2">MPEG-2 bővítmény(DVD)</string>
     <string name="player_plugin_video_msg">A fájl egy <xliff:g id="video">%1$s</xliff:g> képformátumot tartalmaz.</string>
     <string name="player_plugin_audio_msg">A fájl egy <xliff:g id="audio">%1$s</xliff:g> hangformátumot tartalmaz.</string>
     <string name="player_plugin_video_audio_msg">A fájl egy <xliff:g id="video">%1$s</xliff:g> képformátumot és egy <xliff:g id="audio">%2$s</xliff:g> hangformátumot tartalmaz.</string>
+    <string name="player_plugin_purchase_msg">Meg kell vásárolnia a(z) <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">Ugrás az Áruházba</string>
+    <string name="player_plugin_purchase_archos_msg">További codec bővítményeket vásárolhat a www.archos.com-on.</string>
+    <string name="player_plugin_purchase_google_play_msg">További codec bővítményeket vásárolhat a Google Play-en.</string>
     <string name="player_plugin_purchase_google_play_button">Ugrás a Google Play-re</string>
     <string name="plugin_update_required_title">Kodek frissítése szükséges</string>
     <string name="plugin_update_required_message">Úgy tűnik, hogy a kiegészítő kodekek már telepítve vannak a Nova Video Player-hez.\n\nA Nova Video Player ezen új verziójához frissíteni kell ezeket a codec-eket.\n\nKérjük, nyissa meg a Google Play-t a kodekek frissítéséhez és újratelepítéséhez.</string>
@@ -355,9 +409,17 @@
     <string name="subtitles_wizard_cache">Gyorsítótár</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Feliratok lekérése online</string>
+    <string name="toast_subloader_sub_found">Feliratsáv elérhető ehhez a nyelvhez</string>
+    <string name="toast_subloader_sub_not_found">Nem található feliratsáv ehhez a nyelvhez</string>
     <string name="toast_subloader_service_unreachable">Felirat webszolgáltatás kiesés</string>
+    <string name="menu_subloader_allfolder">Hiányzó feliratok letöltése</string>
     <string name="dialog_subloader_copying">Feliratok másolása…</string>
+    <string name="dialog_subloader_downloading">Feliratok letöltése…</string>
+    <string name="dialog_subloader_sumup">Letöltés befejeződött</string>
+    <string name="dialog_subloader_success">Elérhető feliratok:</string>
     <string name="dialog_subloader_fails">Felirat nem található ehhez:</string>
+    <string name="sub_force_all_title">Feliratletöltés kényszerítése</string>
+    <string name="sub_force_all">Az összes videójához már van legalább egy feliratsáv. Mindenképp letölti az új feliratsávokat?</string>
     <string name="dialog_subloader_nonetwork_title">Nincs internetkapcsolat</string>
     <string name="dialog_subloader_nonetwork_message">Internetkapcsolat szükséges a feliratok letöltéséhez</string>
     <string name="dialog_subloader_connecting">Csatlakozás a www.opensubtitles.com…</string>
@@ -374,6 +436,7 @@
     <string name="opensubtitles_summary_quota_exhausted">A kvóta kimerült</string>
     <string name="opensubtitles_summary_status">%1$s · %2$s</string>
     <!-- Subtitle Settings Dialog -->
+    <string name="subtitle_settings_title">Feliratok Beállításai</string>
     <string name="subtitle_sample_text">\"minta\"</string>
     <string name="subtitle_size_text">Méret:</string>
     <string name="subtitle_style_text">Stílus:</string>
@@ -404,16 +467,25 @@
     <string name="loading_torrent">Torrent betöltése…</string>
     <string name="error_no_video_file">Nincs videó fájl</string>
     <string name="torrent_file_to_play">Válasszon fájlt a lejátszáshoz</string>
+    <string name="torrent_buy_premium_message">Torrent-lejátszás csak a fizetett verzióban elérhető</string>
+    <string name="torrent_buy_premium">Prémium verzió megvásárlása</string>
     <!-- Shortcuts -->
     <string name="browse_net_server">Hálózati megosztás tallózása</string>
+    <string name="add_smb_server">SMB szerver tallózása</string>
+    <string name="add_network_server">Hálózati megosztás hozzáadása</string>
+    <string name="add_to_shortcuts">Parancsikon létrehozása</string>
     <string name="add_ssh_server">FTP szerver tallózása</string>
     <string name="add_ssh_shortcut">Parancsikon hozzáadása</string>
     <string name="ssh_prompt">FTP típusa</string>
     <string name="protocol_prompt">Protokoll típus</string>
+    <string name="ssh_empty_view"> \"Tallózhat és lejátszhat tartalmat saját FTP szerverről\"</string>
     <string name="remove_from_shortcuts">Parancsikon eltávolítása</string>
+    <string name="shortcut_added">%s parancsikon létrehozva</string>
     <string name="shortcut_removed">%s parancsikon eltávolítva</string>
     <string name="server_not_available">A szerver jelenleg nem elérhető</string>
+    <string name="cannot_open_shortcut">A parancsikon tartalma jelenleg nem elérhető.\nKérjük ellenőrizze, hogy rendelkezik-e a szükséges engedélyekkel.</string>
     <string name="network_shortcuts">Hálózati parancsikonok</string>
+    <string name="media_servers">Médiakiszolgálók</string>
     <string name="shortcut_list_empty">Nincs hálózati parancsikon.\n\nParancsikon létrehozásához tartsa lenyomva a célmappa nevét és válassza ki a(z) \"%s\" opciót a fenti sávon.</string>
     <string name="ftp_shortcut_list_empty">Könyvjelző létrehozásához a kedvenc távoli mappáihoz, válassza ki a(z) \"%s\" lehetőséget a fenti sávon böngészés közben.</string>
     <string name="indexed_folders">Indexelt mappák</string>
@@ -436,6 +508,7 @@
     <string name="last_rescan_never">Soha</string>
     <string name="upnp_indexing_warning_title">UPnP indexelés</string>
     <string name="upnp_indexing_warning_message">Az UPnP indexelés nem támogat ugyanannyi funkciót, mint az SMB indexelés.\nSMB mappa indexelése javasolt, amennyiben ezt a szerver vagy a PC támogatja.\n</string>
+    <string name="ssh_error">Sikertelen csatlakozás: ellenőrizze a kapcsolatot és a belépési adatokat</string>
     <string name="ssh_remote_address">Távoli cím</string>
     <string name="ssh_port">Port</string>
     <string name="ssh_password">Jelszó</string>
@@ -444,8 +517,11 @@
     <string name="smb_domain">Domain (nem kötelező)</string>
     <!-- Preferences -->
     <string name="preferences">Beállítások</string>
+    <string name="get_the_ad_free_version">Szerezze meg a reklámmentes verziót a Google Play-en</string>
     <string name="upgrade_to_add_free_version">Frissítés reklámmentes változatra</string>
+    <string name="upgrade_to_add_free_version_description">Vásárolja meg az applikációt a reklámok eltávolításához és az összes funkció használatához</string>
     <string name="preferences_about">Névjegy</string>
+    <string name="preferences_category_complete">Teljes verzió</string>
     <string name="preferences_category_video">Videó</string>
     <string name="preferences_force_software_decoding">Szoftveres dekódolás kényszerítése</string>
     <string name="preferences_force_software_decoding_summary">Kipróbálhatja ezt a beállítást, ha néhány videó hibásan jelenik meg</string>
@@ -479,6 +555,8 @@
     <string name="preferences_allow_3rd_party_player_summary">Más kompatibilis videolejátszó alkalmazásokat fog javasolni az Android a video elindításakor. Ne feledje, hogy egyes funkciók nem fognak működni (folytatás, könyvjelzők, stb.)</string>
     <string name="preference_tv_3d_automatic_switch">Automatikus 3D TV átkapcsolás engedélyezése</string>
     <string name="preference_tv_3d_automatic_switch_summary">Csak akkor használja ezt a funkciót, ha a 3D TV-je támogatja</string>
+    <string name="enable_android_frame_timing">Android képkocka-időzítés bekapcsolása</string>
+    <string name="enable_android_frame_timing_summary">Képkockamásolás időzítésének átadása Androidnak simább lejátszáshoz (kísérleti)</string>
     <string name="hide_watched_videos">Megtekintett videók elrejtése</string>
     <string name="hide_watched_videos_summary">Megtekintettnek jelölt videók elrejtése a médiakönyvtárból.</string>
     <string name="enable_projector_mode">Projektor-mód bekapcsolása</string>
@@ -490,6 +568,7 @@
     <string name="preference_dolby_vision_mode">Dolby Vision mód</string>
     <string name="preference_force_dolby_vision">Dolby Vision kényszerítése</string>
     <string name="preference_remove_dolby_vision">Dolby vision kikapcsolása</string>
+    <string name="preference_remove_dolby_vision_summary">Szabványos videókodekek használata a dolby vision helyett</string>
     <string name="preference_cutout_short_edges">Teljes képernyős videó képkivágásokkal</string>
     <string name="preference_cutout_short_edges_summary">Engedélyezze a teljes képernyős tájkép videók levágását</string>
     <string name="toast_cutout_aspect_ratio_fix">Teljesképernyős videók levágása a megfelelő képarány megtartásához.</string>
@@ -518,6 +597,7 @@
     <string name="preferences_video_about">Névjegy</string>
     <string name="preferences_video_os_text">A feliratok szolgáltatója</string>
     <string name="preferences_video_tmdb_text">Film/sorozat információ szolgáltatója</string>
+    <string name="preferences_video_tvdb_text">Sorozatok szoláltatója</string>
     <string name="preferences_video_trakt_text">A video meghirdetés szolgáltatója</string>
     <string name="preferences_video_licenses">Engedélyek</string>
     <string name="preferences_network_mobile_vpn_summary">Csak VPN konfiguráció esetén használja, és figyeljen az adathasználatra.</string>
@@ -528,6 +608,8 @@
     <string name="preferences_video_advanced_quit_title">Gyakori beállítások</string>
     <string name="preferences_video_advanced_quit_summary">Vissza a gyakori beállításokhoz</string>
     <string name="trakt_change">A Trakt API módosításával újrakapcsolódás szükséges.</string>
+    <string name="tv_scraper">Sorozatok</string>
+    <string name="movie_scraper">Filmek</string>
     <string name="enable_auto_scrap">Új videók leírásának automatikus lekérése</string>
     <string name="enable_scrape_from_db_title">A már letöltött adatok használata</string>
     <string name="enable_scrape_from_db_summary">A már meglévő adatok használata duplikált videók esetén. Kapcsolja ki az elsődleges olvasás gyorsításához!</string>
@@ -545,6 +627,10 @@
     <string name="video_info_custom_search_file_hint">"\"Filmcím\" vagy \"Sorozatcím S01E01\""</string>
     <string name="video_info_custom_search_show_hint">A sorozat címe</string>
     <string name="scrap_show_no_result">Nem található megegyező sorozat online.</string>
+    <string name="video_info_backdrop_select">Másik fénykép választása</string>
+    <string name="video_info_backdrop_remove">Eltávolítás</string>
+    <string name="video_info_backdrop_set_as">Kép beállítása, mint</string>
+    <string name="video_info_share_message">"A(z) \"%1$s\" filmet néztem a Nova %2$s-n"</string>
     <string name="notification_mode">Értesítések</string>
     <string name="notifications_all">Összes értesítés</string>
     <string name="notifications_alerts">Csak rendszerértesítések</string>
@@ -558,13 +644,17 @@
     <string name="format_169">16:9</string>
     <string name="format_185">1.85:1</string>
     <string name="format_239">2.39:1</string>
+    <string name="stereo_dive_enable">Stereo-dive hatás</string>
+    <string name="stereo_dive_disable">Stereo-dive hatás letiltása</string>
     <string name="rotation_unlock">Automatikus képernyőforgatás engedélyezése</string>
     <string name="rotation_locked">Automatikus képernyőforgatás letiltva</string>
     <string name="rotation_unlocked">Automatikus képernyőforgatás engedélyezve</string>
     <string name="network_reindex">Tartalom újrakeresése</string>
     <!-- Help overlay -->
     <string name="help_overlay_menu">Nyomja meg a felfelé nyilat\na TV menü megjelenítéséhez</string>
+    <string name="help_overlay_ssh_indexing_text">Válassza ki a \"Hozzáadás parancsikonként\" opciót a szerverhez való gyors visszatéréshez.</string>
     <string name="help_overlay_network_indexing_text1">Nyomja meg ezt a menüelemet, a jelenlegi mappa és ennek almappáinak a Videó Könyvtárhoz való hozzáadáshoz.</string>
+    <string name="help_overlay_network_indexing_text1_lb">Használja a + gombot a jelenlegi mappa és ennek almappáinak a Videó Könyvtárhoz való hozzáadáshoz.</string>
     <string name="help_overlay_network_indexing_text2">Ez lehetővé teszi a poszterek és leírások lekérését a filmekhez és a sorozatokhoz.</string>
     <string name="help_overlay_scraper_text">Nyomja meg ezt a menüelemet poszterek és leírások kereséséhez a videóihoz. </string>
     <string name="help_overlay_network_shortcut_text1_lb">Használja a + gombot a mappa hozzáadásához hálózati parancsikonként azzal a lehetőséggel, hogy a tartalmát hozzáadhassa a videokönyvtárhoz.</string>
@@ -586,12 +676,17 @@
     <string name="share_folders_smb_disable_udp_discovery_summary">Kapcsolja ki az UDP felderítést, ha egyes készülékeken ingatag Wi-Fi-t tapasztal (pl. Fire 10 HD).</string>
     <string name="share_folders_smb_disable_mdns_discovery">Az SMB mDNS felderítés kikapcsolása</string>
     <string name="share_folders_smb_disable_mdns_discovery_summary">Kapcsolja ki az mDNS felderítést, ha egyes készülékeken ingatag Wi-Fi-t tapasztal.</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn">SMB felderítés korlátozása mDNS-re</string>
+    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">Kapcsolja ki az UDP/TCP felderítést, ha bizonyos eszközökön ingatag Wi-Fi kapcsolatot tapasztal (pl. Fire 10 HD). ⚠ Meggátolja a megfelelő felderítést ChromeOS alatt.</string>
     <string name="connection_abnormally_long">A kapcsolódás szokatlanul hosszúnak tűnik. Szeretnéd visszaállítani?</string>
     <string name="connection_reset">Visszaállítás</string>
     <!-- Info dialog, not indexed file -->
+    <string name="video_info_unindexed_message">Ez a fájl jelenleg nincs indexelve a videokönyvtárban.\nPoszterek és információk keresése csak az indexelt fájlok esetén érhető el.\nSzeretnéd most indexelni?</string>
+    <string name="video_info_unindexed_message2">A fájl feldolgozása folyamatban van. Ez eltarthat egy ideig.</string>
     <string name="video_browser_index_file">Hozzáadás a könyvtárhoz</string>
     <string name="video_browser_unindex_file">Eltávolítás a könyvtárból</string>
     <!-- Brightness -->
+    <string name="auto_brightness_message">A fényerő nem módosítható, mert az automatikus fényerő mód jelenleg engedélyezve van.</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">\'nfo\' fájlok feldolgozása</string>
     <string name="network_nfo_parse_summary">Boxee / XBMC \'.nfo\' fájlok beolvasása a keresés/újrakeresés során, médiaadatok és poszterek kinyeréséhez.</string>
@@ -711,6 +806,7 @@
     <string name="torrent_blocklist">Tiltólista</string>
     <string name="blocklist_empty">Az URL cím nem lehet üres</string>
     <string name="blocklist_invalid">Érvénytelen tiltólista</string>
+    <string name="blocklist_downloading">Tiltólista letöltése folyamatban</string>
     <string name="blocklist_file_not_found">Fájl nem található</string>
     <string name="blocklist_success">Tiltólista frissítése sikeres</string>
     <string name="blocklist_unknown_error">Ismeretlen</string>
@@ -721,14 +817,18 @@
     <string name="share_infos_incomplete">Elérési út megadása szükséges</string>
     <string name="share_path">Elérési út</string>
     <string name="category_trakt">Trakt</string>
+    <string name="trakt_user">Felhasználónév</string>
+    <string name="trakt_password">Jelszó</string>
     <string name="trakt_signin">Bejelentkezés</string>
     <string name="trakt_list_signin">Bejelentkezés a Trakt-be</string>
+    <string name="trakt_status_login">Bejelentkezés&#8230;</string>
     <string name="trakt_signin_summary_logged">Bejelentkezve</string>
     <string name="trakt_signin_summary_logged_error">Azonosítási hiba</string>
     <string name="trakt_signin_summary">Nincs bejelentkezve</string>
     <string name="trakt_relog_description">Trakt hiba észlelve, a bejelentkezési adatok törlése szükséges. Kérjük, jelentkezzen be újra.</string>
     <string name="trakt_signin_dialog_title">Bejelentkezés</string>
     <string name="trakt_signin_title">Bejelentkezés</string>
+    <string name="trakt_wipe_dialog_title">Kijelentkezés a Trakt.tv-ből?</string>
     <string name="trakt_wipe_title">Kijelentkezés a Trakt.tv-ből</string>
     <string name="trakt_live_scrobbling_title">Élő meghirdetés</string>
     <string name="trakt_live_scrobbling_summary">Az éppen lejátszott videó megosztása a Trakt-en</string>
@@ -776,6 +876,7 @@
     <string name="leanback_scrap">Leírás lekérése</string>
     <string name="leanback_scrap_choose_the_description">Leírás kiválasztása</string>
     <string name="leanback_scrap_choose_the_description_for">"Leírás kiválasztása ehhez: \"%s\""</string>
+    <string name="leanback_scrap_searching_general_hint">Film vagy sorozat címe</string>
     <string name="leanback_scrap_searching_tvshow_hint">Sorozat címe</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Hagyományos felület</string>
@@ -811,6 +912,7 @@
     <string name="rescan_when_opening_application">Újrafeldolgozás az applikáció megnyitásakor</string>
     <string name="last_rescan_occured">Utolsó újrafeldolgozás:</string>
     <string name="error_permission_display_over_apps">Az ablak módnak speciális engedélyekre van szüksége ahhoz, hogy más alkalmazások előtt megjelenjen. Kérjük, adja meg a Nova Video Playernek ezt az engedélyt, hogy ablak módba váltson.</string>
+    <string name="intro_overlay_text">Érintse meg a videók továbbításához a TV-re</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Bővebben</string>
@@ -837,23 +939,44 @@
     <string name="system">Rendszer</string>
     <string name="keep_setting">Beállítás megjegyzése globálisan</string>
     <string name="select_sub_file"><![CDATA[Nem található pontos felirat a <font color=#29b6f6><i>%s</i></font><br />fájlhoz, kérjük, próbálja meg a következő listák közül:]]></string>
+    <string name="switch_remote_empty_message">A távoli megjelenítési módra váltás nagyobb keresési lehetőséget biztosíthat</string>
+    <string name="cast_stream_mode">Stream mód</string>
+    <string name="cast_remote_display_mode">Távoli kijelző</string>
+    <string name="cast_remote_display_mode_description">a nova videolejátszó által támogatott összes formátum lejátszható a távoli kijelzőn. A minőség azonban romolhat.</string>
+    <string name="cast_stream_mode_description">Optimális minőség, de bizonyos formátumok nem támogatottak</string>
     <string name="sleep_timer_title">Elalvás időzítő</string>
     <string name="sleep_timer_description">Videó leállítása ennyi idő után: </string>
+    <string name="cast_mode">Képátvitel mód</string>
+    <string name="cast_info">Infó</string>
+    <string name="troubleshoot_streammode_msg">A Nova videolejátszó jelenleg stream cast módban van.
+         \nEz jó videóminőséget eredményez, de problémákat okozhat a hangsávoknál és a feliratoknál.
+         Próbáljon meg átváltani távoli megjelenítési módra.</string>
+    <string name="troubleshoot_remotemode_msg">A Nova videolejátszó jelenleg távoli megjelenítési módban van.
+         \nEszközétől és a hálózat minőségétől függően minőségromlást és teljesítményproblémákat tapasztalhat. </string>
     <string name="picture_in_picture">Kép a képben</string>
     <string name="cast">Átvitel</string>
+    <string name="cast_warning">A Cast-támogatás a Chromecast kodekkorlátozása miatt korlátozott. E korlátozások mérséklése érdekében 2 átküldési mód van megvalósítva: Chromecast és Screencast (automatikus tartalékkal). Vegye figyelembe, hogy a teljesítménnyel és a minőséggel kapcsolatos problémák a hálózat vagy az eszköz korlátaiból is adódhatnak.</string>
+    <string name="cast_warning_title">Kísérleti funkció</string>
+    <string name="cast_fallback_message">Hiba: visszatérés a kijelző átvitelhez</string>
+    <string name="cast_introduction">Új kísérleti funkció: \nGoogle Cast</string>
+    <string name="cast_select_for_full_control">Érintse meg a vezérlő kiterjesztéséhez</string>
     <string name="cast_audio_background">A hang nem fog működni, amíg a Nova Videó Lejátszó a háttérben fut</string>
     <string name="help_faq">Segítség / GYIK</string>
     <string name="provider_folders">Felhő</string>
+    <string name="learn_more">Tudjon meg többet</string>
+    <string name="learn_more_about_codecs">A Nova Video Player csak olyan videókat tud lejátszani, melyeket a készüléke támogat. A licencek miatt, egyes formátumokat nem lehet legálisan hozzáadni, egyeseket pedig megvásárolhatja a Google Play Áruházban.</string>
     <string name="rate_us">Ha tetszik ez az alkalmazás, kérjük, támogasson minket 5 csillaggal</string>
     <string name="rate_us_title">☆ Támogasson minket</string>
     <string name="create_new_list">Új lista létrehozása</string>
     <string name="add_to_list">Hozzáadás listához</string>
     <string name="no_resume_available">A folytatás jelenleg nem elérhető</string>
     <string name="no_list_detected">Jelenleg nem található lista. A lista létrehozható új elemek hozzáadásával közvetlenül a videó információiból, vagy szinkronizálható trakt-fiókoddal.</string>
+    <string name="premium_already_purchased">A prémium már meg lett vásárolva</string>
     <string name="remove_from_list">Eltávolítás a listából</string>
     <string name="warning_swdec">Figyelem: hardveres dekódolás kikapcsolva!</string>
     <string name="list_title">Lista címe</string>
     <string name="loading">Betöltés…</string>
+    <string name="connecting">Csatlakozás…</string>
     <string name="refreshrate_failed">Hiba a kívánt frissítési érték beállítása közben</string>
     <string name="sponsor">A Nova támogatása</string>
     <string name="enable_sponsor_title">Nova támogatói link bekapcsolása</string>
@@ -865,6 +988,8 @@
     <string name="upgrade_info">Frissítési információk</string>
     <string name="v5_v6_upgrade_info">FIGYELMEZTETÉS:  a Nova jelentős frissítése megköveteli az összes videogyűjtemény újraolvasását a multimédiás információk újra beszerzéséhez.
          A problémák elkerülése érdekében erősen ajánlott tiszta telepítésről újraindítani. Kérjük, olvassa el a GYIK-ot a részletekért.</string>
+    <string name="networks">Hálózatok:</string>
+    <string name="premiered">Bemutatva:</string>
     <string name="external_player_service_title">Külső lejátszó</string>
     <string name="stop">Leállítás</string>
     <string name="s_descriptions">leírások</string>

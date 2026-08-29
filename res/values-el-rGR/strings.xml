@@ -23,6 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Ανανέωση λίστας εξυπηρετητών</string>
     <!-- Menu item to enable network shares -->
+    <string name="enable_network_shares">Ενεργοποίηση διαμοιρασμού δικτύου</string>
     <string name="initial_scan">Αρχική σάρωση</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Αναζήτηση</string>
@@ -43,9 +44,17 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ</string>
     <!-- The string used in file/folder infos dialog. -->
+    <string name="info_duration">Διάρκεια</string>
     <string name="video_sources">Πηγές</string>
     <!-- Infos dialog tabs -->
+    <string name="info_tab_movie">Ταινία</string>
+    <string name="info_tab_show">Σειρά</string>
+    <string name="info_tab_episode">Επεισόδιο</string>
+    <string name="info_tab_video">Βίντεο</string>
     <string name="info_tab_file">Πληροφορίες αρχείου</string>
+    <string name="info_tab_backdrop_chooser">Επιλογέας φόντου</string>
+    <string name="info_tab_poster_chooser">Επιλογέας αφίσας</string>
+    <string name="info_tab_share">Κοινοποίηση</string>
     <string name="info_menu_backdrop_select">Φόντο</string>
     <string name="info_menu_series_backdrop_select">Φόντο Σειράς</string>
     <string name="info_menu_poster_select">Επιλογή άλλης αφίσας</string>
@@ -68,9 +77,12 @@
     <string name="network_shared_folders">Κοινόχρηστοι φάκελοι (SMB)</string>
     <string name="network_connected_as">Συνδέθηκε ως \"%s\"</string>
     <string name="network_guest">Επισκέπτης</string>
+    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (Πειραματικό)</string>
     <string name="network_cling">UPNP (Πειραματικό)</string>
+    <string name="recordings_storage">Εγγραφές</string>
     <string name="root_storage">Εσωτερικός αποθηκευτικός χώρος</string>
+    <string name="cannot_list">Αδυναμία προβολής περιεχομένου</string>
     <!-- VIDEO -->
     <string name="videos">Βίντεο</string>
     <string name="all_videos">Όλα τα βίντεο</string>
@@ -83,8 +95,12 @@
     <string name="all_animes_format">Ταινίες κινουμένων σχεδίων -  %d</string>
     <string name="all_collections">Όλες οι συλλογές</string>
     <string name="all_collections_format">Όλες οι συλλογές -  %d</string>
+    <string name="all_collection_watched">Όλη η συλλογή που παρακολουθήθηκε</string>
+    <string name="all_collection_unwatched">Συλλογή που δεν παρακολουθήθηκε</string>
     <string name="not_watched_movies_format">Δεν παρακολουθήθηκε -  %d</string>
     <string name="not_watched_animes_format">Δεν παρακολουθήθηκε -  %d</string>
+    <string name="no_movie_watched">Δεν παρακολουθήθηκε ταινία</string>
+    <string name="all_movies_watched">Όλες οι ταινίες που παρακολουθήθηκαν</string>
     <string name="movies_by_alpha">Ταινίες Αλφαβητικά</string>
     <string name="movies_by_genre">Ταινίες ανά είδος</string>
     <string name="movies_by_rating">Ταινίες ανά αξιολόγηση</string>
@@ -96,7 +112,9 @@
     <string name="all_animes">Όλες οι ταινίες κινουμένων σχεδίων</string>
     <string name="all_animes_row">Όλα τα κινούμενα σχέδια</string>
     <string name="all_animeshows">Όλες οι τηλεοπτικές σειρές κινουμένων σχεδίων</string>
+    <string name="animes_by_alpha">Ταινίες κινουμένων σχεδίων αλφαβητικά</string>
     <string name="animes_by_genre">Ταινίες κινουμένων σχεδίων ανά είδος</string>
+    <string name="animes_by_rating">Ταινίες κινουμένων σχεδίων ανα αξιολόγηση</string>
     <string name="animes_by_year">Ταινίες κινουμένων σχεδίων ανα έτος</string>
     <string name="all_tvshows_format">Όλες οι τηλεοπτικές σειρές -  %d</string>
     <string name="not_watched_tvshows_format">Δεν παρακολουθήθηκε -  %d</string>
@@ -113,18 +131,24 @@
     <string name="date_view_year">Χρονιά</string>
     <string name="all_movies_and_tv_shows">Ταινίες και τηλεοπτικές σειρές</string>
     <string name="non_scraped_videos">Βίντεο απο τα οποία δεν έχουν ανακτηθεί πληροφορίες</string>
+    <string name="no_server">Δεν βρέθηκε διακομιστής πολυμέσων</string>
     <string name="cannot_open_video">Αδυναμία ανοίγματος αυτού του βίντεο</string>
     <string name="confirm_delete">Θέλετε πραγματικά να το διαγράψετε;</string>
     <string name="deleting">Παρακαλώ περιμένετε κατά τη διαγραφή…</string>
+    <string name="cannot_delete_directory">Αδυναμία διαγραφής φακέλου</string>
+    <string name="cannot_delete_file">Αδυναμία διαγραφής του αρχείου</string>
     <string name="directory_deleted">Ο φάκελος διαγράφηκε</string>
+    <string name="file_deleted">Το αρχείο διαγράφηκε</string>
     <string name="resume">Συνέχιση</string>
     <string name="remote_resume">Απομακρυσμένη συνέχιση</string>
     <string name="bookmark">Σελιδοδείκτης</string>
     <string name="delete">Διαγραφή</string>
     <string name="confirm_delete_short">Επιβεβαίωση διαγραφής</string>
     <string name="delete_resume">Διαγραφή συνέχισης</string>
+    <string name="delete_bookmark">Διαγραφή σελιδοδείκτη</string>
     <string name="mark_as_watched">Σήμανση ως προβληθέν</string>
     <string name="mark_as_not_watched">Σήμανση ως μη προβληθέν</string>
+    <string name="upnp_not_allowed">Δεν επιτρέπεται η πρόσβαση σε αυτόν τον εξυπηρετητή UPnP. Παρακαλώ αλλάξτε πρώτα τις ρυθμίσεις πρόσβασης σας.</string>
     <string name="scrap_no_info">Δεν έχετε περιγραφή ταινίας ή σειράς για αυτό το βίντεο.</string>
     <string name="scrap_remove">Αφαίρεση πληροφοριών</string>
     <string name="scrap_remove_short">Αφαίρεση</string>
@@ -151,10 +175,14 @@
     <string name="scrap_cast">Πρωταγωνιστές</string>
     <string name="scrap_cast_format">Πρωταγωνιστές: %s</string>
     <string name="scrap_genre">Είδος</string>
+    <string name="scrap_genre_format">Είδη: %s</string>
     <string name="scrap_genre_title">Είδη</string>
     <string name="scrap_aired">Προβλήθηκε</string>
     <string name="scrap_aired_format">Προβλήθηκε: %s</string>
+    <string name="scrap_guests">Προσκεκλημένοι</string>
+    <string name="scrap_premiered">Πρεμιέρα</string>
     <!-- Specific strings for TV shows -->
+    <string name="show_network">Κανάλι</string>
     <string name="episode_name">Επεισόδιο</string>
     <string name="episode_season">Σεζόν</string>
     <string name="episode_specials">Σπέσιαλ</string>
@@ -165,6 +193,9 @@
     <string name="how_to_mark_season_watched">Κάντε κλικ σε έναν κύκλο για να επισημάνετε ότι όλα τα επεισόδια παρακολουθήθηκαν ή δεν παρακολουθήθηκαν</string>
     <string name="how_to_unindex_season">Κάντε κλικ σε έναν κύκλο για να αφαιρέσετε όλα τα επεισόδια από τη βιβλιοθήκη</string>
     <string name="how_to_delete_season">Κάντε κλικ σε έναν κύκλο για να αφαιρέσετε όλα τα επεισόδια</string>
+    <string name="mark_show_watched">Σημείωση όλων των επεισοδίων που παρακολουθήθηκαν ή δεν παρακολουθήθηκαν</string>
+    <string name="unindex_show">Αφαίρεση όλων των επεισοδίων από τη βιβλιοθήκη</string>
+    <string name="delete_show">Διαγραφή όλων των επεισοδίων</string>
     <string name="no_episode_watched">Επεισόδια που δεν έχουν παρακολουθεί</string>
     <string name="all_episodes_watched">Όλα τα επεισόδια που παρακολουθήθηκαν</string>
     <string name="scrap_processing">Ανάκτηση μεταδεδομένων…</string>
@@ -203,9 +234,13 @@
     <string name="preference_display_all_files">Εμφάνιση όλων των αρχείων στον περιηγητή</string>
     <string name="preference_display_all_files_summary">Εμφάνιση επίσης και αρχείων που δεν είναι βίντεο</string>
     <string name="info_processing">Έλεγχος ιδιοτήτων πολυμέσων…</string>
+    <string name="info_video">Βίντεο</string>
     <string name="info_audio">Ήχος</string>
     <string name="info_audio_vbr">VBR</string>
+    <string name="info_plugin_required">(απαιτείται πρόσθετο)</string>
     <string name="info_subtitle">Υπότιτλος</string>
+    <string name="info_resume">Συνέχιση προβολής</string>
+    <string name="info_bookmark">Θέση σελιδοδείκτη</string>
     <string name="info_file">Πληροφορίες αρχείου</string>
     <string name="use_remote_resume">Συνέχιση απο θέση δικτύου;</string>
     <!-- VIDEO COVER ROLL -->
@@ -223,6 +258,9 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">Κέντρο Πολυμέσων</string>
     <string name="view_mode">Λειτουργία προβολής</string>
+    <string name="view_mode_list">Λίστα</string>
+    <string name="view_mode_grid">Αφίσες</string>
+    <string name="view_mode_details">Λεπτομέρειες</string>
     <string name="switch_to_list">Λίστα</string>
     <string name="switch_to_grid">Πλέγμα</string>
     <!-- VideoPlayer -->
@@ -266,6 +304,7 @@
     <string name="menu_change_folder_details">Επιλέξτε το φάκελο εκκίνησης</string>
     <string name="unlock_instructions">Πατήστε παρατεταμένα στο εικονίδιο για ξεκλείδωμα</string>
     <string name="seek_to_percentage">Αναζητώντας το %s%%</string>
+    <string name="set_audio_speed_to">Ταχύτητα ήχου %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
@@ -286,6 +325,8 @@
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Αδυναμία αναπαραγωγής βίντεο</string>
     <string name="player_err_cantplaysound">Αδυναμία αναπαραγωγής ροής ήχου</string>
+    <string name="audiocodec_not_supported">Αυτή η μορφή ήχου (<xliff:g id="codec">%s</xliff:g>) δεν υποστηρίζεται.</string>
+    <string name="videocodec_not_supported">Αυτή η μορφή βίντεο (<xliff:g id="codec">%s</xliff:g>) δεν υποστηρίζεται.</string>
     <string name="player_err_file">Το αρχείο βίντεο δεν υπάρχει.</string>
     <string name="player_err_sizetoobig">Πολύ μεγάλο μέγεθος βίντεο</string>
     <string name="player_err_unknown">Άγνωστο σφάλμα.</string>
@@ -302,10 +343,19 @@
     <string name="player_err_profile_and_level">\"Προφίλ\" και \"Επίπεδο\"</string>
     <string name="player_err_interlaced">Πεπλεγμένο</string>
     <!-- Player plug-in -->
+    <string name="player_plugin_cinema_title">Cinema plug-in</string>
+    <string name="player_plugin_cinema">Cinema plug-in (DVD, MPEG-2, AC3)</string>
+    <string name="player_plugin_ac3_title">AC3 plug-in</string>
+    <string name="player_plugin_ac3">AC3 plug-in</string>
+    <string name="player_plugin_mpeg2_title">MPEG-2 plug-in</string>
+    <string name="player_plugin_mpeg2">MPEG-2 plug-in (DVD)</string>
     <string name="player_plugin_video_msg">Αυτό το αρχείο περιέχει μια <xliff:g id="video">%1$s</xliff:g> μορφή βίντεο.</string>
     <string name="player_plugin_audio_msg">Αυτό το αρχείο περιέχει μια <xliff:g id="audio">%1$s</xliff:g> μορφή ήχου.</string>
     <string name="player_plugin_video_audio_msg">Αυτό το αρχείο περιέχει μια <xliff:g id="video">%1$s</xliff:g> μορφή βίντεο και μια <xliff:g id="audio">%2$s</xliff:g> μορφή ήχου.</string>
+    <string name="player_plugin_purchase_msg">Πρέπει να αγοράσετε το <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">Μετάβαση στο Κατάστημα</string>
+    <string name="player_plugin_purchase_archos_msg">Μπορείτε να αγοράσετε επιπλέον codec plug-ins στο www.archos.com.</string>
+    <string name="player_plugin_purchase_google_play_msg">Μπορείτε να αγοράσετε επιπλέον codec plug-ins στο Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Μετάβαση στο Google Play</string>
     <string name="plugin_update_required_title">Απαιτείται ενημέρωση Codec</string>
     <string name="plugin_update_required_message">Φαίνεται ότι έχετε ήδη εγκατεστημένους επιπλέον κωδικοποιητές για το Nova Video Player.\n\nΑυτή η νέα έκδοση του Nova Video Player απαιτεί ενημέρωση αυτών των κωδικοποιητών.\n\nΠαρακαλώ πηγαίνετε στο Google Play για να ενημερώσετε και να επανεγκαταστήσετε τους κωδικοποιητές.</string>
@@ -323,9 +373,17 @@
     <string name="subtitles_wizard_cache">Κρυφή μνήμη</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Λήψη υποτίτλων από το διαδίκτυο</string>
+    <string name="toast_subloader_sub_found">Βρέθηκαν υπότιτλοι για αυτή τη γλώσσα</string>
+    <string name="toast_subloader_sub_not_found">Δε βρέθηκαν υπότιτλοι για αυτή τη γλώσσα</string>
     <string name="toast_subloader_service_unreachable">διακοπή της υπηρεσίας web υπότιτλων</string>
+    <string name="menu_subloader_allfolder">Λήψη ελλειπόντων υπότιτλων</string>
     <string name="dialog_subloader_copying">Αντιγραφή υποτίτλων…</string>
+    <string name="dialog_subloader_downloading">Λήψη υποτίτλων…</string>
+    <string name="dialog_subloader_sumup">Η λήψη ολοκληρώθηκε</string>
+    <string name="dialog_subloader_success">Βρέθηκαν υπότιτλοι για:</string>
     <string name="dialog_subloader_fails">Δεν βρέθηκαν υπότιτλοι για:</string>
+    <string name="sub_force_all_title">Εξαναγκασμός λήψης υποτίτλων</string>
+    <string name="sub_force_all">Όλα τα βίντεο σας έχουν ήδη τουλάχιστον ένα υπότιτλο. Θέλετε να κάνετε λήψη νέων υποτίτλων;</string>
     <string name="dialog_subloader_nonetwork_title">Δεν υπάρχει σύνδεση στο διαδίκτυο</string>
     <string name="dialog_subloader_nonetwork_message">Απαιτείται σύνδεση στο διαδίκτυο για τη λήψη υποτίτλων</string>
     <string name="dialog_subloader_connecting">Σύνδεση στο www.opensubtitles.com…</string>
@@ -337,6 +395,7 @@
     <string name="toast_subloader_quota_exceeded">Υπέρβαση του ορίου λήψης OpenSubtitles</string>
     <string name="opensubtitles_quota_reset_time_remaining">Θα γίνει επαναφορά ορίου σε %s</string>
     <!-- Subtitle Settings Dialog -->
+    <string name="subtitle_settings_title">Ρυθμίσεις υποτίτλων</string>
     <string name="subtitle_sample_text">\"δείγμα\"</string>
     <string name="subtitle_size_text">Μέγεθος:</string>
     <string name="subtitle_style_text">Στυλ:</string>
@@ -364,16 +423,25 @@
     <string name="loading_torrent">Φόρτωση torrent…</string>
     <string name="error_no_video_file">Δεν υπάρχουν αρχεία βίντεο</string>
     <string name="torrent_file_to_play">Επιλέξτε ένα αρχείο για αναπαραγωγή</string>
+    <string name="torrent_buy_premium_message">Η ροή torrent είναι διαθέσιμη μόνο στην πληρωμένη έκδοση</string>
+    <string name="torrent_buy_premium">Αγοράστε την έκδοση premium</string>
     <!-- Shortcuts -->
     <string name="browse_net_server">Περιήγηση σε μια κοινή χρήση δικτύου</string>
+    <string name="add_smb_server">Περιήγηση σε έναν διακομιστή SMB</string>
+    <string name="add_network_server">Προσθήκη κοινής χρήσης δικτύου</string>
+    <string name="add_to_shortcuts">Δημιουργία συντόμευσης</string>
     <string name="add_ssh_server">Περιήγηση σε έναν διακομιστή FTP</string>
     <string name="add_ssh_shortcut">Προσθήκη ως συντόμευση</string>
     <string name="ssh_prompt">Τύπος FTP</string>
     <string name="protocol_prompt">Τύπος πρωτοκόλλου</string>
+    <string name="ssh_empty_view"> \"Μπορείτε να περιηγηθείτε και να αναπαράγετε από το δικό σας FTP server\"</string>
     <string name="remove_from_shortcuts">Αφαίρεση συντόμευσης</string>
+    <string name="shortcut_added">Η συντόμευση %s δημιουργήθηκε</string>
     <string name="shortcut_removed">Η συντόμευση %s αφαιρέθηκε</string>
     <string name="server_not_available">Ο διακομιστής δεν είναι διαθέσιμος αυτή τη στιγμή.</string>
+    <string name="cannot_open_shortcut">Το περιεχόμενο αυτής της συντόμευσης δεν είναι διαθέσιμο προς το παρόν.\nΠαρακαλώ ελέγξτε ότι έχετε τα απαιτούμενα δικαιώματα.</string>
     <string name="network_shortcuts">Συντομεύσεις δικτύου</string>
+    <string name="media_servers">Διακομιστές πολυμέσων</string>
     <string name="shortcut_list_empty">Δεν δημιουργήθηκαν συντομεύσεις δικτύου.\n\nΓια να δημιουργήσετε συντομεύσεις στους αγαπημένους σας απομακρυσμένους φακέλους κάντε παρατεταμένο κλικ στους φακέλους στόχων και επιλέξτε \"%s\" στην επάνω γραμμή ενεργειών.</string>
     <string name="ftp_shortcut_list_empty">Για να δημιουργήσετε συντομεύσεις στους αγαπημένους σας απομακρυσμένους φακέλους, επιλέξτε \"%s\" στην επάνω γραμμή ενεργειών κατά την περιήγηση σε έναν διακομιστή.</string>
     <string name="indexed_folders">Ευρετήριο φακέλων</string>
@@ -396,6 +464,7 @@
     <string name="last_rescan_never">Ποτέ</string>
     <string name="upnp_indexing_warning_title">Ευρετήριο UPnP</string>
     <string name="upnp_indexing_warning_message">Η ευρετηρίαση UPnP δεν επιτρέπει τόσες λειτουργίες όσες η ευρετηρίαση SMB.\nΣυνιστάται η ευρετηρίαση ενός φακέλου SMB, εάν το υποστηρίζει ο διακομιστής ή ο υπολογιστής σας.\n</string>
+    <string name="ssh_error">Αδυναμία σύνδεσης: παρακαλούμε ελέγξτε τη σύνδεσή σας και τα διαπιστευτήριά σας</string>
     <string name="ssh_remote_address">Απομακρυσμένη διεύθυνση</string>
     <string name="ssh_port">Port</string>
     <string name="ssh_password">Κωδικόs Πρόσβασης</string>
@@ -404,8 +473,11 @@
     <string name="smb_domain">Τομέας (προαιρετικό)</string>
     <!-- Preferences -->
     <string name="preferences">Προτιμήσεις</string>
+    <string name="get_the_ad_free_version">Αποκτήστε την έκδοση χωρίς διαφημίσεις στο Google Play</string>
     <string name="upgrade_to_add_free_version">Αναβάθμιση στην έκδοση χωρίς διαφημίσεις</string>
+    <string name="upgrade_to_add_free_version_description">Αγοράστε άδεια εφαρμογής για να αφαιρέσετε τις διαφημίσεις και να ενεργοποιήσετε όλες τις δυνατότητες</string>
     <string name="preferences_about">Σχετικά</string>
+    <string name="preferences_category_complete">Πλήρης έκδοση</string>
     <string name="preferences_category_video">Βίντεο</string>
     <string name="preferences_force_software_decoding">Εξαναγκασμός αποκωδικοποίησης λογισμικού</string>
     <string name="preferences_force_software_decoding_summary">Μπορείτε να δοκιμάσετε αυτή την επιλογή αν κάποια βίντεο δεν αναπαράγονται σωστά</string>
@@ -429,6 +501,7 @@
     <string name="preference_tv_3d_automatic_switch_summary">Χρησιμοποιήστε αυτή τη δυνατότητα μόνο εάν η 3D TV την υποστηρίζει</string>
     <string name="preference_tv_refreshrate_switch">Ενεργοποίηση αυτόματου διακόπτη ρυθμού ανανέωσης</string>
     <string name="preference_remove_dolby_vision">Απενεργοποίηση Dolby Vision</string>
+    <string name="preference_remove_dolby_vision_summary">Χρήση τυποποιημένων κωδικοποιητών βίντεο για Dolby Vision</string>
     <string name="preference_cutout_short_edges">Βίντεο πλήρους οθόνης με αποκοπές οθόνης</string>
     <string name="preference_cutout_short_edges_summary">Να επιτρέπεται η οριζόντια προβολή βίντεο πλήρους οθόνης με αποκοπή</string>
     <string name="category_languages">Υπότιτλοι</string>
@@ -445,6 +518,7 @@
     <string name="preferences_video_about">Σχετικά</string>
     <string name="preferences_video_os_text">Υπότιτλοι παρέχονται από</string>
     <string name="preferences_video_tmdb_text">Πληροφορίες Ταινίας/Τηλεοπτικής σειράς παρέχονται από</string>
+    <string name="preferences_video_tvdb_text">Πληροφορίες Τηλεοπτικής σειράς παρέχονται από</string>
     <string name="preferences_video_trakt_text">Βίντεο scrobbler παρέχεται από</string>
     <string name="preferences_video_licenses">Άδειες</string>
     <string name="preferences_network_mobile_vpn_summary">Χρησιμοποιήστε το μόνο με τη ρυθμιζόμενο VPN και προσέξτε τη χρήση των δεδομένων σας.</string>
@@ -455,6 +529,8 @@
     <string name="preferences_video_advanced_quit_title">Κανονικές προτιμήσεις</string>
     <string name="preferences_video_advanced_quit_summary">Επιστρέψτε στις κανονικές προτιμήσεις</string>
     <string name="trakt_change">Μια τροποποίηση στο Trakt API απαιτεί επανασύνδεση.</string>
+    <string name="tv_scraper">Τηλεοπτικές Εκπομπές</string>
+    <string name="movie_scraper">Ταινίες</string>
     <string name="enable_auto_scrap">Αυτόματη λήψη πληροφοριών για νέα βίντεο</string>
     <string name="enable_adult_scrap_title">Ανάκτησης πληροφοριών βίντεο ενηλίκων</string>
     <string name="enable_adult_scrap_summary">Ενεργοποίηση ανάκτησης πληροφοριών βίντεο ενηλίκων (εξ ορισμού απενεργοποιημένη)</string>
@@ -468,6 +544,10 @@
     <string name="video_info_custom_search_file_hint">"\"Τίτλος ταινίας\" ή \"τίτλος σειράς S01E01\""</string>
     <string name="video_info_custom_search_show_hint">Όνομα της τηλεοπτικής εκπομπής</string>
     <string name="scrap_show_no_result">Δε βρέθηκε αντίστοιχη τηλεοπτική εκπομπή online.</string>
+    <string name="video_info_backdrop_select">Επιλογή άλλης εικόνας</string>
+    <string name="video_info_backdrop_remove">Αφαίρεση</string>
+    <string name="video_info_backdrop_set_as">Ορισμός εικόνας ως</string>
+    <string name="video_info_share_message">"Έχω παρακολουθήσει το βίντεο \"%1$s\" στο Nova %2$s μου"</string>
     <string name="notification_mode">Ειδοποιήσεις</string>
     <string name="notifications_all">Όλες οι ειδοποιήσεις</string>
     <string name="notifications_alerts">Ειδοποιήσεις μόνο</string>
@@ -477,13 +557,17 @@
     <string name="format_optimized">Βελτιστοποιημένο</string>
     <string name="format_original">Αρχικό</string>
     <string name="format_stretched">Επέκταση</string>
+    <string name="stereo_dive_enable">Εφέ stereo dive</string>
+    <string name="stereo_dive_disable">Απενεργοποίηση εφέ stereo dive</string>
     <string name="rotation_unlock">Ενεργοποίηση αυτόματης περιστροφής οθόνης</string>
     <string name="rotation_locked">Αυτόματη περιστροφή οθόνης απενεργοποιημένη</string>
     <string name="rotation_unlocked">Αυτόματη περιστροφή οθόνης ενεργοποιημένη</string>
     <string name="network_reindex">Επανασάρωση περιεχομένου</string>
     <!-- Help overlay -->
     <string name="help_overlay_menu">Πατήστε το πλήκτρο UP βέλους\nγια να εμφανιστεί το μενού της τηλεόρασης</string>
+    <string name="help_overlay_ssh_indexing_text">Επιλέξτε την επιλογή \"Προσθήκη ως συντόμευση\" για να επιστρέψετε γρήγορα στο διακομιστή σας.</string>
     <string name="help_overlay_network_indexing_text1">Πατήστε αυτό το στοιχείο μενού για να ενσωματώσετε το περιεχόμενο αυτού του φακέλου και των υποφακέλών του στη βιβλιοθήκη βίντεο.</string>
+    <string name="help_overlay_network_indexing_text1_lb">Χρησιμοποιήστε το κουμπί + για να ενσωματώσετε το περιεχόμενο αυτού του φακέλου και των υποφακέλών του στη βιβλιοθήκη βίντεο.</string>
     <string name="help_overlay_network_indexing_text2">Θα σας επιτρέψει να λάβετε αφίσες και περιγραφές για τις ταινίες και τηλεοπτικές εκπομπές.</string>
     <string name="help_overlay_scraper_text">Πατήστε εδώ για να αναζητήσετε αφίσες και περιγραφές online για τα βίντεό σας. </string>
     <string name="help_overlay_network_shortcut_text1_lb">Χρησιμοποιήστε το κουμπί + για την προσθήκη αυτού του φακέλου ως συντόμευση δικτύου και έχετε την επιλογή να προσθέσετε το περιεχόμενό του και των υποφακέλών του στη βιβλιοθήκη βίντεο.</string>
@@ -500,9 +584,11 @@
     <string name="share_folders_smb_resolv">Σειρά επίλυσης SMB</string>
     <string name="connection_reset">Επαναφορά</string>
     <!-- Info dialog, not indexed file -->
+    <string name="video_info_unindexed_message2">Το αρχείο βρίσκεται σε επεξεργασία. Αυτό μπορεί να διαρκέσει λίγο.</string>
     <string name="video_browser_index_file">Προσθήκη στη βιβλιοθήκη</string>
     <string name="video_browser_unindex_file">Αφαίρεση από τη βιβλιοθήκη</string>
     <!-- Brightness -->
+    <string name="auto_brightness_message">Η φωτεινότητα δεν μπορεί να αλλάξει επειδή η λειτουργία αυτόματης φωτεινότητας είναι ενεργοποιημένη.</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">Επεξεργασία αρχείων \'.nfo\'</string>
     <string name="network_nfo_parse_summary">Διαβάστε τα αρχεία του Kodi \'.nfo\' κατά τη διάρκεια (επαν)σάρωσης για να συγκεντρώσετε πληροφορίες και αφίσες πολυμέσων.</string>
@@ -591,13 +677,17 @@
     <string name="sdk_not_supported">Το Android 4.3 δεν υποστηρίζεται ακόμα.\nΕργαζόμαστε σκληρά για να το διορθώσουμε και ελπίζουμε να έχουμε μια νέα έκδοση σύντομα!</string>
     <string name="share_path">Διαδρομή</string>
     <string name="category_trakt">Trakt</string>
+    <string name="trakt_user">Όνομα Χρήστη</string>
+    <string name="trakt_password">Κωδικόs Πρόσβασης</string>
     <string name="trakt_signin">Σύνδεση</string>
     <string name="trakt_list_signin">Σύνδεση στο Trakt</string>
+    <string name="trakt_status_login">Γίνεται είσοδος σε&#8230;</string>
     <string name="trakt_signin_summary_logged_error">Σφάλμα ελέγχου ταυτότητας</string>
     <string name="trakt_signin_summary">Δεν έγινε σύνδεση</string>
     <string name="trakt_relog_description">Εντοπίστηκε πρόβλημα με το Trakt και πρέπει να γίνει επαναφορά των διαπιστευτηρίων. Συνδεθείτε ξανά.</string>
     <string name="trakt_signin_dialog_title">Σύνδεση</string>
     <string name="trakt_signin_title">Είσοδος</string>
+    <string name="trakt_wipe_dialog_title">Αποσύνδεση από το Trakt.tv;</string>
     <string name="trakt_wipe_title">Αποσύνδεση από το Trakt.tv</string>
     <string name="trakt_live_scrobbling_title">Ζωντανό scrobbler</string>
     <string name="trakt_sync_collection_title">Συγχρονισμός συλλογών Τηλεοπτικών εκπομπών και Ταινιών</string>
@@ -637,6 +727,7 @@
     <string name="leanback_scrap">Λήψη πληροφοριών</string>
     <string name="leanback_scrap_choose_the_description">Επιλογή πληροφοριών</string>
     <string name="leanback_scrap_choose_the_description_for">"Επιλέξτε πληροφορίες για το \"%s\""</string>
+    <string name="leanback_scrap_searching_general_hint">Όνομα της ταινίας ή της τηλεοπτικής εκπομπής</string>
     <string name="leanback_scrap_searching_tvshow_hint">Όνομα της τηλεοπτικής εκπομπής</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Παλαιού τύπου διεπαφή</string>
@@ -669,6 +760,7 @@
     <string name="scheduled_rescan_time">Χρόνος επανασάρωσης</string>
     <string name="rescan_when_opening_application">Επανασάρωση κατά το άνοιγμα της εφαρμογής</string>
     <string name="last_rescan_occured">Τελευταία επανασάρωση πραγματοποιήθηκε:</string>
+    <string name="intro_overlay_text">Αγγίξτε για μετάδοση βίντεο στην τηλεόρασή σας</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Προβολή περισσότερων</string>
@@ -689,23 +781,34 @@
     <string name="system">Σύστημα</string>
     <string name="keep_setting">Καθολική διατηρήση αυτής της ρύθμισης</string>
     <string name="select_sub_file"><![CDATA[Ακριβείς υπότιτλοι δε βρέθηκαν για το αρχείο <font color=#29b6f6><i>%s</i></font><br />Παρακαλώ δοκιμάστε μεταξύ αυτών:]]></string>
+    <string name="cast_stream_mode">Λειτουργία ροής</string>
+    <string name="cast_remote_display_mode">Απομακρυσμένη οθόνη</string>
     <string name="sleep_timer_title">Xρονοδιακόπτης ύπνου</string>
     <string name="sleep_timer_description">Διακοπή βίντεο μετά: </string>
+    <string name="cast_mode">Λειτουργία μετάδοσης</string>
+    <string name="cast_info">Πληροφορίες</string>
     <string name="picture_in_picture">Εικόνα σε Εικόνα</string>
     <string name="cast">Μετάδοση</string>
+    <string name="cast_warning">Η υποστήριξη μετάδωσης είναι περιορισμένη λόγω των περιορισμών κωδικοποιητή του Chromecast. Για να μετριαστούν αυτοί οι περιορισμοί, υλοποιούνται 2 λειτουργίες: Chromecast και Screencast (με αυτόματη επαναφορά). Σημειώστε ότι ζητήματα απόδοσης και ποιότητας μπορούν επίσης να οφείλονται σε περιορισμούς δικτύου ή συσκευής.</string>
+    <string name="cast_warning_title">Πειραματικά χαρακτηριστικά</string>
+    <string name="cast_select_for_full_control">Αγγίξτε για επέκταση του ελεγκτή</string>
     <string name="cast_audio_background">Ο ήχος δεν θα λειτουργεί όσο το Nova Video Player βρίσκεται στο παρασκήνιο</string>
     <string name="help_faq">Βοήθεια / Συχνές Ερωτήσεις</string>
     <string name="provider_folders">Cloud</string>
+    <string name="learn_more">Μάθετε περισσότερα</string>
+    <string name="learn_more_about_codecs">Το Nova Video Player μπορεί να αναπαράγει μόνο βίντεο που υποστηρίζονται από τη συσκευή σας. Λόγω ζητημάτων αδειών, ορισμένες μορφές δεν μπορούν να συμπεριληφθούν νόμιμα, κάποιες άλλες μπορούν να αγοραστούν στο Google Play Store.</string>
     <string name="rate_us">Αν σας αρέσει αυτή η εφαρμογή, παρακαλούμε να μας υποστηρίξετε αξιολογώντας μας 5 αστέρια</string>
     <string name="rate_us_title">☆ Υποστηρίξτε μας</string>
     <string name="create_new_list">Δημιουργία νέας λίστας</string>
     <string name="add_to_list">Προσθήκη σε λίστα</string>
     <string name="no_resume_available">Επι του παρόντος δεν υπάρχει δυνατότητα συνέχισης</string>
     <string name="no_list_detected">Δεν εντοπίστηκε καμία λίστα. Η λίστα μπορεί να δημιουργηθεί με την προσθήκη νέων στοιχείων απευθείας από πληροφορίες βίντεο, ή μπορεί να συγχρονιστεί με το λογαριασμό σας στο Trakt.</string>
+    <string name="premium_already_purchased">Το Premium έχει ήδη αγοραστεί</string>
     <string name="remove_from_list">Αφαίρεση από τη λίστα</string>
     <string name="warning_swdec">Προειδοποίηση: η αποκωδικοποίηση υλικού απενεργοποιήθηκε!</string>
     <string name="list_title">Τίτλος λίστας</string>
     <string name="loading">Φόρτωση…</string>
+    <string name="connecting">Σύνδεση…</string>
     <string name="refreshrate_failed">Αποτυχία ορισμού επιθυμητού ρυθμού ανανέωσης</string>
     <string name="sponsor">Χορηγία Nova</string>
     <string name="enable_sponsor_title">Ενεργοποίηση συνδέσμου χορηγίας Nova</string>
@@ -713,4 +816,6 @@
     <string name="upgrade_info">Πληροφορίες αναβάθμισης</string>
     <string name="v5_v6_upgrade_info">ΠΡΟΕΙΔΟΠΟΙΗΣΗ: αυτή η σημαντική ενημέρωση απαιτεί επανασάρωση όλων των συλλογών βίντεο για την επανασύνδεση πληροφοριών πολυμέσων.
         Συνιστάται να κάνετε επανεκκίνηση από μια καθαρή εγκατάσταση για να αποφύγετε προβλήματα. Παρακαλούμε ελέγξτε τις Συχνές Ερωτήσεις για λεπτομέρειες.</string>
+    <string name="networks">Δίκτυα:</string>
+    <string name="premiered">Πρεμιέρα:</string>
 </resources>
