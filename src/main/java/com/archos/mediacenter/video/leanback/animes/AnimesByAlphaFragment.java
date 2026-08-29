@@ -47,7 +47,7 @@ public class AnimesByAlphaFragment extends VideosByFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setTitle(getString(R.string.movies_by_alpha));
+        setTitle(getString(R.string.animes_by_alpha));
 
         mSortOrderEntries = AnimesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
     }

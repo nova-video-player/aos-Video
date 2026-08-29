@@ -21,8 +21,6 @@
     </plurals>
     <string name="no_movie_watched">No movie watched</string>
     <string name="all_movies_watched">All movies watched</string>
-    <string name="animes_by_alpha">Animation movies alphabetical</string>
-    <string name="animes_by_rating">Animation movies by rating</string>
     <string name="no_server">No media server found</string>
     <string name="cannot_delete_directory">Cannot delete the folder</string>
     <string name="cannot_delete_file">Cannot delete the file</string>

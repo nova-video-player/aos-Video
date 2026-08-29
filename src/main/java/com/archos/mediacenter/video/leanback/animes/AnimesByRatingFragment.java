@@ -51,7 +51,7 @@ public class AnimesByRatingFragment extends VideosByFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setTitle(getString(R.string.movies_by_rating));
+        setTitle(getString(R.string.animes_by_rating));
 
         mSortOrderEntries = AnimesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
     }

@@ -116,7 +116,9 @@
     <string name="all_animes">All animation movies</string>
     <string name="all_animes_row">All animations</string>
     <string name="all_animeshows">All animation TV shows</string>
+    <string name="animes_by_alpha">Animation movies alphabetical</string>
     <string name="animes_by_genre">Animation movies by genre</string>
+    <string name="animes_by_rating">Animation movies by rating</string>
     <string name="animes_by_year">Animation movies by year</string>
     <string name="all_tvshows_format">All TV shows  -  %d</string>
     <string name="not_watched_tvshows_format">Not watched  -  %d</string>
