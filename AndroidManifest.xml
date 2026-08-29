@@ -100,7 +100,6 @@
     <application
         android:name=".CustomApplication"
         android:allowTaskReparenting="true"
-        android:extractNativeLibs="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:banner="@drawable/nova_banner"
