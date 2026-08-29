@@ -199,6 +199,7 @@ public class OAuthDialog extends Dialog {
 				}
 			}
 			mdata.code = uri.getQueryParameter("code");
+			mdata.returnedState = uri.getQueryParameter("state");
 			OAuthDialog.this.dismiss();
 			mListener.onFinished(mdata);
 
@@ -228,6 +229,7 @@ public class OAuthDialog extends Dialog {
 				}
 			}
 			mdata.code = uri.getQueryParameter("code");
+			mdata.returnedState = uri.getQueryParameter("state");
 			OAuthDialog.this.dismiss();
 			mListener.onFinished(mdata);
 

@@ -1107,7 +1107,7 @@
             android:label="@string/connect_trakt"
             android:theme="@style/ArchosThemeBlue"
             android:exported="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
             <!-- Handle browser redirect for OAuth phone/tablet flow (legacy localhost) -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

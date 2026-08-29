@@ -374,6 +374,8 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.8.0'
+    // Uses the installed browser for OAuth without embedding a browser engine.
+    implementation 'androidx.browser:browser:1.9.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation ('com.github.ksoichiro:android-observablescrollview:1.6.0') {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
