@@ -13,6 +13,7 @@
 // limitations under the License.
 package com.archos.mediacenter.video.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -380,6 +381,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     // unaffected by that media-only permission scope: the user grants access to one specific
     // folder via the system Files app, and the resulting content:// tree URI can be
     // persisted indefinitely via takePersistableUriPermission().
+    @SuppressLint("WrongConstant") // lint can't reduce Intent.getFlags() & (READ|WRITE) to @Intent.AccessUriMode, see https://developer.android.com/training/data-storage/shared/documents-files#persist-permissions
     private void onFontsFolderTreeResult(ActivityResult result) {
         if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) return;
         Uri treeUri = result.getData().getData();
@@ -391,10 +393,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         // Persist the grant so it survives app restarts/reboots -- without this, the
         // content:// URI stops being readable the next time the process starts, since SAF
         // grants are otherwise scoped to the lifetime of this specific result callback.
-        final int takeFlags = result.getData().getFlags() &
-                (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         try {
-            context.getContentResolver().takePersistableUriPermission(treeUri, takeFlags);
+            context.getContentResolver().takePersistableUriPermission(treeUri,
+                    result.getData().getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION));
         } catch (SecurityException e) {
             log.warn("onFontsFolderTreeResult: failed to persist URI permission for '{}': {}", treeUri, e.getMessage());
             return;
