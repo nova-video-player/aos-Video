@@ -23,7 +23,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">更新伺服器清單</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">開啟網路分享</string>
     <string name="initial_scan">初始化掃描</string>
     <!-- Library screen, menu item -->
     <string name="search_title">搜尋</string>
@@ -44,17 +43,9 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄧㄨㄩㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">片長</string>
     <string name="video_sources">來源</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">電影</string>
-    <string name="info_tab_show">影集</string>
-    <string name="info_tab_episode">集數</string>
-    <string name="info_tab_video">影片</string>
     <string name="info_tab_file">檔案資訊</string>
-    <string name="info_tab_backdrop_chooser">背景選擇器</string>
-    <string name="info_tab_poster_chooser">海報選擇器</string>
-    <string name="info_tab_share">共用</string>
     <string name="info_menu_backdrop_select">背景</string>
     <string name="info_menu_series_backdrop_select">影集背景</string>
     <string name="info_menu_poster_select">選擇另一張海報</string>
@@ -77,12 +68,9 @@
     <string name="network_shared_folders">共用資料夾 (SMB)</string>
     <string name="network_connected_as">已連接 %s</string>
     <string name="network_guest">訪客</string>
-    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (實驗性)</string>
     <string name="network_cling">UPNP (實驗性)</string>
-    <string name="recordings_storage">錄影</string>
     <string name="root_storage">內部儲存空間</string>
-    <string name="cannot_list">無法列出內容</string>
     <!-- VIDEO -->
     <string name="videos">影片</string>
     <string name="all_videos">所有影片</string>
@@ -95,15 +83,8 @@
     <string name="all_animes_format">電影動畫  -  %d</string>
     <string name="all_collections">全部收藏</string>
     <string name="all_collections_format">全部收藏  -  %d</string>
-    <string name="all_collection_watched">已觀看的收藏</string>
-    <string name="all_collection_unwatched">未觀看的收藏</string>
-    <plurals name="n_movies_watched">
-        <item quantity="other">已觀看電影 %d</item>
-    </plurals>
     <string name="not_watched_movies_format">未觀看  -  %d</string>
     <string name="not_watched_animes_format">未觀看  -  %d</string>
-    <string name="no_movie_watched">沒有已觀看電影</string>
-    <string name="all_movies_watched">已觀看所有電影</string>
     <string name="movies_by_alpha">電影：按名稱排列</string>
     <string name="movies_by_genre">電影：按分類排列</string>
     <string name="movies_by_rating">電影：按評分排列</string>
@@ -134,24 +115,18 @@
     <string name="date_view_year">年份</string>
     <string name="all_movies_and_tv_shows">電影和電視劇</string>
     <string name="non_scraped_videos">未抓取資料的影片</string>
-    <string name="no_server">找不到媒體伺服器</string>
     <string name="cannot_open_video">無法打開此影片</string>
     <string name="confirm_delete">確定要刪除嗎？</string>
     <string name="deleting">正在進行刪除，請稍候…</string>
-    <string name="cannot_delete_directory">無法刪除資料夾</string>
-    <string name="cannot_delete_file">無法刪除檔案</string>
     <string name="directory_deleted">資料夾已被刪除</string>
-    <string name="file_deleted">檔案已被刪除</string>
     <string name="resume">繼續播放</string>
     <string name="remote_resume">繼續播放</string>
     <string name="bookmark">書籤</string>
     <string name="delete">刪除</string>
     <string name="confirm_delete_short">確認刪除</string>
     <string name="delete_resume">刪除播放進度</string>
-    <string name="delete_bookmark">刪除書籤</string>
     <string name="mark_as_watched">設為「已觀看」</string>
     <string name="mark_as_not_watched">設為「尚未觀看」</string>
-    <string name="upnp_not_allowed">您無法存取此 UPnP 伺服器，請先變更存取設定。</string>
     <string name="scrap_no_info">沒有該影片的電影或電視劇的資訊。</string>
     <string name="scrap_remove">移除資訊</string>
     <string name="scrap_remove_short">移除</string>
@@ -178,14 +153,10 @@
     <string name="scrap_cast">演員</string>
     <string name="scrap_cast_format">演員：%s</string>
     <string name="scrap_genre">分類</string>
-    <string name="scrap_genre_format">分類：%s</string>
     <string name="scrap_genre_title">分類</string>
     <string name="scrap_aired">上映</string>
     <string name="scrap_aired_format">上映：%s</string>
-    <string name="scrap_guests">來賓</string>
-    <string name="scrap_premiered">首映</string>
     <!-- Specific strings for TV shows -->
-    <string name="show_network">網路</string>
     <string name="episode_name">集數</string>
     <string name="episode_season">季數</string>
     <string name="episode_specials">特別收錄</string>
@@ -196,9 +167,6 @@
     <string name="how_to_mark_season_watched">點擊某一季讓所有該劇集設為「已觀看」或「尚未觀看」</string>
     <string name="how_to_unindex_season">點擊某一季讓所有該劇集從媒體庫移除</string>
     <string name="how_to_delete_season">點擊某一季將刪除該所有劇集</string>
-    <string name="mark_show_watched">將所有劇集設為「已觀看」或「尚未觀看」</string>
-    <string name="unindex_show">將所有劇集從媒體庫中移除</string>
-    <string name="delete_show">刪除所有劇集</string>
     <string name="no_episode_watched">沒有已觀看劇集</string>
     <string name="all_episodes_watched">已觀看所有劇集</string>
     <plurals name="n_episodes_watched">
@@ -240,13 +208,9 @@
     <string name="preference_display_all_files">在瀏覽器中顯示所有檔案</string>
     <string name="preference_display_all_files_summary">同時顯示非影片檔案</string>
     <string name="info_processing">正在確認媒體的內容...</string>
-    <string name="info_video">影片</string>
     <string name="info_audio">音訊</string>
     <string name="info_audio_vbr">VBR (可變位元率)</string>
-    <string name="info_plugin_required">(需要套件)</string>
     <string name="info_subtitle">字幕</string>
-    <string name="info_resume">續播進度</string>
-    <string name="info_bookmark">將進度加入書籤</string>
     <string name="info_file">檔案資訊</string>
     <string name="use_remote_resume">使用網路上的續播進度？</string>
     <!-- VIDEO COVER ROLL -->
@@ -275,9 +239,6 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">多媒體中心</string>
     <string name="view_mode">顯示模式</string>
-    <string name="view_mode_list">清單</string>
-    <string name="view_mode_grid">海報</string>
-    <string name="view_mode_details">詳細資料</string>
     <string name="switch_to_list">清單顯示</string>
     <string name="switch_to_grid">格狀顯示</string>
     <!-- VideoPlayer -->
@@ -322,7 +283,6 @@
     <string name="menu_change_folder_details">選擇起始資料夾</string>
     <string name="unlock_instructions">長按圖示來解鎖</string>
     <string name="seek_to_percentage">快轉至 %s%%</string>
-    <string name="set_audio_speed_to">\"音訊速度 %s</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
     <string name="subs_HI">聽覺障礙</string>
@@ -351,8 +311,6 @@
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">無法播放影片</string>
     <string name="player_err_cantplaysound">無法播放音軌</string>
-    <string name="audiocodec_not_supported">不支援該音訊格式 (<xliff:g id="codec">%s</xliff:g>)。</string>
-    <string name="videocodec_not_supported">不支援該影片格式 (<xliff:g id="codec">%s</xliff:g>)。</string>
     <string name="player_err_file">影片檔案不存在。</string>
     <string name="player_err_sizetoobig">影片檔案過大</string>
     <string name="player_err_unknown">未知的錯誤。</string>
@@ -369,19 +327,10 @@
     <string name="player_err_profile_and_level">「畫質」和「壓縮層級」</string>
     <string name="player_err_interlaced">交错式</string>
     <!-- Player plug-in -->
-    <string name="player_plugin_cinema_title">影院套件</string>
-    <string name="player_plugin_cinema">影院套件 (DVD, MPEG-2, AC3)</string>
-    <string name="player_plugin_ac3_title">AC3 套件</string>
-    <string name="player_plugin_ac3">AC3 套件</string>
-    <string name="player_plugin_mpeg2_title">MPEG-2 套件</string>
-    <string name="player_plugin_mpeg2">MPEG-2 套件 (DVD)</string>
     <string name="player_plugin_video_msg">該檔案包含 <xliff:g id="video">%1$s</xliff:g> 影片格式。</string>
     <string name="player_plugin_audio_msg">該檔案包含 <xliff:g id="audio">%1$s</xliff:g> 音訊格式。</string>
     <string name="player_plugin_video_audio_msg">該檔案包含 <xliff:g id="video">%1$s</xliff:g> 影片格式和 <xliff:g id="audio">%2$s</xliff:g> 音訊格式。</string>
-    <string name="player_plugin_purchase_msg">您需要購買 <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">前往商店</string>
-    <string name="player_plugin_purchase_archos_msg">您可以在 www.archos.com 購買額外的解碼套件。</string>
-    <string name="player_plugin_purchase_google_play_msg">您可以在 Play 商店購買額外的解碼套件。</string>
     <string name="player_plugin_purchase_google_play_button">前往 Play 商店</string>
     <string name="plugin_update_required_title">需要更新解碼器</string>
     <string name="plugin_update_required_message">您似乎已經為 Nova Video Player 安裝了額外的解碼套件。\n\n新版的 Nova Video Player 需要更新這些解碼套件，\n\n請至 Play 商店更新和重裝解碼套件。</string>
@@ -399,17 +348,9 @@
     <string name="subtitles_wizard_cache">快取</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">從網路上取得字幕</string>
-    <string name="toast_subloader_sub_found">找到該語言的字幕軌</string>
-    <string name="toast_subloader_sub_not_found">找不到該語言的字幕軌</string>
     <string name="toast_subloader_service_unreachable">與字幕網站連線發生問題</string>
-    <string name="menu_subloader_allfolder">取得缺少的字幕</string>
     <string name="dialog_subloader_copying">正在複製字幕...</string>
-    <string name="dialog_subloader_downloading">正在下載字幕…</string>
-    <string name="dialog_subloader_sumup">下載完成</string>
-    <string name="dialog_subloader_success">找到字幕：</string>
     <string name="dialog_subloader_fails">找不到字幕：</string>
-    <string name="sub_force_all_title">強制下載字幕</string>
-    <string name="sub_force_all">您所有的影片已經至少有一個字幕軌，您確定要強制下載新的字幕軌嗎？</string>
     <string name="dialog_subloader_nonetwork_title">沒有網際網路連線</string>
     <string name="dialog_subloader_nonetwork_message">必須有網路連線才能下載字幕</string>
     <string name="dialog_subloader_connecting">正在連結至 www.opensubtitles.com…</string>
@@ -421,7 +362,6 @@
     <string name="toast_subloader_quota_exceeded">OpenSubtitles 下載額度已達上限</string>
     <string name="opensubtitles_quota_reset_time_remaining">額度重設... %s</string>
     <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_settings_title">字幕設定</string>
     <string name="subtitle_sample_text">「範例」</string>
     <string name="subtitle_size_text">檔案大小：</string>
     <string name="subtitle_style_text">樣式：</string>
@@ -450,25 +390,16 @@
     <string name="loading_torrent">正在載入種子...</string>
     <string name="error_no_video_file">沒有任何影片檔</string>
     <string name="torrent_file_to_play">選擇要播放的檔案</string>
-    <string name="torrent_buy_premium_message">僅付費版才提供 BT 串流播放</string>
-    <string name="torrent_buy_premium">購買付費版本</string>
     <!-- Shortcuts -->
     <string name="browse_net_server">瀏覽網路分享</string>
-    <string name="add_smb_server">瀏覽 SMB 伺服器</string>
-    <string name="add_network_server">新增網路分享</string>
-    <string name="add_to_shortcuts">新增捷徑</string>
     <string name="add_ssh_server">瀏覽 FTP 伺服器</string>
     <string name="add_ssh_shortcut">新增為捷徑</string>
     <string name="ssh_prompt">FTP 類型</string>
     <string name="protocol_prompt">協定類型</string>
-    <string name="ssh_empty_view"> 「您可以瀏覽自己的 FTP 伺服器並播放」</string>
     <string name="remove_from_shortcuts">刪除捷徑</string>
-    <string name="shortcut_added">捷徑 %s 已建立</string>
     <string name="shortcut_removed">捷徑 %s 已刪除</string>
     <string name="server_not_available">伺服器目前無法連線</string>
-    <string name="cannot_open_shortcut">目前無法使用該捷徑的內容，\n請檢查您具有足夠的權限。</string>
     <string name="network_shortcuts">網路捷徑</string>
-    <string name="media_servers">媒體伺服器</string>
     <string name="shortcut_list_empty">網路捷徑未建立。\n\n長按您喜愛的網路資料夾並在指令工具列上方選擇「%s」新增捷徑。</string>
     <string name="ftp_shortcut_list_empty">請在瀏覽伺服器時，在指令工具列上方選擇「%s」，新增您喜愛的網路資料夾的捷徑。</string>
     <string name="indexed_folders">已索引的資料夾</string>
@@ -491,7 +422,6 @@
     <string name="last_rescan_never">永不</string>
     <string name="upnp_indexing_warning_title">正在索引 UPnP</string>
     <string name="upnp_indexing_warning_message">UPnP 索引無法提供像 SMB 索引那樣多的功能。\n如果您的伺服器或是個人電腦支援的話，建議使用 SMB 資料夾索引方式。\n</string>
-    <string name="ssh_error">無法連線：請檢查您的網路狀態及憑證</string>
     <string name="ssh_remote_address">主機位址</string>
     <string name="ssh_port">連接埠</string>
     <string name="ssh_password">密碼</string>
@@ -500,11 +430,8 @@
     <string name="smb_domain">網域 (可選填)</string>
     <!-- Preferences -->
     <string name="preferences">偏好設定</string>
-    <string name="get_the_ad_free_version">在 Google Play 上取得無廣告版本</string>
     <string name="upgrade_to_add_free_version">升級至無廣告版本</string>
-    <string name="upgrade_to_add_free_version_description">購買這個程式的授權可以移除廣告並啟用所有功能</string>
     <string name="preferences_about">關於本軟體</string>
-    <string name="preferences_category_complete">完整版</string>
     <string name="preferences_category_video">影片</string>
     <string name="preferences_force_software_decoding">強制軟體解碼</string>
     <string name="preferences_force_software_decoding_summary">假如部分影片播放不正常，您可以嘗試開啟此選項</string>
@@ -533,15 +460,12 @@
     <string name="preferences_allow_3rd_party_player_summary">在開始撥放影片時，安卓系統會提示其它相容的播放軟體。請注意，使用其它的播放器可能會導致部分功能無法運作 (例如繼續播放、書籤等)</string>
     <string name="preference_tv_3d_automatic_switch">開啟自動 3D 電視開關</string>
     <string name="preference_tv_3d_automatic_switch_summary">只有在您的 3D 電視支援的情況下使用此功能</string>
-    <string name="enable_android_frame_timing">開啟安卓系統框時序</string>
-    <string name="enable_android_frame_timing_summary">將畫面繪製時序委託給安卓系統以獲得更流暢的播放 (實驗性)</string>
     <string name="preference_tv_refreshrate_switch">開啟自動重新整理頻率開關</string>
     <string name="preference_tv_refreshrate_switch_summary">藉由調適最佳重新整理頻率及影片播放速率來去除抖動效應 (部分裝置可能不支援)</string>
     <string name="preferences_tv_refreshrate_switch_disabled">已停用</string>
     <string name="preferences_tv_refreshrate_switch_mode_selection">顯示模式選擇匹配影片的每秒播放格數 (fps)</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">安卓 12 版以上畫面更新率匹配功能</string>
     <string name="preference_remove_dolby_vision">關閉杜比視域</string>
-    <string name="preference_remove_dolby_vision_summary">使用標準視訊編碼而不是杜比視域編碼</string>
     <string name="preference_cutout_short_edges">強制全螢幕</string>
     <string name="preference_cutout_short_edges_summary">允許截短畫面讓橫擺畫面全螢幕</string>
     <string name="category_languages">字幕</string>
@@ -563,7 +487,6 @@
     <string name="preferences_video_about">關於</string>
     <string name="preferences_video_os_text">字幕提供來自</string>
     <string name="preferences_video_tmdb_text">電影/電視劇資訊提供來自</string>
-    <string name="preferences_video_tvdb_text">電視劇資訊提供來自</string>
     <string name="preferences_video_trakt_text">觀看紀錄同步服務提供來自</string>
     <string name="preferences_video_licenses">授權</string>
     <string name="preferences_network_mobile_vpn_summary">僅在 VPN 已設定時使用，並注意您的行動數據流量</string>
@@ -574,8 +497,6 @@
     <string name="preferences_video_advanced_quit_title">一般設定</string>
     <string name="preferences_video_advanced_quit_summary">回到一般設定</string>
     <string name="trakt_change">Trakt API 已變更，需重新連線。</string>
-    <string name="tv_scraper">電視劇</string>
-    <string name="movie_scraper">電影</string>
     <string name="enable_auto_scrap">自動為新增影片取得資訊</string>
     <string name="enable_adult_scrap_title">抓取成人影片的資料</string>
     <string name="enable_adult_scrap_summary">開啟成人影片的資訊擷取 (預設停用)</string>
@@ -591,10 +512,6 @@
     <string name="video_info_custom_search_file_hint">"「電影名稱」或「影集名稱 S01E01」"</string>
     <string name="video_info_custom_search_show_hint">電視劇名稱</string>
     <string name="scrap_show_no_result">網路上找不到符合的影集。</string>
-    <string name="video_info_backdrop_select">選擇另一張圖片</string>
-    <string name="video_info_backdrop_remove">移除</string>
-    <string name="video_info_backdrop_set_as">將圖片設為</string>
-    <string name="video_info_share_message">"我已經在 Nova %2$s 上看過影片「%1$s」"</string>
     <string name="notification_mode">通知</string>
     <string name="notifications_all">所有通知</string>
     <string name="notifications_alerts">僅通知提醒</string>
@@ -604,17 +521,13 @@
     <string name="format_optimized">最佳化</string>
     <string name="format_original">原始</string>
     <string name="format_stretched">延展</string>
-    <string name="stereo_dive_enable">立體潛入音效</string>
-    <string name="stereo_dive_disable">關閉立體潛入音效</string>
     <string name="rotation_unlock">開啟自動螢幕旋轉</string>
     <string name="rotation_locked">自動螢幕旋轉已停用</string>
     <string name="rotation_unlocked">自動螢幕旋轉已啟用</string>
     <string name="network_reindex">重新掃描內容</string>
     <!-- Help overlay -->
     <string name="help_overlay_menu">按「上」箭頭鍵\n顯示電視選單</string>
-    <string name="help_overlay_ssh_indexing_text">選擇「新增為捷徑」選項以快速返回您的伺服器。</string>
     <string name="help_overlay_network_indexing_text1">按此選單項目將該資料夾和子資料夾的內容給合至影片媒體庫。</string>
-    <string name="help_overlay_network_indexing_text1_lb">使用「+」按鈕將該資料夾和子資料夾的內容結合至影片媒體庫。</string>
     <string name="help_overlay_network_indexing_text2">這將使您取得電影和電視劇的海報及說明。</string>
     <string name="help_overlay_scraper_text">按此選單項目將於網路上搜尋影片的海報和說明。 </string>
     <string name="help_overlay_network_shortcut_text1_lb">使用「+」按鈕將此資料夾新增為網路捷徑，您可以選擇將該資料夾和子資料夾的內容加入至影片媒體庫中。</string>
@@ -636,17 +549,12 @@
     <string name="share_folders_smb_disable_udp_discovery_summary">如果您遭遇到 Wi-Fi 不穩定的情形 (例如 Fire 10 HD)，請關閉 UDP 探索</string>
     <string name="share_folders_smb_disable_mdns_discovery">關閉 SMB mDNS 探索</string>
     <string name="share_folders_smb_disable_mdns_discovery_summary">如果您遭遇到 Wi-Fi 不穩定的情形，請關閉 mDNS 探索</string>
-    <string name="share_folders_smb_discovery_limited_to_mdsn">限制 SMB 探索為 mDNS</string>
-    <string name="share_folders_smb_discovery_limited_to_mdsn_summary">如果您遭遇到 Wi-Fi 不穩定的情形 (例如 Fire 10 HD)，請關閉 UDP/TCP 探索 (⚠ 會導致 ChromeOS 無法正常探索)</string>
     <string name="connection_abnormally_long">連線似乎異常緩慢，要重啟嗎？</string>
     <string name="connection_reset">重啟</string>
     <!-- Info dialog, not indexed file -->
-    <string name="video_info_unindexed_message">媒體庫中目前未有此檔的索引。\n海報和資訊的搜尋僅限已索引的檔案，\n您現在想要進行索引嗎？</string>
-    <string name="video_info_unindexed_message2">檔案處理中，此過程可能要一段時間。</string>
     <string name="video_browser_index_file">新增至媒體庫</string>
     <string name="video_browser_unindex_file">從媒體庫中移除</string>
     <!-- Brightness -->
-    <string name="auto_brightness_message">亮度無法變更，因為自動亮度模式目前已開啟。</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">處理「.nfo」檔案</string>
     <string name="network_nfo_parse_summary">在掃描或重新掃描時，讀取 Kodi 的「.nfo」檔案以獲得媒體資訊和海報</string>
@@ -755,7 +663,6 @@
     <string name="torrent_blocklist">黑名單</string>
     <string name="blocklist_empty">網址不能為空白</string>
     <string name="blocklist_invalid">黑名單無效</string>
-    <string name="blocklist_downloading">正在下載黑名單</string>
     <string name="blocklist_file_not_found">找不到檔案</string>
     <string name="blocklist_success">黑名單重新整理成功</string>
     <string name="blocklist_unknown_error">未知</string>
@@ -766,18 +673,14 @@
     <string name="share_infos_incomplete">必須填寫路徑</string>
     <string name="share_path">路徑</string>
     <string name="category_trakt">Trakt</string>
-    <string name="trakt_user">使用者名稱</string>
-    <string name="trakt_password">密碼</string>
     <string name="trakt_signin">登入</string>
     <string name="trakt_list_signin">登入 Trakt</string>
-    <string name="trakt_status_login">正在登入 &#8230;</string>
     <string name="trakt_signin_summary_logged">已登入</string>
     <string name="trakt_signin_summary_logged_error">認證錯誤</string>
     <string name="trakt_signin_summary">尚未登入</string>
     <string name="trakt_relog_description">Trakt 出現問題，憑證需要重設，請重新登入。</string>
     <string name="trakt_signin_dialog_title">登入</string>
     <string name="trakt_signin_title">登入</string>
-    <string name="trakt_wipe_dialog_title">要登出 Trakt.tv 嗎？</string>
     <string name="trakt_wipe_title">登出 Trakt</string>
     <string name="trakt_live_scrobbling_title">即時同步紀錄</string>
     <string name="trakt_live_scrobbling_summary">在 Trakt 分享已觀看的影片</string>
@@ -819,7 +722,6 @@
     <string name="leanback_scrap">取得影片資訊</string>
     <string name="leanback_scrap_choose_the_description">選擇影片資訊</string>
     <string name="leanback_scrap_choose_the_description_for">"選擇「%s」的影片資訊"</string>
-    <string name="leanback_scrap_searching_general_hint">電影或電視劇名稱</string>
     <string name="leanback_scrap_searching_tvshow_hint">電視劇名稱</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">傳統介面</string>
@@ -855,7 +757,6 @@
     <string name="rescan_when_opening_application">開啟應用程式時重新掃描</string>
     <string name="last_rescan_occured">上次重新掃描時間：</string>
     <string name="error_permission_display_over_apps">視窗模式需要取得顯示在其他應用程式上層的特殊權限，請允許 Nova Video Player 該項權限以切換到視窗模式。</string>
-    <string name="intro_overlay_text">觸碰可將影片投放至電視</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">查看更多</string>
@@ -876,44 +777,23 @@
     <string name="system">系统</string>
     <string name="keep_setting">記住此全域變數設定</string>
     <string name="select_sub_file"><![CDATA[找不到此 <font color=#29b6f6><i>%s</i></font> 檔案的字幕<br />請嘗試以下清單]]></string>
-    <string name="switch_remote_empty_message">切換到遠端顯示模式或許可以提供更多的音軌選項</string>
-    <string name="cast_stream_mode">串流模式</string>
-    <string name="cast_remote_display_mode">遠端顯示模式</string>
-    <string name="cast_remote_display_mode_description">Nova Video Player 所支援的影片檔案格式都可使用遠端顯示模式撥放，但是播放品質可能會下降。</string>
-    <string name="cast_stream_mode_description">最佳品質可能不支援某些影片檔案格式</string>
     <string name="sleep_timer_title">睡眠定時器</string>
     <string name="sleep_timer_description">停止播放時間：</string>
-    <string name="cast_mode">投放模式</string>
-    <string name="cast_info">資訊</string>
-    <string name="troubleshoot_streammode_msg">Nova Video Player 目前為串流投放模式。
-        \n這會增加播放品質，但可能會導致音軌和字幕的問題。
-        可以嘗試切換到遠端顯示投放模式。</string>
-    <string name="troubleshoot_remotemode_msg">Nova Video Player 目前為遠端顯示模式。
-        \n根據裝置和網路的品質，您可能遭遇到播放品質和效能的問題。</string>
     <string name="picture_in_picture">畫中畫</string>
     <string name="cast">投放</string>
-    <string name="cast_warning">投放的支援受限於 Chromecast 解碼器的限制，為了減少這限制，可實行兩種投放模式：Chromecast 和螢幕投放 (具自動後饋功能)。請注意，效能和播放品質也可能受到裝置和網路的限制。</string>
-    <string name="cast_warning_title">實驗性功能</string>
-    <string name="cast_fallback_message">錯誤：後饋至螢幕投放</string>
-    <string name="cast_introduction">新的實驗性功能：\nGoogle cast</string>
-    <string name="cast_select_for_full_control">觸壓以延伸控制器</string>
     <string name="cast_audio_background">Nova Video Player 於後台運行時，聲音將無法運作</string>
     <string name="help_faq">説明 / 常見問題</string>
     <string name="provider_folders">雲端</string>
-    <string name="learn_more">了解更多</string>
-    <string name="learn_more_about_codecs">Nova Video Player 只能播放裝置支援的影片格式。由於授權的問題，部分格式無法內建支援，其他的解碼套件則可在 Play 商店購買。</string>
     <string name="rate_us">如果您喜歡這個應用程式，請用五顆星評分來支持我們</string>
     <string name="rate_us_title">☆ 支持我們</string>
     <string name="create_new_list">建立新的播放清單</string>
     <string name="add_to_list">新增至播放清單</string>
     <string name="no_resume_available">目前沒有可用的續播進度</string>
     <string name="no_list_detected">目前找不到任何撥放清單。您可以直接藉由影片資訊中的「新增至播放清單」建立列表，或是同步您的 Trakt 帳戶。</string>
-    <string name="premium_already_purchased">已購買付費版本</string>
     <string name="remove_from_list">從播放清單中移除</string>
     <string name="warning_swdec">警告：硬體解碼已停用！</string>
     <string name="list_title">清單標題</string>
     <string name="loading">載入中...</string>
-    <string name="connecting">連線中...</string>
     <string name="refreshrate_failed">設定重新整理頻率失敗</string>
     <string name="sponsor">贊助 Nova</string>
     <string name="enable_sponsor_title">開啟 Nova 贊助連結</string>
@@ -921,6 +801,4 @@
     <string name="upgrade_info">升級資訊</string>
     <string name="v5_v6_upgrade_info">警告：本版本 Nova 有重大更新，需要重新掃描所有影片的收藏以重新獲得多媒體資訊。
         強烈建議重新安裝後重起以避免發生問題，詳細資訊請參閱「説明 / 常見問題」。</string>
-    <string name="networks">網路：</string>
-    <string name="premiered">首映：</string>
 </resources>

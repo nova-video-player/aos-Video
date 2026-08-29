@@ -38,15 +38,9 @@
     <!-- Dialog box button -->
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">ଅଵଧି</string>
     <string name="video_sources">ଉତ୍ସ</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">ଚଳଚ୍ଚିତ୍ର</string>
-    <string name="info_tab_show">ପ୍ରଦର୍ଶନୀ</string>
-    <string name="info_tab_episode">ଅଧ୍ୟାୟ</string>
-    <string name="info_tab_video">ଵିଡ଼ିଓ</string>
     <string name="info_tab_file">ଫାଇଲ୍ ସୂଚନା</string>
-    <string name="info_tab_poster_chooser">ପୋଷ୍ଟର୍ ଚୟକ</string>
     <string name="info_menu_poster_select">ଅନ୍ୟ ଏକ ପୋଷ୍ଟର୍ ଚୟନ କରନ୍ତୁ</string>
     <string name="info_menu_series_poster_select">ଅନ୍ୟ ଏକ ପୋଷ୍ଟର୍ ଚୟନ କରନ୍ତୁ</string>
     <!-- COVER ROLL -->
@@ -65,16 +59,8 @@
     <string name="all_movies_format">ସବୁ ଚଳଚ୍ଚିତ୍ର  -  %d</string>
     <string name="all_collections">ସବୁ ସଂଗ୍ରହ</string>
     <string name="all_collections_format">ସବୁ ସଂଗ୍ରହ  -  %d</string>
-    <string name="all_collection_watched">ସବୁ ସଂଗ୍ରହ ଦେଖି ସାରିଛନ୍ତି</string>
-    <string name="all_collection_unwatched">ସଂଗ୍ରହ ଦେଖି ନାହାଁନ୍ତି</string>
-    <plurals name="n_movies_watched">
-        <item quantity="one">%dଟିଏ ଚଳଚ୍ଚିତ୍ର ଦେଖିଛନ୍ତି</item>
-        <item quantity="other">%dଟି ଚଳଚ୍ଚିତ୍ର ଦେଖିଛନ୍ତି</item>
-    </plurals>
     <string name="not_watched_movies_format">ଦେଖି ନାହାଁନ୍ତି  -  %d</string>
     <string name="not_watched_animes_format">ଦେଖି ନାହାଁନ୍ତି  -  %d</string>
-    <string name="no_movie_watched">କୌଣସି ଚଳଚ୍ଚିତ୍ର ଦେଖି ନାହାଁନ୍ତି</string>
-    <string name="all_movies_watched">ସବୁ ଚଳଚ୍ଚିତ୍ର ଦେଖି ସାରିଛନ୍ତି</string>
     <string name="movie_collections">ସଂଗ୍ରହ</string>
     <string name="anime_collections">ଅନିମେ ସଂଗ୍ରହ</string>
     <string name="not_watched_tvshows_format">ଦେଖି ନାହାଁନ୍ତି  -  %d</string>
@@ -96,11 +82,9 @@
     <string name="scrap_cast">ପାତ୍ର</string>
     <string name="scrap_cast_format">ପାତ୍ର: %s</string>
     <string name="scrap_genre">ଧରଣ</string>
-    <string name="scrap_genre_format">ଧରଣ: %s</string>
     <string name="scrap_genre_title">ଧରଣ</string>
     <string name="scrap_aired">ପ୍ରସାରଣ ହୋଇଛି</string>
     <string name="scrap_aired_format">ପ୍ରସାରିତ: %s</string>
-    <string name="scrap_guests">ଅତିଥି</string>
     <!-- Specific strings for TV shows -->
     <string name="episode_name">ଅଧ୍ୟାୟ</string>
     <string name="episode_season">ଋତୁ</string>
@@ -122,7 +106,6 @@
     <string name="scraper_no_movie_text">ଆପଣଙ୍କ ପାଖରେ ଵର୍ତ୍ତମାନ ଆପଣଙ୍କ ଚଳଚ୍ଚିତ୍ର ପାଇଁ କୌଣସି ପୋଷ୍ଟର୍ ଏଵଂ ଵର୍ଣ୍ଣନା ନାହିଁ</string>
     <string name="scraper_no_tv_show_text">ଆପଣଙ୍କ ପାଖରେ ଵର୍ତ୍ତମାନ ଆପଣଙ୍କ ଟିଵି ଶୋ\' ପାଇଁ କୌଣସି ପୋଷ୍ଟର୍ ଏଵଂ ଵର୍ଣ୍ଣନା ନାହିଁ</string>
     <!-- To be translated only in case there is a localized IMDB -->
-    <string name="info_video">ଵିଡ଼ିଓ</string>
     <string name="info_audio">ଅଡ଼ିଓ</string>
     <string name="info_file">ଫାଇଲ୍ ସୂଚନା</string>
     <!-- VIDEO COVER ROLL -->
@@ -131,7 +114,6 @@
         <item quantity="other"><xliff:g id="count">%d</xliff:g>ଟି ଋତୁ</item>
     </plurals>
     <!-- Media Center -->
-    <string name="view_mode_grid">ପୋଷ୍ଟର୍</string>
     <!-- VideoPlayer -->
     <string name="pref_play_mode_entry_folder">ଫୋଲ୍ଡର୍</string>
     <string name="ui_mode_auto">ସ୍ୱତଃ</string>
@@ -165,11 +147,9 @@
     <string name="ssh_username">ଉପଭୋକ୍ତା ନାମ</string>
     <!-- Preferences -->
     <string name="preferences_about">ଵିଷୟରେ</string>
-    <string name="preferences_category_complete">ପୁରା ସଂସ୍କରଣ</string>
     <string name="preferences_category_video">ଵିଡ଼ିଓ</string>
     <string name="preferences_video_about">ଵିଷୟରେ</string>
     <string name="preferences_video_advanced">ଵିକଶିତ</string>
-    <string name="movie_scraper">ଚଳଚ୍ଚିତ୍ର</string>
     <string name="locale">ସିଷ୍ଟମ୍ ଭାଷା</string>
     <string name="yes">ହଁ</string>
     <string name="no">ନାହିଁ</string>
@@ -212,8 +192,6 @@
     <string name="codepage_extra_1258">(CP୧୨୫୮)</string>
     <string name="blocklist_unknown_error">ଅଜ୍ଞାତ</string>
     <string name="share_path">ପଥ</string>
-    <string name="trakt_user">ଉପଭୋକ୍ତା ନାମ</string>
-    <string name="trakt_password">ପାସ୍‌ୱର୍ଡ଼</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">ସବୁ ଵିଡ଼ିଓ</string>
     <string name="hide_seen">ଦେଖି ନାହାଁନ୍ତି</string>
@@ -238,5 +216,4 @@
     <string name="scheduled_rescan_period_every_two_hours">ପ୍ରତି ୨ ଘଣ୍ଟାରେ</string>
     <string name="scheduled_rescan_period_every_hour">ପ୍ରତି ଘଣ୍ଟାରେ</string>
     <string name="view_more">ଆହୁରି ଦେଖନ୍ତୁ</string>
-    <string name="cast_info">ସୂଚନା</string>
 </resources>

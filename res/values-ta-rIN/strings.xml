@@ -23,7 +23,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">சர்வர் பட்டியலைப் புதுப்பிக்கவும்</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">நெட்வொர்க் பகிர்வுகளை இயக்கு</string>
     <string name="initial_scan">ஆரம்ப ஸ்கேன்</string>
     <!-- Library screen, menu item -->
     <string name="search_title">தேடு</string>
@@ -44,17 +43,9 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">கால அளவு</string>
     <string name="video_sources">ஆதாரங்கள்</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">திரைப்படம்</string>
-    <string name="info_tab_show">காட்டு</string>
-    <string name="info_tab_episode">அத்தியாயம்</string>
-    <string name="info_tab_video">காணொளி</string>
     <string name="info_tab_file">கோப்பு விவரம்</string>
-    <string name="info_tab_backdrop_chooser">பின் திரையை தேர்ந்தெடு</string>
-    <string name="info_tab_poster_chooser">சுவரொட்டி தேர்வு செய்பவர்</string>
-    <string name="info_tab_share">பகிர்</string>
     <string name="info_menu_backdrop_select">பின்னணி</string>
     <string name="info_menu_series_backdrop_select">தொடர் பின்னணி</string>
     <string name="info_menu_poster_select">மற்றொரு சுவரொட்டியைத் தேர்ந்தெடுக்கவும்</string>
@@ -77,12 +68,9 @@
     <string name="network_shared_folders">பகிரப்பட்ட கோப்புறைகள் (SMB)</string>
     <string name="network_connected_as">%s உடன் இணையவும்</string>
     <string name="network_guest">விருந்தாளி</string>
-    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">சம்பா (பரிசோதனை)</string>
     <string name="network_cling">UPNP (பரிசோதனை)</string>
-    <string name="recordings_storage">பதிவுகள்</string>
     <string name="root_storage">அகச் சேமிப்பகம்</string>
-    <string name="cannot_list">பட்டியலிட இயலாத தகவு</string>
     <!-- VIDEO -->
     <string name="videos">காணொளிகள்</string>
     <string name="all_videos">அனைத்து காணொளிகள்</string>
@@ -99,7 +87,6 @@
     <string name="bookmark">புத்தகக்குறிகள்</string>
     <string name="delete">நீக்கு</string>
     <string name="confirm_delete_short">அழித்தலை உறுதிசெய்</string>
-    <string name="delete_bookmark">\"%s\" புக்மார்க்கை நீக்கவா</string>
     <string name="scrap_remove">தகவலை நீக்கு</string>
     <string name="scrap_remove_short">நீக்கு</string>
     <!-- for small screens -->
@@ -120,11 +107,8 @@
     <string name="scrap_cast">நடிகர்கள்</string>
     <string name="scrap_cast_format">நடிகர்கள்: %s</string>
     <string name="scrap_genre">வகை</string>
-    <string name="scrap_genre_format">வகைகள்: %s</string>
     <string name="scrap_genre_title">வகைகள்</string>
-    <string name="scrap_guests">விருந்தினர்கள்</string>
     <!-- Specific strings for TV shows -->
-    <string name="show_network">பிணையம்</string>
     <string name="episode_name">அத்தியாயம்</string>
     <string name="next_episode">அடுத்த அத்தியாயம்</string>
     <string name="list_episodes">அத்தியாயங்களைப் பட்டியலிடு</string>
@@ -138,15 +122,11 @@
     <string name="scraper_no_episode_found">இல்லை அடுத்த சம்பவம் காணப்படவில்லை</string>
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">சேமிப்பகம்</string>
-    <string name="info_video">காணொளி</string>
     <string name="info_audio">பாடல்</string>
     <string name="info_subtitle">வசனவரி</string>
     <!-- VIDEO COVER ROLL -->
     <string name="you_have_no_video">வீடியோக்கள் இல்லை</string>
     <!-- Media Center -->
-    <string name="view_mode_list">பட்டியல்</string>
-    <string name="view_mode_grid">சுவரோட்டிகள்</string>
-    <string name="view_mode_details">விவரங்கள்</string>
     <string name="switch_to_list">பட்டியல்</string>
     <string name="switch_to_grid">கட்டம்</string>
     <!-- VideoPlayer -->
