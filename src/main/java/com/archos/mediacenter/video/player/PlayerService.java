@@ -1643,10 +1643,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 PlayerService.sPlayerService.mPlayerState = PlayerService.PlayerState.PLAYING;
             }
             if(mAudioSubtitleNeedUpdate){ // when we have info about subs or audio track BEFORE mVideoInfo is set
-                if (log.isDebugEnabled()) log.debug("postPreparedAndVideoDb: subtitletrack onSubtitleMetadataUpdated {}", mNewSubtitleTrack);
-                onSubtitleMetadataUpdated(mPlayer.getVideoMetadata(), mNewSubtitleTrack);
                 if (log.isDebugEnabled()) log.debug("postPreparedAndVideoDb: audiotrack onAudioMetadataUpdated {}", mNewAudioTrack);
                 onAudioMetadataUpdated(mPlayer.getVideoMetadata(), mNewAudioTrack);
+                if (log.isDebugEnabled()) log.debug("postPreparedAndVideoDb: subtitletrack onSubtitleMetadataUpdated {}", mNewSubtitleTrack);
+                onSubtitleMetadataUpdated(mPlayer.getVideoMetadata(), mNewSubtitleTrack);
                 mAudioSubtitleNeedUpdate = false;
             }
             if (log.isDebugEnabled()) log.debug("postPreparedAndVideoDb: mPlayerFrontend.onPrepared, setPlaMode {}", mPlayMode);
@@ -2139,6 +2139,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: hide subs -> selected none track");
                     mVideoInfo.subtitleTrack = noneTrack;
                 } else {
+                    String currentLocaleLanguage = Locale.getDefault().getLanguage();
+                    boolean selectedAudioIsInCurrentLocale =
+                            isSelectedAudioTrackInLanguage(vMetadata, currentLocaleLanguage);
                     Locale locale = Locale.forLanguageTag(mSubsFavoriteLanguage);
                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: favorite locale {}, current locale {}", locale.getDisplayLanguage(), Locale.getDefault().getDisplayLanguage());
                     String trackName = "";
@@ -2161,7 +2164,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                             if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: no language found in track/file name -> set it to unknown");
                             lang = getText(R.string.unknown_track_name).toString();
                         } else {
-                            if (stringContainsForced(trackName)) {
+                            if (selectedAudioIsInCurrentLocale
+                                    && isSubtitleTrackInLanguage(vMetadata, i, currentLocaleLanguage)) {
+                                if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: skip locale subtitle track {} because active audio track {} is also in locale language {}", i, mVideoInfo.audioTrack, currentLocaleLanguage);
+                            } else if (stringContainsForced(trackName)) {
                                 if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: skip track: {} with identified lang: {} because it contains forced sub", trackName, lang);
                             } else {
                                 if (lang.toLowerCase(Locale.getDefault()).contains(locale.getDisplayLanguage().toLowerCase(Locale.getDefault()))) {
@@ -2207,6 +2213,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         } else {
                             newTrack = Objects.requireNonNullElse(fallbackTextTrack, newSubtitleTrack); // strategy to revert to newSubtitleTrack if lang not found (legacy)
                             revertTrackName = "newSubtitleTrack";
+                        }
+                        if (selectedAudioIsInCurrentLocale
+                                && newTrack < nbTrack
+                                && isSubtitleTrackInLanguage(vMetadata, newTrack, currentLocaleLanguage)) {
+                            if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: fallback {} is in current locale {} while active audio is also local -> selected none track", newTrack, currentLocaleLanguage);
+                            newTrack = noneTrack;
+                            revertTrackName = "noneTrack";
                         }
                         if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: no default sub found mVideoInfo.subtitleTrack: {} -> setting {} or external text ({}) track if exists -> videoInfo.subtitleTrack={}", mVideoInfo.subtitleTrack, revertTrackName, fallbackTextTrack, newTrack);
                         mVideoInfo.subtitleTrack = newTrack;
@@ -2294,6 +2307,31 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (track != noneTrack && !mPlayer.setSubtitleTrack(noneTrack)) {
             log.error("onSubtitleTrackSelectionCompleted: failed to queue none-track fallback {}", noneTrack);
         }
+    }
+
+    private boolean isSelectedAudioTrackInLanguage(VideoMetadata videoMetadata, String language) {
+        int audioTrackIndex = mVideoInfo.audioTrack;
+        if (audioTrackIndex < 0 || audioTrackIndex >= videoMetadata.getAudioTrackNb()) {
+            return false;
+        }
+        VideoMetadata.AudioTrack audioTrack = videoMetadata.getAudioTrack(audioTrackIndex);
+        return audioTrack != null
+                && audioTrack.supported
+                && ISO639codes.isFavoriteLanguageMatch(language, audioTrack.language);
+    }
+
+    private boolean isSubtitleTrackInLanguage(VideoMetadata videoMetadata, int subtitleTrackIndex,
+            String language) {
+        VideoMetadata.SubtitleTrack subtitleTrack = videoMetadata.getSubtitleTrack(subtitleTrackIndex);
+        if (subtitleTrack == null) {
+            return false;
+        }
+        String subtitleLanguage = subtitleTrack.language;
+        if (subtitleTrack.isExternal) {
+            subtitleLanguage = getSubLanguageFromSubPathAndVideoPath(
+                    getApplicationContext(), subtitleTrack.path, videoMetadata.getFile().getPath());
+        }
+        return ISO639codes.isFavoriteLanguageMatch(language, extractLanguageCode(subtitleLanguage));
     }
 
     private static boolean isGenericTextSubtitleFormat(String lang) {

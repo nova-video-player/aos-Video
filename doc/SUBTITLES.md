@@ -62,6 +62,33 @@ External subtitle discovery is refreshed through `stream_check_subtitles()`,
 which compares external subtitle files, rebuilds external subtitle state when it
 changes, and emits subtitle metadata changes.
 
+## Automatic subtitle-track selection
+
+`PlayerService.onSubtitleMetadataUpdated()` selects a subtitle track only when
+there is no saved or explicit subtitle choice. It normally favors the configured
+preferred subtitle language (the device locale by default), skips tracks marked
+as forced, and falls back to an external text track or the player-provided track
+when no preferred-language track is available.
+
+The system locale and the preferred audio/subtitle-language settings are
+independent. Before automatic subtitle selection, Nova resolves the active audio
+track. If that selected audio track has the same normalized language as the
+device's current system locale, automatic selection must not enable a subtitle
+track in that locale. This avoids, for example, automatically showing French
+subtitles while a French audio track is playing for a French-locale user.
+
+- A separately configured preferred audio track does not change this rule: it
+  is the selected audio track, not the audio preference, that is compared.
+- Preferred subtitles in another language remain eligible for automatic
+  selection.
+- The fallback path must also reject a system-locale subtitle in this case and
+  leave subtitles off instead.
+- A subtitle track selected manually or restored from a valid saved selection
+  is never overridden by this automatic-selection rule.
+
+Audio and subtitle languages are compared as normalized ISO 639-1 base codes,
+so equivalent two-letter, three-letter, and locale-tag forms compare equally.
+
 ## Native subtitle formats
 
 ### Text
