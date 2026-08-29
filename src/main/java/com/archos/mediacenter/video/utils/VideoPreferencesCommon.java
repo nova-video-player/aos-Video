@@ -933,6 +933,15 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                     rescanPath(s);
                 }
             }
+            // Explicitly also retry files the auto-scraper previously could not match (but not
+            // already-matched content), unlike the generic incremental scrape that scanFile() above
+            // triggers via the ContentObserver, which only looks at never-scraped files. Scoped to
+            // this user-triggered action so permanently-unmatchable content isn't retried on every
+            // silent automatic trigger.
+            Intent rescanNotFoundIntent = new Intent(AutoScrapeService.RESCAN_EVERYTHING, null, getActivity(), AutoScrapeService.class);
+            rescanNotFoundIntent.putExtra(AutoScrapeService.RESCAN_EVERYTHING, false);
+            rescanNotFoundIntent.putExtra(AutoScrapeService.RESCAN_ONLY_DESC_NOT_FOUND, true);
+            getContext().startService(rescanNotFoundIntent);
             Toast.makeText(getActivity(), R.string.rescanning,Toast.LENGTH_SHORT).show();
             return true;
         });
