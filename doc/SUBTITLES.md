@@ -94,7 +94,11 @@ Current automatic selection works as follows:
 5. In every other case, Nova scans for a non-forced full subtitle matching
    `favSubLang`, using Chinese title variants and the `default` disposition as
    tie breakers. Forced tracks are not candidates for this full-subtitle scan.
-6. A generic/player-provided fallback is rejected when it is forced. If no
+6. If no preferred-language full subtitle exists, *Hide subtitles by default*
+   is off, and the valid active audio language differs from the device locale,
+   Nova falls back to a non-forced English full subtitle. A matching `default`
+   track wins over the first English match.
+7. A generic/player-provided fallback is rejected when it is forced. If no
    eligible full or forced track exists, Nova selects none.
 
 Audio processing is performed before deferred subtitle processing, so this scan
@@ -165,7 +169,10 @@ existing preferences and strict language matching:
    user watching English audio therefore gets full French subtitles, not an
    English forced track. Apply language-variant and `default` tie breakers only
    among eligible tracks.
-6. A forced track is never a fallback for a requested full subtitle. If no
+6. If no preferred full subtitle exists, hiding is off, and the active audio is
+   not in the device locale, select a non-forced English full subtitle (default
+   disposition first, then first match).
+7. A forced track is never a fallback for a requested full subtitle. If no
    eligible track exists, select none.
 
 The `default` disposition is only a tie breaker among already eligible tracks;
@@ -188,6 +195,7 @@ manual or full-subtitle selection during an audio change.
 | French | French | French / hide off | French full only | None |
 | English | French | French / hide off | French full; English forced | French full |
 | French | French | English / hide off | English full; French forced | English full |
+| Japanese | French | French / hide off | English full only | English full |
 | English | French | French / hide on | English forced only | English forced only |
 | French | French | French / hide on | Forced with no language; one French audio track | Forced track |
 
