@@ -125,6 +125,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
         Bundle b = new Bundle();
         //b.putBoolean(Scraper.ITEM_REQUEST_BASIC_SHOW, true);
         b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
+        b.putBoolean(Scraper.ITEM_REQUEST_REFRESH_SHOW_METADATA, true);
         //b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
         //b.putInt(Scraper.ITEM_REQUEST_SEASON, 1);
         // this is required to get the season poster (episode does not have this information on tmdb)
@@ -325,6 +326,7 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             Bundle b = new Bundle();
             // TODO MARC not sure we need all
             b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
+            b.putBoolean(Scraper.ITEM_REQUEST_REFRESH_SHOW_METADATA, true);
             ScrapeDetailResult detail = Scraper.getDetails(sr, b);
             HashMap<String, EpisodeTags> epMap = null;
             if (detail.isOkay()) {
@@ -332,6 +334,14 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
                     newShow = ((EpisodeTags)detail.tag).getShowTags();
                 Bundle episodeList = detail.extras;
                 epMap = toMap(episodeList);
+                if (log.isDebugEnabled()) {
+                    log.debug("handleSave: full TMDb refresh returned show onlineId={} original_language={} original_title={} spoken_languages={} episodes={}",
+                            newShow == null ? -1 : newShow.getOnlineId(),
+                            newShow == null ? null : newShow.getOriginalLanguage(),
+                            newShow == null ? null : newShow.getOriginalTitle(),
+                            newShow == null ? null : newShow.getSpokenLanguages(),
+                            epMap == null ? -1 : epMap.size());
+                }
             } else {
                 // TODO: if notOkay then epMap is null -> should be handled
                 log.warn("handleSave: episode details NOK!");

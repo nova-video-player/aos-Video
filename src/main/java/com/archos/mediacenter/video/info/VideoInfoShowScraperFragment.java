@@ -538,6 +538,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                         while (!isCancelled && current < count) {
                             Bundle b = new Bundle();
                             b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
+                            b.putBoolean(Scraper.ITEM_REQUEST_REFRESH_SHOW_METADATA, true);
                             checkPause();
                             if (isCancelled) return;
                             BaseTags tag = null;
