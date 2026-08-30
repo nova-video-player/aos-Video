@@ -573,6 +573,8 @@
     <string name="favSubLang_summary">Choose your favorite language for reading subtitles</string>
     <string name="favAudioLang_title">Audio preferred language</string>
     <string name="favAudioLang_summary">Choose your favorite audio track language</string>
+    <string name="prefer_original_audio_track_title">Prefer original audio track</string>
+    <string name="prefer_original_audio_track_summary">Use the track matching the movie or show’s original language when available</string>
     <string name="ui_language_title">Choose user interface language</string>
     <string name="UiLang_title">User interface language</string>
     <string name="UiLang_summary">Set nova user interface language, pick system to use system default</string>

@@ -192,6 +192,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_SUBTITLES_HIDE = "subtitles_hide_default";
     public static final String KEY_SUBTITLES_FAV_LANG = "favSubLang";
     public static final String KEY_AUDIO_TRACK_FAV_LANG = "favAudioLang";
+    public static final String KEY_PREFER_ORIGINAL_AUDIO_TRACK = "prefer_original_audio_track";
     public static final String KEY_SCRAPER_FAV_LANG = "favScraperLang";
     public static final String KEY_TRAKT_CATEGORY = "trakt_category";
     public static final String KEY_TRAKT_GETFULL = "trakt_getfull";

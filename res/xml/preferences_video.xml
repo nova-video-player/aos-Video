@@ -155,6 +155,13 @@
             android:title="@string/preference_dolby_vision_mode"
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="prefer_original_audio_track"
+            android:persistent="true"
+            android:summary="@string/prefer_original_audio_track_summary"
+            android:title="@string/prefer_original_audio_track_title"
+            app:iconSpaceReserved="false"/>
         <ListPreference
             android:dialogTitle="@string/favAudioLang_title"
             android:entries="@array/entries_list_preference"

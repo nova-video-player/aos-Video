@@ -315,6 +315,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private boolean mIsPreparingSubs;
     private String mSubsFavoriteLanguage;
     private String mAudioTrackFavoriteLanguage;
+    private boolean mPreferOriginalAudioTrack;
     private boolean mDestroyed;
     private Runnable mAutoSaveTask;
     private CountDownLatch mSubtitlesReadyLatch = null;
@@ -581,6 +582,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mNetworkBookmarksEnabled = mPreferences.getBoolean(KEY_NETWORK_BOOKMARKS, true);
         mSubsFavoriteLanguage = mPreferences.getString(KEY_SUBTITLES_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
         mAudioTrackFavoriteLanguage = mPreferences.getString(KEY_AUDIO_TRACK_FAVORITE_LANGUAGE, Locale.getDefault().getISO3Language());
+        mPreferOriginalAudioTrack = mPreferences.getBoolean(VideoPreferencesCommon.KEY_PREFER_ORIGINAL_AUDIO_TRACK, false);
         mAudioFilt = mPreferences.getInt(KEY_AUDIO_FILT, 0);
         mNightModeOn = mPreferences.getBoolean(KEY_AUDIO_FILT_NIGHT, false);
         mForceSingleRepeatMode = isDemoMode;
@@ -1998,6 +2000,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         Integer languageMatchTrack = null;
         Integer languageDefaultMatchTrack = null;
         Integer languageVariantMatchTrack = null;
+        Integer originalLanguageMatchTrack = null;
+        Integer originalLanguageDefaultMatchTrack = null;
+        String originalLanguage = mVideoInfo.scraperOriginalLanguage;
+        boolean chooseInitialAudioTrack = (mVideoInfo.audioTrack < 0 || mVideoInfo.audioTrack >= nbTrack || !vMetadata.getAudioTrack(mVideoInfo.audioTrack).supported) && firstTimeAudioCalled;
+        boolean preferOriginalLanguage = mPreferOriginalAudioTrack && originalLanguage != null
+                && !originalLanguage.isEmpty() && !"und".equalsIgnoreCase(originalLanguage);
         supported = false;
 
         // VideoDbInfo sets audioTrack to -1 when file has not been played or restores playerParams
@@ -2009,8 +2017,18 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     firstSupportedTrack = i;
                     supported = true;
                 }
-                if ((mVideoInfo.audioTrack < 0 || mVideoInfo.audioTrack >= nbTrack || !vMetadata.getAudioTrack(mVideoInfo.audioTrack).supported) && firstTimeAudioCalled) { // track has not been selected yet and it is the first time video is played
+                if (chooseInitialAudioTrack) { // track has not been selected yet and it is the first time video is played
                     String trackLanguage = vMetadata.getAudioTrack(i).language;
+                    if (preferOriginalLanguage && ISO639codes.isFavoriteLanguageMatch(originalLanguage, trackLanguage)) {
+                        if (originalLanguageMatchTrack == null) {
+                            if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: track #{} -> {} matches original audio language {}", i, trackName, originalLanguage);
+                            originalLanguageMatchTrack = i;
+                        }
+                        if (originalLanguageDefaultMatchTrack == null && (vMetadata.getAudioTrack(i).disposition & VideoUtils.AV_DISPOSITION_DEFAULT) != 0) {
+                            if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: track #{} -> {} matches original audio language {} and is marked default", i, trackName, originalLanguage);
+                            originalLanguageDefaultMatchTrack = i;
+                        }
+                    }
                     if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: trying to match favorite audioTrack language {} against track #{} language {} ({})", mAudioTrackFavoriteLanguage, i, trackLanguage, trackName);
                     if (ISO639codes.isFavoriteLanguageMatch(mAudioTrackFavoriteLanguage, trackLanguage)) {
                         if (languageMatchTrack == null) {
@@ -2041,7 +2059,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // prefer a Chinese-variant title match (Mandarin/Cantonese/Taiwan) if found, otherwise the
         // language-matching track marked "default" by the container, otherwise the first track
         // whose language code matches the favorite audio language
-        Integer selectedAudioTrack = ISO639codes.selectPreferredTrack(languageVariantMatchTrack, languageDefaultMatchTrack, languageMatchTrack);
+        Integer selectedOriginalAudioTrack = ISO639codes.selectPreferredTrack(null, originalLanguageDefaultMatchTrack, originalLanguageMatchTrack);
+        Integer selectedFavoriteAudioTrack = ISO639codes.selectPreferredTrack(languageVariantMatchTrack, languageDefaultMatchTrack, languageMatchTrack);
+        Integer selectedAudioTrack = selectedOriginalAudioTrack != null ? selectedOriginalAudioTrack : selectedFavoriteAudioTrack;
+        if (selectedOriginalAudioTrack != null && log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: preferring original audio language {} on track #{}", originalLanguage, selectedOriginalAudioTrack);
         if (selectedAudioTrack != null) mVideoInfo.audioTrack = selectedAudioTrack;
 
         // if no valid audioTrack selected revert to firstSupportedTrack if it exists
