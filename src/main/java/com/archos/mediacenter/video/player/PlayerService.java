@@ -2161,6 +2161,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         isSelectedAudioTrackInLanguage(vMetadata, currentLocaleLanguage);
                 boolean selectedAudioIsOutsideCurrentLocale =
                         isSelectedAudioTrackOutsideLanguage(vMetadata, currentLocaleLanguage);
+                Integer defaultExternalTextTrack = mHideSubtitles ? null
+                        : selectDefaultExternalTextSubtitleTrack(vMetadata);
                 if (mHideSubtitles) {
                     Integer forcedTrack = selectForcedSubtitleTrack(vMetadata);
                     mVideoInfo.subtitleTrack = Objects.requireNonNullElse(forcedTrack, noneTrack);
@@ -2168,8 +2170,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 } else if (selectedAudioIsInCurrentLocale
                         && ISO639codes.isFavoriteLanguageMatch(mSubsFavoriteLanguage, currentLocaleLanguage)) {
                     Integer forcedTrack = selectForcedSubtitleTrack(vMetadata);
-                    mVideoInfo.subtitleTrack = Objects.requireNonNullElse(forcedTrack, noneTrack);
-                    if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: active audio and preferred subtitles match current locale {} -> selected forced track {}", currentLocaleLanguage, mVideoInfo.subtitleTrack);
+                    mVideoInfo.subtitleTrack = Objects.requireNonNullElse(forcedTrack,
+                            Objects.requireNonNullElse(defaultExternalTextTrack, noneTrack));
+                    if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: active audio and preferred subtitles match current locale {} -> selected forced or untagged default external track {}", currentLocaleLanguage, mVideoInfo.subtitleTrack);
                 } else {
                     Locale locale = Locale.forLanguageTag(mSubsFavoriteLanguage);
                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: favorite locale {}, current locale {}", locale.getDisplayLanguage(), Locale.getDefault().getDisplayLanguage());
@@ -2373,6 +2376,27 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 && !ISO639codes.isFavoriteLanguageMatch(language, audioTrack.language);
     }
 
+    /**
+     * A sidecar named exactly like its video (for example {@code movie.srt}) has no language
+     * suffix, but conventionally represents the user's default full subtitle. It is eligible
+     * only when it is not forced; a forced track remains subject to forced-track selection.
+     */
+    private @Nullable Integer selectDefaultExternalTextSubtitleTrack(VideoMetadata videoMetadata) {
+        for (int i = 0; i < videoMetadata.getSubtitleTrackNb(); i++) {
+            VideoMetadata.SubtitleTrack subtitleTrack = videoMetadata.getSubtitleTrack(i);
+            if (subtitleTrack == null || !subtitleTrack.isExternal
+                    || isForcedSubtitleTrack(subtitleTrack)) {
+                continue;
+            }
+            String language = getSubLanguageFromSubPathAndVideoPath(
+                    getApplicationContext(), subtitleTrack.path, videoMetadata.getFile().getPath());
+            if (isGenericTextSubtitleFormat(language)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
     private @Nullable Integer selectForcedSubtitleTrack(VideoMetadata videoMetadata) {
         int audioTrackIndex = mVideoInfo.audioTrack;
         if (audioTrackIndex < 0 || audioTrackIndex >= videoMetadata.getAudioTrackNb()) {
@@ -2402,9 +2426,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 if (unknownLanguageDefaultTrack == null && isDefault) unknownLanguageDefaultTrack = i;
             }
         }
-        return Objects.requireNonNullElse(matchingDefaultTrack,
-                Objects.requireNonNullElse(matchingTrack,
-                        Objects.requireNonNullElse(unknownLanguageDefaultTrack, unknownLanguageTrack)));
+        if (matchingDefaultTrack != null) return matchingDefaultTrack;
+        if (matchingTrack != null) return matchingTrack;
+        if (unknownLanguageDefaultTrack != null) return unknownLanguageDefaultTrack;
+        return unknownLanguageTrack;
     }
 
     private boolean isForcedSubtitleTrack(@Nullable VideoMetadata.SubtitleTrack subtitleTrack) {
@@ -2454,7 +2479,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     /**
      * Extract 2-letter ISO 639-1 language code from a language name or code string.
-     * Uses ISO639codes utility to handle conversions from full names or different code formats.
+     * Uses ISO639codes utility to handle conversions from different code formats and also
+     * recognizes language names localized for the device (for example French "Anglais").
      * Returns lowercase 2-letter code or empty string if unable to extract.
      */
     private static String extractLanguageCode(String languageStr) {
@@ -2469,6 +2495,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         String code = com.archos.mediacenter.utils.ISO639codes.getISO6391ForLetterCode(languageStr);
         if (code != null && !code.isEmpty()) {
             return code.toLowerCase(Locale.ROOT);
+        }
+        for (String iso6391 : Locale.getISOLanguages()) {
+            Locale locale = Locale.forLanguageTag(iso6391);
+            if (languageStr.equalsIgnoreCase(locale.getDisplayLanguage())
+                    || languageStr.equalsIgnoreCase(locale.getDisplayLanguage(Locale.ENGLISH))) {
+                return iso6391.toLowerCase(Locale.ROOT);
+            }
         }
         // Fallback: if it's already a 2-letter code, use it
         if (languageStr.length() == 2 && !languageStr.contains(" ")) {

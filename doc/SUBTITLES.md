@@ -98,8 +98,12 @@ Current automatic selection works as follows:
    is off, and the valid active audio language differs from the device locale,
    Nova falls back to a non-forced English full subtitle. A matching `default`
    track wins over the first English match.
-7. A generic/player-provided fallback is rejected when it is forced. If no
-   eligible full or forced track exists, Nova selects none.
+7. An external text subtitle named exactly like the video (for example
+   `movie.srt`) is an untagged default full subtitle. When hiding is off, Nova
+   selects it if no matching forced subtitle is available for local audio, or
+   as the final normal fallback. This is intentional: the exact sidecar name
+   convention indicates that it was supplied as the video's default subtitle.
+8. If no eligible full or forced track exists, Nova selects none.
 
 Audio processing is performed before deferred subtitle processing, so this scan
 uses the resolved audio selection. There is no separate forced-subtitle
@@ -172,13 +176,20 @@ existing preferences and strict language matching:
 6. If no preferred full subtitle exists, hiding is off, and the active audio is
    not in the device locale, select a non-forced English full subtitle (default
    disposition first, then first match).
-7. A forced track is never a fallback for a requested full subtitle. If no
+7. If hiding is off and the active audio is in the device locale, select an
+   untagged default external text subtitle only after a matching forced track.
+   A sidecar named exactly like the video, such as `movie.srt`, is that default.
+8. A forced track is never a fallback for a requested full subtitle. If no
    eligible track exists, select none.
 
 The `default` disposition is only a tie breaker among already eligible tracks;
 it must never override a language mismatch. Audio and subtitle languages are
 compared as normalized ISO 639-1 base codes, so equivalent two-letter,
 three-letter, and locale-tag forms compare equally.
+
+External subtitle suffixes such as `.eng.srt` and `.ger.srt` are also matched
+by their ISO language identity, even when the file browser renders their names
+in the device language (for example, `Anglais` on a French device).
 
 When the user changes audio, repeat the forced-track steps only if the currently selected
 subtitle was automatically selected as forced. Switch to a forced track matching
@@ -196,6 +207,7 @@ manual or full-subtitle selection during an audio change.
 | English | French | French / hide off | French full; English forced | French full |
 | French | French | English / hide off | English full; French forced | English full |
 | Japanese | French | French / hide off | English full only | English full |
+| English | English | English / hide off | `movie.srt` only | `movie.srt` |
 | English | French | French / hide on | English forced only | English forced only |
 | French | French | French / hide on | Forced with no language; one French audio track | Forced track |
 
