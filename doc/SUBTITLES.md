@@ -64,30 +64,138 @@ changes, and emits subtitle metadata changes.
 
 ## Automatic subtitle-track selection
 
-`PlayerService.onSubtitleMetadataUpdated()` selects a subtitle track only when
-there is no saved or explicit subtitle choice. It normally favors the configured
-preferred subtitle language (the device locale by default), skips tracks marked
-as forced, and falls back to an external text track or the player-provided track
-when no preferred-language track is available.
+This section describes Nova's current automatic-selection policy and the
+remaining implementation work needed to make forced-track detection reliable.
 
-The system locale and the preferred audio/subtitle-language settings are
-independent. Before automatic subtitle selection, Nova resolves the active audio
-track. If that selected audio track has the same normalized language as the
-device's current system locale, automatic selection must not enable a subtitle
-track in that locale. This avoids, for example, automatically showing French
-subtitles while a French audio track is playing for a French-locale user.
+### Current implementation
 
-- A separately configured preferred audio track does not change this rule: it
-  is the selected audio track, not the audio preference, that is compared.
-- Preferred subtitles in another language remain eligible for automatic
-  selection.
-- The fallback path must also reject a system-locale subtitle in this case and
-  leave subtitles off instead.
-- A subtitle track selected manually or restored from a valid saved selection
-  is never overridden by this automatic-selection rule.
+`PlayerService` reads one audio preference (`favAudioLang`), one subtitle
+preference (`favSubLang`), and the *Hide subtitles by default* preference. Both
+language preferences fall back to the device locale's ISO-639-3 code when no
+value is stored; neither has a distinct **System language** value.
 
-Audio and subtitle languages are compared as normalized ISO 639-1 base codes,
-so equivalent two-letter, three-letter, and locale-tag forms compare equally.
+Current automatic selection works as follows:
+
+1. On first enumeration, audio selection retains a valid saved audio track. If
+   none is valid, it chooses a supported track matching `favAudioLang`, with a
+   Chinese title-variant match, then a matching `default` track, then the first
+   matching track as tie breakers. It finally falls back to the first supported
+   audio track.
+2. Subtitle selection retains a saved subtitle track when the language at its
+   saved index still matches. A manual or saved selection is never replaced by
+   automatic forced-track selection.
+3. If *Hide subtitles by default* is enabled and there is no saved selection,
+   Nova suppresses full subtitles but selects a forced track matching the active
+   audio language. A forced track with no determined language is eligible only
+   when there is exactly one audio track.
+4. Otherwise, if `favSubLang` matches the current locale and the active audio
+   also matches that locale, Nova treats the user as a native speaker: it
+   suppresses full local-language subtitles and selects the matching forced
+   track, or none if it is absent.
+5. In every other case, Nova scans for a non-forced full subtitle matching
+   `favSubLang`, using Chinese title variants and the `default` disposition as
+   tie breakers. Forced tracks are not candidates for this full-subtitle scan.
+6. A generic/player-provided fallback is rejected when it is forced. If no
+   eligible full or forced track exists, Nova selects none.
+
+Audio processing is performed before deferred subtitle processing, so this scan
+uses the resolved audio selection. There is no separate forced-subtitle
+preference. The remaining work is to make the FFmpeg forced disposition and
+external filename heuristic consistently available to this classification.
+
+### Forced subtitle semantics
+
+A *forced* subtitle track contains only dialogue or on-screen text that needs
+translation for an audience listening to the track's language. It is not a
+complete transcription of the film. For example, an English-forced track
+alongside English audio commonly translates a short conversation in another
+language; it is useful to an English-audio listener even if they normally keep
+subtitles off.
+
+A forced track must not be treated as a better version of a full subtitle track:
+
+- If the user wants full French subtitles, Nova must select the full French
+  track rather than an English-forced track. Selecting the latter would show
+  only a few English lines and fail to provide the requested French subtitles.
+- An English-forced track must never be enabled automatically for French audio
+  merely because it is marked forced or default.
+- A French-forced track may be useful with French audio, including for a
+  French-locale user. The local-audio rule that suppresses automatic *full*
+  French subtitles must not suppress this forced-only track.
+- Nova renders one subtitle track at a time. A forced track therefore cannot be
+  overlaid on a selected full subtitle track; the full track wins.
+
+For embedded tracks, the FFmpeg `forced` disposition is authoritative. For
+external tracks and containers that omit the disposition, a `forced` token in a
+normalized title or filename is a fallback heuristic only. Classification must
+be retained separately from the localized display name. The display name and
+disposition-label rules are specified in [Track Naming Specification](TRACK_NAMING.md);
+in particular, `Forced` may be a secondary UI label and is not a language.
+
+### Policy using the existing preferences
+
+No new preference is required. `favSubLang` remains the user's single preferred
+full-subtitle language. When it has the same normalized base language as the
+current device locale, Nova assumes it is the user's native language: full
+subtitles in that language are useful for foreign audio, but not for local audio.
+
+`subtitles_hide_default` means **hide full subtitles by default; still show
+matching forced subtitles**. Its summary must state this behaviour. It does not
+disable a manual or valid saved subtitle selection.
+
+Language comparison uses normalized ISO 639 base codes. Thus English variants
+such as `en`, `en-GB`, and `en-US` match each other for forced-track selection;
+existing Chinese title-variant tie breakers remain in effect.
+
+### Selection algorithm
+
+The policy follows Kodi's useful forced-track adaptation, but uses Nova's
+existing preferences and strict language matching:
+
+1. Resolve the active audio track, including the user's preferred-audio
+   selection and supported-track fallback.
+2. Keep a valid saved or manually selected subtitle track unchanged.
+3. If `subtitles_hide_default` is enabled, select only a forced track matching
+   the active audio language. With exactly one audio track, a forced track with
+   no usable language metadata is also eligible. Otherwise select none.
+4. If `favSubLang` and the current locale match the active audio language,
+   select only a forced track under the same rule as step 3. This is the native
+   speaker case: French audio plus French `favSubLang` selects French forced
+   subtitles, not full French subtitles.
+5. Otherwise select a non-forced full subtitle matching `favSubLang`. A French
+   user watching English audio therefore gets full French subtitles, not an
+   English forced track. Apply language-variant and `default` tie breakers only
+   among eligible tracks.
+6. A forced track is never a fallback for a requested full subtitle. If no
+   eligible track exists, select none.
+
+The `default` disposition is only a tie breaker among already eligible tracks;
+it must never override a language mismatch. Audio and subtitle languages are
+compared as normalized ISO 639-1 base codes, so equivalent two-letter,
+three-letter, and locale-tag forms compare equally.
+
+When the user changes audio, repeat the forced-track steps only if the currently selected
+subtitle was automatically selected as forced. Switch to a forced track matching
+the new audio language, or disable subtitles if none exists. Never replace a
+manual or full-subtitle selection during an audio change.
+
+### Examples
+
+| Active audio | System locale | `favSubLang` / hide setting | Available subtitle tracks | Automatic result |
+| --- | --- | --- | --- | --- |
+| English | English (any variant) | English / hide off | English full; English forced | English forced only |
+| English | English (any variant) | English / hide off | English full only | None |
+| French | French | French / hide off | French full; French forced | French forced only |
+| French | French | French / hide off | French full only | None |
+| English | French | French / hide off | French full; English forced | French full |
+| French | French | English / hide off | English full; French forced | English full |
+| English | French | French / hide on | English forced only | English forced only |
+| French | French | French / hide on | Forced with no language; one French audio track | Forced track |
+
+The first two rows are the English-native-speaker case. The French rows apply
+the same rule, while a French full-subtitle preference is still respected for
+foreign audio. The final row permits an untagged forced track only when there is
+no ambiguity about the audio language.
 
 ## Native subtitle formats
 

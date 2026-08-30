@@ -563,7 +563,7 @@
     <string name="preference_enable_cutout_both_sidesx_summary">Cut the display equally on both sides, so the screen is symmetrical.</string>
     <string name="category_languages">Subtitles</string>
     <string name="subtitles_hide_default">Hide subtitles by default</string>
-    <string name="subtitles_hide_default_summary">Check if you want to hide subtitles by default</string>
+    <string name="subtitles_hide_default_summary">Hide regular subtitles by default; matching forced subtitles may still be shown</string>
     <string name="subtitles_credentials_title">OpenSubtitles credentials</string>
     <string name="subtitles_credentials_summary">Provide your opensubtitles credentials to be able to download subtitles</string>
 

@@ -2135,13 +2135,19 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             }
             // do the scan for preferred lang at second call since onSubtitleMetadataUpdated is called twice and the first time it does not get all subtracks when there are a Subs/ dir with a lot of subs
             if (mVideoInfo.subtitleTrack == -1 && (firstTimeSubCalled || ! mIsPreparingSubs)) { // means no track has been selected before
+                String currentLocaleLanguage = Locale.getDefault().getLanguage();
+                boolean selectedAudioIsInCurrentLocale =
+                        isSelectedAudioTrackInLanguage(vMetadata, currentLocaleLanguage);
                 if (mHideSubtitles) {
-                    if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: hide subs -> selected none track");
-                    mVideoInfo.subtitleTrack = noneTrack;
+                    Integer forcedTrack = selectForcedSubtitleTrack(vMetadata);
+                    mVideoInfo.subtitleTrack = Objects.requireNonNullElse(forcedTrack, noneTrack);
+                    if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: hide regular subtitles -> selected forced track {}", mVideoInfo.subtitleTrack);
+                } else if (selectedAudioIsInCurrentLocale
+                        && ISO639codes.isFavoriteLanguageMatch(mSubsFavoriteLanguage, currentLocaleLanguage)) {
+                    Integer forcedTrack = selectForcedSubtitleTrack(vMetadata);
+                    mVideoInfo.subtitleTrack = Objects.requireNonNullElse(forcedTrack, noneTrack);
+                    if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: active audio and preferred subtitles match current locale {} -> selected forced track {}", currentLocaleLanguage, mVideoInfo.subtitleTrack);
                 } else {
-                    String currentLocaleLanguage = Locale.getDefault().getLanguage();
-                    boolean selectedAudioIsInCurrentLocale =
-                            isSelectedAudioTrackInLanguage(vMetadata, currentLocaleLanguage);
                     Locale locale = Locale.forLanguageTag(mSubsFavoriteLanguage);
                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: favorite locale {}, current locale {}", locale.getDisplayLanguage(), Locale.getDefault().getDisplayLanguage());
                     String trackName = "";
@@ -2164,10 +2170,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                             if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: no language found in track/file name -> set it to unknown");
                             lang = getText(R.string.unknown_track_name).toString();
                         } else {
-                            if (selectedAudioIsInCurrentLocale
-                                    && isSubtitleTrackInLanguage(vMetadata, i, currentLocaleLanguage)) {
-                                if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: skip locale subtitle track {} because active audio track {} is also in locale language {}", i, mVideoInfo.audioTrack, currentLocaleLanguage);
-                            } else if (stringContainsForced(trackName)) {
+                            if (isForcedSubtitleTrack(vMetadata.getSubtitleTrack(i))) {
                                 if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: skip track: {} with identified lang: {} because it contains forced sub", trackName, lang);
                             } else {
                                 if (lang.toLowerCase(Locale.getDefault()).contains(locale.getDisplayLanguage().toLowerCase(Locale.getDefault()))) {
@@ -2214,17 +2217,15 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                             newTrack = Objects.requireNonNullElse(fallbackTextTrack, newSubtitleTrack); // strategy to revert to newSubtitleTrack if lang not found (legacy)
                             revertTrackName = "newSubtitleTrack";
                         }
-                        if (selectedAudioIsInCurrentLocale
-                                && newTrack < nbTrack
-                                && isSubtitleTrackInLanguage(vMetadata, newTrack, currentLocaleLanguage)) {
-                            if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: fallback {} is in current locale {} while active audio is also local -> selected none track", newTrack, currentLocaleLanguage);
+                        if (newTrack < nbTrack && isForcedSubtitleTrack(vMetadata.getSubtitleTrack(newTrack))) {
+                            if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: fallback {} is forced -> selected none track", newTrack);
                             newTrack = noneTrack;
                             revertTrackName = "noneTrack";
                         }
                         if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: no default sub found mVideoInfo.subtitleTrack: {} -> setting {} or external text ({}) track if exists -> videoInfo.subtitleTrack={}", mVideoInfo.subtitleTrack, revertTrackName, fallbackTextTrack, newTrack);
                         mVideoInfo.subtitleTrack = newTrack;
                     }
-                    if (mHideSubtitles || mVideoInfo.subtitleTrack == noneTrack) { // if none track selected, player gets -1 track
+                    if (mVideoInfo.subtitleTrack == noneTrack) { // if none track selected, player gets -1 track
                         // nonTrack is nbTracks
                         if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: hideSubs or noneTrack -> player.setSubtitleTrack(-1) and  videoInfo.subtitleTrack={}", noneTrack);
                         mVideoInfo.subtitleTrack = noneTrack;
@@ -2318,6 +2319,61 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         return audioTrack != null
                 && audioTrack.supported
                 && ISO639codes.isFavoriteLanguageMatch(language, audioTrack.language);
+    }
+
+    private @Nullable Integer selectForcedSubtitleTrack(VideoMetadata videoMetadata) {
+        int audioTrackIndex = mVideoInfo.audioTrack;
+        if (audioTrackIndex < 0 || audioTrackIndex >= videoMetadata.getAudioTrackNb()) {
+            return null;
+        }
+        VideoMetadata.AudioTrack audioTrack = videoMetadata.getAudioTrack(audioTrackIndex);
+        if (audioTrack == null || !audioTrack.supported) {
+            return null;
+        }
+
+        Integer matchingTrack = null;
+        Integer matchingDefaultTrack = null;
+        Integer unknownLanguageTrack = null;
+        Integer unknownLanguageDefaultTrack = null;
+        for (int i = 0; i < videoMetadata.getSubtitleTrackNb(); i++) {
+            VideoMetadata.SubtitleTrack subtitleTrack = videoMetadata.getSubtitleTrack(i);
+            if (!isForcedSubtitleTrack(subtitleTrack)) {
+                continue;
+            }
+            boolean isDefault = (subtitleTrack.disposition & VideoUtils.AV_DISPOSITION_DEFAULT) != 0;
+            if (isSubtitleTrackInLanguage(videoMetadata, i, audioTrack.language)) {
+                if (matchingTrack == null) matchingTrack = i;
+                if (matchingDefaultTrack == null && isDefault) matchingDefaultTrack = i;
+            } else if (videoMetadata.getAudioTrackNb() == 1
+                    && isSubtitleTrackLanguageUndetermined(videoMetadata, subtitleTrack)) {
+                if (unknownLanguageTrack == null) unknownLanguageTrack = i;
+                if (unknownLanguageDefaultTrack == null && isDefault) unknownLanguageDefaultTrack = i;
+            }
+        }
+        return Objects.requireNonNullElse(matchingDefaultTrack,
+                Objects.requireNonNullElse(matchingTrack,
+                        Objects.requireNonNullElse(unknownLanguageDefaultTrack, unknownLanguageTrack)));
+    }
+
+    private boolean isForcedSubtitleTrack(@Nullable VideoMetadata.SubtitleTrack subtitleTrack) {
+        return subtitleTrack != null
+                && ((subtitleTrack.disposition & VideoUtils.AV_DISPOSITION_FORCED) != 0
+                || stringContainsForced(subtitleTrack.name)
+                || (subtitleTrack.isExternal && stringContainsForced(subtitleTrack.path)));
+    }
+
+    private boolean isSubtitleTrackLanguageUndetermined(VideoMetadata videoMetadata,
+            VideoMetadata.SubtitleTrack subtitleTrack) {
+        String language = subtitleTrack.language;
+        if (subtitleTrack.isExternal) {
+            language = getSubLanguageFromSubPathAndVideoPath(
+                    getApplicationContext(), subtitleTrack.path, videoMetadata.getFile().getPath());
+        }
+        if (language == null || language.isEmpty() || isGenericTextSubtitleFormat(language)
+                || stringContainsForced(language)) {
+            return true;
+        }
+        return "und".equalsIgnoreCase(language) || "unknown".equalsIgnoreCase(language);
     }
 
     private boolean isSubtitleTrackInLanguage(VideoMetadata videoMetadata, int subtitleTrackIndex,
