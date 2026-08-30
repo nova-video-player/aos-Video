@@ -512,7 +512,6 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="preference_enable_cutout_both_sidesx_summary">Corta la pantalla por igual en ambos lados, por lo que la pantalla es simétrica.</string>
     <string name="category_languages">Subtítulos</string>
     <string name="subtitles_hide_default">Ocultar subtítulos por defecto</string>
-    <string name="subtitles_hide_default_summary">Marcar si desea ocultar los subtítulos por defecto</string>
     <string name="subtitles_credentials_title">Credenciales de Opensubtitles</string>
     <string name="subtitles_credentials_summary">Proporcione sus credenciales de opensubtitles para poder descargar subtítulos</string>
     <string name="preferences_languages">Idiomas de descarga de subtítulos</string>

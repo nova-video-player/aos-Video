@@ -494,7 +494,6 @@
     <string name="preference_enable_cutout_both_sidesx_summary">Ekranı her iki taraftan eşit şekilde kes, böylece ekran simetrik olacak.</string>
     <string name="category_languages">Altyazı</string>
     <string name="subtitles_hide_default">Varsayılan olarak altyazıları gizle</string>
-    <string name="subtitles_hide_default_summary">Varsayılan olarak altyazıları gizlemek isteyip istemediğinizi kontrol edin</string>
     <string name="subtitles_credentials_title">Altyazı kimlik bilgilerini aç</string>
     <string name="subtitles_credentials_summary">Altyazıları indirebilmek için açık altyazı kimlik bilgilerinizi sağlayın</string>
     <string name="preferences_languages">Altyazı indirme dilleri</string>

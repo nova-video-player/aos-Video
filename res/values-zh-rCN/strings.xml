@@ -507,7 +507,6 @@
     <string name="preference_enable_cutout_both_sidesx_summary">两侧等距裁剪显示区域，使屏幕对称。</string>
     <string name="category_languages">字幕</string>
     <string name="subtitles_hide_default">默认隐藏字幕</string>
-    <string name="subtitles_hide_default_summary">如果您想要默认隐藏字幕，请勾选此项</string>
     <string name="subtitles_credentials_title">OpenSubtitles 用户凭据</string>
     <string name="subtitles_credentials_summary">提供你的 opensubtitles 用户凭据以下载字幕</string>
     <string name="preferences_languages">字幕下载语言</string>

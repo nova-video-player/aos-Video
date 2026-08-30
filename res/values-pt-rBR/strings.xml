@@ -511,7 +511,6 @@
     <string name="preference_enable_cutout_both_sidesx_summary">Recorte a tela igualmente em ambos os lados para mantê-la simétrica.</string>
     <string name="category_languages">Legendas</string>
     <string name="subtitles_hide_default">Ocultar legendas por padrão</string>
-    <string name="subtitles_hide_default_summary">Marque se deseja ocultar legendas por padrão.</string>
     <string name="subtitles_credentials_title">Credenciais do Opensubtitles</string>
     <string name="subtitles_credentials_summary">Forneça suas credenciais do OpenSubtitles para poder baixar legendas</string>
     <string name="preferences_languages">Idiomas para baixar legendas</string>

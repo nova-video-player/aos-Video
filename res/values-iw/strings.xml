@@ -475,7 +475,6 @@
     <string name="preference_cutout_short_edges_summary">אפשר תצוגה על מסך מלא במכשיר עם חורים במסך</string>
     <string name="category_languages">כתוביות</string>
     <string name="subtitles_hide_default">הסתר כתוביות כברירת מחדל</string>
-    <string name="subtitles_hide_default_summary">סמן אם להסתיר כתוביות כברירת מחדל</string>
     <string name="subtitles_credentials_title">פרטי משתמש OpenSubtitles</string>
     <string name="subtitles_credentials_summary">הזן את פרטי משתמש ה-opensubtitles שלך על מנת שתוכל להוריד כתוביות</string>
     <string name="preferences_languages">הורדת שפות כתוביות</string>

@@ -498,7 +498,6 @@
     <string name="preference_enable_cutout_both_sidesx_summary">Обрізати зображення однаково з обох боків, щоб екран був симетричним.</string>
     <string name="category_languages">Субтитри</string>
     <string name="subtitles_hide_default">Приховати субтитри за замовчуванням</string>
-    <string name="subtitles_hide_default_summary">Позначте, якщо бажаєте приховувати субтитри за замовчуванням</string>
     <string name="subtitles_credentials_title">Облікові дані OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Надайте облікові дані OpenSubtitles у налаштуваннях, щоб мати можливість завантажувати субтитри</string>
     <string name="preferences_languages">Мови завантаження субтитрів</string>

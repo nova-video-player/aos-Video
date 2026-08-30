@@ -499,7 +499,6 @@
     <string name="preference_enable_cutout_both_sidesx_summary">A kép levágása mindkét oldalon ugyanolyan arányban, a szimmetrikus megjelenéshez.</string>
     <string name="category_languages">Feliratok</string>
     <string name="subtitles_hide_default">Feliratok elrejtése alapértelmezetten</string>
-    <string name="subtitles_hide_default_summary">Jelölje be, ha alapértelmezetten szeretné elrejteni a feliratokat</string>
     <string name="subtitles_credentials_title">OpenSubtitles bejelentkezési adatok</string>
     <string name="subtitles_credentials_summary">Adja meg az OpenSubtitles bejelentkezési adatait feliratok letöltéséhez</string>
     <string name="preferences_languages">Letöltött feliratok nyelve</string>

@@ -470,7 +470,6 @@
     <string name="preference_cutout_short_edges_summary">允許截短畫面讓橫擺畫面全螢幕</string>
     <string name="category_languages">字幕</string>
     <string name="subtitles_hide_default">預設隱藏字幕</string>
-    <string name="subtitles_hide_default_summary">如要預設隱藏字幕請勾選</string>
     <string name="subtitles_credentials_title">Opensubtitles 憑證</string>
     <string name="subtitles_credentials_summary">請提供您的 opensubtitles 憑證以下載字幕</string>
     <string name="preferences_languages">下載字幕的語言</string>

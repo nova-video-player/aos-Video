@@ -396,7 +396,6 @@
     <string name="preference_cutout_short_edges_summary">Sta volledig scherm toe in landscape met uitsparingen</string>
     <string name="category_languages">Ondertitels</string>
     <string name="subtitles_hide_default">Verberg ondertitels standaard</string>
-    <string name="subtitles_hide_default_summary">Controleer of u ondertitels standaard wilt verbergen</string>
     <string name="preferences_languages">Ondertitels download talen</string>
     <string name="summary_list_preference_primary">Selecteer uw talen voor het downloaden van ondertitels</string>
     <string name="favSubLang_title">Ondertitels leestaal</string>

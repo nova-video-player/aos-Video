@@ -435,7 +435,6 @@
     <string name="preference_cutout_short_edges_summary">Να επιτρέπεται η οριζόντια προβολή βίντεο πλήρους οθόνης με αποκοπή</string>
     <string name="category_languages">Υπότιτλοι</string>
     <string name="subtitles_hide_default">Απόκρυψη υποτίτλων από προεπιλογή</string>
-    <string name="subtitles_hide_default_summary">Επιλέξτε αν θέλετε να αποκρύψετε τους υπότιτλους από προεπιλογή</string>
     <string name="subtitles_credentials_title">Πιστοποιητικά OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Παρέχετε τα διαπιστευτήρια σας OpenSubtitles για να μπορείτε να κατεβάσετε υπότιτλους</string>
     <string name="preferences_languages">Επιλογή γλώσσας υποτίτλων για κατέβασμα</string>

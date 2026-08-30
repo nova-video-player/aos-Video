@@ -519,7 +519,6 @@
     <string name="preference_enable_cutout_both_sidesx_summary">Orezajte displej rovnako na oboch stranách, aby bol obrazovka symetrická.</string>
     <string name="category_languages">Titulky</string>
     <string name="subtitles_hide_default">Skryť predvolené titulky</string>
-    <string name="subtitles_hide_default_summary">Označte, či chcete skryť predvolené titulky</string>
     <string name="subtitles_credentials_title">Prihlasovacie údaje k službe OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Poskytnite svoje prihlasovacie údaje Opensubtitles, aby ste mohli sťahovať titulky</string>
     <string name="preferences_languages">Jazyky sťahovania titulkov</string>

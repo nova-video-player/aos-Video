@@ -419,7 +419,6 @@
     <string name="preference_cutout_short_edges_summary">Rodyti vaizda visame ekrane įrenginiuose su iškirpimais ekrane</string>
     <string name="category_languages">Subtitrai</string>
     <string name="subtitles_hide_default">Pagal nutylėjimą slėpti subtitrus</string>
-    <string name="subtitles_hide_default_summary">Pažymėkite, jei norite slėpti subtitrus</string>
     <string name="subtitles_credentials_title">Opensubtitles paskyra</string>
     <string name="subtitles_credentials_summary">Norėdami atsiųsti titrus, nustatymuose įveskite savo opensubtitles paskyrą</string>
     <string name="preferences_languages">Subtitrų kalbos</string>

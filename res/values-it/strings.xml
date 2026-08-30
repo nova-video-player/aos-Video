@@ -435,7 +435,6 @@ Copertina (rotolo di copertina)</string>
     <string name="preference_cutout_short_edges_summary">Consenti video a schermo intero in modalità schermo intero con ritagli</string>
     <string name="category_languages">Sottotitoli</string>
     <string name="subtitles_hide_default">Nascondi sempre i sottotitoli</string>
-    <string name="subtitles_hide_default_summary">Chiedi sempre se vuoi nascondere i sottotitoli</string>
     <string name="subtitles_credentials_title">Credenziali dei sottotitoli</string>
     <string name="subtitles_credentials_summary">Fornisci le tue credenziali opensubtitles nelle impostazioni per poter scaricare i sottotitoli</string>
     <string name="preferences_languages">Lingua dei sottotitoli da scaricare</string>

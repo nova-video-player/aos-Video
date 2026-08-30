@@ -495,7 +495,6 @@
     <string name="preference_enable_cutout_both_sidesx_summary">Anzeige auf beiden Seiten gleich beschneiden, sodass der Bildschirm symmetrisch ist.</string>
     <string name="category_languages">Untertitel</string>
     <string name="subtitles_hide_default">Untertitel standardmäßig ausblenden</string>
-    <string name="subtitles_hide_default_summary">Überprüfen Sie, ob Sie Untertitel standardmäßig ausblenden möchten</string>
     <string name="subtitles_credentials_title">OpenSubtitles-Anmeldedaten</string>
     <string name="subtitles_credentials_summary">Geben Sie Ihre Zugangsdaten für opensubtitles.com in den Einstellungen an, um Untertitel herunterladen zu können</string>
     <string name="preferences_languages">Download-Sprachen für Untertitel</string>
