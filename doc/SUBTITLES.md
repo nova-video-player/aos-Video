@@ -69,18 +69,17 @@ remaining implementation work needed to make forced-track detection reliable.
 
 ### Current implementation
 
-`PlayerService` reads one audio preference (`favAudioLang`), one subtitle
-preference (`favSubLang`), and the *Hide subtitles by default* preference. Both
-language preferences fall back to the device locale's ISO-639-3 code when no
-value is stored; neither has a distinct **System language** value.
+`PlayerService` reads the audio-selection preferences, one subtitle preference
+(`favSubLang`), and the *Hide subtitles by default* preference. The detailed
+audio policy is specified in [AUDIO_TRACK_SELECTION.md](AUDIO_TRACK_SELECTION.md).
+The language preferences fall back to the device locale's ISO-639-3 code when
+no value is stored; neither has a distinct **System language** value.
 
 Current automatic selection works as follows:
 
 1. On first enumeration, audio selection retains a valid saved audio track. If
-   none is valid, it chooses a supported track matching `favAudioLang`, with a
-   Chinese title-variant match, then a matching `default` track, then the first
-   matching track as tie breakers. It finally falls back to the first supported
-   audio track.
+   none is valid, it follows the audio-selection policy before subtitle rules
+   evaluate the resulting active audio language.
 2. Subtitle selection retains a saved subtitle track when the language at its
    saved index still matches. A manual or saved selection is never replaced by
    automatic forced-track selection.
