@@ -124,7 +124,7 @@
         android:textColor="@color/leanback_discreet_text_over_background"
         android:singleLine="true"
         android:gravity="center"
-        android:translationY="26dip"/>
+        android:translationY="32dip"/>
 
     <!-- HINT: using translationY to put it under the Orb to avoid enlarging the parent viewgroup ;-) -->
     <TextView
@@ -141,7 +141,7 @@
         android:textColor="@color/leanback_discreet_text_over_background"
         android:singleLine="true"
         android:gravity="center"
-        android:translationY="26dip"/>
+        android:translationY="32dip"/>
 
     <!-- HINT: using translationY to put it under the Orb to avoid enlarging the parent viewgroup ;-) -->
     <TextView
@@ -158,7 +158,7 @@
         android:textColor="@color/leanback_discreet_text_over_background"
         android:singleLine="true"
         android:gravity="center"
-        android:translationY="26dip"/>
+        android:translationY="32dip"/>
 
     <TextView
         android:id="@+id/orb4_description"
@@ -174,7 +174,7 @@
         android:textColor="@color/leanback_discreet_text_over_background"
         android:singleLine="true"
         android:gravity="center"
-        android:translationY="26dip"/>
+        android:translationY="32dip"/>
 
     <TextView
         android:id="@+id/orb5_description"
@@ -190,6 +190,6 @@
         android:textColor="@color/leanback_discreet_text_over_background"
         android:singleLine="true"
         android:gravity="center"
-        android:translationY="26dip"/>
+        android:translationY="32dip"/>
 
 </merge>
