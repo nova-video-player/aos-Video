@@ -30,6 +30,7 @@ import com.archos.mediaprovider.ImportState;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
 import com.archos.mediaprovider.video.NetworkScannerServiceVideo;
+import com.archos.mediascraper.AllCollectionScrapeService;
 import com.archos.mediascraper.AutoScrapeService;
 
 import org.slf4j.Logger;
@@ -108,7 +109,11 @@ public class ScannerAndScraperProgress {
     private Runnable mRepeatRunnable = new Runnable() {
         @Override
         public void run() {
-            boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking() || LoaderUtils.getScrapeInProgress() || ImportState.VIDEO.isInitialImport() || ImportState.VIDEO.isRegularImport();
+            boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking()
+                    || LoaderUtils.getScrapeInProgress()
+                    || AllCollectionScrapeService.isCollectionScrapeInProgress()
+                    || ImportState.VIDEO.isInitialImport()
+                    || ImportState.VIDEO.isRegularImport();
             mStatusVisibility = scanningOnGoing ? View.VISIBLE : View.GONE;
             if (log.isTraceEnabled()) log.trace("mRepeatRunnable: visibility {} because scanningOngoing {} due to networkScanner {} due to autoScrapeService {} due to isInitialImport {} due to isRegularImport {}", mStatusVisibility, scanningOnGoing, NetworkScannerReceiver.isScannerWorking(), LoaderUtils.getScrapeInProgress(), ImportState.VIDEO.isInitialImport(), ImportState.VIDEO.isRegularImport());
             if (mContext instanceof Activity) {
@@ -157,6 +162,10 @@ public class ScannerAndScraperProgress {
         } else if (LoaderUtils.getScrapeInProgress() || AutoScrapeService.getNumberOfFilesRemainingToProcess() > 0) {
             badge = mBadgeOpIdentify;
             count = AutoScrapeService.getNumberOfFilesRemainingToProcess();
+            textColor = mDefaultTextColor;
+        } else if (AllCollectionScrapeService.isCollectionScrapeInProgress()) {
+            badge = mBadgeOpIdentify;
+            count = AllCollectionScrapeService.getNumberOfCollectionsRemainingToProcess();
             textColor = mDefaultTextColor;
         }
 
