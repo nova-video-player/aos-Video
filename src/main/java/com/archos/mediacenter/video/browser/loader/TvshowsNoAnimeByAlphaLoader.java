@@ -35,16 +35,17 @@ public class TvshowsNoAnimeByAlphaLoader extends TvshowsNoAnimeByLoader {
     }
 
     public String getSelection(Context context) {
+        String col = com.archos.mediacenter.video.utils.SortUtils.getAlphaBucketColumn(context, com.archos.mediacenter.video.utils.SortUtils.SortScope.SHOW);
         return "SELECT\n" +
-                "    UNICODE(SUBSTR(s_name,1,1)) AS _id,\n" +
-                "    UPPER(SUBSTR(s_name,1,1)) AS name,\n" +
+                "    UNICODE(SUBSTR(" + col + ",1,1)) AS _id,\n" +
+                "    UPPER(SUBSTR(" + col + ",1,1)) AS name,\n" +
                 "    group_concat( s_id ) AS list,\n" +
                 "    group_concat( s_po_large_file ) AS po_file_list,\n" +
                 "    count( s_id ) AS number\n" +
                 "FROM  ( \n" +
-                "  SELECT s_id, s_po_large_file, s_name FROM video\n"+
-                "  WHERE s_id IS NOT NULL AND s_name IS NOT NULL"+ getCommonSelection()+"\n"+
-                "  GROUP BY s_name COLLATE NOCASE\n" +
+                "  SELECT s_id, s_po_large_file, s_name, " + col + " FROM video\n"+
+                "  WHERE s_id IS NOT NULL AND " + col + " IS NOT NULL"+ getCommonSelection()+"\n"+
+                "  GROUP BY " + col + " COLLATE LOCALIZED\n" +
                 ") \n" +
                 "GROUP BY name\n" +
                 " ORDER BY " + mSortOrder;

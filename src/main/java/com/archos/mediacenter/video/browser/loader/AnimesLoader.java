@@ -70,7 +70,7 @@ public class AnimesLoader extends VideoLoader {
 
     @Override
     public String getSortOrder() {
-        return mSortOrder;
+        return com.archos.mediacenter.video.utils.SortUtils.resolveSortOrder(getContext(), com.archos.mediacenter.video.utils.SortUtils.SortScope.MOVIE, mSortOrder);
     }
 
     @Override

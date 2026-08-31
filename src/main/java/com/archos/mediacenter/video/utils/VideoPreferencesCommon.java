@@ -201,6 +201,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_TRAKT_LIVE_SCROBBLING = "trakt_live_scrobbling";
     public static final String KEY_TRAKT_SYNC_COLLECTION = "trakt_sync_collection";
     public static final String KEY_HIDE_WATCHED = "hide_watched";
+    public static final String KEY_SORT_IGNORE_ARTICLES = "sort_ignore_articles";
     public static final String KEY_CREATE_REMOTE_THUMBS = VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS;
     public static final String KEY_ENABLE_SPONSOR = "enable_sponsor";
     public static final String KEY_ABOUT_PREFERENCES = "preferences_about";
@@ -213,6 +214,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_SMBJ = "pref_smbj";
     public static final String KEY_APP_THEME = "app_theme";
 
+    public static final boolean SORT_IGNORE_ARTICLES_DEFAULT = true;
     public static final boolean SEPARATE_ANIME_MOVIE_SHOW_DEFAULT = true;
     // TODO: disabled until issue #186 is fixed
     public static final boolean SHOW_WATCHING_UP_NEXT_ROW_DEFAULT = true;

@@ -233,6 +233,13 @@
             android:summary="@string/hide_watched_videos_summary"
             android:title="@string/hide_watched_videos"
             app:iconSpaceReserved="false"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="sort_ignore_articles"
+            android:persistent="true"
+            android:summary="@string/preferences_sort_ignore_articles_summary"
+            android:title="@string/preferences_sort_ignore_articles_title"
+            app:iconSpaceReserved="false"/>
 
         <ListPreference
             android:defaultValue="0"

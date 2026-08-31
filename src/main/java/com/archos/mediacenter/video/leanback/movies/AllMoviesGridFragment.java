@@ -126,6 +126,7 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         mSortOrderEntries = MoviesSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
 
         mShowWatched = mPrefs.getBoolean(SHOW_WATCHED_KEY, true);
+        mSortIgnoreArticles = com.archos.mediacenter.video.utils.SortUtils.isIgnoreArticlesEnabled(getActivity());
 
         updateBackground();
 
@@ -320,11 +321,21 @@ public class AllMoviesGridFragment extends MyVerticalGridFragment implements Loa
         super.onDestroyView();
     }
 
+    private boolean mSortIgnoreArticles;
+
     @Override
     public void onResume() {
         super.onResume();
         mOverlay.resume();
         updateBackground();
+        boolean newSortIgnoreArticles = com.archos.mediacenter.video.utils.SortUtils.isIgnoreArticlesEnabled(getActivity());
+        if (newSortIgnoreArticles != mSortIgnoreArticles) {
+            mSortIgnoreArticles = newSortIgnoreArticles;
+            Bundle args = new Bundle();
+            args.putString("sort", mSortOrder);
+            args.putBoolean("showWatched", mShowWatched);
+            LoaderManager.getInstance(this).restartLoader(0, args, this);
+        }
     }
 
     @Override

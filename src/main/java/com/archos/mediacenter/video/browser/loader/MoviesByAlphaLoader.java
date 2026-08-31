@@ -35,16 +35,17 @@ public class MoviesByAlphaLoader extends MoviesByLoader {
     }
 
     public String getSelection(Context context) {
+        String col = com.archos.mediacenter.video.utils.SortUtils.getAlphaBucketColumn(context, com.archos.mediacenter.video.utils.SortUtils.SortScope.MOVIE);
         return "SELECT\n" +
-                "    UNICODE(SUBSTR(m_name,1,1)) as _id,\n" +
-                "    UPPER(SUBSTR(m_name,1,1)) as name,\n" +
+                "    UNICODE(SUBSTR(" + col + ",1,1)) as _id,\n" +
+                "    UPPER(SUBSTR(" + col + ",1,1)) as name,\n" +
                 "    group_concat( m_id ) AS list,\n" +
                 "    group_concat( m_po_large_file ) AS po_file_list,\n" +
                 "    count( m_id ) AS number\n" +
                 "FROM  ( \n" +
-                "  SELECT m_id, m_po_large_file, m_name FROM video\n"+
-                "  WHERE m_id IS NOT NULL AND m_name IS NOT NULL" + getCommonSelection()+"\n"+
-                "  GROUP BY m_name COLLATE NOCASE\n" +
+                "  SELECT m_id, m_po_large_file, m_name, " + col + " FROM video\n"+
+                "  WHERE m_id IS NOT NULL AND " + col + " IS NOT NULL" + getCommonSelection()+"\n"+
+                "  GROUP BY " + col + " COLLATE NOCASE\n" +
                 ") \n" +
                 "GROUP BY name\n" +
                 " ORDER BY "+mSortOrder;

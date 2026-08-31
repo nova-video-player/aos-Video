@@ -155,6 +155,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mSortOrder = mPrefs.getString(getSortOrderParamKey(), mDefaultSort);
+        mSortIgnoreArticles = com.archos.mediacenter.video.utils.SortUtils.isIgnoreArticlesEnabled(getActivity());
 
         Resources r = getResources();
         updateBackground();
@@ -199,12 +200,25 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         super.onDestroyView();
     }
 
+    private boolean mSortIgnoreArticles;
+
     @Override
     public void onResume() {
         if (log.isDebugEnabled()) log.debug("onResume");
         super.onResume();
         mBackgroundWorkWasOngoing = isBackgroundWorkOngoing();
         mOverlay.resume();
+        boolean newSortIgnoreArticles = com.archos.mediacenter.video.utils.SortUtils.isIgnoreArticlesEnabled(getActivity());
+        if (newSortIgnoreArticles != mSortIgnoreArticles) {
+            mSortIgnoreArticles = newSortIgnoreArticles;
+            if (mCurrentCategoriesCursor != null) {
+                boolean deferRowLoaders = shouldDeferRowLoadersDuringBackgroundWork() && isBackgroundWorkOngoing();
+                loadCategoriesRows(mCurrentCategoriesCursor, !deferRowLoaders);
+                mRowsLoadDeferred = deferRowLoaders;
+            } else {
+                LoaderManager.getInstance(this).restartLoader(-1, null, this);
+            }
+        }
     }
 
     @Override

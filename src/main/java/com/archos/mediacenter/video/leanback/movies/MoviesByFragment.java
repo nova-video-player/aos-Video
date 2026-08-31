@@ -134,6 +134,7 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mSortOrder = mPrefs.getString(getSortOrderParamKey(), MoviesLoader.DEFAULT_SORT);
         mSeparateAnimeFromShowMovie = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+        mSortIgnoreArticles = com.archos.mediacenter.video.utils.SortUtils.isIgnoreArticlesEnabled(getActivity());
 
         Resources r = getResources();
 
@@ -183,11 +184,22 @@ public abstract class MoviesByFragment extends BrowseSupportFragment implements 
         super.onDestroy();
     }
 
+    private boolean mSortIgnoreArticles;
+
     @Override
     public void onResume() {
         super.onResume();
         mOverlay.resume();
         updateBackground();
+        boolean newSortIgnoreArticles = com.archos.mediacenter.video.utils.SortUtils.isIgnoreArticlesEnabled(getActivity());
+        if (newSortIgnoreArticles != mSortIgnoreArticles) {
+            mSortIgnoreArticles = newSortIgnoreArticles;
+            if (mCurrentCategoriesCursor != null) {
+                loadCategoriesRows(mCurrentCategoriesCursor);
+            } else {
+                LoaderManager.getInstance(this).restartLoader(-1, null, this);
+            }
+        }
     }
 
     @Override

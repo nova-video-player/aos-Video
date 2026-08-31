@@ -121,6 +121,7 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
 
         mCollectionWatched = mPrefs.getBoolean(COLLECTION_WATCHED_KEY, true);
         mSeparateAnimeFromShowMovie = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+        mSortIgnoreArticles = com.archos.mediacenter.video.utils.SortUtils.isIgnoreArticlesEnabled(getActivity());
 
         updateBackground();
 
@@ -309,11 +310,21 @@ public class AllCollectionsGridFragment extends MyVerticalGridFragment implement
         super.onDestroyView();
     }
 
+    private boolean mSortIgnoreArticles;
+
     @Override
     public void onResume() {
         super.onResume();
         mOverlay.resume();
         updateBackground();
+        boolean newSortIgnoreArticles = com.archos.mediacenter.video.utils.SortUtils.isIgnoreArticlesEnabled(getActivity());
+        if (newSortIgnoreArticles != mSortIgnoreArticles) {
+            mSortIgnoreArticles = newSortIgnoreArticles;
+            Bundle args = new Bundle();
+            args.putString("sort", mSortOrder);
+            args.putBoolean("collectionWatched", mCollectionWatched);
+            LoaderManager.getInstance(this).restartLoader(ALL_COLLECTIONS_LOADER_ID, args, this);
+        }
     }
 
     @Override

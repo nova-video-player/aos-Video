@@ -672,6 +672,8 @@
     <string name="status_disabled">désactivé</string>
     <string name="status_multichannel">multicanal</string>
     <string name="preferences_user_interface">Interface utilisateur</string>
+    <string name="preferences_sort_ignore_articles_title">Ignorer les articles au début des titres</string>
+    <string name="preferences_sort_ignore_articles_summary">Ignorer les articles tels que \"The\", \"A\", \"Le\", \"La\", \"Les\", \"Das\" lors du tri alphabétique</string>
     <string name="preferences_display_resume_box_summary">Afficher ou cacher le bouton de reprise de la dernière vidéo dans l\'écran principal</string>
     <string name="preferences_display_resume_box">Afficher le bouton de reprise de la vidéo</string>
     <string name="reset_brightness_on_start">Se souvenir de la luminosité vidéo.</string>

@@ -44,6 +44,6 @@ public class AllVideosLoader extends VideoLoader {
 
     @Override
     public String getSortOrder() {
-        return mSortOrder;
+        return com.archos.mediacenter.video.utils.SortUtils.resolveSortOrder(getContext(), com.archos.mediacenter.video.utils.SortUtils.SortScope.VIDEO_VIEW, mSortOrder);
     }
 }

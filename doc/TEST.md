@@ -93,6 +93,14 @@ Verifies intent extra extraction for external video playback launches (position 
 
 Verifies Picasso image cropping, aspect ratio preservation, and dimension clamping.
 
+### 7. Sort Order Resolution (`SortUtilsTest`)
+
+**Class**: `com.archos.mediacenter.video.utils.SortUtilsTest`
+
+Verifies dynamic sort clause rewriting across all scopes (`MOVIE`, `SHOW`, `COLLECTION`, `VIDEO_VIEW`) based on the "Ignore initial articles when sorting" setting (`sort_ignore_articles`):
+- `VIDEO_VIEW`: verifies null-safe `COALESCE(NULLIF(sort_name, ''), name)` expression for unscraped/mixed media queries when enabled, and raw `name` when disabled.
+- Compound search and alpha clauses (e.g. season/episode order preservations).
+
 ---
 
 ## CLI Track Selection Extraction Tool

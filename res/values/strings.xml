@@ -749,6 +749,8 @@
     <string name="status_multichannel">multichannel</string>
 
     <string name="preferences_user_interface">User Interface</string>
+    <string name="preferences_sort_ignore_articles_title">Ignore initial articles when sorting</string>
+    <string name="preferences_sort_ignore_articles_summary">Ignore leading articles such as \"The\", \"A\", \"Le\", \"Das\" when sorting titles alphabetically</string>
     <string name="preferences_display_resume_box_summary">Display or hide the button resuming the latest video in the main screen</string>
     <string name="preferences_display_resume_box">Display resume box</string>
     <string name="reset_brightness_on_start">Remember video brightness.</string>

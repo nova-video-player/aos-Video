@@ -153,6 +153,7 @@ public abstract class VideoLoader extends CursorLoader implements CompatAndSDKCu
             VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE,
             VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID,
             VideoStore.Video.VideoColumns.SCRAPER_TITLE,
+            VideoStore.Video.VideoColumns.SCRAPER_SORT_NAME,
             VideoStore.Video.VideoColumns.SCRAPER_BACKDROP_LARGE_URL,
             VideoStore.Video.VideoColumns.SCRAPER_BACKDROP_LARGE_FILE,
             DATE, RATING, CONTENT_RATING, PLOT,

@@ -221,6 +221,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     private boolean mShowLastAddedRow;
     private boolean mShowLastPlayedRow;
     private boolean mSmartRecentlyRows;
+    private boolean mSortIgnoreArticles;
     private boolean mShowMoviesRow;
     private String mMovieSortOrder;
     private boolean mShowTvshowsRow;
@@ -552,6 +553,15 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                 }
                 LoaderManager.getInstance(this).restartLoader(LOADER_ID_LAST_PLAYED, null, this);
             }
+        }
+
+        boolean newSortIgnoreArticles = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SORT_IGNORE_ARTICLES, VideoPreferencesCommon.SORT_IGNORE_ARTICLES_DEFAULT);
+        if (newSortIgnoreArticles != mSortIgnoreArticles) {
+            if (log.isDebugEnabled()) log.debug("onResume: preference changed, sort ignore articles: {} -> restarting loaders", newSortIgnoreArticles);
+            mSortIgnoreArticles = newSortIgnoreArticles;
+            if (mShowMoviesRow) restartMoviesLoader = true;
+            if (mShowTvshowsRow) restartTvshowsLoader = true;
+            if (mShowAnimesRow && mSeparateAnimeFromShowMovie) restartAnimesLoader = true;
         }
 
         boolean newShowMoviesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_MOVIES_ROW, VideoPreferencesCommon.SHOW_ALL_MOVIES_ROW_DEFAULT);

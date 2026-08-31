@@ -63,7 +63,7 @@ public class AllCollectionsLoader extends VideoLoader {
 
     @Override
     public String getSortOrder() {
-        return mSortOrder;
+        return com.archos.mediacenter.video.utils.SortUtils.resolveSortOrder(getContext(), com.archos.mediacenter.video.utils.SortUtils.SortScope.COLLECTION, mSortOrder);
     }
 
     @Override
@@ -71,6 +71,7 @@ public class AllCollectionsLoader extends VideoLoader {
         return new String[] {
                 VideoStore.Video.VideoColumns.SCRAPER_C_ID + " AS " + BaseColumns._ID,
                 VideoStore.Video.VideoColumns.SCRAPER_C_NAME + " AS " + COLUMN_NAME,
+                VideoStore.Video.VideoColumns.SCRAPER_C_SORT_NAME,
                 VideoStore.Video.VideoColumns.SCRAPER_C_DESCRIPTION,
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + ") AS " + COLUMN_COLLECTION_COUNT,
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + " || ',' || " + VideoStore.Video.VideoColumns.SCRAPER_M_IMDB_ID + ") AS " + COLUMN_COLLECTION_MOVIE_COUNT,

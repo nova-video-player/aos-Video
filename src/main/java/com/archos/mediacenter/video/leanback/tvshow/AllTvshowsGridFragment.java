@@ -112,6 +112,7 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         mSortOrderEntries = TvshowsSortOrderEntry.getSortOrderEntries(getActivity(), sortOrderIndexer);
         mSeparateAnimeFromShowMovie = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
         mShowWatched = mPrefs.getBoolean(SHOW_WATCHED_KEY, true);
+        mSortIgnoreArticles = com.archos.mediacenter.video.utils.SortUtils.isIgnoreArticlesEnabled(getActivity());
 
         updateBackground();
 
@@ -307,11 +308,21 @@ public class AllTvshowsGridFragment extends MyVerticalGridFragment implements Lo
         super.onDestroyView();
     }
 
+    private boolean mSortIgnoreArticles;
+
     @Override
     public void onResume() {
         super.onResume();
         mOverlay.resume();
         updateBackground();
+        boolean newSortIgnoreArticles = com.archos.mediacenter.video.utils.SortUtils.isIgnoreArticlesEnabled(getActivity());
+        if (newSortIgnoreArticles != mSortIgnoreArticles) {
+            mSortIgnoreArticles = newSortIgnoreArticles;
+            Bundle args = new Bundle();
+            args.putString("sort", mSortOrder);
+            args.putBoolean("showWatched", mShowWatched);
+            LoaderManager.getInstance(this).restartLoader(0, args, this);
+        }
     }
 
     @Override
