@@ -214,7 +214,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_SMBJ = "pref_smbj";
     public static final String KEY_APP_THEME = "app_theme";
 
-    public static final boolean SORT_IGNORE_ARTICLES_DEFAULT = true;
+    public static final boolean SORT_IGNORE_ARTICLES_DEFAULT = false;
     public static final boolean SEPARATE_ANIME_MOVIE_SHOW_DEFAULT = true;
     // TODO: disabled until issue #186 is fixed
     public static final boolean SHOW_WATCHING_UP_NEXT_ROW_DEFAULT = true;

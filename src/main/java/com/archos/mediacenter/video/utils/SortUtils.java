@@ -39,7 +39,7 @@ public final class SortUtils {
     private SortUtils() { }
 
     /**
-     * @return true if the user preference to ignore initial articles when sorting is enabled (default: true).
+     * @return true if the user preference to ignore initial articles when sorting is enabled (default: false).
      */
     public static boolean isIgnoreArticlesEnabled(Context context) {
         if (context == null) return VideoPreferencesCommon.SORT_IGNORE_ARTICLES_DEFAULT;
