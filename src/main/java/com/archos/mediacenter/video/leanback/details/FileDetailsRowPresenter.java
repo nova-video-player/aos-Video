@@ -270,11 +270,18 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
             return;
         }
         int maximumHeight = Math.round(scrollView.getResources().getDisplayMetrics().heightPixels * 0.8f);
-        int targetHeight = Math.min(content.getMeasuredHeight(), maximumHeight);
+        int contentHeight = content.getMeasuredHeight();
         ViewGroup.LayoutParams layoutParams = scrollView.getLayoutParams();
-        if (targetHeight > 0 && layoutParams.height != targetHeight) {
-            layoutParams.height = targetHeight;
-            scrollView.setLayoutParams(layoutParams);
+        if (contentHeight > maximumHeight) {
+            if (layoutParams.height != maximumHeight) {
+                layoutParams.height = maximumHeight;
+                scrollView.setLayoutParams(layoutParams);
+            }
+        } else {
+            if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                scrollView.setLayoutParams(layoutParams);
+            }
         }
     }
 
