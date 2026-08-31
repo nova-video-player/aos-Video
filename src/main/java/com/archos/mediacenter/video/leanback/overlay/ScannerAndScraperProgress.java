@@ -58,6 +58,7 @@ public class ScannerAndScraperProgress {
     final private String mBadgeOpScan;
     final private String mBadgeOpDelete;
     final private String mBadgeOpIdentify;
+    final private String mBadgeOpExport;
     final Handler mRepeatHandler = new Handler(Looper.getMainLooper());
 
     /** the visibility due to the general state of the fragment */
@@ -79,6 +80,7 @@ public class ScannerAndScraperProgress {
         mBadgeOpScan = context.getString(R.string.badge_op_scan);
         mBadgeOpDelete = context.getString(R.string.badge_op_delete);
         mBadgeOpIdentify = context.getString(R.string.badge_op_identify);
+        mBadgeOpExport = context.getString(R.string.badge_op_export);
         if (log.isDebugEnabled()) log.debug("ScannerAndScraperProgress: creation");
         mRepeatHandler.post(mRepeatRunnable);
     }
@@ -111,11 +113,12 @@ public class ScannerAndScraperProgress {
         public void run() {
             boolean scanningOnGoing = NetworkScannerReceiver.isScannerWorking()
                     || LoaderUtils.getScrapeInProgress()
+                    || AutoScrapeService.isNfoExportInProgress()
                     || AllCollectionScrapeService.isCollectionScrapeInProgress()
                     || ImportState.VIDEO.isInitialImport()
                     || ImportState.VIDEO.isRegularImport();
             mStatusVisibility = scanningOnGoing ? View.VISIBLE : View.GONE;
-            if (log.isTraceEnabled()) log.trace("mRepeatRunnable: visibility {} because scanningOngoing {} due to networkScanner {} due to autoScrapeService {} due to isInitialImport {} due to isRegularImport {}", mStatusVisibility, scanningOnGoing, NetworkScannerReceiver.isScannerWorking(), LoaderUtils.getScrapeInProgress(), ImportState.VIDEO.isInitialImport(), ImportState.VIDEO.isRegularImport());
+            if (log.isTraceEnabled()) log.trace("mRepeatRunnable: visibility {} because scanningOngoing {} due to networkScanner {} due to autoScrapeService {} due to nfoExport {} due to isInitialImport {} due to isRegularImport {}", mStatusVisibility, scanningOnGoing, NetworkScannerReceiver.isScannerWorking(), LoaderUtils.getScrapeInProgress(), AutoScrapeService.isNfoExportInProgress(), ImportState.VIDEO.isInitialImport(), ImportState.VIDEO.isRegularImport());
             if (mContext instanceof Activity) {
                 ActiveOperationMonitor.updateKeepScreenOn((Activity) mContext);
             }
@@ -158,6 +161,10 @@ public class ScannerAndScraperProgress {
                 badge = mBadgeDomainLocal + ":" + mBadgeOpScan;
                 count = ImportState.VIDEO.getNumberOfFilesRemainingToImport();
             }
+            textColor = mDefaultTextColor;
+        } else if (AutoScrapeService.isNfoExportInProgress()) {
+            badge = mBadgeOpExport;
+            count = AutoScrapeService.getNumberOfFilesRemainingToExport();
             textColor = mDefaultTextColor;
         } else if (LoaderUtils.getScrapeInProgress() || AutoScrapeService.getNumberOfFilesRemainingToProcess() > 0) {
             badge = mBadgeOpIdentify;
