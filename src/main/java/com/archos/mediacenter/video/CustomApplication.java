@@ -679,9 +679,13 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         log = LoggerFactory.getLogger(CustomApplication.class);
         configureFullLoggingAsync();
         new Thread(() -> {
-            setupBouncyCastle();
-            // BC now registered globally: safe to decrypt stored credentials (Blowfish)
-            NetworkCredentialsDatabase.getInstance().loadCredentials(mContext);
+            try {
+                setupBouncyCastle();
+                // BC now registered globally: safe to decrypt stored credentials (Blowfish)
+                NetworkCredentialsDatabase.getInstance().loadCredentials(mContext);
+            } catch (Exception e) {
+                log.warn("Network credentials init failed or cancelled: {}", e.getMessage());
+            }
         }, "bouncycastle-credentials-init").start();
 
         systemLocale = Locale.getDefault();
@@ -716,24 +720,28 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         // so a cores-based cap gives no real headroom on hexa/octa-core boxes. Cap at 2 regardless
         // of core count to guarantee slack for the UI thread during that launch burst.
         ExecutorService picassoExecutor = Executors.newFixedThreadPool(2);
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
-            // for Android versions below 7.1.1 we need to trust letsencrypt certificates
-            Picasso.setSingletonInstance(
-                    new Picasso.Builder(mContext)
-                            .addRequestHandler(new ThumbnailRequestHandler(mContext))
-                            .addRequestHandler(new SmbRequestHandler(mContext))
-                            .downloader(new TrustingOkHttp3Downloader(mContext))
-                            .executor(picassoExecutor)
-                            .build()
-            );
-        } else {
-            Picasso.setSingletonInstance(
-                    new Picasso.Builder(mContext)
-                            .addRequestHandler(new ThumbnailRequestHandler(mContext))
-                            .addRequestHandler(new SmbRequestHandler(mContext))
-                            .executor(picassoExecutor)
-                            .build()
-            );
+        try {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+                // for Android versions below 7.1.1 we need to trust letsencrypt certificates
+                Picasso.setSingletonInstance(
+                        new Picasso.Builder(mContext)
+                                .addRequestHandler(new ThumbnailRequestHandler(mContext))
+                                .addRequestHandler(new SmbRequestHandler(mContext))
+                                .downloader(new TrustingOkHttp3Downloader(mContext))
+                                .executor(picassoExecutor)
+                                .build()
+                );
+            } else {
+                Picasso.setSingletonInstance(
+                        new Picasso.Builder(mContext)
+                                .addRequestHandler(new ThumbnailRequestHandler(mContext))
+                                .addRequestHandler(new SmbRequestHandler(mContext))
+                                .executor(picassoExecutor)
+                                .build()
+                );
+            }
+        } catch (IllegalStateException ignored) {
+            // Picasso singleton already initialized (e.g. in unit tests)
         }
 
         // Removed: was downscaling posters to details view dimensions (160dp x 240dp),

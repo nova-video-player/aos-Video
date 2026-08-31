@@ -413,3 +413,7 @@ configurations { // try to exclude device specific libraries interfering
 configurations.implementation {
     exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
 }
+
+configurations.matching { it.name.toLowerCase().contains("unittest") }.configureEach {
+    exclude group: 'com.github.tony19', module: 'logback-android'
+}

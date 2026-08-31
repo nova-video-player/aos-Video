@@ -1,0 +1,26 @@
+# name,audioTracks,subtitleTracks,uiLocale,favAudioLang,favSubLang,hideSubtitles,preferOriginalAudio,originalAudioLang,expectedAudioTrack,expectedSubtitleTrack
+# Audio track format: title;lang;format;disposition;supported (disposition: 1=default, 4=original, 64=forced)
+# Subtitle track format: title;lang;path;disposition;isGfx;format (disposition: 1=default, 64=forced)
+
+English native with English full and forced,Main;eng;AC3;1;true,Full;eng;;0;false;0|Forced;eng;;64;false;0,en,en,en,false,false,,0,1
+English native with English full only,Main;eng;AC3;1;true,Full;eng;;0;false;0,en,en,en,false,false,,0,-1
+French native with French full and forced,Main;fra;AC3;1;true,Full;fra;;0;false;0|Forced;fra;;64;false;0,fr,fr,fr,false,false,,0,1
+French native with French full only,Main;fra;AC3;1;true,Full;fra;;0;false;0,fr,fr,fr,false,false,,0,-1
+French user watching English audio with French full and English forced,Main;eng;AC3;1;true,Full;fra;;0;false;0|Forced;eng;;64;false;0,fr,en,fr,false,false,,0,0
+French user with English sub pref watching French audio,Main;fra;AC3;1;true,Full;eng;;0;false;0|Forced;fra;;64;false;0,fr,fr,en,false,false,,0,0
+Hide subtitles on with matching audio forced track,Main;eng;AC3;1;true,Forced;eng;;64;false;0|Full;eng;;0;false;0,fr,en,fr,true,false,,0,0
+Hide subtitles on with untagged forced track and single audio,Main;fra;AC3;1;true,Forced;und;;64;false;0,fr,fr,fr,true,false,,0,0
+Hide subtitles on with untagged forced track and multiple audio tracks,Main;fra;AC3;1;true|English;eng;AC3;0;true,Forced;und;;64;false;0,fr,fr,fr,true,false,,0,-1
+Forced track detected by title keyword,Main;eng;AC3;1;true,English (forced);eng;;0;false;0,en,en,en,false,false,,0,0
+Subtitle default disposition tie breaker,Main;jpn;AC3;1;true,Track 1;eng;;0;false;0|Track 2 (Default);eng;;1;false;0,en,en,en,false,false,,0,1
+Audio language selection by favorite,French;fra;AC3;0;true|English;eng;AC3;1;true,English;eng;;0;false;0,en,fra,en,false,false,,0,0
+Spanish audio with Spanish locale and Spanish full sub,Audio;spa;AC3;1;true,Sub;spa;;0;false;0,es,es,es,false,false,,0,-1
+Spanish audio with Spanish locale and Spanish forced sub,Audio;spa;AC3;1;true,Sub Full;spa;;0;false;0|Sub Forced;spa;;64;false;0,es,es,es,false,false,,0,1
+German audio with German locale and German forced sub in title,Audio;deu;AC3;1;true,German forced;deu;;0;false;0,de,de,de,false,false,,0,0
+test2.mkv with Chinese subtitle preference,;und;AAC;1;true,Traditional;chi;;0;false;0|Simplified;chi;;0;false;0,en,en,zh,false,false,,0,0
+Anime with prefer VO false selects English dub and no subtitles for English native,Dub;eng;AC3;1;true|Original;jpn;AC3;4;true,Full;eng;;0;false;0,en,en,en,false,false,ja,0,-1
+Anime with prefer VO true selects Japanese VO and full subtitles for English native,Dub;eng;AC3;1;true|Original;jpn;AC3;4;true,Full;eng;;0;false;0,en,en,en,false,true,ja,1,0
+French film with prefer VO true selects French audio and English sub for English user,Dub;eng;AC3;1;true|Original;fra;AC3;4;true,Full;eng;;0;false;0,en,en,en,false,true,fr,1,0
+Hide subtitles on with mismatched forced subtitle language,Main;eng;AC3;1;true,Forced;fra;;64;false;0,fr,en,fr,true,false,,0,-1
+"Deutschland-S01E01-Quantum_Jump-1080p-AVC-AC3-5.1-short.mkv","Deutschland.83.S01E01.Quantum.Jump.1080p.GERMAN.ENSUBBED.WEB-DL.DD5.1.H.264-RARBG;ger;AC3;1;true","Deutschland-S01E01-Quantum_Jump-1080p-AVC-AC3-5.1.eng.srt;eng;Deutschland-S01E01-Quantum_Jump-1080p-AVC-AC3-5.1.eng.srt;0;false;0|Deutschland-S01E01-Quantum_Jump-1080p-AVC-AC3-5.1.ger.srt;ger;Deutschland-S01E01-Quantum_Jump-1080p-AVC-AC3-5.1.ger.srt;0;false;0","fr","en","fr",false,true,"de",0,0
+"Trapped_(2015)-S01E01-Episode_1-1080p-AVC-EAC3-5.1-short.mkv","French;fre;EAC3;1;true|Icelandic;ice;EAC3;0;true","French [Full];fre;;0;false;0","fr","en","fr",false,true,"is",1,0
