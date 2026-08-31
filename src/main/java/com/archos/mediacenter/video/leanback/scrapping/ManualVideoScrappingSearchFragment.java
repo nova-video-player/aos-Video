@@ -105,6 +105,7 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
         // Get the details for this match
         Bundle b = new Bundle();
         b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
+        b.putBoolean(Scraper.ITEM_REQUEST_REFRESH_SHOW_METADATA, true);
 
         if (result.isTvShow()) {
             b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
@@ -162,6 +163,7 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
             public void run() {
                 BaseTags tags = fTags;
                 Bundle bundle = new Bundle();
+                bundle.putBoolean(Scraper.ITEM_REQUEST_REFRESH_SHOW_METADATA, true);
                 if (tags instanceof EpisodeTags) {
                     // note that this is for a single episode scraping not the whole show here thus get only the required season
                     // this enables to get the right poster from the show

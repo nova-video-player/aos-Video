@@ -581,6 +581,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                 // TODO: remove entries with no getDefaultPoster
                 Bundle b = new Bundle();
                 b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
+                b.putBoolean(Scraper.ITEM_REQUEST_REFRESH_SHOW_METADATA, true);
                 if (result.isTvShow()) {
                     b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
                     b.putInt(Scraper.ITEM_REQUEST_EPISODE, result.getOriginSearchEpisode());
@@ -693,6 +694,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                     SearchResult result = mResults.get(mResIndex);
                     Bundle b = new Bundle();
                     b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
+                    b.putBoolean(Scraper.ITEM_REQUEST_REFRESH_SHOW_METADATA, true);
                     if (result.isTvShow()) {
                         b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
                         b.putInt(Scraper.ITEM_REQUEST_EPISODE, result.getOriginSearchEpisode());
