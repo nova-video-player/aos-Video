@@ -965,6 +965,10 @@
     <string name="rescrap_all_title">Rescrape all</string>
     <string name="rescrap_all_movies_title">Rescrape all movies</string>
     <string name="rescrap_all_collections_title">Rescrape all collections</string>
+    <string name="recreate_sort_titles_title">Recreate sort titles</string>
+    <string name="recreate_sort_titles_summary">Recompute sort titles for movies, TV shows, and collections</string>
+    <string name="recreate_sort_titles_in_progress">Recreating sort titles in progress</string>
+    <string name="recreate_sort_titles_done">Sort titles recreated</string>
     <string name="nfo_export_manual_title">Export already scraped videos</string>
     <string name="nfo_export_manual_summary">Export .nfo files of every already scraped videos</string>
     <string name="db_export_manual_title">Export media database</string>

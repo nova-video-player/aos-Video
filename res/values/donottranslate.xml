@@ -24,6 +24,7 @@
     <string name="rescrap_all_prefkey">rescrap_all_prefkey</string>
     <string name="rescrap_all_movies_prefkey">rescrap_all_movies_prefkey</string>
     <string name="rescrap_all_collections_prefkey">rescrap_all_collections_prefkey</string>
+    <string name="recreate_sort_titles_prefkey">recreate_sort_titles_prefkey</string>
     <string name="db_export_manual_prefkey">db_export_manual_prefkey</string>
     <string name="media_library_export_prefkey">media_library_export_prefkey</string>
     <string name="media_library_import_prefkey">media_library_import_prefkey</string>

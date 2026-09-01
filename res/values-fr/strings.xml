@@ -873,6 +873,10 @@
     <string name="rescrap_all_title">Actualiser les descriptions</string>
     <string name="rescrap_all_movies_title">Actualiser les descriptions des films</string>
     <string name="rescrap_all_collections_title">Actualiser les descriptions des sagas</string>
+    <string name="recreate_sort_titles_title">Recréer les titres de tri</string>
+    <string name="recreate_sort_titles_summary">Recalculer les titres de tri pour les films, séries et sagas</string>
+    <string name="recreate_sort_titles_in_progress">Recréation des titres de tri en cours</string>
+    <string name="recreate_sort_titles_done">Titres de tri recréés</string>
     <string name="nfo_export_manual_title">Exporter toutes les descriptions</string>
     <string name="nfo_export_manual_summary">Export des fichiers .nfo pour chaque vidéo</string>
     <string name="db_export_manual_title">Export de la base de donnée media</string>

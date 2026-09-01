@@ -839,6 +839,26 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             return true;
         });
 
+        findPreference(getString(R.string.recreate_sort_titles_prefkey)).setOnPreferenceClickListener(preference -> {
+            Toast.makeText(getActivity(), R.string.recreate_sort_titles_in_progress, Toast.LENGTH_SHORT).show();
+            new Thread(() -> {
+                try {
+                    android.database.sqlite.SQLiteDatabase db = com.archos.mediaprovider.VideoDb.get(getContext());
+                    com.archos.mediaprovider.video.ScraperTables.recreateSortNames(db);
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            if (getActivity() != null) {
+                                Toast.makeText(getActivity(), R.string.recreate_sort_titles_done, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    log.error("recreateSortNames failed", e);
+                }
+            }).start();
+            return true;
+        });
+
         // recretate contexts in case of smb pref change
         mSmb2.setOnPreferenceChangeListener((preference, newValue) -> {
             Toast.makeText(getActivity(), preference.getKey() + "=" + newValue.toString(), Toast.LENGTH_SHORT).show();
