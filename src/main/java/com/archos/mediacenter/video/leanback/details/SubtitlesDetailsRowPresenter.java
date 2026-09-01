@@ -193,8 +193,8 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
             boolean need2Columns = externalSubs.size() > 5;
             int externalSubsCol1Nb = need2Columns ? ((externalSubs.size() + 1) / 2) : externalSubs.size();
             int externalSubsCol2Nb = need2Columns ? (externalSubs.size() / 2) : 0;
-            vh.mExternalSubsCol1Tv.setText(getFormattedExternalSubList(externalSubsCol1Nb, 0,                  externalSubs));
-            vh.mExternalSubsCol2Tv.setText(getFormattedExternalSubList(externalSubsCol2Nb, externalSubsCol1Nb, externalSubs));
+            vh.mExternalSubsCol1Tv.setText(getFormattedExternalSubList(c, externalSubsCol1Nb, 0,                  externalSubs));
+            vh.mExternalSubsCol2Tv.setText(getFormattedExternalSubList(c, externalSubsCol2Nb, externalSubsCol1Nb, externalSubs));
             vh.mExternalSubsCol2Tv.setVisibility(need2Columns ? View.VISIBLE : View.GONE);
             vh.mExternalSubsRow.setVisibility(View.VISIBLE);
             vh.mExternalSubsLabel.setVisibility(View.VISIBLE);
@@ -214,10 +214,13 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
     private CharSequence getFormattedSubList(Context c, int number, int offset, List<VideoMetadata.SubtitleTrack> list) {
         final String SEP = "  ";
         StringBuilder sb = new StringBuilder();
+        boolean isRtl = c.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+        String dirMarker = isRtl ? "\u200F" : "\u200E";
         for (int i=0 ; i<number ; i++) {
             if (i > 0) {
                 sb.append("<br>");
             }
+            sb.append(dirMarker);
             int index = i + offset;
             VideoMetadata.SubtitleTrack track = list.get(index);
             String format = VideoUtils.getSubtitleFormatLabel(c, track.format);
@@ -228,13 +231,16 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
         return HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY);
     }
 
-    private CharSequence getFormattedExternalSubList(int number, int offset, List<SubtitleManager.SubtitleFile> list) {
+    private CharSequence getFormattedExternalSubList(Context c, int number, int offset, List<SubtitleManager.SubtitleFile> list) {
         final String SEP = "  ";
         StringBuilder sb = new StringBuilder();
+        boolean isRtl = c.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+        String dirMarker = isRtl ? "\u200F" : "\u200E";
         for (int i=0 ; i<number ; i++) {
             if (i > 0) {
                 sb.append("<br>");
             }
+            sb.append(dirMarker);
             int index = i + offset;
             sb.append(Integer.toString(index + 1)).append(".").append(SEP)
               .append(capitalizeFirstLetter(list.get(index).mName)).append(SEP);

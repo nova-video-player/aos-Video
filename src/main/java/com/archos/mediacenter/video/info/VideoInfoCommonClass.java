@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
+import android.view.View;
 import androidx.core.text.HtmlCompat;
 
 import com.archos.filecorelibrary.FileEditor;
@@ -176,11 +177,14 @@ public class VideoInfoCommonClass {
         int audioTrackNb = videoMetadata.getAudioTrackNb();
         if (audioTrackNb > 0) {
             StringBuilder sb = new StringBuilder();
+            boolean isRtl = c.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+            String dirMarker = isRtl ? "\u200F" : "\u200E";
 
             for (int i = 0; i < audioTrackNb; i++) {
                 if (i > 0) {
                     sb.append("<br>");
                 }
+                sb.append(dirMarker);
                 VideoMetadata.AudioTrack audio = videoMetadata.getAudioTrack(i);
                 if (audioTrackNb == 1) {  // name of the track only if there is only one
                     String language = generateTrackName(c, audio.name, audio.language, null, audio.disposition, true);

@@ -31,7 +31,7 @@
             <TextView
                 android:id="@+id/subtitle_track"
                 android:padding="@dimen/video_info_margin_half"
-
+                android:textDirection="locale"
                 style="@style/VideoInfoFileInfo"
                 android:paddingLeft="32dip"/>
 

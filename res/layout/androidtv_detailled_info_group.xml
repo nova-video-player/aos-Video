@@ -150,6 +150,7 @@
                 style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textDirection="locale"
                 />
         </LinearLayout>
     </TableRow>
@@ -177,6 +178,7 @@
                 style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textDirection="locale"
                 />
         </LinearLayout>
 
@@ -190,6 +192,7 @@
                 style="@style/TextAppearance.Leanback.DetailsDescriptionSubtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textDirection="locale"
                 />
         </LinearLayout>
     </TableRow>

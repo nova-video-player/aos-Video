@@ -15,6 +15,7 @@
         <TextView android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textDirection="locale"
                 android:textAppearance="?attr/textAppearanceLargePopupMenu"
                 android:ellipsize="end"
                 android:fadingEdge="horizontal" />
@@ -23,6 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/name"
                 android:layout_alignLeft="@id/name"
+                android:textDirection="locale"
                 android:textAppearance="?attr/textAppearanceSmallPopupMenu"
                 android:textSize="11sp"
                 android:singleLine="true" />

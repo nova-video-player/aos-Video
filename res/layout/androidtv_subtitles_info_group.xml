@@ -64,6 +64,7 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textDirection="locale"
                 />
             <TextView
                 android:id="@+id/integrated_subtitles_values_col2"
@@ -71,6 +72,7 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textDirection="locale"
                 />
         </TableRow>
 
@@ -93,6 +95,7 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textDirection="locale"
                 />
             <TextView
                 android:id="@+id/external_subtitles_values_col2"
@@ -100,6 +103,7 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textDirection="locale"
                 />
         </TableRow>
 

@@ -1152,6 +1152,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         if (subtitleTrackNb > 0 || externalSubs!=null&&externalSubs.size()>0) {
             if (log.isDebugEnabled()) log.debug("updateAudioVideoInfo: subtitle");
             ArrayList<CharSequence> lines = new ArrayList<>();
+            boolean isRtl = getContext() != null && getContext().getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+            String dirMarker = isRtl ? "\u200F" : "\u200E";
             int totSubs = 0;
             if(videoMetadata!=null) {
                 VideoMetadata.SubtitleTrack subTrack = null;
@@ -1160,14 +1162,14 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (!videoMetadata.getSubtitleTrack(i).isExternal) { //manage external subs with sub manager
                         if (log.isDebugEnabled()) log.debug("updateSubtitleInfo: int subtitleTrack {} {} {} {}", i, subTrack.name, subTrack.language, subTrack.format);
                         String format = VideoUtils.getSubtitleFormatLabel(getContext(), subTrack.format);
-                        lines.add((totSubs + 1) + ": " + StringUtils.removeHtmlTags(generateTrackName(getContext(), subTrack.name, subTrack.language, format, subTrack.disposition, false)));
+                        lines.add(dirMarker + (totSubs + 1) + ": " + StringUtils.removeHtmlTags(generateTrackName(getContext(), subTrack.name, subTrack.language, format, subTrack.disposition, false)));
                         totSubs++;
                     }
                 }
             }
             if(externalSubs!=null) {
                 for (SubtitleManager.SubtitleFile sub : externalSubs) {
-                    lines.add((totSubs + 1) + ": " + replaceLanguageCodeInString(getContext(), sub.mName));
+                    lines.add(dirMarker + (totSubs + 1) + ": " + replaceLanguageCodeInString(getContext(), sub.mName));
                     totSubs++;
                 }
             }

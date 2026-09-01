@@ -287,10 +287,13 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
 
     private String getSubtitleTrackList(Context context, int number, int offset, String separator, VideoMetadata videoMetadata) {
         StringBuilder sb = new StringBuilder();
+        boolean isRtl = context.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+        String dirMarker = isRtl ? "\u200F" : "\u200E";
         for (int i=0 ; i<number ; i++) {
             if (i > 0) {
                 sb.append("\n");
             }
+            sb.append(dirMarker);
             int index = i + offset;
             String format = VideoUtils.getSubtitleFormatLabel(context, videoMetadata.getSubtitleTrack(index).format);
             VideoMetadata.SubtitleTrack track = videoMetadata.getSubtitleTrack(index);
