@@ -36,7 +36,6 @@ public class AllTvshowsLoader extends VideoLoader {
     private String mSortOrder;
 
     private boolean mShowWatched;
-    private Context mContext;
 
     /**
      * List all shows
@@ -58,14 +57,13 @@ public class AllTvshowsLoader extends VideoLoader {
         super(context);
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
-        mContext = context;
         if (applyThrottleDelay) setUpdateThrottle(throttleDelay);
         init();
     }
 
     @Override
     public String getSortOrder() {
-        return mSortOrder;
+        return com.archos.mediacenter.video.utils.SortUtils.resolveSortOrder(getContext(), com.archos.mediacenter.video.utils.SortUtils.SortScope.SHOW, mSortOrder);
     }
 
     @Override
@@ -74,6 +72,7 @@ public class AllTvshowsLoader extends VideoLoader {
                 VideoStore.MediaColumns.DATA,
                 VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " AS " + BaseColumns._ID,
                 VideoStore.Video.VideoColumns.SCRAPER_TITLE,
+                VideoStore.Video.VideoColumns.SCRAPER_S_SORT_NAME,
                 VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID,
                 VideoStore.Video.VideoColumns.SCRAPER_S_COVER,
                 VideoStore.Video.VideoColumns.SCRAPER_S_POSTER_ID,

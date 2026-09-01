@@ -14,9 +14,12 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
@@ -206,7 +209,7 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
             v.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
+                    Log.d(TAG, "Element " + getBindingAdapterPosition() + " clicked.");
                 }
             });
             mName = (TextView) v.findViewById(R.id.name);
@@ -260,10 +263,14 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
      * Restore the state that has been saved in a bundle
      * @param inState
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "deprecation"})
     public void onRestoreInstanceState(Bundle inState) {
-        mAvailableShares = (List<String>) inState.getSerializable("mAvailableShares");
-        mIndexedShortcuts = (ArrayList<ShortcutDbAdapter.Shortcut>) inState.getSerializable("mIndexedShortcuts");
+        mAvailableShares = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? (List<String>) inState.getSerializable("mAvailableShares", ArrayList.class)
+                : (List<String>) inState.getSerializable("mAvailableShares");
+        mIndexedShortcuts = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? (ArrayList<ShortcutDbAdapter.Shortcut>) inState.getSerializable("mIndexedShortcuts", ArrayList.class)
+                : (ArrayList<ShortcutDbAdapter.Shortcut>) inState.getSerializable("mIndexedShortcuts");
     }
 
     // Create new views (invoked by the layout manager)
@@ -300,7 +307,7 @@ public abstract class RootFragmentAdapter extends RecyclerView.Adapter<RecyclerV
 
             // Set shortcut availability
 
-            boolean available = (mAvailableShares==null||mAvailableShares.contains(Uri.parse(shortcut.getUri()).getHost().toLowerCase())||mForcedEnabledShortcut.contains(shortcut.getUri()));
+            boolean available = (mAvailableShares==null||mAvailableShares.contains(Uri.parse(shortcut.getUri()).getHost().toLowerCase(Locale.ROOT))||mForcedEnabledShortcut.contains(shortcut.getUri()));
             sViewHolder.setAvailable(available);
             sViewHolder.setRefreshable(available && !NetworkScannerServiceVideo.isScannerAlive());
         }

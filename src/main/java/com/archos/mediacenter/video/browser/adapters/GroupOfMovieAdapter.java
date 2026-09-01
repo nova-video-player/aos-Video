@@ -94,8 +94,8 @@ public class GroupOfMovieAdapter extends CursorAdapter implements SectionIndexer
     public void bindView(View view, Context context, Cursor cursor) {
 
         int movieCount = cursor.getInt(mNumberOfMovieIdsColumnIdx);
-        String format = context.getResources().getQuantityText(R.plurals.Nmovies, movieCount).toString();
-        mPresenter.bindView(view, new Pair<String,String>(cursor.getString(mNameColumnIdx),String.format(format, movieCount)),mThumbnailEngine.getResultFromPool(getItemId(cursor.getPosition())),cursor.getPosition());
+        String movieCountString = context.getResources().getQuantityString(R.plurals.Nmovies, movieCount, movieCount);
+        mPresenter.bindView(view, new Pair<String,String>(cursor.getString(mNameColumnIdx), movieCountString), mThumbnailEngine.getResultFromPool(getItemId(cursor.getPosition())), cursor.getPosition());
 
 
     }

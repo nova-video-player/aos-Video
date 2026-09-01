@@ -45,7 +45,7 @@ public class OpenSubtitlesQueryParams {
     public void setOnlineId(OnlineId onlineId) {
         if (onlineId == null) return;
         if (onlineId.getImdbId() != null) imdbId = onlineId.getImdbId();
-        if (onlineId.getImdbId() != null) tmdbId = onlineId.getTmdbId();
+        if (onlineId.getTmdbId() != null) tmdbId = onlineId.getTmdbId();
     }
 
     public String getFileName() { return fileName;}

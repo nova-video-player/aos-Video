@@ -22,6 +22,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -38,6 +39,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.oauth.OAuthDialog;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * A dialog showing a progress indicator and an optional text message or view.
@@ -207,7 +209,7 @@ public class NovaProgressDialog extends AlertDialog {
             /* Use a separate handler to update the text views as they
              * must be updated on the same thread that created them.
              */
-            mViewUpdateHandler = new Handler() {
+            mViewUpdateHandler = new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage(Message msg) {
                     super.handleMessage(msg);
@@ -217,7 +219,7 @@ public class NovaProgressDialog extends AlertDialog {
                     int max = mProgress.getMax();
                     if (mProgressNumberFormat != null) {
                         String format = mProgressNumberFormat;
-                        mProgressNumber.setText(String.format(format, progress, max));
+                        mProgressNumber.setText(String.format(Locale.getDefault(), format, progress, max));
                     } else {
                         mProgressNumber.setText("");
                     }

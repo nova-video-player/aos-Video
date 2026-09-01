@@ -100,7 +100,6 @@
     <application
         android:name=".CustomApplication"
         android:allowTaskReparenting="true"
-        android:extractNativeLibs="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:banner="@drawable/nova_banner"
@@ -109,7 +108,7 @@
         android:requestLegacyExternalStorage="true"
         android:localeConfig="@xml/locales_config"
         android:usesCleartextTraffic="true"
-        android:enableOnBackInvokedCallback="false"
+        android:enableOnBackInvokedCallback="true"
         android:networkSecurityConfig="@xml/network_security_config">
         <meta-data
             android:name="to.dualscreen"
@@ -221,7 +220,6 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme=""/>
                 <data android:scheme="smb" />
                 <data android:scheme="smbj" />
                 <data android:scheme="ftps" />
@@ -255,7 +253,6 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme=""/>
                 <data android:scheme="file"/>
                 <data android:scheme="content"/>
                 <data android:scheme="http"/>
@@ -288,7 +285,6 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme=""/>
                 <data android:scheme="file"/>
                 <data android:scheme="content"/>
                 <data android:scheme="http"/>
@@ -329,7 +325,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme=""/>                 
                 <data android:scheme="content" />
                 <data android:scheme="file" />
                 <data android:scheme="http" />
@@ -687,13 +682,12 @@
             <!--
             Need to repeat it all over again for the applications not declaring any mimeType
             -->
-            <intent-filter android:autoVerify="true">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme=""/>                 
                 <data android:scheme="content" />
                 <data android:scheme="file" />
                 <data android:scheme="http" />
@@ -1112,7 +1106,7 @@
             android:label="@string/connect_trakt"
             android:theme="@style/ArchosThemeBlue"
             android:exported="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
             <!-- Handle browser redirect for OAuth phone/tablet flow (legacy localhost) -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -1176,7 +1170,7 @@
             android:taskAffinity="archos.task.video"
             android:theme="@style/Theme.HelpOverlay" />
 
-        <service android:name="org.jupnp.android.AndroidUpnpServiceImpl" />
+        <service android:name="com.archos.mediacenter.filecoreextension.upnp2.NovaUpnpService" />
         <service android:name=".browser.TorrentObserverService" />
         <service
             android:name=".player.FloatingPlayerService"
@@ -1377,7 +1371,7 @@
                 <data android:host="*" />
                 <data android:pathPattern=".*\\.torrent" />
             </intent-filter>
-            <intent-filter android:autoVerify="true">
+            <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />

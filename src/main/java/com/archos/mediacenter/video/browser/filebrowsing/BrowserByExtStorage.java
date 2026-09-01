@@ -15,7 +15,6 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,9 +22,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.loader.app.LoaderManager;
 
@@ -43,8 +43,22 @@ import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
 
 public class BrowserByExtStorage extends BrowserByLocalFolder {
 
-    private static final int READ_REQUEST_CODE = 42;
     protected String currentMountPoint;
+
+    private final ActivityResultLauncher<Intent> docTreeLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri treeUri = result.getData().getData();
+                    getActivity().getContentResolver().takePersistableUriPermission(
+                            treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    mCurrentDirectory = treeUri;
+                    listFiles(false);
+                    LoaderManager.getInstance(this).restartLoader(0, null, this);
+                } else {
+                    displayFailPage();
+                }
+            });
 
     private final BroadcastReceiver mSdCardReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -109,7 +123,7 @@ public class BrowserByExtStorage extends BrowserByLocalFolder {
                     intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
                     intent.putExtra("android.content.extra.FANCY", true);
                     intent.putExtra("android.content.extra.SHOW_FILESIZE", true);
-                    startActivityForResult(Intent.createChooser(intent, "Choose directory"), READ_REQUEST_CODE);
+                    docTreeLauncher.launch(Intent.createChooser(intent, "Choose directory"));
                 }
             }).setNegativeButton(android.R.string.cancel, null).show();
             displayFailPage();
@@ -127,7 +141,7 @@ public class BrowserByExtStorage extends BrowserByLocalFolder {
     @Override
     public void onPause() {
         if(mHasRegisteredReceiver)
-        getActivity().unregisterReceiver(mSdCardReceiver);
+            getActivity().unregisterReceiver(mSdCardReceiver);
         mHasRegisteredReceiver = false;
         super.onPause();
     }
@@ -144,22 +158,5 @@ public class BrowserByExtStorage extends BrowserByLocalFolder {
         return Uri.parse(currentMountPoint);
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        if(requestCode==READ_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-
-                //Set directory as default in preferences
-                Uri treeUri = intent.getData();
-                //grant write permissions
-                getActivity().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                mCurrentDirectory = treeUri;
-                listFiles(false);
-                LoaderManager.getInstance(this).restartLoader(0, null, this);
-
-            } else displayFailPage();
-        }
-    }
 
 }

@@ -176,6 +176,12 @@ public class ArchosDetailsOverviewRowPresenter extends FullWidthDetailsOverviewR
         }
     }
 
+    public void setSelectedActionPosition(int position) {
+        if (mViewHolder != null) {
+            ((HorizontalGridView)mViewHolder.getActionsRow()).setSelectedPosition(position);
+        }
+    }
+
     public int getState() {
         return mViewHolder.getState();
     }

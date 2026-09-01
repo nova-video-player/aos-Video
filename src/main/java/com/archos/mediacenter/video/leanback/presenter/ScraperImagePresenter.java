@@ -108,19 +108,35 @@ public abstract class ScraperImagePresenter extends Presenter {
             String adjustedImageUrl = getAdjustedImageUrl(mImage);
             if (log.isDebugEnabled()) log.debug("loadImage: picasso loads {}", adjustedImageUrl);
             File imgFile = mImage.getLargeFileF();
+
+            int targetWidth = getAdjustedWidth(c);
+            int targetHeight = getAdjustedHeight(c);
+
+            // Safe Fidelity Target: request 1.6x resize during decode.
+            int decodeWidth = (int) (targetWidth * 1.6f);
+            int decodeHeight = (int) (targetHeight * 1.6f);
+
             if (! imgFile.exists()) { // download via picasso
                 if (log.isDebugEnabled()) log.debug("loadImage: {} does not exist (could be for size reason)", mImage.getLargeFile());
                 Picasso.get()
                         .load(adjustedImageUrl)
-                        .resize(getAdjustedWidth(c), getAdjustedHeight(c)) // better resize to card size, since backdrop files are pretty large
+                        .config(Bitmap.Config.ARGB_8888)
+                        .resize(decodeWidth, decodeHeight)
                         .centerCrop()
+                        .onlyScaleDown()
+                        .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(targetWidth, targetHeight))
+                        .noFade()
                         .error(R.drawable.filetype_new_image)
                         .into(mImageViewTarget);
             } else { // use existing file
                 Picasso.get()
-                        .load(mImage.getLargeFileF())
-                        .resize(getAdjustedWidth(c), getAdjustedHeight(c)) // better resize to card size, since backdrop files are pretty large
+                        .load(imgFile)
+                        .config(Bitmap.Config.ARGB_8888)
+                        .resize(decodeWidth, decodeHeight)
                         .centerCrop()
+                        .onlyScaleDown()
+                        .transform(new com.archos.mediacenter.video.picasso.FidelityTransformation(targetWidth, targetHeight))
+                        .noFade()
                         .error(R.drawable.filetype_new_image)
                         .into(mImageViewTarget);
             }
@@ -149,7 +165,7 @@ public abstract class ScraperImagePresenter extends Presenter {
         String imageUrl = getImageUrl(image);
 
         if (mBigMode)
-            imageUrl = image.getLargeUrl().replace("/w342/", "/w780/");
+            imageUrl = image.getLargeUrl().replace("/" + ScraperImage.POSTER_LARGE + "/", "/original/");
 
         return imageUrl;
     }

@@ -34,11 +34,9 @@ public abstract class AnimeShowsByLoader extends CursorLoader implements CompatA
     protected String mSortOrder;
     private boolean mForceHideVideos;
 
-    private Context mContext;
 
     public AnimeShowsByLoader(Context context) {
         super(context);
-        mContext = context;
         setUri(VideoStore.RAW_QUERY.buildUpon().appendQueryParameter("group",
                 VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL GROUP BY ( " + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " ) "
         ).build());
@@ -60,7 +58,7 @@ public abstract class AnimeShowsByLoader extends CursorLoader implements CompatA
         }
 
         sb.append(" AND ( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " IS NULL OR " +
-                VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%' )");
+                VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + getContext().getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%' )");
 
         return sb.toString();
     }

@@ -14,11 +14,13 @@
 
 package com.archos.mediacenter.video.browser;
 
-import android.app.IntentService;
+import java.util.Locale;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.ContentUris;
 import android.content.Context;
 import androidx.core.content.ContextCompat;
@@ -34,7 +36,12 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
+import android.os.Process;
 import android.provider.BaseColumns;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
@@ -53,7 +60,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class  UpdateRecommendationsService extends IntentService implements DefaultLifecycleObserver {
+public class UpdateRecommendationsService extends Service implements DefaultLifecycleObserver {
 	private static final String TAG = "UpdateRecommendationsService";
 	public static class Columns {
 		public static final String ID = BaseColumns._ID;
@@ -104,8 +111,24 @@ public class  UpdateRecommendationsService extends IntentService implements Defa
 	private int mProgressColumns;
 	private int mDurationColumns;
 	private static List<Integer> sLastCard = new ArrayList<>();
+
+	private volatile Looper mServiceLooper;
+	private volatile ServiceHandler mServiceHandler;
+
+	private final class ServiceHandler extends Handler {
+		public ServiceHandler(Looper looper) {
+			super(looper);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			onHandleIntent((Intent) msg.obj);
+			stopSelf(msg.arg1);
+		}
+	}
+
 	public UpdateRecommendationsService() {
-		super("RecommendationService");
+		super();
 	}
 
 	public class RecommendationServiceBinder extends Binder{
@@ -117,13 +140,26 @@ public class  UpdateRecommendationsService extends IntentService implements Defa
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		HandlerThread thread = new HandlerThread("UpdateRecommendationsService", Process.THREAD_PRIORITY_BACKGROUND);
+		thread.start();
+		mServiceLooper = thread.getLooper();
+		mServiceHandler = new ServiceHandler(mServiceLooper);
 		// Register as a lifecycle observer
 		ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 	}
 
 	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		Message msg = mServiceHandler.obtainMessage();
+		msg.arg1 = startId;
+		msg.obj = intent;
+		mServiceHandler.sendMessage(msg);
+		return START_NOT_STICKY;
+	}
+
+	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
 		return binder;
 	}
 	public void update(){
@@ -152,7 +188,7 @@ public class  UpdateRecommendationsService extends IntentService implements Defa
 							.setContext(getApplicationContext())
 							.setSmallIcon(R.mipmap.nova);
 					final String scraperCover = c.getString(c.getColumnIndexOrThrow(Columns.COVER_PATH));
-					Bitmap bitmap = BitmapFactory.decodeFile(scraperCover);
+					Bitmap bitmap = com.archos.mediacenter.utils.BitmapUtils.decodeSampledBitmapFromFile(scraperCover, 500, 750);
 					if (bitmap == null&&c.getLong(mIDColumns) >= 0) {
 						BitmapFactory.Options options = new BitmapFactory.Options();
 						options.inSampleSize = 2;
@@ -165,7 +201,7 @@ public class  UpdateRecommendationsService extends IntentService implements Defa
 					int episode = c.getInt(episodeColumns);
 					// TODO MARC format unification e%03?
 					if (season != 0 && episode != 0)
-						builder.setDescription(String.format("S%02dE%02d  -  %s", season, episode, c.getString(episodeNameColumns)));
+						builder.setDescription(String.format(Locale.getDefault(), "S%02dE%02d  -  %s", season, episode, c.getString(episodeNameColumns)));
 					Notification notification = builder.setTitle(c.getString(mNameColumn))
 							.setImage(bitmap)
 							.setMax(c.getInt(mDurationColumns))
@@ -193,11 +229,10 @@ public class  UpdateRecommendationsService extends IntentService implements Defa
 		}
 	}
 
-	@Override
 	protected void onHandleIntent(Intent intent) {
 		mNotificationManager =(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		update();
-}
+	}
 	public class RecommendationBuilder {
 		private Bitmap mImageUri;
 		private String mDescription;
@@ -300,7 +335,7 @@ public class  UpdateRecommendationsService extends IntentService implements Defa
 		// Ensure a unique PendingIntents, otherwise all
 		// recommendations end up with the same PendingIntent
 		PendingIntent intent = stackBuilder.getPendingIntent(0,
-				((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
+				PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
 		return intent;
 	}
@@ -322,6 +357,10 @@ public class  UpdateRecommendationsService extends IntentService implements Defa
 	@Override
 	public void onDestroy() {
 		if (DBG) Log.d(TAG, "onDestroy()");
+		ProcessLifecycleOwner.get().getLifecycle().removeObserver(this);
+		if (mServiceLooper != null) {
+			mServiceLooper.quit();
+		}
 		cleanup(); // Call cleanup here
 		super.onDestroy();
 	}

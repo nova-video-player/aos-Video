@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -23,6 +25,7 @@ import android.os.Bundle;
 
 import androidx.preference.PreferenceManager;
 
+import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
@@ -45,6 +48,7 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
 
     private static final Logger log = LoggerFactory.getLogger(ExternalPlayerResultListener.class);
 
+    @SuppressLint("StaticFieldLeak")
     private static ExternalPlayerResultListener sExternalPlayerResultListener;
     private Context mContext;
     private TraktService.Client mTraktClient;
@@ -81,17 +85,17 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
     }
 
     public void init(Context context, Uri contentUri, Uri playerUri, VideoDbInfo videoDbInfo){
-        mContext = context;
+        mContext = context != null ? context.getApplicationContext() : ArchosUtils.getGlobalContext();
         mContentUri = contentUri;
         mPlayerUri = playerUri;
         if (log.isDebugEnabled()) log.debug("init: playerUri={}, contentUri={}", playerUri, contentUri);
         mContentUri = Uri.parse(removeFileSlashSlash(mContentUri.toString())); // we need to remove "file://"
-        if (!PrivateMode.isActive() && Trakt.isTraktV2Enabled(mContext, PreferenceManager.getDefaultSharedPreferences(mContext)))
+        if (mContext != null && !PrivateMode.isActive() && Trakt.isTraktV2Enabled(mContext, PreferenceManager.getDefaultSharedPreferences(mContext)))
             mTraktClient = new TraktService.Client(mContext, mTraktListener, false);
         else
             mTraktClient = null;
         //get video info, useful to save video state
-        mIndexHelper = new IndexHelper(context, null, 0);
+        mIndexHelper = new IndexHelper(mContext, null, 0);
         if(videoDbInfo!=null){
             mVideoDbInfo = videoDbInfo;
         }
@@ -102,11 +106,12 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
         }
     }
 
+    @SuppressWarnings("deprecation") // bundle.get: debug dumping only
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (log.isDebugEnabled()) log.debug("onActivityResult: requestCode={}, resultCode={}, mVideoDbInfo!=null {}, mPlayerUri {}", requestCode, resultCode, (mVideoDbInfo!=null), mPlayerUri        );
 
-        ExternalPlayerService.stopService(mContext);
+        ExternalPlayerService.stopService(mContext != null ? mContext : ArchosUtils.getGlobalContext());
 
         // Some external video player api specs:
         // vlc https://wiki.videolan.org/Android_Player_Intents/ https://wiki.videolan.org/MediaControlAPI
@@ -161,6 +166,8 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
                 mVideoDbInfo.lastTimePlayed = Long.valueOf(System.currentTimeMillis() / 1000L);
                 if (position != -1) {
                     mVideoDbInfo.resume = position;
+                    if (mDuration > 0)
+                        mVideoDbInfo.duration = mDuration;
                     mIndexHelper.writeVideoInfo(mVideoDbInfo, true);
                 }
                 TorrentObserverService.staticExitProcess();

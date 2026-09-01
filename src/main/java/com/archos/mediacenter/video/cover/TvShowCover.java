@@ -14,8 +14,10 @@
 
 package com.archos.mediacenter.video.cover;
 
+
 import com.archos.mediacenter.cover.ArtworkFactory;
 import com.archos.mediacenter.cover.Cover;
+import com.archos.mediacenter.utils.BitmapUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.BrowserListOfSeasons;
 import com.archos.mediacenter.video.player.PlayerActivity;
@@ -62,16 +64,6 @@ public class TvShowCover extends Cover {
     private int mNumberOfSingleSeason; // Number of single season for this show
     private String mAnyEpisodeFilePath;
 
-    // Layout stuff is done only once for all Cover instances
-    //TVSHOW
-    private static View sDescriptionViewTVShow = null;
-    private static TextView sTVShowName = null;
-    private static TextView sNumberOfSeasonsOrEpisodes = null;
-    /** Formatting optimization to avoid creating many temporary objects. */
-    private static StringBuilder sFormatBuilder;
-    /** Formatting optimization to avoid creating many temporary objects. */
-    private static Formatter sFormatter;
-
     public TvShowCover(long id, String name, int numberOfEpisodes, String poster, int numberOfSeasons, int numberOfSingleSeason, String anyEpisodeFilePath) {
         super();
         if (DBG) Log.d(TAG, "TvShowCover(" + id +"|"+name+"|"+poster+")");
@@ -100,18 +92,6 @@ public class TvShowCover extends Cover {
         return "TVS"+libraryId+"_"+NumberOfEpisodes; //TV Show
     }
 
-    /**
-     * Destroy all cached layout, bitmaps, etc.
-     * Called when the screen size is changed, for example.
-     */
-    public static void resetCachedGraphicStuff() {
-        sDescriptionViewTVShow = null;
-        sTVShowName = null;
-        sNumberOfSeasonsOrEpisodes = null;
-        sFormatBuilder = null;
-        sFormatter = null;
-    }
-
     @Override
     public Bitmap getArtwork(ArtworkFactory factory, boolean descriptionOnCover) {
         if (DBG) Log.d(TAG, "getArtwork for " + mScraperId);
@@ -122,7 +102,7 @@ public class TvShowCover extends Cover {
             // get the DVD-like art from the Scraper database
             if (mPosterPath!=null) {
                 if (DBG) Log.d(TAG, "try to decode mPosterPath=" + mPosterPath);
-                coverBitmap = BitmapFactory.decodeFile(mPosterPath);
+                coverBitmap = BitmapUtils.decodeSampledBitmapFromFile(mPosterPath, 500, 750);
             }
 
             if (coverBitmap == null) {
@@ -174,15 +154,11 @@ public class TvShowCover extends Cover {
 
     @Override
     public Bitmap getDescription( ArtworkFactory factory ) {
-        View view;
+        View view = factory.getCachedView(R.layout.cover_floating_description_video);
+        TextView tvShowName = view.findViewById(R.id.filename);
+        TextView numberOfSeasonsOrEpisodes = view.findViewById(R.id.duration);
 
-        // Inflate the layout in case it has not been inflated yet for this Cover class
-        if (sDescriptionViewTVShow==null) {
-            inflateDescriptionLayoutTVShow(factory);
-        }
-        view = sDescriptionViewTVShow;
-
-        sTVShowName.setText(mName);
+        tvShowName.setText(mName);
 
         int numberOfSeasons = 0;
         String[] seasonProjection = new String[] {ScraperStore.Seasons.SHOW_ID};
@@ -191,10 +167,8 @@ public class TvShowCover extends Cover {
         if (seasonCursor != null) {
             numberOfSeasons = seasonCursor.getCount();
             if (numberOfSeasons > 1) {
-                String f = factory.getResources().getQuantityText(R.plurals.Nseasons, numberOfSeasons).toString();
-                sFormatBuilder.setLength(0);
-                sFormatter.format(f, Integer.valueOf(numberOfSeasons));
-                sNumberOfSeasonsOrEpisodes.setText(sFormatBuilder);
+                String f = factory.getResources().getQuantityString(R.plurals.Nseasons, numberOfSeasons, numberOfSeasons);
+                numberOfSeasonsOrEpisodes.setText(f);
             }
             seasonCursor.close();
         }
@@ -206,16 +180,14 @@ public class TvShowCover extends Cover {
             if (episodeCursor != null) {
                 int numberOfEpisodes = episodeCursor.getCount();
                 if (numberOfEpisodes > 0) {
-                    String f = factory.getResources().getQuantityText(R.plurals.Nepisodes, numberOfEpisodes).toString();
-                    sFormatBuilder.setLength(0);
-                    sFormatter.format(f, Integer.valueOf(numberOfEpisodes));
-                    sNumberOfSeasonsOrEpisodes.setText(sFormatBuilder);
+                    String f = factory.getResources().getQuantityString(R.plurals.Nepisodes, numberOfEpisodes, numberOfEpisodes);
+                    numberOfSeasonsOrEpisodes.setText(f);
                 } else {
-                    sNumberOfSeasonsOrEpisodes.setText("");
+                    numberOfSeasonsOrEpisodes.setText("");
                 }
                 episodeCursor.close();
             } else {
-                sNumberOfSeasonsOrEpisodes.setText("");
+                numberOfSeasonsOrEpisodes.setText("");
             }
         }
 
@@ -225,21 +197,6 @@ public class TvShowCover extends Cover {
         view.layout(0, 0, DESCRIPTION_TEXTURE_WIDTH, DESCRIPTION_TEXTURE_HEIGHT);
 
         return factory.createViewBitmap(view, DESCRIPTION_TEXTURE_WIDTH, DESCRIPTION_TEXTURE_HEIGHT);
-    }
-
-    /**
-     * Inflate the (static) layout used for the TVShow description texture
-     */
-    private static void inflateDescriptionLayoutTVShow( ArtworkFactory factory ) {
-        // Here we "re-use" the basic video description (one line title plus one line duration that we use here for number of episodes)
-        sDescriptionViewTVShow = factory.getLayoutInflater().inflate(R.layout.cover_floating_description_video, null);
-        sTVShowName = (TextView)sDescriptionViewTVShow.findViewById(R.id.filename);
-        sNumberOfSeasonsOrEpisodes = (TextView)sDescriptionViewTVShow.findViewById(R.id.duration);
-
-        sDescriptionViewTVShow.setLayoutParams( new FrameLayout.LayoutParams(DESCRIPTION_TEXTURE_WIDTH,DESCRIPTION_TEXTURE_HEIGHT) );
-
-        sFormatBuilder = new StringBuilder();
-        sFormatter = new Formatter( sFormatBuilder, Locale.getDefault() );
     }
 
     @Override
@@ -257,6 +214,7 @@ public class TvShowCover extends Cover {
                 args.putLong(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID, mScraperId);
                 args.putString("subcategoryName", mName);
                 i.putExtra(BrowserActivity.FRAGMENT_ARGS, args);
+                i.setPackage(context.getPackageName());
                 context.sendBroadcast(i);
             }
         };

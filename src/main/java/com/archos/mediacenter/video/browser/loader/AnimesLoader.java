@@ -28,7 +28,6 @@ public class AnimesLoader extends VideoLoader {
 
     private boolean mShowWatched;
 
-    private Context mContext;
 
     public AnimesLoader(Context context, boolean groupbyOnlineId) {
         this(context, DEFAULT_SORT, true, groupbyOnlineId, false, 0);
@@ -40,7 +39,6 @@ public class AnimesLoader extends VideoLoader {
 
     public AnimesLoader(Context context, String SortOrder, boolean showWatched, boolean groupByOnlineId, boolean applyThrottleDelay, int throttleDelay) {
         super(context);
-        mContext = context;
         mGroupByOnlineId = groupByOnlineId;
         mSortOrder = SortOrder;
         mShowWatched = showWatched;
@@ -72,7 +70,7 @@ public class AnimesLoader extends VideoLoader {
 
     @Override
     public String getSortOrder() {
-        return mSortOrder;
+        return com.archos.mediacenter.video.utils.SortUtils.resolveSortOrder(getContext(), com.archos.mediacenter.video.utils.SortUtils.SortScope.MOVIE, mSortOrder);
     }
 
     @Override
@@ -82,7 +80,7 @@ public class AnimesLoader extends VideoLoader {
         sb.append(" AND ");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL");
         sb.append(" AND ");
-        sb.append(VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'");
+        sb.append(VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%" + getContext().getString(com.archos.medialib.R.string.movie_genre_animation) + "%'");
         if (!mShowWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);

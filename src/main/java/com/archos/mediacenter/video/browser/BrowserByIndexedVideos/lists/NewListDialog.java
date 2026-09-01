@@ -1,8 +1,23 @@
+// Copyright 2026 Courville Software
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +42,7 @@ public class NewListDialog extends DialogFragment {
 
     private View mView;
 
+    @SuppressWarnings("deprecation") // getSerializable: API 33+ branch uses typed form; else branch suppressed
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -40,7 +56,9 @@ public class NewListDialog extends DialogFragment {
                 EditText text = (EditText)mView.findViewById(R.id.list_title);
                 VideoStore.List.ListObj list = new VideoStore.List.ListObj(text.getText().toString(), -1, VideoStore.List.SyncStatus.STATUS_NOT_SYNC);
                 Uri uri = getActivity().getContentResolver().insert(VideoStore.List.LIST_CONTENT_URI, list.toContentValues());
-                Video video = (Video) getArguments().getSerializable(ListDialog.EXTRA_VIDEO);
+                Video video = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                        ? getArguments().getSerializable(ListDialog.EXTRA_VIDEO, Video.class)
+                        : (Video) getArguments().getSerializable(ListDialog.EXTRA_VIDEO);
                 BaseTags metadata = video.getFullScraperTags(getActivity());
                 boolean isEpisode = metadata instanceof EpisodeTags;
                 VideoStore.VideoList.VideoItem videoItem  =

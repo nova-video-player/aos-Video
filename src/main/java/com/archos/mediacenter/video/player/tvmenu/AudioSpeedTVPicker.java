@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.player.tvmenu;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -46,7 +47,7 @@ public class AudioSpeedTVPicker extends AudioSpeedPickerAbstract implements TVSl
     private static final int CHANGE_SPEED = 1;
     private static final int CHANGE_SPEED_TIMEOUT = 750; // msec
 
-    private final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             AudioSpeedTVPicker.this.handleMessage(msg);

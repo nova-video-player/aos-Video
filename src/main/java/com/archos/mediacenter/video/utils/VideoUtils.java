@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.utils;
 
+import java.util.Locale;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -105,7 +107,7 @@ public class VideoUtils {
                     //if(DBG) Log.d(TAG, "deleteAssociatedSubtitles: Match for " + fullName);
                     dotPos = fullName.lastIndexOf('.');
                     if (dotPos >= 0 && dotPos < fullName.length()) {
-                        String ext = fullName.substring(dotPos + 1).toLowerCase();
+                        String ext = fullName.substring(dotPos + 1).toLowerCase(Locale.ROOT);
                         if (getSubtitleExtensions().contains(ext)) {
                             if(DBG) Log.d(TAG, "deleteAssociatedSubtitles: deleting file " + f.getPath());
                             f.delete();
@@ -138,6 +140,48 @@ public class VideoUtils {
         }
         Log.e(TAG, "getSubtitleFormatLabel: subtitle format index out of bounds: " + format);
         return context.getResources().getString(R.string.unknown_track_name);
+    }
+
+    public static final int AV_DISPOSITION_DEFAULT           = 0x0001;
+    public static final int AV_DISPOSITION_DUB               = 0x0002;
+    public static final int AV_DISPOSITION_ORIGINAL          = 0x0004;
+    public static final int AV_DISPOSITION_COMMENT           = 0x0008;
+    public static final int AV_DISPOSITION_LYRICS            = 0x0010;
+    public static final int AV_DISPOSITION_KARAOKE           = 0x0020;
+    public static final int AV_DISPOSITION_FORCED            = 0x0040;
+    public static final int AV_DISPOSITION_HEARING_IMPAIRED  = 0x0080;
+    public static final int AV_DISPOSITION_VISUAL_IMPAIRED   = 0x0100;
+    public static final int AV_DISPOSITION_CLEAN_EFFECTS     = 0x0200;
+    public static final int AV_DISPOSITION_ATTACHED_PIC      = 0x0400;
+    public static final int AV_DISPOSITION_CAPTIONS           = 0x10000;
+    public static final int AV_DISPOSITION_DESCRIPTIONS       = 0x20000;
+
+    public static String getTrackDispositionLabel(Context context, int disposition, boolean isAudio) {
+        if (context == null || disposition == 0 || disposition == AV_DISPOSITION_DEFAULT) {
+            return "";
+        }
+        if ((disposition & AV_DISPOSITION_HEARING_IMPAIRED) != 0)
+            return context.getString(R.string.subs_HI);
+        if ((disposition & AV_DISPOSITION_VISUAL_IMPAIRED) != 0)
+            return context.getString(isAudio ? R.string.s_audio_description : R.string.s_visual_impaired);
+        if ((disposition & AV_DISPOSITION_CAPTIONS) != 0)
+            return context.getString(R.string.subs_SDH);
+        if ((disposition & AV_DISPOSITION_DESCRIPTIONS) != 0)
+            return context.getString(R.string.s_descriptions);
+        if ((disposition & AV_DISPOSITION_FORCED) != 0)
+            return context.getString(R.string.s_forced);
+        if ((disposition & AV_DISPOSITION_ORIGINAL) != 0)
+            return context.getString(R.string.s_original);
+        if ((disposition & AV_DISPOSITION_DUB) != 0)
+            return context.getString(isAudio ? R.string.s_dubbed : R.string.s_translated);
+        if ((disposition & AV_DISPOSITION_COMMENT) != 0)
+            return context.getString(R.string.s_commentary);
+        if ((disposition & AV_DISPOSITION_LYRICS) != 0)
+            return context.getString(R.string.s_lyrics);
+        if ((disposition & AV_DISPOSITION_KARAOKE) != 0)
+            return context.getString(R.string.s_karaoke);
+
+        return "";
     }
 
     static public CharSequence getLanguageString(Context context, CharSequence name) {

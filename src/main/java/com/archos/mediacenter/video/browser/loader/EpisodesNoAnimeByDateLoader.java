@@ -21,7 +21,6 @@ import com.archos.mediaprovider.video.VideoStore;
 
 public class EpisodesNoAnimeByDateLoader extends MoviesByLoader {
 
-    private Context mContext;
 
     public static enum DateView {
         WEEK, MONTH, YEAR
@@ -33,7 +32,6 @@ public class EpisodesNoAnimeByDateLoader extends MoviesByLoader {
 
     public EpisodesNoAnimeByDateLoader(Context context, DateView dateView) {
         super(context);
-        mContext = context;
         mSortOrder = DEFAULT_SORT;
         mDateView = dateView;
         setSelection(getSelection(context));
@@ -69,7 +67,7 @@ public class EpisodesNoAnimeByDateLoader extends MoviesByLoader {
                 "  SELECT e_id, e_po_large_file, e_aired FROM video\n" +
                 "  WHERE e_id IS NOT NULL \n" +
                 "    AND e_aired > 0" + getCommonSelection() + "\n" +
-                "    AND ( s_genres NOT NULL OR s_genres NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%' ) \n" +
+                "    AND ( s_genres NOT NULL OR s_genres NOT LIKE '%" + getContext().getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%' ) \n" +
                 ") \n" +
                 "GROUP BY name\n" +
                 "ORDER BY "+mSortOrder;

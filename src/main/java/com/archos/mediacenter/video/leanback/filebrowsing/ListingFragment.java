@@ -14,8 +14,11 @@
 
 package com.archos.mediacenter.video.leanback.filebrowsing;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.os.BundleCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.loader.app.LoaderManager;
 
@@ -28,6 +31,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.preference.PreferenceManager;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.widget.ArrayObjectAdapter;
@@ -91,6 +96,22 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     private static final Logger log = LoggerFactory.getLogger(ListingFragment.class);
 
     private static final String PREF_LISTING_DISPLAY_MODE = "PREF_LISTING_DISPLAY_MODE";
+    private static final String STATE_SELECTED_ITEM_URI = "selected_item_uri";
+
+    private Uri mSelectedItemUri;
+
+    private final ActivityResultLauncher<Intent> infoLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == ListingActivity.RESULT_FILE_DELETED && result.getData() != null) {
+                    Uri deletedFile = result.getData().getData();
+                    ((ListingActivity) requireActivity()).notifyFileDeleted(deletedFile);
+                    if (mSelectedItemUri != null && mSelectedItemUri.equals(deletedFile)) {
+                        mSelectedItemUri = null;
+                    }
+                }
+                restoreSelectedItem(mSelectedItemUri);
+            });
 
     public static final String ARG_URI = "URI";
     public static final String ARG_TITLE = "TITLE";
@@ -166,10 +187,14 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         mSortOrderItem = sortorder2itemid(mSortOrder);
         if (log.isDebugEnabled()) log.debug("onCreate: mSortOrder={} mSortOrderItem={}", mSortOrder, mSortOrderItem);
 
+        if (savedInstanceState != null) {
+            mSelectedItemUri = BundleCompat.getParcelable(savedInstanceState, STATE_SELECTED_ITEM_URI, Uri.class);
+        }
+
         updateBackground();
 
         setTitle(getArguments().getString(ARG_TITLE));
-        mUri = getArguments().getParcelable(ARG_URI);
+        mUri = BundleCompat.getParcelable(getArguments(), ARG_URI, Uri.class);
         mIsRoot = getArguments().getBoolean(ARG_IS_ROOT, false);
 
         setupEventListeners();
@@ -178,6 +203,14 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         initGridOrList();
 
         mRefreshOnNextResume = true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mSelectedItemUri != null) {
+            outState.putParcelable(STATE_SELECTED_ITEM_URI, mSelectedItemUri);
+        }
     }
 
     @Override
@@ -351,7 +384,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
                         break;
                 }
                 // Save the new setting
-                mPrefs.edit().putInt(PREF_LISTING_DISPLAY_MODE, mDisplayMode.ordinal()).commit();
+                mPrefs.edit().putInt(PREF_LISTING_DISPLAY_MODE, mDisplayMode.ordinal()).apply();
                 // Update the display mode
                 updateGridOrList();
                 // update the orb icon from list/grid to grid/list
@@ -484,6 +517,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+                mSelectedItemUri = getItemUri(item);
                 if (item instanceof MetaFile2) {
                     MetaFile2 file = (MetaFile2) item;
                     if (file.isDirectory()) {
@@ -521,9 +555,11 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
      * for example hide DB xml files and change resume with remotes resumes
      * @param mListedFiles
      * @param indexedVideosMap
+     * @return filtered/updated list of files
      */
-    protected void updateVideosMapAndFileList(List<? extends MetaFile2> mListedFiles, HashMap<String, Video> indexedVideosMap) {
+    protected List<? extends MetaFile2> updateVideosMapAndFileList(List<? extends MetaFile2> mListedFiles, HashMap<String, Video> indexedVideosMap) {
         // used by smblistingfragmnet
+        return mListedFiles;
     }
 
     /**
@@ -534,6 +570,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     private void updateAdapterIfReady() {
         if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: mFileListReady={}, mDbQueryReady={}", mFileListReady, mDbQueryReady);
         if (mFileListReady && mDbQueryReady) {
+            Uri selectedItemUri = mSelectedItemUri;
             VideoCursorMapper cursorMapper = new VideoCursorMapper();
             cursorMapper.publicBindColumns(mCursor);
 
@@ -549,7 +586,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
             }
             // Must not close the cursor here, else it fails when recreating the fragment from backstack (i.e. when back from a sub-directory)
 
-            updateVideosMapAndFileList(mListedFiles, indexedVideosMap); // I'm sorry, but this is specially made for smb to update resume with remotes ones;
+            mListedFiles = updateVideosMapAndFileList(mListedFiles, indexedVideosMap); // I'm sorry, but this is specially made for smb to update resume with remotes ones;
 
             int positionInAdapter = 0;
             for (MetaFile2 file : mListedFiles) {
@@ -563,7 +600,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
                 if (file.isDirectory()){
                     if (!doReplace) {
-                        mFilesAdapter.add(file); // Add a regular folder
+                        replaceOrAppend(positionInAdapter, file);
                     } else {
                         // a directory can not be "updated", hence nothing to do in the replace case
                     }
@@ -603,21 +640,57 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
                             if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: replace {}", positionInAdapter);
                             mFilesAdapter.replace(positionInAdapter, newObject);
                         } else {
-                            if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: remove {} and add", positionInAdapter);
-                            mFilesAdapter.removeItems(positionInAdapter,1);
-                            mFilesAdapter.add(newObject);
+                            if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: replace or append {}", positionInAdapter);
+                            replaceOrAppend(positionInAdapter, newObject);
                         }
                         positionInAdapter++; // this increment must be done only when something is added or modified in the adapter (not when skipping a non-video file)
                     }
                 }
             }
             //remove items
-            if(mFilesAdapter.size()>mListedFiles.size()){
-                if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: mFilesAdapter.size()={}>mListedFiles.size()={}, remove above", mFilesAdapter.size(), mListedFiles.size());
-                mFilesAdapter.removeItems(mListedFiles.size(), mFilesAdapter.size()-mListedFiles.size());
+            if (mFilesAdapter.size() > positionInAdapter) {
+                if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: mFilesAdapter.size()={}>positionInAdapter={}, remove above", mFilesAdapter.size(), positionInAdapter);
+                mFilesAdapter.removeItems(positionInAdapter, mFilesAdapter.size() - positionInAdapter);
             }
 
+            restoreSelectedItem(selectedItemUri);
         }
+    }
+
+    private void replaceOrAppend(int position, Object item) {
+        if (position < mFilesAdapter.size()) {
+            mFilesAdapter.replace(position, item);
+        } else {
+            mFilesAdapter.add(item);
+        }
+    }
+
+    private void restoreSelectedItem(Uri selectedItemUri) {
+        if (selectedItemUri == null) {
+            return;
+        }
+        for (int position = 0; position < mFilesAdapter.size(); position++) {
+            if (selectedItemUri.equals(getItemUri(mFilesAdapter.get(position)))) {
+                if (getSelectedPosition() != position) {
+                    if (log.isDebugEnabled()) log.debug("restoreSelectedItem: restoring {} at position {}", selectedItemUri, position);
+                    setSelectedPosition(position);
+                }
+                // one-shot: consume it so later spurious adapter refreshes (e.g. background
+                // AutoScrapeService DB notifications) don't keep forcing focus back here
+                mSelectedItemUri = null;
+                return;
+            }
+        }
+    }
+
+    private Uri getItemUri(Object item) {
+        if (item instanceof Video) {
+            return ((Video) item).getFileUri();
+        }
+        if (item instanceof MetaFile2) {
+            return ((MetaFile2) item).getUri();
+        }
+        return null;
     }
 
     protected void updateResumes(List<? extends MetaFile2> mListedFiles) {
@@ -743,25 +816,27 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
             sourceView = ((ListPresenter.ListViewHolder)itemViewHolder).getImageView();
         }
 
-        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                getActivity(),
-                sourceView,
-                VideoDetailsActivity.SHARED_ELEMENT_NAME).toBundle();
-
-        getActivity().startActivityForResult(intent, ListingActivity.REQUEST_INFO_ACTIVITY, bundle);
+        ActivityOptionsCompat opts = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity(), sourceView, VideoDetailsActivity.SHARED_ELEMENT_NAME);
+        infoLauncher.launch(intent, opts);
     }
 
 
     public void onFileDelete(Uri file) {
 
-        if(file.toString().endsWith("/")&&!mUri.toString().endsWith("/")&&file.toString().equals(mUri.toString()+"/")|| mUri.equals(file)) { //if current listed uri
-            if (isAdded()) getActivity().onBackPressed();
-        }
-        else{ //if parent uri
+        if (file.toString().endsWith("/") && !mUri.toString().endsWith("/") && file.toString().equals(mUri.toString() + "/") || mUri.equals(file)) { // if current listed uri
+            if (isAdded() && getActivity() != null) {
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    if (isAdded() && getActivity() != null) {
+                        getActivity().getOnBackPressedDispatcher().onBackPressed();
+                    }
+                });
+            }
+        } else { // if parent uri
             Uri parent = FileUtils.getParentUrl(file);
-            if(parent.toString().endsWith("/")&&!mUri.toString().endsWith("/")&&parent.toString().equals(mUri.toString()+"/") || mUri.equals(parent)){
+            if (parent != null && (parent.toString().endsWith("/") && !mUri.toString().endsWith("/") && parent.toString().equals(mUri.toString() + "/") || mUri.equals(parent))) {
                 // we need to refresh
-                if(isAdded())
+                if (isAdded())
                     startListing(mUri);
                 else
                     mRefreshOnNextResume = true;

@@ -34,11 +34,9 @@ public abstract class TvshowsByLoader extends CursorLoader implements CompatAndS
     protected String mSortOrder;
     private boolean mForceHideVideos;
 
-    private Context mContext;
 
     public TvshowsByLoader(Context context) {
         super(context);
-        mContext = context;
         setUri(VideoStore.RAW_QUERY.buildUpon().appendQueryParameter("group",
                 VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL GROUP BY ( " + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " ) "
         ).build());

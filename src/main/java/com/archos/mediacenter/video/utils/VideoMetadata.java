@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
@@ -82,6 +83,7 @@ public class VideoMetadata implements Serializable {
             fpsScale = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_VIDEO_TRACK_FPS_SCALE);
             s3dMode = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_VIDEO_TRACK_S3D);
             decoder = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_VIDEO_TRACK_DECODER);
+            colorTrc = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_VIDEO_TRACK_COLOR_TRC);
         }
         
         VideoTrack(IMediaMetadataRetriever retriever) {
@@ -96,6 +98,7 @@ public class VideoMetadata implements Serializable {
             fpsScale = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_VIDEO_TRACK_FPS_SCALE);
             s3dMode = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_VIDEO_TRACK_S3D_MODE);
             decoder = LibAvos.MP_DECODER_ANY;
+            colorTrc = 0;
         }
 
         public final String format;
@@ -108,6 +111,7 @@ public class VideoMetadata implements Serializable {
         public final int fpsScale;
         public final int s3dMode;
         public final int decoder;
+        public final int colorTrc; // AVCOL_TRC_* (e.g. 16=SMPTE2084/PQ, 18=HLG)
     }
 
     public static class AudioTrack implements Serializable {
@@ -124,7 +128,8 @@ public class VideoMetadata implements Serializable {
             vbr = getMetadataBool(data, gapKey + IMediaPlayer.METADATA_KEY_AUDIO_TRACK_VBR);
             supported = getMetadataBool(data, gapKey + IMediaPlayer.METADATA_KEY_AUDIO_TRACK_SUPPORTED);
             language = getMetadataString(data, gapKey + IMediaPlayer.METADATA_KEY_AUDIO_TRACK_LANGUAGE);
-            if (log.isDebugEnabled()) log.debug("AudioTrack name={}, format={}, language{}", name, format, language);
+            disposition = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_AUDIO_TRACK_DISPOSITION);
+            if (log.isDebugEnabled()) log.debug("AudioTrack name={}, format={}, language={}, disposition={}", name, format, language, disposition);
         }
         
         AudioTrack(IMediaMetadataRetriever retriever, int idx) {
@@ -138,7 +143,8 @@ public class VideoMetadata implements Serializable {
             vbr = getMetadataRetrieverBool(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_AUDIO_TRACK_VBR);
             supported = getMetadataRetrieverBool(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_AUDIO_TRACK_SUPPORTED);
             language = getMetadataRetrieverString(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_AUDIO_TRACK_LANGUAGE);
-            if (log.isDebugEnabled()) log.debug("AudioTrack name={}, format={}", name, format);
+            disposition = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_AUDIO_TRACK_DISPOSITION);
+            if (log.isDebugEnabled()) log.debug("AudioTrack name={}, format={}, disposition={}", name, format, disposition);
         }
 
         public final String  name;
@@ -149,6 +155,7 @@ public class VideoMetadata implements Serializable {
         public final boolean vbr;
         public final boolean supported;
         public final String  language;
+        public final int     disposition;
     }
 
     public static class SubtitleTrack implements Serializable {
@@ -163,6 +170,7 @@ public class VideoMetadata implements Serializable {
             else isGfx = getMetadataBool(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_IS_GFX);
             format = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_FORMAT);
             language = getMetadataString(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_LANGUAGE);
+            disposition = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_DISPOSITION);
         }
         
         SubtitleTrack(IMediaMetadataRetriever retriever, int idx) {
@@ -175,6 +183,7 @@ public class VideoMetadata implements Serializable {
             else isGfx = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_IS_GFX) == 1;
             format = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_FORMAT);
             language = getMetadataRetrieverString(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_LANGUAGE);
+            disposition = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_DISPOSITION);
         }
 
         public final String name;
@@ -183,6 +192,7 @@ public class VideoMetadata implements Serializable {
         public final boolean isGfx;
         public final int format;
         public final String language;
+        public final int disposition;
     }
 
     public VideoMetadata() {
@@ -199,6 +209,18 @@ public class VideoMetadata implements Serializable {
             mRemotePath = path;
         else
             mFile = new File(path);
+    }
+
+    public VideoMetadata(VideoMetadata other) {
+        mFile = other.mFile;
+        mRemotePath = other.mRemotePath;
+        mVideoTrack = other.mVideoTrack;
+        mAudioTrackList = other.mAudioTrackList != null ? Arrays.copyOf(other.mAudioTrackList, other.mAudioTrackList.length) : null;
+        mSubtitleTrackList = other.mSubtitleTrackList != null ? Arrays.copyOf(other.mSubtitleTrackList, other.mSubtitleTrackList.length) : null;
+        mDuration = other.mDuration;
+        mVideoWidth = other.mVideoWidth;
+        mVideoHeight = other.mVideoHeight;
+        mFileSize = other.mFileSize;
     }
 
     private void reset() {
@@ -224,7 +246,7 @@ public class VideoMetadata implements Serializable {
         int nbTrack;
         if (data.has(IMediaPlayer.METADATA_KEY_FILE_SIZE))
             mFileSize = data.getLong(IMediaPlayer.METADATA_KEY_FILE_SIZE);
-	    if (data.has(IMediaPlayer.METADATA_KEY_DURATION))
+        if (data.has(IMediaPlayer.METADATA_KEY_DURATION))
             mDuration = data.getInt(IMediaPlayer.METADATA_KEY_DURATION);
         if (data.has(IMediaPlayer.METADATA_KEY_VIDEO_WIDTH))
             mVideoWidth = data.getInt(IMediaPlayer.METADATA_KEY_VIDEO_WIDTH);
@@ -292,7 +314,11 @@ public class VideoMetadata implements Serializable {
         } catch (Exception ex) {
             log.error("fillFromRetriever: failed for url={}, ex={}", mRemotePath != null ? mRemotePath : (mFile != null ? mFile.getPath() : "null"), ex.getMessage());
         }
-        retriever.release();
+        try {
+            retriever.release();
+        } catch (IOException e) {
+            log.error("fillFromRetriever: release failed", e);
+        }
     }
 
     public VideoTrack getVideoTrack() {

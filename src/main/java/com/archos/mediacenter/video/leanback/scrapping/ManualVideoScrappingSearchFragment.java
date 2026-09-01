@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.leanback.scrapping;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.archos.mediacenter.utils.trakt.TraktService;
@@ -49,12 +50,15 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
     private SearchInfo mSearchInfo;
     HashMap<BaseTags, SearchResult> mTagsToSearchResultMap = new HashMap<>();
 
+    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Get input file and init the SearchInfo ASAP
-        mVideo = (Video) getActivity().getIntent().getSerializableExtra(ManualVideoScrappingActivity.EXTRA_VIDEO);
+        mVideo = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? getActivity().getIntent().getSerializableExtra(ManualVideoScrappingActivity.EXTRA_VIDEO, Video.class)
+                : (Video) getActivity().getIntent().getSerializableExtra(ManualVideoScrappingActivity.EXTRA_VIDEO);
         mSearchInfo = SearchPreprocessor.instance().parseFileBased(mVideo.getUri(), mVideo.getName()!=null&&!mVideo.getName().isEmpty()? Uri.parse("/"+mVideo.getName()):mVideo.getUri());
 
         // Start a search using the search suggestion. It makes it easy for the user to edit it for typo if needed
@@ -101,6 +105,7 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
         // Get the details for this match
         Bundle b = new Bundle();
         b.putBoolean(Scraper.ITEM_REQUEST_BASIC_VIDEO, true);
+        b.putBoolean(Scraper.ITEM_REQUEST_REFRESH_SHOW_METADATA, true);
 
         if (result.isTvShow()) {
             b.putInt(Scraper.ITEM_REQUEST_SEASON, result.getOriginSearchSeason());
@@ -158,6 +163,7 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
             public void run() {
                 BaseTags tags = fTags;
                 Bundle bundle = new Bundle();
+                bundle.putBoolean(Scraper.ITEM_REQUEST_REFRESH_SHOW_METADATA, true);
                 if (tags instanceof EpisodeTags) {
                     // note that this is for a single episode scraping not the whole show here thus get only the required season
                     // this enables to get the right poster from the show

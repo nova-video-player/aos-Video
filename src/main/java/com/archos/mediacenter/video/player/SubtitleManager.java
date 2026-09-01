@@ -277,6 +277,8 @@ public class SubtitleManager {
 
     private int mColor;
     private boolean mOutline;
+    private boolean mBackground;
+    private int mBgOpacity;
     private int mUiMode;
 
     private void removeSubtitle(Subtitle subtitle) {
@@ -385,6 +387,28 @@ public class SubtitleManager {
         }
     }
 
+    public boolean getBackgroundState() { 
+        return mBackground; 
+    }
+
+    public void setBackgroundState(boolean background) {
+        mBackground = background;
+        if (mSubtitleTxtView != null) {
+            mSubtitleTxtView.setBackgroundState(background);
+        }
+    }
+
+    public int getBackgroundOpacity() { 
+        return mBgOpacity; 
+    }
+
+    public void setBackgroundOpacity(int opacity) {
+        mBgOpacity = opacity;
+        if (mSubtitleTxtView != null) {
+            mSubtitleTxtView.setBackgroundOpacity(opacity); 
+        }
+    }
+
     public void setUIMode(int uiMode) {
         mUiMode = uiMode;
         if(mSubtitleTxtView!=null)
@@ -456,37 +480,40 @@ public class SubtitleManager {
 
                 // outside of synchronized since sleep does NOT release the lock
                 // go to sleep if we have still have mSubtitleDisplayLeft
-                if (mSubtitleDisplayLeft > 0) { // we have a subtitle to display and at this point mCurrentSubtitle != null
-                    if (log.isDebugEnabled()) log.debug("DispSubtitleThread after displaying mCurrentSubtitle={}+{}ms, sleep for {}", mCurrentSubtitle.getPosition(), mCurrentSubtitle.getDuration(), mSubtitleDisplayLeft);
+                Subtitle currentSub = mCurrentSubtitle;
+                if (mSubtitleDisplayLeft > 0 && currentSub != null) { // we have a subtitle to display
+                    if (log.isDebugEnabled()) log.debug("DispSubtitleThread after displaying mCurrentSubtitle={}+{}ms, sleep for {}", currentSub.getPosition(), currentSub.getDuration(), mSubtitleDisplayLeft);
                     long sleepStart = System.currentTimeMillis();
                     try {
                         sleep(mSubtitleDisplayLeft);
-                    } catch (InterruptedException e) { // wake up from sleep thus mCurrentSubtitle exists
+                    } catch (InterruptedException e) { // wake up from sleep
                         interrupted = true;
                         long elapsedTime = System.currentTimeMillis() - sleepStart;
+                        Subtitle curSub = mCurrentSubtitle;
+                        Subtitle nxtSub = mNextSubtitle;
                         if (log.isDebugEnabled()) log.debug("DispSubtitleThread sleep interrupt, waking up after {}ms, mCurrentSubtitle={}+{}ms, mNextSubtitle={}+{}ms, old mSubtitleDisplayLeft={}",
                                 elapsedTime,
-                                mCurrentSubtitle != null ? mCurrentSubtitle.getPosition() : "null",
-                                mCurrentSubtitle != null ? mCurrentSubtitle.getDuration() : "null",
-                                mNextSubtitle != null ? mNextSubtitle.getPosition() : "null",
-                                mNextSubtitle != null ? mNextSubtitle.getDuration() : "null",
+                                curSub != null ? curSub.getPosition() : "null",
+                                curSub != null ? curSub.getDuration() : "null",
+                                nxtSub != null ? nxtSub.getPosition() : "null",
+                                nxtSub != null ? nxtSub.getDuration() : "null",
                                 mSubtitleDisplayLeft);
-                        if (mCurrentSubtitle != null && mNextSubtitle != null) {
+                        if (curSub != null && nxtSub != null) {
                             // woke up from sleep by interrupt because getting new subtitle
-                            int currentPosition = mCurrentSubtitle.getPosition() + (int) elapsedTime;
+                            int currentPosition = curSub.getPosition() + (int) elapsedTime;
                             int realCurrentSubtitleDuration;
                             // need to correct time left only if the next subtitle starts before the current one ends
-                            if (mCurrentSubtitle.getPosition() + mCurrentSubtitle.getDuration() > mNextSubtitle.getPosition()) {
+                            if (curSub.getPosition() + curSub.getDuration() > nxtSub.getPosition()) {
                                 if (log.isDebugEnabled()) log.debug("DispSubtitleThread: cannot sleep after mNextSubtitle, adjust");
-                                realCurrentSubtitleDuration = mNextSubtitle.getPosition() - mCurrentSubtitle.getPosition();
-                                mCurrentSubtitle.setDuration(realCurrentSubtitleDuration);
-                                mSubtitleDisplayLeft = mNextSubtitle.getPosition() - currentPosition;
+                                realCurrentSubtitleDuration = nxtSub.getPosition() - curSub.getPosition();
+                                curSub.setDuration(realCurrentSubtitleDuration);
+                                mSubtitleDisplayLeft = nxtSub.getPosition() - currentPosition;
                             } else {
-                                realCurrentSubtitleDuration = mCurrentSubtitle.getDuration();
+                                realCurrentSubtitleDuration = curSub.getDuration();
                                 mSubtitleDisplayLeft -= (int) (System.currentTimeMillis() - sleepStart);
                             }
                             if (log.isDebugEnabled()) log.debug("DispSubtitleThread sleep interrupt bcoz received new subtitle, recompute duration currentPosition={}, realCurrentSubtitleDuration={}, updated mSubtitleDisplayLeft={}", currentPosition, realCurrentSubtitleDuration, mSubtitleDisplayLeft);
-                            if (mNextSubtitle.getDuration() == 0) { // this is an empty subtitle that is used to provide the correct duration
+                            if (nxtSub.getDuration() == 0) { // this is an empty subtitle that is used to provide the correct duration
                                 if (log.isDebugEnabled()) log.debug("DispSubtitleThread sleep interrupt bcoz received empty Subtitle, dismiss mNextSubtitle");
                                 mNextSubtitle = null; // remove the empty subtitle
                             }
@@ -616,17 +643,24 @@ public class SubtitleManager {
             mSubtitleSpacer.setRenderingSurface(uiSurface);
     }
 
+    // setOnSystemUiVisibilityChangeListener is the only reliable way to track transient bar visibility;
+    // no WindowInsetsControllerCompat equivalent exists for this use case.
+    @SuppressWarnings("deprecation")
     private void attachWindow() {
         SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (mPreferences != null) mFullScreenWithCutout = mPreferences.getBoolean("enable_cutout_mode_short_edges", true);
         if (mSubtitleLayout != null) return;
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mSubtitleLayout = inflater.inflate(R.layout.subtitle_layout, mPlayerView, false);
+        if (mSubtitleLayout == null) return;
         mSubtitleSpacer = (SubtitleSpacerView) mSubtitleLayout.findViewById(R.id.subtitle_spacer);
         mSubtitleGfxView = (SubtitleGfxView) mSubtitleLayout.findViewById(R.id.subtitle_gfx_view);
         mSubtitleTxtView = (Subtitle3DTextView) mSubtitleLayout.findViewById(R.id.subtitle_txt_view);
+        if (mSubtitleSpacer == null || mSubtitleGfxView == null || mSubtitleTxtView == null) return;
         mSubtitleTxtView.setScreenSize(mScreenWidth, mScreenHeight);
         mSubtitleTxtView.setUIMode(mUiMode);
+        mSubtitleTxtView.setBackgroundState(mBackground);
+        mSubtitleTxtView.setBackgroundOpacity(mBgOpacity);
         mSubtitleSpacerParams = mSubtitleSpacer.getLayoutParams();
         if (log.isDebugEnabled()) log.debug("attachWindow: mSubtitleSpacerParams.height={}", mSubtitleSpacerParams.height);
         mSubtitleSpacerParams.height = mSubtitleEvadedVPos;
@@ -646,10 +680,15 @@ public class SubtitleManager {
             });
 
             // ui visibility listener is needed for UI mode changes
+            // No WindowInsetsControllerCompat equivalent for transient bar visibility tracking;
+            // setOnSystemUiVisibilityChangeListener remains the only reliable option here.
+            //noinspection deprecation
             mRootView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                //noinspection deprecation
                 mNavigationBarShowing = (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0;
+                //noinspection deprecation
                 mSystemBarShowing = (visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0;
-                mActionBarShowing = (visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) == 0;
+                mActionBarShowing = PlayerController.isActionBarShowing();
                 mIsNavBarOnBottom = MiscUtils.isNavigationBarOnBottom(mRootView, mContext);
                 mIsGestureAreaShowing = MiscUtils.isGestureAreaDisplayed(mContext);
                 mGestureAreaHeight = MiscUtils.getGestureAreaHeight(mContext);
@@ -672,11 +711,16 @@ public class SubtitleManager {
         // Player.sPlayer.getSurfaceControllerWidth(), Player.sPlayer.getSurfaceControllerHeight() is for the videoView but virtualScreen is larger
         // do not apply globalShift if in floating player mode
         if (log.isDebugEnabled()) log.debug("adjustView: mIsSubtitleGfx={}", mIsSubtitleGfx);
+        mActionBarShowing = PlayerController.isActionBarShowing();
         MiscUtils.adjustViewLayoutForInsets(mContext, mRootView, mSubtitleLayout, "mSubtitleLayout",
                 mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, PlayerController.isControlBarShowing(), mIsNavBarOnBottom, mIsGestureAreaShowing,
                 (! mIsSubtitleGfx && PlayerController.isControlBarShowing() ? PlayerController.getControlBarCurrentHeight() : 0), (mIsSubtitleGfx ? 0 :mSubtitleEvadedVPos),
                 false, ! mIsSubtitleGfx, false, ! mIsSubtitleGfx,
                 avoidCutout, avoidCutout, avoidCutout, avoidCutout, ! mIsSubtitleGfx, mIsSubtitleGfx && ! isFloatingPlayer);
+    }
+
+    public void onControlBarVisibilityChanged() {
+        if (! isFirstTime) adjustView();
     }
 
     private void detachWindow() {

@@ -34,6 +34,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import android.text.format.Formatter;
 import android.widget.Toast;
 
@@ -149,8 +150,7 @@ public class FileManagerService extends Service implements OperationEngineListen
         IntentFilter filter = new IntentFilter();
         filter.addAction("CANCEL");
         filter.addAction("OPEN");
-        if (Build.VERSION.SDK_INT >= 33) registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
-        else registerReceiver(receiver, filter);
+        ContextCompat.registerReceiver(this, receiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
         isReceiverRegistered = true;
         // Register as a lifecycle observer
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
@@ -300,7 +300,7 @@ public class FileManagerService extends Service implements OperationEngineListen
     private PendingIntent getCancelIntent() {
         Intent intent = new Intent("CANCEL");
         return PendingIntent.getBroadcast(this, 0, intent,
-                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private Intent getOpenIntent() {
@@ -369,12 +369,14 @@ public class FileManagerService extends Service implements OperationEngineListen
         }
     }
 
+    private static final long WAKELOCK_TIMEOUT_MS = 10 * 60 * 1000L; // 10 minutes rolling timeout
+
     private void acquireWakeLock() {
         releaseWakeLock();
         if (log.isDebugEnabled()) log.debug("acquireWakeLock");
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Nova:FileManagerWakeLock");
-        mWakeLock.acquire();
+        mWakeLock.acquire(WAKELOCK_TIMEOUT_MS);
     }
     private void releaseWakeLock(){
         if (log.isDebugEnabled()) log.debug("releaseWakeLock");
@@ -428,6 +430,9 @@ public class FileManagerService extends Service implements OperationEngineListen
     @Override
     public void onProgress(int currentFile, long currentFileProgress,int currentRootFile, long currentRootFileProgress, long totalProgress, double currentSpeed) {
         mLastStatus = ActionStatusEnum.PROGRESS;
+        if (mWakeLock != null && mWakeLock.isHeld()) {
+            mWakeLock.acquire(WAKELOCK_TIMEOUT_MS);
+        }
         if(currentFile< mProcessedFiles.size()){
             mProgress.put(mProcessedFiles.get(currentFile), currentFileProgress);
         }
@@ -478,7 +483,7 @@ public class FileManagerService extends Service implements OperationEngineListen
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setAction(MainActivity.LAUNCH_DIALOG);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         nb.setContentTitle(getText(R.string.copying))
                 .setContentIntent(contentIntent)

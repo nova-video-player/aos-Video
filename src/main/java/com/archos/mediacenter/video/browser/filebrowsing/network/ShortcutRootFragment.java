@@ -53,7 +53,9 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
     }
 
     @Override
-    public void onViewCreated (View v, Bundle saved){}
+    public void onViewCreated(View v, Bundle saved) {
+        super.onViewCreated(v, saved);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -68,7 +70,6 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -88,15 +89,14 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
     public boolean onContextItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        switch (itemId) {
-            case R.string.add_to_library:
-                addToIndexed(mSelectedUri, mSelectedName);
-                return true;
-            case R.string.remove_from_shortcuts:
-                ShortcutDb.STATIC.removeShortcut(getContext(), mSelectedUri);
-                ((ShortcutAdapter)mAdapter).updateShortcuts(ShortcutDb.STATIC.getAllShortcuts(getActivity()));
-                loadIndexedShortcuts();
-                return true;
+        if (itemId == R.string.add_to_library) {
+            addToIndexed(mSelectedUri, mSelectedName);
+            return true;
+        } else if (itemId == R.string.remove_from_shortcuts) {
+            ShortcutDb.STATIC.removeShortcut(getContext(), mSelectedUri);
+            ((ShortcutAdapter)mAdapter).updateShortcuts(ShortcutDb.STATIC.getAllShortcuts(getActivity()));
+            loadIndexedShortcuts();
+            return true;
         }
 
         return super.onContextItemSelected(item);
@@ -208,7 +208,7 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
         mQuickAction = new QuickAction(v);
         ActionItem rescanAction = new ActionItem();
         rescanAction.setTitle(getString(R.string.add_to_library));
-        rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_menu_refresh));
+        rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_menu_add));
         rescanAction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 addToIndexed(uri, name);

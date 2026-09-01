@@ -231,7 +231,7 @@ public class NetworkListingFragment extends ListingFragment {
             if (removeFromLibrary) {
                 Toast.makeText(getActivity(), getString(R.string.indexed_folder_removed, shortcutName), Toast.LENGTH_SHORT).show();
                 // Tell MediaScanner to remove the videos from this directory
-                NetworkScanner.removeVideos(getActivity(), mUri);
+                NetworkScanner.removeIndexedVideos(getActivity(), mUri);
                 removeFromLibrary = false;
             } else {
                 Toast.makeText(getActivity(), getString(R.string.shortcut_removed, shortcutName), Toast.LENGTH_SHORT).show();

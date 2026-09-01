@@ -38,7 +38,8 @@ public class SeasonsAdapter extends PresenterAdapterByCursor  implements Adapter
     }
 
     public String getCover() {
-        return getCursor().getString(getCursor().getColumnIndex(VideoLoader.COLUMN_COVER_PATH));
+        int coverColumn = getCursor().getColumnIndex(VideoLoader.COLUMN_COVER_PATH);
+        return coverColumn >= 0 ? getCursor().getString(coverColumn) : null;
     }
     public Object getItem(int position){
         getCursor().moveToPosition(position);

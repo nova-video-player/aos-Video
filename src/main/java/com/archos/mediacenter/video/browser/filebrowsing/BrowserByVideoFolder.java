@@ -25,8 +25,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.view.MenuItemCompat;
+import androidx.core.view.MenuProvider;
 import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.video.R;
@@ -41,7 +45,24 @@ public class BrowserByVideoFolder extends BrowserByLocalFolder {
     private static final String TAG = "BrowserByVideoFolder";
     private static final boolean DBG = false;
 
-    private static final int FOLDER_PICKER_REQUEST_CODE = 2011;
+    private final ActivityResultLauncher<Intent> folderPickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    String newPath = result.getData().getStringExtra(FolderPicker.EXTRA_SELECTED_FOLDER);
+                    if (DBG) Log.d(TAG, "FolderPicker returns " + newPath);
+                    if (newPath != null) {
+                        File f = new File(newPath);
+                        if (f.isDirectory() && f.exists()) {
+                            Editor ed = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+                            ed.putString(VideoPreferencesActivity.FOLDER_BROWSING_DEFAULT_FOLDER, f.getPath());
+                            ed.apply();
+                            MainActivity bav = (MainActivity) getActivity();
+                            bav.reloadBrowserByVideoFolder();
+                        }
+                    }
+                }
+            });
 
     @Override
     protected Uri getDefaultDirectory() {
@@ -56,49 +77,27 @@ public class BrowserByVideoFolder extends BrowserByLocalFolder {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(0, MainActivity.MENU_CHANGE_FOLDER, Menu.NONE, R.string.menu_change_folder).setIcon(R.drawable.ic_menu_folder).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        boolean ret;
-        switch (item.getItemId()) {
-            case MainActivity.MENU_CHANGE_FOLDER:
-                Intent i = new Intent(mContext, FolderPicker.class);
-                Bundle b = new Bundle();
-                i.putExtra(FolderPicker.EXTRA_CURRENT_SELECTION, getDefaultDirectory().getPath());
-                i.putExtra(FolderPicker.EXTRA_DIALOG_TITLE, getResources().getString(R.string.menu_change_folder_details));
-                startActivityForResult(i, FOLDER_PICKER_REQUEST_CODE);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(DBG) Log.d(TAG, "onActivityResult "+requestCode+" "+resultCode);
-        if (requestCode == FOLDER_PICKER_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                String newPath = data.getStringExtra(FolderPicker.EXTRA_SELECTED_FOLDER);
-                if(DBG) Log.d(TAG, "FolderPicker returns "+newPath);
-                if (newPath!=null) { //better safe than sorry
-                    File f = new File(newPath);
-                    if ((f!=null) && f.isDirectory() && f.exists()) { //better safe than sorry x3
-                        Editor ed = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
-                        ed.putString(VideoPreferencesActivity.FOLDER_BROWSING_DEFAULT_FOLDER, f.getPath());
-                        ed.commit();
-                        // Only the activity is able to correctly update the root folder browser view
-                        // (because user may be deep in a folder hierarchy already)
-                        MainActivity bav = (MainActivity)getActivity();
-                        bav.reloadBrowserByVideoFolder();
-                    }
-                }
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+                menu.add(0, MainActivity.MENU_CHANGE_FOLDER, Menu.NONE, R.string.menu_change_folder)
+                        .setIcon(R.drawable.ic_menu_folder)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
+            @Override
+            public boolean onMenuItemSelected(MenuItem item) {
+                if (item.getItemId() == MainActivity.MENU_CHANGE_FOLDER) {
+                    Intent i = new Intent(mContext, FolderPicker.class);
+                    i.putExtra(FolderPicker.EXTRA_CURRENT_SELECTION, getDefaultDirectory().getPath());
+                    i.putExtra(FolderPicker.EXTRA_DIALOG_TITLE, getResources().getString(R.string.menu_change_folder_details));
+                    folderPickerLauncher.launch(i);
+                    return true;
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner());
     }
 
 

@@ -14,11 +14,24 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_browse_fragment"
-    android:name="com.archos.mediacenter.video.leanback.collections.CollectionFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:deviceIds="tv"
-    tools:ignore="MergeRootFrame" />
+    tools:deviceIds="tv">
+
+    <ImageView
+        android:id="@+id/details_backdrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop" />
+
+    <fragment
+        android:id="@+id/main_browse_fragment"
+        android:name="com.archos.mediacenter.video.leanback.collections.CollectionFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="MergeRootFrame" />
+</FrameLayout>

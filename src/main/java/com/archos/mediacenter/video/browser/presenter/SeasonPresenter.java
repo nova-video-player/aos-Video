@@ -68,10 +68,10 @@ public class SeasonPresenter extends CommonPresenter implements Presenter {
 
         int count = tvShow.getEpisodeTotalCount();
         if (DBG) Log.d("XXX", "getInfo() count=" + count);
-        String format = mContext.getResources().getQuantityText(R.plurals.Nepisodes, count).toString();
+        String infoText = mContext.getResources().getQuantityString(R.plurals.Nepisodes, count, count);
 
         if(holder.info!=null)
-            holder.info.setText(String.format(format, count));
+            holder.info.setText(infoText);
         //no resume in tv showspia
         //holder.bookmark.setVisibility(View.VISIBLE);
         holder.bookmark.setEnabled(false);

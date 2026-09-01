@@ -14,13 +14,9 @@
 package com.archos.mediacenter.video.utils;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.Insets;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
@@ -45,23 +41,13 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Adjust padding for edge-to-edge
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            view.setOnApplyWindowInsetsListener((v, insets) -> {
-                Insets systemBarsInsets = insets.getInsets(WindowInsets.Type.systemBars());
-                v.setPadding(systemBarsInsets.left, systemBarsInsets.top, systemBarsInsets.right, systemBarsInsets.bottom);
-                return insets;
-            });
-        } else {
-            view.setOnApplyWindowInsetsListener((v, insets) -> {
-                v.setPadding(
-                        insets.getSystemWindowInsetLeft(),
-                        insets.getSystemWindowInsetTop(),
-                        insets.getSystemWindowInsetRight(),
-                        insets.getSystemWindowInsetBottom()
-                );
-                return insets;
-            });
-        }
+        MiscUtils.applySystemWindowInsets(view);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPreferencesCommon.onResume();
     }
 
     @Override
@@ -76,9 +62,4 @@ public class VideoPreferencesFragment extends PreferenceFragmentCompat {
         mPreferencesCommon.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mPreferencesCommon.onActivityResult(requestCode, resultCode, data);
-    }
 }

@@ -15,13 +15,15 @@
 package com.archos.mediacenter.video.leanback.details;
 
 import android.content.res.Resources;
-import androidx.leanback.widget.RowHeaderPresenter;
-import androidx.leanback.widget.RowPresenter;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.leanback.widget.RowHeaderPresenter;
+import androidx.leanback.widget.RowPresenter;
 
 import com.archos.mediacenter.video.R;
 
@@ -107,7 +109,9 @@ public class CastRowPresenter extends FullWidthRowPresenter implements Backgroun
         CastViewHolder vh = (CastViewHolder) holder;
         CastRow row = (CastRow) item;
 
-        vh.mCastTv.setText(row.getCast());
+        int textColor = vh.mCastTv.getCurrentTextColor();
+        SpannableString cast = row.getTags().getSpannableActorsFormatted(textColor);
+        vh.mCastTv.setText(cast);
 
         if (row.getDirectors()!=null && !row.getDirectors().isEmpty()) {
             vh.mDirectorsTv.setText(row.getDirectors());

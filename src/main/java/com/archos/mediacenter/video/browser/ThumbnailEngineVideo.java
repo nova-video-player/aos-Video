@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser;
 
+import android.annotation.SuppressLint;
+
 import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.BitmapUtils;
@@ -75,7 +77,8 @@ public class ThumbnailEngineVideo extends ThumbnailEngine {
 	/**
 	 * Thumbnail engine video is a singleton
 	 */
-	private static ThumbnailEngineVideo sThumbnailEngineVideo = null;
+	@SuppressLint("StaticFieldLeak")
+    private static ThumbnailEngineVideo sThumbnailEngineVideo = null;
 
 	/**
 	 * The type of the thumbnails currently in the pool.
@@ -222,23 +225,23 @@ public class ThumbnailEngineVideo extends ThumbnailEngine {
 		    Bitmap bitmap=null;
 		    if (postersPaths.size()>=4) {
 		        bitmap = mPosterCompositionStuff.getCompositionFour(
-		                BitmapFactory.decodeFile(postersPaths.get(0)),
-		                BitmapFactory.decodeFile(postersPaths.get(1)),
-		                BitmapFactory.decodeFile(postersPaths.get(2)),
-		                BitmapFactory.decodeFile(postersPaths.get(3)));
+		                BitmapUtils.decodeSampledBitmapFromFile(postersPaths.get(0), mThumbnailWidth, mThumbnailHeight),
+		                BitmapUtils.decodeSampledBitmapFromFile(postersPaths.get(1), mThumbnailWidth, mThumbnailHeight),
+		                BitmapUtils.decodeSampledBitmapFromFile(postersPaths.get(2), mThumbnailWidth, mThumbnailHeight),
+		                BitmapUtils.decodeSampledBitmapFromFile(postersPaths.get(3), mThumbnailWidth, mThumbnailHeight));
 		        return new VideoResult(bitmap, videoRequest);
 		    }
 		    else if (postersPaths.size()==3) {
 		        bitmap = mPosterCompositionStuff.getCompositionThree(
-                        BitmapFactory.decodeFile(postersPaths.get(0)),
-                        BitmapFactory.decodeFile(postersPaths.get(1)),
-                        BitmapFactory.decodeFile(postersPaths.get(2)));
+                        BitmapUtils.decodeSampledBitmapFromFile(postersPaths.get(0), mThumbnailWidth, mThumbnailHeight),
+                        BitmapUtils.decodeSampledBitmapFromFile(postersPaths.get(1), mThumbnailWidth, mThumbnailHeight),
+                        BitmapUtils.decodeSampledBitmapFromFile(postersPaths.get(2), mThumbnailWidth, mThumbnailHeight));
 		        return new VideoResult(bitmap, videoRequest);
             }
 		    else if (postersPaths.size()==2) {
 		        bitmap = mPosterCompositionStuff.getCompositionTwo(
-                        BitmapFactory.decodeFile(postersPaths.get(0)),
-                        BitmapFactory.decodeFile(postersPaths.get(1)));
+                        BitmapUtils.decodeSampledBitmapFromFile(postersPaths.get(0), mThumbnailWidth, mThumbnailHeight),
+                        BitmapUtils.decodeSampledBitmapFromFile(postersPaths.get(1), mThumbnailWidth, mThumbnailHeight));
 		        return new VideoResult(bitmap, videoRequest);
             }
 		    else if (postersPaths.size()==1) {
@@ -296,7 +299,7 @@ public class ThumbnailEngineVideo extends ThumbnailEngine {
 					Log.d(TAG, "decodeCover before for " + poster + " of length " + poster.length());
 				java.io.File f = new java.io.File(poster);
 				if (DBG) Log.d(TAG, "decodeCover: file exists=" + f.exists() + ", canRead=" + f.canRead() + ", size=" + f.length());
-				Bitmap coverBitmap = BitmapFactory.decodeFile(poster);
+				Bitmap coverBitmap = BitmapUtils.decodeSampledBitmapFromFile(poster, mThumbnailWidth, mThumbnailHeight);
 				if (DBG) Log.d(TAG, "decodeCover after, bitmap=" + coverBitmap);
 				if (coverBitmap != null) {
 					// There is a valid poster

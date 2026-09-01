@@ -22,12 +22,15 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.PreferenceManager;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,6 +52,7 @@ import com.archos.mediacenter.video.utils.ThemeManager;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.WebUtils;
 import com.archos.environment.NetworkState;
+import com.archos.mediaprovider.video.NetworkAutoRefresh;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -70,14 +74,20 @@ abstract public class BrowserCategory extends ListFragment {
     private static final String PREFERENCE_LAST_FRAGMENT = "preference_last_selected_fragment";
     private static final String PREFERENCE_LAST_PATH = "preference_last_selected_path";
     protected static final int ITEM_ID_BROWSER = 1;
+    protected static final int ITEM_ID_VIDEO_FOLDER = 7;
     protected static final int ITEM_ID_OFFSET = 7;
     protected static final int ITEM_ID_SMB = 2;
     protected static final int ITEM_ID_UPNP = 3;
     protected static final int ITEM_ID_FTP = 4;
     protected static final int ITEM_ID_PROVIDER = 6;
     protected static final int ITEM_ID_NETWORK = 5;
-    protected static final int FILE_CHOOSER_ACTIVITY_REQUEST_CODE = 788;
-
+    final ActivityResultLauncher<Intent> fileChooserLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getData() != null) {
+                    VideoInfoActivity.startInstance(getActivity(), null, result.getData().getData(), -1L);
+                }
+            });
 
     private int mLibrarySize;
     protected int mSelectedItemId;
@@ -186,16 +196,9 @@ abstract public class BrowserCategory extends ListFragment {
         return categoryView;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode, data);
-        if(requestCode == FILE_CHOOSER_ACTIVITY_REQUEST_CODE&&data!=null){
-            //PlayUtils.startVideo(getActivity(), data.getData(), data.getData(), null, null, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, null);
-            VideoInfoActivity.startInstance(getActivity(), null, data.getData(),new Long(-1));
-        }
-    }
-
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String lastPath = null;
@@ -222,18 +225,23 @@ abstract public class BrowserCategory extends ListFragment {
         if(mSelectedItemId == ITEM_ID_BROWSER && lastPath == null)
             mSelectedItemId = BrowserCategoryVideo.ITEM_ID_RECENTLY_ADDED;
 
-        if(savedInstanceState==null) //restore only when starting from scratch
-            setFragment(lastPath);
+        final String initialPath = lastPath;
+        view.post(() -> {
+            if (!isAdded())
+                return;
+            if(savedInstanceState==null) //restore only when starting from scratch
+                setFragment(initialPath);
 
-        if(getActivity() instanceof BrowserActivity)
-            ((MainActivity)getActivity()).updateHomeIcon(getParentFragmentManager().getBackStackEntryCount()>1);
+            if(getActivity() instanceof BrowserActivity)
+                ((MainActivity)getActivity()).updateHomeIcon(getParentFragmentManager().getBackStackEntryCount()>1);
+        });
 
         // handles NetworkState changes
         networkState = NetworkState.instance(getContext());
         if (propertyChangeListener == null)
             propertyChangeListener = evt -> {
                 if (evt.getOldValue() != evt.getNewValue()) {
-                    if (DBG) Log.d(TAG, "onActivityCreated: updateUI NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
+                    if (DBG) Log.d(TAG, "onViewCreated: updateUI NetworkState for " + evt.getPropertyName() + " changed:" + evt.getOldValue() + " -> " + evt.getNewValue());
                     updateUI();
                 }
             };
@@ -308,11 +316,7 @@ abstract public class BrowserCategory extends ListFragment {
         intentFilter.addAction(ExtStorageReceiver.ACTION_MEDIA_CHANGED);
         intentFilter.addDataScheme(ExtStorageReceiver.ARCHOS_FILE_SCHEME);//new android nougat send UriExposureException when scheme = file
         intentFilter.addDataScheme("file");
-        if (Build.VERSION.SDK_INT >= 33) {
-            getActivity().registerReceiver(mExternalStorageReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            getActivity().registerReceiver(mExternalStorageReceiver, intentFilter);
-        }
+        ContextCompat.registerReceiver(getActivity(), mExternalStorageReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
         addNetworkListener();
         // Remove non constant category items.
         for (int index = mCategoryList.size() - 1; index >= mLibrarySize; index--)
@@ -356,6 +360,9 @@ abstract public class BrowserCategory extends ListFragment {
             if(item.text == R.string.preferences){
                 if(getActivity() instanceof MainActivity)
                     ((MainActivity) getActivity()).startPreference();
+                setSelection(mSelectedItemId); //restore selection
+            } else if (item.text == R.string.rescan){
+                NetworkAutoRefresh.forceRescan(getActivity());
                 setSelection(mSelectedItemId); //restore selection
             } else if (item.text == R.string.help_faq){
                 WebUtils.openWebLink(getActivity(),getString(R.string.faq_url));
@@ -493,7 +500,15 @@ abstract public class BrowserCategory extends ListFragment {
         final boolean hasExternal = storageManager.hasExtStorage();
         final boolean isConnected = isConnected();
         if (hasExternal|| isConnected || NetworkState.isNetworkConnected(getActivity())) {
-            mCategoryList.add(getText(R.string.external_storage));
+            mCategoryList.add(getText(R.string.leanback_browsing));
+
+            {
+                ItemData itemData2 = new ItemData();
+                itemData2.icon = R.drawable.category_common_folder;
+                itemData2.text = R.string.root_storage;
+                itemData2.id = ITEM_ID_VIDEO_FOLDER;
+                mCategoryList.add(itemData2);
+            }
 
             if (hasExternal) {
                 for(String s : storageManager.getExtSdcards()) {
@@ -539,7 +554,7 @@ abstract public class BrowserCategory extends ListFragment {
             }
             if ( NetworkState.isNetworkConnected(getActivity())){
                 ItemData itemData = new ItemData();
-                itemData.icon = R.drawable.category_common_network;
+                itemData.icon = R.drawable.category_network_shortcut;
                 itemData.text = R.string.network_shortcuts;
                 itemData.id = ITEM_ID_NETWORK;
                 mCategoryList.add(itemData);
@@ -549,7 +564,7 @@ abstract public class BrowserCategory extends ListFragment {
         // but offline capability is present in drive and provider is more generic
         // than cloud in reality. Perhaps think of better name
         ItemData itemData = new ItemData();
-        itemData.icon = R.drawable.category_common_network;
+        itemData.icon = R.drawable.cloud_24px;
         itemData.text = R.string.provider_folders;
         itemData.id = ITEM_ID_PROVIDER;
         mCategoryList.add(itemData);
@@ -577,6 +592,10 @@ abstract public class BrowserCategory extends ListFragment {
         ItemData itemData = new ItemData();
         itemData.icon = R.drawable.android29_ic_settings;
         itemData.text = R.string.preferences;
+        mCategoryList.add(itemData);
+        itemData = new ItemData();
+        itemData.icon = R.drawable.android29_ic_rescan;
+        itemData.text = R.string.rescan;
         mCategoryList.add(itemData);
         itemData = new ItemData();
         itemData.icon = R.drawable.android29_ic_menu_help;

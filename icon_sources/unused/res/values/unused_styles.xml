@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Archived unused styles -->
+<resources>
+    <style name="InfoDialogButton" parent="Widget.AppCompat.Button.Small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingRight">15dip</item>
+        <item name="android:paddingLeft">15dip</item>
+    </style>
+
+    <style name="BrowserText.Info.InfoBlue.Video">
+        <item name="android:paddingTop">5dip</item>
+    </style>
+
+    <style name="BrowserText.Number.Video" parent="MainLine">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_width">@dimen/video_details_number_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">right|center_vertical</item>
+        <item name="android:paddingRight">10dip</item>
+    </style>
+
+    <style name="category_item_style">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="VideoInfoFileInfo.Title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/lightblue500</item>
+        <item name="android:drawablePadding">6dip</item>
+    </style>
+
+    <style name="toolbarStyle" parent="Base.Widget.AppCompat.Toolbar">
+    </style>
+
+    <style name="textAppearanceVeryLarge" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">@dimen/video_info_very_big_text</item>
+        <item name="android:maxLines">3</item>
+    </style>
+
+    <style name="AlertDialog">
+        <item name="progressLayout">@layout/progress_dialog</item>
+        <item name="horizontalProgressLayout">@layout/alert_dialog_progress</item>
+    </style>
+</resources>

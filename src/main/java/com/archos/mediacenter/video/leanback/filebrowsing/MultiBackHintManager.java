@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.filebrowsing;
 
+import android.annotation.SuppressLint;
+
 import android.content.Context;
 import android.os.SystemClock;
 import androidx.preference.PreferenceManager;
@@ -34,6 +36,7 @@ public class MultiBackHintManager {
     private long mPreviousPressTime = 0; // press -1
     private long mPreviousPreviousPressTime = 0; // press -2
 
+    @SuppressLint("StaticFieldLeak")
     static MultiBackHintManager sSingleton = null;
 
     /** static to avoid reading the Preference each time */

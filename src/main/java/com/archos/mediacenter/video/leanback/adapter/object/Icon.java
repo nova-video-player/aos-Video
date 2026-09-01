@@ -21,6 +21,7 @@ public class Icon {
 
     public enum ID {
         PREFERENCES,
+        RESCAN,
         PRIVATE_MODE,
         LEGACY_UI,
         HELP_FAQ,

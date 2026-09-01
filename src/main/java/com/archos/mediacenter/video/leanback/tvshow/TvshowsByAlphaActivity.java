@@ -23,8 +23,4 @@ public class TvshowsByAlphaActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new TvshowsByAlphaFragment();
     }
-
-    public void onBackPressed(){
-        finish();
-    }
 }

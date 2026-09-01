@@ -23,8 +23,4 @@ public class MoviesByRatingActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new MoviesByRatingFragment();
     }
-
-    public void onBackPressed(){
-        finish();
-    }
 }

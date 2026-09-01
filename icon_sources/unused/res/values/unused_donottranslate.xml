@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Archived unused donottranslate strings -->
+<resources>
+    <string name="text_a">A</string>
+    <string name="player_plugin_store_url">https://www.archos.com/misc/result.html?ptype=10&amp;ts=pl</string>
+    <string name="action_non_scraped">com.archos.mediacenter.video.action_non_scraped</string>
+    <string name="av_delay_key">av_delay_key</string>
+    <string name="resolution_3D">3D</string>
+    <string name="app_id">08FEA4DD</string>
+    <string name="app_id_surface">C44FB232</string>
+</resources>

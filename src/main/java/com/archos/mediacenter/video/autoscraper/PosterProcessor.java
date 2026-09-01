@@ -43,7 +43,7 @@ public class PosterProcessor extends ImageProcessor {
     public void loadBitmap(LoadTaskItem taskItem) {
         if (taskItem.loadObject instanceof String) {
             String file = (String) taskItem.loadObject;
-            Bitmap bm = BitmapFactory.decodeFile(file);
+            Bitmap bm = BitmapUtils.decodeSampledBitmapFromFile(file, mWidth, mHeight);
             if (bm != null) {
                 // A valid poster is available => resize it to the expected size
                 Bitmap scaled = BitmapUtils.scaleThumbnailCenterCrop(bm, mWidth, mHeight);

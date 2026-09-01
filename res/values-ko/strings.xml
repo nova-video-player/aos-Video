@@ -23,7 +23,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">서버목록 새로고침</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares"></string>
     <!-- Library screen, menu item -->
     <string name="search_title">검색</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -41,9 +40,7 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet"> ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">재생시간:</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">영화</string>
     <!-- COVER ROLL -->
     <string name="recently_added">최근 추가된 항목</string>
     <string name="recently_added_videos">최근 추가된 항목</string>
@@ -56,11 +53,8 @@
     <string name="usb_host_storage">외장 드라이브</string>
     <string name="network_media_servers">미디어 서버 (UPnP)</string>
     <string name="network_shared_folders">공유폴더 (SMB)</string>
-    <string name="recordings_storage">녹음</string>
     <string name="root_storage">내부 저장공간</string>
-    <string name="cannot_list">콘텐츠를 표시할 수 없습니다.</string>
     <!-- VIDEO -->
-    <string name="upnp_not_allowed">UPNP 서버에 액세스할 수 없습니다. 먼저 액세스 설정을 변경하십시오.</string>
     <!-- for small screens -->
     <!-- Generic strings for Movies or TV shows -->
     <!-- Specific strings for TV shows -->
@@ -103,12 +97,9 @@
     <string name="player_err_video_decoder_error">비디오 디코더 오류:</string>
     <string name="player_err_interlaced">비월주사</string>
     <!-- Player plug-in -->
-    <string name="player_plugin_cinema_title">시네마 플러그인</string>
-    <string name="player_plugin_cinema">시네마 플러그인 (DVD, MPEG-2, AC3)</string>
     <string name="player_plugin_video_msg">이 파일은<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="video">%1$s</g>비디오 포맷을 포함합니다. </string>
     <string name="player_plugin_audio_msg">이 파일은<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="audio">%1$s</g>오디오 포맷을 포함합니다. </string>
     <string name="player_plugin_video_audio_msg">이 파일은<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="video">%1$s</g>비디오 포맷과<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="audio">%2$s</g>오디오 포맷을 포함합니다. </string>
-    <string name="player_plugin_purchase_msg">You need to purchase the<g xmlns="urn:oasis:names:tc:xliff:document:1.2" id="plugin">%1$s</g></string>
     <string name="player_plugin_purchase">스토어로 이동합니다.</string>
     <!-- Subtitles wizard -->
     <string name="subtitles_wizard_no_files">자막 파일을 찾을 수 없습니다.</string>
@@ -135,4 +126,5 @@
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->
     <!--  Nfo File parsing -->
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
 </resources>

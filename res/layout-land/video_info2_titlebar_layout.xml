@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+    <!-- Only included from layout-land (video_info2_action_poster_layout.xml, video_info2_fragment.xml);
+         the portrait video_info2_fragment.xml defines its titlebar inline instead of via <include>,
+         so there is no meaningful default/portrait variant to add for this layout-land-only chain. -->
     <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    tools:ignore="MissingDefaultResource"
     >
 
         <TextView

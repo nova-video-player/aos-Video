@@ -19,9 +19,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
@@ -53,6 +54,9 @@ import com.archos.mediacenter.video.leanback.presenter.EmptyViewPresenter;
 import com.archos.mediacenter.video.leanback.presenter.PosterImageCardPresenter;
 import androidx.leanback.widget.ShadowLessRowPresenter;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class VideoSearchFragment extends SafeSearchSupportFragment implements SearchSupportFragment.SearchResultProvider {
 
     static final String TAG = "VideoSearchFragment";
@@ -60,11 +64,11 @@ public class VideoSearchFragment extends SafeSearchSupportFragment implements Se
     private static final int SEARCH_DELAY_MS = 300;
 
     private ArrayObjectAdapter mRowsAdapter;
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private SearchTask mCurrentSearchTask;
     private SearchRunnable mDelayedLoad;
     private VideoLoader mSearchLoader;
     private String mLastQuery;
-    private static final int SEARCH_REQUEST_CODE = 1;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
     private class SearchRunnable implements Runnable {
@@ -108,15 +112,8 @@ public class VideoSearchFragment extends SafeSearchSupportFragment implements Se
         }
     }
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode==SEARCH_REQUEST_CODE&&data!=null){
-                setSearchQuery(data, true);
-        }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         Resources r = getResources();
         updateBackground();
         // Setup theme change listener
@@ -189,15 +186,27 @@ public class VideoSearchFragment extends SafeSearchSupportFragment implements Se
     }
 
     private void loadRows(final String query) {
-        new AsyncTask<String, Void, ListRow>() {
-            @Override
-            protected void onPreExecute() {
-                mRowsAdapter.clear();
-            }
+        if (mCurrentSearchTask != null) mCurrentSearchTask.cancel();
+        mCurrentSearchTask = new SearchTask(query);
+        mCurrentSearchTask.execute();
+    }
 
-            @Override
-            protected ListRow doInBackground(String... params) {
-                if (getActivity() != null && ! getActivity().isFinishing()) {
+    private class SearchTask {
+        private final String query;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
+
+        SearchTask(String query) {
+            this.query = query;
+        }
+
+        void execute() {
+            mRowsAdapter.clear();
+            executor.execute(() -> {
+                ListRow listRow = null;
+                Cursor cursorToRelease = null;
+                if (!isCancelled && getActivity() != null && !getActivity().isFinishing()) {
                     ContentResolver cr = getActivity().getContentResolver();
                     if (mSearchLoader instanceof SearchMovieLoader) {
                         ((SearchMovieLoader) mSearchLoader).setQuery(query);
@@ -209,27 +218,38 @@ public class VideoSearchFragment extends SafeSearchSupportFragment implements Se
                         ((SearchVideoLoader) mSearchLoader).setQuery(query);
                     }
                     Cursor cursor = cr.query(mSearchLoader.getUri(), mSearchLoader.getProjection(), mSearchLoader.getSelection(), mSearchLoader.getSelectionArgs(), mSearchLoader.getSortOrder());
-                    if (cursor.getCount() > 0) {
+                    if (cursor != null && cursor.getCount() > 0) {
                         CursorObjectAdapter listRowAdapter = new CursorObjectAdapter(new PosterImageCardPresenter(getActivity()));
                         listRowAdapter.setMapper(new CompatibleCursorMapperConverter(new VideoCursorMapper()));
                         listRowAdapter.changeCursor(cursor);
-                        return new ListRow(ROW_ID, new HeaderItem(getString(R.string.search_results)), listRowAdapter);
+                        cursorToRelease = cursor;
+                        listRow = new ListRow(ROW_ID, new HeaderItem(getString(R.string.search_results)), listRowAdapter);
                     } else {
+                        if (cursor != null) cursor.close();
                         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new EmptyViewPresenter());
                         listRowAdapter.add(new EmptyView(getString(R.string.no_results_found)));
-                        return new ShadowLessListRow(new HeaderItem(getString(R.string.search_results)), listRowAdapter);
+                        listRow = new ShadowLessListRow(new HeaderItem(getString(R.string.search_results)), listRowAdapter);
                     }
                 } else {
                     Log.e(TAG, "loadRows: no more activity, aborting search");
-                    return null;
                 }
-            }
+                final ListRow finalRow = listRow;
+                final Cursor finalCursor = cursorToRelease;
+                handler.post(() -> {
+                    if (!isCancelled && finalRow != null) {
+                        mRowsAdapter.add(finalRow);
+                    } else if (finalCursor != null) {
+                        finalCursor.close();
+                    }
+                });
+                executor.shutdown();
+            });
+        }
 
-            @Override
-            protected void onPostExecute(ListRow listRow) {
-                if (listRow != null) mRowsAdapter.add(listRow);
-            }
-        }.execute();
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
+        }
     }
 
 }

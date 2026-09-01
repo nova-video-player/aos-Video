@@ -1,13 +1,9 @@
-- seamless audio speed with remote shortcuts
-- better lipsync, passthrough and downmix
-- AC3 universal audio passthrough
-- new aspect ratio modes & projector mode
-- display cutout modes in player UI
-- trakt sync speed logic revisited
-- scrape reliability & speed enhancements
-- UPnP uses jupnp instead of cling
-- avoid USB/SMB rescans & medialib loss
-- new gestures (check FAQ)
-- subtitles fixes & improved rendering
-- smart categories: new to watch & continue watching
-- database backup/restore
+- Add provisional video end time on OSD
+- 5s seek base granularity and smoother backward seek
+- Fix judder on some HEVC videos
+- Keep screen awake during active scanning, scraping
+- Improve edge-to-edge display support
+- Restore media info retrieval on cellular network
+- Restore SAMBA SMBv1 server compatibility by protocol level detection
+- Smarter TV show and movie media scraping
+- Many stability enhancement

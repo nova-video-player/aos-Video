@@ -186,17 +186,25 @@ public class AudioDelayTVPicker extends AudioDelayPickerAbstract implements TVSl
             case KeyEvent.KEYCODE_DPAD_RIGHT:
                 if (log.isDebugEnabled()) log.debug("onKeyDown: right key");
                 int delay = (int) (getDelay() + mStep - (getDelay() + mStep) % mStep);
+                if (hasMax && delay > mMax) {
+                    updateNextDrawable(-1);
+                    return true;
+                }
                 updateNextDrawable(hasMax && delay >= mMax ? -1 : R.drawable.arrow_right_pressed);
                 updatePreviousDrawable(hasMin && delay < mMin ? -1 : R.drawable.arrow_left);
-                updateDelay(hasMax && delay > mMax ? mMax : delay);
+                updateDelay(delay);
                 changeAudioDelay();
                 return true;
             case KeyEvent.KEYCODE_DPAD_LEFT:
                 if (log.isDebugEnabled()) log.debug("onKeyDown: left key");
                 delay = (int) (getDelay() - mStep - (getDelay() - mStep) % mStep);
+                if (hasMin && delay < mMin) {
+                    updatePreviousDrawable(-1);
+                    return true;
+                }
                 updatePreviousDrawable(hasMin && delay <= mMin ? -1 : R.drawable.arrow_left_pressed);
                 updateNextDrawable(hasMax && delay > mMax ? -1 : R.drawable.arrow_right);
-                updateDelay(hasMin && delay < mMin ? mMin : delay);
+                updateDelay(delay);
                 changeAudioDelay();
                 return true;
         }

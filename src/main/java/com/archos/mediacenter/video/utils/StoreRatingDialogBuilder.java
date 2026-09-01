@@ -38,7 +38,7 @@ public class StoreRatingDialogBuilder{
         if(current == TRIGGER_VALUE){
             showDialog(context);
         }
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(NUM_PLAYER_LAUNCHED, current+1).commit();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(NUM_PLAYER_LAUNCHED, current+1).apply();
     }
 
     private static void showDialog(final Context context) {

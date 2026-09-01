@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.player.tvmenu;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -40,7 +41,7 @@ public class TimerDelayTVPicker extends TimerPickerAbstract implements TVSlaveVi
     private static final int CHANGE_DELAY = 1;
     private static final int CHANGE_DELAY_TIMEOUT = 750; // msec
 
-    private final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             TimerDelayTVPicker.this.handleMessage(msg);

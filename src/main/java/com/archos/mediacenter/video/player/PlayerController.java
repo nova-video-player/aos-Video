@@ -30,13 +30,15 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.ActionBar;
 
+import com.archos.mediacenter.video.leanback.overlay.Clock;
+
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -47,7 +49,11 @@ import android.view.View.OnGenericMotionListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
+
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -71,6 +77,7 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.Locale;
 
+import com.archos.environment.ArchosFeatures;
 import static com.archos.environment.ArchosFeatures.isChromeOS;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 
@@ -127,7 +134,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     public static final int SEEK_LONG_INIT_DELAY = 200;
     public static final int SEEK_LONG_DELAY = 50;
-    private static final int SEEK_ACCEL_MSECS[]  = { 2000, 6000, 30000, 60000};
+    private static final int SEEK_ACCEL_MSECS[]  = {5000, 15000, 30000, 60000};
     private static final int SEEK_SHORT_MSEC     = SEEK_ACCEL_MSECS[0];
     private static final int SEEK_ACCEL_PERMIL[] = {10, 20, 40, 80};
     private static final int SEEK_SHORT_PERMIL   = SEEK_ACCEL_PERMIL[0];
@@ -237,6 +244,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private int                 mLastProgress;
     private Rect                mLastCrop = new Rect();
     private int                 mSystemUiVisibility;
+    private WindowInsetsControllerCompat mInsetsController;
     private int 				UIMode;
     private int 				testSwitchView=0;
 
@@ -265,6 +273,17 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         void setSubtitleDelay(int delay);
     }
 
+    public interface OnControlBarVisibilityListener {
+        void onControlBarVisibilityChanged(boolean visible);
+    }
+
+    private OnControlBarVisibilityListener mOnControlBarVisibilityListener;
+
+    public void setOnControlBarVisibilityListener(OnControlBarVisibilityListener listener) {
+        mOnControlBarVisibilityListener = listener;
+    }
+
+    @SuppressWarnings("deprecation") // setStatusBarColor: pre-API 35 fallback
     public PlayerController(Context context, Window window, ViewGroup playerView, SurfaceController surfaceController, Settings settings, ActionBar actionBar) {
         mContext = context;
         mSurfaceController = surfaceController;
@@ -288,11 +307,17 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mActionBar.setCustomView(mVideoTitle);
         manualVisibilityChange=false;
 
-        mSystemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        mSystemUiVisibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;
-        mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
+        mSystemUiVisibility = 0;
+        WindowCompat.setDecorFitsSystemWindows(mWindow, false);
+        // setStatusBarColor is deprecated and ignored on Android 15+ (edge-to-edge enforced,
+        // bar is already transparent there)
+        if (Build.VERSION.SDK_INT < 35) {
+            mWindow.setStatusBarColor(Color.TRANSPARENT); // FLAG_TRANSLUCENT_STATUS replacement: keep status bar transparent when visible
+        }
+        mInsetsController = WindowCompat.getInsetsController(mWindow, mWindow.getDecorView());
+        mInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        // Do not hide bars here — old code only set LAYOUT_* flags + IMMERSIVE behavior, not FULLSCREEN|HIDE_NAVIGATION.
+        // Bars are hidden later via showSystemBar(false) / MSG_HIDE_SYSTEM_BAR.
         manualVisibilityChange=true;
 
         /* Hack:
@@ -354,6 +379,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if (mPlayPauseTouchZone != null) {
             mPlayPauseTouchZone.setVisibility(View.INVISIBLE);
         }
+        if (mClock != null) {
+            mClock.setText(getDateFormat().format(new Date()));
+        }
     }
 
     public void addToMenuContainer(View v){
@@ -361,13 +389,21 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         if(container1!=null && container1 instanceof FrameLayout){
             ((FrameLayout)container1).addView(v);
         }
+        TVCardDialog dialog = null;
+        View cardView = v.findViewById(R.id.card_view);
+        if (cardView instanceof TVCardDialog) {
+            dialog = (TVCardDialog) cardView;
+            // Keep the primary dialog on every TV layout. Previously this was assigned only
+            // when a split-screen slave controller existed, leaving normal Android TV playback
+            // unable to dismiss the overlay through the predictive-back callback.
+            tvCardDialog = dialog;
+        }
         if(mControllerViewRight!=null){
             View container2 = mControllerViewRight.findViewById(R.id.tv_menu_container);
             if(container2!=null && container2 instanceof FrameLayout){
                 //then we have to inflate a slave view
-                if(v.findViewById(R.id.card_view)!=null&&v.findViewById(R.id.card_view)instanceof TVCardDialog){
-                    tvCardDialog  =(TVCardDialog) v.findViewById(R.id.card_view);
-                    ((FrameLayout)container2).addView(((TVCardDialog)v.findViewById(R.id.card_view)).createSlaveView());
+                if(dialog != null){
+                    ((FrameLayout)container2).addView(dialog.createSlaveView());
                 }
             }
         }
@@ -555,9 +591,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     mClock.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
                     mClock.setTextColor(Color.WHITE);
                     if (DateFormat.is24HourFormat(mContext)) {
-                        mDateFormat = new SimpleDateFormat("HH:mm");
+                        mDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                     } else {
-                        mDateFormat = new SimpleDateFormat("h:mm");
+                        mDateFormat = new SimpleDateFormat("h:mm", Locale.getDefault());
                     }
                     updateClock();
                 }
@@ -606,6 +642,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
 
 
+    // setOnSystemUiVisibilityChangeListener is the only reliable way to track transient bar visibility;
+    // no WindowInsetsControllerCompat equivalent exists for this use case.
+    @SuppressWarnings("deprecation")
     private void attachWindow() {
         SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (mPreferences != null) mFullScreenWithCutout = mPreferences.getBoolean("enable_cutout_mode_short_edges", true);
@@ -618,6 +657,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         int layoutID=R.layout.player_controller;
         mControllerView = inflater.inflate(layoutID, null);
+        if (mControllerView == null) return;
 
         mControllerView.setOnTouchListener(this);
         mControllerView.setOnGenericMotionListener(this);
@@ -648,8 +688,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
 
 
+        if (mControllerView == null) return;
+
         playerControllersContainer = (FrameLayout)mControllerView.findViewById(R.id.playerControllersContainer);
-        playerControllersContainer.addView(mControllerViewLeft);
+        if (playerControllersContainer != null && mControllerViewLeft != null)
+            playerControllersContainer.addView(mControllerViewLeft);
 
         if (log.isDebugEnabled()) log.debug("CONFIG attachWindow: layout WxH {}x{}", mLayoutWidth, mLayoutHeight);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mLayoutWidth, mLayoutHeight);
@@ -670,10 +713,16 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             });
 
             // ui visibility listener is needed for UI mode changes
+            // No WindowInsetsControllerCompat equivalent for transient bar visibility tracking;
+            // setOnSystemUiVisibilityChangeListener remains the only reliable option here.
+            //noinspection deprecation
             mRootView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                //noinspection deprecation
                 mNavigationBarShowing = (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0;
+                //noinspection deprecation
                 mSystemBarShowing = (visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0;
-                mActionBarShowing = (visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) == 0;
+                // SYSTEM_UI_FLAG_LOW_PROFILE is no longer set by WindowInsetsControllerCompat;
+                // mActionBarShowing is tracked directly by showActionBar(), so skip update here.
                 mIsNavBarOnBottom = MiscUtils.isNavigationBarOnBottom(mRootView, mContext);
                 mIsGestureAreaShowing = MiscUtils.isGestureAreaDisplayed(mContext);
                 mGestureAreaHeight = MiscUtils.getGestureAreaHeight(mContext);
@@ -702,7 +751,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     }
                     Editor ed = mPreferences.edit();
                     ed.putBoolean(PLAYER_HELP_OVERLAY_KEY, true);
-                    ed.commit();
+                    ed.apply();
                     sendOverlayFadeOut(6000);
                 }
             }
@@ -711,6 +760,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void adjustView() {
+        if (mControlBar != null) {
+            mControlBarHeight = (mNavigationBarShowing || mIsGestureAreaShowing ? mControlBar.getHeight() : 0);
+        }
         MiscUtils.adjustViewLayoutForInsets(mContext, mRootView, mControllerView,"mControllerView",
                 mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mControlBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing,
                 0, 0,
@@ -724,6 +776,10 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     public static boolean isControlBarShowing() {
         return mControlBarShowing;
+    }
+
+    public static boolean isActionBarShowing() {
+        return mActionBarShowing;
     }
 
     private void showHelpOverlay(View controllerView) {
@@ -805,11 +861,14 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void showActionBar(boolean show) {
-        if (mActionBarShowing != show) {
+        if (isTVMode || TVUtils.isTV(mContext)) {
+            if (!mControlBarShowing || Player.sPlayer == null) show = false;
+        }
+        if (mActionBarShowing != show || mActionBar.isShowing() != show) {
             if (show) mActionBar.show();
             else mActionBar.hide();
-            mActionBarShowing = show;
         }
+        mActionBarShowing = show;
     }
     public View getVolumeBar(){
         return mVolumeBar;
@@ -819,19 +878,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
     protected void showSystemBar(boolean show) {
         if (log.isDebugEnabled()) log.debug("showSystemBar {}", show);
-        if (mSystemBarShowing == show) return;
-        mSystemUiVisibility = mPlayerView.getSystemUiVisibility();
-        int systemUiFlag = View.SYSTEM_UI_FLAG_LOW_PROFILE;
-        systemUiFlag |= View.SYSTEM_UI_FLAG_FULLSCREEN;
         if (show) {
-            mSystemUiVisibility &= ~systemUiFlag;
-            mSystemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE;
+            mInsetsController.show(WindowInsetsCompat.Type.systemBars());
+            mNavigationBarShowing = true;
+        } else {
+            mInsetsController.hide(WindowInsetsCompat.Type.statusBars());
         }
-        else {
-            mSystemUiVisibility |= systemUiFlag;
-            mSystemUiVisibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;
-        }
-        mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
         manualVisibilityChange=true;
         mSystemBarGone = false;
         if (!show)
@@ -841,8 +893,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     private void showControlBar(boolean show) {
         if (log.isDebugEnabled()) log.debug("showControlBar {}", show);
-        if (mControlBar != null && mControlBarShowing != show) {
+        if (mControlBar != null && (mControlBarShowing != show
+                || mControlBar.getVisibility() != (show ? View.VISIBLE : View.GONE))) {
             if (log.isDebugEnabled()) log.debug("showControlBar {}", String.valueOf(show));
+            mControlBarShowing = show;
+            adjustView();
             setVisibility(mControlBar, show, true);
             if(mPlayPauseTouchZone!=null){
                 setVisibility(mPlayPauseTouchZone, show, false);
@@ -863,7 +918,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 updateFormat();
             }
 
-            mControlBarShowing = show;
+            if (mOnControlBarVisibilityListener != null) {
+                mOnControlBarVisibilityListener.onControlBarVisibilityChanged(show);
+            }
         }
     }
 
@@ -1022,7 +1079,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 (mBackwardButton != null && mBackwardButton.isPressed());
     }
 
-    private final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             int pos;
@@ -1154,8 +1211,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     break;
                 case MSG_HIDE_SYSTEM_BAR:
                     if (log.isDebugEnabled()) log.debug("Handle: MSG_HIDE_SYSTEM_BAR");
-                    mSystemUiVisibility |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-                    mPlayerView.setSystemUiVisibility(mSystemUiVisibility);
+                    mInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
+                    mNavigationBarShowing = false;
                     manualVisibilityChange=true;
                     break;
                 case MSG_OVERLAY_FADE_OUT:
@@ -1236,13 +1293,30 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
                 boolean makeTimeNegative = prefs.getBoolean(VideoPreferencesCommon.KEY_MAKE_TIME_NEGATIVE, VideoPreferencesCommon.MAKE_TIME_NEGATIVE_DEFAULT);
 
-                endText = (!makeTimeNegative ? "" : "-") + stringForTime(duration-position > 0 ? duration-position : 0);
+                int remaining = duration - position > 0 ? duration - position : 0;
+                String remainingText = (!makeTimeNegative ? "" : "-") + stringForTime(remaining);
+
+                boolean isLeanback = mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK);
+                if (!isLeanback && duration > 0 && remaining > 0 && Player.sPlayer != null && (Player.sPlayer.isPlaying() || Player.sPlayer.isPaused())) {
+                    long now = System.currentTimeMillis();
+                    float speed = PlayerService.sPlayerService != null ? PlayerService.sPlayerService.getAudioSpeed() : 1.0f;
+                    if (speed <= 0f) speed = 1.0f;
+                    long remainingMs = (long) (remaining / speed);
+                    String endClockText = getDateFormat().format(new Date(now + remainingMs));
+                    endText = remainingText + " → 🕖 " + endClockText;
+                } else {
+                    endText = remainingText;
+                }
             } else {
                 if (mDragging || !mSeekComplete) {
-                    mProgress.setProgress(position);
-                    if(mProgress2!=null)
-                        mProgress2.setProgress(position);
-                    currentText = String.valueOf(position / 10) + "%";
+                    if (mLastRelativePosition != -1 && position <= 1000) {
+                        mProgress.setProgress(position);
+                        if(mProgress2!=null)
+                            mProgress2.setProgress(position);
+                        currentText = String.valueOf(position / 10) + "%";
+                    } else {
+                        currentText = stringForTime(position);
+                    }
                 } else {
                     int relativePosition = Player.sPlayer.getRelativePosition();
                     if (relativePosition != mLastRelativePosition && relativePosition >= 0) {
@@ -1274,6 +1348,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             if(mCurrentTime2!=null)
                 mCurrentTime2.setText(currentText);
         }
+        updateClock();
 
         return position;
     }
@@ -1735,7 +1810,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             mVolumeLevel.setProgress(volume);
             if(mVolumeLevel2!=null)
                 mVolumeLevel2.setProgress(volume);
-            setMusicVolume(volume);
+            setVolumeBarMuteUI(volume == 0);
         }
     }
 
@@ -1804,16 +1879,19 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
     //this will be sent by activity
     public boolean onTouch(MotionEvent event){
+        if (event == null) return false;
         if (isTVMenuDisplayed) mLastTouchEventTime = event.getEventTime();
         return false;
     }
 
     public boolean onTouch(View v, MotionEvent event) {
+        if (event == null) return false;
         return gestureDetector.onTouchEvent(event);
     }
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
+        if (event == null) return false;
         if (log.isDebugEnabled()) log.debug("onSingleTapConfirmed");
         if (isTVMenuDisplayed) mLastTouchEventTime = event.getEventTime();
         if(mControllerViewLeft!=null){
@@ -1932,6 +2010,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     public boolean onSingleTapUp(MotionEvent e) { return false; }
 
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        if (e1 == null || e2 == null) return false;
 
         if(mIsLocked){
             showUnlockInstructions(true);
@@ -1940,10 +2019,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
         float deltaY = e2.getY() - e1.getY();
 
-        WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        Display display = windowManager.getDefaultDisplay();
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        display.getMetrics(displayMetrics);
+        DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
         int screenWidth = displayMetrics.widthPixels;
         int screenHeight = displayMetrics.heightPixels;
 
@@ -2032,7 +2108,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     }
                 } else {
                     // Bottom 25% left: decrease audio speed
-                    if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED, false)) {
+                    if (VideoPreferencesCommon.isAudioSpeedEnabled(mContext)) {
                         PlayerService.sPlayerService.decrementAudioSpeed();
                         showAudioSpeedOSD(PlayerService.sPlayerService.getAudioSpeed());
                     }
@@ -2053,7 +2129,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     }
                 } else {
                     // Bottom 25% right: increase audio speed
-                    if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED, false)) {
+                    if (VideoPreferencesCommon.isAudioSpeedEnabled(mContext)) {
                         PlayerService.sPlayerService.incrementAudioSpeed();
                         showAudioSpeedOSD(PlayerService.sPlayerService.getAudioSpeed());
                     }
@@ -2067,7 +2143,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     public boolean onGenericMotion(View v, MotionEvent event) {
         if(!isTVMenuDisplayed){
             if (log.isDebugEnabled()) log.debug("onGenericMotion : event={}", event);
-            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M&&event.getActionButton()==MotionEvent.BUTTON_PRIMARY) //
+            if (event.getActionButton() == MotionEvent.BUTTON_PRIMARY)
                 return false;
             int action = event.getAction();
 
@@ -2083,7 +2159,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         return false;
     }
 
-    private Handler hideOsdHandler = new Handler();
+    private Handler hideOsdHandler = new Handler(Looper.getMainLooper());
     private Runnable hideOsdRunnable = new Runnable() {
         @Override
         public void run() {
@@ -2141,7 +2217,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     public void showAudioSpeedOSD(float audioSpeed) {
-        String speedText = String.format("%.2fx", audioSpeed);
+        String speedText = String.format(Locale.getDefault(), "%.2fx", audioSpeed);
         if (mOsdRightTextView != null) {
             mOsdRightTextView.setText(speedText);
             mOsdRightTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -2211,20 +2287,33 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
 
             if (mVolumeBarEnabled) {
+                final boolean passThroughHardwareVolumeKeys = ArchosFeatures.isAndroidTV(mContext);
                 switch(keyCode) {
                     case KeyEvent.KEYCODE_VOLUME_DOWN:
+                        // Let framework handle TV+HDMI keys so CEC/ARC controls external sink.
+                        if (passThroughHardwareVolumeKeys) return false;
+                        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                            changeVolumeBy(-1);
+                        }
+                        return true;
                     case KeyEvent.KEYCODE_D:
                         if (event.getAction() == KeyEvent.ACTION_DOWN) {
                             changeVolumeBy(-1);
                         }
                         return true;
                     case KeyEvent.KEYCODE_VOLUME_UP:
+                        if (passThroughHardwareVolumeKeys) return false;
+                        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                            changeVolumeBy(1);
+                        }
+                        return true;
                     case KeyEvent.KEYCODE_U:
                         if (event.getAction() == KeyEvent.ACTION_DOWN) {
                             changeVolumeBy(1);
                         }
                         return true;
                     case KeyEvent.KEYCODE_VOLUME_MUTE:
+                        if (passThroughHardwareVolumeKeys) return false;
                         if (event.getAction() == KeyEvent.ACTION_DOWN) {
                             setMusicVolume(0);
                             // Show volume slider
@@ -2299,6 +2388,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 } else if (event.getAction() == KeyEvent.ACTION_UP) {
                     switch(keyCode) {
                         case KeyEvent.KEYCODE_MENU:
+                            if (isTVMode || TVUtils.isTV(mContext)) {
+                                return true;
+                            }
                             if (Player.sPlayer.isBusy()) {
                                 /* Don't show the menu if the MediaPlayer is busy */
                                 return true;
@@ -2383,7 +2475,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         case KeyEvent.KEYCODE_CHANNEL_DOWN:
                         case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
                         case KeyEvent.KEYCODE_G:
-                            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED,false)) {
+                            if (VideoPreferencesCommon.isAudioSpeedEnabled(mContext)) {
                                 PlayerService.sPlayerService.decrementAudioSpeed();
                                 showAudioSpeedOSD(PlayerService.sPlayerService.getAudioSpeed());
                             }
@@ -2391,7 +2483,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         case KeyEvent.KEYCODE_CHANNEL_UP:
                         case KeyEvent.KEYCODE_MEDIA_NEXT:
                         case KeyEvent.KEYCODE_H:
-                            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(KEY_PLAYBACK_SPEED,false)) {
+                            if (VideoPreferencesCommon.isAudioSpeedEnabled(mContext)) {
                                 PlayerService.sPlayerService.incrementAudioSpeed();
                                 showAudioSpeedOSD(PlayerService.sPlayerService.getAudioSpeed());
                             }
@@ -2414,6 +2506,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void switchMode(boolean tv) {
+        if (TVUtils.isTV(mContext)) {
+            tv = true;
+        }
         isTVMode=tv;
         // TODO Auto-generated method stub
         //for view not to be split before window attached
@@ -2447,7 +2542,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             
         }
 
-        if(mContext instanceof PlayerActivity&&!tv)
+        if(mContext instanceof PlayerActivity)
             ((PlayerActivity)mContext).switchMode(tv);
     }
     
@@ -2491,6 +2586,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
     }
 
+    // STATUS_BAR_DISABLE_* are internal system flags with no public API replacement;
+    // they have no effect for regular (non-system) apps on modern Android.
+    @SuppressWarnings("deprecation")
     public void enableAllNotifications() {
         if (log.isDebugEnabled()) log.debug("Enable all notifications");
         mSystemUiVisibility = mPlayerView.getSystemUiVisibility();
@@ -2501,6 +2599,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         manualVisibilityChange=true;
     }
 
+    @SuppressWarnings("deprecation")
     public void enableNotificationAlerts() {
         if (log.isDebugEnabled()) log.debug("Enable notification alerts only");
         mSystemUiVisibility = mPlayerView.getSystemUiVisibility();
@@ -2511,6 +2610,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         manualVisibilityChange=true;
     }
 
+    @SuppressWarnings("deprecation")
     public void disableNotifications() {
         if (log.isDebugEnabled()) log.debug("Disable all notifications");
         mSystemUiVisibility = mPlayerView.getSystemUiVisibility();
@@ -2636,6 +2736,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     public void showTVMenu(boolean show){
+        if (show && mContext instanceof PlayerActivity) {
+            ((PlayerActivity) mContext).refreshPlayModeIntroSummary();
+        }
         if (mTVMenuView != null) {
             mTVMenuView.setVisibility(show ? View.VISIBLE : View.GONE);
             if (show && !isTVMenuDisplayed) {
@@ -2662,11 +2765,34 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
         else{
             //destroy dialogs
-            if(tvCardDialog!=null)
-                tvCardDialog.exitDialog();
+            dismissTVCardDialog();
         }
         isTVMenuDisplayed=show;
     }
+
+    private boolean dismissTVCardDialog() {
+        if (tvCardDialog == null || tvCardDialog.getVisibility() != View.VISIBLE)
+            return false;
+        log.info("Back navigation: active TV card dialog found");
+        TVCardDialog dialog = tvCardDialog;
+        tvCardDialog = null;
+        dialog.handleBackPressed();
+        return true;
+    }
+
+    public boolean handleBackPressed() {
+        log.info("Back navigation: TV menu displayed={}, card dialog active={}",
+                isTVMenuDisplayed,
+                tvCardDialog != null && tvCardDialog.getVisibility() == View.VISIBLE);
+        if (dismissTVCardDialog())
+            return true;
+        if (isTVMenuDisplayed) {
+            showTVMenu(false);
+            return true;
+        }
+        return false;
+    }
+
     public boolean isTVMenuDisplayed() {
         // TODO Auto-generated method stub
         return isTVMenuDisplayed;
@@ -2676,9 +2802,35 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
 
+    private SimpleDateFormat getDateFormat() {
+        if (mDateFormat == null) {
+            if (DateFormat.is24HourFormat(mContext)) {
+                mDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            } else {
+                mDateFormat = new SimpleDateFormat("h:mm", Locale.getDefault());
+            }
+        }
+        return mDateFormat;
+    }
+
     public void updateClock() {
-        if (mClock!=null) {
-            mClock.setText(mDateFormat.format(new Date()));
+        if (mClock != null) {
+            long now = System.currentTimeMillis();
+            String currentClockText = getDateFormat().format(new Date(now));
+            if (Player.sPlayer != null && (Player.sPlayer.isPlaying() || Player.sPlayer.isPaused())) {
+                int duration = Player.sPlayer.getDuration();
+                int position = Player.sPlayer.getCurrentPosition();
+                float speed = PlayerService.sPlayerService != null ? PlayerService.sPlayerService.getAudioSpeed() : 1.0f;
+                if (speed <= 0f) speed = 1.0f;
+
+                if (duration > 0 && duration > position) {
+                    long remainingMs = (long) ((duration - position) / speed);
+                    String endClockText = getDateFormat().format(new Date(now + remainingMs));
+                    mClock.setText(Clock.formatTimeWithArrow(currentClockText, endClockText));
+                    return;
+                }
+            }
+            mClock.setText(currentClockText);
         }
     }
 

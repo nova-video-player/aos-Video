@@ -105,6 +105,7 @@ public class WidgetProviderVideo extends AppWidgetProvider {
      *  - if a widget id is provided => apply the action to this widget only.
      *  - if no id is provided => apply the action to all the existing video widgets.
      */
+    @SuppressWarnings("deprecation") // notifyAppWidgetViewDataChanged(int[], int) deprecated API 33; no array-based compat replacement
     @Override
     public void onReceive(Context context, Intent intent) {
         if (log.isDebugEnabled()) log.debug("onReceive intent={}", intent);
@@ -239,6 +240,7 @@ public class WidgetProviderVideo extends AppWidgetProvider {
     ** Local methods
     *****************************************************************/
 
+    @SuppressWarnings("deprecation") // setRemoteAdapter(int, Intent) deprecated API 31; RemoteCollectionItems replacement requires service-backed adapter migration
     private void update(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds,
                         boolean updateRemoteAdapter, boolean showEmptyViewText, boolean showDataLoadingSpinBar) {
         if (log.isDebugEnabled()) log.debug("update: updateRemoteAdapter={} showEmptyViewText={} showDataLoadingSpinBar={}", updateRemoteAdapter, showEmptyViewText, showDataLoadingSpinBar);
@@ -262,7 +264,7 @@ public class WidgetProviderVideo extends AppWidgetProvider {
                 // Pending intent on the icon and title
                 Intent appIntent = new Intent(context, MainActivity.class);
                 PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0 /* no requestCode */, appIntent,
-                        ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
+                        PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
                 rv.setOnClickPendingIntent(R.id.app_icon, appPendingIntent);
                 rv.setOnClickPendingIntent(R.id.label, appPendingIntent);
 
@@ -292,7 +294,7 @@ public class WidgetProviderVideo extends AppWidgetProvider {
                 tapIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
                 intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
                 PendingIntent tapPendingIntent = PendingIntent.getBroadcast(context, 0, tapIntent,
-                        ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
+                        PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
                 rv.setPendingIntentTemplate(R.id.gridview, tapPendingIntent);
 
                 // Apply all changes to the widget

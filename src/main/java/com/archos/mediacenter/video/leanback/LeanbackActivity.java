@@ -23,7 +23,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.archos.mediacenter.utils.trakt.Trakt;
@@ -35,6 +38,10 @@ public abstract class LeanbackActivity extends FragmentActivity {
 
     private BroadcastReceiver mTraktRelogBroadcastReceiver;
     private AlertDialog mTraktRelogAlertDialog;
+
+    private final ActivityResultLauncher<Intent> traktRelogLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { /* Trakt relog completed; token stored by TraktDeviceAuthActivity */ });
 
     @Override
     protected void onCreate(Bundle saved){
@@ -53,6 +60,7 @@ public abstract class LeanbackActivity extends FragmentActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     TraktSigninDialogPreference dialog = new TraktSigninDialogPreference(LeanbackActivity.this, null);
+                                    dialog.setLauncher(traktRelogLauncher);
                                     dialog.performDeviceAuth();
                                 }
                             })
@@ -66,11 +74,7 @@ public abstract class LeanbackActivity extends FragmentActivity {
 
     public void onResume(){
         super.onResume();
-        if (Build.VERSION.SDK_INT >= 33) {
-            registerReceiver(mTraktRelogBroadcastReceiver, new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN), Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            registerReceiver(mTraktRelogBroadcastReceiver, new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN));
-        }
+        ContextCompat.registerReceiver(this, mTraktRelogBroadcastReceiver, new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN), ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     public void onPause(){

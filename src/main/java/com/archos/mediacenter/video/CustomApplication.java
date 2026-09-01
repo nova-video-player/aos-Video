@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video;
 
+import android.annotation.SuppressLint;
+
 
 import static com.archos.filecorelibrary.FileUtils.getPermissions;
 import static com.archos.filecorelibrary.FileUtils.hasPermission;
@@ -43,6 +45,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ProcessLifecycleOwner;
@@ -65,6 +68,7 @@ import com.archos.mediacenter.video.picasso.SmbRequestHandler;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediacenter.video.utils.CodecDiscovery;
 import com.archos.mediacenter.video.utils.LocaleConfigParser;
 import com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper;
 import com.archos.mediacenter.video.utils.TrustingOkHttp3Downloader;
@@ -72,6 +76,7 @@ import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.LibAvos;
 import com.archos.mediaprovider.video.NetworkAutoRefresh;
 import com.archos.mediaprovider.video.VideoStoreImportReceiver;
+import com.archos.mediascraper.MediaScraper;
 import com.archos.mediascraper.ScraperImage;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.squareup.picasso.Picasso;
@@ -82,9 +87,16 @@ import io.sentry.SentryLevel;
 import io.sentry.android.core.SentryAndroid;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.beans.PropertyChangeListener;
 import java.security.Provider;
 import java.security.Security;
@@ -96,8 +108,16 @@ import java.util.regex.Pattern;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CustomApplication extends Application implements DefaultLifecycleObserver {
+
+    private static final String LOGBACK_DIR_PROPERTY = "nova.logback.dir";
+    private static final String LOGBACK_BOOTSTRAP_CONFIG = "logback.xml";
+    private static final String LOGBACK_FULL_CONFIG_FILE = "logback-full.xml";
+    private static final String LOGBACK_USER_CONFIG_FILE = "logback.xml";
+    private static final String LOGBACK_CONFIG_CACHE_DIR = "logback-config";
 
     private static Logger log = null;
 
@@ -121,12 +141,17 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     private static AudioDeviceCallback mAudioDeviceCallback;
     private static boolean isIecEncapsulationCapable = false;
     private static boolean isDirectPcmMultichannelCapable = false;
+    private static long mediaCodecAudioCapabilityFlag = 0;
+    private static boolean mediaCodecAudioCapabilityFlagInitialized = false;
+    private static int spatializerCapabilities = 0;
+    private static boolean spatializerCapabilitiesInitialized = false;
     public static final long allHdmiAudioCodecs = 0b11111111111111111111111111111111;
     private static boolean hasManageExternalStoragePermissionInManifest = false;
     public static boolean isManageExternalStoragePermissionInManifest() { return hasManageExternalStoragePermissionInManifest; }
 
     private static int [] novaVersionArray;
     private static int [] novaPreviousVersionArray;
+    private static boolean novaVersionStateInitialized = false;
     private static String novaLongVersion;
     private static String novaShortVersion;
     private static int novaVersionCode = -1;
@@ -141,7 +166,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     public static boolean isNovaUpdated() { return novaUpdated; }
     public static void clearUpdatedFlag(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putBoolean("app_updated", false).commit();
+        sharedPreferences.edit().putBoolean("app_updated", false).apply();
         novaUpdated = false;
     }
 
@@ -245,7 +270,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
      * the actual audio route.
      */
     private void refreshAudioOutputCapabilities(String reason) {
-        if (Build.VERSION.SDK_INT < 23 || mAudioManager == null) return;
+        if (mAudioManager == null) return;
 
         AudioDeviceInfo[] devices = mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         boolean foundHdmi = false;
@@ -372,6 +397,54 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         return spdifAudioEncodingFlag;
     }
 
+    private static synchronized void refreshMediaCodecAudioCapabilities(String reason) {
+        mediaCodecAudioCapabilityFlag = CodecDiscovery.getMediaCodecAudioCapabilities(false);
+        mediaCodecAudioCapabilityFlagInitialized = true;
+        if (log != null) {
+            String capabilities = getSupportedAudioCodecs(mediaCodecAudioCapabilityFlag);
+            log.info("refreshMediaCodecAudioCapabilities({}): flags=0x{} codecs={}",
+                    reason,
+                    Long.toHexString(mediaCodecAudioCapabilityFlag),
+                    capabilities.isEmpty() ? "<none>" : capabilities);
+        }
+    }
+
+    public static long getMediaCodecAudioCapabilitiesFlag() {
+        if (!mediaCodecAudioCapabilityFlagInitialized) {
+            refreshMediaCodecAudioCapabilities("lazy");
+        }
+        return mediaCodecAudioCapabilityFlag;
+    }
+
+    private static synchronized void refreshSpatializerCapabilities(String reason) {
+        if (Build.VERSION.SDK_INT < 32) {
+            spatializerCapabilities = 0;
+            spatializerCapabilitiesInitialized = true;
+            if (log != null && log.isDebugEnabled()) {
+                log.debug("refreshSpatializerCapabilities({}): API {} < 32, no Spatializer support",
+                        reason, Build.VERSION.SDK_INT);
+            }
+            return;
+        }
+
+        spatializerCapabilities = CodecDiscovery.getSpatializerCapabilities(mContext);
+        spatializerCapabilitiesInitialized = true;
+        if (log != null) {
+            log.info("refreshSpatializerCapabilities({}): flags=0x{} state={}",
+                    reason,
+                    Integer.toHexString(spatializerCapabilities),
+                    CodecDiscovery.getSpatializerCapabilitiesDescription(mContext, spatializerCapabilities));
+        }
+    }
+
+    public static int getSpatializerCapabilities() {
+        if (!spatializerCapabilitiesInitialized) {
+            refreshSpatializerCapabilities("lazy");
+        }
+        return spatializerCapabilities;
+    }
+
+    @SuppressLint("StaticFieldLeak")
     private static SambaDiscovery mSambaDiscovery = null;
 
     private PropertyChangeListener propertyChangeListener = null;
@@ -386,6 +459,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
 
     private static OpenSubtitlesApiHelper openSubtitlesApiHelper = null;
 
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext = null;
 
     public static Context getAppContext() {
@@ -482,6 +556,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
      * Uses getDirectPlaybackSupport() on API 33+ (preferred, non-deprecated)
      * Falls back to isDirectPlaybackSupported() on API 29-32
      */
+    @SuppressWarnings("deprecation") // CHANNEL_OUT_7POINT1: different mask from CHANNEL_OUT_7POINT1_SURROUND, intentional for probe
     private void updateDirectPcmMultichannelCapability() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || mAudioManager == null || !hasHdmi) {
             isDirectPcmMultichannelCapable = false;
@@ -602,7 +677,16 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         mContext = getApplicationContext();
         // must be done after context is available
         log = LoggerFactory.getLogger(CustomApplication.class);
-        setupBouncyCastle();
+        configureFullLoggingAsync();
+        new Thread(() -> {
+            try {
+                setupBouncyCastle();
+                // BC now registered globally: safe to decrypt stored credentials (Blowfish)
+                NetworkCredentialsDatabase.getInstance().loadCredentials(mContext);
+            } catch (Exception e) {
+                log.warn("Network credentials init failed or cancelled: {}", e.getMessage());
+            }
+        }, "bouncycastle-credentials-init").start();
 
         systemLocale = Locale.getDefault();
         getDefaultLocale();
@@ -620,7 +704,6 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             if (fileUtilsQ == null) fileUtilsQ = FileUtilsQ.getInstance(mContext);
         }).start();
 
-        Trakt.initApiKeys(this);
         new Thread() {
             public void run() {
                 this.setPriority(Thread.MIN_PRIORITY);
@@ -629,28 +712,44 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         }.start();
 
         // Initialize picasso thumbnail extension
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
-            // for Android versions below 7.1.1 we need to trust letsencrypt certificates
-            Picasso.setSingletonInstance(
-                    new Picasso.Builder(mContext)
-                            .addRequestHandler(new ThumbnailRequestHandler(mContext))
-                            .addRequestHandler(new SmbRequestHandler(mContext))
-                            .downloader(new TrustingOkHttp3Downloader(mContext))
-                            .build()
-            );
-        } else {
-            Picasso.setSingletonInstance(
-                    new Picasso.Builder(mContext)
-                            .addRequestHandler(new ThumbnailRequestHandler(mContext))
-                            .addRequestHandler(new SmbRequestHandler(mContext))
-                            .build()
-            );
+        // Bound Picasso's background thread pool so poster decoding/FidelityTransformation
+        // work does not compete with the main/render thread during the leanback MainFragment
+        // initial browse screen transition (several rows of posters loading at once).
+        // Fixed (not core-count-relative): Picasso's own default executor already scales
+        // itself up to 4 threads on WiFi/Ethernet (see PicassoExecutorService.adjustThreadCount),
+        // so a cores-based cap gives no real headroom on hexa/octa-core boxes. Cap at 2 regardless
+        // of core count to guarantee slack for the UI thread during that launch burst.
+        ExecutorService picassoExecutor = Executors.newFixedThreadPool(2);
+        try {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+                // for Android versions below 7.1.1 we need to trust letsencrypt certificates
+                Picasso.setSingletonInstance(
+                        new Picasso.Builder(mContext)
+                                .addRequestHandler(new ThumbnailRequestHandler(mContext))
+                                .addRequestHandler(new SmbRequestHandler(mContext))
+                                .downloader(new TrustingOkHttp3Downloader(mContext))
+                                .executor(picassoExecutor)
+                                .build()
+                );
+            } else {
+                Picasso.setSingletonInstance(
+                        new Picasso.Builder(mContext)
+                                .addRequestHandler(new ThumbnailRequestHandler(mContext))
+                                .addRequestHandler(new SmbRequestHandler(mContext))
+                                .executor(picassoExecutor)
+                                .build()
+                );
+            }
+        } catch (IllegalStateException ignored) {
+            // Picasso singleton already initialized (e.g. in unit tests)
         }
 
-        // Set the dimension of the posters to save
-        ScraperImage.setGeneralPosterSize(
-                getResources().getDimensionPixelSize(R.dimen.details_poster_width),
-                getResources().getDimensionPixelSize(R.dimen.details_poster_height));
+        // Removed: was downscaling posters to details view dimensions (160dp x 240dp),
+        // discarding quality from TMDb w780 downloads. Posters are now saved at original
+        // downloaded resolution and ImageView handles display-time scaling.
+        //ScraperImage.setGeneralPosterSize(
+        //        getResources().getDimensionPixelSize(R.dimen.details_poster_width),
+        //        getResources().getDimensionPixelSize(R.dimen.details_poster_height));
 
         BASEDIR = Environment.getExternalStorageDirectory().getPath()+"Android/data/"+getPackageName();
 
@@ -664,17 +763,6 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 }
             };
 
-        launchSambaDiscovery();
-
-        // init HttpImageManager manager.
-        mHttpImageManager = new HttpImageManager(HttpImageManager.createDefaultMemoryCache(), 
-                new FileSystemPersistence(BASEDIR));
-
-        // Note: we do not init UPnP here, we wait for the user to enter the network view
-
-        NetworkAutoRefresh.init(this);
-        //init credentials db
-        NetworkCredentialsDatabase.getInstance().loadCredentials(this);
         ArchosUtils.setGlobalContext(this.getApplicationContext());
         // only launch BootupRecommandation if on AndroidTV and before Android O otherwise target TV channels
         if(ArchosFeatures.isAndroidTV(this) && Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
@@ -684,12 +772,6 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         hasManageExternalStoragePermissionInManifest = hasPermission("android.permission.MANAGE_EXTERNAL_STORAGE", mContext);
         if (log.isTraceEnabled()) log.trace("onCreate: has permission android.permission.MANAGE_EXTERNAL_STORAGE {}", hasManageExternalStoragePermissionInManifest);
 
-        updateVersionState(this);
-        if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
-        //makeUseOpenSubtitlesRestApi(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(VideoPreferencesCommon.KEY_OPENSUBTITILES_REST_API, true));
-
-        upgradeActions(mContext);
-
         // Amazon has an "optional" check that when opening IEC61937, the content is stereo
         // It is pushed into some weird vendor callbacks, I have no idea what they are supposed to mean
         // But anyway we can allow IEC61937 @ 8 channels by removing this thing
@@ -698,18 +780,125 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             Field f = fireOSInit.getDeclaredField("sVendorCallbacks");
             f.setAccessible(true);
             Object o = f.get(null);
-            Map<Class<?>, Object> m = (Map<Class<?>, Object>) o;
+            Map<?, ?> m = (Map<?, ?>) o;
             m.remove(Class.forName("android.media.VendorAudioTrackCallback"));
         } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException | NullPointerException e) {
         }
 
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        if (Build.VERSION.SDK_INT >= 23) {
-            // Detect initial audio devices (include HDMI ARC/eARC)
-            refreshAudioOutputCapabilities("onCreate");
-        } else {
-            // only set hasSpdif since hasHdmi should be caught by the broadcast receiver and be valid for lower APIs
-            hasSpdif = true;
+
+        // init HttpImageManager manager (requires main thread Looper for internal Handler)
+        mHttpImageManager = new HttpImageManager(HttpImageManager.createDefaultMemoryCache(),
+                new FileSystemPersistence(BASEDIR));
+
+        // NetworkAutoRefresh.init requires main thread (LifecycleRegistry.addObserver)
+        NetworkAutoRefresh.init(this);
+
+        // Defer heavy initialization to a background thread to speed up cold start
+        final Context appContext = mContext;
+        final CustomApplication app = this;
+        updateVersionState(appContext);
+        new Thread("nova-deferred-init") {
+            public void run() {
+                Trakt.initApiKeys(appContext);
+                launchSambaDiscovery();
+                if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
+                upgradeActions(appContext);
+                refreshAudioOutputCapabilities("onCreate");
+                refreshMediaCodecAudioCapabilities("onCreate");
+                refreshSpatializerCapabilities("onCreate");
+            }
+        }.start();
+    }
+
+    /**
+     * Enables rolling file logging and the optional external logback override
+     * without accessing external storage on the provider-startup main thread.
+     */
+    private void configureFullLoggingAsync() {
+        Thread loggingInitThread = new Thread(() -> {
+            LoggerContext loggerContext = null;
+            try {
+                File externalFilesDir = getExternalFilesDir(null);
+                if (externalFilesDir == null) {
+                    Log.w("CustomApplication", "External files directory unavailable; keeping Logcat-only logging");
+                    return;
+                }
+
+                File logDirectory = new File(externalFilesDir, "logback");
+                if (!logDirectory.isDirectory() && !logDirectory.mkdirs()) {
+                    throw new IOException("Could not create logging directory: " + logDirectory);
+                }
+                ensureUserLoggingConfiguration(logDirectory);
+                System.setProperty(LOGBACK_DIR_PROPERTY, logDirectory.getAbsolutePath());
+
+                loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+                synchronized (loggerContext) {
+                    File configurationFile = new File(
+                            new File(getCacheDir(), LOGBACK_CONFIG_CACHE_DIR),
+                            LOGBACK_FULL_CONFIG_FILE);
+                    copyRawResource(R.raw.logback_full, configurationFile);
+                    configureLogging(loggerContext, configurationFile);
+                }
+            } catch (Exception e) {
+                Log.e("CustomApplication", "Could not enable full logging; restoring Logcat-only logging", e);
+                restoreBootstrapLogging(loggerContext);
+            }
+        }, "logback-init");
+        loggingInitThread.setPriority(Thread.MIN_PRIORITY);
+        loggingInitThread.start();
+    }
+
+    private void ensureUserLoggingConfiguration(File logDirectory) throws IOException {
+        File userConfiguration = new File(logDirectory, LOGBACK_USER_CONFIG_FILE);
+        if (!userConfiguration.exists()) {
+            copyRawResource(R.raw.logback_user, userConfiguration);
+        }
+    }
+
+    private void copyRawResource(int resourceId, File destination) throws IOException {
+        File parent = destination.getParentFile();
+        if (parent == null || (!parent.isDirectory() && !parent.mkdirs())) {
+            throw new IOException("Could not create logging configuration directory: " + parent);
+        }
+        try (InputStream input = getResources().openRawResource(resourceId);
+             FileOutputStream output = new FileOutputStream(destination)) {
+            byte[] buffer = new byte[8192];
+            int count;
+            while ((count = input.read(buffer)) != -1) {
+                output.write(buffer, 0, count);
+            }
+        }
+    }
+
+    private void configureLogging(LoggerContext loggerContext, File configurationFile)
+            throws JoranException {
+        JoranConfigurator configurator = new JoranConfigurator();
+        configurator.setContext(loggerContext);
+        loggerContext.reset();
+        configurator.doConfigure(configurationFile);
+    }
+
+    private void configureBootstrapLogging(LoggerContext loggerContext)
+            throws IOException, JoranException {
+        try (InputStream input = getAssets().open(LOGBACK_BOOTSTRAP_CONFIG)) {
+            JoranConfigurator configurator = new JoranConfigurator();
+            configurator.setContext(loggerContext);
+            loggerContext.reset();
+            configurator.doConfigure(input);
+        }
+    }
+
+    private void restoreBootstrapLogging(LoggerContext loggerContext) {
+        if (loggerContext == null) {
+            return;
+        }
+        synchronized (loggerContext) {
+            try {
+                configureBootstrapLogging(loggerContext);
+            } catch (Exception fallbackError) {
+                Log.e("CustomApplication", "Could not restore Logcat-only logging", fallbackError);
+            }
         }
     }
 
@@ -753,11 +942,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 final IntentFilter intentFilter = new IntentFilter();
                 intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
                 intentFilter.addDataScheme("file");
-                if (Build.VERSION.SDK_INT >= 33) {
-                    registerReceiver(videoStoreImportReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
-                } else {
-                    registerReceiver(videoStoreImportReceiver, intentFilter);
-                }
+                ContextCompat.registerReceiver(this, videoStoreImportReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
                 isVideStoreImportReceiverRegistered = true;
                 ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in ForeGround register videoStoreImportReceiver");
             } else {
@@ -809,36 +994,33 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     private void registerAudioDeviceCallback() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            mAudioDeviceCallback = new AudioDeviceCallback() {
-                @Override
-                public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
-                    for (AudioDeviceInfo device : addedDevices) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("registerAudioDeviceCallback:onAudioDevicesAdded: type={} name={}", device.getType(), device.getProductName());
-                        }
+        mAudioDeviceCallback = new AudioDeviceCallback() {
+            @Override
+            public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
+                for (AudioDeviceInfo device : addedDevices) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("registerAudioDeviceCallback:onAudioDevicesAdded: type={} name={}", device.getType(), device.getProductName());
                     }
-                    refreshAudioOutputCapabilities("devicesAdded");
                 }
-                @Override
-                public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
-                    for (AudioDeviceInfo removedDevice : removedDevices) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("registerAudioDeviceCallback:onAudioDevicesRemoved: type={} name={}", removedDevice.getType(), removedDevice.getProductName());
-                        }
+                refreshAudioOutputCapabilities("devicesAdded");
+                refreshSpatializerCapabilities("devicesAdded");
+            }
+            @Override
+            public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
+                for (AudioDeviceInfo removedDevice : removedDevices) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("registerAudioDeviceCallback:onAudioDevicesRemoved: type={} name={}", removedDevice.getType(), removedDevice.getProductName());
                     }
-                    refreshAudioOutputCapabilities("devicesRemoved");
                 }
-            };
-            mAudioManager.registerAudioDeviceCallback(mAudioDeviceCallback, null);
-        } else {
-            // only set hasSpdif since hasHdmi should be caught by the broadcast receiver and be valid for lower APIs
-            hasSpdif = true;
-        }
+                refreshAudioOutputCapabilities("devicesRemoved");
+                refreshSpatializerCapabilities("devicesRemoved");
+            }
+        };
+        mAudioManager.registerAudioDeviceCallback(mAudioDeviceCallback, null);
     }
 
     private void unRegisterAudioDeviceCallback() {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (mAudioDeviceCallback != null) {
             mAudioManager.unregisterAudioDeviceCallback(mAudioDeviceCallback);
         }
     }
@@ -854,8 +1036,9 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 final boolean isPlugged = intent.getIntExtra(AudioManager.EXTRA_AUDIO_PLUG_STATE, 0) == 1;
                 // On Android TV + ARC/eARC, the HDMI plug broadcast may not represent the active audio route.
                 // Prefer scanning AudioManager output devices (which include HDMI_ARC/HDMI_EARC).
-                if (Build.VERSION.SDK_INT >= 23 && mAudioManager != null) {
+                if (mAudioManager != null) {
                     refreshAudioOutputCapabilities("ACTION_HDMI_AUDIO_PLUG");
+                    refreshSpatializerCapabilities("ACTION_HDMI_AUDIO_PLUG");
                     // If system reports plugged but device scan didn't find HDMI, fall back to intent values.
                     if (isPlugged && !hasHdmi) {
                         hasHdmi = true;
@@ -864,22 +1047,9 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                         updateIecEncapsulationCapability();
                         updateDirectPcmMultichannelCapability();
                     }
-                } else {
-                    hasHdmi = isPlugged;
-                    hdmiAudioEncodingsFlags = intent.getIntArrayExtra(AudioManager.EXTRA_ENCODINGS);
-                    hdmiAudioEncodingFlag = !hasHdmi ? 0 : getEncodingFlags(hdmiAudioEncodingsFlags);
-                    updateIecEncapsulationCapability();
-                    updateDirectPcmMultichannelCapability();
-                }
-                final Integer isAudioPlugged = intent.getIntExtra(AudioManager.EXTRA_AUDIO_PLUG_STATE, 0);
-                if (isAudioPlugged != null) {
-                    // maxAudioChannelCount not exploited for now
-                    if (isAudioPlugged == 1) {
-                        maxAudioChannelCount = intent.getIntExtra(AudioManager.EXTRA_MAX_CHANNEL_COUNT, 2);
-                    }
                 }
 
-                if (log.isDebugEnabled()) log.debug("mHdmiAudioPlugReceiver: received ACTION_HDMI_AUDIO_PLUG, isAudioPlugged={}, hasHdmi={}, maxAudioChannelCount={}, hdmiAudioEncodingFlag={}, iecCapable={}", isAudioPlugged, hasHdmi, maxAudioChannelCount, hdmiAudioEncodingFlag, isIecEncapsulationCapable);
+                if (log.isDebugEnabled()) log.debug("mHdmiAudioPlugReceiver: received ACTION_HDMI_AUDIO_PLUG, isPlugged={}, hasHdmi={}, maxAudioChannelCount={}, hdmiAudioEncodingFlag={}, iecCapable={}", isPlugged, hasHdmi, maxAudioChannelCount, hdmiAudioEncodingFlag, isIecEncapsulationCapable);
             }
         }
     };
@@ -901,7 +1071,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     public static boolean isPassthroughSupported () {
-        return hasHdmi || hasSpdif;
+        return hasHdmi || hasSpdif || ArchosFeatures.isAndroidTV(mContext);
     }
 
     public static String[] audioEncodings = new String[] {"INVALID", "DEFAULT", "PCM_16BIT", "PCM_8BIT", "PCM_FLOAT",
@@ -1036,7 +1206,10 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         return mHttpImageManager;
     }
 
-    private static void updateVersionState(Context context) {
+    @SuppressWarnings("deprecation") // info.versionCode: field and callers use int; getLongVersionCode() would require field type change across callers
+    private static synchronized void updateVersionState(Context context) {
+        if (novaVersionStateInitialized) return;
+        if (context == null) return;
         try {
             //this code gets current version-code (after upgrade it will show new versionCode)
             PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -1045,8 +1218,8 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             try {
                 novaVersionArray = splitVersion(novaVersionName);
                 novaLongVersion = "Nova v" + novaVersionArray[0] + "." + novaVersionArray[1] + "." + novaVersionArray[2] +
-                        " (" + novaVersionArray[3] + String.format("%02d", novaVersionArray[4]) + String.format("%02d", novaVersionArray[5]) +
-                        "." + String.format("%02d", novaVersionArray[6]) + String.format("%02d", novaVersionArray[7]) + ")";
+                        " (" + novaVersionArray[3] + String.format(Locale.ROOT, "%02d", novaVersionArray[4]) + String.format(Locale.ROOT, "%02d", novaVersionArray[5]) +
+                        "." + String.format(Locale.ROOT, "%02d", novaVersionArray[6]) + String.format(Locale.ROOT, "%02d", novaVersionArray[7]) + ")";
                 novaShortVersion = "v" + novaVersionArray[0] + "." + novaVersionArray[1] + "." + novaVersionArray[2];
             } catch (IllegalArgumentException ie) {
                 novaVersionArray = new int[] { 0, 0, 0, 0, 0, 0, 0, 0};
@@ -1065,27 +1238,36 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             }
             if (previousVersion > 0) {
                 if (previousVersion != novaVersionCode) {
-                    // got upgraded, save version in current_versionCode and remember former version in previous_versionCode
-                    // and indicated that we got updated in app_updated until used and reset
-                    sharedPreferences.edit().putInt("current_versionCode", novaVersionCode).commit();
-                    sharedPreferences.edit().putInt("previous_versionCode", previousVersion).commit();
+                    sharedPreferences.edit()
+                            .putInt("current_versionCode", novaVersionCode)
+                            .putInt("previous_versionCode", previousVersion)
+                            .putBoolean("app_updated", true)
+                            .putString("current_versionName", novaVersionName)
+                            .putString("previous_versionName", previousVersionName)
+                            .apply();
                     novaUpdated = true;
-                    sharedPreferences.edit().putBoolean("app_updated", true).commit();
-                    sharedPreferences.edit().putString("current_versionName", novaVersionName).commit();
-                    sharedPreferences.edit().putString("previous_versionName", previousVersionName).commit();
                     if (log.isDebugEnabled()) log.debug("updateVersionState: update from {}({}) to {}({})", previousVersionName, previousVersion, novaVersionName, novaVersionCode);
                 }
             } else {
                 // save first app version
                 if (log.isDebugEnabled()) log.debug("updateVersionState: save first version {}", novaVersionCode);
-                sharedPreferences.edit().putInt("current_versionCode", novaVersionCode).commit();
-                sharedPreferences.edit().putInt("previous_versionCode", -1).commit();
-                sharedPreferences.edit().putString("current_versionName", novaVersionName).commit();
-                sharedPreferences.edit().putString("previous_versionName", "0.0.0").commit();
+                sharedPreferences.edit()
+                        .putInt("current_versionCode", novaVersionCode)
+                        .putInt("previous_versionCode", -1)
+                        .putString("current_versionName", novaVersionName)
+                        .putString("previous_versionName", "0.0.0")
+                        .apply();
             }
         } catch (PackageManager.NameNotFoundException e) {
+            novaVersionArray = emptyVersionArray();
+            novaPreviousVersionArray = emptyVersionArray();
             log.error("updateVersionState: caught NameNotFoundException", e);
         }
+        novaVersionStateInitialized = true;
+    }
+
+    private static int[] emptyVersionArray() {
+        return new int[] { 0, 0, 0, 0, 0, 0, 0, 0};
     }
 
     // takes version major.minor.revision-YYYYMMDD.HHMMSS and convert it into an integer array
@@ -1106,6 +1288,9 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     public static String getChangelog(Context context) {
+        if (novaPreviousVersionArray == null || novaVersionArray == null) {
+            updateVersionState(context);
+        }
         if (log.isDebugEnabled()) log.debug("getChangelog: {}->{}", novaPreviousVersionArray[0], novaVersionArray[0]);
         if (novaPreviousVersionArray[0] > 0 && novaPreviousVersionArray[0] <= 5 && novaVersionArray[0] > 5)
             return context.getResources().getString(R.string.v5_v6_upgrade_info);
@@ -1134,20 +1319,27 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     private void setupBouncyCastle() {
-        final Provider provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
-        if (provider == null) {
-            return;
+        try {
+            final Provider provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
+            if (provider == null) {
+                return;
+            }
+            if (provider.getClass().equals(BouncyCastleProvider.class)) {
+                // BC with same package name, shouldn't happen in real life.
+                return;
+            }
+            // Android registers its own BC provider. As it might be outdated and might not include
+            // all needed ciphers, we substitute it with a known BC bundled in the app.
+            // Android's BC has its package rewritten to "com.android.org.bouncycastle" and because
+            // of that it's possible to have another BC implementation loaded in VM.
+            // Instantiate new provider first (heavy work) while system BC provider is still registered
+            final Provider newProvider = new BouncyCastleProvider();
+
+            Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
+            Security.insertProviderAt(newProvider, 1);
+        } catch (Throwable t) {
+            log.error("setupBouncyCastle: failed to register BouncyCastleProvider", t);
         }
-        if (provider.getClass().equals(BouncyCastleProvider.class)) {
-            // BC with same package name, shouldn't happen in real life.
-            return;
-        }
-        // Android registers its own BC provider. As it might be outdated and might not include
-        // all needed ciphers, we substitute it with a known BC bundled in the app.
-        // Android's BC has its package rewritten to "com.android.org.bouncycastle" and because
-        // of that it's possible to have another BC implementation loaded in VM.
-        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
-        Security.insertProviderAt(new BouncyCastleProvider(), 1);
     }
 
     static boolean DBG = false;
@@ -1176,6 +1368,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         setLocale(localeCode, getResources());
     }
 
+    @SuppressWarnings("deprecation") // updateConfiguration: needed for locale injection pre-API 33
     public static void setLocale(String localeCode, Resources resources) {
         // Warning no log.debug at this stage
         Locale locale;
@@ -1199,22 +1392,23 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         // if nova is upgraded from 6.4.22 and below disable force_passthrough and android frame timing
         if ((novaPreviousVersionArray[0] < 6) ||
             (novaPreviousVersionArray[0] == 6 && novaPreviousVersionArray[1] < 4) ||
-            (novaPreviousVersionArray[0] == 6 && novaPreviousVersionArray[1] == 4 && novaPreviousVersionArray[2] <= 28)) {
+            (novaPreviousVersionArray[0] == 6 && novaPreviousVersionArray[1] == 4 && novaPreviousVersionArray[2] <= 36)) {
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit()
                     .putBoolean(VideoPreferencesCommon.KEY_FORCE_AUDIO_PASSTHROUGH, false)
                     .apply();
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit()
-                    .putBoolean(PlayerActivity.KEY_ENABLE_ANDROID_FRAME_TIMING, false)
-                    .apply();
-            PreferenceManager.getDefaultSharedPreferences(context)
-                    .edit()
-                    .putBoolean(VideoPreferencesCommon.KEY_ENABLE_DYNAMIC_AUDIO_DELAY, false)
+                    .putBoolean(VideoPreferencesCommon.KEY_ENABLE_DYNAMIC_AUDIO_DELAY, true)
                     .apply();
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit()
                     .putBoolean(VideoPreferencesCommon.KEY_PLAYBACK_SPEED, true)
+                    .apply();
+            // disable smbj since it is now no longer faster than jcfis-ng
+            PreferenceManager.getDefaultSharedPreferences(context)
+                    .edit()
+                    .putBoolean(VideoPreferencesCommon.KEY_SMBJ, false)
                     .apply();
         }
         // do not replace lastPlayed row with watchingUpNext one since it is still a little slow on shield
@@ -1224,13 +1418,38 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit()
                     .putBoolean(VideoPreferencesCommon.KEY_SHOW_WATCHING_UP_NEXT_ROW, true)
-                    .commit();
+                    .apply();
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit()
                     .putBoolean(VideoPreferencesCommon.KEY_SHOW_LAST_PLAYED_ROW, false)
-                    .commit();
+                    .apply();
         }
          */
+
+        // Upgraded from 6.4.31 and below: TMDb image sizes changed (posters w342->w780, stills w342->w300,
+        // thumbs w154->w185). Clear download caches only — poster/still storage files are still referenced
+        // by the database and will be naturally replaced at higher quality when videos are re-scraped.
+        if ((novaPreviousVersionArray[0] < 6) ||
+            (novaPreviousVersionArray[0] == 6 && novaPreviousVersionArray[1] < 4) ||
+            (novaPreviousVersionArray[0] == 6 && novaPreviousVersionArray[1] == 4 && novaPreviousVersionArray[2] <= 31)) {
+            log.info("upgradeActions: clearing image download caches for TMDb image quality upgrade");
+            clearDirectory(MediaScraper.getImageCacheDirectory(context));
+            clearDirectory(MediaScraper.getPictureCacheDirectory(context));
+        }
+    }
+
+    /** Deletes all files in a directory without removing the directory itself */
+    private static void clearDirectory(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    if (f.isFile()) {
+                        f.delete();
+                    }
+                }
+            }
+        }
     }
 
     public static CustomApplication getApplication() {

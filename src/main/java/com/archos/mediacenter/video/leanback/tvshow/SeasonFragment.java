@@ -24,6 +24,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -99,31 +100,42 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
     private Overlay mOverlay;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
-    // need to be static otherwise ActivityResultLauncher find them null
-    private static Delete delete;
-    private static List<Uri> deleteUrisList;
+    private static final String SAVED_DELETE_URIS = "saved_delete_uris";
+    private static final String SAVED_DELETE_OPERATION = "saved_delete_operation";
+    private static final String SAVED_DELETE_FILE_SIZE = "saved_delete_file_size";
+
+    private Delete delete;
+    private List<Uri> deleteUrisList;
+    private int deleteOperation = Delete.OP_SINGLE_FILE;
+    private long deleteFileSize = 0L;
 
     private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
             result -> { // result can be RESULT_OK, RESULT_CANCELED
                 Context context = getActivity();
                 if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: result {}", result.toString());
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: OK, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
-                    if (delete != null && deleteUrisList != null && deleteUrisList.size() >= 1) {
-                        if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: calling delete.deleteOK on {}", deleteUrisList.get(0));
-                        delete.deleteOK(deleteUrisList.get(0));
-                    }
-                } else {
-                    if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: NO, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
-                    if (delete != null && deleteUrisList != null && deleteUrisList.size() > 1)
-                        delete.deleteNOK(deleteUrisList.get(0));
+                if (delete == null && getActivity() != null) {
+                    delete = new Delete(SeasonFragment.this, getActivity());
+                }
+                if (delete != null && deleteUrisList != null && !deleteUrisList.isEmpty()) {
+                    boolean isSuccess = result.getResultCode() == Activity.RESULT_OK;
+                    delete.completeSystemDelete(deleteUrisList, isSuccess, deleteOperation, deleteFileSize);
                 }
             });
 
+    @SuppressWarnings("deprecation") // getParcelableArrayList: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS, Uri.class);
+            } else {
+                deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS);
+            }
+            deleteOperation = savedInstanceState.getInt(SAVED_DELETE_OPERATION, Delete.OP_SINGLE_FILE);
+            deleteFileSize = savedInstanceState.getLong(SAVED_DELETE_FILE_SIZE, 0L);
+        }
         // pass the right deleteLauncher linked to activity
         FileUtilsQ.setDeleteLauncher(deleteLauncher);
 
@@ -203,10 +215,13 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
     
                             delete = new Delete(SeasonFragment.this, getActivity());
                             deleteUrisList = uris;
-                            if (uris.size() == 1)
+                            if (uris.size() == 1) {
+                                deleteOperation = Delete.OP_SINGLE_FILE;
                                 delete.startDeleteProcess(uris.get(0));
-                            else if (uris.size() > 1)
+                            } else if (uris.size() > 1) {
+                                deleteOperation = Delete.OP_MULTIPLE_FILES;
                                 delete.startMultipleDeleteProcess(uris);
+                            }
                         }
                     }
 
@@ -245,10 +260,13 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
 
                         delete = new Delete(SeasonFragment.this, getActivity());
                         deleteUrisList = uris;
-                        if (uris.size() == 1)
+                        if (uris.size() == 1) {
+                            deleteOperation = Delete.OP_SINGLE_FILE;
                             delete.startDeleteProcess(uris.get(0));
-                        else if (uris.size() > 1)
+                        } else if (uris.size() > 1) {
+                            deleteOperation = Delete.OP_MULTIPLE_FILES;
                             delete.startMultipleDeleteProcess(uris);
+                        }
                     }
                 }
             }
@@ -268,8 +286,25 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (deleteUrisList != null) {
+            if (delete != null && delete.getCurrentVideoFileToDeleteSize() > 0) {
+                deleteFileSize = delete.getCurrentVideoFileToDeleteSize();
+            }
+            outState.putParcelableArrayList(SAVED_DELETE_URIS, (deleteUrisList instanceof ArrayList) ? (ArrayList<Uri>) deleteUrisList : new ArrayList<>(deleteUrisList));
+            outState.putInt(SAVED_DELETE_OPERATION, deleteOperation);
+            outState.putLong(SAVED_DELETE_FILE_SIZE, deleteFileSize);
+        }
+    }
+
+    @Override
     public void onDestroyView() {
+        if (mSeasonsAdapter != null) {
+            mSeasonsAdapter.changeCursor(null);
+        }
         mOverlay.destroy();
+        delete = null;
         // Unregister theme change listener
         if (mThemeChangeListener != null) {
             ThemeManager.getInstance(getActivity()).unregisterThemeChangeListener(mThemeChangeListener);
@@ -277,12 +312,20 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
         super.onDestroyView();
     }
 
+    @Override
+    public void onDestroy() {
+        delete = null;
+        deleteUrisList = null;
+        super.onDestroy();
+    }
+
     private void updateBackground() {
         // Update private mode indicator visibility
         PrivateModeUIHelper.updatePrivateModeIndicator(getView());
 
         BackgroundManager bgMngr = BackgroundManager.getInstance(getActivity());
-        bgMngr.attach(getActivity().getWindow());
+        if (!bgMngr.isAttached())
+            bgMngr.attach(getActivity().getWindow());
 
         if (PrivateMode.isActive()) {
             int privateModeColor = ThemeManager.getInstance(getActivity()).getPrivateModeColor();
@@ -378,6 +421,9 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        if (mSeasonsAdapter != null) {
+            mSeasonsAdapter.changeCursor(null);
+        }
     }
     
     @Override
@@ -399,6 +445,7 @@ public class SeasonFragment extends BrowseSupportFragment implements LoaderManag
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 delete = new Delete(SeasonFragment.this, activity);
+                                deleteOperation = Delete.OP_FOLDER;
                                 deleteUrisList = Collections.singletonList(folder);
                                 delete.deleteFolder(folder);
                             }

@@ -89,33 +89,33 @@ public class VideoSearchProvider extends ContentProvider {
 
             Uri u = VideoStore.Video.Media.EXTERNAL_CONTENT_URI;
             ContentResolver cr = getContext().getContentResolver();
-            Cursor result = cr.query(u, mProjection, SELECTION, extendedSelectionArgs, SORT);
+            try (Cursor result = cr.query(u, mProjection, SELECTION, extendedSelectionArgs, SORT)) {
+                if (result != null && result.moveToFirst()) {
+                    matrixCursor = new MatrixCursor(result.getColumnNames());
+                    int numColumns = result.getColumnCount();
+                    int iconIdx = result.getColumnIndexOrThrow(SearchManager.SUGGEST_COLUMN_RESULT_CARD_IMAGE);
 
-            if (result.moveToFirst()) {
-                matrixCursor = new MatrixCursor(result.getColumnNames());
-                int numColumns = result.getColumnCount();
-                int iconIdx = result.getColumnIndexOrThrow(SearchManager.SUGGEST_COLUMN_RESULT_CARD_IMAGE);
-
-                do {
-                    Object[] currRow = new Object[numColumns];
-                    for (int i=0 ; i<numColumns ; i++) {
-                        currRow[i] = result.getString(i);
-                    }
-                    String icon = result.getString(iconIdx);
-                    if (icon == null || icon.isEmpty()) {
-                        // video without poster, put thumbail in place of poster
-                        long id = result.getLong(result.getColumnIndexOrThrow(BaseColumns._ID));
-                        Cursor c = cr.query(VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI,
-                                            new String[]{VideoStore.Video.Thumbnails._ID},
-                                            VideoStore.Video.Thumbnails.VIDEO_ID + "=" + id, null, null);
-                        if (c != null && c.moveToFirst()) {
-                            int thumbIdIdx = c.getColumnIndexOrThrow(VideoStore.Video.Thumbnails._ID);
-                            currRow[iconIdx] = VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI + "/" + c.getString(thumbIdIdx);
+                    do {
+                        Object[] currRow = new Object[numColumns];
+                        for (int i = 0; i < numColumns; i++) {
+                            currRow[i] = result.getString(i);
                         }
-                    }
-                    matrixCursor.addRow(currRow);
+                        String icon = result.getString(iconIdx);
+                        if (icon == null || icon.isEmpty()) {
+                            // video without poster, put thumbnail in place of poster
+                            long id = result.getLong(result.getColumnIndexOrThrow(BaseColumns._ID));
+                            try (Cursor c = cr.query(VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI,
+                                    new String[]{VideoStore.Video.Thumbnails._ID},
+                                    VideoStore.Video.Thumbnails.VIDEO_ID + "=" + id, null, null)) {
+                                if (c != null && c.moveToFirst()) {
+                                    int thumbIdIdx = c.getColumnIndexOrThrow(VideoStore.Video.Thumbnails._ID);
+                                    currRow[iconIdx] = VideoStore.Video.Thumbnails.EXTERNAL_CONTENT_URI + "/" + c.getString(thumbIdIdx);
+                                }
+                            }
+                        }
+                        matrixCursor.addRow(currRow);
+                    } while (result.moveToNext());
                 }
-                while (result.moveToNext());
             }
         }
         return matrixCursor;

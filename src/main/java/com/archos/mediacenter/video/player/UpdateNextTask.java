@@ -17,7 +17,8 @@ package com.archos.mediacenter.video.player;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.BaseColumns;
 
 import androidx.loader.content.CursorLoader;
@@ -47,6 +48,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -54,7 +60,7 @@ import java.util.List;
 /**
  * Created by alexandre on 24/04/15.
  */
-public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.Result> {
+public class UpdateNextTask {
 
     private static final Logger log = LoggerFactory.getLogger(UpdateNextTask.class);
 
@@ -65,6 +71,10 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
     private final Video mVideo;
     private Uri mUri;
     private Listener mListener;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private volatile boolean isCancelled = false;
+    private Future<Result> mFuture;
     protected static class Result {
         public final Uri uri;
         public final long id;
@@ -141,7 +151,8 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                 int uri = cursor2.getColumnIndex(VideoStore.MediaColumns.DATA);
                 Uri uri2 = Uri.parse(cursor2.getString(uri));
                 int id2 = cursor2.getInt(id);
-                if (log.isDebugEnabled()) log.debug("findEpisode: found new episode {} {}", (cursor2.getInt(cursor2.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE))), cursor2.getString(uri));
+                int episodeColumn = cursor2.getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE);
+                if (log.isDebugEnabled()) log.debug("findEpisode: found new episode {} {}", (episodeColumn >= 0 ? cursor2.getInt(episodeColumn) : -1), cursor2.getString(uri));
                 cursor2.close();
                 return new Result(uri2, id2);
             }
@@ -179,7 +190,8 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                     Cursor c = loader.loadInBackground();
                     if (c.getCount()>0) {
                         c.moveToFirst();
-                        nextUri = Uri.parse(c.getString(c.getColumnIndex(VideoStore.MediaColumns.DATA)));
+                        int dataColumn = c.getColumnIndex(VideoStore.MediaColumns.DATA);
+                        if (dataColumn >= 0) nextUri = Uri.parse(c.getString(dataColumn));
                     }
                     c.close();
                     if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result binge mode {}", nextUri);
@@ -206,26 +218,30 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                         " AND " + LoaderUtils.HIDE_USER_HIDDEN_FILTER +
                         " AND vl." + VideoStore.List.Columns.SYNC_STATUS + " != " + VideoStore.List.SyncStatus.STATUS_DELETED +
                         " AND vl." + VideoStore.VideoList.Columns.LIST_ID + " = ?)";
-                Cursor cursor = mResolver.query(VideoStore.RAW_QUERY, null, selection, new String[]{mPlaylistId + ""}, null);
-                if (cursor != null && cursor.getCount() > 0) {
-                    if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: cursor not null");
-                    int movieIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.M_ONLINE_ID);
-                    int episodeIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.E_ONLINE_ID);
-                    while (cursor.moveToNext()) {
-                        long episodeId = cursor.getLong(episodeIdColumn);
-                        long movieId = cursor.getLong(movieIdColumn);
-                        if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: episodeId {}, movieId {}", episodeId, movieId);
-                        if (currentEpisodeId != -1 && currentEpisodeId == episodeId) {
-                            useNextVideo = true;
-                        } else if (currentMovieId != -1 && currentMovieId == movieId) {
-                            useNextVideo = true;
-                        } else if (useNextVideo) { //previous was our video, this one is different, use Uri
-                            nextUri = Uri.parse(cursor.getString(cursor.getColumnIndex(VideoStore.MediaColumns.DATA)));
-                            return new Result(nextUri, nextId);
+                try (Cursor cursor = mResolver.query(VideoStore.RAW_QUERY, null, selection, new String[]{mPlaylistId + ""}, null)) {
+                    if (cursor != null && cursor.getCount() > 0) {
+                        if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: cursor not null");
+                        int movieIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.M_ONLINE_ID);
+                        int episodeIdColumn = cursor.getColumnIndex(VideoStore.VideoList.Columns.E_ONLINE_ID);
+                        while (cursor.moveToNext()) {
+                            long episodeId = cursor.getLong(episodeIdColumn);
+                            long movieId = cursor.getLong(movieIdColumn);
+                            if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: episodeId {}, movieId {}", episodeId, movieId);
+                            if (currentEpisodeId != -1 && currentEpisodeId == episodeId) {
+                                useNextVideo = true;
+                            } else if (currentMovieId != -1 && currentMovieId == movieId) {
+                                useNextVideo = true;
+                            } else if (useNextVideo) { //previous was our video, this one is different, use Uri
+                                int dataColumn = cursor.getColumnIndex(VideoStore.MediaColumns.DATA);
+                                if (dataColumn >= 0) {
+                                    nextUri = Uri.parse(cursor.getString(dataColumn));
+                                    return new Result(nextUri, nextId);
+                                }
+                            }
                         }
+                    } else {
+                        if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: cursor null");
                     }
-                } else {
-                    if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: cursor null");
                 }
                 if (log.isDebugEnabled()) log.debug("UpdateNextTask.Result: found nothing");
                 return null;
@@ -284,8 +300,10 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                 if (cursor != null) {
                     try {
                         if (cursor.moveToFirst()) {
-                            nextUri = Uri.parse(cursor.getString(cursor.getColumnIndex(VideoStore.Files.FileColumns.DATA)));
-                            nextId = cursor.getInt(cursor.getColumnIndex(VideoStore.Files.FileColumns._ID));
+                            int dataColumn = cursor.getColumnIndex(VideoStore.Files.FileColumns.DATA);
+                            int idColumn = cursor.getColumnIndex(VideoStore.Files.FileColumns._ID);
+                            if (dataColumn >= 0) nextUri = Uri.parse(cursor.getString(dataColumn));
+                            if (idColumn >= 0) nextId = cursor.getInt(idColumn);
                             if (log.isDebugEnabled()) log.debug("updateNextVideo({}) - next via getNextInBucket(DB):{}", repeatFolder, nextUri);
                             return new Result(nextUri, nextId);
                         } else {
@@ -304,8 +322,10 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
                     if (cursor != null) {
                         try {
                             if (cursor.moveToFirst()) {
-                                nextUri = Uri.parse(cursor.getString(cursor.getColumnIndex(VideoStore.Files.FileColumns.DATA)));
-                                nextId = cursor.getInt(cursor.getColumnIndex(VideoStore.Files.FileColumns._ID));
+                                int dataColumn = cursor.getColumnIndex(VideoStore.Files.FileColumns.DATA);
+                                int idColumn = cursor.getColumnIndex(VideoStore.Files.FileColumns._ID);
+                                if (dataColumn >= 0) nextUri = Uri.parse(cursor.getString(dataColumn));
+                                if (idColumn >= 0) nextId = cursor.getInt(idColumn);
                                 if (log.isDebugEnabled()) log.debug("updateNextVideo({}) - next via getFirstInBucket(DB):{}", repeatFolder, nextUri);
                                 return new Result(nextUri, nextId);
                             } else if (log.isDebugEnabled()) log.debug("updateNextVideo({}) - getNextInBucket empty cursor!?", repeatFolder);
@@ -377,26 +397,48 @@ public class UpdateNextTask extends AsyncTask<Boolean, Integer, UpdateNextTask.R
         return null;
     }
 
-    @Override
-    protected UpdateNextTask.Result doInBackground(Boolean... params) {
-        if (params.length < 1)
-            return null;
-        return run(params[0], params[1]);
+    public void execute(boolean repeatFolder, boolean binge) {
+        mFuture = executor.submit(() -> run(repeatFolder, binge));
+        executor.execute(() -> {
+            try {
+                Result result = mFuture.get();
+                if (!isCancelled) {
+                    handler.post(() -> {
+                        if (isCancelled) return;
+                        if (log.isDebugEnabled()) log.debug("onPostExecute: result={}, mListener={}", (result != null ? result.uri : "null"), (mListener != null ? "set" : "null"));
+                        if (mListener != null) {
+                            if (result != null) {
+                                if (log.isDebugEnabled()) log.debug("onPostExecute: calling mListener.onResult with uri={}, id={}", result.uri, result.id);
+                                mListener.onResult(result.uri, result.id);
+                            } else {
+                                if (log.isDebugEnabled()) log.debug("onPostExecute: calling mListener.onResult with null uri");
+                                mListener.onResult(null, -1);
+                            }
+                        } else {
+                            if (log.isDebugEnabled()) log.debug("onPostExecute: mListener is null, cannot call onResult");
+                        }
+                    });
+                }
+            } catch (ExecutionException | InterruptedException | CancellationException e) {
+                if (!isCancelled) log.error("UpdateNextTask error", e);
+            } finally {
+                executor.shutdown();
+            }
+        });
     }
 
-    @Override
-    protected void onPostExecute(Result result) {
-        if (log.isDebugEnabled()) log.debug("onPostExecute: result={}, mListener={}", (result != null ? result.uri : "null"), (mListener != null ? "set" : "null"));
-        if (mListener != null) {
-            if (result != null) {
-                if (log.isDebugEnabled()) log.debug("onPostExecute: calling mListener.onResult with uri={}, id={}", result.uri, result.id);
-                mListener.onResult(result.uri, result.id);
-            } else {
-                if (log.isDebugEnabled()) log.debug("onPostExecute: calling mListener.onResult with null uri");
-                mListener.onResult(null, -1);
-            }
-        } else {
-            if (log.isDebugEnabled()) log.debug("onPostExecute: mListener is null, cannot call onResult");
+    public void cancel(boolean mayInterruptIfRunning) {
+        isCancelled = true;
+        if (mFuture != null) mFuture.cancel(mayInterruptIfRunning);
+        if (mayInterruptIfRunning) executor.shutdownNow();
+        else executor.shutdown();
+    }
+
+    public Result get() throws ExecutionException, InterruptedException {
+        try {
+            return mFuture != null ? mFuture.get() : null;
+        } catch (CancellationException e) {
+            return null;
         }
     }
 }

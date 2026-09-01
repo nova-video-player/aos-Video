@@ -19,27 +19,18 @@
     <dimen name="player2014_bar_width">45dip</dimen>
 
     <!-- ============ VIDEO PLAYER ============ -->
-    <dimen name="video_title_marginTop">0dip</dimen>
-    <dimen name="volume_bar_marginTop">8dip</dimen>
-    <dimen name="volume_bar_marginBottom">-18dip</dimen> <!-- negative bottom margin to have the volume bar stick to the bottom of the screen in phone mode (while it is floating on tablets) -->
     <dimen name="volume_button_vertical_margin">0dip</dimen>
 
     <dimen name="player_time_text_size">14dip</dimen>
     <dimen name="player_button_padding_full">2dip</dimen>
     <dimen name="player_button_padding_half">0dip</dimen>
     <dimen name="player_button_padding_small">0dip</dimen>
-    <dimen name="player_button_margin_small">0dip</dimen>
     <dimen name="player_button_margin_half">2dip</dimen>
-    <dimen name="player_button_margin_full">4dip</dimen>
     <dimen name="player_subtitles_popup_width">300dip</dimen>
 
-    <dimen name="control_bar_margin_left">58dip</dimen>
-    <dimen name="control_bar_margin_right">-18dip</dimen>
-    <dimen name="control_bar_margin_bottom">-16dip</dimen> <!-- negative bottom margin to have the control bar stick to the bottom of the screen in phone mode (while it is floating on tablets) -->
 
     <!-- ============ VIDEO INFO BROWSER ============ -->
     <!-- Needed only for "notouch" but for some reason it is sometimes used in other cases (we see some crashes on Google Play reports)-->
-    <dimen name="video_list_container_width">110dip</dimen>
     <dimen name="video_info_grid_column_width">100dip</dimen>
     <dimen name="video_info_grid_poster_width">96dip</dimen>
     <dimen name="video_info_grid_poster_height">144dip</dimen>
@@ -56,20 +47,16 @@
 
     <dimen name="subtitle_color_picker_box_size">40dip</dimen>
     <dimen name="tv_menu_font_size">19dip</dimen>
-    <dimen name="tv_menu_small_font_size">10dip</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="info_activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="video_info_cardview_elevation">5dp</dimen>
     <dimen name="video_info_cardview_corner">12dp</dimen>
     <dimen name="categories_list_width">300dip</dimen>
-    <dimen name="half_fab_button">28dip</dimen>
 
     <dimen name="toolbar_default_elevation">5dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="categories_list_top_padding">@dimen/video_info_margin_half</dimen>
 
-    <dimen name="lb_browse_title_text_width">584dp</dimen>
 
     <dimen name="lb_details_overview_margin_start">100dp</dimen>
     <dimen name="lb_details_overview_margin_end">100dp</dimen>
@@ -79,10 +66,79 @@
     <dimen name="lb_details_v2_align_pos_for_actions">138dp</dimen>
 
     <item name="wrap_content" format="integer" type="dimen">-2</item>
-    <dimen name="lb_guidedactions_item_icon_width">@dimen/wrap_content</dimen>
 
     <!-- Private mode indicator -->
     <dimen name="private_mode_indicator_size">48dp</dimen>
     <dimen name="private_mode_indicator_margin">16dp</dimen>
+
+    <!-- ============ TABLET/NOTOUCH FALLBACK DEFAULTS ============ -->
+    <!-- These dimens provide baseline phone values matching MediaLib/res/values/dimens.xml,
+         preventing MissingDefaultResource lint errors and Resources.NotFoundException while
+         preserving correct phone layout scaling and 2:3 poster aspect ratios. -->
+    <dimen name="ContentLabel_fontsize">18dip</dimen>
+    <dimen name="MessageBox_fontsize">17dip</dimen>
+    <dimen name="MessageBox_width">200dip</dimen>
+    <dimen name="auto_scraper_poster_height">120dip</dimen>
+    <dimen name="auto_scraper_poster_item_height">124dip</dimen>
+    <dimen name="auto_scraper_poster_margin_bottom">2dip</dimen>
+    <dimen name="auto_scraper_poster_margin_left">2dip</dimen>
+    <dimen name="auto_scraper_poster_margin_top">2dip</dimen>
+    <dimen name="auto_scraper_poster_width">80dip</dimen>
+    <dimen name="auto_scraper_thumbnail_height">54dip</dimen>
+    <dimen name="auto_scraper_thumbnail_item_height">58dip</dimen>
+    <dimen name="auto_scraper_thumbnail_margin_bottom">2dip</dimen>
+    <dimen name="auto_scraper_thumbnail_margin_left">2dip</dimen>
+    <dimen name="auto_scraper_thumbnail_margin_top">2dip</dimen>
+    <dimen name="auto_scraper_thumbnail_width">80dip</dimen>
+    <dimen name="connection_button_height">32dip</dimen>
+    <dimen name="connection_button_padding">16dip</dimen>
+    <dimen name="connection_button_vertical_spacing">2dip</dimen>
+    <dimen name="content_grid_vertical_spacing_between_items">16dip</dimen>
+    <dimen name="content_list_left_margin">4dip</dimen>
+    <dimen name="content_list_right_margin">0dip</dimen>
+    <dimen name="content_list_space_between_thumbnail_and_name">12dip</dimen>
+    <dimen name="content_list_vertical_spacing_between_items">2dip</dimen>
+    <dimen name="cover_description_floating_large">23px</dimen>
+    <dimen name="cover_description_floating_small">17px</dimen>
+    <dimen name="cover_description_overlay_medium">13px</dimen>
+    <dimen name="cover_description_overlay_small">10px</dimen>
+    <dimen name="global_resume_icon_padding_left">10dip</dimen>
+    <dimen name="global_resume_icon_padding_right">10dip</dimen>
+    <dimen name="global_resume_playbutton_height">40dip</dimen>
+    <dimen name="global_resume_playbutton_width">40dip</dimen>
+    <dimen name="global_resume_video_height">56dip</dimen>
+    <dimen name="item_horizontal_offset">0dp</dimen>
+    <dimen name="list_expanded_padding">10dip</dimen>
+    <dimen name="popup_horizontal_offset">16dip</dimen>
+    <dimen name="quick_action_anchor_size">24dip</dimen>
+    <dimen name="radio_button_width">40dp</dimen>
+    <dimen name="scraper_selection_spinbar_size">40dip</dimen>
+    <dimen name="subtitles_settings_dialog_margin_large">4dip</dimen>
+    <dimen name="subtitles_settings_dialog_margin_outerframe">10dip</dimen>
+    <dimen name="subtitles_settings_dialog_margin_small">2dip</dimen>
+    <dimen name="subtitles_settings_dialog_sample_min_height">100dip</dimen>
+    <dimen name="track_menu_layout_width">48dip</dimen>
+    <dimen name="track_menu_minWidth">196dip</dimen>
+    <dimen name="track_menu_padding">16dip</dimen>
+    <dimen name="video_details_item_height">178dip</dimen>
+    <dimen name="video_details_poster_height">174dip</dimen>
+    <dimen name="video_details_poster_margin_bottom">10dip</dimen>
+    <dimen name="video_details_poster_margin_left">10dip</dimen>
+    <dimen name="video_details_poster_margin_top">2dip</dimen>
+    <dimen name="video_details_poster_width">116dip</dimen>
+    <dimen name="video_grid_column_width">124dip</dimen>
+    <dimen name="video_grid_poster_height">186dip</dimen>
+    <dimen name="video_grid_poster_margin_left">2dip</dimen>
+    <dimen name="video_grid_poster_margin_right">2dip</dimen>
+    <dimen name="video_grid_poster_margin_top">2dip</dimen>
+    <dimen name="video_grid_poster_width">124dip</dimen>
+    <dimen name="video_list_item_height">64dip</dimen>
+    <dimen name="video_list_thumbnail_height">60dip</dimen>
+    <dimen name="video_list_thumbnail_margin_bottom">2dip</dimen>
+    <dimen name="video_list_thumbnail_margin_left">2dip</dimen>
+    <dimen name="video_list_thumbnail_margin_top">2dip</dimen>
+    <dimen name="video_list_thumbnail_width">90dip</dimen>
+    <dimen name="video_resume_slider_length_list">55dp</dimen>
+    <dimen name="video_show_details_item_height">180dip</dimen>
 
 </resources>

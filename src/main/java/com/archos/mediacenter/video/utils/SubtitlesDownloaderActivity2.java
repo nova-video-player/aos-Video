@@ -23,8 +23,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +73,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 import static com.archos.filecorelibrary.FileUtils.removeFileSlashSlash;
@@ -163,7 +165,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         if (log.isDebugEnabled()) log.debug("onStop");
         if (mOpenSubtitlesTask != null) {
             if (log.isDebugEnabled()) log.debug("mOpenSubtitlesTask.cancel");
-            mOpenSubtitlesTask.cancel(false);
+            mOpenSubtitlesTask.cancel();
             mOpenSubtitlesTask = null;
         }
         logOut();
@@ -195,11 +197,11 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             // if no language is set, add default locale at least
             String defaultLanguage = Locale.getDefault().getLanguage();
             // if defaultLanguage is not equal ignoring case zh-cn or zh-tw replace by zh-cn since zh-cn and zh-tw are the only two known by opensubtitles
-            if (defaultLanguage.toLowerCase().startsWith("zh") && !defaultLanguage.equalsIgnoreCase("zh-cn") && !defaultLanguage.equalsIgnoreCase("zh-tw")) {
+            if (defaultLanguage.toLowerCase(Locale.ROOT).startsWith("zh") && !defaultLanguage.equalsIgnoreCase("zh-cn") && !defaultLanguage.equalsIgnoreCase("zh-tw")) {
                 log.warn("getSubLangValue: curing defaultLanguage={} to zh-cn", defaultLanguage);
                 defaultLanguage = "zh-cn";  // Simplified Chinese
             }
-            if (defaultLanguage.toLowerCase().startsWith("pt") && !defaultLanguage.equalsIgnoreCase("pt-br") && !defaultLanguage.equalsIgnoreCase("pt-pt")) {
+            if (defaultLanguage.toLowerCase(Locale.ROOT).startsWith("pt") && !defaultLanguage.equalsIgnoreCase("pt-br") && !defaultLanguage.equalsIgnoreCase("pt-pt")) {
                 log.warn("getSubLangValue: curing defaultLanguage={} to pt-pt", defaultLanguage);
                 defaultLanguage = "pt-pt";  // Portuguese
             }
@@ -211,12 +213,12 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         Set<String> toAdd = new HashSet<>();
         boolean modifiedList = false;
         for (String lang : existingLanguages) {
-            if (lang.toLowerCase().startsWith("zh") && !lang.equalsIgnoreCase("zh-cn") && !lang.equalsIgnoreCase("zh-tw")) {
+            if (lang.toLowerCase(Locale.ROOT).startsWith("zh") && !lang.equalsIgnoreCase("zh-cn") && !lang.equalsIgnoreCase("zh-tw")) {
                 toRemove.add(lang);
                 toAdd.add("zh-cn");
                 modifiedList = true;
             }
-            if (lang.toLowerCase().startsWith("pt") && !lang.equalsIgnoreCase("pt-pt") && !lang.equalsIgnoreCase("pt-br")) {
+            if (lang.toLowerCase(Locale.ROOT).startsWith("pt") && !lang.equalsIgnoreCase("pt-pt") && !lang.equalsIgnoreCase("pt-br")) {
                 toRemove.add(lang);
                 toAdd.add("pt-pt");
                 modifiedList = true;
@@ -233,35 +235,47 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
         return languageList;
     }
 
-    private class OpenSubtitlesTask extends AsyncTask<ArrayList<String>, Integer, Void>{
+    private class OpenSubtitlesTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
         ArrayList<OpenSubtitlesSearchResult> searchResults = null;
-        @Override
-        protected void onPreExecute() {
+
+        void execute(ArrayList<String> fileUrls, ArrayList<String> languages) {
             if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPreExecute");
             setInitDialog();
+
+            executor.execute(() -> {
+                try {
+                    String fileUrl = fileUrls.get(0);
+                    if (logIn()) {
+                        getSubtitle(fileUrl, languages);
+                    }
+                } catch (Exception e) {
+                    log.error("OpenSubtitlesTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                handler.post(() -> {
+                    // Close the progress dialog
+                    if (mDialog != null) {
+                        mDoNotFinish = mDoNotFinish &&
+                                searchResults != null &&
+                                !searchResults.isEmpty() &&
+                                (OpenSubtitlesApiHelper.getLastQueryResult() == OpenSubtitlesApiHelper.RESULT_CODE_OK);
+                        if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPostExecute: mDoNotFinish={}", mDoNotFinish);
+                        if (searchResults != null) if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPostExecute: found {} subs", searchResults.size());
+                        else if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPostExecute: searchResults=null");
+                        mDialog.dismiss();
+                    }
+                });
+            });
         }
-        @Override
-        protected Void doInBackground(ArrayList<String>... params) {
-            String fileUrl =  params[0].get(0);
-            ArrayList<String> languages = params[1];
-            if (logIn()){
-                getSubtitle(fileUrl, languages);
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            // Close the progress dialog
-            if (mDialog != null) {
-                mDoNotFinish = mDoNotFinish &&
-                        searchResults != null &&
-                        !searchResults.isEmpty() &&
-                        (OpenSubtitlesApiHelper.getLastQueryResult() == OpenSubtitlesApiHelper.RESULT_CODE_OK);
-                if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPostExecute: mDoNotFinish={}", mDoNotFinish);
-                if (searchResults != null) if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPostExecute: found {} subs", searchResults.size());
-                else if (log.isDebugEnabled()) log.debug("OpenSubtitlesTask: onPostExecute: searchResults=null");
-                mDialog.dismiss();
-            }
+
+        void cancel() {
+            isCancelled = true;
+            executor.shutdown(); // mayInterruptIfRunning was false in original call
         }
 
         /**************************************************
@@ -277,14 +291,21 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 if (mUsername.isEmpty() || mPassword.isEmpty()) {
                     displayToast(getString(R.string.toast_subloader_credentials_empty));
                 }
-                OpenSubtitlesApiHelper.login(getApplicationContext().getString(R.string.opensubtitles_api_key), mUsername, mPassword);
+                boolean loginOk = OpenSubtitlesApiHelper.login(getApplicationContext().getString(R.string.opensubtitles_api_key), mUsername, mPassword);
+                if (!loginOk && !mUsername.isEmpty()) {
+                    OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_BAD_CREDENTIALS, -1, -1, "");
+                    displayToast(getString(R.string.toast_subloader_login_failed) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
+                    return false;
+                }
             } catch (IOException e) {
                 log.warn("logIn error message: result={} message:{}; localizedMessage:{}, cause: {}", OpenSubtitlesApiHelper.getLastQueryResult(), e.getMessage(), e.getLocalizedMessage(), e.getCause());
+                OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_NETWORK_ERROR, -1, -1, "");
                 displayToast(getString(R.string.toast_subloader_login_failed) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
                 closeDialog();
                 return false;
             } catch (Throwable e) { //for various service outages
                 log.error("logIn: caught exception result={}", OpenSubtitlesApiHelper.getLastQueryResult(),e);
+                OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_NETWORK_ERROR, -1, -1, "");
                 displayToast(getString(R.string.toast_subloader_service_unreachable) + " (ERR " + OpenSubtitlesApiHelper.getLastQueryResult() + ")");
                 closeDialog();
                 return false;
@@ -318,6 +339,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 searchResults = OpenSubtitlesApiHelper.searchSubtitle(fileInfo, languagesString);
             } catch (Throwable e) { //for various service outages
                 log.error("getSubtitles: caught Throwable ", e);
+                OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_NETWORK_ERROR, -1, -1, "");
                 displayToast(getString(R.string.toast_subloader_service_unreachable));
                 mDoNotFinish = false;
                 return;
@@ -332,13 +354,30 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             if (searchResults != null && searchResults.size() > 1) {
                 mHandler.post(() -> askSubChoice(fileUrl, searchResults,languages.size()>1, !searchResults.isEmpty()));
             } else {
+                if (searchResults == null) {
+                    int qr = OpenSubtitlesApiHelper.getLastQueryResult();
+                    final int osStatus;
+                    if (qr == OpenSubtitlesApiHelper.RESULT_CODE_BAD_CREDENTIALS
+                            || qr == OpenSubtitlesApiHelper.RESULT_CODE_TOKEN_EXPIRED) {
+                        osStatus = OpenSubtitlesApiHelper.OS_STATUS_BAD_CREDENTIALS;
+                    } else if (qr == OpenSubtitlesApiHelper.RESULT_CODE_QUOTA_EXCEEDED
+                            || qr == OpenSubtitlesApiHelper.RESULT_CODE_TOO_MANY_REQUESTS) {
+                        osStatus = OpenSubtitlesApiHelper.OS_STATUS_QUOTA_EXCEEDED;
+                    } else if (qr != OpenSubtitlesApiHelper.RESULT_CODE_OK) {
+                        osStatus = OpenSubtitlesApiHelper.OS_STATUS_NETWORK_ERROR;
+                    } else {
+                        osStatus = -1; // searchSubtitle returned null with OK — don't overwrite status
+                    }
+                    if (osStatus != -1)
+                        OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), osStatus, -1, -1, "");
+                }
                 log.warn("getSubtitles: no subs found on opensubtitles for {}", fileUrl);
                 displayToast(getString(R.string.dialog_subloader_fails) + " " + ((fileInfo != null) ? fileInfo.getFileName() : null));
                 mDoNotFinish = false;
                 return;
             }
             MediaUtils.removeLastSubs(SubtitlesDownloaderActivity2.this);
-            if (!isCancelled() && !searchResults.isEmpty()) setResult(AppCompatActivity.RESULT_OK);
+            if (!isCancelled && !searchResults.isEmpty()) setResult(AppCompatActivity.RESULT_OK);
         }
 
         private void getSub(String fileUrl, OpenSubtitlesSearchResult searchResult) {
@@ -347,6 +386,7 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                 subUrl = OpenSubtitlesApiHelper.getDownloadSubtitleLink(searchResult.getFileId());
                 if (OpenSubtitlesApiHelper.getLastQueryResult() == OpenSubtitlesApiHelper.RESULT_CODE_QUOTA_EXCEEDED) {
                     log.warn("getSub: quota exceeded, quota resets in {}", OpenSubtitlesApiHelper.getTimeRemaining());
+                    OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_QUOTA_EXCEEDED);
                     displayToast(getString(R.string.toast_subloader_quota_exceeded));
                     displayToast(getString(R.string.opensubtitles_quota_reset_time_remaining, OpenSubtitlesApiHelper.getTimeRemaining()));
                     mDoNotFinish = false;
@@ -360,14 +400,21 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
                     finish();
                     return;
                 }
+                OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_OK);
                 displayToast(getString(R.string.opensubtitles_quota_download_remaining, OpenSubtitlesApiHelper.getRemainingDownloads(), OpenSubtitlesApiHelper.getAllowedDownloads()));
             } catch (IOException e) {
                 log.error("getSub: caught IOException", e);
+                OpenSubtitlesApiHelper.persistStatus(getApplicationContext(), OpenSubtitlesApiHelper.OS_STATUS_NETWORK_ERROR, -1, -1, "");
                 mDoNotFinish = false;
                 finish();
                 return;
             }
-            downloadSubtitles(subUrl, fileUrl, getFriendlyFilename(fileUrl), searchResult.getLanguage());
+            // The friendly name is for the OpenSubtitles query only.  Saved subtitles
+            // must retain the video URL's basename so SubtitleManager can associate
+            // them with the currently playing video.
+            downloadSubtitles(subUrl, fileUrl,
+                    FileUtils.getFileNameWithoutExtension(Uri.parse(fileUrl)),
+                    searchResult.getLanguage());
             setResult(Activity.RESULT_OK);
             finish();
         }
@@ -665,12 +712,14 @@ public class SubtitlesDownloaderActivity2 extends AppCompatActivity {
             mHandler.post(() -> {
                 mDialog = NovaProgressDialog.show(SubtitlesDownloaderActivity2.this, "", getString(R.string.dialog_subloader_connecting), true, true, dialog -> {
                     dialog.cancel();
+                    if (mOpenSubtitlesTask != null) mOpenSubtitlesTask.cancel();
                     finish();
                 });
                 mDialog.setCanceledOnTouchOutside(false); // to not cancel when tapping the screen out of dialog zone
                 mDialog.setOnDismissListener(dialog -> {
                     if(!mDoNotFinish) {
                         dialog.cancel();
+                        if (mOpenSubtitlesTask != null) mOpenSubtitlesTask.cancel();
                         finish();
                     }
                     mDoNotFinish = false;

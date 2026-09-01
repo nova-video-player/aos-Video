@@ -14,15 +14,16 @@
 
 package com.archos.mediacenter.video.utils;
 
-import android.os.AsyncTask;
-
 import java.util.ArrayDeque;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Created by alexandre on 05/02/16.
  */
 public class SerialExecutor implements Executor {
+    private static final Executor THREAD_POOL = Executors.newCachedThreadPool();
+
     final ArrayDeque<Runnable> mTasks = new ArrayDeque<Runnable>();
     Runnable mActive;
 
@@ -47,7 +48,7 @@ public class SerialExecutor implements Executor {
     protected synchronized void scheduleNext() {
         if ((mActive = mTasks.poll()) != null) {
 
-            AsyncTask.THREAD_POOL_EXECUTOR.execute(mActive);
+            THREAD_POOL.execute(mActive);
         }
     }
 }

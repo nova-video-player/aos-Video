@@ -29,6 +29,7 @@ import android.widget.AdapterView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.core.view.MenuItemCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 
@@ -76,6 +77,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 		}
 	}
 
+	@SuppressWarnings("deprecation") // ActionBar navigation mode
 	@Override
 	public void onResume() {
 		((MainActivity)getActivity()).setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -90,10 +92,10 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 		.putString(getSortOrderParamKey(), mSortOrder)
 		.apply();
 
-        super.onDestroy();
-        if (mCursor != null && ! mCursor.isClosed()) {
-            mCursor.close();
-        }
+		super.onDestroy();
+		if (mCursor != null && ! mCursor.isClosed()) {
+			mCursor.close();
+		}
 		mCursor = null;
 	}
 
@@ -117,34 +119,36 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
         return ""; // no title because there is the NAVIGATION_MODE_LIST list at this place instead
     }
 
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
-            // Add the "view mode" item
-            MenuItem viewModeMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.view_mode);
-            viewModeMenuItem.setIcon(R.drawable.ic_menu_view_mode);
-			viewModeMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+	private static final int MENU_SORT_MODE = Browser.MENU_VIEW_MODE + 1;
 
-			// Add the "sort mode" item
-			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
-			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			mSortModeSubmenu.attachMenuItem(sortMenuItem);
-			mSortModeSubmenu.clear();
-			addSortOptionsSubmenus(mSortModeSubmenu);
-
-			// Init with the current value
-			int initId = sortorder2itemid(mSortOrder);
-			if (initId==-1) { // not found
-				mSortModeSubmenu.selectSubmenuItem(0);
-			}
-			else {
-				int position = mSortModeSubmenu.getPosition(initId);
-				if (position<0) { // not found
-				    position=0;
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		requireActivity().addMenuProvider(new MenuProvider() {
+			@Override
+			public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+				if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu != null) {
+					// View mode item is already added by Browser base class
+					MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, MENU_SORT_MODE, Menu.NONE, R.string.sort_mode);
+					sortMenuItem.setIcon(R.drawable.ic_menu_sort);
+					sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+					mSortModeSubmenu.attachMenuItem(sortMenuItem);
+					mSortModeSubmenu.clear();
+					addSortOptionsSubmenus(mSortModeSubmenu);
+					int initId = sortorder2itemid(mSortOrder);
+					if (initId == -1) {
+						mSortModeSubmenu.selectSubmenuItem(0);
+					} else {
+						int position = mSortModeSubmenu.getPosition(initId);
+						mSortModeSubmenu.selectSubmenuItem(position < 0 ? 0 : position);
+					}
 				}
-				mSortModeSubmenu.selectSubmenuItem(position);
 			}
-		}
+			@Override
+			public boolean onMenuItemSelected(MenuItem item) {
+				return false;
+			}
+		}, getViewLifecycleOwner());
 	}
 	
 	abstract public void addSortOptionsSubmenus(ActionBarSubmenu submenu);
@@ -236,6 +240,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
 		return itemId;
 	}
 
+	@SuppressWarnings("deprecation") // ActionBar navigation mode
 	@Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
 	    // Prepare the list of movies and the title, to be given to the opened fragment
@@ -243,7 +248,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
         args.putString(BrowserByVideoSelection.LIST_OF_IDS, ((GroupOfMovieAdapter)mBrowserAdapter).getListOfMoviesIds(position));
         if (DBG) Log.d(TAG, "onItemClick: Selection: "+((GroupOfMovieAdapter)mBrowserAdapter).getListOfMoviesIds(position));
         args.putString(CursorBrowserByVideo.SUBCATEGORY_NAME, ((GroupOfMovieAdapter)mBrowserAdapter).getName(position));
-		completeNewFragmentBundle(args, position);
+        completeNewFragmentBundle(args, position);
         //Load fragment
         BrowserCategory category = (BrowserCategory) getParentFragmentManager().findFragmentById(R.id.category);
         Fragment newfragment = new BrowserAllMovies();
@@ -251,7 +256,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
         category.startContent(newfragment);
         
         // Remove the navigation drop down from the actionbar when opening a child fragment
-		((MainActivity)getActivity()).setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        ((MainActivity)getActivity()).setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     }
 
 	protected void completeNewFragmentBundle(Bundle args, int pos) {
@@ -281,7 +286,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
     public static ThumbnailRequestVideo getMultiposterThumbnailRequest(Cursor c, int position, long id) {
 		if(c==null)
 			return null;
-        if (c.moveToPosition(position)) {
+		if (c.moveToPosition(position)) {
             String posterFileListString = c.getString(c.getColumnIndexOrThrow(COLUMN_LIST_OF_POSTER_FILES));
             if (posterFileListString==null) {
                 return null;

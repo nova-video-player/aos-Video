@@ -181,6 +181,18 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="audio_decoder_choice_entries">
+        <item>@string/audio_decoder_auto</item>
+        <item>@string/audio_decoder_prefer_ffmpeg</item>
+        <item>@string/audio_decoder_prefer_mediacodec</item>
+    </string-array>
+
+    <string-array name="audio_decoder_choice_entryvalues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string-array name="codepage_entries">
         <item>@string/codepage_default</item>
         <item>@string/codepage_1250</item> <!-- Eastern European (CP1250) -->
@@ -268,6 +280,18 @@
         <item>HDR HLG</item>
         <item>HDR10+</item>
         <item>Dolby Vision</item>
+    </string-array>
+
+    <string-array name="pref_dolby_vision_mode_entries">
+        <item>@string/ui_mode_auto</item>
+        <item>@string/preference_remove_dolby_vision</item>
+        <item>@string/preference_force_dolby_vision</item>
+    </string-array>
+
+    <string-array name="pref_dolby_vision_mode_values" translatable="false">
+        <item>auto</item>
+        <item>off</item>
+        <item>force</item>
     </string-array>
 
     <string-array name="theme_selection_entries" translatable="false">

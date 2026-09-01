@@ -14,14 +14,16 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser;
 
+import java.util.Locale;
+
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -39,6 +41,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by alexandre on 28/05/15.
@@ -47,7 +51,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     private static final Logger log = LoggerFactory.getLogger(SmbRootFragment.class);
     private SambaDiscovery mSambaDiscovery;
 
-    private AsyncTask<Void, Void, Void> mCheckShortcutAvailabilityTask;
+    private CheckShortcutAvailabilityTask mCheckShortcutAvailabilityTask;
 
     public SmbRootFragment(){
         super();
@@ -67,7 +71,7 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
             cursor.moveToFirst();
             do {
                 String path = cursor.getString(uriIndex);
-                if (((WorkgroupShortcutAndServerAdapter) mAdapter).getShares().contains(Uri.parse(path).getHost().toLowerCase())) {
+                if (((WorkgroupShortcutAndServerAdapter) mAdapter).getShares().contains(Uri.parse(path).getHost().toLowerCase(Locale.ROOT))) {
                     NetworkScanner.scanVideos(getActivity(), path);
                 }
             } while (cursor.moveToNext());
@@ -76,32 +80,31 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        super.onCreateOptionsMenu(menu, inflater);
+    protected void onContributeMenu(Menu menu) {
         menu.add(0, R.string.refresh_servers_list, Menu.NONE, R.string.refresh_servers_list).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
     }
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    protected boolean onHandleMenuItem(MenuItem item) {
         if (item.getItemId() == R.string.refresh_servers_list) {
-            // restart the discovery (if there is connectivity and not already discovering)
-            if (NetworkState.isNetworkConnected(getActivity())&&!mSambaDiscovery.isRunning()) {
+            if (NetworkState.isNetworkConnected(getActivity()) && !mSambaDiscovery.isRunning()) {
                 mSambaDiscovery.start();
                 checkShortcutAvailability();
             }
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     @Override
-    public void onViewCreated (View v, Bundle saved){
-        if (saved!=null) {
+    public void onViewCreated(View v, Bundle saved) {
+        super.onViewCreated(v, saved);
+        if (saved != null) {
             // Restart the discovery if it was running when saving the instance
             if (saved.getBoolean("isRunning")) {
                 mSambaDiscovery.start();
             }
-        }
-        else {
+        } else {
             // First initialization, start the discovery (if there is connectivity)
             if (NetworkState.isNetworkConnected(getActivity())) {
                 mSambaDiscovery.start();
@@ -126,7 +129,6 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         mSambaDiscovery.addListener(this);
     }
 
@@ -135,9 +137,9 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
         super.onDestroy();
         if (log.isDebugEnabled()) log.debug("onDestroy");
         mSambaDiscovery.removeListener(this);
-        if(mCheckShortcutAvailabilityTask!=null) {
+        if (mCheckShortcutAvailabilityTask != null) {
             if (log.isDebugEnabled()) log.debug("onDestroy: cancel mCheckShortcutAvailabilityTask");
-            mCheckShortcutAvailabilityTask.cancel(true);
+            mCheckShortcutAvailabilityTask.cancel();
         }
     }
     @Override
@@ -186,42 +188,62 @@ public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaD
         ((WorkgroupShortcutAndServerAdapter)mAdapter).setIsLoadingWorkgroups(false);
     }
 
-    private void checkShortcutAvailability(){
-        if(mCheckShortcutAvailabilityTask!=null) {
+    private void checkShortcutAvailability() {
+        if (mCheckShortcutAvailabilityTask != null) {
             if (log.isDebugEnabled()) log.debug("checkShortcutAvailability: cancel non null mCheckShortcutAvailabilityTask before launching one");
-            mCheckShortcutAvailabilityTask.cancel(true);
+            mCheckShortcutAvailabilityTask.cancel();
         }
-        mCheckShortcutAvailabilityTask = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... arg0) {
-                List<ShortcutDbAdapter.Shortcut> shortcuts = mAdapter.getShortcuts();
-                List<String> shares = mAdapter.getAvailableShares();
-                List<String> forcedShortcuts = mAdapter.getForcedEnabledShortcuts();
-                if(shortcuts == null) return null;
-                // FIXME: manage display/remove of shortcuts not only adding
-                // below code does not do anything in terms of forcing display shortcut since it is anyway displayed and creates an issue with jcifs-ng #377
-                // it is anyway displayed and creates an issue with jcifs-ng #377 : disable it for now
-                // re-enable since otherwise stunnel smb://127.0.0.1:xxxx links are marked non available
-                for (ShortcutDbAdapter.Shortcut shortcut : shortcuts) {
-                    Uri uri = Uri.parse(shortcut.getUri());
-                    if (log.isDebugEnabled()) log.debug("checkShortcutAvailability.doInBackground: checking {}", shortcut.getUri());
-                    if ((shares == null || !shares.contains(uri.getHost().toLowerCase())) // share not listed yet...
-                            &&!forcedShortcuts.contains(shortcut.getUri()) // it is not a forced shortcut
-                            && FileEditorFactory.getFileEditorForUrl(uri, getActivity()).exists()) { // shortcut exists
-                        if (log.isDebugEnabled()) log.debug("checkShortcutAvailability.doInBackground: shortcut {} is available, display it!", shortcut.getUri());
-                        mAdapter.forceShortcutDisplay(shortcut.getUri());
-                    } else {
-                        if (log.isDebugEnabled()) log.debug("checkShortcutAvailability.doInBackground: it is there, no need to check {}", shortcut.getUri());
+        mCheckShortcutAvailabilityTask = new CheckShortcutAvailabilityTask();
+        mCheckShortcutAvailabilityTask.execute();
+    }
+
+    private class CheckShortcutAvailabilityTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
+
+        void execute() {
+            executor.execute(() -> {
+                try {
+                    if (isCancelled) return;
+                    List<ShortcutDbAdapter.Shortcut> shortcuts = mAdapter.getShortcuts();
+                    List<String> shares = mAdapter.getAvailableShares();
+                    List<String> forcedShortcuts = mAdapter.getForcedEnabledShortcuts();
+                    if (shortcuts != null) {
+                        // FIXME: manage display/remove of shortcuts not only adding
+                        // below code does not do anything in terms of forcing display shortcut since it is anyway displayed and creates an issue with jcifs-ng #377
+                        // it is anyway displayed and creates an issue with jcifs-ng #377 : disable it for now
+                        // re-enable since otherwise stunnel smb://127.0.0.1:xxxx links are marked non available
+                        for (ShortcutDbAdapter.Shortcut shortcut : shortcuts) {
+                            if (isCancelled) return;
+                            Uri uri = Uri.parse(shortcut.getUri());
+                            if (log.isDebugEnabled()) log.debug("checkShortcutAvailability.doInBackground: checking {}", shortcut.getUri());
+                            if ((shares == null || !shares.contains(uri.getHost().toLowerCase(Locale.ROOT)))
+                                    && !forcedShortcuts.contains(shortcut.getUri())
+                                    && FileEditorFactory.getFileEditorForUrl(uri, getActivity()).exists()) {
+                                if (log.isDebugEnabled()) log.debug("checkShortcutAvailability.doInBackground: shortcut {} is available, display it!", shortcut.getUri());
+                                mAdapter.forceShortcutDisplay(shortcut.getUri());
+                            } else {
+                                if (log.isDebugEnabled()) log.debug("checkShortcutAvailability.doInBackground: it is there, no need to check {}", shortcut.getUri());
+                            }
+                        }
                     }
+                    if (log.isDebugEnabled()) log.debug("checkShortcutAvailability.doInBackground: check finished");
+                    handler.post(() -> {
+                        if (!isCancelled) mAdapter.notifyDataSetChanged();
+                    });
+                } catch (Exception e) {
+                    log.error("Error in CheckShortcutAvailabilityTask", e);
+                } finally {
+                    executor.shutdown();
                 }
-                if (log.isDebugEnabled()) log.debug("checkShortcutAvailability.doInBackground: check finished");
-                return null;
-            }
-            @Override
-            protected void onPostExecute(Void result) {
-                mAdapter.notifyDataSetChanged();
-            }
-        }.execute();
+            });
+        }
+
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
+        }
     }
 
     @Override

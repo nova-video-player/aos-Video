@@ -22,8 +22,7 @@ import android.net.Uri;
 import androidx.leanback.widget.RowHeaderPresenter;
 import androidx.leanback.widget.RowPresenter;
 
-import android.os.Build;
-import android.text.Html;
+import androidx.core.text.HtmlCompat;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -212,53 +211,36 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
         }
     }
 
-    private String getFormattedSubList(Context c, int number, int offset, List<VideoMetadata.SubtitleTrack> list) {
+    private CharSequence getFormattedSubList(Context c, int number, int offset, List<VideoMetadata.SubtitleTrack> list) {
         final String SEP = "  ";
         StringBuilder sb = new StringBuilder();
         for (int i=0 ; i<number ; i++) {
             if (i > 0) {
-                sb.append("\n");
+                sb.append("<br>");
             }
             int index = i + offset;
-            String format = VideoUtils.getSubtitleFormatLabel(c, list.get(index).format);
+            VideoMetadata.SubtitleTrack track = list.get(index);
+            String format = VideoUtils.getSubtitleFormatLabel(c, track.format);
             sb.append(Integer.toString(index + 1)).append(".").append(SEP)
-              .append(generateTrackName(c, list.get(index).name, list.get(index).language, format, false)).append(SEP);
+              .append(generateTrackName(c, track.name, track.language, format, track.disposition, false)).append(SEP);
         }
-        return StringUtils.removeHtmlTags(sb.toString());
-        /*
-        SpannableString spannableString;
-        String formattedText = sb.toString().replace("\n", "<br>");
-        if (Build.VERSION.SDK_INT >= 24) {
-            spannableString = new SpannableString(Html.fromHtml(formattedText, Html.FROM_HTML_MODE_LEGACY));
-        } else {
-            spannableString = new SpannableString(Html.fromHtml(formattedText));
-        }
-        return spannableString;
-         */
+
+        return HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY);
     }
 
-    private String getFormattedExternalSubList(int number, int offset, List<SubtitleManager.SubtitleFile> list) {
+    private CharSequence getFormattedExternalSubList(int number, int offset, List<SubtitleManager.SubtitleFile> list) {
         final String SEP = "  ";
         StringBuilder sb = new StringBuilder();
         for (int i=0 ; i<number ; i++) {
             if (i > 0) {
-                sb.append("\n");
+                sb.append("<br>");
             }
             int index = i + offset;
             sb.append(Integer.toString(index + 1)).append(".").append(SEP)
               .append(capitalizeFirstLetter(list.get(index).mName)).append(SEP);
         }
-        SpannableString spannableString;
-        return StringUtils.removeHtmlTags(sb.toString());
-        /*
-        String formattedText = sb.toString().replace("\n", "<br>");
-        if (Build.VERSION.SDK_INT >= 24) {
-            spannableString = new SpannableString(Html.fromHtml(formattedText, Html.FROM_HTML_MODE_LEGACY));
-        } else {
-            spannableString = new SpannableString(Html.fromHtml(formattedText));
-        }
-        return spannableString;
-         */
+
+        return HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY);
     }
 
 }

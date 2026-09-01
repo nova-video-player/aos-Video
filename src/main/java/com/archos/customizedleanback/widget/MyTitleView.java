@@ -20,12 +20,16 @@ import android.graphics.drawable.Drawable;
 
 import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.SearchOrbView;
+import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.core.widget.TextViewCompat;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.widget.HintView;
@@ -39,6 +43,7 @@ public class MyTitleView extends RelativeLayout {
 
     private ImageView mBadgeView;
     private TextView mTextView;
+    private float mOriginalTextSizePx = 0f;
     private SearchOrbView mSearchOrbView;
     private SearchOrbView mSearchOrbView2; // ARCHOS added
     private SearchOrbView mSearchOrbView3; // ARCHOS added
@@ -72,6 +77,16 @@ public class MyTitleView extends RelativeLayout {
 
         mBadgeView = (ImageView) rootView.findViewById(R.id.title_badge);
         mTextView = (TextView) rootView.findViewById(R.id.title_text);
+        if (mTextView != null) {
+            mTextView.setEllipsize(null);
+            mOriginalTextSizePx = mTextView.getTextSize();
+            mTextView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+                @Override
+                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                    adjustTitleTextSize();
+                }
+            });
+        }
         mSearchOrbView = (SearchOrbView) rootView.findViewById(R.id.title_orb);
         mSearchOrbView2 = (SearchOrbView) rootView.findViewById(R.id.title_orb2); // ARCHOS added
         mSearchOrbView3 = (SearchOrbView) rootView.findViewById(R.id.title_orb3); // ARCHOS added
@@ -95,6 +110,32 @@ public class MyTitleView extends RelativeLayout {
 
         setClipToPadding(false);
         setClipChildren(false);
+    }
+
+    public void adjustTitleTextSize() {
+        if (mTextView == null) return;
+        CharSequence cs = mTextView.getText();
+        if (cs == null || cs.length() == 0) return;
+        String text = cs.toString();
+
+        int availableWidth = mTextView.getWidth() - mTextView.getPaddingLeft() - mTextView.getPaddingRight();
+        if (availableWidth <= 0) return;
+
+        float maxTextSizePx = mOriginalTextSizePx > 0 ? mOriginalTextSizePx : mTextView.getTextSize();
+        float minTextSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 8, getResources().getDisplayMetrics());
+
+        TextPaint paint = new TextPaint(mTextView.getPaint());
+        float targetSizePx = maxTextSizePx;
+        paint.setTextSize(targetSizePx);
+
+        while (targetSizePx > minTextSizePx && paint.measureText(text) > availableWidth) {
+            targetSizePx -= 1.0f;
+            paint.setTextSize(targetSizePx);
+        }
+
+        if (Math.abs(mTextView.getTextSize() - targetSizePx) > 0.5f) {
+            mTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, targetSizePx);
+        }
     }
 
     @Override
@@ -134,6 +175,13 @@ public class MyTitleView extends RelativeLayout {
      */
     public void setTitle(String titleText) {
         mTextView.setText(titleText);
+        adjustTitleTextSize();
+        mTextView.post(new Runnable() {
+            @Override
+            public void run() {
+                adjustTitleTextSize();
+            }
+        });
     }
 
     /**

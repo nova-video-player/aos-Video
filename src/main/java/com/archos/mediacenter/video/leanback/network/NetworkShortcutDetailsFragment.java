@@ -19,9 +19,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.DetailsSupportFragment;
@@ -67,6 +71,17 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
 
     protected Shortcut mShortcut;
 
+    private final ActivityResultLauncher<Intent> browsingLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                // If the shortcut has been modified (removed) from the NetworkListingActivity launched by ACTION_OPEN,
+                // we must forward the info to the root fragment
+                if (result.getResultCode() == NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED) {
+                    getActivity().setResult(NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED);
+                }
+                getActivity().finish();
+            });
+
     public boolean isHimselfIndexedFolder = false;
     public boolean isCurrentDirectoryShortcut = false;
     public boolean isCurrentDirectoryIndexed = false;
@@ -87,6 +102,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
     private int oldSelectedSubPosition = 0;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
+    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,13 +113,15 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
         int backgroundColor = ThemeManager.getInstance(getActivity()).getLeanbackBackgroundColor();
         bgMngr.setColor(backgroundColor);
 
-        mShortcut = (Shortcut)getActivity().getIntent().getSerializableExtra(EXTRA_SHORTCUT);
+        mShortcut = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? getActivity().getIntent().getSerializableExtra(EXTRA_SHORTCUT, Shortcut.class)
+                : (Shortcut) getActivity().getIntent().getSerializableExtra(EXTRA_SHORTCUT);
 
         DetailsOverviewRow detailRow = new DetailsOverviewRow(mShortcut);
         detailRow.setImageScaleUpAllowed(false);
         checkIfIsShortcut(mShortcut.getUri());
         addActions(detailRow);
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.getMainLooper());
         mDetailsRowPresenter = new ArchosDetailsOverviewRowPresenter(new ShortcutDetailsPresenter());
         //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
 
@@ -256,16 +274,6 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
         mOverlay.pause();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // If the shortcut has been modified (removed) from the NetworkListingActivity launched by ACTION_OPEN,
-        // we must forward the info to the root fragment
-        if (requestCode==NetworkRootFragment.REQUEST_CODE_BROWSING && resultCode==NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED) {
-            getActivity().setResult(NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED);
-        }
-        getActivity().finish();
-    }
-
     protected void slightlyDelayedFinish() {
         getView().postDelayed(new Runnable() {
             @Override
@@ -282,7 +290,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
             Intent intent = new Intent(getActivity(), ListingActivity.getActivityForUri(mShortcut.getUri()));
             intent.putExtra(ListingActivity.EXTRA_ROOT_URI, mShortcut.getUri());
             intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, mShortcut.getName());
-            startActivityForResult(intent, NetworkRootFragment.REQUEST_CODE_BROWSING);
+            browsingLauncher.launch(intent);
         }
         else if (action.getId() == ACTION_REINDEX) {
             //If we are scraping, we need to stop that.
@@ -339,7 +347,7 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
                 if (isHimselfIndexedFolder) Toast.makeText(getActivity(), getString(R.string.indexed_folder_removed, mShortcut.getName()), Toast.LENGTH_SHORT).show();
                 // Send a delete request to MediaScanner
                 if (isHimselfIndexedFolder) // only if indexed
-                    NetworkScanner.removeVideos(getActivity(), mShortcut.getUri());
+                    NetworkScanner.removeIndexedVideos(getActivity(), mShortcut.getUri());
                 // set caller result
                 getActivity().setResult(NetworkRootFragment.RESULT_CODE_SHORTCUTS_MODIFIED);
             }

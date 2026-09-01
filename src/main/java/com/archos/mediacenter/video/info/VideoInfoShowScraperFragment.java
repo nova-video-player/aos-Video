@@ -24,9 +24,10 @@ import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 import androidx.fragment.app.Fragment;
@@ -71,6 +72,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class VideoInfoShowScraperFragment extends Fragment implements
         OnItemClickListener, OnClickListener, OnEditorActionListener,
@@ -120,10 +123,8 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         if (log.isDebugEnabled()) log.debug("onCreate savedInstanceState={}", savedInstanceState);
         super.onCreate(savedInstanceState);
 
-        // we'd like to keep this instance when rotating
-        setRetainInstance(false);
         mSearchInfo = SearchPreprocessor.instance().parseFileBased(Uri.parse("/foo.avi"), Uri.parse("/foo.avi"));
-        mHandler = new Handler(this);
+        mHandler = new Handler(Looper.getMainLooper(), this);
 
         mDisplayState = DisplayState.SEARCH_INITIAL;
     }
@@ -135,6 +136,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         return mView;
     }
 
+    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         if (log.isDebugEnabled()) log.debug("onViewCreated");
@@ -159,7 +161,9 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         // limit the way the window is adjusted when softkeyboard is opened
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        setInfoItem((Base)getActivity().getIntent().getSerializableExtra(VideoInfoScraperActivity.EXTRA_SHOW));
+        setInfoItem(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? getActivity().getIntent().getSerializableExtra(VideoInfoScraperActivity.EXTRA_SHOW, Base.class)
+                : (Base) getActivity().getIntent().getSerializableExtra(VideoInfoScraperActivity.EXTRA_SHOW));
 
         // restore display state
         setDisplayState(mDisplayState);
@@ -280,19 +284,16 @@ public class VideoInfoShowScraperFragment extends Fragment implements
     public void onClick(View v) {
         if (log.isDebugEnabled()) log.debug("onClick");
 
-        switch (v.getId()) {
-            case R.id.cancel:
-                hideSoftKbd();
-                cancelCurrentTask();
-                getActivity().finish();
-                break;
-            case R.id.search:
-                hideSoftKbd();
-                startSearch();
-                break;
-            default:
-                log.error("Click on {} not supported.", v);
-                break;
+        int viewId = v.getId();
+        if (viewId == R.id.cancel) {
+            hideSoftKbd();
+            cancelCurrentTask();
+            getActivity().finish();
+        } else if (viewId == R.id.search) {
+            hideSoftKbd();
+            startSearch();
+        } else {
+            log.error("Click on {} not supported.", v);
         }
     }
 
@@ -391,8 +392,8 @@ public class VideoInfoShowScraperFragment extends Fragment implements
     private void cancelCurrentTask() {
         if (log.isDebugEnabled()) log.debug("cancelCurrentTask");
         if (mCurrentSearchTask != null) {
-            // cancel before resume so it exists after waiting
-            mCurrentSearchTask.cancel(false);
+            // cancel before resume so it exits after waiting
+            mCurrentSearchTask.cancel();
             mCurrentSearchTask.resume();
             mCurrentSearchTask = null;
         }
@@ -405,7 +406,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         cancelCurrentTask();
         // start searching
         mCurrentSearchTask = new SearchTask();
-        mCurrentSearchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mSearchEdTxt.getText().toString());
+        mCurrentSearchTask.execute(mSearchEdTxt.getText().toString());
         setDisplayState(DisplayState.SEARCH_SEARCHING);
     }
 
@@ -467,9 +468,13 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         }
     }
 
-    private class SearchTask extends AsyncTask<String, ProgressItem, Void> {
+    private class SearchTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
+
         private volatile boolean mPause;
-        private Object mWaitObject = new Object();
+        private final Object mWaitObject = new Object();
 
         private volatile boolean mSaveRequested;
         private volatile int mSaveRequestId;
@@ -517,98 +522,100 @@ public class VideoInfoShowScraperFragment extends Fragment implements
             }
         }
 
-        @Override
-        protected Void doInBackground(String... params) {
-            if (params != null && params.length > 0 && mScraper != null) {
-                    checkPause();
-                    if (isCancelled())
-                        return null;
-                    // search for param + " S1E1" so we get show results only, filename is ignored but has to be != null
-                    mSearchInfo.setUserInput(params[0] + " S1E1");
-                    List<SearchResult> matches = mScraper.getAllMatches(mSearchInfo).results;
-                    publishProgressSafe(new ProgressItem(matches));
-                    int count = matches != null ? matches.size() : 0;
-                    int current = 0;
-                    while (!isCancelled() && current < count) {
-                        Bundle b = new Bundle();
-                        // no need to get all episodes?
-                        b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
-                        //b.putInt(Scraper.ITEM_REQUEST_SEASON, 1);
-                        //b.putInt(Scraper.ITEM_REQUEST_EPISODE, 1);
+        void execute(String query) {
+            executor.execute(() -> {
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    if (query != null && mScraper != null) {
                         checkPause();
-                        if (isCancelled())
-                             return null;
-                        BaseTags tag = null;
-                        HashMap<String, EpisodeTags> epMap = null;
-                        if (mSaveRequested) {
-                            current = mSaveRequestId;
-                            if (log.isDebugEnabled()) log.debug("fetching / saving item: {}", current);
+                        if (isCancelled) return;
+                        // search for query + " S1E1" so we get show results only
+                        mSearchInfo.setUserInput(query + " S1E1");
+                        List<SearchResult> matches = mScraper.getAllMatches(mSearchInfo).results;
+                        publishProgressSafe(new ProgressItem(matches));
+                        int count = matches != null ? matches.size() : 0;
+                        int current = 0;
+                        while (!isCancelled && current < count) {
+                            Bundle b = new Bundle();
+                            b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
+                            b.putBoolean(Scraper.ITEM_REQUEST_REFRESH_SHOW_METADATA, true);
+                            checkPause();
+                            if (isCancelled) return;
+                            BaseTags tag = null;
+                            HashMap<String, EpisodeTags> epMap = null;
+                            if (mSaveRequested) {
+                                current = mSaveRequestId;
+                                if (log.isDebugEnabled()) log.debug("fetching / saving item: {}", current);
+                                ScrapeDetailResult detail = Scraper.getDetails(matches.get(current), b);
+                                if (detail.isOkay()) {
+                                    tag = detail.tag;
+                                    Bundle episodeList = detail.extras;
+                                    epMap = toMap(episodeList);
+                                    SaveItem saveItem = new SaveItem();
+                                    saveItem.source = epMap;
+                                    saveItem.target = mSaveTarget;
+                                    saveItem.sendOnSuccess = mSaveMessage;
+                                    EpSaveTask.createAndRun(mSaveContext, saveItem);
+                                    mSaveContext = null;
+                                    mSaveTarget = null;
+                                    mSaveMessage = null;
+                                }
+                                break; // fall through to onSearchFinished
+                            }
+                            if (log.isDebugEnabled()) log.debug("mScraperService.getDetailsSpecial - {}", current);
                             ScrapeDetailResult detail = Scraper.getDetails(matches.get(current), b);
                             if (detail.isOkay()) {
                                 tag = detail.tag;
                                 Bundle episodeList = detail.extras;
                                 epMap = toMap(episodeList);
-                                SaveItem saveItem = new SaveItem();
-                                saveItem.source = epMap;
-                                saveItem.target = mSaveTarget;
-                                saveItem.sendOnSuccess = mSaveMessage;
-                                EpSaveTask.createAndRun(mSaveContext, saveItem);
-                                mSaveContext = null;
-                                mSaveTarget = null;
-                                mSaveMessage = null;
                             }
-                            return null;
+                            publishProgressSafe(new ProgressItem(tag, epMap, current));
+                            current++;
                         }
-                        if (log.isDebugEnabled()) log.debug("mScraperService.getDetailsSpecial - {}", current);
-                        ScrapeDetailResult detail = Scraper.getDetails(matches.get(current), b);
-
-                        if (detail.isOkay()) {
-                            tag = detail.tag;
-                            Bundle episodeList = detail.extras;
-                            epMap = toMap(episodeList);
-                        }
-                        publishProgressSafe(new ProgressItem(tag, epMap, current));
-                        current++;
                     }
-            }
-            return null;
+                } catch (Exception e) {
+                    log.error("SearchTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    onSearchFinished();
+                });
+            });
         }
 
-        private void publishProgressSafe(ProgressItem... items) {
+        private void publishProgressSafe(ProgressItem item) {
             synchronized (mWaitObject) {
                 checkPause();
-                if (isCancelled())
-                    return;
-                publishProgress(items);
+                if (isCancelled) return;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    if (log.isDebugEnabled()) log.debug("publishProgressSafe got item");
+                    onUpdateProgress(item);
+                });
             }
         }
 
+        @SuppressWarnings("deprecation") // getParcelable: API 33+ branch uses typed form; else branch suppressed
         private HashMap<String, EpisodeTags> toMap(Bundle b) {
             int size = b != null ? b.size() : 0;
             HashMap<String, EpisodeTags> result = new HashMap<String, EpisodeTags>(size);
             if (b != null) {
                 b.setClassLoader(BaseTags.class.getClassLoader());
                 for (String key : b.keySet()) {
-                    result.put(key, b.<EpisodeTags>getParcelable(key));
+                    result.put(key, Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                            ? b.getParcelable(key, EpisodeTags.class)
+                            : b.<EpisodeTags>getParcelable(key));
                 }
             }
             return result;
         }
 
-        @Override
-        protected void onProgressUpdate(ProgressItem... values) {
-            if (isCancelled())
-                return;
-
-            if (values != null && values.length > 0) {
-                if (log.isDebugEnabled()) log.debug("onProgressUpdate got {} items", values.length);
-                onUpdateProgress(values[0]);
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            onSearchFinished();
+        void cancel() {
+            isCancelled = true;
+            executor.shutdown(); // mayInterruptIfRunning=false: let thread exit via isCancelled check
         }
     }
 
@@ -618,32 +625,38 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         Message sendOnSuccess;
     }
 
-    private static class EpSaveTask extends AsyncTask<SaveItem, Void, Void> {
+    private static class EpSaveTask {
         private final Context mContext;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
         public static void createAndRun(Context context, SaveItem item) {
-            // might be better on a single thread instead of a pool but the default one is bad too
-            new EpSaveTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
+            new EpSaveTask(context).execute(item);
         }
 
         public EpSaveTask(Context context) {
             mContext = context;
         }
 
-        @Override
-        protected Void doInBackground(SaveItem... params) {
-            if (params != null && params.length > 0) {
-                // step 1: find all episodes in database that belong to this show
-                List<EpisodeTags> episodeList = getEpisodeList(params[0].target);
-                // step 2: save new show / episode info for those
-                long showID = handleSave(params[0], episodeList);
-                Message m = params[0].sendOnSuccess;
-                m.arg1 = (int) showID;
-                if (log.isDebugEnabled()) log.debug("EpSaveTask.doInBackground: save finished, sending message");
-                if (m != null)
-                    m.sendToTarget();
-            }
-            return null;
+        void execute(SaveItem item) {
+            executor.execute(() -> {
+                try {
+                    if (item != null) {
+                        // step 1: find all episodes in database that belong to this show
+                        List<EpisodeTags> episodeList = getEpisodeList(item.target);
+                        // step 2: save new show / episode info for those
+                        long showID = handleSave(item, episodeList);
+                        Message m = item.sendOnSuccess;
+                        m.arg1 = (int) showID;
+                        if (log.isDebugEnabled()) log.debug("EpSaveTask: save finished, sending message");
+                        if (m != null)
+                            m.sendToTarget();
+                    }
+                } catch (Exception e) {
+                    log.error("EpSaveTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+            });
         }
 
         private List<EpisodeTags> getEpisodeList(ShowTags sTag) {
@@ -715,6 +728,10 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                             }
                         }
                     }
+                }
+                if (exportContext != null) {
+                    // drain the queued NFO exports for this batch before returning
+                    NfoWriter.awaitPendingExports();
                 }
                 if (log.isDebugEnabled()) log.debug("preparations took:{}", t.step());
                 if (opList.size() > 0) {

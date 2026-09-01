@@ -17,8 +17,10 @@ package com.archos.mediacenter.video.info;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,6 +45,8 @@ import com.archos.mediascraper.ScraperImage;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class VideoInfoPosterChooserFragment extends Fragment implements
         AdapterView.OnItemClickListener,
@@ -69,6 +73,7 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
 
     // onAttach
 
+    @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (DBG_LC) Log.d(TAG, "onCreate");
@@ -76,9 +81,13 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
 
         // in case we get recreated restore the tag, may be null anyways.
         if (savedInstanceState != null)
-            mTag = savedInstanceState.getParcelable(TAG);
-        if(mTag==null)
-            setVideo((Base)getActivity().getIntent().getSerializableExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO));
+            mTag = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? savedInstanceState.getParcelable(TAG, BaseTags.class)
+                    : (BaseTags) savedInstanceState.getParcelable(TAG);
+        if (mTag == null)
+            setVideo(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? getActivity().getIntent().getSerializableExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO, Base.class)
+                    : (Base) getActivity().getIntent().getSerializableExtra(VideoInfoPosterBackdropActivity.EXTRA_VIDEO));
         // we'd like to keep this instance when rotating
        // setRetainInstance(VideoInfoActivity2.KEEP_FRAGMENT_INSTANCE);
 
@@ -106,12 +115,7 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
         mGrid = (GridView) view.findViewById(R.id.list);
         mGrid.setAdapter(mAdapter);
         mGrid.setOnItemClickListener(this);
-    }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        if (DBG_LC) Log.d(TAG, "onActivityCreated");
-        super.onActivityCreated(savedInstanceState);
         startLoadingIfReady();
     }
 
@@ -209,44 +213,49 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
 
     private void startLoadingIfReady() {
         if (mTag != null && getActivity() != null && mAdapter != null) {
-            new PosterListLoader(getActivity(), mAdapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,mTag);
+            new PosterListLoader(getActivity(), mAdapter).execute(mTag);
         }
     }
 
     // ---------------------- INTERNALLY USED CLASSES ----------------------- //
 
     /** Loads a List<ScraperImage> from the database and sets it to a PosterAdapter */
-    private static class PosterListLoader extends AsyncTask<BaseTags, Void, List<ScraperImage>> {
+    private static class PosterListLoader {
         private final Context mContext;
         private final PosterAdapter mTargetAdapter;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
 
         public PosterListLoader(Context context, PosterAdapter target) {
             mContext = context;
             mTargetAdapter = target;
         }
 
-        @Override
-        protected List<ScraperImage> doInBackground(BaseTags... params) {
-            Log.d(TAG, "get posters");
-            if (params != null && params.length > 0) {
-                return params[0].getAllPostersInDb(mContext);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<ScraperImage> result) {
-            if (mTargetAdapter != null)
-                mTargetAdapter.setList(result);
+        void execute(BaseTags tag) {
+            executor.execute(() -> {
+                try {
+                    Log.d(TAG, "get posters");
+                    List<ScraperImage> result = (tag != null) ? tag.getAllPostersInDb(mContext) : null;
+                    handler.post(() -> {
+                        if (mTargetAdapter != null)
+                            mTargetAdapter.setList(result);
+                    });
+                } finally {
+                    executor.shutdown();
+                }
+            });
         }
     }
 
     /** Saves a Poster as default poster for a video and stops the hosting fragment */
-    private static class PosterSaver extends AsyncTask<ScraperImage, Void, Boolean> {
+    private static class PosterSaver {
         private final Context mContext;
         private final VideoInfoPosterChooserFragment mHost;
         private final int mSeason;
         private final long mOnlineID;
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+
         public PosterSaver(Context context, VideoInfoPosterChooserFragment host, int season, long onlineID) {
             mContext = context;
             mHost = host;
@@ -254,19 +263,22 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
             mSeason = season;
         }
 
-        @Override
-        protected Boolean doInBackground(ScraperImage... params) {
-            params[0].setOnlineId(mOnlineID);
-            if (params != null && params.length > 0) {
-                return Boolean.valueOf(params[0].setAsDefault(mContext, mSeason));
-            }
-            return Boolean.FALSE;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (mHost != null)
-                mHost.stop();
+        void execute(ScraperImage image) {
+            executor.execute(() -> {
+                try {
+                    boolean result = false;
+                    if (image != null) {
+                        image.setOnlineId(mOnlineID);
+                        result = image.setAsDefault(mContext, mSeason);
+                    }
+                    final boolean finalResult = result;
+                    handler.post(() -> {
+                        if (mHost != null) mHost.stop();
+                    });
+                } finally {
+                    executor.shutdown();
+                }
+            });
         }
     }
 
@@ -362,7 +374,7 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
                     String file = image.getLargeFile();
                     if (file != null) {
                         image.download(mContext);
-                        taskItem.result.bitmap = BitmapFactory.decodeFile(file);
+                        taskItem.result.bitmap = com.archos.mediacenter.utils.BitmapUtils.decodeSampledBitmapFromFile(file, 300, 450);
                     }
                     taskItem.result.status = taskItem.result.bitmap != null ?
                             Status.LOAD_OK : Status.LOAD_ERROR;

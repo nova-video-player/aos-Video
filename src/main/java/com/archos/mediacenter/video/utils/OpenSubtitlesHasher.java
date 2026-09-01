@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -76,7 +77,7 @@ public class OpenSubtitlesHasher {
             bb.flip();
             tail = computeHashForChunk(bb);
 
-            return String.format("%016x", size + head + tail);
+            return String.format(Locale.ROOT, "%016x", size + head + tail);
         } catch (FileNotFoundException e1) {
             Log.e(TAG, "computeHash: caught FileNotFoundException", e1);
             return null;
@@ -114,7 +115,7 @@ public class OpenSubtitlesHasher {
         long head = computeHashForChunk(ByteBuffer.wrap(chunkBytes, 0, chunkSizeForFile));
         long tail = computeHashForChunk(ByteBuffer.wrap(chunkBytes, chunkBytes.length - chunkSizeForFile, chunkSizeForFile));
         stream.close();
-        return String.format("%016x", length + head + tail);
+        return String.format(Locale.ROOT, "%016x", length + head + tail);
     }
 
     public static String computeHash(HttpURLConnection urlConnection, long length) throws IOException {
@@ -141,7 +142,7 @@ public class OpenSubtitlesHasher {
         in.readFully(chunkBytes, chunkSizeForFile, chunkBytes.length - chunkSizeForFile);
         long head = computeHashForChunk(ByteBuffer.wrap(chunkBytes, 0, chunkSizeForFile));
         long tail = computeHashForChunk(ByteBuffer.wrap(chunkBytes, chunkBytes.length - chunkSizeForFile, chunkSizeForFile));
-        return String.format("%016x", length + head + tail);
+        return String.format(Locale.ROOT, "%016x", length + head + tail);
     }
 
     private static long computeHashForChunk(ByteBuffer buffer) {

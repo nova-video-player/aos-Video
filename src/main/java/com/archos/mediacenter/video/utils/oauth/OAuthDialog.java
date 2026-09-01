@@ -77,8 +77,8 @@ public class OAuthDialog extends Dialog {
 	 */
 	public OAuthDialog(Context context, OAuthCallback o,OAuthData oa, OAuthClientRequest req) {
 		super(context);
-        if (log.isDebugEnabled()) log.debug("OAuthDialog");
-        mdata = oa;
+		if (log.isDebugEnabled()) log.debug("OAuthDialog");
+		mdata = oa;
 		mReq = req;
 		mListener=o;
 	}
@@ -102,8 +102,8 @@ public class OAuthDialog extends Dialog {
 		super.onCreate(savedInstanceState);
 		if (log.isDebugEnabled()) log.debug("onCreate");
 
-        // get another progress dialog while loading the page in this dialog
-        mProgress = NovaProgressDialog.show(getContext(), "", getContext().getResources().getString(R.string.loading), true);
+		// get another progress dialog while loading the page in this dialog
+		mProgress = NovaProgressDialog.show(getContext(), "", getContext().getResources().getString(R.string.loading), true);
 		mProgress.setCancelable(true);
 		mProgress.setCanceledOnTouchOutside(false);
 
@@ -120,9 +120,7 @@ public class OAuthDialog extends Dialog {
 		// Essential JavaScript for OAuth flow
 		mWebView.getSettings().setJavaScriptEnabled(true);
 		// Allow mixed content (for OAuth callback URL handling)
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			mWebView.getSettings().setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-		}
+		mWebView.getSettings().setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 		// Enhanced security settings
 		mWebView.getSettings().setDomStorageEnabled(false);
 		mWebView.getSettings().setDatabaseEnabled(false);
@@ -151,9 +149,7 @@ public class OAuthDialog extends Dialog {
 		// Enable cookies for OAuth flow
 		CookieManager cookieManager = CookieManager.getInstance();
 		cookieManager.setAcceptCookie(true);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			cookieManager.setAcceptThirdPartyCookies(mWebView, true);
-		}
+		cookieManager.setAcceptThirdPartyCookies(mWebView, true);
 
 		mWebView.loadUrl(mReq.getLocationUri());
 
@@ -192,17 +188,18 @@ public class OAuthDialog extends Dialog {
 				log.warn("OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
 			}
 			Uri uri = Uri.parse(urldecode);
-            if (!"localhost".equals(uri.getHost()) && !"auth".equals(uri.getHost())) {
-                // Enhanced validation for OAuth callback - allow only Trakt domain, localhost, or nova.trakt://auth
-                if (uri.getHost() != null && (uri.getHost().endsWith("trakt.tv") || uri.getHost().equals("localhost") || uri.getHost().equals("auth"))) {
-                    if (log.isDebugEnabled()) log.debug("shouldOverrideUrlLoading API21-23: allowing Trakt domain or custom auth host: {}", uri.getHost());
-                    return false; // Continue loading
-                } else {
-                    log.warn("shouldOverrideUrlLoading API21-23: blocking non-Trakt domain: {}", uri.getHost());
-                    return true; // Block navigation to non-Trakt domains
-                }
-            }
+			if (!"localhost".equals(uri.getHost()) && !"auth".equals(uri.getHost())) {
+				// Enhanced validation for OAuth callback - allow only Trakt domain, localhost, or nova.trakt://auth
+				if (uri.getHost() != null && (uri.getHost().endsWith("trakt.tv") || uri.getHost().equals("localhost") || uri.getHost().equals("auth"))) {
+					if (log.isDebugEnabled()) log.debug("shouldOverrideUrlLoading API21-23: allowing Trakt domain or custom auth host: {}", uri.getHost());
+					return false; // Continue loading
+				} else {
+					log.warn("shouldOverrideUrlLoading API21-23: blocking non-Trakt domain: {}", uri.getHost());
+					return true; // Block navigation to non-Trakt domains
+				}
+			}
 			mdata.code = uri.getQueryParameter("code");
+			mdata.returnedState = uri.getQueryParameter("state");
 			OAuthDialog.this.dismiss();
 			mListener.onFinished(mdata);
 
@@ -210,7 +207,6 @@ public class OAuthDialog extends Dialog {
 		}
 
         // this one is for Android API 24+
-        @RequiresApi(Build.VERSION_CODES.M)
         @Override
 		public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 			String url = request.getUrl().toString();
@@ -218,21 +214,22 @@ public class OAuthDialog extends Dialog {
 			String urldecode = null;
 			try {
 				urldecode = URLDecoder.decode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            log.warn("OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
-        }
-        Uri uri = Uri.parse(urldecode);
-        if (!"localhost".equals(uri.getHost()) && !"auth".equals(uri.getHost())) {
-            // Enhanced validation for OAuth callback - allow only Trakt domain, localhost, or nova.trakt://auth
-            if (uri.getHost() != null && (uri.getHost().endsWith("trakt.tv") || uri.getHost().equals("localhost") || uri.getHost().equals("auth"))) {
-                if (log.isDebugEnabled()) log.debug("shouldOverrideUrlLoading API24+: allowing Trakt domain or custom auth host: {}", uri.getHost());
-                return false; // Continue loading
-            } else {
-                log.warn("shouldOverrideUrlLoading API24+: blocking non-Trakt domain: {}", uri.getHost());
-                return true; // Block navigation to non-Trakt domains
-            }
-        }
+			} catch (UnsupportedEncodingException e) {
+				log.warn("OAuthWebViewClient:shouldOverrideUrlLoading: caught UnsupportedEncodingException");
+			}
+			Uri uri = Uri.parse(urldecode);
+			if (!"localhost".equals(uri.getHost()) && !"auth".equals(uri.getHost())) {
+				// Enhanced validation for OAuth callback - allow only Trakt domain, localhost, or nova.trakt://auth
+				if (uri.getHost() != null && (uri.getHost().endsWith("trakt.tv") || uri.getHost().equals("localhost") || uri.getHost().equals("auth"))) {
+					if (log.isDebugEnabled()) log.debug("shouldOverrideUrlLoading API24+: allowing Trakt domain or custom auth host: {}", uri.getHost());
+					return false; // Continue loading
+				} else {
+					log.warn("shouldOverrideUrlLoading API24+: blocking non-Trakt domain: {}", uri.getHost());
+					return true; // Block navigation to non-Trakt domains
+				}
+			}
 			mdata.code = uri.getQueryParameter("code");
+			mdata.returnedState = uri.getQueryParameter("state");
 			OAuthDialog.this.dismiss();
 			mListener.onFinished(mdata);
 
@@ -240,20 +237,20 @@ public class OAuthDialog extends Dialog {
 		}
 
 
-        /*
-        **  Catch the error if an error occurs
-        ** 
-        */
-        // for Android 21-22
-        @SuppressWarnings("deprecation")
-        @Override
-        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
-        {
-            super.onReceivedError(view, errorCode, description, failingUrl);
+		/*
+		**  Catch the error if an error occurs
+		**
+		*/
+		// for Android 21-22
+		@SuppressWarnings("deprecation")
+		@Override
+		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
+		{
+			super.onReceivedError(view, errorCode, description, failingUrl);
 			if (log.isDebugEnabled()) log.debug("onReceivedError API21,22 for url {}", failingUrl);
-        	if(mListener!=null)
-        		mListener.onFinished(mdata);
-            OAuthDialog.this.dismiss();
+			if(mListener!=null)
+				mListener.onFinished(mdata);
+			OAuthDialog.this.dismiss();
 			log.warn("onReceivedError: error code={}, description={}, failingUrl={}", errorCode, description, failingUrl);
 			// ERR_FAILED (-1) often indicates SSL certificate issues or DNS resolution failures
 			String errorMsg = "No Internet";
@@ -264,16 +261,19 @@ public class OAuthDialog extends Dialog {
 		}
 
         // for Android 23+
-        @RequiresApi(Build.VERSION_CODES.M)
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request,  WebResourceError error)
         {
 			if (log.isDebugEnabled()) log.debug("onReceivedError API23+");
 			super.onReceivedError(view, request, error);
+			log.warn("onReceivedError: error code={}, description={}, failingUrl={}, mainFrame={}", error.getErrorCode(), error.getDescription(), request.getUrl(), request.isForMainFrame());
+			// Only abort the auth flow for main frame failures: sub-resource failures
+			// (favicon, analytics, ORB-blocked assets, etc.) must not cancel a successfully
+			// loaded sign-in page.
+			if (!request.isForMainFrame()) return;
 			if(mListener!=null)
                 mListener.onFinished(mdata);
 			OAuthDialog.this.dismiss();
-			log.warn("onReceivedError: error code={}, description={}, failingUrl={}", error.getErrorCode(), error.getDescription(), request.getUrl());
 			// ERR_FAILED (-1) often indicates SSL certificate issues or DNS resolution failures
 			String errorMsg = "No Internet";
 			if (error.getErrorCode() == -1) {
@@ -302,7 +302,6 @@ public class OAuthDialog extends Dialog {
 		**  Handle HTTP errors (API 23+)
 		**
 		*/
-		@RequiresApi(Build.VERSION_CODES.M)
 		@Override
 		public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse)
 		{
@@ -316,7 +315,17 @@ public class OAuthDialog extends Dialog {
 				if(mListener!=null)
 					mListener.onFinished(mdata);
 				OAuthDialog.this.dismiss();
-				Toast.makeText(getContext(), "HTTP Error " + errorResponse.getStatusCode() + " - Cannot connect to Trakt", Toast.LENGTH_LONG).show();
+				// trakt.tv/auth/<provider> (Google, Facebook, Apple, etc.) is the handoff to a
+				// third-party identity provider. Those providers commonly refuse to complete
+				// sign-in inside an embedded WebView, which trakt.tv surfaces as an HTTP error
+				// here. Give the user an actionable message instead of a generic network error.
+				String host = request.getUrl().getHost();
+				String path = request.getUrl().getPath();
+				if (host != null && host.endsWith("trakt.tv") && path != null && path.startsWith("/auth/")) {
+					Toast.makeText(getContext(), R.string.trakt_social_signin_unsupported, Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(getContext(), "HTTP Error " + errorResponse.getStatusCode() + " - Cannot connect to Trakt", Toast.LENGTH_LONG).show();
+				}
 			}
 		}
 

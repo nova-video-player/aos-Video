@@ -22,10 +22,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.BrowseSupportFragment;
@@ -79,6 +81,8 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Fragment displaying 3 rows : one for the shortcuts a.k.a. indexed folders ; one for the SMB discovered servers ; one for the UPnP discovered servers
@@ -109,12 +113,32 @@ public class NetworkRootFragment extends BrowseSupportFragment {
 
     SambaDiscovery mSambaDiscovery;
 
-    private Handler mDiscoveryRepeatHandler = new Handler();
+    private final Handler mDiscoveryRepeatHandler = new Handler(Looper.getMainLooper());
 
     private Overlay mOverlay;
     private ArrayObjectAdapter mNetworkShortcutsAdapter;
     private NetworkShortcutsLoaderTask mNetworkShortcutsLoaderTask;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
+
+    private final ActivityResultLauncher<Intent> detailsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_CODE_SHORTCUTS_MODIFIED) {
+                    mShortcutsLoaderTask = new ShortcutsLoaderTask();
+                    mShortcutsLoaderTask.execute();
+                    mNetworkShortcutsLoaderTask = new NetworkShortcutsLoaderTask();
+                    mNetworkShortcutsLoaderTask.execute();
+                }
+            });
+
+    private final ActivityResultLauncher<Intent> browsingLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_CODE_SHORTCUTS_MODIFIED) {
+                    mShortcutsLoaderTask = new ShortcutsLoaderTask();
+                    mShortcutsLoaderTask.execute();
+                }
+            });
 
     // temp debug flag (to remove once re-scan feature is published)
     static boolean sDisplayRescanItem = false;
@@ -198,7 +222,8 @@ public class NetworkRootFragment extends BrowseSupportFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mShortcutsLoaderTask.cancel(true);
+        mShortcutsLoaderTask.cancel();
+        mNetworkShortcutsLoaderTask.cancel();
     }
 
     @Override
@@ -270,20 +295,6 @@ public class NetworkRootFragment extends BrowseSupportFragment {
         mRowsAdapter.notifyArrayItemRangeChanged(0, mRowsAdapter.size());        setOnItemViewClickedListener(mClickListener);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode==REQUEST_CODE_DETAILS && resultCode==RESULT_CODE_SHORTCUTS_MODIFIED) {
-            mShortcutsLoaderTask = new ShortcutsLoaderTask();
-            mShortcutsLoaderTask.execute();
-            mNetworkShortcutsLoaderTask = new NetworkShortcutsLoaderTask();
-            mNetworkShortcutsLoaderTask.execute();
-        }
-        else if (requestCode==REQUEST_CODE_BROWSING && resultCode==RESULT_CODE_SHORTCUTS_MODIFIED) {
-            mShortcutsLoaderTask = new ShortcutsLoaderTask();
-            mShortcutsLoaderTask.execute();
-        }
-    }
-
     OnItemViewClickedListener mClickListener = new OnItemViewClickedListener() {
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
@@ -291,10 +302,9 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 if (log.isDebugEnabled()) log.debug("onItemClicked: GenericNetworkShortcut");
                 Intent intent = new Intent(getActivity(), NetworkShortcutDetailsActivity.class);
                 intent.putExtra(NetworkShortcutDetailsFragment.EXTRA_SHORTCUT, (Serializable) item);
-                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                detailsLauncher.launch(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                         ((NetworkShortcutPresenter.NetworkShortcutViewHolder) itemViewHolder).getImageView(),
-                        NetworkShortcutDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                startActivityForResult(intent, REQUEST_CODE_DETAILS, bundle);
+                        NetworkShortcutDetailsFragment.SHARED_ELEMENT_NAME));
             }
             else if (item instanceof NetworkBrowse) { // browse network
                 if (log.isDebugEnabled()) log.debug("onItemClicked: NetworkBrowse");
@@ -343,7 +353,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                             intent.putExtra(ListingActivity.EXTRA_ROOT_URI, uri);
                             String shareName = FileUtils.getName(uri);
                             intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, (shareName==null || shareName.isEmpty())?uri.getHost():shareName);
-                            startActivityForResult(intent, REQUEST_CODE_BROWSING);
+                            browsingLauncher.launch(intent);
                         }
                     });
                     dialog.setOnCancelClickListener(new View.OnClickListener() {
@@ -358,10 +368,9 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 if (log.isDebugEnabled()) log.debug("onItemClicked: NetworkShortcut");
                 Intent intent = new Intent(getActivity(), NetworkShortcutDetailsActivity.class);
                 intent.putExtra(NetworkShortcutDetailsFragment.EXTRA_SHORTCUT, (Serializable)item);
-                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                detailsLauncher.launch(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                         ((NetworkShortcutPresenter.NetworkShortcutViewHolder) itemViewHolder).getImageView(),
-                        NetworkShortcutDetailsFragment.SHARED_ELEMENT_NAME).toBundle();
-                startActivityForResult(intent, REQUEST_CODE_DETAILS, bundle);
+                        NetworkShortcutDetailsFragment.SHARED_ELEMENT_NAME));
             }
             else if (item instanceof Box) {
                 if (log.isDebugEnabled()) log.debug("onItemClicked: Box");
@@ -379,7 +388,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 Intent intent = new Intent(getActivity(), ListingActivity.getActivityForUri(uri));
                 intent.putExtra(ListingActivity.EXTRA_ROOT_URI, uri);
                 intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, share.getName());
-                startActivityForResult(intent, REQUEST_CODE_BROWSING);
+                browsingLauncher.launch(intent);
             }
             else if (item instanceof UpnpServer) {
                 if (log.isDebugEnabled()) log.debug("onItemClicked: UpnpServer");
@@ -392,98 +401,128 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                 Intent intent = new Intent(getActivity(), ListingActivity.getActivityForUri(uri));
                 intent.putExtra(ListingActivity.EXTRA_ROOT_URI, uri);
                 intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, server.getName());
-                startActivityForResult(intent, REQUEST_CODE_BROWSING);
+                browsingLauncher.launch(intent);
             }
         }
     };
 
-    private class ShortcutsLoaderTask extends AsyncTask<Void, Void, Cursor> {
+    private class ShortcutsLoaderTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
         private ShortcutDbAdapter shortcutDbAdapter;
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // Open the database connection here
+        public void execute() {
             shortcutDbAdapter = ShortcutDbAdapter.VIDEO;
-        }
+            executor.execute(() -> {
+                try {
+                    if (isCancelled) return;
+                    Cursor cursor = null;
+                    if (getActivity() != null && !getActivity().isFinishing()) {
+                        cursor = shortcutDbAdapter.queryAllShortcuts(getActivity());
+                    }
+                    final Cursor finalCursor = cursor;
+                    handler.post(() -> {
+                        try {
+                            if (!isCancelled && getActivity() != null && !getActivity().isFinishing()) {
+                                if (isAdded() && finalCursor != null) {
+                                    if (shortcutDbAdapter != null && shortcutDbAdapter.isDbOpen() && !finalCursor.isClosed()) {
+                                        if (finalCursor.getCount() == 0) {
+                                            // remove shortcuts row if empty
+                                            mRowsAdapter.remove(mIndexedFoldersListRow);
+                                        } else {
+                                            // Add it back in first row if it is not
+                                            if (mRowsAdapter.indexOf(mIndexedFoldersListRow) == -1) {
+                                                mRowsAdapter.add(0, mIndexedFoldersListRow);
+                                            }
 
-        @Override
-        protected Cursor doInBackground(Void... args) {
-            if (getActivity() != null && !getActivity().isFinishing()) {
-                return shortcutDbAdapter.queryAllShortcuts(getActivity());
-            }
-            return null;
-        }
+                                            // update content
+                                            mIndexedFoldersAdapter.clear();
+                                            // First item is not an actual shortcut, it opens the re-scan settings
+                                            if (finalCursor.getCount() > 0) {
+                                                Box rescanBox = new Box(Box.ID.INDEXED_FOLDERS_REFRESH, getString(R.string.rescan), R.drawable.filetype_new_rescan);
+                                                if (log.isDebugEnabled()) log.debug("ShortcutsLoaderTask NetworkScannerReceiver.isScannerWorking()={}", NetworkScannerReceiver.isScannerWorking());
+                                                mIndexedFoldersAdapter.add(rescanBox);
+                                            }
 
-        @Override
-        protected void onPostExecute(Cursor cursor) {
-            if (getActivity() != null && ! getActivity().isFinishing()) {
-                if (isAdded() && cursor != null) {
-                    if (shortcutDbAdapter != null && shortcutDbAdapter.isDbOpen() && !cursor.isClosed()) {
-                        if (cursor.getCount() == 0) {
-                            // remove shortcuts row if empty
-                            mRowsAdapter.remove(mIndexedFoldersListRow);
-                        } else {
-                            // Add it back in first row if it is not
-                            if (mRowsAdapter.indexOf(mIndexedFoldersListRow) == -1) {
-                                mRowsAdapter.add(0, mIndexedFoldersListRow);
+                                            // Convert from cursor to array (only because we need to add the "refresh" Box in the list)
+                                            finalCursor.moveToFirst();
+                                            NetworkShortcutMapper mapper = new NetworkShortcutMapper();
+                                            mapper.bind(finalCursor);
+                                            while (!finalCursor.isAfterLast()) {
+                                                mIndexedFoldersAdapter.add(mapper.convert(finalCursor));
+                                                finalCursor.moveToNext();
+                                            }
+                                        }
+                                    } else {
+                                        // database seems to have been closed
+                                        log.error("onPostExecute: database is closed");
+                                    }
+                                }
                             }
-
-                            // update content
-                            mIndexedFoldersAdapter.clear();
-                            // First item is not an actual shortcut, it opens the re-scan settings
-                            if (cursor.getCount() > 0) {
-                                Box rescanBox = new Box(Box.ID.INDEXED_FOLDERS_REFRESH, getString(R.string.rescan), R.drawable.filetype_new_rescan);
-                                if (log.isDebugEnabled()) log.debug("ShortcutsLoaderTask NetworkScannerReceiver.isScannerWorking()={}", NetworkScannerReceiver.isScannerWorking());
-                                mIndexedFoldersAdapter.add(rescanBox);
-                            }
-
-                            // Convert from cursor to array (only because we need to add the "refresh" Box in the list)
-                            cursor.moveToFirst();
-                            NetworkShortcutMapper mapper = new NetworkShortcutMapper();
-                            mapper.bind(cursor);
-                            while (!cursor.isAfterLast()) {
-                                mIndexedFoldersAdapter.add(mapper.convert(cursor));
-                                cursor.moveToNext();
+                        } finally {
+                            if (finalCursor != null && !finalCursor.isClosed()) finalCursor.close();
+                            if (shortcutDbAdapter != null && shortcutDbAdapter.isDbOpen()) {
+                                shortcutDbAdapter.close();
                             }
                         }
-                    } else {
-                        // database seems to have been closed
-                        log.error("onPostExecute: database is closed");
-                    }
+                    });
+                } catch (Exception e) {
+                    log.error("Error in ShortcutsLoaderTask", e);
+                } finally {
+                    executor.shutdown();
                 }
-                if (cursor != null) cursor.close();
-            }
-            if (cursor != null) cursor.close();
-            if (shortcutDbAdapter != null && shortcutDbAdapter.isDbOpen()) {
-                shortcutDbAdapter.close();
-            }
+            });
+        }
+
+        public void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
     // need a second task because they are not using the same cursor
-    private class NetworkShortcutsLoaderTask extends AsyncTask<Void, Void, Cursor> {
-        @Override
-        protected Cursor doInBackground(Void... args) {
-            return ShortcutDb.STATIC.getCursorAllShortcuts(getActivity());
-        }
-        @Override
-        protected void onPostExecute(Cursor cursor) {
-            if (getActivity() != null && !getActivity().isFinishing()) {
-                if (isAdded() && cursor != null && !cursor.isClosed()) {
-                    mNetworkShortcutsAdapter.clear();
-                    mNetworkShortcutsAdapter.add(new NetworkBrowse(getString(R.string.browse_net_server)));
-                    if (cursor.getCount() > 0) {
-                        cursor.moveToFirst();
-                        do {
-                            GenericNetworkShortcutMapper shortcutMapper = new GenericNetworkShortcutMapper();
-                            shortcutMapper.bindColumns(cursor);
-                            mNetworkShortcutsAdapter.add(shortcutMapper.bind(cursor));
-                        } while (cursor.moveToNext());
-                    }
+    private class NetworkShortcutsLoaderTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
+
+        public void execute() {
+            executor.execute(() -> {
+                try {
+                    if (isCancelled) return;
+                    Cursor cursor = ShortcutDb.STATIC.getCursorAllShortcuts(getActivity());
+                    handler.post(() -> {
+                        try {
+                            if (!isCancelled && getActivity() != null && !getActivity().isFinishing()) {
+                                if (isAdded() && cursor != null && !cursor.isClosed()) {
+                                    mNetworkShortcutsAdapter.clear();
+                                    mNetworkShortcutsAdapter.add(new NetworkBrowse(getString(R.string.browse_net_server)));
+                                    if (cursor.getCount() > 0) {
+                                        cursor.moveToFirst();
+                                        do {
+                                            GenericNetworkShortcutMapper shortcutMapper = new GenericNetworkShortcutMapper();
+                                            shortcutMapper.bindColumns(cursor);
+                                            mNetworkShortcutsAdapter.add(shortcutMapper.bind(cursor));
+                                        } while (cursor.moveToNext());
+                                    }
+                                }
+                            }
+                        } finally {
+                            if (cursor != null && !cursor.isClosed()) cursor.close();
+                        }
+                    });
+                } catch (Exception e) {
+                    log.error("Error in NetworkShortcutsLoaderTask", e);
+                } finally {
+                    executor.shutdown();
                 }
-                if (cursor != null) cursor.close();
-            }
+            });
+        }
+
+        public void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 

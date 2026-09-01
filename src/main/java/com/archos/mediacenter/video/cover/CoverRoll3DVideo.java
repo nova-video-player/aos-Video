@@ -109,9 +109,9 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 		// Reset the cached layout, bitmaps, etc. when the screen size is changed
-		VideoCover.resetCachedGraphicStuff();
-		MovieCover.resetCachedGraphicStuff();
-		EpisodeCover.resetCachedGraphicStuff();
+		if (mArtworkFactory != null) {
+			mArtworkFactory.clearCachedViews();
+		}
 		// Set the fine tuning of the layout
 		CoverRollLayout layout = (CoverRollLayout)mLayout; // layout shall always be a CoverRollLayout in that case;
 		layout.setFineTuningValues(CoverRollLayout.FINE_TUNE_FOR_VIDEO);
@@ -138,14 +138,10 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 
 		if(DBG) Log.d(TAG, "getDefaultArtwork, labelId="+labelId);
 
-		switch (labelId) {
-			case R.string.movies:
-			case R.string.all_tv_shows:
-				return MovieCover.getDefaultArtwork(factory);
-			case R.string.all_videos:
-			case R.string.recently_added_videos:
-			default:
-				return VideoCover.getDefaultArtwork(factory);
+		if (labelId == R.string.movies || labelId == R.string.all_tv_shows) {
+			return MovieCover.getDefaultArtwork(factory);
+		} else {
+			return VideoCover.getDefaultArtwork(factory);
 		}
 	}
 
@@ -224,13 +220,11 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 			mLabelId = labelId;
 		}
 		public CoverProvider getCoverProvider(Context context) {
-			switch (mLabelId) {
-			case R.string.all_videos: return new AllVideosProvider(context);
-			case R.string.recently_added_videos: return new RecentlyAddedVideosProvider(context);
-			case R.string.movies: return new AllMoviesProvider(context);
-			case R.string.all_tv_shows: return new AllTVShowsProvider(context);
-			default: return null; // should not happen
-			}
+			if (mLabelId == R.string.all_videos) return new AllVideosProvider(context);
+			if (mLabelId == R.string.recently_added_videos) return new RecentlyAddedVideosProvider(context);
+			if (mLabelId == R.string.movies) return new AllMoviesProvider(context);
+			if (mLabelId == R.string.all_tv_shows) return new AllTVShowsProvider(context);
+			return null; // should not happen
 		}
 		// weird (but convenient) functions using the final array ROLL_CONTENT as argument...
 		final public CoverRollVideoContent getNextContentType(CoverRollVideoContent[] roll_content) {
@@ -259,25 +253,25 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 	        return;
 	    }
 
-		// Some stuff to do in the parent class
-		super.createContextMenu(activity,menu);
+	    // Some stuff to do in the parent class
+	    super.createContextMenu(activity,menu);
 
 	    // Special case: TvShow covers have only info in context menu.
 	    if (c instanceof TvShowCover) {
-            menu.add(R.string.info);
+	        menu.add(R.string.info);
 	        return;
 	    }
 
-		menu.add(0, R.string.play_selection, 0, R.string.play_selection).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+	    menu.add(0, R.string.play_selection, 0, R.string.play_selection).setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			public boolean onMenuItemClick(MenuItem item) {
 				mLayout.getFrontCover().play(getContext());
 				return true;
 			}
 		});
 
-		if (!(c instanceof BaseVideoCover)) {
-			throw new IllegalStateException("CoverRoll3DVideo must only contain instances of BaseVideoCover!");
-		}
+	    if (!(c instanceof BaseVideoCover)) {
+	        throw new IllegalStateException("CoverRoll3DVideo must only contain instances of BaseVideoCover!");
+	    }
 
 		// Then add video specific stuff
 
@@ -315,10 +309,10 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 		//Delete
 		menu.add(R.string.delete).setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			public boolean onMenuItemClick(MenuItem item) {
-                // Forbid deleting in DemoMode
-                if (ArchosSettings.isDemoModeActive(mActivity)) {
-                    mActivity.startService(new Intent(ArchosIntents.ACTION_DEMO_MODE_FEATURE_DISABLED));
-                } else {
+				// Forbid deleting in DemoMode
+				if (ArchosSettings.isDemoModeActive(mActivity)) {
+					mActivity.startService(new Intent(ArchosIntents.ACTION_DEMO_MODE_FEATURE_DISABLED));
+				} else {
 					AlertDialog.Builder b = new AlertDialog.Builder(activity).setTitle("");
 					b.setIcon(R.drawable.filetype_new_video);
 					b.setMessage(R.string.confirm_delete);
@@ -347,7 +341,7 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 									delete.startDeleteProcess(Uri.parse(((BaseVideoCover) c).getFilePath()));
 								}
 							}).show();
-                }
+				}
 				return true;
 			}
 		});
@@ -378,11 +372,11 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 
                 });
         //Info
-		menu.add(R.string.info).setOnMenuItemClickListener(new OnMenuItemClickListener() {
-			public boolean onMenuItemClick(MenuItem item) {
-				openInfoActivity(mLayout.getFrontCoverIndex());
-				return true;
-			}});
+        menu.add(R.string.info).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                openInfoActivity(mLayout.getFrontCoverIndex());
+                return true;
+            }});
 
 	}
 
@@ -416,5 +410,19 @@ public class CoverRoll3DVideo extends CoverRoll3D {
 			return mCovers.get(cid).getOpenAction(getContext());
 	}
 
+	@Override
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		if (mArtworkFactory != null) {
+			mArtworkFactory.clearCachedViews();
+		}
+		super.surfaceDestroyed(holder);
+	}
 
+	@Override
+	protected void onDetachedFromWindow() {
+		if (mArtworkFactory != null) {
+			mArtworkFactory.clearCachedViews();
+		}
+		super.onDetachedFromWindow();
+	}
 }

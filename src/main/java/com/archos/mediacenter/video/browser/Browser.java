@@ -15,8 +15,8 @@
 
 package com.archos.mediacenter.video.browser;
 
+import java.util.Locale;
 
-import static androidx.core.app.ActivityCompat.invalidateOptionsMenu;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -33,6 +33,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.view.ContextMenu;
@@ -63,7 +64,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.os.BundleCompat;
 import androidx.core.widget.TextViewCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
@@ -100,13 +103,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 public abstract class Browser extends Fragment implements AbsListView.OnScrollListener,
         View.OnTouchListener,
         AdapterView.OnItemClickListener,
-        Observer,
         ThumbnailEngine.Listener,
         ActionBarSubmenuListener, OnItemLongClickListener, Delete.DeleteListener, ExternalPlayerWithResultStarter {
 
@@ -148,7 +148,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     protected boolean mHideWatched;
     protected boolean mHideOption = false;
     protected int LOADING_FINISHED = 2;
-    protected final Handler mHandler = new Handler();
+    protected final Handler mHandler = new Handler(Looper.getMainLooper());
 
     protected int mDeletedPosition;
     protected int mFirstVisiblePosition;
@@ -178,6 +178,11 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
     private List<Uri> deleteUrisList = null;
     private static Boolean isFileManagerServiceBound = false;
+
+    private final ActivityResultLauncher<Intent> playLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> ExternalPlayerResultListener.getInstance().onActivityResult(
+                    PLAY_ACTIVITY_REQUEST_CODE, result.getResultCode(), result.getData()));
 
     private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
@@ -223,14 +228,63 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             mFirstVisiblePosition = posBundle.getInt(FIRST_VISIBLE_POSITION);
             mSelectedPosition = posBundle.getInt(SELECTED_POSITION);
             mScroll = posBundle.getInt(CURRENT_SCROLL);
-            mListState= posBundle.getParcelable(LIST_STATE_KEY);
+            mListState = BundleCompat.getParcelable(posBundle, LIST_STATE_KEY, Parcelable.class);
         }
         if (bundle != null) {
             mCopyName = bundle.getString(COPY_NAME);
             mCopyLength = bundle.getLong(COPY_LENGTH);
             mCopyDialogID = bundle.getInt(COPY_DIALOG);
         }
-        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+                if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
+                    MenuItem viewModeMenuItem = menu.add(MENU_VIEW_MODE_GROUP, MENU_VIEW_MODE, Menu.NONE, R.string.view_mode);
+                    viewModeMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                }
+                if (shouldEnableMultiSelection())
+                    menu.add(0, R.string.multiple_selection, 0, R.string.multiple_selection);
+            }
+            @Override
+            public void onPrepareMenu(Menu menu) {
+                menu.setGroupVisible(MENU_HIDE_WATCHED_GROUP, mHideOption);
+                MenuItem item = menu.findItem(MENU_VIEW_MODE);
+                if (item != null) {
+                    int icon = getViewModeMenuIcon(mViewMode);
+                    if (icon != 0) item.setIcon(icon);
+                }
+            }
+            @Override
+            public boolean onMenuItemSelected(MenuItem item) {
+                if (item.getItemId() == MENU_VIEW_HIDE_SEEN) {
+                    mHideWatched = !mHideWatched;
+                    item.setTitle(mHideWatched ? R.string.hide_seen : R.string.show_all);
+                    mPreferences.edit().putBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, mHideWatched).apply();
+                    return true;
+                } else if (item.getItemId() == R.string.multiple_selection) {
+                    enableMultiple(0, false);
+                    return true;
+                } else if (item.getItemId() == MENU_VIEW_MODE) {
+                    if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
+                        applySelectedViewMode(VideoUtils.VIEW_MODE_GRID);
+                    } else if (mViewMode == VideoUtils.VIEW_MODE_GRID) {
+                        applySelectedViewMode(VideoUtils.VIEW_MODE_DETAILS);
+                    } else if (mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
+                        applySelectedViewMode(VideoUtils.VIEW_MODE_LIST);
+                    }
+                    if (getActivity() != null) {
+                        getActivity().invalidateOptionsMenu();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner());
     }
 
     @Override
@@ -262,7 +316,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         if (mViewMode!= VideoUtils.VIEW_MODE_GRID_SHORT && (viewMode == -1 || viewMode != mViewMode)) {
             Editor ed = mPreferences.edit();
             ed.putInt(getClass().getName(), mViewMode);
-            ed.commit();
+            ed.apply();
         }
 
         if (mDialogDeleting != null)
@@ -320,6 +374,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
      * May be overriden by child classes to have the ActionBar in NAVIGATION_MODE_LIST, for example
      * @return
      */
+    @SuppressWarnings("deprecation") // ActionBar navigation mode
     protected int getActionBarNavigationMode() {
         return ActionBar.NAVIGATION_MODE_STANDARD;
     }
@@ -489,6 +544,19 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
      */
     public int getDefaultViewMode() {
         return VideoUtils.VIEW_MODE_LIST;
+    }
+
+    /**
+     * Returns the icon resource to display on the view-mode menu button for the given current mode.
+     * The icon represents the next mode the user will switch to. Subclasses that support a subset
+     * of modes (e.g. only LIST/DETAILS or LIST/GRID) should override this to show the correct icon.
+     * Return 0 to leave the icon unchanged.
+     */
+    protected int getViewModeMenuIcon(int currentViewMode) {
+        if (currentViewMode == VideoUtils.VIEW_MODE_LIST) return R.drawable.ic_menu_poster_mode;
+        if (currentViewMode == VideoUtils.VIEW_MODE_GRID) return R.drawable.ic_menu_details_mode2;
+        if (currentViewMode == VideoUtils.VIEW_MODE_DETAILS) return R.drawable.ic_menu_list_mode2;
+        return 0;
     }
 
     protected void setViewMode(int mode) {
@@ -782,15 +850,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
     @Override
     public void startActivityWithResultListener(Intent intent) {
-        startActivityForResult(intent, PLAY_ACTIVITY_REQUEST_CODE);
-    }
-
-    @Override
-    public void  onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == PLAY_ACTIVITY_REQUEST_CODE){
-            ExternalPlayerResultListener.getInstance().onActivityResult(requestCode,resultCode,data);
-        }
-        else super.onActivityResult(requestCode,resultCode,data);
+        playLauncher.launch(intent);
     }
 
     public void showSubsRetrievingDialog(SubtitleManager engine){
@@ -1017,11 +1077,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public void update(Observable observable, Object data){
-    }
-
-
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         boolean ret = false;
         switch (keyCode) {
@@ -1047,62 +1102,6 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     }
 
     protected MultipleSelectionManager mActionModeManager ;
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty()) {
-            // Add the "view mode" item
-            MenuItem viewModeMenuItem = menu.add(MENU_VIEW_MODE_GROUP, MENU_VIEW_MODE, Menu.NONE, R.string.view_mode);
-            viewModeMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            // Details view is only proposed on tablets, not on phones
-            
-        }
-        if(shouldEnableMultiSelection())
-            menu.add(0, R.string.multiple_selection, 0, R.string.multiple_selection);
-    }
-
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        menu.setGroupVisible(MENU_HIDE_WATCHED_GROUP, mHideOption);
-        
-        //Draw the Current Selection for Display Mode
-        MenuItem item = menu.findItem(MENU_VIEW_MODE);
-        if (item != null){
-            if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
-                item.setIcon(R.drawable.ic_menu_poster_mode);
-            } else if (mViewMode == VideoUtils.VIEW_MODE_GRID) {
-                item.setIcon(R.drawable.ic_menu_details_mode2);
-            } else if (mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
-                item.setIcon(R.drawable.ic_menu_list_mode2);
-            }
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // NOTE: ignore the MENU_VIEW_MODE item which is
-        // already handled internally in ActionBarSubmenu
-
-        if (item.getItemId() == MENU_VIEW_HIDE_SEEN){
-            mHideWatched = !mHideWatched;
-            item.setTitle(mHideWatched ? R.string.hide_seen : R.string.show_all);
-            mPreferences.edit().putBoolean(VideoPreferencesCommon.KEY_HIDE_WATCHED, mHideWatched).apply();
-        } else if (item.getItemId()==R.string.multiple_selection){
-            enableMultiple(0, false);
-        } else if (item.getItemId() == MENU_VIEW_MODE){
-            if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
-                applySelectedViewMode(VideoUtils.VIEW_MODE_GRID);
-            } else if (mViewMode == VideoUtils.VIEW_MODE_GRID) {
-                applySelectedViewMode(VideoUtils.VIEW_MODE_DETAILS);
-            } else if (mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
-                applySelectedViewMode(VideoUtils.VIEW_MODE_LIST);
-            }
-            invalidateOptionsMenu(getActivity());
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     public void onSubmenuItemSelected(ActionBarSubmenu submenu, int position, long itemId) {
         switch (position) {
@@ -1247,7 +1246,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             return null;
         int dotPos = filename.lastIndexOf('.');
         if (dotPos >= 0 && dotPos < filename.length()) {
-            return filename.substring(dotPos + 1).toLowerCase();
+            return filename.substring(dotPos + 1).toLowerCase(Locale.ROOT);
         }
         return null;
     }

@@ -22,29 +22,47 @@
 
     <include layout="@layout/clock" />
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/progress_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_below="@id/clock"
-        android:layout_marginEnd="8dip">
-
-        <ProgressBar
-            android:id="@+id/progress"
-            style="@android:style/Widget.DeviceDefault.ProgressBar.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+        android:layout_marginEnd="8dip"
+        android:orientation="horizontal"
+        android:gravity="center_vertical|end">
 
         <TextView
-            android:id="@+id/count"
+            android:id="@+id/badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_marginEnd="4dip"
             android:gravity="center"
-            android:singleLine="false"
+            android:singleLine="true"
+            android:textStyle="bold"
             android:textSize="11dip" />
-    </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/counter_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/progress"
+                style="@android:style/Widget.DeviceDefault.ProgressBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:id="@+id/count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textSize="11dip" />
+        </FrameLayout>
+    </LinearLayout>
 
 </RelativeLayout>

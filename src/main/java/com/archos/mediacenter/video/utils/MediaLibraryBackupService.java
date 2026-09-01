@@ -30,6 +30,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.ServiceCompat;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.utils.ShortcutDbAdapter;
+import com.archos.mediaprovider.DbHolder;
+import com.archos.mediaprovider.VideoDb;
 import com.archos.mediaprovider.video.VideoOpenHelper;
 import com.archos.mediascraper.MediaScraper;
 
@@ -138,7 +141,7 @@ public class MediaLibraryBackupService extends Service {
                 log.error("startExport: error exporting media library", e);
                 showToast(getString(R.string.media_library_export_error));
             } finally {
-                stopForeground(true);
+                ServiceCompat.stopForeground(MediaLibraryBackupService.this, ServiceCompat.STOP_FOREGROUND_REMOVE);
                 stopSelf();
             }
         });
@@ -170,7 +173,7 @@ public class MediaLibraryBackupService extends Service {
                 log.error("startImport: error importing media library", e);
                 showToast(getString(R.string.media_library_import_error));
             } finally {
-                stopForeground(true);
+                ServiceCompat.stopForeground(MediaLibraryBackupService.this, ServiceCompat.STOP_FOREGROUND_REMOVE);
                 stopSelf();
             }
         });
@@ -312,65 +315,75 @@ public class MediaLibraryBackupService extends Service {
                     ", Current version: " + currentDbVersion + ". Cannot import.");
         }
 
-        // STEP 2: FULL CLEANUP - Delete all existing data
-        if (log.isDebugEnabled()) log.debug("importMediaLibrary: performing FULL CLEANUP of existing data");
-        cleanupExistingData();
+        // STEP 2+3: Hold exclusive access to the media database across the whole
+        // destructive window (delete existing files + extract the backup). This
+        // blocks concurrent provider queries from reopening media.db while it is
+        // being deleted or half-rewritten.
+        DbHolder dbHolder = VideoDb.getHolder(this);
+        dbHolder.lockExclusive();
+        try {
+            // STEP 2: FULL CLEANUP - Delete all existing data
+            if (log.isDebugEnabled()) log.debug("importMediaLibrary: performing FULL CLEANUP of existing data");
+            cleanupExistingData();
 
-        // STEP 3: Extract all files from backup
-        if (log.isDebugEnabled()) log.debug("importMediaLibrary: extracting files from backup");
-        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile))) {
-            ZipEntry entry;
-            byte[] buffer = new byte[BUFFER_SIZE];
+            // STEP 3: Extract all files from backup
+            if (log.isDebugEnabled()) log.debug("importMediaLibrary: extracting files from backup");
+            try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile))) {
+                ZipEntry entry;
+                byte[] buffer = new byte[BUFFER_SIZE];
 
-            while ((entry = zis.getNextEntry()) != null) {
-                String fileName = entry.getName();
-                if (log.isDebugEnabled()) log.debug("importMediaLibrary: extracting {}", fileName);
+                while ((entry = zis.getNextEntry()) != null) {
+                    String fileName = entry.getName();
+                    if (log.isDebugEnabled()) log.debug("importMediaLibrary: extracting {}", fileName);
 
-                // Skip version file
-                if (fileName.equals(VERSION_FILE)) {
-                    zis.closeEntry();
-                    continue;
-                }
-
-                File outputFile = null;
-
-                if (fileName.equals(DATABASE_NAME)) {
-                    outputFile = getDatabasePath(DATABASE_NAME);
-                } else if (fileName.equals(CREDENTIALS_DB_NAME)) {
-                    outputFile = getDatabasePath(CREDENTIALS_DB_NAME);
-                } else if (fileName.equals(SHORTCUTS_DB_NAME)) {
-                    outputFile = getDatabasePath(SHORTCUTS_DB_NAME);
-                } else if (fileName.equals(SHORTCUTS2_DB_NAME)) {
-                    outputFile = getDatabasePath(SHORTCUTS2_DB_NAME);
-                } else if (fileName.startsWith("scraper_posters/")) {
-                    String relativePath = fileName.substring("scraper_posters/".length());
-                    outputFile = new File(MediaScraper.getPosterDirectory(this), relativePath);
-                } else if (fileName.startsWith("scraper_backdrops/")) {
-                    String relativePath = fileName.substring("scraper_backdrops/".length());
-                    outputFile = new File(MediaScraper.getBackdropDirectory(this), relativePath);
-                } else if (fileName.startsWith("scraper_pictures/")) {
-                    String relativePath = fileName.substring("scraper_pictures/".length());
-                    outputFile = new File(MediaScraper.getPictureDirectory(this), relativePath);
-                }
-
-                if (outputFile != null && !entry.isDirectory()) {
-                    // Create parent directories if needed
-                    File parentDir = outputFile.getParentFile();
-                    if (parentDir != null && !parentDir.exists()) {
-                        parentDir.mkdirs();
+                    // Skip version file
+                    if (fileName.equals(VERSION_FILE)) {
+                        zis.closeEntry();
+                        continue;
                     }
 
-                    // Extract file
-                    try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-                        int len;
-                        while ((len = zis.read(buffer)) > 0) {
-                            fos.write(buffer, 0, len);
+                    File outputFile = null;
+
+                    if (fileName.equals(DATABASE_NAME)) {
+                        outputFile = getDatabasePath(DATABASE_NAME);
+                    } else if (fileName.equals(CREDENTIALS_DB_NAME)) {
+                        outputFile = getDatabasePath(CREDENTIALS_DB_NAME);
+                    } else if (fileName.equals(SHORTCUTS_DB_NAME)) {
+                        outputFile = getDatabasePath(SHORTCUTS_DB_NAME);
+                    } else if (fileName.equals(SHORTCUTS2_DB_NAME)) {
+                        outputFile = getDatabasePath(SHORTCUTS2_DB_NAME);
+                    } else if (fileName.startsWith("scraper_posters/")) {
+                        String relativePath = fileName.substring("scraper_posters/".length());
+                        outputFile = new File(MediaScraper.getPosterDirectory(this), relativePath);
+                    } else if (fileName.startsWith("scraper_backdrops/")) {
+                        String relativePath = fileName.substring("scraper_backdrops/".length());
+                        outputFile = new File(MediaScraper.getBackdropDirectory(this), relativePath);
+                    } else if (fileName.startsWith("scraper_pictures/")) {
+                        String relativePath = fileName.substring("scraper_pictures/".length());
+                        outputFile = new File(MediaScraper.getPictureDirectory(this), relativePath);
+                    }
+
+                    if (outputFile != null && !entry.isDirectory()) {
+                        // Create parent directories if needed
+                        File parentDir = outputFile.getParentFile();
+                        if (parentDir != null && !parentDir.exists()) {
+                            parentDir.mkdirs();
+                        }
+
+                        // Extract file
+                        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+                            int len;
+                            while ((len = zis.read(buffer)) > 0) {
+                                fos.write(buffer, 0, len);
+                            }
                         }
                     }
-                }
 
-                zis.closeEntry();
+                    zis.closeEntry();
+                }
             }
+        } finally {
+            dbHolder.unlockExclusive();
         }
 
         if (log.isDebugEnabled()) log.debug("importMediaLibrary: FULL REPLACEMENT import completed successfully");
@@ -410,6 +423,11 @@ public class MediaLibraryBackupService extends Service {
 
     private void cleanupExistingData() {
         if (log.isDebugEnabled()) log.debug("cleanupExistingData: DELETING all existing media library data");
+
+        // Close database helper and connections before deleting files to release locks and files
+        if (log.isDebugEnabled()) log.debug("cleanupExistingData: closing database connections");
+        VideoDb.getHolder(this).close();
+        ShortcutDbAdapter.VIDEO.close();
 
         // Delete media database files
         File dbFile = getDatabasePath(DATABASE_NAME);
@@ -575,9 +593,7 @@ public class MediaLibraryBackupService extends Service {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                 // Schedule app restart after a short delay
-                int pendingIntentFlags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                        ? android.app.PendingIntent.FLAG_UPDATE_CURRENT | android.app.PendingIntent.FLAG_IMMUTABLE
-                        : android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+                int pendingIntentFlags = android.app.PendingIntent.FLAG_UPDATE_CURRENT | android.app.PendingIntent.FLAG_IMMUTABLE;
 
                 android.app.PendingIntent pendingIntent = android.app.PendingIntent.getActivity(
                         this,

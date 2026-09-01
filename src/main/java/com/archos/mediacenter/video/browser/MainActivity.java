@@ -41,10 +41,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.DisplayCutout;
 import android.view.InputDevice;
 import android.view.InputEvent;
@@ -57,10 +57,14 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -74,6 +78,9 @@ import androidx.loader.app.LoaderManager;
 import androidx.preference.PreferenceManager;
 
 import com.archos.filecorelibrary.FileUtils;
+import com.archos.mediaprovider.ImportState;
+import com.archos.mediaprovider.video.LoaderUtils;
+import com.archos.mediaprovider.video.NetworkScannerReceiver;
 import com.archos.mediacenter.utils.GlobalResumeView;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.CustomApplication;
@@ -91,6 +98,7 @@ import com.archos.mediacenter.video.browser.filebrowsing.BrowserByVideoFolder;
 import com.archos.mediacenter.video.info.SingleVideoLoader;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.player.PrivateMode;
+import com.archos.mediacenter.video.utils.ActiveOperationMonitor;
 import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.MiscUtils;
@@ -111,6 +119,8 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /*
  * This is the launch class for the video browser.
@@ -143,6 +153,35 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     public static final int MENU_CHANGE_FOLDER = 6;
 
     public static final int ACTIVITY_REQUEST_CODE_PREFERENCES = 101;
+
+    private String mCurrentUiModeLeanback = null;
+
+    private final ActivityResultLauncher<Intent> traktRelogLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { /* Trakt relog completed; token stored by TraktDeviceAuthActivity */ });
+
+    private final ActivityResultLauncher<Intent> playLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> ExternalPlayerResultListener.getInstance().onActivityResult(
+                    PLAY_ACTIVITY_REQUEST_CODE, result.getResultCode(), result.getData()));
+
+    private final ActivityResultLauncher<Intent> preferencesLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == VideoPreferencesCommon.ACTIVITY_RESULT_UI_MODE_CHANGED) {
+                    String newUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this)
+                            .getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
+                    if (!newUiModeLeanback.equals(mCurrentUiModeLeanback)) {
+                        finish();
+                        startActivity(new Intent(this, EntryActivity.class));
+                    }
+                    mCurrentUiModeLeanback = null;
+                } else if (result.getResultCode() == VideoPreferencesCommon.ACTIVITY_RESULT_UI_ZOOM_CHANGED) {
+                    new DensityTweak(this).forceDensityDialogAtNextStart();
+                    finish();
+                    startActivity(new Intent(this, EntryActivity.class));
+                }
+            });
 
     private int mGlobalResumeId = -1;
     private GlobalResumeContentObserver mGlobalResumeContentObserver = null;
@@ -243,12 +282,37 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         } else {
             setTheme(R.style.ArchosThemeBlueNoActionBar);
         }
+        // requestWindowFeature() must be called before applyWindowTheme() since
+        // setBackgroundDrawable() can install the decor view on older API levels
+        requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
         themeManager.applyWindowTheme(this);
         ((CustomApplication) getApplication()).loadLocale();
-        //CustomApplication.loadLocale(getResources());
-        requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         super.onCreate(savedInstanceState);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
+                if (backStackCount <= 1) {
+                    if (mDrawerLayout == null || safeIsDrawerOpen())
+                        supportFinishAfterTransition();
+                    else {
+                        safeOpenDrawer();
+                    }
+                } else {
+                    // Get the fragment that is currently at the top of the back stack
+                    String fragmentTag = getSupportFragmentManager().getBackStackEntryAt(backStackCount - 1).getName();
+                    Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(fragmentTag);
+                    // Check if the fragment is added before trying to remove it
+                    if (currentFragment != null && currentFragment.isAdded()) {
+                        getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
+                    }
+                    getSupportFragmentManager().popBackStackImmediate();
+                }
+                updateHomeIcon(getSupportFragmentManager().getBackStackEntryCount() > 1);
+            }
+        });
 
         mThemeChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
@@ -270,12 +334,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         LoaderUtils.mMustHideWatchedVideo = mPreferences.getBoolean("hide_watched", false);
         LoaderUtils.mSmartRecentlyRows = mPreferences.getBoolean("smart_recently_rows", false);
 
-        //Reset the Video Aspect Ratio on Startup.
-        SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString("player_pref_auto_format_key","-1");
-        editor.putString("player_pref_format_key","0");
-        
         //If we are starting the Browser again, we aren't unpausing a Video
+        SharedPreferences.Editor editor = mPreferences.edit();
         editor.putBoolean("user_paused_video", false);
 
         //Reset Video brightness to System on Startup.
@@ -301,35 +361,37 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         getSupportActionBar().setHomeButtonEnabled(true);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null){
-            mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.string.drawer_open, R.string.drawer_close);
-            mDrawerToggle.setDrawerIndicatorEnabled(true);
-            mDrawerToggle.syncState();
+            try {
+                mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                        R.string.drawer_open, R.string.drawer_close);
+                mDrawerToggle.setDrawerIndicatorEnabled(true);
+                mDrawerToggle.syncState();
 
-            if(savedInstanceState==null && !isShortcutIntent())
-                mDrawerLayout.openDrawer(GravityCompat.START);
-
+                if (savedInstanceState == null && !isShortcutIntent())
+                    safeOpenDrawer();
+            } catch (Throwable t) {
+                log.error("onCreate: caught exception setting up drawer, locking drawer closed", t);
+                disableDrawer();
+            }
         }
 
         // determine if display has cutouts
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().getDecorView().setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
-                @SuppressLint("NewApi")
-                @Override
-                public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
-                        if (cutout != null) {
-                            if (log.isDebugEnabled()) log.debug("device with cutout");
-                            MiscUtils.hasCutout = true;
-                        } else
-                            if (log.isDebugEnabled()) log.debug("device without cutout");
-                    }
-                    getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
-                    return view.onApplyWindowInsets(insets);
+        getWindow().getDecorView().setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
+                    if (cutout != null) {
+                        if (log.isDebugEnabled()) log.debug("device with cutout");
+                        MiscUtils.hasCutout = true;
+                    } else
+                        if (log.isDebugEnabled()) log.debug("device without cutout");
                 }
-            });
-        }
+                getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
+                return view.onApplyWindowInsets(insets);
+            }
+        });
 
         mGlobalResumeViewStub = (ViewStub) findViewById(R.id.global_resume_stub);
         AutoScrapeService.registerObserver(this);
@@ -380,6 +442,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     TraktSigninDialogPreference dialog = new TraktSigninDialogPreference(MainActivity.this, null);
+                                    dialog.setLauncher(traktRelogLauncher);
                                     dialog.performDeviceAuth();
                                 }
                             })
@@ -454,18 +517,19 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         }
         else if(getString(R.string.action_resume).equals(intent.getAction())){
             ContentResolver contentResolver = getContentResolver();
-            Cursor c = contentResolver.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, CURSORS,
+            try (Cursor c = contentResolver.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, CURSORS,
                     VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "!=0" + (LoaderUtils.mustHideUserHiddenObjects() ? " AND " + LoaderUtils.HIDE_USER_HIDDEN_FILTER : ""), null,
-                    VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + " DESC LIMIT 1");
+                    VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + " DESC LIMIT 1")) {
 
-            if (c != null && c.getCount() != 0) {
-                int index_id = c.getColumnIndex(VideoStore.Video.VideoColumns._ID);
-                c.moveToFirst();
-                long resumeId = c.getLong(index_id);
-                Video video = getVideoFromId(resumeId);
-                PlayUtils.startVideo(this, video, PlayerActivity.RESUME_FROM_LAST_POS, true,-1, this, -1);
-            }else
-                Toast.makeText(this, R.string.no_resume_available, Toast.LENGTH_LONG).show();
+                if (c != null && c.moveToFirst()) {
+                    int index_id = c.getColumnIndex(VideoStore.Video.VideoColumns._ID);
+                    long resumeId = c.getLong(index_id);
+                    Video video = getVideoFromId(resumeId);
+                    PlayUtils.startVideo(this, video, PlayerActivity.RESUME_FROM_LAST_POS, true, -1, this, -1);
+                } else {
+                    Toast.makeText(this, R.string.no_resume_available, Toast.LENGTH_LONG).show();
+                }
+            }
         }
         else if(getString(R.string.action_recently_added).equals(intent.getAction())){
             final BrowserCategoryVideo category = (BrowserCategoryVideo) getSupportFragmentManager().findFragmentById(R.id.category);
@@ -520,6 +584,15 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
+    private final Handler mKeepScreenOnHandler = new Handler(Looper.getMainLooper());
+    private final Runnable mKeepScreenOnRunnable = new Runnable() {
+        @Override
+        public void run() {
+            ActiveOperationMonitor.updateKeepScreenOn(MainActivity.this);
+            mKeepScreenOnHandler.postDelayed(this, 1000);
+        }
+    };
+
     @Override
     public void onResume() {
         super.onResume();
@@ -531,19 +604,18 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         LoaderUtils.mMustHideWatchedVideo = mPreferences.getBoolean("hide_watched", false);
         LoaderUtils.mSmartRecentlyRows = mPreferences.getBoolean("smart_recently_rows", false);
 
-        if (Build.VERSION.SDK_INT >= 33) {
-            registerReceiver(mTraktRelogBroadcastReceiver,new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN), Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            registerReceiver(mTraktRelogBroadcastReceiver,new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN));
-        }
+        ContextCompat.registerReceiver(this, mTraktRelogBroadcastReceiver, new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN), ContextCompat.RECEIVER_NOT_EXPORTED);
         getContentResolver().registerContentObserver(VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
                 false, mGlobalResumeContentObserver);
         LoaderManager.getInstance(this).restartLoader(0, null, mNewVideosActionProvider);
+        mKeepScreenOnHandler.post(mKeepScreenOnRunnable);
     }
 
 
     @Override
     public void onPause() {
+        mKeepScreenOnHandler.removeCallbacks(mKeepScreenOnRunnable);
+        ActiveOperationMonitor.clearKeepScreenOn(this);
         unregisterReceiver(mTraktRelogBroadcastReceiver);
         if (mGlobalResumeContentObserver != null) {
             getContentResolver().unregisterContentObserver(mGlobalResumeContentObserver);
@@ -563,28 +635,6 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
             ThemeManager.getInstance(this).unregisterThemeChangeListener(mThemeChangeListener);
         }
         super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
-        if(backStackCount<=1) {
-            if(mDrawerLayout==null||mDrawerLayout.isDrawerOpen(GravityCompat.START))
-                supportFinishAfterTransition();
-            else{
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
-        } else {
-            // Get the fragment that is currently at the top of the back stack
-            String fragmentTag = getSupportFragmentManager().getBackStackEntryAt(backStackCount - 1).getName();
-            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(fragmentTag);
-            // Check if the fragment is added before trying to remove it
-            if (currentFragment != null && currentFragment.isAdded()) {
-                getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
-            }
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-        updateHomeIcon(getSupportFragmentManager().getBackStackEntryCount() > 1);
     }
 
     @Override
@@ -625,7 +675,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     @Override
     public void startActivityWithResultListener(Intent intent) {
-        startActivityForResult(intent, PLAY_ACTIVITY_REQUEST_CODE);
+        playLauncher.launch(intent);
     }
 
     @Override
@@ -710,8 +760,16 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 //setHomeButton();
                 break;
             case android.R.id.home:
-                if (mDrawerLayout == null || !mDrawerToggle.onOptionsItemSelected(item))
-                    onBackPressed();
+                boolean drawerHandled = false;
+                if (mDrawerLayout != null && mDrawerToggle != null) {
+                    try {
+                        drawerHandled = mDrawerToggle.onOptionsItemSelected(item);
+                    } catch (Throwable t) {
+                        log.error("onOptionsItemSelected: caught exception in drawer toggle", t);
+                    }
+                }
+                if (!drawerHandled)
+                    getOnBackPressedDispatcher().onBackPressed();
                 break;
 
             }
@@ -719,51 +777,12 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         return ret;
     }
 
-    private String mCurrentUiModeLeanback = null;
-
-    /**
-     * Handle the return from VideoPreferencesActivity, check if the UiMode has been changed or if
-     * the zoom dialog must be displayed
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Preference activity sets RESULT_OK if something need to be checked when back
-        if (requestCode == ACTIVITY_REQUEST_CODE_PREFERENCES) {
-            if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_UI_MODE_CHANGED) {
-                // Check if the UI mode changed
-                String newUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
-                if (!newUiModeLeanback.equals(mCurrentUiModeLeanback)) {
-                    // ui mode changed -> quit the current activity and restart
-                    finish();
-                    startActivity(new Intent(this, EntryActivity.class));
-                }
-                mCurrentUiModeLeanback = null; // reset
-            }
-            else if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_UI_ZOOM_CHANGED) {
-                new DensityTweak(this)
-                        .forceDensityDialogAtNextStart();
-                // restart the leanback activity for user to change the zoom
-                finish();
-                startActivity(new Intent(this, EntryActivity.class));
-            }
-        }
-       else if(requestCode == PLAY_ACTIVITY_REQUEST_CODE){
-            ExternalPlayerResultListener.getInstance().onActivityResult(requestCode,resultCode,data);
-        }
-
-    }
-
     public void startPreference(){
         Intent p = new Intent(Intent.ACTION_MAIN);
         p.setComponent(new ComponentName(this, VideoPreferencesActivity.class));
-        startActivityForResult(p, ACTIVITY_REQUEST_CODE_PREFERENCES);
         // Save the uimode_leanback to check if it changed when back from preferences
         mCurrentUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
+        preferencesLauncher.launch(p);
     }
 
     /**
@@ -778,17 +797,64 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     }
 
     public void updateHomeIcon(boolean show) {
-        if(mDrawerLayout!=null){
-             mDrawerToggle.setDrawerIndicatorEnabled(!show);
-            return;
+        if (mDrawerLayout != null && mDrawerToggle != null) {
+            try {
+                mDrawerToggle.setDrawerIndicatorEnabled(!show);
+                return;
+            } catch (Throwable t) {
+                log.error("updateHomeIcon: caught exception", t);
+                disableDrawer();
+            }
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(show);
         getSupportActionBar().setHomeButtonEnabled(show);
     }
 
     public void closeDrawer() {
-        if(mDrawerLayout!=null)
-            mDrawerLayout.closeDrawer(GravityCompat.START);
+        safeCloseDrawer();
+    }
+
+    private void disableDrawer() {
+        if (mDrawerLayout != null) {
+            try {
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            } catch (Throwable ignored) {}
+        }
+        mDrawerToggle = null;
+    }
+
+    private void safeOpenDrawer() {
+        if (mDrawerLayout != null) {
+            try {
+                mDrawerLayout.openDrawer(GravityCompat.START);
+            } catch (Throwable t) {
+                log.error("safeOpenDrawer: caught exception opening drawer", t);
+                disableDrawer();
+            }
+        }
+    }
+
+    private void safeCloseDrawer() {
+        if (mDrawerLayout != null) {
+            try {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            } catch (Throwable t) {
+                log.error("safeCloseDrawer: caught exception closing drawer", t);
+                disableDrawer();
+            }
+        }
+    }
+
+    private boolean safeIsDrawerOpen() {
+        if (mDrawerLayout != null) {
+            try {
+                return mDrawerLayout.isDrawerOpen(GravityCompat.START);
+            } catch (Throwable t) {
+                log.error("safeIsDrawerOpen: caught exception checking drawer state", t);
+                disableDrawer();
+            }
+        }
+        return false;
     }
 
     public void hideSeachView() {
@@ -797,6 +863,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     }
 
     //delegating to activity because getNavigationMode on support action bar doesn't work anymore
+    @SuppressWarnings("deprecation") // ActionBar navigation mode
     public void setNavigationMode(int navigationMode) {
         getSupportActionBar().setNavigationMode(navigationMode);
         mNavigationMode = navigationMode;
@@ -808,7 +875,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     private class GlobalResumeContentObserver extends ContentObserver {
         public GlobalResumeContentObserver() {
-            super(new Handler());
+            super(new Handler(Looper.getMainLooper()));
         }
 
         @Override
@@ -834,10 +901,15 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         return mGlobalResumeView;
     }
 
-    private class GlobalResumeTask extends AsyncTask<Void, Void, Map> {
-        protected Map doInBackground(Void... anything) {
-            Map<String, Object> result;
-            ContentResolver contentResolver = getContentResolver();
+    private class GlobalResumeTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+
+        void execute() {
+            executor.execute(() -> {
+                try {
+                Map<String, Object> result;
+                ContentResolver contentResolver = getContentResolver();
             Cursor c = contentResolver.query(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, CURSORS,
                     VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "!=0" + (LoaderUtils.mustHideUserHiddenObjects() ? " AND " + LoaderUtils.HIDE_USER_HIDDEN_FILTER : ""), null,
                     VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + " DESC LIMIT 1");
@@ -855,8 +927,8 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 int scraperId = c.getInt(index_scraper_id);
 
                 if (scraperId > 0) {
-                    int scraperType = c
-                            .getInt(c.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE));
+                    int scraperTypeColumn = c.getColumnIndex(VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE);
+                    int scraperType = scraperTypeColumn >= 0 ? c.getInt(scraperTypeColumn) : -1;
                     String[] selectionArgs = new String[] {
                             String.valueOf(scraperType), String.valueOf(scraperId)
                     };
@@ -869,7 +941,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                         int index_name = scraperCursor
                                 .getColumnIndex(ScraperStore.AllVideos.MOVIE_OR_SHOW_NAME);
 
-                        thumbnail = BitmapFactory.decodeFile(scraperCursor.getString(index_cover));
+                        thumbnail = com.archos.mediacenter.utils.BitmapUtils.decodeSampledBitmapFromFile(scraperCursor.getString(index_cover), 300, 450);
 
                         if (scraperType == com.archos.mediascraper.BaseTags.MOVIE) {
                             name = scraperCursor.getString(index_name);
@@ -880,7 +952,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                                     .getColumnIndex(ScraperStore.AllVideos.EPISODE_SEASON_NUMBER);
                             int index_episode_name = scraperCursor
                                     .getColumnIndex(ScraperStore.AllVideos.EPISODE_NAME);
-                            String episodeName = String.format(getString(R.string.quotation_format),
+                            String episodeName = String.format(Locale.getDefault(), getString(R.string.quotation_format),
                                     scraperCursor.getString(index_episode_name));
                             name = HtmlCompat.fromHtml(String.format(Locale.ENGLISH,TITLE_FORMAT,
                                     scraperCursor.getString(index_name),
@@ -910,19 +982,16 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 result = new HashMap<>(0);
             }
 
-            if (c != null)
-                c.close();
+                if (c != null)
+                    c.close();
 
-            return result;
-        }
-
-        protected void onPostExecute(Map result) {
-
-            if (!result.isEmpty()) {
+                final Map<String, Object> finalResult = result;
+                handler.post(() -> {
+                    if (!finalResult.isEmpty()) {
                 GlobalResumeView grv = getGlobalResumeView();
                 grv.resetOpenAnimation();
                 TextView text = (TextView) grv.findViewById(R.id.global_resume_text);
-                text.setText((CharSequence) result.get("name"));
+                text.setText((CharSequence) finalResult.get("name"));
                 View tint = grv.findViewById(R.id.tint);
 
                 // it seems to be possible that tint is null. Prevent crash and
@@ -930,7 +999,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 // the regular lifecycle.
                 if (tint == null) return;
 
-                Bitmap thumbnail = (Bitmap) result.get("thumbnail");
+                Bitmap thumbnail = (Bitmap) finalResult.get("thumbnail");
                 grv.setImage(thumbnail);
                 if (thumbnail != null) {
                     tint.setVisibility(View.VISIBLE);
@@ -938,7 +1007,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                     tint.setVisibility(View.GONE);
                 }
 
-                if ((Boolean) result.get("setListener")) {
+                if ((Boolean) finalResult.get("setListener")) {
                     final GlobalResumeView f_grv = grv;
 
                     // Handle clicks on the "resume global" area
@@ -996,7 +1065,12 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                         }
                     });
                 }
-            }
+                    }
+                });
+                } finally {
+                    executor.shutdown();
+                }
+            });
         }
     }
 
@@ -1008,6 +1082,10 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
 
     // ====================== UiChoiceDialog ====================
 
+    // Only used to skip the UiChoiceDialog check for a few hardware keys; it does not consume
+    // or otherwise intercept the BACK event (always delegates to super), so there is no
+    // OnBackPressedCallback/predictive-back equivalent to migrate to here.
+    @SuppressLint("GestureBackNavigation")
     @Override
     public boolean dispatchKeyEvent(KeyEvent ev) {
         boolean ignore = false;

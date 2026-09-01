@@ -36,7 +36,6 @@ public class LastAddedLoader extends VideoLoader {
         // cf. https://github.com/nova-video-player/aos-AVP/issues/134 reduce strain
         // only updates the CursorLoader on data change every 10s since used only in MainFragment as nonScraped box presence
         if (VideoLoader.ALLVIDEO_THROTTLE) setUpdateThrottle(VideoLoader.ALLVIDEO_THROTTLE_DELAY);
-
         // When smart mode is enabled, add GROUP BY and HAVING via URI query parameters
         if (LoaderUtils.isSmartRecentlyRows()) {
             Uri baseUri = getUri();
@@ -47,15 +46,15 @@ public class LastAddedLoader extends VideoLoader {
             if (DBG) Log.d(TAG, "Modified URI: " + builder.build());
         }
     }
-    
+
     @Override
     public String getSelection() {
         StringBuilder sb = new StringBuilder();
-        sb.append(super.getSelection()); // get common selection from the parent
+        sb.append(super.getSelection());
 
         if (LoaderUtils.isSmartRecentlyRows()) {
             //If we have played it at all (watched or started), it's not new anymore - it will show in Last Played!
-            sb.append(" AND ");
+            if (sb.length() > 0) sb.append(" AND ");
             sb.append(VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "=0");
         }
         String selection = sb.toString();
@@ -67,12 +66,10 @@ public class LastAddedLoader extends VideoLoader {
     public String getSortOrder() {
         String sortOrder;
         if (LoaderUtils.isSmartRecentlyRows()) {
-            // Secondary sort by release/air date to ensure consistent ordering when date_added is equal
-            // Movies use m_release_date (YYYY-MM-DD string), Episodes use e_aired (milliseconds timestamp)
-            sortOrder = "MAX(" + VideoStore.MediaColumns.DATE_ADDED + ") DESC, " +
-                       "COALESCE(" + VideoStore.Video.VideoColumns.SCRAPER_M_RELEASE_DATE + ", " +
-                       "date(" + VideoStore.Video.VideoColumns.SCRAPER_E_AIRED + "/1000, 'unixepoch')) DESC " +
-                       "LIMIT 50";
+            sortOrder = "MAX(" + VideoStore.MediaColumns.DATE_ADDED + ") DESC, "
+                    + "COALESCE(" + VideoStore.Video.VideoColumns.SCRAPER_M_RELEASE_DATE + ", "
+                    + "date(" + VideoStore.Video.VideoColumns.SCRAPER_E_AIRED + "/1000, 'unixepoch')) DESC "
+                    + "LIMIT 50";
         } else {
             sortOrder = VideoStore.MediaColumns.DATE_ADDED + " DESC LIMIT 50";
         }

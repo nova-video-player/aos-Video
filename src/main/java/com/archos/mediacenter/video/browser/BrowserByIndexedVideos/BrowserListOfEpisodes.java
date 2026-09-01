@@ -15,8 +15,6 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
-import static com.archos.mediacenter.video.utils.VideoUtils.isColorDark;
-
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -30,9 +28,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.loader.content.Loader;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -55,6 +50,7 @@ import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
 import com.archos.mediacenter.video.browser.presenter.EpisodeListDetailedPresenter;
 import com.archos.mediacenter.video.browser.presenter.EpisodePresenter;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
+import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -109,6 +105,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
         ThemeManager.getInstance(getContext()).registerThemeChangeListener(mThemeChangeListener);
     }
     @Override
+    @SuppressWarnings("deprecation")
     public void onDestroyView() {
         super.onDestroyView();
         if (mArchosGridView instanceof ListView) {
@@ -120,8 +117,13 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
             ((MainActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(ThemeManager.getInstance(getContext()).getToolbarBackgroundColor())
             );
+            WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            // setStatusBarColor is deprecated and ignored on Android 15+ (edge-to-edge enforced,
+            // bar is already transparent there)
+            if (Build.VERSION.SDK_INT < 35) {
+                getActivity().getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+            }
         }
         // Unregister theme change listener
         if (mThemeChangeListener != null) {
@@ -231,32 +233,20 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        // Show current mode icon instead of next mode
-        MenuItem item = menu.findItem(Browser.MENU_VIEW_MODE);
-        if (item != null) {
-            if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
-                item.setIcon(R.drawable.ic_menu_list_mode2);
-            } else if (mViewMode == VideoUtils.VIEW_MODE_DETAILS) {
-                item.setIcon(R.drawable.ic_menu_details_mode2);
-            }
+    protected void applySelectedViewMode(int viewMode) {
+        // Only cycle between LIST and DETAILS; redirect GRID to DETAILS
+        if (viewMode == VideoUtils.VIEW_MODE_GRID) {
+            viewMode = VideoUtils.VIEW_MODE_DETAILS;
         }
+        super.applySelectedViewMode(viewMode);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Override to skip GRID mode - only cycle between LIST and DETAILS
-        if (item.getItemId() == Browser.MENU_VIEW_MODE) {
-            if (mViewMode == VideoUtils.VIEW_MODE_LIST) {
-                applySelectedViewMode(VideoUtils.VIEW_MODE_DETAILS);
-            } else {
-                applySelectedViewMode(VideoUtils.VIEW_MODE_LIST);
-            }
-            getActivity().invalidateOptionsMenu();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    protected int getViewModeMenuIcon(int currentViewMode) {
+        // Icon points to the next mode in the LIST↔DETAILS cycle
+        return currentViewMode == VideoUtils.VIEW_MODE_LIST
+                ? R.drawable.ic_menu_details_mode2
+                : R.drawable.ic_menu_list_mode2;
     }
 
     @Override
@@ -277,6 +267,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void setColor(int color) {
         int darkColor = VideoInfoCommonClass.getDarkerColor(color);
         ColorDrawable[] colord = {new ColorDrawable(mLastColor), new ColorDrawable(darkColor)};
@@ -288,10 +279,9 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
             WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
             WindowInsetsControllerCompat insetsController = new WindowInsetsControllerCompat(getActivity().getWindow(), getActivity().getWindow().getDecorView());
             insetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-            insetsController.setAppearanceLightStatusBars(isColorDark(darkColor));
-            insetsController.setAppearanceLightNavigationBars(isColorDark(darkColor));
+            MiscUtils.applyStatusBarIconContrast(insetsController, darkColor);
         } else {
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getActivity().getWindow().setStatusBarColor(VideoInfoCommonClass.getAlphaColor(darkColor, 160));
         }

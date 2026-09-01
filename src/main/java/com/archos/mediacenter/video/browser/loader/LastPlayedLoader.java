@@ -22,7 +22,7 @@ import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
 /**
- * Load the 100 latest videos
+ * Load the 100 latest played videos
  * Created by vapillon on 10/04/15.
  */
 public class LastPlayedLoader extends VideoLoader {
@@ -36,7 +36,6 @@ public class LastPlayedLoader extends VideoLoader {
         // cf. https://github.com/nova-video-player/aos-AVP/issues/134 reduce strain
         // only updates the CursorLoader on data change every 10s since used only in MainFragment as nonScraped box presence
         if (VideoLoader.ALLVIDEO_THROTTLE) setUpdateThrottle(VideoLoader.ALLVIDEO_THROTTLE_DELAY);
-
         // When smart mode is enabled, add GROUP BY and HAVING via URI query parameters
         if (LoaderUtils.isSmartRecentlyRows()) {
             Uri baseUri = getUri();
@@ -51,10 +50,9 @@ public class LastPlayedLoader extends VideoLoader {
     @Override
     public String getSelection() {
         StringBuilder sb = new StringBuilder();
-        sb.append(super.getSelection()); // get common selection from the parent
+        sb.append(super.getSelection());
 
-        if (sb.length()>0) { sb.append(" AND "); }
-
+        if (sb.length() > 0) sb.append(" AND ");
         sb.append(VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + "!=0");
 
         String selection = sb.toString();
@@ -66,12 +64,10 @@ public class LastPlayedLoader extends VideoLoader {
     public String getSortOrder() {
         String sortOrder;
         if (LoaderUtils.isSmartRecentlyRows()) {
-            // Secondary sort by release/air date to ensure consistent ordering when last_played is equal
-            // Movies use m_release_date (YYYY-MM-DD string), Episodes use e_aired (milliseconds timestamp)
-            sortOrder = "MAX(" + VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + ") DESC, " +
-                       "COALESCE(" + VideoStore.Video.VideoColumns.SCRAPER_M_RELEASE_DATE + ", " +
-                       "date(" + VideoStore.Video.VideoColumns.SCRAPER_E_AIRED + "/1000, 'unixepoch')) DESC " +
-                       "LIMIT 50";
+            sortOrder = "MAX(" + VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + ") DESC, "
+                    + "COALESCE(" + VideoStore.Video.VideoColumns.SCRAPER_M_RELEASE_DATE + ", "
+                    + "date(" + VideoStore.Video.VideoColumns.SCRAPER_E_AIRED + "/1000, 'unixepoch')) DESC "
+                    + "LIMIT 50";
         } else {
             sortOrder = VideoStore.Video.VideoColumns.ARCHOS_LAST_TIME_PLAYED + " DESC LIMIT 50";
         }

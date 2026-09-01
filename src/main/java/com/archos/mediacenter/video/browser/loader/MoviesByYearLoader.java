@@ -38,6 +38,10 @@ public class MoviesByYearLoader extends MoviesByLoader {
     }
 
     public String getSelection(Context context) {
+        String categorySort = COLUMN_SUBSET_NAME + " COLLATE NOCASE DESC";
+        if (mSortOrder != null && (mSortOrder.startsWith("name") || mSortOrder.startsWith(COLUMN_SUBSET_NAME)) && mSortOrder.contains("ASC")) {
+            categorySort = COLUMN_SUBSET_NAME + " COLLATE NOCASE ASC";
+        }
         return "SELECT\n" +
                 "    m_year as _id,\n" +
                 "    m_year as name,\n" +
@@ -49,6 +53,6 @@ public class MoviesByYearLoader extends MoviesByLoader {
                 "  WHERE m_id IS NOT NULL AND m_year > 0" + getCommonSelection()+"\n"+
                 ") \n" +
                 "GROUP BY name\n" +
-                " ORDER BY "+mSortOrder;
+                " ORDER BY " + categorySort;
     }
 }

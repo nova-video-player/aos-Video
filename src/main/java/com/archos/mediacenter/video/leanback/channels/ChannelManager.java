@@ -1,7 +1,24 @@
+// Copyright 2026 Courville Software
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package com.archos.mediacenter.video.leanback.channels;
+
+import java.util.Locale;
 
 import static com.archos.mediacenter.utils.MediaUtils.getExternalCacheDir;
 
+import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,8 +29,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.core.content.ContextCompat;
 import androidx.tvprovider.media.tv.Channel;
@@ -59,6 +77,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ChannelManager {
 
@@ -108,7 +128,7 @@ public class ChannelManager {
     
     private void prepareEmptyPoster() {
         if (mPrepareEmptyPosterTask != null)
-            mPrepareEmptyPosterTask.cancel(true);
+            mPrepareEmptyPosterTask.cancel();
 
         mPrepareEmptyPosterTask = new PrepareEmptyPosterTask();
 
@@ -117,7 +137,7 @@ public class ChannelManager {
 
     private void prepareChannels() {
         if (mPrepareChannelsTask != null)
-            mPrepareChannelsTask.cancel(true);
+            mPrepareChannelsTask.cancel();
 
         mPrepareChannelsTask = new PrepareChannelsTask();
 
@@ -134,6 +154,7 @@ public class ChannelManager {
     }
 
     private void createChannels() {
+        if (mChannels == null) return;
         for(ChannelData channel : mChannels.values()) {
             if (channel.getId() == -1)
                 createChannel(channel);
@@ -144,7 +165,7 @@ public class ChannelManager {
         CreateChannelTask oldTask = mCreateChannelTasks.get(channel.getName());
 
         if (oldTask != null)
-            oldTask.cancel(true);
+            oldTask.cancel();
 
         CreateChannelTask newTask = new CreateChannelTask();
 
@@ -153,6 +174,7 @@ public class ChannelManager {
     }
 
     private void refreshChannels() {
+        if (mChannels == null) return;
         for(ChannelData channel : mChannels.values()) {
             if (channel.getId() != -1)
                 refreshChannel(channel);
@@ -163,24 +185,36 @@ public class ChannelManager {
         RefreshChannelTask oldTask = mRefreshChannelTasks.get(channel.getName());
 
         if (oldTask != null)
-            oldTask.cancel(true);
-        
+            oldTask.cancel();
+
         RefreshChannelTask newTask = new RefreshChannelTask();
 
         mRefreshChannelTasks.put(channel.getName(), newTask);
         newTask.execute(channel);
     }
 
-    private class PrepareEmptyPosterTask extends AsyncTask<Void, Void, Void> {
+    private class PrepareEmptyPosterTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            String path = new File(getExternalCacheDir(mContext), "empty_poster.png").getAbsolutePath();
+        void execute() {
+            executor.execute(() -> {
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    String path = new File(getExternalCacheDir(mContext), "empty_poster.png").getAbsolutePath();
+                    createEmptyPosterFile(path);
+                    createEmptyPosterRow(path);
+                } catch (Exception e) {
+                    Log.e(TAG, "PrepareEmptyPosterTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+            });
+        }
 
-            createEmptyPosterFile(path);
-            createEmptyPosterRow(path);
-
-            return null;
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
 
         private void createEmptyPosterFile(String path) {
@@ -228,27 +262,39 @@ public class ChannelManager {
         }
     }
 
-    private class PrepareChannelsTask extends AsyncTask<Void, Void, Void> {
+    private class PrepareChannelsTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
         private VideosByListLoader mListLoader;
 
-        @Override
-        protected void onPreExecute() {
-            mListLoader = new VideosByListLoader(mContext);
+        void execute() {
+            mListLoader = new VideosByListLoader(mContext); // onPreExecute equivalent
+            executor.execute(() -> {
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    addInternalChannels();
+                    deleteNotExistingChannels();
+                } catch (Exception e) {
+                    Log.e(TAG, "PrepareChannelsTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    if (mChannels != null) {
+                        initInternalChannels();
+                        onChannelsPrepared();
+                    }
+                });
+            });
         }
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            addInternalChannels();
-            deleteNotExistingChannels();
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            initInternalChannels();
-            onChannelsPrepared();
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
 
         private void addInternalChannels() {
@@ -261,17 +307,17 @@ public class ChannelManager {
             addInternalChannel(newChannels, mAllAnimes);
 
             Cursor listCursor = mListLoader.loadInBackground();
+            if (listCursor != null) {
+                try {
+                    int subsetIdColumn = listCursor.getColumnIndex(VideosByListLoader.COLUMN_SUBSET_ID);
+                    int subsetNameColumn = listCursor.getColumnIndex(VideosByListLoader.COLUMN_SUBSET_NAME);
+                    int videoIdsColumn = listCursor.getColumnIndex(VideosByListLoader.COLUMN_LIST_OF_VIDEO_IDS);
 
-            int subsetIdColumn = listCursor.getColumnIndex(VideosByListLoader.COLUMN_SUBSET_ID);
-            int subsetNameColumn = listCursor.getColumnIndex(VideosByListLoader.COLUMN_SUBSET_NAME);
-            int videoIdsColumn = listCursor.getColumnIndex(VideosByListLoader.COLUMN_LIST_OF_VIDEO_IDS);
-
-            try {
-                while (listCursor.moveToNext())
-                    addInternalChannel(newChannels, listCursor.getString(subsetNameColumn), listCursor.getLong(subsetIdColumn), listCursor.getString(videoIdsColumn));
-            }
-            finally {
-                listCursor.close();
+                    while (listCursor.moveToNext())
+                        addInternalChannel(newChannels, listCursor.getString(subsetNameColumn), listCursor.getLong(subsetIdColumn), listCursor.getString(videoIdsColumn));
+                } finally {
+                    listCursor.close();
+                }
             }
             
             mChannels = newChannels;
@@ -308,6 +354,11 @@ public class ChannelManager {
     
                         if (!mChannels.containsKey(channel.getDisplayName()))
                             mContext.getContentResolver().delete(TvContractCompat.buildChannelUri(channel.getId()), null, null);
+                        else {
+                            ChannelData internalChannel = mChannels.get(channel.getDisplayName());
+                            if (internalChannel != null)
+                                internalChannel.setId(channel.getId());
+                        }
                     }
                 }
                 finally {
@@ -317,53 +368,77 @@ public class ChannelManager {
         }
 
         private void initInternalChannels() {
+            if (mChannels == null) {
+                Log.e(TAG, "initInternalChannels: mChannels is null");
+                return;
+            }
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             String allMoviesSortOrder = prefs.getString(VideoPreferencesCommon.KEY_MOVIE_SORT_ORDER, MoviesLoader.DEFAULT_SORT);
             String allTvShowsSortOrder = prefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
             String allAnimesSortOrder = prefs.getString(VideoPreferencesCommon.KEY_ANIMES_SORT_ORDER, AnimesLoader.DEFAULT_SORT);
 
-            if (MainFragment.FEATURE_WATCH_UP_NEXT) mChannels.get(mWatchingUpNext).setLoader(new WatchingUpNextLoader(mContext));
-            mChannels.get(mRecentlyAdded).setLoader(new LastAddedLoader(mContext));
-            mChannels.get(mRecentlyPlayed).setLoader(new LastPlayedLoader(mContext));
-            mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
-            mChannels.get(mAllTvShows).setLoader(new AllTvshowsLoader(mContext, allTvShowsSortOrder, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
-            if  (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT))
-                mChannels.get(mAllAnimes).setLoader(new AnimesNShowsLoader(mContext, allAnimesSortOrder, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
-            else mChannels.get(mAllAnimes).setLoader(new AnimesLoader(mContext, allAnimesSortOrder, true, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+            if (MainFragment.FEATURE_WATCH_UP_NEXT && mChannels.get(mWatchingUpNext) != null) 
+                mChannels.get(mWatchingUpNext).setLoader(new WatchingUpNextLoader(mContext));
+            if (mChannels.get(mRecentlyAdded) != null)
+                mChannels.get(mRecentlyAdded).setLoader(new LastAddedLoader(mContext));
+            if (mChannels.get(mRecentlyPlayed) != null)
+                mChannels.get(mRecentlyPlayed).setLoader(new LastPlayedLoader(mContext));
+            if (mChannels.get(mAllMovies) != null)
+                mChannels.get(mAllMovies).setLoader(new MoviesLoader(mContext, allMoviesSortOrder, true, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+            if (mChannels.get(mAllTvShows) != null)
+                mChannels.get(mAllTvShows).setLoader(new AllTvshowsLoader(mContext, allTvShowsSortOrder, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+            if (mChannels.get(mAllAnimes) != null) {
+                if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(VideoPreferencesCommon.KEY_SEPARATE_ANIME_MOVIE_SHOW, VideoPreferencesCommon.SEPARATE_ANIME_MOVIE_SHOW_DEFAULT))
+                    mChannels.get(mAllAnimes).setLoader(new AnimesNShowsLoader(mContext, allAnimesSortOrder, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+                else
+                    mChannels.get(mAllAnimes).setLoader(new AnimesLoader(mContext, allAnimesSortOrder, true, true, VideoLoader.CHANNEL_THROTTLE, VideoLoader.CHANNEL_THROTTLE_DELAY));
+            }
 
             for(ChannelData channel : mChannels.values()) {
-                if (channel.getListVideoIds() != null)
+                if (channel != null && channel.getListVideoIds() != null)
                     channel.setLoader(new VideosSelectionLoader(mContext, channel.getListVideoIds(), VideoLoader.DEFAULT_SORT));
             }
         }
     }
 
-    private class CreateChannelTask extends AsyncTask<ChannelData, Void, Void> {
+    private class CreateChannelTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected Void doInBackground(ChannelData... params) {
-            ChannelData channel = params[0];
-
-            long channelId = getChannelId(channel);
-
-            if (channelId == -1) {
+        void execute(ChannelData channel) {
+            executor.execute(() -> {
                 try {
-                    channelId = createChannel(channel);
-                    channel.setId(channelId);
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    long channelId = getChannelId(channel);
+                    if (channelId == -1) {
+                        try {
+                            channelId = createChannel(channel);
+                            channel.setId(channelId);
+                        } catch (Exception e) {
+                            if (DBG) Log.e(TAG, "CreateChannelTask: caught exception (HarmonyOS?)", e);
+                        }
+                    } else {
+                        try {
+                            channel.setId(channelId);
+                            updateChannel(channel);
+                        } catch (Exception e) {
+                            if (DBG) Log.e(TAG, "CreateChannelTask: caught exception (HarmonyOS?)", e);
+                        }
+                    }
+                    if (channel.getId() != -1 && !isCancelled && !Thread.currentThread().isInterrupted()) {
+                        refreshChannel(channel);
+                    }
                 } catch (Exception e) {
-                    if (DBG) Log.e(TAG, "CreateChannelTask:doInBackground: caught exception (HarmonyOS?)", e);
+                    Log.e(TAG, "CreateChannelTask failed", e);
+                } finally {
+                    executor.shutdown();
                 }
-            }
-            else {
-                try {
-                    channel.setId(channelId);
-                    updateChannel(channel);
-                } catch (Exception e) {
-                    if (DBG) Log.e(TAG, "CreateChannelTask:doInBackground: caught exception (HarmonyOS?)", e);
-                }
-            }
-            
-            return null;
+            });
+        }
+
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
 
         private long getChannelId(ChannelData internalChannel) {
@@ -395,6 +470,7 @@ public class ChannelManager {
                 long id = ContentUris.parseId(uri);
 
                 ChannelLogoUtils.storeChannelLogo(mContext, id, BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.nova));
+                TvContractCompat.requestChannelBrowsable(mContext, id);
 
                 return id;
             } catch (Exception e) {
@@ -418,23 +494,43 @@ public class ChannelManager {
         }
     }
 
-    private class RefreshChannelTask extends AsyncTask<ChannelData, Void, Void> {
+    private class RefreshChannelTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected Void doInBackground(ChannelData... params) {
-            ChannelData channel = params[0];
+        void execute(ChannelData channel) {
+            executor.execute(() -> {
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    doRefresh(channel);
+                } catch (Exception e) {
+                    Log.e(TAG, "RefreshChannelTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+            });
+        }
 
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
+        }
+
+        // PreviewProgram.Builder setters/getters are inherited from BaseProgram.Builder /
+        // BasePreviewProgram.Builder which are marked @RestrictTo(LIBRARY_GROUP) in
+        // androidx.tvprovider, but PreviewProgram.Builder is the only public, documented way
+        // to build a TV "Channels" preview program (see Android TV Recommendations Channel
+        // API docs/samples), so this is the sanctioned usage, not an internal-only call.
+        @SuppressLint("RestrictedApi")
+        private void doRefresh(ChannelData channel) {
             if (DBG) Log.d(TAG, "Refreshing " + channel.getName());
 
-            boolean isVisible = isChannelVisible(channel);
-
-            if (!isVisible) {
-                deletePrograms(channel);
-
-                return null;
-            }
+            if (channel.getLoader() == null)
+                return;
 
             Cursor cursor = channel.getLoader().loadInBackground();
+            if (cursor == null)
+                return;
 
             try {
                 ArrayList<Long> oldVideoOrTvShowIds = getVideoOrTvShowIds(channel);
@@ -444,8 +540,7 @@ public class ChannelManager {
 
                 if (newVideoOrTvShowIds.equals(oldVideoOrTvShowIds) && newPosterIds.equals(oldPosterIds)) {
                     cursor.close();
-
-                    return null;
+                    return;
                 }
 
                 deletePrograms(channel);
@@ -524,7 +619,7 @@ public class ChannelManager {
                             long aired = cursor.getLong(dateColumn);
 
                             if (aired > 0)
-                                date = new SimpleDateFormat("yyyy-MM-dd").format(new Date(aired));
+                                date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date(aired));
                         }
                         else {
                             int year = cursor.getInt(dateColumn);
@@ -537,7 +632,7 @@ public class ChannelManager {
                         long premiered = cursor.getLong(dateColumn);
 
                         if (premiered > 0)
-                            date = new SimpleDateFormat("yyyy").format(new Date(premiered));
+                            date = new SimpleDateFormat("yyyy", Locale.US).format(new Date(premiered));
                     }
 
                     if (date != null && !date.isEmpty())
@@ -591,33 +686,12 @@ public class ChannelManager {
             finally {
                 cursor.close();
             }
-
-            return null;
         }
 
-        private boolean isChannelVisible(ChannelData internalChannel) {
-            Cursor cursor = mContext.getContentResolver().query(TvContractCompat.Channels.CONTENT_URI, new String[] { TvContractCompat.Channels._ID, TvContractCompat.Channels.COLUMN_BROWSABLE }, null, null, null);
-
-            if (cursor != null) {
-                try {
-                    while (cursor.moveToNext()) {
-                        Channel channel = Channel.fromCursor(cursor);
-    
-                        if (channel.getId() == internalChannel.getId()) {
-                            cursor.close();
-
-                            return channel.isBrowsable();
-                        } 
-                    }
-                }
-                finally {
-                    cursor.close();
-                }
-            }
-
-            return false;
-        }
-
+        // BaseProgram.getId() is the only public way to read the id of a PreviewProgram
+        // obtained via PreviewProgram.fromCursor(); see doRefresh() above for why this
+        // androidx.tvprovider @RestrictTo is a false positive here.
+        @SuppressLint("RestrictedApi")
         private void deletePrograms(ChannelData channel) {
             Cursor cursor = mContext.getContentResolver().query(TvContractCompat.PreviewPrograms.CONTENT_URI, new String[] { TvContractCompat.Programs._ID, TvContractCompat.Programs.COLUMN_CHANNEL_ID }, null, null, null);
             
@@ -636,6 +710,10 @@ public class ChannelManager {
             }
         }
 
+        // BasePreviewProgram.getIntent() is the only public way to read back the Intent stored
+        // on a PreviewProgram; see doRefresh() above for why this androidx.tvprovider
+        // @RestrictTo is a false positive here.
+        @SuppressLint("RestrictedApi")
         private ArrayList<Long> getVideoOrTvShowIds(ChannelData channel) {
             ArrayList<Long> videoOrTvShowIds = new ArrayList<>();
             Cursor cursor = mContext.getContentResolver().query(TvContractCompat.PreviewPrograms.CONTENT_URI, new String[] { TvContractCompat.Programs._ID, TvContractCompat.Programs.COLUMN_CHANNEL_ID, TvContractCompat.PreviewPrograms.COLUMN_INTENT_URI }, null, null, null);
@@ -696,6 +774,10 @@ public class ChannelManager {
             return videoOrTvShowIds;
         }
 
+        // ProgramColumns.COLUMN_POSTER_ART_URI / BaseProgram.getPosterArtUri() are the only
+        // public way to query/read the poster uri of a PreviewProgram; see doRefresh() above
+        // for why this androidx.tvprovider @RestrictTo is a false positive here.
+        @SuppressLint("RestrictedApi")
         private ArrayList<Long> getPosterIds(ChannelData channel) {
             ArrayList<Long> posterIds = new ArrayList<>();
             Cursor cursor = mContext.getContentResolver().query(TvContractCompat.PreviewPrograms.CONTENT_URI, new String[] { TvContractCompat.Programs._ID, TvContractCompat.Programs.COLUMN_CHANNEL_ID, TvContractCompat.PreviewPrograms.COLUMN_POSTER_ART_URI }, null, null, null);

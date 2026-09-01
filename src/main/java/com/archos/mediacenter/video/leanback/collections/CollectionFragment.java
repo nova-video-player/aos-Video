@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.collections;
 
+import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 
@@ -32,15 +34,12 @@ import androidx.loader.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.preference.PreferenceManager;
-import androidx.leanback.app.BackgroundManager;
 import androidx.leanback.app.DetailsFragmentWithLessTopOffset;
 import androidx.leanback.widget.Action;
 import androidx.leanback.widget.ArrayObjectAdapter;
@@ -59,6 +58,7 @@ import androidx.leanback.widget.RowPresenter;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import android.transition.Slide;
+import android.transition.Transition;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
@@ -66,8 +66,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.leanback.transition.TransitionHelper;
-import androidx.leanback.transition.TransitionListener;
 import androidx.loader.content.CursorLoader;
 
 import com.archos.filecorelibrary.FileUtilsQ;
@@ -85,8 +83,8 @@ import com.archos.mediacenter.video.browser.loader.CollectionLoader;
 import com.archos.mediacenter.video.browser.loader.MovieCollectionLoader;
 import com.archos.mediacenter.video.collections.CollectionsSortOrderEntries;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
-import com.archos.mediacenter.video.leanback.BackdropTask;
 import com.archos.mediacenter.video.leanback.CompatibleCursorMapperConverter;
+import com.archos.mediacenter.video.leanback.DetailsBackdropController;
 import com.archos.mediacenter.video.leanback.VideoViewClickedListener;
 import com.archos.mediacenter.video.leanback.details.ArchosDetailsOverviewRowPresenter;
 import com.archos.mediacenter.video.leanback.filebrowsing.ListingActivity;
@@ -107,6 +105,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class CollectionFragment extends DetailsFragmentWithLessTopOffset implements LoaderManager.LoaderCallbacks<Cursor>, Delete.DeleteListener {
@@ -132,9 +132,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     private ArrayObjectAdapter mRowsAdapter;
     private MovieCollectionAdapter mMovieCollectionAdapter;
 
-    private AsyncTask mBackdropTask;
-    private AsyncTask mDetailRowBuilderTask;
-    private AsyncTask mRefreshCollectionBitmapTask;
+    private DetailsBackdropController mBackdropController;
+    private DetailRowBuilderTask mDetailRowBuilderTask;
+    private RefreshCollectionBitmapTask mRefreshCollectionBitmapTask;
 
     private ArchosDetailsOverviewRowPresenter mOverviewRowPresenter;
     private CollectionDetailsDescriptionPresenter mDescriptionPresenter;
@@ -145,48 +145,77 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     private int oldPos = 0;
     private int oldSelectedSubPosition = 0;
     private boolean mHasDetailRow;
-
     private boolean mShouldDisplayConfirmDelete = false;
 
-    // need to be static otherwise ActivityResultLauncher find them null
-    private static Delete delete;
-    private static List<Uri> deleteUrisList;
+    private static final String SAVED_DELETE_URIS = "saved_delete_uris";
+    private static final String SAVED_DELETE_OPERATION = "saved_delete_operation";
+    private static final String SAVED_DELETE_FILE_SIZE = "saved_delete_file_size";
+
+    private Delete delete;
+    private List<Uri> deleteUrisList;
+    private int deleteOperation = Delete.OP_SINGLE_FILE;
+    private long deleteFileSize = 0L;
+
+    private final ActivityResultLauncher<Intent> videoLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { if (result.getResultCode() == Activity.RESULT_OK) { refreshCollection(); refreshActivity(); } });
 
     private final ActivityResultLauncher<IntentSenderRequest> deleteLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
             result -> { // result can be RESULT_OK, RESULT_CANCELED
                 Context context = getActivity();
                 if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: result {}", result.toString());
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: OK, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
-                    if (delete != null && deleteUrisList != null && deleteUrisList.size() >= 1) {
-                        if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: calling delete.deleteOK on {}", deleteUrisList.get(0));
-                        delete.deleteOK(deleteUrisList.get(0));
-                    }
-                } else {
-                    if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: NO, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
-                    if (delete != null && deleteUrisList != null && deleteUrisList.size() > 1)
-                        delete.deleteNOK(deleteUrisList.get(0));
+                if (delete == null && getActivity() != null) {
+                    delete = new Delete(CollectionFragment.this, getActivity());
+                }
+                if (delete != null && deleteUrisList != null && !deleteUrisList.isEmpty()) {
+                    boolean isSuccess = result.getResultCode() == Activity.RESULT_OK;
+                    delete.completeSystemDelete(deleteUrisList, isSuccess, deleteOperation, deleteFileSize);
                 }
             });
 
+    @SuppressWarnings("deprecation") // getSerializableExtra / getParcelableArrayList: API 33+ branch uses typed form; else branch suppressed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (log.isDebugEnabled()) log.debug("onCreate");
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS, Uri.class);
+            } else {
+                deleteUrisList = savedInstanceState.getParcelableArrayList(SAVED_DELETE_URIS);
+            }
+            deleteOperation = savedInstanceState.getInt(SAVED_DELETE_OPERATION, Delete.OP_SINGLE_FILE);
+            deleteFileSize = savedInstanceState.getLong(SAVED_DELETE_FILE_SIZE, 0L);
+        }
         // pass the right deleteLauncher linked to activity
         FileUtilsQ.setDeleteLauncher(deleteLauncher);
-        Object transition = TransitionHelper.getEnterTransition(getActivity().getWindow());
+        // minSdk is 23 (> 21), so Window.getEnterTransition()/Transition.addListener() -
+        // both public android.transition APIs - are always available; no need for
+        // androidx.leanback's restricted TransitionHelper/TransitionListener wrappers.
+        Transition transition = getActivity().getWindow().getEnterTransition();
         if(transition!=null) {
-            TransitionHelper.addTransitionListener(transition, new TransitionListener() {
+            transition.addListener(new Transition.TransitionListener() {
                 @Override
-                public void onTransitionStart(Object transition) {
+                public void onTransitionStart(Transition transition) {
                     mOverlay.hide();
                 }
 
                 @Override
-                public void onTransitionEnd(Object transition) {
+                public void onTransitionEnd(Transition transition) {
                     mOverlay.show();
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
                 }
             });
         }
@@ -194,7 +223,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         setTopOffsetRatio(0.6f);
 
         Intent intent = getActivity().getIntent();
-        mCollection = (Collection) intent.getSerializableExtra(EXTRA_COLLECTION);
+        mCollection = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                ? intent.getSerializableExtra(EXTRA_COLLECTION, Collection.class)
+                : (Collection) intent.getSerializableExtra(EXTRA_COLLECTION);
         if (mCollection != null) mCollectionId = mCollection.getCollectionId();
         else mCollectionId = intent.getLongExtra(EXTRA_COLLECTION_ID, -1);
 
@@ -203,7 +234,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         if (log.isDebugEnabled()) log.debug("onCreate: {}", mCollection.getName());
 
         mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.getMainLooper());
         mDescriptionPresenter = new CollectionDetailsDescriptionPresenter();
         mOverviewRowPresenter = new ArchosDetailsOverviewRowPresenter(mDescriptionPresenter);
         //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
@@ -223,8 +254,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     if (!mCollection.isWatched()) {
                         DbUtils.markAsRead(getActivity(), mCollection);
                         refreshCollection();
-                        if (mRefreshCollectionBitmapTask != null) mRefreshCollectionBitmapTask.cancel(true);
-                        mRefreshCollectionBitmapTask = new RefreshCollectionBitmapTask().execute(mCollection);
+                        if (mRefreshCollectionBitmapTask != null) mRefreshCollectionBitmapTask.cancel();
+                        mRefreshCollectionBitmapTask = new RefreshCollectionBitmapTask();
+                        mRefreshCollectionBitmapTask.execute(mCollection);
                         refreshActivity();
                     }
                 }
@@ -233,8 +265,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     if (mCollection.isWatched()) {
                         DbUtils.markAsNotRead(getActivity(), mCollection);
                         refreshCollection();
-                        if (mRefreshCollectionBitmapTask != null) mRefreshCollectionBitmapTask.cancel(true);
-                        mRefreshCollectionBitmapTask = new RefreshCollectionBitmapTask().execute(mCollection);
+                        if (mRefreshCollectionBitmapTask != null) mRefreshCollectionBitmapTask.cancel();
+                        mRefreshCollectionBitmapTask = new RefreshCollectionBitmapTask();
+                        mRefreshCollectionBitmapTask.execute(mCollection);
                         refreshActivity();
                     }
                 }
@@ -250,10 +283,13 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     }
                     delete = new Delete(CollectionFragment.this, getActivity());
                     deleteUrisList = uris;
-                    if (uris.size() == 1)
+                    if (uris.size() == 1) {
+                        deleteOperation = Delete.OP_SINGLE_FILE;
                         delete.startDeleteProcess(uris.get(0));
-                    else if (uris.size() > 1)
+                    } else if (uris.size() > 1) {
+                        deleteOperation = Delete.OP_MULTIPLE_FILES;
                         delete.startMultipleDeleteProcess(uris);
+                    }
                     mShouldDisplayConfirmDelete = false;
                     refreshActivity();
                 }
@@ -267,10 +303,9 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         mRowsAdapter = new ArrayObjectAdapter(ps);
         mHasDetailRow = false;
 
-        // WORKAROUND: at least one instance of BackdropTask must be created soon in the process (onCreate ?)
-        // else it does not work later.
-        // --> This instance of BackdropTask() will not be used but it must be created here!
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor));
+        mBackdropController = new DetailsBackdropController(getActivity(), R.id.details_backdrop,
+                VideoInfoCommonClass.getDarkerColor(mColor));
+        mBackdropController.attach();
 
         setOnItemViewClickedListener(new OnItemViewClickedListener() {
             @Override
@@ -278,7 +313,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 if (item instanceof Video) {
                     //animate only if episode picture isn't displayed
                     boolean animate =!((item instanceof Video)&&((Video)item).getPosterUri()!=null);
-                    VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1, CollectionFragment.this, REQUEST_CODE_VIDEO);
+                    VideoViewClickedListener.showVideoDetails(getActivity(), (Video) item, itemViewHolder, animate, false, false, -1, videoLauncher);
                 }
             }
         });
@@ -303,6 +338,7 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 delete = new Delete(CollectionFragment.this, activity);
+                                deleteOperation = Delete.OP_FOLDER;
                                 deleteUrisList = Collections.singletonList(folder);
                                 delete.deleteFolder(folder);
                             }
@@ -337,6 +373,8 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
 
     @Override
     public void onDeleteSuccess() {
+        Activity activity = getActivity();
+        if (activity != null) activity.finish();
     }
 
     private void playMovie() {
@@ -403,19 +441,42 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (deleteUrisList != null) {
+            if (delete != null && delete.getCurrentVideoFileToDeleteSize() > 0) {
+                deleteFileSize = delete.getCurrentVideoFileToDeleteSize();
+            }
+            outState.putParcelableArrayList(SAVED_DELETE_URIS, (deleteUrisList instanceof ArrayList) ? (ArrayList<Uri>) deleteUrisList : new ArrayList<>(deleteUrisList));
+            outState.putInt(SAVED_DELETE_OPERATION, deleteOperation);
+            outState.putLong(SAVED_DELETE_FILE_SIZE, deleteFileSize);
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         if (log.isDebugEnabled()) log.debug("onDestroyView");
         mOverlay.destroy();
+        delete = null;
         super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (log.isDebugEnabled()) log.debug("onDestroy");
+        delete = null;
+        deleteUrisList = null;
+        super.onDestroy();
     }
 
     @Override
     public void onStop() {
         if (log.isDebugEnabled()) log.debug("onStop");
-        mBackdropTask.cancel(true);
+        mBackdropController.onStop(mCollection != null, mCollection);
         if (mDetailRowBuilderTask!=null) {
-            mDetailRowBuilderTask.cancel(true);
+            mDetailRowBuilderTask.cancel();
         }
+        if (mRefreshCollectionBitmapTask != null) mRefreshCollectionBitmapTask.cancel();
         super.onStop();
     }
 
@@ -424,19 +485,16 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         if (log.isDebugEnabled()) log.debug("onResume");
         super.onResume();
         mOverlay.resume();
+        mBackdropController.restoreIfNeeded();
 
         // Load the details view
         if (mDetailRowBuilderTask != null) {
-            mDetailRowBuilderTask.cancel(true);
+            mDetailRowBuilderTask.cancel();
         }
-        mDetailRowBuilderTask = new DetailRowBuilderTask().execute(mCollection);
+        mDetailRowBuilderTask = new DetailRowBuilderTask();
+        mDetailRowBuilderTask.execute(mCollection);
 
-        // Launch backdrop task in BaseTags-as-arguments mode
-        if (mBackdropTask!=null) {
-            mBackdropTask.cancel(true);
-        }
-        // what we need here is the backdrop i.e. the image generated
-        mBackdropTask = new BackdropTask(getActivity(), VideoInfoCommonClass.getDarkerColor(mColor)).execute(mCollection);
+        mBackdropController.loadIfIdle(mCollection);
 
         // Start loading the list of seasons
         LoaderManager.getInstance(CollectionFragment.this).restartLoader(COLLECTION_LOADER_ID, null, CollectionFragment.this);
@@ -449,23 +507,6 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         mOverlay.pause();
     }
 
-    /**
-     * Getting RESULT_OK from REQUEST_CODE_MORE_DETAILS means that the poster and/or the backdrop has been changed
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (log.isDebugEnabled()) log.debug("onActivityResult requestCode {}", requestCode);
-        if ((requestCode == REQUEST_CODE_MARK_WATCHED || requestCode == REQUEST_CODE_VIDEO) && resultCode == Activity.RESULT_OK) {
-            if (log.isDebugEnabled()) log.debug("onActivityResult processing requestCode, first refreshCollection");
-            refreshCollection();
-            refreshActivity();
-        } else {
-            if (log.isDebugEnabled()) log.debug("onActivityResult NOT processing requestCode");
-        }
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
@@ -500,53 +541,70 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
     }
 
-    private class DetailRowBuilderTask extends AsyncTask<Collection, Void, Pair<Collection, Bitmap>> {
+    private class DetailRowBuilderTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
-        @Override
-        protected Pair<Collection, Bitmap> doInBackground(Collection... collections) {
-            if (log.isDebugEnabled()) log.debug("DetailRowBuilderTask.doInBackground collectionS length {}", collections.length);
-            Collection collection = collections[0];
-            if (log.isDebugEnabled()) log.debug("DetailRowBuilderTask.doInBackground collection {}", collection.getName());
-            Bitmap bitmap = generateCollectionBitmap(collection.getPosterUri(), collection.isWatched());
-            return new Pair<>(collection, bitmap);
+        void execute(Collection collection) {
+            executor.execute(() -> {
+                Pair<Collection, Bitmap> result = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    if (log.isDebugEnabled()) log.debug("DetailRowBuilderTask.doInBackground collection {}", collection.getName());
+                    Bitmap bitmap = generateCollectionBitmap(collection.getPosterUri(), collection.isWatched());
+                    result = new Pair<>(collection, bitmap);
+                } catch (Exception e) {
+                    log.error("DetailRowBuilderTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                final Pair<Collection, Bitmap> finalResult = result;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    if (finalResult == null) return;
+                    Collection c = finalResult.first;
+                    Bitmap bitmap = finalResult.second;
+
+                    // Buttons
+                    if (mDetailsOverviewRow == null) {
+                        mDetailsOverviewRow = new DetailsOverviewRow(c);
+                        mDetailsOverviewRow.setActionsAdapter(new CollectionActionAdapter(getActivity(), c, mShouldDisplayConfirmDelete));
+                    }
+                    else {
+                        mDetailsOverviewRow.setItem(c);
+                    }
+
+                    if (bitmap != null) {
+                        mOverviewRowPresenter.updateBackgroundColor(mColor);
+                        mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
+                        mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
+                        mDetailsOverviewRow.setImageScaleUpAllowed(true);
+                    }
+                    else {
+                        mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
+                        mDetailsOverviewRow.setImageScaleUpAllowed(false);
+                    }
+
+                    if (log.isDebugEnabled()) log.debug("mHasDetailRow = {}", mHasDetailRow);
+                    if (!mHasDetailRow) {
+                        if (log.isDebugEnabled()) log.debug("mHasDetailRow is false adding detailOverviewRow");
+                        mBackdropController.setFallbackColor(VideoInfoCommonClass.getDarkerColor(mColor));
+                        mRowsAdapter.add(INDEX_DETAILS, mDetailsOverviewRow);
+                        setAdapter(mRowsAdapter);
+                        mHasDetailRow = true;
+                    } else {
+                        mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
+                        setAdapter(mRowsAdapter);
+                    }
+                });
+            });
         }
 
-        @Override
-        protected void onPostExecute(Pair<Collection, Bitmap> result) {
-            Collection collection = result.first;
-            Bitmap bitmap = result.second;
-
-            // Buttons
-            if (mDetailsOverviewRow == null) {
-                mDetailsOverviewRow = new DetailsOverviewRow(collection);
-                mDetailsOverviewRow.setActionsAdapter(new CollectionActionAdapter(getActivity(), collection, mShouldDisplayConfirmDelete));
-            }
-            else {
-                mDetailsOverviewRow.setItem(collection);
-            }
-
-            if (bitmap!=null) {
-                mOverviewRowPresenter.updateBackgroundColor(mColor);
-                mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
-                mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
-                mDetailsOverviewRow.setImageScaleUpAllowed(true);
-            }
-            else {
-                mDetailsOverviewRow.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.filetype_new_video));
-                mDetailsOverviewRow.setImageScaleUpAllowed(false);
-            }
-
-            if (log.isDebugEnabled()) log.debug("mHasDetailRow = {}", mHasDetailRow);
-            if (!mHasDetailRow) {
-                if (log.isDebugEnabled()) log.debug("mHasDetailRow is false adding detailOverviewRow");
-                BackgroundManager.getInstance(getActivity()).setDrawable(new ColorDrawable(VideoInfoCommonClass.getDarkerColor(mColor)));
-                mRowsAdapter.add(INDEX_DETAILS, mDetailsOverviewRow);
-                setAdapter(mRowsAdapter);
-                mHasDetailRow = true;
-            } else {
-                mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
-                setAdapter(mRowsAdapter);
-            }
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
@@ -693,26 +751,44 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
         return bitmap;
     }
 
-    private class RefreshCollectionBitmapTask extends AsyncTask<Collection, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(Collection... collections) {
-            Collection collection = collections[0];
-            if (log.isDebugEnabled()) log.debug("RefreshCollectionBitmapTask.doInBackground collection {}", collection.getName());
-            Bitmap bitmap = generateCollectionBitmap(collection.getPosterUri(), collection.isWatched());
-            return bitmap;
-        }
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap!=null) {
-                mOverviewRowPresenter.updateBackgroundColor(mColor);
-                mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
-                mDetailsOverviewRow.setImageBitmap(getActivity(), bitmap);
-                mDetailsOverviewRow.setImageScaleUpAllowed(true);
-                if (mHasDetailRow) {
-                    mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
-                    setAdapter(mRowsAdapter);
+    private class RefreshCollectionBitmapTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
+
+        void execute(Collection collection) {
+            executor.execute(() -> {
+                Bitmap result = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    if (log.isDebugEnabled()) log.debug("RefreshCollectionBitmapTask.doInBackground collection {}", collection.getName());
+                    result = generateCollectionBitmap(collection.getPosterUri(), collection.isWatched());
+                } catch (Exception e) {
+                    log.error("RefreshCollectionBitmapTask failed", e);
+                } finally {
+                    executor.shutdown();
                 }
-            }
+                if (isCancelled) return;
+                final Bitmap finalResult = result;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    if (finalResult != null) {
+                        mOverviewRowPresenter.updateBackgroundColor(mColor);
+                        mOverviewRowPresenter.updateActionsBackgroundColor(getDarkerColor(mColor));
+                        mDetailsOverviewRow.setImageBitmap(getActivity(), finalResult);
+                        mDetailsOverviewRow.setImageScaleUpAllowed(true);
+                        if (mHasDetailRow) {
+                            mRowsAdapter.replace(INDEX_DETAILS, mDetailsOverviewRow);
+                            setAdapter(mRowsAdapter);
+                        }
+                    }
+                });
+            });
+        }
+
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 }

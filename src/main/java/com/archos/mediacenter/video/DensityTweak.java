@@ -63,6 +63,7 @@ public class DensityTweak {
      * Can be called early in Activity.onCreate()
      * @return this, to allow chaining calls
      */
+    @SuppressWarnings("deprecation") // updateConfiguration: no alternative for runtime density override
     public DensityTweak applyUserDensity() {
 
         // Do not do anything on actual leanback devices (the density is ok by default)
@@ -89,11 +90,12 @@ public class DensityTweak {
     /**
      * restores normal density without saving it for next start
      */
+    @SuppressWarnings("deprecation") // updateConfiguration: no alternative for runtime density override
     public void temporaryRestoreDefaultDensity(){
         Resources res = mActivity.getResources();
         DisplayMetrics displayMetrics = res.getDisplayMetrics();
         Configuration config = res.getConfiguration();
-        displayMetrics.densityDpi = DisplayMetrics.DENSITY_DEFAULT;
+        displayMetrics.densityDpi = DisplayMetrics.DENSITY_MEDIUM;
         config.densityDpi = Configuration.DENSITY_DPI_UNDEFINED;
         res.updateConfiguration(config, displayMetrics);
     }

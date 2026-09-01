@@ -140,6 +140,14 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
             e.printStackTrace();
         }
     }
+
+    public void handleBackPressed() {
+        log.info("Back navigation: dismissing TV card dialog");
+        if (onResult != null)
+            onResult.onResult(DESTROYED);
+        exitDialog();
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (log.isDebugEnabled()) log.debug("onKeyDown keyCode:{}", keyCode);
@@ -150,9 +158,7 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
             return true;
         }
         else if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ESCAPE || keyCode == KeyEvent.KEYCODE_BUTTON_B) {
-            if(onResult!=null)
-                onResult.onResult(DESTROYED);
-            exitDialog();
+            handleBackPressed();
             return true;
         }
         

@@ -18,6 +18,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -29,6 +34,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
@@ -84,6 +90,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import static com.archos.filecorelibrary.FileUtils.backupDatabase;
 
@@ -145,6 +152,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_FORCE_SW = "force_software_decoding";
     public static final String KEY_FORCE_AUDIO_PASSTHROUGH = "force_passthrough";
     public static final String KEY_PARSER_SYNC_MODE = "parser_sync_mode";
+    public static final String KEY_DOLBY_VISION_MODE = "dolby_vision_mode";
     public static final String KEY_DISABLE_DOLBY_VISION = "disable_dolby_vision";
     public static final String KEY_DOLBY_VISION_MODE = "dolby_vision_mode";
     public static final String KEY_DOLBY_VISION_TARGET_NITS = "dolby_vision_target_nits";
@@ -183,9 +191,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_UI_LANG_SYSTEM = "syst";
     public static final String KEY_DEC_CHOICE = "dec_choice";
     public static final String KEY_AUDIO_INTERFACE_CHOICE = "audio_interface_choice";
+    public static final String KEY_AUDIO_DECODER_CHOICE = "audio_decoder_choice";
     public static final String KEY_SUBTITLES_HIDE = "subtitles_hide_default";
     public static final String KEY_SUBTITLES_FAV_LANG = "favSubLang";
     public static final String KEY_AUDIO_TRACK_FAV_LANG = "favAudioLang";
+    public static final String KEY_PREFER_ORIGINAL_AUDIO_TRACK = "prefer_original_audio_track";
     public static final String KEY_SCRAPER_FAV_LANG = "favScraperLang";
     public static final String KEY_TRAKT_CATEGORY = "trakt_category";
     public static final String KEY_TRAKT_GETFULL = "trakt_getfull";
@@ -194,6 +204,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_TRAKT_LIVE_SCROBBLING = "trakt_live_scrobbling";
     public static final String KEY_TRAKT_SYNC_COLLECTION = "trakt_sync_collection";
     public static final String KEY_HIDE_WATCHED = "hide_watched";
+    public static final String KEY_SORT_IGNORE_ARTICLES = "sort_ignore_articles";
     public static final String KEY_CREATE_REMOTE_THUMBS = VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS;
     public static final String KEY_ENABLE_SPONSOR = "enable_sponsor";
     public static final String KEY_ABOUT_PREFERENCES = "preferences_about";
@@ -206,6 +217,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_SMBJ = "pref_smbj";
     public static final String KEY_APP_THEME = "app_theme";
 
+    public static final boolean SORT_IGNORE_ARTICLES_DEFAULT = false;
     public static final boolean SEPARATE_ANIME_MOVIE_SHOW_DEFAULT = true;
     // TODO: disabled until issue #186 is fixed
     public static final boolean SHOW_WATCHING_UP_NEXT_ROW_DEFAULT = true;
@@ -223,8 +235,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final boolean TRAKT_LIVE_SCROBBLING_DEFAULT = true;
     public static final boolean ENABLE_SPONSOR_DEFAULT = false;
 
-    public static final String LOGIN_DIALOG = "login_dialog";
-
     private static final boolean ACTIVATE_EMAIL_MEDIA_DB = true;
     private static final String KEY_RESCAN_STORAGE = "rescan_storage" ;
     private static final String KEY_DISPLAY_ALL_FILE = "preference_display_all_files" ;
@@ -240,6 +250,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private ListPreference mDecChoicePreferences = null;
     private ListPreference mParserSyncMode = null;
     private ListPreference mAudioInterfaceChoicePreferences = null;
+    private ListPreference mAudioDecoderChoicePreferences = null;
     private CheckBoxPreference mForceSwDecPreferences = null;
     private CheckBoxPreference mForceAudioPassthrough = null;
     private CheckBoxPreference mPlaybackSpeed = null;
@@ -251,7 +262,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mEnableCutoutModeShortEdge = null;
     private CheckBoxPreference mEnableCutBothSidesX = null;
     private CheckBoxPreference mActivate3DTVSwitch = null;
-    private CheckBoxPreference mEnableAndroidFrameTiming = null;
     private PreferenceCategory mAdvancedPreferences = null;
     private PreferenceCategory mScraperCategory = null;
     private ListPreference mSubtitlesFavLangPreferences = null;
@@ -275,6 +285,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private Preference mTraktForcePushPreference = null;
     private Preference mTraktForcePullPreference = null;
     private CheckBoxPreference mAutoScrapPreference = null;
+
+    private Preference mSubtitlesCredentialsPreference = null;
+    private SharedPreferences mOsPreferences = null;
+    private SharedPreferences.OnSharedPreferenceChangeListener mOsPrefsListener = null;
 
     private CheckBoxPreference mSeparateAnimeMoviePreference = null;
     private CheckBoxPreference mShowAllAnimesRowPreference = null;
@@ -312,8 +326,38 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     List<String> UiLanguageListEntries = new ArrayList<>();
     List<String> UiLanguageListEntryValues = new ArrayList<>();
 
+    private final ActivityResultLauncher<Intent> mFolderPickerLauncher;
+    private final ActivityResultLauncher<Intent> mTraktAuthLauncher;
+
     public VideoPreferencesCommon(PreferenceFragmentCompat preferencesFragment) {
         mPreferencesFragment = preferencesFragment;
+        mFolderPickerLauncher = preferencesFragment.registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::onFolderPickerResult);
+        mTraktAuthLauncher = preferencesFragment.registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::onTraktAuthResult);
+    }
+
+    private void onFolderPickerResult(ActivityResult result) {
+        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+            String newPath = result.getData().getStringExtra(FolderPicker.EXTRA_SELECTED_FOLDER);
+            if (newPath != null) {
+                java.io.File f = new java.io.File(newPath);
+                if (f.isDirectory() && f.exists()) {
+                    PreferenceManager.getDefaultSharedPreferences(getActivity())
+                            .edit().putString(KEY_TORRENT_PATH, f.getAbsolutePath()).apply();
+                    TorrentPathDialogPreference pref =
+                            (TorrentPathDialogPreference) findPreference(KEY_TORRENT_PATH);
+                    if (pref != null) pref.notifyChanged();
+                }
+            }
+        }
+    }
+
+    private void onTraktAuthResult(ActivityResult result) {
+        if (mTraktSigninPreference != null)
+            mTraktSigninPreference.onAuthCompleted(result.getResultCode() == Activity.RESULT_OK);
     }
 
     private Activity getActivity() {
@@ -464,20 +508,60 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
      */
     private void updateDynamicAudioDelayState(boolean passthroughEnabled, boolean frameTimingEnabled) {
         if (passthroughEnabled) {
-            // Passthrough takes precedence - disable and turn off dynamic audio delay
-            if (mEnableDynamicAudioDelay.isChecked()) {
-                mEnableDynamicAudioDelay.setChecked(false);
-                mSharedPreferences.edit().putBoolean(KEY_ENABLE_DYNAMIC_AUDIO_DELAY, false).apply();
-                if (log.isDebugEnabled()) {
-                    log.debug("updateDynamicAudioDelayState: passthrough enabled, turning off dynamic audio delay");
-                }
-            }
+            // Passthrough takes precedence - disable dynamic audio delay in UI
+            // but keep its state so it's restored when passthrough is disabled
             mEnableDynamicAudioDelay.setEnabled(false);
             mEnableDynamicAudioDelay.setSelectable(false);
         } else {
             // Normal state - user can control dynamic audio delay
             mEnableDynamicAudioDelay.setEnabled(true);
             mEnableDynamicAudioDelay.setSelectable(true);
+        }
+    }
+
+    public static boolean isAudioSpeedEnabled(SharedPreferences preferences) {
+        if (preferences == null) return false;
+        if (!preferences.getBoolean(KEY_PLAYBACK_SPEED, false)) return false;
+        try {
+            if (Integer.parseInt(preferences.getString("force_audio_passthrough_multiple", "0")) > 0) return false;
+        } catch (NumberFormatException e) {}
+        if ("2".equals(preferences.getString(KEY_AUDIO_DECODER_CHOICE, "1"))) return false;
+        return true;
+    }
+
+    public static boolean isAudioSpeedEnabled(Context context) {
+        if (context == null) return false;
+        return isAudioSpeedEnabled(PreferenceManager.getDefaultSharedPreferences(context));
+    }
+
+    private void updateAudioDecoderChoiceState(boolean passthroughEnabled) {
+        if (mAudioDecoderChoicePreferences == null) {
+            return;
+        }
+        mAudioDecoderChoicePreferences.setEnabled(!passthroughEnabled);
+        mAudioDecoderChoicePreferences.setSelectable(!passthroughEnabled);
+    }
+
+    /**
+     * Update the enabled and selectable state of audio speed preferences
+     * (playback speed and audiotrack audio speed) based on passthrough settings
+     * and software audio decoder choice. When passthrough is enabled or MediaCodec is used
+     * as the audio decoder (instead of FFmpeg), audio speed controls are disabled,
+     * greyed out and skipeable.
+     *
+     * @param passthroughEnabled true if audio passthrough is enabled
+     */
+    private void updateAudioSpeedState(boolean passthroughEnabled) {
+        boolean mediaCodecAudioDecoder = "2".equals(mSharedPreferences.getString(KEY_AUDIO_DECODER_CHOICE, "1"));
+        boolean speedAllowed = !passthroughEnabled && !mediaCodecAudioDecoder;
+        if (mPlaybackSpeed != null) {
+            mPlaybackSpeed.setEnabled(speedAllowed);
+            mPlaybackSpeed.setSelectable(speedAllowed);
+        }
+        if (mAudioSpeedAudiotrack != null) {
+            boolean audiotrackAllowed = speedAllowed && (mPlaybackSpeed != null && mPlaybackSpeed.isChecked());
+            mAudioSpeedAudiotrack.setEnabled(audiotrackAllowed);
+            mAudioSpeedAudiotrack.setSelectable(audiotrackAllowed);
         }
     }
 
@@ -543,7 +627,12 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         addPreferencesFromResource(R.xml.preferences_video);
 
+        TorrentPathDialogPreference torrentPref =
+                (TorrentPathDialogPreference) findPreference(KEY_TORRENT_PATH);
+        if (torrentPref != null) torrentPref.setFolderPickerLauncher(mFolderPickerLauncher);
+
         mSharedPreferences = getPreferenceManager().getSharedPreferences();
+        migrateDolbyVisionPreference(mSharedPreferences);
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
         final Preference pref = (Preference) findPreference(KEY_VIDEO_OS);
         pref.setEnabled(true);
@@ -570,6 +659,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mDecChoicePreferences = (ListPreference) findPreference(KEY_DEC_CHOICE);
         mAudioInterfaceChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_INTERFACE_CHOICE);
+        mAudioDecoderChoicePreferences = (ListPreference) findPreference(KEY_AUDIO_DECODER_CHOICE);
         mParserSyncMode = (ListPreference) findPreference(KEY_PARSER_SYNC_MODE);
         mForceSwDecPreferences = (CheckBoxPreference) findPreference(KEY_FORCE_SW);
         mEnableSponsor = (CheckBoxPreference) findPreference(KEY_ENABLE_SPONSOR);
@@ -578,7 +668,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mPlaybackSpeed = (CheckBoxPreference) findPreference(KEY_PLAYBACK_SPEED);
         mAudioSpeedAudiotrack = (CheckBoxPreference) findPreference(KEY_AUDIO_SPEED_AUDIOTRACK);
         mEnableDynamicAudioDelay = (CheckBoxPreference) findPreference(KEY_ENABLE_DYNAMIC_AUDIO_DELAY);
-        mEnableAndroidFrameTiming = (CheckBoxPreference) findPreference("enable_android_frame_timing");
         mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");
         mEnableDownmixATV = (CheckBoxPreference) findPreference("enable_downmix_androidtv");
         final ListPreference mForceAudioPassthroughMultiple = (ListPreference) findPreference("force_audio_passthrough_multiple");
@@ -590,10 +679,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mForceAudioPassthroughMultiple.setSelectable(isPassthroughSupported);
 
         // Remove Mode 1 (IEC61937 manual wrapping) from options if not supported by device.
-        // On API < 23, EXTRA_ENCODINGS is unreliable on some TVs, so don't hide mode 1
-        // based solely on that signal.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !isIecEncapsulationCapable
+        if (!isIecEncapsulationCapable
                 && mForceAudioPassthroughMultiple != null) {
             removeMode1FromPassthroughOptions(mForceAudioPassthroughMultiple);
         }
@@ -605,25 +691,21 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             String passthroughMode = mSharedPreferences.getString("force_audio_passthrough_multiple", "0");
             boolean passthroughEnabled = !"0".equals(passthroughMode);
             mForceAudioPassthrough.setEnabled(passthroughEnabled);
-            mPlaybackSpeed.setEnabled(!passthroughEnabled);
-            mPlaybackSpeed.setSelectable(!passthroughEnabled);
-            // Audio speed audiotrack should be non-selectable when playback speed is non-selectable
-            mAudioSpeedAudiotrack.setSelectable(!passthroughEnabled);
-            // Disable downmix should be non-selectable when passthrough is enabled
+            mForceAudioPassthrough.setSelectable(passthroughEnabled);
+            updateAudioSpeedState(passthroughEnabled);
+            updateAudioDecoderChoiceState(passthroughEnabled);
+            mDisableDownmix.setEnabled(!passthroughEnabled);
             mDisableDownmix.setSelectable(!passthroughEnabled);
             // Dynamic audio delay depends on both passthrough and frame timing
             updateDynamicAudioDelayState(passthroughEnabled, frameTimingEnabled);
             mForceAudioPassthroughMultiple.setOnPreferenceChangeListener((preference, newValue) -> {
                 boolean newPassthroughEnabled = !"0".equals(newValue.toString());
                 mForceAudioPassthrough.setEnabled(newPassthroughEnabled);
-                mPlaybackSpeed.setEnabled(!newPassthroughEnabled);
-                mPlaybackSpeed.setSelectable(!newPassthroughEnabled);
-                // Audio speed audiotrack should be non-selectable when playback speed is non-selectable
-                mAudioSpeedAudiotrack.setSelectable(!newPassthroughEnabled);
-                // Disable downmix should be non-selectable when passthrough is enabled
+                mForceAudioPassthrough.setSelectable(newPassthroughEnabled);
+                updateAudioSpeedState(newPassthroughEnabled);
+                updateAudioDecoderChoiceState(newPassthroughEnabled);
+                mDisableDownmix.setEnabled(!newPassthroughEnabled);
                 mDisableDownmix.setSelectable(!newPassthroughEnabled);
-                boolean currentFrameTimingEnabled = mEnableAndroidFrameTiming.isChecked();
-                updateDynamicAudioDelayState(newPassthroughEnabled, currentFrameTimingEnabled);
                 return true;
             });
         } else {
@@ -632,24 +714,49 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             if (!"0".equals(mSharedPreferences.getString("force_audio_passthrough_multiple", "0"))) {
                 mSharedPreferences.edit().putString("force_audio_passthrough_multiple", "0").apply();
             }
-            mPlaybackSpeed.setEnabled(true);
-            mPlaybackSpeed.setSelectable(true);
-            // Audio speed audiotrack is selectable when playback speed is selectable
-            mAudioSpeedAudiotrack.setSelectable(true);
-            // Disable downmix is selectable when passthrough is not supported
+            updateAudioSpeedState(false);
+            updateAudioDecoderChoiceState(false);
+            mDisableDownmix.setEnabled(true);
             mDisableDownmix.setSelectable(true);
             // Frame timing can still affect dynamic audio delay even without passthrough
             updateDynamicAudioDelayState(false, frameTimingEnabled);
         }
 
-        // Set up listener for frame timing changes
-        mEnableAndroidFrameTiming.setOnPreferenceChangeListener((preference, newValue) -> {
-            boolean newFrameTimingEnabled = (Boolean) newValue;
-            boolean currentPassthroughEnabled = isPassthroughSupported &&
-                !"0".equals(mSharedPreferences.getString("force_audio_passthrough_multiple", "0"));
-            updateDynamicAudioDelayState(currentPassthroughEnabled, newFrameTimingEnabled);
-            return true;
-        });
+        if (mPlaybackSpeed != null) {
+            mPlaybackSpeed.setOnPreferenceChangeListener((preference, newValue) -> {
+                boolean isPlaybackSpeedChecked = (Boolean) newValue;
+                boolean passthroughEnabled = CustomApplication.isPassthroughSupported()
+                        && !"0".equals(mSharedPreferences.getString("force_audio_passthrough_multiple", "0"));
+                boolean mediaCodecAudioDecoder = "2".equals(mSharedPreferences.getString(KEY_AUDIO_DECODER_CHOICE, "1"));
+                boolean speedAllowed = !passthroughEnabled && !mediaCodecAudioDecoder;
+                boolean audiotrackAllowed = speedAllowed && isPlaybackSpeedChecked;
+                if (mAudioSpeedAudiotrack != null) {
+                    mAudioSpeedAudiotrack.setEnabled(audiotrackAllowed);
+                    mAudioSpeedAudiotrack.setSelectable(audiotrackAllowed);
+                }
+                return true;
+            });
+        }
+
+        if (mAudioDecoderChoicePreferences != null) {
+            mAudioDecoderChoicePreferences.setOnPreferenceChangeListener((preference, newValue) -> {
+                boolean passthroughEnabled = CustomApplication.isPassthroughSupported()
+                        && !"0".equals(mSharedPreferences.getString("force_audio_passthrough_multiple", "0"));
+                boolean newMediaCodecAudioDecoder = "2".equals(newValue.toString());
+                boolean speedAllowed = !passthroughEnabled && !newMediaCodecAudioDecoder;
+                if (mPlaybackSpeed != null) {
+                    mPlaybackSpeed.setEnabled(speedAllowed);
+                    mPlaybackSpeed.setSelectable(speedAllowed);
+                }
+                if (mAudioSpeedAudiotrack != null) {
+                    boolean audiotrackAllowed = speedAllowed && (mPlaybackSpeed != null && mPlaybackSpeed.isChecked());
+                    mAudioSpeedAudiotrack.setEnabled(audiotrackAllowed);
+                    mAudioSpeedAudiotrack.setSelectable(audiotrackAllowed);
+                }
+                return true;
+            });
+        }
+
         mStreamBufferSize = (EditTextPreference) findPreference(KEY_STREAM_BUFFER_SIZE);
         mStreamMaxIFrameSize = (EditTextPreference) findPreference(KEY_STREAM_MAX_IFRAME_SIZE);
         mActivate3DTVSwitch = (CheckBoxPreference) findPreference(KEY_ACTIVATE_3D_SWITCH);
@@ -677,6 +784,13 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mSeparateAnimeMoviePreference = (CheckBoxPreference) findPreference(KEY_SEPARATE_ANIME_MOVIE_SHOW);
         mShowAllAnimesRowPreference = (CheckBoxPreference) findPreference(KEY_SHOW_ALL_ANIMES_ROW);
         mAnimesSortOrderPreference = (ListPreference) findPreference(KEY_ANIMES_SORT_ORDER);
+
+        boolean separateAnime = mSharedPreferences.getBoolean(KEY_SEPARATE_ANIME_MOVIE_SHOW, SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
+        PreferenceCategory leanbackCategory = (PreferenceCategory) findPreference("category_leanback_user_interface");
+        if (!separateAnime && leanbackCategory != null) {
+            if (mShowAllAnimesRowPreference != null) leanbackCategory.removePreference(mShowAllAnimesRowPreference);
+            if (mAnimesSortOrderPreference != null) leanbackCategory.removePreference(mAnimesSortOrderPreference);
+        }
         mAboutPreferences = (PreferenceCategory) findPreference(KEY_ABOUT_PREFERENCES);
         Preference novaVersion = (Preference) findPreference("preferences_version");
         novaVersion.setTitle(mSharedPreferences.getString("nova_version", "@string/APP_INFO"));
@@ -825,6 +939,15 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                     rescanPath(s);
                 }
             }
+            // Explicitly also retry files the auto-scraper previously could not match (but not
+            // already-matched content), unlike the generic incremental scrape that scanFile() above
+            // triggers via the ContentObserver, which only looks at never-scraped files. Scoped to
+            // this user-triggered action so permanently-unmatchable content isn't retried on every
+            // silent automatic trigger.
+            Intent rescanNotFoundIntent = new Intent(AutoScrapeService.RESCAN_EVERYTHING, null, getActivity(), AutoScrapeService.class);
+            rescanNotFoundIntent.putExtra(AutoScrapeService.RESCAN_EVERYTHING, false);
+            rescanNotFoundIntent.putExtra(AutoScrapeService.RESCAN_ONLY_DESC_NOT_FOUND, true);
+            getContext().startService(rescanNotFoundIntent);
             Toast.makeText(getActivity(), R.string.rescanning,Toast.LENGTH_SHORT).show();
             return true;
         });
@@ -867,20 +990,18 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         });
 
         mSeparateAnimeMoviePreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            boolean oldValue = getPreferenceManager().getSharedPreferences().getBoolean(KEY_SEPARATE_ANIME_MOVIE_SHOW, SEPARATE_ANIME_MOVIE_SHOW_DEFAULT);
-            // !oldValue is the new value...
-            mSeparateAnimeMoviePreference.setChecked(!oldValue);
+            boolean separate = (Boolean) newValue;
             PreferenceCategory prefCategory = (PreferenceCategory) findPreference("category_leanback_user_interface");
-            if (!oldValue) {
-                // set visible
-                prefCategory.addPreference(mShowAllAnimesRowPreference);
-                prefCategory.addPreference(mAnimesSortOrderPreference);
-            } else {
-                // set not visible
-                prefCategory.removePreference(mShowAllAnimesRowPreference);
-                prefCategory.removePreference(mAnimesSortOrderPreference);
+            if (prefCategory != null) {
+                if (separate) {
+                    if (mShowAllAnimesRowPreference != null) prefCategory.addPreference(mShowAllAnimesRowPreference);
+                    if (mAnimesSortOrderPreference != null) prefCategory.addPreference(mAnimesSortOrderPreference);
+                } else {
+                    if (mShowAllAnimesRowPreference != null) prefCategory.removePreference(mShowAllAnimesRowPreference);
+                    if (mAnimesSortOrderPreference != null) prefCategory.removePreference(mAnimesSortOrderPreference);
+                }
             }
-            return false;
+            return true;
         });
 
         Preference p = findPreference(KEY_ADVANCED_VIDEO_QUIT);
@@ -904,17 +1025,25 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             }
             return true;
         });
+        mSubtitlesCredentialsPreference = subtitlesCredentialsButton;
+        mOsPreferences = getActivity().getApplicationContext()
+                .getSharedPreferences(OpenSubtitlesApiHelper.OS_PREFS_NAME, Context.MODE_PRIVATE);
+        mOsPrefsListener = (sharedPreferences, key) -> updateOsStatus();
+        mOsPreferences.registerOnSharedPreferenceChangeListener(mOsPrefsListener);
+        updateOsStatus();
 
         CheckBoxPreference cbp = (CheckBoxPreference)findPreference(KEY_SUBTITLES_HIDE);
         cbp.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean doHide = ((Boolean) newValue);
             mSubtitlesFavLangPreferences.setEnabled(!doHide);
+            mSubtitlesFavLangPreferences.setSelectable(!doHide);
             return true;
         });
         boolean doHide = mSharedPreferences.getBoolean(KEY_SUBTITLES_HIDE, false);
 
         mSubtitlesFavLangPreferences = (ListPreference) findPreference(KEY_SUBTITLES_FAV_LANG);
         mSubtitlesFavLangPreferences.setEnabled(!doHide);
+        mSubtitlesFavLangPreferences.setSelectable(!doHide);
 
         buildLanguageList(OPENSUBTITLES_LANGUAGES, OpensubtitlesLanguageListEntries, OpensubtitlesLanguageListEntryValues);
         OpensubtitlesSystemLanguageIndex = findLanguageIndex(OpensubtitlesLanguageListEntryValues, getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getLanguage()));
@@ -977,7 +1106,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             // commit all the settings changes before restarting the activity
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
             editor.putString(KEY_UI_LANG, newLocale);
-            editor.commit();
+            editor.apply();
             // TODO MARC BUG: does not change the title string.preferences of preferences_video.xml but all the rest is ok
             restartActivity(); // not enough to clear all the cached fragments
             //restartApplication(); // not enough when returning to settings
@@ -994,22 +1123,20 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         entryArray[0] = getResources().getString(R.string.codepage_default,getResources().getString(cpStringID));
         lp.setEntries(entryArray);
 
-        mHanlder = new Handler();
+        mHanlder = new Handler(Looper.getMainLooper());
         mTraktSigninPreference = (TraktSigninDialogPreference) findPreference(KEY_TRAKT_SIGNIN);
-        if(mTraktSigninPreference!= null && savedInstanceState!=null) {
-            if (log.isDebugEnabled()) log.debug("onCreatePreferences: closing mTraktSigninPreference dialog to prevent leaked window");
-            // close dialog to prevent leaked window
-            mTraktSigninPreference.showDialog(savedInstanceState.getBoolean(LOGIN_DIALOG, false));
-        }
-
+        if (mTraktSigninPreference != null) mTraktSigninPreference.setLauncher(mTraktAuthLauncher);
         mTraktWipePreference = findPreference(KEY_TRAKT_WIPE);
         mTraktLiveScrobblingPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_LIVE_SCROBBLING);
         //trakt resume must be disabled when no scrobbling
         mTraktSyncProgressPreference.setEnabled(mTraktLiveScrobblingPreference.isChecked() && mTraktLiveScrobblingPreference.isEnabled());
+        mTraktSyncProgressPreference.setSelectable(mTraktLiveScrobblingPreference.isChecked() && mTraktLiveScrobblingPreference.isEnabled());
         mTraktLiveScrobblingPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
-                mTraktSyncProgressPreference.setEnabled((Boolean) o && mTraktLiveScrobblingPreference.isEnabled());
+                boolean enabled = (Boolean) o && mTraktLiveScrobblingPreference.isEnabled();
+                mTraktSyncProgressPreference.setEnabled(enabled);
+                mTraktSyncProgressPreference.setSelectable(enabled);
                 if (!(Boolean) o)
                     mTraktSyncProgressPreference.setChecked(false);
                 return true;
@@ -1222,11 +1349,15 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
                 ListPreference animesSortOrderPref = (ListPreference)findPreference(KEY_ANIMES_SORT_ORDER);
 
-                animesSortOrderPref.setEntries(AnimesSortOrderEntry.getSortOrderEntries(getActivity(), AllAnimesGridFragment.sortOrderIndexer));
-                animesSortOrderPref.setEntryValues(AnimesSortOrderEntry.getSortOrderEntryValues(getActivity(), AllAnimesGridFragment.sortOrderIndexer));
+                // animesSortOrderPref can be null when "separate anime/movie/show" is disabled
+                // since it gets removed from the leanback category earlier
+                if (animesSortOrderPref != null) {
+                    animesSortOrderPref.setEntries(AnimesSortOrderEntry.getSortOrderEntries(getActivity(), AllAnimesGridFragment.sortOrderIndexer));
+                    animesSortOrderPref.setEntryValues(AnimesSortOrderEntry.getSortOrderEntryValues(getActivity(), AllAnimesGridFragment.sortOrderIndexer));
 
-                if (animesSortOrderPref.getValue() == null)
-                    animesSortOrderPref.setValue(AnimeShowSortOrderEntries.DEFAULT_SORT);
+                    if (animesSortOrderPref.getValue() == null)
+                        animesSortOrderPref.setValue(AnimeShowSortOrderEntries.DEFAULT_SORT);
+                }
 
                 findPreference(KEY_SHOW_ALL_TV_SHOWS_ROW).setOnPreferenceClickListener(preference -> {
                     // Check click speed
@@ -1274,6 +1405,19 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         }
     }
 
+    private static String getDolbyVisionModeValue(boolean isDisabled) {
+        return isDisabled ? "off" : "auto";
+    }
+
+    private void migrateDolbyVisionPreference(SharedPreferences sharedPreferences) {
+        if (sharedPreferences.contains(KEY_DOLBY_VISION_MODE) || !sharedPreferences.contains(KEY_DISABLE_DOLBY_VISION)) {
+            return;
+        }
+
+        String doViModeValue = getDolbyVisionModeValue(sharedPreferences.getBoolean(KEY_DISABLE_DOLBY_VISION, false));
+        sharedPreferences.edit().putString(KEY_DOLBY_VISION_MODE, doViModeValue).apply();
+    }
+
     private int findLanguageIndex(List<String> languageEntryValues, String language) {
         for (int i = 0; i < languageEntryValues.size(); i++) {
             if (languageEntryValues.get(i).equalsIgnoreCase(language)) {
@@ -1288,7 +1432,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         Locale defaultLocale = Locale.getDefault();
         String defaultLocaleLanguage = defaultLocale.getDisplayLanguage();
-        Locale englishLocale = new Locale("en");
+        Locale englishLocale = Locale.forLanguageTag("en");
         String englishLocaleLanguage = englishLocale.getDisplayLanguage();
 
         // Add default system language first
@@ -1339,17 +1483,12 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public static Locale getLocaleFromCode(String code) {
         //log.trace("getLocaleFromCode: code {}", code);
-        String[] parts = code.split("[-_]");
-        if (parts.length == 1) {
-            //log.trace("getLocaleFromCode: parts[0] {}", parts[0]);
-            return new Locale(parts[0]);
-        } else if (parts.length == 2) {
-            //log.trace("getLocaleFromCode: parts[0] {} parts[1] {}", parts[0], parts[1]);
-            return new Locale(parts[0], parts[1]);
-        } else {
-            //log.trace("getLocaleFromCode: returning default locale");
-            return Locale.getDefault();
-        }
+        if (code == null || code.isEmpty()) return Locale.getDefault();
+        // forLanguageTag requires BCP-47 format with '-' separator; stored values may use '_'
+        Locale locale = Locale.forLanguageTag(code.replace('_', '-'));
+        // forLanguageTag returns an empty Locale (not null) for unrecognised tags
+        if (locale.toLanguageTag().equals("und")) return Locale.getDefault();
+        return locale;
     }
 
     private String getLocaleDisplayName(String localeCode) {
@@ -1384,9 +1523,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         Uri toIndex = Uri.parse(s);
         if (toIndex.getScheme() == null)
             toIndex = Uri.parse("file://" + toIndex.toString());
-        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        scanIntent.setData(toIndex);
-        getActivity().sendBroadcast(scanIntent);
+        MediaScannerConnection.scanFile(getActivity(), new String[]{toIndex.getPath()}, null, null);
     }
 
     public static boolean isMediaScannerScanning(ContentResolver cr) {
@@ -1419,6 +1556,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public void onDestroy() {
         if (mSharedPreferences != null)
             mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        if (mOsPreferences != null && mOsPrefsListener != null)
+            mOsPreferences.unregisterOnSharedPreferenceChangeListener(mOsPrefsListener);
     }
 
     private void setTraktPreferencesEnabled(boolean enabled) {
@@ -1446,12 +1585,121 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mTraktSigninPreference.setSelectable(!enabled);
     }
 
-    public void onSaveInstanceState(Bundle outState) {
-        if(mTraktSigninPreference!= null && mTraktSigninPreference.isDialogShowing()) {
-            // close dialog to prevent leaked window
-            mTraktSigninPreference.dismissDialog();
-            outState.putBoolean(LOGIN_DIALOG, true);
+    private void updateTraktSyncStatus() {
+        if (mTraktSigninPreference == null) return;
+        // Guard: if not signed in, reset to the default unsigned summary and stop.
+        if (Trakt.getAccessTokenFromPreferences(mSharedPreferences) == null) {
+            mTraktSigninPreference.setSummary(R.string.trakt_signin_summary);
+            return;
         }
+        // Guard: if the sign-in flow itself reported an auth error, leave that summary untouched.
+        if (mTraktStatus == Trakt.Status.ERROR_AUTH) return;
+        Resources res = getResources();
+        long lastSync = mSharedPreferences.getLong("trakt_last_sync", 0);
+        int status = mSharedPreferences.getInt(TraktService.PREFERENCE_TRAKT_LAST_SYNC_STATUS, -1);
+        int skippedDuration = mSharedPreferences.getInt(TraktService.PREFERENCE_TRAKT_SKIPPED_NO_DURATION, 0);
+        int skippedMeta = mSharedPreferences.getInt(TraktService.PREFERENCE_TRAKT_SKIPPED_NO_METADATA, 0);
+
+        // Build the status portion of the summary
+        final String statusPart;
+        if (status == TraktService.SYNC_STATUS_ERROR_AUTH) {
+            statusPart = res.getString(R.string.trakt_sync_status_error_auth);
+        } else if (status == TraktService.SYNC_STATUS_ERROR_ACCOUNT_LOCKED) {
+            statusPart = res.getString(R.string.trakt_sync_status_error_locked);
+        } else if (status == TraktService.SYNC_STATUS_ERROR_NETWORK) {
+            statusPart = res.getString(R.string.trakt_sync_status_error_network);
+        } else if (lastSync == 0) {
+            statusPart = res.getString(R.string.trakt_sync_status_never);
+        } else {
+            // Format elapsed time
+            long elapsedSeconds = System.currentTimeMillis() / 1000L - lastSync;
+            final String elapsed;
+            if (elapsedSeconds < 120) {
+                elapsed = "1 min";
+            } else if (elapsedSeconds < 3600) {
+                elapsed = TimeUnit.SECONDS.toMinutes(elapsedSeconds) + " min";
+            } else if (elapsedSeconds < 86400) {
+                elapsed = TimeUnit.SECONDS.toHours(elapsedSeconds) + " hr";
+            } else {
+                elapsed = TimeUnit.SECONDS.toDays(elapsedSeconds) + " day(s)";
+            }
+            if (skippedDuration > 0 && skippedMeta > 0) {
+                statusPart = res.getString(R.string.trakt_sync_status_ok_both_skipped, elapsed, skippedDuration, skippedMeta);
+            } else if (skippedDuration > 0) {
+                statusPart = res.getString(R.string.trakt_sync_status_ok_skipped, elapsed, skippedDuration);
+            } else if (skippedMeta > 0) {
+                statusPart = res.getString(R.string.trakt_sync_status_ok_meta_skipped, elapsed, skippedMeta);
+            } else {
+                statusPart = res.getString(R.string.trakt_sync_status_ok, elapsed);
+            }
+        }
+        mTraktSigninPreference.setSummary(res.getString(R.string.trakt_signin_summary_logged_sync, statusPart));
+    }
+
+    private void updateOsStatus() {
+        if (mSubtitlesCredentialsPreference == null || mOsPreferences == null) return;
+        String username = mOsPreferences.getString(
+                OpenSubtitlesCredentialsDialog.OPENSUBTITLES_USERNAME, "");
+        Resources res = getResources();
+        String identity = username.isEmpty()
+                ? res.getString(R.string.opensubtitles_summary_anonymous)
+                : res.getString(R.string.opensubtitles_summary_user_account);
+        int status = mOsPreferences.getInt(
+                OpenSubtitlesApiHelper.PREF_LAST_STATUS, OpenSubtitlesApiHelper.OS_STATUS_NONE);
+        int remaining = mOsPreferences.getInt(OpenSubtitlesApiHelper.PREF_LAST_REMAINING_DOWNLOADS, -1);
+        int allowed = mOsPreferences.getInt(OpenSubtitlesApiHelper.PREF_LAST_ALLOWED_DOWNLOADS, -1);
+        String resetTimeUtc = mOsPreferences.getString(OpenSubtitlesApiHelper.PREF_LAST_RESET_TIME_UTC, "");
+        final String summary;
+        if (username.isEmpty()) {
+            if (status == OpenSubtitlesApiHelper.OS_STATUS_BAD_CREDENTIALS) {
+                // Credentials were cleared after a failed validation — still surface the failure.
+                summary = res.getString(R.string.opensubtitles_summary_login_failed);
+            } else if (remaining >= 0 && allowed > 0) {
+                summary = res.getString(R.string.opensubtitles_summary_status, identity,
+                        res.getString(R.string.opensubtitles_quota_download_remaining, remaining, allowed));
+            } else {
+                summary = res.getString(R.string.subtitles_credentials_summary);
+            }
+        } else {
+            switch (status) {
+                case OpenSubtitlesApiHelper.OS_STATUS_OK:
+                    if (remaining >= 0 && allowed > 0) {
+                        summary = res.getString(R.string.opensubtitles_summary_status, identity,
+                                res.getString(R.string.opensubtitles_quota_download_remaining, remaining, allowed));
+                    } else {
+                        summary = res.getString(R.string.opensubtitles_summary_status, identity,
+                                res.getString(R.string.opensubtitles_summary_credentials_verified));
+                    }
+                    break;
+                case OpenSubtitlesApiHelper.OS_STATUS_QUOTA_EXCEEDED:
+                    String timeLeft = OpenSubtitlesApiHelper.getTimeRemainingFromUtc(resetTimeUtc);
+                    String resetStr = timeLeft.isEmpty()
+                            ? res.getString(R.string.opensubtitles_summary_quota_exhausted)
+                            : res.getString(R.string.opensubtitles_quota_reset_time_remaining, timeLeft);
+                    summary = res.getString(R.string.opensubtitles_summary_status, identity, resetStr);
+                    break;
+                case OpenSubtitlesApiHelper.OS_STATUS_BAD_CREDENTIALS:
+                    summary = res.getString(R.string.opensubtitles_summary_status, identity,
+                            res.getString(R.string.opensubtitles_summary_login_failed));
+                    break;
+                case OpenSubtitlesApiHelper.OS_STATUS_NETWORK_ERROR:
+                    summary = res.getString(R.string.opensubtitles_summary_status, identity,
+                            res.getString(R.string.opensubtitles_summary_service_unavailable));
+                    break;
+                default:
+                    summary = res.getString(R.string.opensubtitles_summary_status, identity,
+                            res.getString(R.string.opensubtitles_summary_not_checked));
+                    break;
+            }
+        }
+        mSubtitlesCredentialsPreference.setSummary(summary);
+    }
+
+    public void onResume() {
+        updateOsStatus();
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
     }
     private boolean onTraktUserChange() {
         final String traktUser = Trakt.getAccessTokenFromPreferences(mSharedPreferences);
@@ -1466,8 +1714,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             if (mTraktStatus == Trakt.Status.ERROR_AUTH) {
                 mTraktSigninPreference.setSummary(getResources().getString(R.string.trakt_signin_summary_logged_error));
             } else {
-                mTraktSigninPreference.setSummary(getResources().getString(R.string.trakt_signin_summary_logged));
                 new TraktService.Client(getActivity(), null, false).sync(0);
+                updateTraktSyncStatus();
             }
         } else {
             if (mLastTraktUser != null ) {
@@ -1488,23 +1736,6 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         return traktUser != null;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==VideoPreferencesActivity.FOLDER_PICKER_REQUEST_CODE){
-            if (resultCode == AppCompatActivity.RESULT_OK) {
-                String newPath = data.getStringExtra(FolderPicker.EXTRA_SELECTED_FOLDER);
-                if (newPath!=null) {
-                    File f = new File(newPath);
-                    if ((f!=null) && f.isDirectory() && f.exists()) { //better safe than sorry x3
-                        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString(VideoPreferencesCommon.KEY_TORRENT_PATH, f.getAbsolutePath()).apply();
-                        ((TorrentPathDialogPreference)findPreference(KEY_TORRENT_PATH)).notifyChanged();
-                    }
-                }
-            }
-        } else if (mTraktSigninPreference != null) {
-            // Forward to TraktSigninDialogPreference to handle device auth result
-            mTraktSigninPreference.onActivityResult(requestCode, resultCode);
-        }
-    }
 
     private void showImportDialog() {
         File exportDir = getContext().getExternalFilesDir(null);
@@ -1555,6 +1786,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             // preference just changed, assume it's valid
             mTraktStatus = Trakt.Status.SUCCESS;
             onTraktUserChange();
+        } else if (key.equals(TraktService.PREFERENCE_TRAKT_LAST_SYNC_STATUS)
+                || key.equals(TraktService.PREFERENCE_TRAKT_SKIPPED_NO_DURATION)
+                || key.equals(TraktService.PREFERENCE_TRAKT_SKIPPED_NO_METADATA)
+                || key.equals("trakt_last_sync")) {
+            updateTraktSyncStatus();
         } else if (key.equals(KEY_TRAKT_SYNC_COLLECTION)) {
             if (Trakt.isTraktV2Enabled(getActivity(), mSharedPreferences)) {
                 Boolean newBoolean = (Boolean) sharedPreferences.getBoolean(KEY_TRAKT_SYNC_COLLECTION, TRAKT_SYNC_COLLECTION_DEFAULT);
@@ -1587,6 +1823,16 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                     activity.recreate();
                 }
             }
+        } else if (key.equals("force_audio_passthrough_multiple") || key.equals(KEY_FORCE_AUDIO_PASSTHROUGH)) {
+            boolean passthroughEnabled = !"0".equals(sharedPreferences.getString("force_audio_passthrough_multiple", "0"));
+            updateAudioDecoderChoiceState(passthroughEnabled);
+            updateAudioSpeedState(passthroughEnabled);
+            boolean frameTimingEnabled = sharedPreferences.getBoolean("enable_android_frame_timing", false);
+            updateDynamicAudioDelayState(passthroughEnabled, frameTimingEnabled);
+        } else if (key.equals(KEY_AUDIO_DECODER_CHOICE)) {
+            boolean passthroughEnabled = CustomApplication.isPassthroughSupported()
+                    && !"0".equals(sharedPreferences.getString("force_audio_passthrough_multiple", "0"));
+            updateAudioSpeedState(passthroughEnabled);
         }
     }
 

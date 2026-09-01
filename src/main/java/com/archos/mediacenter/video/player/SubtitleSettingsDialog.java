@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
@@ -34,6 +35,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.video.R;
@@ -57,7 +61,7 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     private View mLeftVerticalButton;
     private View mRightVerticalButton;
     private static int REPEAT_TOUCH_ACTION = 0;
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler(Looper.getMainLooper()){
         public void handleMessage(Message msg) {
             if(mTouchedView != null){
                 onAction(mTouchedView);
@@ -69,6 +73,10 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     };
     private View mTouchedView;
     private int mColor;
+    private CheckBox mSubBackgroundCheckBox;
+    private SeekBar mBgOpacitySeekBar;
+    private boolean mBackground;
+    private int mBgOpacity;
 
     public SubtitleSettingsDialog(Context context, SubtitleManager subtitleManager) {
         super(context);
@@ -125,6 +133,22 @@ public class SubtitleSettingsDialog extends AlertDialog implements
             }
         });
 
+        mSubBackgroundCheckBox = view.findViewById(R.id.subBackground);
+        mBackground = mSubtitleManager.getBackgroundState();
+        mSubBackgroundCheckBox.setChecked(mBackground);
+        mBgOpacity = mSubtitleManager.getBackgroundOpacity();
+        mSubBackgroundCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBackground = mSubBackgroundCheckBox.isChecked();
+                mSubtitleManager.setBackgroundState(mBackground); 
+            }
+        });
+
+        mBgOpacitySeekBar = (SeekBar) view.findViewById(R.id.subtitle_bg_opacity_seekbar);
+        mBgOpacitySeekBar.setMax(255);
+        mBgOpacitySeekBar.setOnSeekBarChangeListener(this);
+
         setCancelable(true);
         setCanceledOnTouchOutside(true);
 
@@ -156,6 +180,11 @@ public class SubtitleSettingsDialog extends AlertDialog implements
                 }
                 mSubtitleManager.setVerticalPosition(progress);
             }
+        } else if (seekBar == mBgOpacitySeekBar) {
+            mBgOpacity = progress;
+            if (mSubtitleManager != null) {
+                mSubtitleManager.setBackgroundOpacity(progress);
+            }
         } else {
             // wtf
         }
@@ -179,18 +208,27 @@ public class SubtitleSettingsDialog extends AlertDialog implements
     @Override
     public void onDetachedFromWindow() {
         Log.d("Player", "onDetachedFromWindow");
-        mSampleText.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        if (getWindow() != null) {
+            WindowCompat.getInsetsController(getWindow(), mSampleText)
+                    .show(WindowInsetsCompat.Type.statusBars());
+        }
         mSharedPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_SIZE, mSize).apply();
         mSharedPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_VPOS, mVPos).apply();
         mSharedPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mOutline).apply();
         mSubtitleManager.fadeSubtitlePositionHint(false);
+        mSharedPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_BACKGROUND, mBackground).apply();
+        mSharedPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_BG_OPACITY, mBgOpacity).apply();
         super.onDetachedFromWindow();
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mSampleText.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        if (getWindow() != null) {
+            WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), mSampleText);
+            controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            controller.hide(WindowInsetsCompat.Type.statusBars());
+        }
 
         // Set the initial position of the sliders and checkbox
         mSizeSeekBar.setProgress(mSubtitleManager.getSize());
@@ -200,6 +238,8 @@ public class SubtitleSettingsDialog extends AlertDialog implements
 
         // Force the initial focus on the size slider
         mSizeSeekBar.requestFocus();
+        mSubBackgroundCheckBox.setChecked(mSubtitleManager.getBackgroundState());
+        mBgOpacitySeekBar.setProgress(mSubtitleManager.getBackgroundOpacity());
     }
 
     public void onAction(View view) {

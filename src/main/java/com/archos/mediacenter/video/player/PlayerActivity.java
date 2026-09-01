@@ -1,4 +1,20 @@
+// Copyright 2026 Courville Software
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package com.archos.mediacenter.video.player;
+
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -23,6 +39,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.display.DisplayManager;
 import android.media.AudioManager;
@@ -31,6 +48,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 import android.provider.Settings;
@@ -38,6 +56,7 @@ import android.provider.Settings.SettingNotFoundException;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -57,14 +76,20 @@ import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
@@ -77,6 +102,7 @@ import com.archos.environment.ArchosUtils;
 import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.MediaUtils;
+import com.archos.mediacenter.utils.introdb.IntroSegments;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.CustomApplication;
@@ -127,6 +153,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.archos.environment.ArchosFeatures.isChromeOS;
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
@@ -156,8 +183,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public static final int RESUME_FROM_REMOTE_POS = 3;
     public static final int RESUME_FROM_LOCAL_POS = 4;
     public static final String RESUME = "resume";
-    public static final int LAST_POSITION_UNKNOWN = -1;
-    public static final int LAST_POSITION_END = -2;
+    // Kept as API aliases for browser/database code; runtime position is owned by PlayerService.
+    public static final int LAST_POSITION_UNKNOWN = PlayerService.LAST_POSITION_UNKNOWN;
+    public static final int LAST_POSITION_END = PlayerService.LAST_POSITION_END;
 
     public static final String STARTED_VIDEO_INTENT = "archos.intent.video.started";
     public static final String STOPPED_VIDEO_INTENT = "archos.intent.video.stopped";
@@ -174,6 +202,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private static final int DIALOG_AUDIO_SPEED = 10;
 
     // accessed from SubtitleSettingsDialog
+    public static final String KEY_SUBTITLE_BACKGROUND = "subtitle_background";
+    public static final String KEY_SUBTITLE_BG_OPACITY = "subtitle_bg_opacity";
     /* package */ public static final String KEY_SUBTITLE_SIZE = "pref_play_subtitle_size_key";
     /* package */ public static final String KEY_SUBTITLE_VPOS = "pref_play_subtitle_vpos_key";
     public static final String KEY_SUBTITLE_OUTLINE = "pref_play_subtitle_outline_key";
@@ -183,11 +213,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private static final String KEY_PLAYER_PROJECTOR_MODE = "player_projector_mode_key";
     private static final String KEY_AUDIO_FILT = "pref_audio_filt_int_key"; // used to be "pref_audio_filt_key", containing a string
     private static final String KEY_AUDIO_FILT_NIGHT = "pref_audio_filt_night_int_key";
+    private static final String KEY_SPATIALIZATION_ENABLED = "player_spatialization_enabled";
     private static final String KEY_NOTIFICATIONS_MODE = "notifications_mode";
     private static final String KEY_NETWORK_BOOKMARKS = "network_bookmarks";
     private static final String KEY_LOCK_ROTATION = "pref_lock_rotation";
     public static final String KEY_ADVANCED_VIDEO_ENABLED = "preferences_advanced_video_enabled";
-    public static final String KEY_ENABLE_ANDROID_FRAME_TIMING = "enable_android_frame_timing";
 
     public static final String INDEXED_URI = "indexed_uri";
     public static final String KEY_TORRENT="torrent";
@@ -221,6 +251,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private static final int MENU_PREFERENCES = 305;
     private static final int MENU_AUDIO_DELAY_ID = 306;
     private static final int MENU_AUDIO_SPEED_ID = 307;
+    private static final int MENU_SPATIALIZATION_ID = 308;
 
     // Notification types (keep in sync with res/values/arrays.xml:pref_notification_mode_entries)
     private static final int NOTIFICATION_MODE_ALL = 0;
@@ -244,8 +275,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     // from WindowManagerPolicy.java ; should be aligned in case of change
     private static final String ACTION_HDMI_PLUGGED = "android.intent.action.HDMI_PLUGGED";
     private static final String EXTRA_HDMI_PLUGGED_STATE = "state";
-    private static final int SUBTITLE_REQUEST = 0;
     private static final String[] GENERIC_TEXT_SUBTITLE_FORMATS = {"srt", "vtt"};
+
+    private final ActivityResultLauncher<Intent> subtitleLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { if (result.getResultCode() == Activity.RESULT_OK) onSubtitleResult(); });
 
     private boolean mHasAskedFloatingPermission;
     private boolean mIsInfoActivityDisplayed;
@@ -271,7 +305,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mCutoutBottom = bottom;
     }
 
-    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -355,8 +389,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     // State maintained for proper onPause/OnResume behaviour.
     private boolean mResumeFromLast;
     private boolean mNetworkBookmarksEnabled;
-    private int mRemotePosition =-1;
-    private int mLastPosition;
 
     // External player result reporting
     private boolean mIsExternalPlayer = false;
@@ -398,6 +430,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private TVCardView mSubtitleTVCardView;
     private TVCardView mAudioTracksTVCardView;
     private TVMenu mAudioTracksTVMenu;
+    private TVMenu mPlayModeTVMenu;
+    private TVMenuItem mIntroSummaryMenuItem;
     private boolean isTVMode;
     private TorrentObserverService mTorrent;
     private int mTorrentFilePosition = -1;
@@ -444,11 +478,20 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (plugged) {
                     // update HDMI screen size
                     int[] size = readHdmiSize(mContext);
-                    if (size != null) {
-                        w = size[0];
-                        h = size[1];
-                        mSurfaceController.setHdmiPlugged(plugged, w, h);
+                    if (size == null) {
+                        // Some USB-C mirror outputs are not reported as FLAG_PRESENTATION displays.
+                        size = readFallbackDisplaySize();
+                        log.warn("HDMI plugged but no presentation display found, using fallback size=({},{})", size[0], size[1]);
                     }
+                    w = size[0];
+                    h = size[1];
+                }
+                if (mSurfaceController != null) {
+                    mSurfaceController.setHdmiPlugged(plugged, w, h);
+                }
+                invalidateOptionsMenu();
+                if (isTVMode) {
+                    refreshAudioTracksTVMenu();
                 }
             }
             else if(action.equals(PlayerService.PLAYER_SERVICE_STARTED)){
@@ -464,15 +507,106 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         return (TVUtils.isTV(this) || mHdmiPlugged);
     }
 
+    private boolean isSpatializationSupportedByPlatform() {
+        int capabilities = CustomApplication.getSpatializerCapabilities();
+        return Build.VERSION.SDK_INT >= 32
+                && (capabilities & CodecDiscovery.SPATIALIZER_CAP_SUPPORTED) != 0
+                && (capabilities & CodecDiscovery.SPATIALIZER_CAP_AVAILABLE) != 0
+                && (capabilities & (CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_5_1
+                | CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_7_1)) != 0;
+    }
+
+    private boolean isSpatializationToggleAvailable() {
+        return isSpatializationSupportedByPlatform()
+                && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple", "0")) == 0;
+    }
+
+    private boolean isSpatializationPreferenceEnabled() {
+        return mPreferences.getBoolean(KEY_SPATIALIZATION_ENABLED, true);
+    }
+
+    private boolean isSpatializationEnabledForPlayback() {
+        return isSpatializationToggleAvailable() && isSpatializationPreferenceEnabled();
+    }
+
+    private void applySpatializationPreferenceToAvos() {
+        if (LibAvos.isAvailable()) {
+            LibAvos.setSpatializerEnabled(isSpatializationEnabledForPlayback());
+        }
+    }
+
+    private void applyDownmixPreferenceToAvos() {
+        if (!LibAvos.isAvailable()) {
+            return;
+        }
+        int passthroughMode = Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple", "0"));
+        if (passthroughMode > 0) {
+            LibAvos.setDownmix(0);
+            return;
+        }
+        if (isSpatializationEnabledForPlayback()) {
+            LibAvos.setDownmix(0);
+            return;
+        }
+        if (ArchosFeatures.isAndroidTV(this)) {
+            LibAvos.setDownmix(mPreferences.getBoolean("enable_downmix_androidtv", false) ? 1 : 0);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                && mPreferences.getBoolean("disable_downmix", false)) {
+            LibAvos.setDownmix(0);
+        } else {
+            LibAvos.setDownmix(1);
+        }
+    }
+
+    private boolean isPassthroughAudioDelayLimited() {
+        return CustomApplication.isPassthroughSupported()
+                && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple", "0")) > 0;
+    }
+
+    private int clampAudioDelayForPassthrough(int delay) {
+        return isPassthroughAudioDelayLimited() && delay > 0 ? 0 : delay;
+    }
+
+    private void resetUnsupportedPassthroughAudioDelayPreset() {
+        if (!isPassthroughAudioDelayLimited()) {
+            return;
+        }
+        int delay = mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0);
+        if (delay <= 0) {
+            return;
+        }
+        if (log.isDebugEnabled()) log.debug("resetUnsupportedPassthroughAudioDelayPreset: reset unsupported delay {}", delay);
+        mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), 0).apply();
+        if (PlayerService.sPlayerService != null) {
+            PlayerService.sPlayerService.setAudioDelay(0, false);
+        }
+    }
+
+    private void setSpatializationPreferenceEnabled(boolean enabled) {
+        mPreferences.edit().putBoolean(KEY_SPATIALIZATION_ENABLED, enabled).apply();
+        applySpatializationPreferenceToAvos();
+        applyDownmixPreferenceToAvos();
+        if (mPlayer != null && mPlayer.isInPlaybackState()) {
+            mPlayer.refreshAudioOutput();
+        }
+        invalidateOptionsMenu();
+        if (isTVMode) {
+            refreshAudioTracksTVMenu();
+        }
+    }
+
+    private void toggleSpatializationPreference() {
+        setSpatializationPreferenceEnabled(!isSpatializationPreferenceEnabled());
+    }
+
     public static int[] readHdmiSize(Context context) {
         DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
         Display[] displays = displayManager.getDisplays();
         for (Display display : displays) {
             if ((display.getFlags() & Display.FLAG_PRESENTATION) != 0) {
-                DisplayMetrics metrics = new DisplayMetrics();
-                display.getRealMetrics(metrics);
-                int width = metrics.widthPixels;
-                int height = metrics.heightPixels;
+                Display.Mode mode = display.getMode();
+                int width = mode.getPhysicalWidth();
+                int height = mode.getPhysicalHeight();
                 if (log.isDebugEnabled()) log.debug("readHdmiSize: size=({},{})", width,height);
                 int[] ret = new int[2];
                 ret[0] = width;
@@ -482,6 +616,23 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
         if (log.isDebugEnabled()) log.debug("readHdmiSize: no external HDMI display found.");
         return null;
+    }
+
+    @SuppressWarnings("deprecation") // FLAG_TRANSLUCENT_NAVIGATION: no edge-to-edge alternative in PlayerActivity
+    private void addTranslucentNavigationFlag() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+    }
+
+    @SuppressWarnings("deprecation") // getRealMetrics: API 30+ uses getCurrentWindowMetrics
+    private int[] readFallbackDisplaySize() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Rect bounds = getWindowManager().getCurrentWindowMetrics().getBounds();
+            return new int[] { bounds.width(), bounds.height() };
+        } else {
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+            return new int[] { metrics.widthPixels, metrics.heightPixels };
+        }
     }
 
     public void setUIExternalSurface(Surface uiSurface) {
@@ -514,11 +665,33 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
         );
         mContext = this;
+        isTVMode = TVUtils.isTV(this);
+
+        ensureLaunchGeneration(getIntent());
 
         // Detect if we're being used as an external player
         detectExternalPlayerMode();
 
         super.onCreate(icicle);
+
+        // Predictive back (mandatory on targetSdk 36) no longer dispatches KEYCODE_BACK to
+        // onKeyDown/onKeyUp, which is how the TV menu / TVCardDialog overlays used to intercept
+        // BACK to close themselves instead of finishing the player. Close them explicitly first.
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                log.info("Back navigation: OnBackPressedDispatcher callback, dialogId={}",
+                        mShowingDialogId);
+                if (mPlayerController != null && mPlayerController.handleBackPressed()) {
+                    // The player controller dismisses a nested TV card before the main TV menu.
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    setEnabled(true);
+                }
+            }
+        });
+
         mIndexHelper = new IndexHelper(mContext, LoaderManager.getInstance(this), LOADER_INDEX);
 
         mPermissionChecker = new PermissionChecker(hasManageExternalStoragePermission(getApplicationContext()));
@@ -548,8 +721,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         mPlayerController.pauseTimeout = (mPreferences.getBoolean("hide_controls_on_pause", false)) ? 5000 : 0;
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        addTranslucentNavigationFlag();
         getWindow().setAttributes(attributes);
         /*
          * transparent background for archos devices
@@ -562,23 +734,21 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         setContentView(R.layout.player);
         mRootView = findViewById(R.id.root);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mRootView.setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
-                @Override
-                public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
-                    //NOTE do not do updateSizes() here otherwise player controller is not displayed
-                    MiscUtils.setCutoutMetrics(insets, mRootView, PlayerActivity.this);
-                    mSurfaceController.setCutoutMetrics(mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom);
-                    if (log.isDebugEnabled()) log.debug("CONFIG onApplyWindowInsets: cutout=({},{},{},{})", mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom);
-                    getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
-                    // needed on Bravia for HDR content to avoid grey bars cf. issue #270
-                    // avoid emulator UI glitch
-                    if (!(isEmulator() || isChromeOS(mContext)))
-                        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    return view.onApplyWindowInsets(insets);
-                }
-            });
-        }
+        mRootView.setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
+                //NOTE do not do updateSizes() here otherwise player controller is not displayed
+                MiscUtils.setCutoutMetrics(insets, mRootView, PlayerActivity.this);
+                mSurfaceController.setCutoutMetrics(mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom);
+                if (log.isDebugEnabled()) log.debug("CONFIG onApplyWindowInsets: cutout=({},{},{},{})", mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom);
+                getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
+                // needed on Bravia for HDR content to avoid grey bars cf. issue #270
+                // avoid emulator UI glitch
+                if (!(isEmulator() || isChromeOS(mContext)))
+                    getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                return view.onApplyWindowInsets(insets);
+            }
+        });
 
         // needed otherwise the playerController does not appear
         mRootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -633,6 +803,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mAudioInfoController = new TrackInfoController(mContext, getLayoutInflater(), menuAnchor, actionBar);
         mAudioInfoController.setListener(this);
         mSubtitleManager = new SubtitleManager(mContext, (ViewGroup)mRootView, getWindow().getWindowManager(),false);
+        mPlayerController.setOnControlBarVisibilityListener(visible -> {
+            if (mSubtitleManager != null) {
+                mSubtitleManager.onControlBarVisibilityChanged();
+            }
+        });
         mSubtitleInfoController = new TrackInfoController(mContext, getLayoutInflater(), menuAnchor, actionBar);
         mSubtitleInfoController.setListener(this);
         mSubtitleInfoController.setAlwayDisplay(true);
@@ -648,8 +823,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
 
                 @Override
+                @SuppressWarnings("deprecation") // getDefaultDisplay: API 30+ uses context.getDisplay()
                 public void onDisplayChanged(int displayId) {
-                    orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        orientation = mContext.getDisplay().getRotation();
+                    } else {
+                        orientation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+                    }
                     if(mCurrentRotation != orientation) {
                         mCurrentRotation = orientation;
                         runOnUiThread(new Runnable() {
@@ -770,11 +950,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
         intentFilter.addAction(PlayerService.PLAYER_SERVICE_STARTED);
         intentFilter.addAction(ACTION_HDMI_PLUGGED);
-        if (Build.VERSION.SDK_INT >= 33) {
-            registerReceiver(mReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            registerReceiver(mReceiver, intentFilter);
-        }
+        ContextCompat.registerReceiver(this, mReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
         isTVMode = TVUtils.isTV(mContext);
         mLockRotation = mPreferences.getBoolean(KEY_LOCK_ROTATION, false);
         mNetworkBookmarksEnabled = mPreferences.getBoolean(KEY_NETWORK_BOOKMARKS, true);
@@ -802,7 +978,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             LibAvos.setMaxPcmChannels(maxPcmChannels);
             log.info("onStart: Set max PCM channels to {}", maxPcmChannels);
             LibAvos.setPcmChannelMasks(CustomApplication.getHdmiChannelMasks());
-            LibAvos.setPassthrough(CustomApplication.isPassthroughSupported() ? Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0") ) : 0);
+            int passthroughMode = CustomApplication.isPassthroughSupported() ? Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0") ) : 0;
+            LibAvos.setPassthrough(passthroughMode);
+            resetUnsupportedPassthroughAudioDelayPreset();
             // Dolby Vision playback mode: passthrough to the device DV decoder (0) or
             // software HEVC decode + GPU tone-mapping to HDR10 (1, mpv/libplacebo style)
             LibAvos.setDolbyVisionMode(Integer.parseInt(mPreferences.getString(VideoPreferencesCommon.KEY_DOLBY_VISION_MODE, "0")));
@@ -834,11 +1012,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             } else {
                 LibAvos.setHdmiSupportedAudioCodecs(CustomApplication.getNativeAudioCodecsFlag());
             }
+            LibAvos.setMediaCodecAudioCapabilities(CustomApplication.getMediaCodecAudioCapabilitiesFlag());
+            LibAvos.setSpatializerCapabilities(CustomApplication.getSpatializerCapabilities());
             mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            applySpatializationPreferenceToAvos();
             // note enable_downmix_androidtv and disable_downmix are the opposite same settings but only one applies to androidTV
             // this is done on purpose to respect logic of presentation and default value
             float audioSpeed;
-            if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+            if (passthroughMode == 0) {
                 audioSpeed = mPreferences.getFloat(getString(R.string.save_audio_speed_setting_pref_key), 1.0f);
                 if (log.isDebugEnabled()) log.debug("onStart: {}", audioSpeed);
             } else {
@@ -860,32 +1041,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 finalSize = DEFAULT_MAX_IFRAME_SIZE;
             }
             LibAvos.setStreamMaxIframeSize(finalSize);
-            LibAvos.enableAudioSpeed(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false));
+            LibAvos.enableAudioSpeed(VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences));
             LibAvos.disableAtempoFilter(mPreferences.getBoolean(VideoPreferencesCommon.KEY_AUDIO_SPEED_AUDIOTRACK, false));
-            LibAvos.setAndroidFrameTiming(mPreferences.getBoolean(KEY_ENABLE_ANDROID_FRAME_TIMING,false));
             LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback (does nothing if audio speed not enabled)
-            LibAvos.setDynamicAudioDelay(mPreferences.getBoolean(VideoPreferencesCommon.KEY_ENABLE_DYNAMIC_AUDIO_DELAY, true)); // set dynamic audio delay estimation (default enabled)
+            LibAvos.setDynamicAudioDelay(mPreferences.getBoolean(VideoPreferencesCommon.KEY_ENABLE_DYNAMIC_AUDIO_DELAY, true)); // AVOS applies it only when the active sink path can use dynamic delay.
             LibAvos.parserSyncMode(Integer.parseInt(mPreferences.getString(KEY_PARSER_SYNC_MODE,"0"))); // set lavc parser sync mode (0: PTS, 1 samples)
-            // Check passthrough mode - downmix must be disabled when passthrough is active
-            int passthroughMode = Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0"));
-            if (passthroughMode > 0) {
-                // Passthrough is enabled - disable downmix as audio is sent raw to receiver
-                LibAvos.setDownmix(0);
-            } else {
-                // Passthrough disabled - use user preference for downmix
-                if (ArchosFeatures.isAndroidTV(this)) {
-                    if (mPreferences.getBoolean("enable_downmix_androidtv", false))
-                        LibAvos.setDownmix(1);
-                    else
-                        LibAvos.setDownmix(0);
-                } else {
-                    // Android is recent enough not to require downmix on phones/tablets if enabled
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mPreferences.getBoolean("disable_downmix", false))
-                        LibAvos.setDownmix(0);
-                    else
-                        LibAvos.setDownmix(1);
-                }
-            }
+            applyDownmixPreferenceToAvos();
         }
 
         //if not started from floating player, we have to stop our video
@@ -903,6 +1064,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         getIntent().putExtra(LAUNCH_FROM_FLOATING_PLAYER, false);
     }
 
+    @SuppressWarnings("deprecation") // Bundle.get(key) is required for the untyped external header bundle.
     private void postOnPlayerServiceBind() {
         if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: START, mResumeFromLast={}", mResumeFromLast);
         if (!mResumeFromLast && getSharedPreferences("player", 0).getInt("lastintent", 0) == getIntent().hashCode()) {
@@ -910,9 +1072,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
              * (when resumed from history for example)
              * NOTE: Skip this check when used as external player with position extras to respect caller's position
              */
-            boolean hasPositionExtras = getIntent().hasExtra("startfrom") ||
-                                       getIntent().hasExtra("position") ||
-                                       getIntent().hasExtra("resume_position");
+            boolean hasPositionExtras = ExternalResumeIntent.hasPositionExtra(getIntent());
             if (!(mIsExternalPlayer && hasPositionExtras)) {
                 mResumeFromLast = true;
                 if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: Set mResumeFromLast=true due to lastintent match");
@@ -930,59 +1090,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: Retrieved mResume from intent, value={}", mResume);
             // Check for external resume position if no other resume mode is set
             if (mResume == RESUME_NO) {
-                if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: mResume==RESUME_NO, checking for position extras");
-                if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: resume from extra");
-                // Debug: dump all intent extras
-                if (log.isTraceEnabled()) {
-                    if (getIntent().getExtras() != null) {
-                        if (log.isDebugEnabled()) log.debug("Intent extras dump:");
-                        for (String key : getIntent().getExtras().keySet()) {
-                            Object value = getIntent().getExtras().get(key);
-                            String valueType = value != null ? value.getClass().getSimpleName() : "null";
-                            if (log.isDebugEnabled()) log.debug("  {} = {} ({})", key, value, valueType);
-                        }
-                    } else {
-                        if (log.isDebugEnabled()) log.debug("Intent extras: null");
-                    }
-                }
-                if (getIntent().hasExtra("startfrom")) {
-                    Object positionExtra = getIntent().getExtras().get("startfrom");
-                    if (positionExtra instanceof Integer) {
-                        mRemotePosition = (Integer) positionExtra;
-                    } else if (positionExtra instanceof Long) {
-                        mRemotePosition = ((Long) positionExtra).intValue();
-                    }
-                    if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: found startfrom extra, mRemotePosition={}", mRemotePosition);
-                } else if (getIntent().hasExtra("position")) {
-                    Object positionExtra = getIntent().getExtras().get("position");
-                    if (positionExtra instanceof Integer) {
-                        mRemotePosition = (Integer) positionExtra;
-                    } else if (positionExtra instanceof Long) {
-                        mRemotePosition = ((Long) positionExtra).intValue();
-                    }
-                    if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: found position extra, mRemotePosition={}", mRemotePosition);
-                } else if (getIntent().hasExtra("resume_position")) {
-                    Object positionExtra = getIntent().getExtras().get("resume_position");
-                    if (positionExtra instanceof Integer) {
-                        mRemotePosition = (Integer) positionExtra;
-                    } else if (positionExtra instanceof Long) {
-                        mRemotePosition = ((Long) positionExtra).intValue();
-                    }
-                    if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: found resume_position extra, mRemotePosition={}", mRemotePosition);
-                }
-                if (mRemotePosition > 0) {
+                // Presence alone is not sufficient: position=0 and malformed values historically
+                // mean "start from the beginning", not "select the remote bookmark".
+                if (ExternalResumeIntent.hasValidLaunchPosition(getIntent())) {
                     mResume = RESUME_FROM_REMOTE_POS;
                     getIntent().putExtra(RESUME, mResume);
-                    if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: set mResume=RESUME_FROM_REMOTE_POS({}) and updated intent", RESUME_FROM_REMOTE_POS);
-                    // Set the remote position in VideoDbInfo for playback
-                    if (mVideoInfo != null) {
-                        mVideoInfo.resume = mRemotePosition;
-                        if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: Set mVideoInfo.resume={}", mRemotePosition);
-                    } else {
-                        if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: mVideoInfo is null, cannot set resume position yet");
-                    }
-                } else {
-                    if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: mRemotePosition not > 0, value={}", mRemotePosition);
+                    if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: explicit position is owned by PlayerService");
                 }
             }
         }
@@ -1004,11 +1117,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         } else {
             if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: no HTTP headers in external intent");
         }
-        if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: uri={}, mExtraMap={}", getIntent().getData(), mExtraMap);
+        // Header values may contain bearer tokens; log only their names.
+        if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: uri={} headerNames={}",
+                getIntent().getData(), mExtraMap != null ? mExtraMap.keySet() : null);
 
         Intent intent = new Intent();
         intent.putExtras(getIntent());
         intent.setData(getIntent().getData());
+        // Internal marker lets the service distinguish a new external ACTION_VIEW command from
+        // a frontend handoff. It is paired with SESSION_POSITION for lifecycle reattachment.
+        intent.putExtra(ExternalResumeIntent.EXTERNAL_PLAYER_LAUNCH, mIsExternalPlayer);
 
         PlayerService.sPlayerService.switchPlayerFrontend(mPlayerListener);
         Player.sPlayer = mPlayer;
@@ -1016,6 +1134,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         if(mPermissionChecker.hasExternalPermission(this)) {
             if (log.isDebugEnabled()) log.debug("postOnPlayerServiceBind: hasExternalPermission");
             PlayerService.sPlayerService.onStart(intent);
+            mUserPausedVideo = !PlayerService.sPlayerService.isPlayOnResume();
             PlayerService.sPlayerService.setIndexHelper(mIndexHelper);
             start();
         }
@@ -1040,7 +1159,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         if(!mWasInPictureInPicture){
             mPermissionChecker.checkAndRequestPermission(this);
             if (!isFinishing() && !isDestroyed()) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mHasAskedFloatingPermission&&Settings.canDrawOverlays(this)){ //permission has been granted
+                if (mHasAskedFloatingPermission && Settings.canDrawOverlays(this)) { //permission has been granted
                     startService(new Intent(this, FloatingPlayerService.class));
                 }
                 mHasAskedFloatingPermission = false;
@@ -1071,15 +1190,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mWasInPictureInPicture = false;
     }
 
+    @SuppressWarnings("deprecation") // requestVisibleBehind: deprecated API 26, no replacement for Android TV
     @Override
     protected void onPause() {
         super.onPause();
         if (log.isDebugEnabled()) log.debug("onPause");
 
-        // Update last position for external player result reporting
-        if (mIsExternalPlayer && mPlayer != null && mPlayer.isInPlaybackState()) {
-            mLastPosition = mPlayer.getCurrentPosition();
-        }
         // Clock (for leanback devices only)
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK) || isChromeOS(mContext)) {
             unregisterReceiver(mClockReceiver);
@@ -1102,22 +1218,19 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
         mPaused = true;
 
+        if (PlayerService.sPlayerService != null) {
+            PlayerService.sPlayerService.checkpointPlaybackIntent(getIntent());
+        }
+
         // If player is paused when activity pauses (screen off), preserve pause state
         if (mPlayer != null && mPlayer.isPaused() && PlayerService.sPlayerService != null) {
             if (log.isDebugEnabled()) log.debug("onPause (activity): player is paused, setting mPlayOnResume = false");
             PlayerService.sPlayerService.setPlayOnResume(false);
         }
 
-        //Update the playback time for proper restore when resumed.
-        if (mLastPosition != LAST_POSITION_END) {
-                mLastPosition = mPlayer.getCurrentPosition();
-                if (log.isDebugEnabled()) log.debug("onPause: player activity paused, saving exact position {}", mLastPosition);
-                Intent intent = getIntent();
-                if (intent.hasExtra("position"))
-                    intent.putExtra("position", mLastPosition);
-        }
     }
 
+    @SuppressWarnings("deprecation") // onVisibleBehindCanceled: deprecated API 26, no replacement for Android TV
     @Override
     public void onVisibleBehindCanceled() {
         mPaused = true;
@@ -1130,8 +1243,15 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         super.onStop();
         if (log.isDebugEnabled()) log.debug("onStop");
 
-        // Send external player result when stopping (before onDestroy)
-        sendExternalPlayerResult();
+        // Refresh the service-owned handoff position in case playback continued behind Home.
+        if (PlayerService.sPlayerService != null) {
+            PlayerService.sPlayerService.checkpointPlaybackIntent(getIntent());
+        }
+
+        // Home and screensavers also call onStop(). They are session checkpoints, not an
+        // external-player completion, so do not publish a stale result here. Every deliberate
+        // exit goes through finish(), which reports the latest service-owned snapshot.
+        if (isFinishing()) sendExternalPlayerResult();
 
         if (mStopped)
             return;
@@ -1150,16 +1270,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         mPlayerController.hide();
 
-        if (mLastPosition != LAST_POSITION_END) {
-            // If player is paused, save exact position; otherwise save bookmark position
-            if (mPlayer.isPaused()) {
-                mLastPosition = mPlayer.getCurrentPosition();
-                if (log.isDebugEnabled()) log.debug("onStop: player paused, saving exact position {}", mLastPosition);
-            } else {
-                mLastPosition = getBookmarkPosition();
-                if (log.isDebugEnabled()) log.debug("onStop: player playing, saving bookmark position {}", mLastPosition);
-            }
-        }
         stop();
         if(PlayerService.sPlayerService !=null)
             PlayerService.sPlayerService.removePlayerFrontend(mPlayerListener, mLaunchFloatingPlayer);
@@ -1181,16 +1291,21 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     protected void onDestroy() {
         if (log.isDebugEnabled()) log.debug("onDestroy");
 
-        // Send external player result if we haven't already
-        sendExternalPlayerResult();
+        // System-driven destruction after Home/screensaver is not an external-player exit.
+        // finish() normally sends first; this guarded fallback covers framework finish paths.
+        if (isFinishing()) sendExternalPlayerResult();
 
         stopDialog();
         removeNetworkListener();
 
-        // Clear the pause state preference when activity is destroyed
-        // This ensures fresh start when opening the video again
-        mPreferences.edit().putBoolean("user_paused_video", false).apply();
-        if (log.isDebugEnabled()) log.debug("onDestroy: cleared user_paused_video preference");
+        // System/screensaver recreation must retain a user pause. A deliberate finish ends it.
+        if (isFinishing()) {
+            mPreferences.edit()
+                    .putBoolean(PlayerService.PREFERENCE_USER_PAUSED_VIDEO, false)
+                    .remove(PlayerService.PREFERENCE_USER_PAUSED_URI)
+                    .apply();
+            if (log.isDebugEnabled()) log.debug("onDestroy: cleared finished paused session");
+        }
 
         // Unregister DisplayListener to prevent memory leak
         if (mDisplayManager != null && mDisplayListener != null) {
@@ -1202,22 +1317,41 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         VideoEffect.resetForcedMode();
         if (log.isDebugEnabled()) log.debug("onDestroy: setEffect");
         setEffect(VideoEffect.getDefaultMode());
+        if (Player.sPlayer == mPlayer) {
+            Player.sPlayer = null;
+        }
+        if (mPlayer != null) {
+            mPlayer.setListener(null);
+            mPlayer = null;
+        }
         super.onDestroy();
     }
 
+    @SuppressWarnings("deprecation") // getRealSize/getSize: API 30+ uses getCurrentWindowMetrics
     private void updateSizes() {
         boolean isInPictureInPictureMode = Build.VERSION.SDK_INT>=Build.VERSION_CODES.N&&isInPictureInPictureMode();
         boolean isInMultiWindowMode = Build.VERSION.SDK_INT>=Build.VERSION_CODES.N&&isInMultiWindowMode();
-        Display display = getWindowManager().getDefaultDisplay();
         int width, height, layoutWidth, layoutHeight, displayWidth, displayHeight;
-        Point realPoint = new Point();
         // returns the real screen dimension
-        display.getRealSize(realPoint);
-        displayWidth = realPoint.x;
-        displayHeight = realPoint.y;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Rect realBounds = getWindowManager().getCurrentWindowMetrics().getBounds();
+            displayWidth = realBounds.width();
+            displayHeight = realBounds.height();
+        } else {
+            Point realPoint = new Point();
+            getWindowManager().getDefaultDisplay().getRealSize(realPoint);
+            displayWidth = realPoint.x;
+            displayHeight = realPoint.y;
+        }
         // returns the available dimension (real screen size minus decors): this is needed on phones, cannot only matchParent
         Point point = new Point();
-        display.getSize(point);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // In API 30+ use currentWindowMetrics bounds minus insets for the usable area
+            Rect bounds = getWindowManager().getCurrentWindowMetrics().getBounds();
+            point.set(bounds.width(), bounds.height());
+        } else {
+            getWindowManager().getDefaultDisplay().getSize(point);
+        }
         // note on chromeos pixelbook point.y when fullscreen only reports a wrong layoutHeight (2400x1400 instead of 2400x1600) as if there are hidden decors
         // status bar | action bar | navigation bar, system bar = status bar + navigation bar
         layoutWidth = point.x;
@@ -1226,9 +1360,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         boolean isPortrait = ((1.0f*layoutHeight/layoutWidth)>1.0);
         boolean isSeenPortrait = ((1.0f*displayHeight/displayWidth)>1.0);
 
-        //Find the screen size.
-        DisplayMetrics metrics = new DisplayMetrics();
-        display.getMetrics(metrics);
+        //Find the screen density.
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
         
         //Set the Floating Player Size, 45% of the smallest side, or 2 inches on Tablet etc.
         int smallestSide = (isPortrait ? displayWidth : displayHeight);
@@ -1255,8 +1388,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         // if rotation is locked reverse w/h but only if we have a difference of portrait/landscape perception between layout and screen dimension
         if (isRotationLocked()&&(isPortrait != isSeenPortrait)) {
-            displayWidth = realPoint.y;
-            displayHeight = realPoint.x;
+            int swapTemp = displayWidth;
+            displayWidth = displayHeight;
+            displayHeight = swapTemp;
             if (log.isDebugEnabled()) log.debug("CONFIG updateSizes RotationLocked overriding display ({},{})", displayWidth, displayHeight);
         }
 
@@ -1333,9 +1467,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         };
     }
 
+    @SuppressWarnings("deprecation") // getDefaultDisplay: API 30+ uses getDisplay()
     private void setLockRotation(boolean avpLock) {
-        Display display = getWindowManager().getDefaultDisplay();
-        int rotation = display.getRotation();
+        int rotation;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            rotation = getDisplay().getRotation();
+        } else {
+            rotation = getWindowManager().getDefaultDisplay().getRotation();
+        }
         if (log.isDebugEnabled()) log.debug("CONFIG setLockRotation, rotation status: {}, i.e. {}", rotation, getHumanReadableRotation(rotation));
 
         boolean systemLock;
@@ -1381,13 +1520,22 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         if (log.isDebugEnabled()) log.debug("onNewIntent: {}", intent);
+        ensureLaunchGeneration(intent);
         setIntent(intent);
         if(mWasInPictureInPicture) {
             if (PlayerService.sPlayerService != null) {
                 PlayerService.sPlayerService.stopAndSaveVideoState();
                 postOnPlayerServiceBind();
             }
+        }
+    }
+
+    /** Assign once per command; lifecycle recreation and floating-player handoffs retain it. */
+    private static void ensureLaunchGeneration(Intent intent) {
+        if (intent != null && !intent.hasExtra(PlayerService.LAUNCH_GENERATION)) {
+            intent.putExtra(PlayerService.LAUNCH_GENERATION, UUID.randomUUID().toString());
         }
     }
 
@@ -1703,6 +1851,38 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
         });
 
+        final TVMenuItem tvmBg = tvmenu.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.subtitle_background_text), mSubtitleManager.getBackgroundState()); // Make sure to add string resource or use literal "Subtitle Background"
+        tvmBg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean bg = mSubtitleManager.getBackgroundState();
+                tvmBg.setChecked(!bg);
+                mSubtitleManager.setBackgroundState(!bg);
+            }
+        });
+
+        tvmenu.createAndAddTVMenuItem(getResources().getString(R.string.subtitle_bg_opacity_text), false);
+
+        final SubtitleDelayTVPicker tvPickerOpacity = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
+                .inflate(R.layout.subtitle_delay_tv_picker, null);
+        tvPickerOpacity.setStep(1); 
+        tvPickerOpacity.setMin(0);
+        tvPickerOpacity.setMax(255 * 100); 
+        tvmenu.addTVMenuItem(tvPickerOpacity);
+        tvPickerOpacity.setTextViewWidth((int) pickerWidth);
+        tvPickerOpacity.setUpdateText(false);
+        tvPickerOpacity.setText(String.valueOf(mSubtitleManager.getBackgroundOpacity()));
+        tvPickerOpacity.init(mSubtitleManager.getBackgroundOpacity() * 100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
+            @Override
+            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
+                int opacity = delay / 100;
+                if (opacity < 0) opacity = 0;
+                if (opacity > 255) opacity = 255;
+                mSubtitleManager.setBackgroundOpacity(opacity);
+                tvPickerOpacity.setText(String.valueOf(opacity));
+            }
+        });
+
         ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).addOtherView(tvmenu);
         ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {     
             @Override
@@ -1711,6 +1891,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleManager.getVerticalPosition()).apply();
                 mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_COLOR, mSubtitleManager.getColor()).apply();
                 mPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mSubtitleManager.getOutlineState()).apply();
+                mPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_BACKGROUND, mSubtitleManager.getBackgroundState()).apply();
+                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_BG_OPACITY, mSubtitleManager.getBackgroundOpacity()).apply();
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
                 mSubtitleManager.fadeSubtitlePositionHint(false);
             }
@@ -1740,6 +1922,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             tvPicker.setMax(mPlayer.getDuration());
             tvPicker.setMin(-mPlayer.getDuration());
         }
+        if (isPassthroughAudioDelayLimited()) {
+            tvPicker.setMax(0);
+        }
         tvPicker.setHourFormat(true);
         tvmenu.addTVMenuItem(tvPicker);
         final TVMenuItem saveSettingCB = tvmenu.createAndAddTVSwitchableMenuItem(getString(R.string.keep_setting), mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0) != 0);
@@ -1748,6 +1933,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             public void onClick(View view) {
                 saveSettingCB.toggle();
                 if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog:onClick saveSettingCB.isChecked()={}", saveSettingCB.isChecked());
+                if (saveSettingCB.isChecked()) {
+                    int delay = clampAudioDelayForPassthrough(PlayerService.sPlayerService.getAudioDelay());
+                    if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog: keep setting toggled ON, save current audio delay={} in prefs", delay);
+                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), delay).apply();
+                } else {
+                    if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog: keep setting toggled OFF, save 0 in prefs");
+                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), 0).apply();
+                }
             }
         });
         // View hierarchy is
@@ -1757,11 +1950,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         //        └── TVMenu
         //            ├── AudioDelayTVPicker
         //            └── TVMenuItem (saveSettingCB)
-        tvPicker.init(PlayerService.sPlayerService.getAudioDelay(), new AudioDelayPickerAbstract.OnAudioDelayChangedListener() {
+        tvPicker.init(clampAudioDelayForPassthrough(PlayerService.sPlayerService.getAudioDelay()), new AudioDelayPickerAbstract.OnAudioDelayChangedListener() {
             @Override
             public void onAudioDelayChanged(AudioDelayPickerAbstract view, int delay) {
+                delay = clampAudioDelayForPassthrough(delay);
                 if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog:onAudioDelayChanged delay={}", delay);
                 PlayerActivity.this.onAudioDelayChange(null, delay);
+                if (saveSettingCB.isChecked()) {
+                    if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog: audio delay changed to {} with keep setting ON, save in prefs", delay);
+                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), delay).apply();
+                }
             }
         });
         ((TVCardDialog)dialogView).addOtherView(tvmenu);
@@ -1770,8 +1968,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             public void onResult(int code) {
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
                 if(saveSettingCB.isChecked()){
-                    if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog:onResult save audio delay={} in prefs", PlayerService.sPlayerService.getAudioDelay());
-                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), PlayerService.sPlayerService.getAudioDelay()).apply();
+                    int delay = clampAudioDelayForPassthrough(PlayerService.sPlayerService.getAudioDelay());
+                    if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog:onResult save audio delay={} in prefs", delay);
+                    mPreferences.edit().putInt(getString(R.string.save_delay_setting_pref_key), delay).apply();
                 }
                 else {
                     if (log.isDebugEnabled()) log.debug("createTVAudioDelayDialog:onResult do not save audio delay and carve 0 in prefs");
@@ -1952,6 +2151,18 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                 });
 
+                final TVMenuItem tvmiSpatialization = mAudioTracksTVMenu.createAndAddTVSwitchableMenuItem(
+                        getResources().getString(R.string.spatialization_capabilities),
+                        isSpatializationEnabledForPlayback());
+                tvmiSpatialization.setDisabled(!isSpatializationToggleAvailable());
+                tvmiSpatialization.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleSpatializationPreference();
+                        tvmiSpatialization.setChecked(isSpatializationEnabledForPlayback());
+                    }
+                });
+
                 mAudioTracksTVMenu.createAndAddSeparator();
 
                 final TVMenuItem tvmi3 = mAudioTracksTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_subtitle_delay_title).toString(), false, false);
@@ -1962,8 +2173,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                 });
 
-                // disable playback speed if passthrough is enabled and Android M (API23+)
-                if(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0) {
+                // disable playback speed if audio speed is disabled (passthrough, MediaCodec audio decoder, or API < 23)
+                if (VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences)) {
                     final TVMenuItem tvmi4 = mAudioTracksTVMenu.createAndAddTVMenuItem(getText(R.string.player_pref_audio_speed_title).toString(), false, false);
                     tvmi4.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -1975,6 +2186,33 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             } else {
                 mPlayerController.getTVMenuAdapter().setCardViewVisibility(View.GONE, mAudioTracksTVCardView);
             }
+        }
+    }
+
+    // The intro/outro timings are fetched asynchronously and may not be known when the Play
+    // mode tile is first built. This adds (or updates) the summary line inside the Play mode
+    // menu once the segments become available; safe to call repeatedly (e.g. on each menu show).
+    public void refreshPlayModeIntroSummary() {
+        if (mPlayModeTVMenu == null) return;
+        IntroSegments segments = (PlayerService.sPlayerService != null) ? PlayerService.sPlayerService.getIntroSegments() : null;
+        String summary = (segments != null) ? segments.toSummaryString(PlayerService.introLabels(this), getString(R.string.introdb_segment_end)) : null;
+        if (summary == null) return;
+        if (mIntroSummaryMenuItem == null) {
+            mPlayModeTVMenu.createAndAddSeparator();
+            mIntroSummaryMenuItem = mPlayModeTVMenu.createAndAddTVMenuItem(summary, false);
+            ViewGroup.LayoutParams lp = mIntroSummaryMenuItem.getLayoutParams();
+            if (lp != null) {
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                mIntroSummaryMenuItem.setLayoutParams(lp);
+            }
+        } else {
+            mIntroSummaryMenuItem.setText(summary);
+        }
+        TextView summaryText = (TextView) mIntroSummaryMenuItem.findViewById(R.id.info_text);
+        if (summaryText != null) {
+            summaryText.setSingleLine(false);
+            summaryText.setMaxLines(6);
+            summaryText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
         }
     }
 
@@ -2101,6 +2339,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
             else vPicInPic = null;
             tvmFormat.setOnItemClickListener(new View.OnClickListener() {
+                @SuppressWarnings("deprecation") // enterPictureInPictureMode(): API 26+ uses PictureInPictureParams
                 @Override
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
@@ -2147,7 +2386,24 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             });
 
             tvmPlayMode.setItems(R.array.pref_play_mode_entries, PlayerService.sPlayerService.mPlayMode, true);
+
+            tvmPlayMode.createAndAddSeparator();
+            final TVMenuItem tvmAutoSkip = tvmPlayMode.createAndAddTVSwitchableMenuItem(
+                    getResources().getString(R.string.pref_introdb_autoskip_title),
+                    mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED));
+            tvmAutoSkip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean enabled = !mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED);
+                    mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_ENABLED, enabled).apply();
+                    tvmAutoSkip.setChecked(enabled);
+                }
+            });
+
+            mPlayModeTVMenu = tvmPlayMode;
+            mIntroSummaryMenuItem = null;
             tcv.addOtherView(tvmPlayMode);
+            refreshPlayModeIntroSummary();
             //[/playmode]
             /*
             //[sleep timer]
@@ -2229,8 +2485,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public void bookmark() {
         if (mVideoInfo != null) {
             mVideoInfo.bookmark = getBookmarkPosition();
-            mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
+            persistVideoInfo();
             mPlayerController.updateBookmarkToast(mPlayer.getCurrentPosition());
+        }
+    }
+
+    private void persistVideoInfo() {
+        if (PlayerService.sPlayerService != null) {
+            PlayerService.sPlayerService.persistVideoInfoFromFrontend(mVideoInfo);
+        } else if (mIndexHelper != null && mVideoInfo != null) {
+            mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
         }
     }
 
@@ -2238,7 +2502,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
 
-        if (!isTVMode) {
+        if (!isTVMode && !TVUtils.isTV(this)) {
             MenuItem menuItem;
 
             //------------------------------------------------------------------
@@ -2306,8 +2570,15 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 menuItem.setIcon(R.drawable.ic_baseline_speed_24);
                 menuItem.setShowAsAction(!isPluggedOnTv() ? MenuItem.SHOW_AS_ACTION_NEVER : MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
-            // disable playback speed if passthrough is enabled and Android M+ (API23+)
-            menuItem.setVisible(mPreferences.getBoolean(KEY_PLAYBACK_SPEED,false) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","-1"))<=0);
+            // disable playback speed if audio speed is disabled (passthrough, MediaCodec audio decoder, or API < 23)
+            menuItem.setVisible(VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences));
+            menuItem = menu.add(MENU_OTHER_GROUP, MENU_SPATIALIZATION_ID, Menu.NONE, R.string.spatialization_capabilities);
+            if (menuItem != null) {
+                menuItem.setCheckable(true);
+                menuItem.setChecked(isSpatializationEnabledForPlayback());
+                menuItem.setEnabled(isSpatializationToggleAvailable());
+                menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            }
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_S3D_ID, Menu.NONE, R.string.pref_s3d_mode_title);
             if (menuItem != null) {
                 menuItem.setIcon(R.drawable.ic_menu_3d);
@@ -2351,6 +2622,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mBookmarkMenuItem.setVisible(canSetBookmark());
         if (menu.findItem(MENU_S3D_ID) != null)
             menu.findItem(MENU_S3D_ID).setVisible(isStereoEffectOn());
+        if (menu.findItem(MENU_SPATIALIZATION_ID) != null) {
+            menu.findItem(MENU_SPATIALIZATION_ID).setChecked(isSpatializationEnabledForPlayback());
+            menu.findItem(MENU_SPATIALIZATION_ID).setEnabled(isSpatializationToggleAvailable());
+        }
         /*if(menu.findItem(MENU_WINDOW_MODE)!=null)
             menu.findItem(MENU_WINDOW_MODE).setVisible(mPreferences.getBoolean(KEY_ADVANCED_VIDEO_ENABLED, false));*/
         return super.onPrepareOptionsMenu(menu);
@@ -2364,14 +2639,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 return true;
             case MENU_WINDOW_MODE:
                 mLaunchFloatingPlayer = true;
-                if(Build.VERSION.SDK_INT>=  Build.VERSION_CODES.M&&!Settings.canDrawOverlays(this))
+                if (!Settings.canDrawOverlays(this))
                     displayFloatingWindowPermissionDialog();
                 else {
                     Intent floatingIntent = new Intent(this, FloatingPlayerService.class);
-                    // Pass current playback position to floating player
-                    if (mPlayer != null) {
-                        int currentPos = mPlayer.getCurrentPosition();
-                        floatingIntent.putExtra("floating_player_position", currentPos);
+                    // Pass a service-owned snapshot to the new frontend.
+                    if (PlayerService.sPlayerService != null) {
+                        int currentPos = PlayerService.sPlayerService.getPlaybackSnapshot().getPositionMs();
+                        floatingIntent.putExtra(ExternalResumeIntent.FLOATING_POSITION, currentPos);
                         floatingIntent.putExtra("floating_player_size", mPlayerController.floatingPlayerSize);            //FLOATING PLAYER SIZE
                     }
                     startService(floatingIntent);
@@ -2384,7 +2659,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             case MENU_BOOKMARK_ID:
                 if (mVideoInfo != null) {
                     mVideoInfo.bookmark = getBookmarkPosition();
-                    mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
+                    persistVideoInfo();
                     mPlayerController.updateBookmarkToast(mPlayer.getCurrentPosition());
                 }
                 return true;
@@ -2419,12 +2694,57 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             case MENU_PLAYMODE_ID: {
                 AlertDialog.Builder adb = new AlertDialog.Builder(this);
                 adb.setTitle(R.string.pref_play_mode_title);
-                adb.setSingleChoiceItems(R.array.pref_play_mode_entries, PlayerService.sPlayerService.mPlayMode, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        PlayerService.sPlayerService.menuChangePlayMode(which);
-                        dialog.dismiss();
+                final CharSequence[] playModeEntries = mContext.getResources().getTextArray(R.array.pref_play_mode_entries);
+                final ArrayList<RadioButton> playModeRbs = new ArrayList<RadioButton>();
+
+                LinearLayout content = new LinearLayout(mContext);
+                content.setOrientation(LinearLayout.VERTICAL);
+                int pad = (int) (16 * getResources().getDisplayMetrics().density);
+                content.setPadding(pad, pad / 2, pad, pad / 2);
+
+                for (int i = 0; i < playModeEntries.length; i++) {
+                    final int position2 = i;
+                    RadioButton rb = new RadioButton(mContext);
+                    rb.setText(playModeEntries[i]);
+                    rb.setPadding(pad, pad, pad, pad);
+                    rb.setChecked(PlayerService.sPlayerService.mPlayMode == i);
+                    playModeRbs.add(rb);
+                    rb.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            PlayerService.sPlayerService.menuChangePlayMode(position2);
+                            for (RadioButton other : playModeRbs)
+                                other.setChecked(other == v);
+                        }
+                    });
+                    content.addView(rb);
+                }
+
+                Switch tb = new Switch(mContext);
+                tb.setText(R.string.pref_introdb_autoskip_title);
+                tb.setPadding(pad, pad, pad, pad);
+                tb.setChecked(mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED));
+                tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_ENABLED, isChecked).apply();
                     }
                 });
+                content.addView(tb);
+
+                IntroSegments introSegmentsPhone = (PlayerService.sPlayerService != null) ? PlayerService.sPlayerService.getIntroSegments() : null;
+                String introSummaryPhone = (introSegmentsPhone != null) ? introSegmentsPhone.toSummaryString(PlayerService.introLabels(this), getString(R.string.introdb_segment_end)) : null;
+                if (introSummaryPhone != null) {
+                    TextView footer = new TextView(mContext);
+                    footer.setText(introSummaryPhone);
+                    footer.setEnabled(false);
+                    footer.setPadding(pad, pad / 2, pad, pad / 2);
+                    content.addView(footer);
+                }
+
+                ScrollView scroll = new ScrollView(mContext);
+                scroll.addView(content);
+                adb.setView(scroll);
                 adb.create().show();
 
                 return true;
@@ -2514,6 +2834,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
             case MENU_AUDIO_SPEED_ID: {
                 myShowDialog(DIALOG_AUDIO_SPEED);
+                return true;
+            }
+            case MENU_SPATIALIZATION_ID: {
+                toggleSpatializationPreference();
+                item.setChecked(isSpatializationEnabledForPlayback());
                 return true;
             }
             case MENU_S3D_ID: {
@@ -2734,9 +3059,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 break;
             case DIALOG_AUDIO_DELAY:
                 if(PlayerService.sPlayerService!=null)
-                    mDialog = new AudioDelayPickerDialog(this, this, PlayerService.sPlayerService.getAudioDelay());
+                    mDialog = new AudioDelayPickerDialog(this, this, clampAudioDelayForPassthrough(PlayerService.sPlayerService.getAudioDelay()), isPassthroughAudioDelayLimited());
                 else
-                    mDialog = new AudioDelayPickerDialog(this, this, mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0));
+                    mDialog = new AudioDelayPickerDialog(this, this, clampAudioDelayForPassthrough(mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0)), isPassthroughAudioDelayLimited());
                 AudioDelayPickerDialog audioPickerDialog = (AudioDelayPickerDialog) mDialog;
                 audioPickerDialog.setStep(20);
                 if (mPlayer.getDuration() > 0) {
@@ -2744,9 +3069,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     audioPickerDialog.setMin(-mPlayer.getDuration());
                 }
                 if(PlayerService.sPlayerService!=null)
-                    audioPickerDialog.updateDelay(PlayerService.sPlayerService.getAudioDelay());
+                    audioPickerDialog.updateDelay(clampAudioDelayForPassthrough(PlayerService.sPlayerService.getAudioDelay()));
                 else
-                    audioPickerDialog.updateDelay(mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0));
+                    audioPickerDialog.updateDelay(clampAudioDelayForPassthrough(mPreferences.getInt(getString(R.string.save_delay_setting_pref_key), 0)));
                 mPlayerController.hide();
                 break;
             case DIALOG_AUDIO_SPEED:
@@ -2874,19 +3199,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             postOnPlayerServiceBind();
     }
 
-    private int getLastPosition(VideoDbInfo videoInfo, int resume) {
-        int lastPosition = 0;
-        if (resume != RESUME_NO && (videoInfo.lastTimePlayed > 0 || resume == RESUME_FROM_REMOTE_POS)) {
-            if (mResume == RESUME_FROM_LAST_POS || mResume == RESUME_FROM_REMOTE_POS || mResume ==  RESUME_FROM_LOCAL_POS)
-                lastPosition = videoInfo.resume;
-            else if (mResume == RESUME_FROM_BOOKMARK)
-                lastPosition = videoInfo.bookmark;
-            if (lastPosition <= 0)
-                return 0;
-        }
-        return lastPosition;
-    }
-
     private final static String SHOW_FORMAT = "%s  -  S%02dE%02d  -  %s";
 
     public void setVideoInfo(VideoDbInfo info){
@@ -2903,11 +3215,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mUri = mVideoInfo.uri;
             if (log.isDebugEnabled()) log.debug("setVideoInfo mVideoId: {}", mVideoId);
 
-            applyRemotePositionIfNeeded();
-
-            // get resume position only if video was played
-            mLastPosition = getLastPosition(mVideoInfo, mResume);
-            if (!mCling) {
+            if (!mCling && !TextUtils.isEmpty(mVideoInfo.title)) {
                 mTitle = mVideoInfo.title;
             }
             mMovieOrShowName = null;
@@ -2919,7 +3227,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mMovieOrShowName = mVideoInfo.scraperTitle;
                 if (mMovieOrShowName != null) {
                     if (mVideoInfo.isShow) {
-                        mTitle = String.format(SHOW_FORMAT, mMovieOrShowName, mVideoInfo.scraperSeasonNr, mVideoInfo.scraperEpisodeNr, mVideoInfo.scraperEpisodeName);
+                        mTitle = String.format(Locale.getDefault(), SHOW_FORMAT, mMovieOrShowName, mVideoInfo.scraperSeasonNr, mVideoInfo.scraperEpisodeNr, mVideoInfo.scraperEpisodeName);
                     } else {
                         mTitle = mMovieOrShowName;
                     }
@@ -3012,40 +3320,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public void onVideoDb(final VideoDbInfo localVideoInfo, final VideoDbInfo remoteVideoInfo) {
     }
 
-    public void showTraktResumeDialog(final int localTraktPosition, VideoDbInfo localVideoInfo) {
-        mVideoInfo = localVideoInfo;
-
-        applyRemotePositionIfNeeded();
-
-        if(PlayerService.sPlayerService!=null){
-            PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
+    private void selectVideoInfo(VideoDbInfo videoInfo, PlayerService.ResumeSource resumeSource) {
+        mVideoInfo = videoInfo;
+        if (PlayerService.sPlayerService != null) {
+            PlayerService.sPlayerService.setVideoInfo(mVideoInfo, resumeSource);
             PlayerService.sPlayerService.requestIndexAndScrap();
         }
-    	// if we want to display a dialog for trakt resume, uncomment this
-    	/* if (log.isDebugEnabled()) log.debug("onVideoDb: trakt: into dialog");
-    	if(localTraktPosition>0&&
-        		(localTraktPosition<localVideoInfo.resume-60000||localTraktPosition>localVideoInfo.resume+60000)){
-    		if (log.isDebugEnabled()) log.debug("onVideoDb: trakt: showing dialog");
-        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.use_trakt_resume)
-            .setCancelable(false)
-            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    mVideoInfo.resume = localTraktPosition;
-                    postStart();
-                }
-            })
-            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            
-                            postStart();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
-    	else */
-        if (log.isDebugEnabled()) log.debug("showTraktResumeDialog: call setVideoInfo");
         setVideoInfo(mVideoInfo);
     }
 
@@ -3076,7 +3356,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             return;
         }
 
-        mLastPosition = intent.getIntExtra("position", -1);
         mShowingDialogId = DIALOG_NO;
         if (mForceAudioTrack != -1) {
             mVideoInfo.audioTrack = mForceAudioTrack;
@@ -3117,6 +3396,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mPermissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
@@ -3336,23 +3616,23 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mPlayer.setSubtitleDelay(mVideoInfo.subtitleDelay);
             mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
             // Save the subtitle delay and ratio to the database for persistence across resume
-            mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
+            persistVideoInfo();
             if (log.isDebugEnabled()) log.debug("onDelayChange: saved subtitleDelay={} subtitleRatio={} to database", mVideoInfo.subtitleDelay, mVideoInfo.subtitleRatio);
         }
     }
 
     /* AudioDelayPickerDialog.OnAudioDelayChangeListener */
     public void onAudioDelayChange(AudioDelayPickerAbstract delayPicker, int delay) {
-       PlayerService.sPlayerService.setAudioDelay(delay,false);
+       PlayerService.sPlayerService.setAudioDelay(clampAudioDelayForPassthrough(delay), false);
     }
 
     /* AudioSpeedPickerDialog.OnAudioSpeedChangeListener */
     public void onAudioSpeedChange(AudioSpeedPickerAbstract speedPicker, float speed) {
-        if (Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0")) == 0) {
+        if (VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences)) {
             if (log.isDebugEnabled()) log.debug("onAudioSpeedChange: setAudioSpeed {}", speed);
              PlayerService.sPlayerService.setAudioSpeed(speed, false);
         } else {
-            if (log.isDebugEnabled()) log.debug("onAudioSpeedChange: DO NOT setAudioSpeed coz passthrough");
+            if (log.isDebugEnabled()) log.debug("onAudioSpeedChange: DO NOT setAudioSpeed coz audio speed disabled");
         }
     }
 
@@ -3372,7 +3652,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     Bitmap result = null;
                     boolean foundPoster = false;
                     if (posterPath != null) {
-                        Bitmap bm = BitmapFactory.decodeFile(posterPath);
+                        Bitmap bm = com.archos.mediacenter.utils.BitmapUtils.decodeSampledBitmapFromFile(posterPath, 150, 225);
                         if (bm != null) {
                             float scaleFactor = (float)100 / (float)bm.getWidth();
                             result = Bitmap.createScaledBitmap(bm, (int)(scaleFactor * (float)bm.getWidth()), (int)(scaleFactor * (float)bm.getHeight()), true);
@@ -3529,7 +3809,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mVideoInfo.subtitleTrack == -1 || mVideoInfo.subtitleTrack >= mVideoInfo.nbSubtitles) {
             return false;
         }
-        return mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack).isGfx;
+        VideoMetadata.SubtitleTrack sub = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
+        return sub != null && sub.isGfx;
     }
 
     public boolean isCurrentSubtrackNone() {
@@ -3589,11 +3870,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (ret) {
                     mVideoInfo.audioTrack = position;
                     // Save the audio track selection to the database for persistence across resume
-                    mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
+                    persistVideoInfo();
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: saved audioTrack {} to database", mVideoInfo.audioTrack);
                 }
             } else if (at == null || !at.supported){
-                mErrorMsg = at.format;
+                mErrorMsg = (at != null) ? at.format : "";
                 myShowDialog(DIALOG_CODEC_NOT_SUPPORTED);
             }
         } else if (Objects.equals(trackInfoController, mSubtitleInfoController)) {
@@ -3615,7 +3896,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                             } else {
                                 language = ISO639codes.getLanguageNameForLetterCode(track.language);
                             }
-                            mVideoInfo.subtitleLanguage = extractLanguageCode(language).toLowerCase();
+                            mVideoInfo.subtitleLanguage = extractLanguageCode(language).toLowerCase(Locale.ROOT);
                             if (log.isDebugEnabled()) log.debug("onTrackSelected: saved subtitleLanguage={} for track {}", mVideoInfo.subtitleLanguage, mVideoInfo.subtitleTrack);
                         }
                     } else {
@@ -3623,7 +3904,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                     setSubtitleVpos("onTrackSelected");
                     // Save the subtitle track selection to the database for persistence across resume
-                    mIndexHelper.writeVideoInfo(mVideoInfo, mNetworkBookmarksEnabled);
+                    persistVideoInfo();
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: saved subtitleTrack {} to database", mVideoInfo.subtitleTrack);
                 } else {
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: player failed to get to subtitletrack {}", positionToSubtitleTrack(position, mVideoInfo.nbSubtitles));
@@ -3661,11 +3942,19 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         return true;
     }
 
+    private void onSubtitleResult() {
+        if (log.isDebugEnabled()) log.debug("Get result from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
+        mPlayer.checkSubtitles();
+    }
+
     private void downloadSubtitles() {
         Intent subIntent = new Intent(Intent.ACTION_MAIN);
         subIntent.setClass(mContext, SubtitlesDownloaderActivity2.class);
         subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_URL, PlayerService.sPlayerService.getStreamingUri().toString());
-        startActivityForResult(subIntent, SUBTITLE_REQUEST);
+        if (mTitle != null) {
+            subIntent.putExtra(SubtitlesDownloaderActivity2.FILE_NAME, mTitle);
+        }
+        subtitleLauncher.launch(subIntent);
     }
 
     private void chooseSubtitles() {
@@ -3674,7 +3963,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         subIntent.setClass(mContext, SubtitlesWizardActivity.class);
         subIntent.setData(uri);
-        startActivityForResult(subIntent, SUBTITLE_REQUEST);
+        subtitleLauncher.launch(subIntent);
     }
 
     private static boolean isGenericTextSubtitleFormat(String lang) {
@@ -3698,29 +3987,21 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
         // Handle special cases for known subtitle formats (e.g. SRT, VTT)
         if (isGenericTextSubtitleFormat(languageStr)) {
-            return languageStr.toLowerCase();
+            return languageStr.toLowerCase(Locale.ROOT);
         }
         // Use ISO639codes utility to convert any format (2-letter, 3-letter, or full name) to 2-letter code
         String code = com.archos.mediacenter.utils.ISO639codes.getISO6391ForLetterCode(languageStr);
         if (code != null && !code.isEmpty()) {
-            return code.toLowerCase();
+            return code.toLowerCase(Locale.ROOT);
         }
         // Fallback: if it's already a 2-letter code, use it
         if (languageStr.length() == 2 && !languageStr.contains(" ")) {
-            return languageStr.toLowerCase();
+            return languageStr.toLowerCase(Locale.ROOT);
         }
         // Last resort: return first 2 chars
-        return languageStr.substring(0, Math.min(2, languageStr.length())).toLowerCase();
+        return languageStr.substring(0, Math.min(2, languageStr.length())).toLowerCase(Locale.ROOT);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == SUBTITLE_REQUEST && resultCode == Activity.RESULT_OK){
-            if (log.isDebugEnabled()) log.debug("Get result from SubtitlesDownloaderActivity/SubtitlesWizardActivity");
-            mPlayer.checkSubtitles();
-        }
-    }
     protected boolean forceExitOnTouch() {
         return mForceExitOnTouch;
     }
@@ -3755,8 +4036,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 // Try to get calling package from multiple sources
                 mCallingPackage = getCallingPackage();
 
-                // API 22+: Try getReferrer() as fallback (more reliable than getCallingPackage)
-                if (mCallingPackage == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                // Try getReferrer() as fallback (more reliable than getCallingPackage)
+                if (mCallingPackage == null) {
                     Uri referrer = getReferrer();
                     if (referrer != null && "android-app".equals(referrer.getScheme())) {
                         mCallingPackage = referrer.getHost();
@@ -3765,10 +4046,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
 
                 // Check if we have external player indicators
-                boolean hasExternalIndicators = returnResult ||
-                        intent.hasExtra("position") ||
-                        intent.hasExtra("resume_position") ||
-                        intent.hasExtra("startfrom");
+                boolean hasExternalIndicators = returnResult
+                        || ExternalResumeIntent.hasPositionExtra(intent);
 
                 // Detect external player mode if:
                 // 1. We have a calling package that's different from Nova, OR
@@ -3792,15 +4071,24 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         // Set MX Player action - Stremio specifically recognizes this format
         resultIntent.setAction("com.mxtech.intent.result.VIEW");
 
-        // Get current position - use last known position or current player position
-        int currentPosition = mLastPosition;
-        if (mPlayer != null && mPlayer.isInPlaybackState()) {
-            currentPosition = mPlayer.getCurrentPosition();
-        }
+        // Prefer live state, but retain the service-owned lifecycle checkpoint as a fallback for
+        // a deliberate finish after the service/player has already been torn down.
+        PlayerService.PlaybackSnapshot snapshot = PlayerService.sPlayerService != null
+                ? PlayerService.sPlayerService.getPlaybackSnapshot()
+                : null;
+        int servicePosition = snapshot != null ? snapshot.getPositionMs() : -1;
+        int playerPosition = mPlayer != null && mPlayer.isInPlaybackState()
+                ? mPlayer.getCurrentPosition() : -1;
+        int checkpointPosition = ExternalResumeIntent.readPosition(
+                getIntent(), PlayerService.SESSION_POSITION);
+        int currentPosition = PlaybackResumePolicy.chooseExternalResultPosition(
+                servicePosition, playerPosition, checkpointPosition);
 
         // Get duration
         int duration = -1;
-        if (mVideoInfo != null && mVideoInfo.duration > 0) {
+        if (snapshot != null && snapshot.getDurationMs() > 0) {
+            duration = snapshot.getDurationMs();
+        } else if (mVideoInfo != null && mVideoInfo.duration > 0) {
             duration = mVideoInfo.duration;
         } else if (mPlayer != null && mPlayer.isInPlaybackState()) {
             duration = mPlayer.getDuration();
@@ -3893,9 +4181,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     /* If we get a corrupted file error, if the file is from the network,
                      * and if we are still connected, try to reopen the video one time.
                      */
-                    mVideoInfo.resume = mLastPosition = getBookmarkPosition();
-                    mVideoInfo.duration = mPlayer.getDuration();
-                    if (mLastPosition != 0) {
+                    int retryPosition = PlayerService.sPlayerService != null
+                            ? PlayerService.sPlayerService.prepareRetryFromCurrentPosition()
+                            : getBookmarkPosition();
+                    if (PlayerService.sPlayerService == null) {
+                        mVideoInfo.resume = retryPosition;
+                        mVideoInfo.duration = mPlayer.getDuration();
+                    }
+                    if (retryPosition != 0) {
                         mNetworkFailed = true;
                         stop();
                         mResumeFromLast = true;
@@ -3904,7 +4197,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                 }
             }
-            mLastPosition = LAST_POSITION_UNKNOWN;
             stop();
             mErrorCode = errorCode;
             mErrorQualCode = errorQualCode;
@@ -3949,11 +4241,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mUserPausedVideo = false;
                 PlayerService.sPlayerService.setPlayOnResume(true);
                 // Clear the pause state preference
-                mPreferences.edit().putBoolean("user_paused_video", false).apply();
+                mPreferences.edit()
+                        .putBoolean(PlayerService.PREFERENCE_USER_PAUSED_VIDEO, false)
+                        .remove(PlayerService.PREFERENCE_USER_PAUSED_URI)
+                        .apply();
             }
         }
         public void onFirstPlay() {
             mPlayerController.hide();
+        }
+        public void onIntroDbReady() {
+            refreshPlayModeIntroSummary();
         }
         public void onPause(int state) {
 
@@ -3968,7 +4266,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mUserPausedVideo = true;
                 PlayerService.sPlayerService.setPlayOnResume(false);
                 // Save pause state to preferences to survive activity recreation
-                mPreferences.edit().putBoolean("user_paused_video", true).apply();
+                mPreferences.edit()
+                        .putBoolean(PlayerService.PREFERENCE_USER_PAUSED_VIDEO, true)
+                        .putString(PlayerService.PREFERENCE_USER_PAUSED_URI,
+                                mUri != null ? mUri.toString() : null)
+                        .apply();
             }
         }
 
@@ -4006,8 +4308,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             String trackName = null;
             for (int i = 0; i < nbTrack; ++i) {
                 VideoMetadata.AudioTrack audio = vMetadata.getAudioTrack(i);
-                if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: name={}, language={}, format={}", audio.name, audio.language, audio.format);
-                trackName = generateTrackName(mContext, audio.name, audio.language, audio.format, true);
+                if (audio == null)
+                    continue;
+                if (log.isDebugEnabled()) log.debug("onAudioMetadataUpdated: name={}, language={}, format={}, disposition={}", audio.name, audio.language, audio.format, audio.disposition);
+                trackName = generateTrackName(mContext, audio.name, audio.language, audio.format, audio.disposition, true);
                 CharSequence name = trackName;
                 // when no name use track number instead of R.string.unknown_track_name th
                 if (trackName.isEmpty())
@@ -4044,12 +4348,15 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mVideoInfo.nbSubtitles = nbTrack; // nbSubtitles does not capture none track
                 String lang = null;
                 for (int i = 0; i < nbTrack; ++i) {
+                    SubtitleTrack track = vMetadata.getSubtitleTrack(i);
+                    if (track == null)
+                        continue;
                     // name comes from IMediaPlayer (avos) and if not internal it says SRT/VTT generic, infer the name from path
                     // infer language from path if path is provided
-                    if (vMetadata.getSubtitleTrack(i).isExternal) {
+                    if (track.isExternal) {
                         // external subtitle get name from file
-                        lang = getSubLanguageFromSubPathAndVideoPath(mContext, vMetadata.getSubtitleTrack(i).path, vMetadata.getFile().getPath());
-                        if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: extsub name={}, path={}, videoPath={}, isExternal={}, langFromPath={}", vMetadata.getSubtitleTrack(i).name, vMetadata.getSubtitleTrack(i).path, vMetadata.getFile().getPath(), vMetadata.getSubtitleTrack(i).isExternal, lang);
+                        lang = getSubLanguageFromSubPathAndVideoPath(mContext, track.path, vMetadata.getFile().getPath());
+                        if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: extsub name={}, path={}, videoPath={}, isExternal={}, langFromPath={}", track.name, track.path, vMetadata.getFile().getPath(), track.isExternal, lang);
                         if (lang != null) {
                             if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: extsub name might not be null add track name with lang={}", lang);
                             mSubtitleInfoController.addTrack(lang, true);
@@ -4059,10 +4366,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         }
                     } else {
                         // internal subtitle get name from name
-                    if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: intsub add track name with name={} replacing language code in {}", vMetadata.getSubtitleTrack(i).name, vMetadata.getSubtitleTrack(i).language);
-                    SubtitleTrack track = vMetadata.getSubtitleTrack(i);
-                    String format = VideoUtils.getSubtitleFormatLabel(mContext, track.format);
-                    mSubtitleInfoController.addTrack(generateTrackName(mContext, track.name, track.language, format, false), false);
+                        if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: intsub add track name with name={} replacing language code in {}, disposition={}", track.name, track.language, track.disposition);
+                        String format = VideoUtils.getSubtitleFormatLabel(mContext, track.format);
+                        mSubtitleInfoController.addTrack(generateTrackName(mContext, track.name, track.language, format, track.disposition, false), false);
                     }
                 }
                 mSubtitleInfoController.addSeparator();
@@ -4082,6 +4388,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mSubtitleManager.setColor(color);
                 setSubtitleVpos(vpos, "onSubtitleMetadataUpdated");
                 mSubtitleManager.setOutlineState(outline);
+                boolean background = preferences.getBoolean(KEY_SUBTITLE_BACKGROUND, false);
+                int bgOpacity = preferences.getInt(KEY_SUBTITLE_BG_OPACITY, 128);
+                mSubtitleManager.setBackgroundState(background);
+                mSubtitleManager.setBackgroundOpacity(bgOpacity);
                 // mVideoInfo.subtitleTrack is the track number with the none track 0<=mVideoInfo.subtitleTrack<=nbTrack, nbTrack for none track
                 // but mSubtitleInfoController is the track number with the none track (i.e. nbTrack + 1) at position 0
                 // at this point mVideoInfo.subtitleTrack is the track number to be used
@@ -4096,8 +4406,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
             refreshSubtitleTVMenu();
 
-            if (mPlayerController.isTVMenuDisplayed())
+            if (mPlayerController.isTVMenuDisplayed()) {
                 mPlayerController.showTVMenu(true);
+                // move focus to the currently selected subtitle track (e.g. the one just
+                // downloaded/auto-selected) instead of leaving it on whatever TV menu item had
+                // focus before the refresh (e.g. "Get subtitles online" that was just clicked)
+                if (nbTrack != 0) {
+                    View selectedTrackItem = mSubtitleTVMenu.getItem(mSubtitleInfoController.getTrack());
+                    if (selectedTrackItem != null) selectedTrackItem.requestFocus();
+                }
+            }
         }
 
         public void onBufferingUpdate(int percent) {
@@ -4136,39 +4454,32 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     } else fileHasAlreadyPlayed = true;
                 }
             } else fileHasAlreadyPlayed = false;
-            if (localVideoInfo != null) {
-                final int localTraktPosition = Math.abs(localVideoInfo.duration>0 ? (int)(localVideoInfo.traktResume * (double) localVideoInfo.duration / 100) : 0);
-                log.info("onVideoDb: trakt calc: "+ localTraktPosition+ " local "+ localVideoInfo.resume);
+            if (localVideoInfo != null && PlayerService.sPlayerService != null) {
+                int explicitPosition = PlayerService.sPlayerService.getResumeCandidate(PlayerService.ResumeSource.EXPLICIT);
+                if (explicitPosition > 0) {
+                    selectVideoInfo(localVideoInfo, PlayerService.ResumeSource.EXPLICIT);
+                    return;
+                }
 
-                if (localVideoInfo != null && remoteVideoInfo != null && mResume != RESUME_NO&& mResume !=  RESUME_FROM_LOCAL_POS) {
+                if (remoteVideoInfo != null && mResume != RESUME_NO && mResume != RESUME_FROM_LOCAL_POS) {
                     if (log.isDebugEnabled()) log.debug("hasRemoteVideoInfo");
                     // Don't show resume dialog if user explicitly paused the video
                     // Use mUserPausedVideo flag which is set by onPause listener and cleared by onPlay
                     if (log.isDebugEnabled()) log.debug("onVideoDb: mUserPausedVideo={}", mUserPausedVideo);
 
                     if (!mUserPausedVideo) {
-                        int localLastPosition = getLastPosition(localVideoInfo, mResume);
-                        int remoteLastPosition = getLastPosition(remoteVideoInfo, mResume);
+                        int localLastPosition = PlayerService.sPlayerService.getResumeCandidate(PlayerService.ResumeSource.LOCAL);
+                        int remoteLastPosition = PlayerService.sPlayerService.getResumeCandidate(PlayerService.ResumeSource.NETWORK);
 
                         if (localLastPosition != remoteLastPosition && remoteLastPosition > 0) {
                             //do not display dialog if remote position is the only available
                             if (localLastPosition <= 0) {
                                 if (log.isDebugEnabled()) log.debug("use remoteVideoInfo");
-                                showTraktResumeDialog(localTraktPosition,remoteVideoInfo);
+                                selectVideoInfo(remoteVideoInfo, PlayerService.ResumeSource.NETWORK);
 
                             } else {
                                 if(mResume ==  RESUME_FROM_REMOTE_POS){ //use only remote
-                                    mVideoInfo = remoteVideoInfo;
-                                    // Apply remote position BEFORE calling PlayerService.setVideoInfo()
-                                    if (mRemotePosition > 0) {
-                                        mVideoInfo.resume = mRemotePosition;
-                                    }
-                                    if(PlayerService.sPlayerService!=null){
-                                        PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
-                                        PlayerService.sPlayerService.requestIndexAndScrap();
-                                    }
-                                    if (log.isDebugEnabled()) log.debug("onVideoDb: call setVideoInfo");
-                                    setVideoInfo(mVideoInfo);
+                                    selectVideoInfo(remoteVideoInfo, PlayerService.ResumeSource.NETWORK);
                                 }
                                 else {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(PlayerActivity.this);
@@ -4176,23 +4487,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                                             .setCancelable(false)
                                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
-                                                    mVideoInfo = remoteVideoInfo;
-                                                    applyRemotePositionIfNeeded();
-                                                    if(PlayerService.sPlayerService!=null){
-                                                        PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
-                                                        PlayerService.sPlayerService.requestIndexAndScrap();
-                                                    }
-                                                    if (log.isDebugEnabled()) log.debug("onVideoDb: call setVideoInfo");
-                                                    setVideoInfo(mVideoInfo);
+                                                    selectVideoInfo(remoteVideoInfo, PlayerService.ResumeSource.NETWORK);
                                                 }
                                             })
                                             .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
-                                                    showTraktResumeDialog(localTraktPosition, localVideoInfo);
+                                                    selectVideoInfo(localVideoInfo, PlayerService.ResumeSource.LOCAL);
                                                 }
-                                            });
+                                    });
                                     AlertDialog alert = builder.create();
                                     alert.show();
+                                    alert.getButton(DialogInterface.BUTTON_POSITIVE).requestFocus();
                                 }
                             }
                             return;
@@ -4201,21 +4506,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         if (log.isDebugEnabled()) log.debug("onVideoDb: player is paused, skipping resume dialog");
                     }
                 }
-                //	showTraktResumeDialog(localTraktPosition,localVideoInfo);
-                //return ;
             }
 
             // this provides the video info to the player based on localVideoInfo (keeping subtrack etc...)
             if (log.isDebugEnabled()) log.debug("onVideoDb: call setVideoInfo for playerActivity and playerService");
-            mVideoInfo = localVideoInfo;
-
-            applyRemotePositionIfNeeded();
-
-            if(PlayerService.sPlayerService!=null){
-                PlayerService.sPlayerService.setVideoInfo(mVideoInfo);
-                PlayerService.sPlayerService.requestIndexAndScrap();
-            }
-            setVideoInfo(mVideoInfo);
+            selectVideoInfo(localVideoInfo, PlayerService.ResumeSource.NONE);
         }
 
         @Override
@@ -4225,6 +4520,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             final String scheme = mUri.getScheme();
             if (getIntent().getStringExtra("title") != null)
                 mTitle = getIntent().getStringExtra("title");
+            else if (getIntent().getStringExtra(Intent.EXTRA_TITLE) != null)
+                mTitle = getIntent().getStringExtra(Intent.EXTRA_TITLE);
+            else if (getIntent().getStringExtra("extra_name") != null)
+                mTitle = getIntent().getStringExtra("extra_name");
             else if (scheme == null || !scheme.equals("content"))
                 mTitle = FileUtils.getName(mUri);
             invalidateOptionsMenu();
@@ -4283,17 +4582,4 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public static int getScreenWidth() { return mScreenWidth; }
     public static int getScreenHeight() { return mScreenHeight; }
 
-    /**
-     * Apply remote position to VideoDbInfo if we're in remote resume mode
-     */
-    private void applyRemotePositionIfNeeded() {
-        if (log.isDebugEnabled()) log.debug("applyRemotePositionIfNeeded: mResume={}, mRemotePosition={}, mVideoInfo={}", mResume, mRemotePosition, mVideoInfo != null ? "not null" : "null");
-        if (mResume == RESUME_FROM_REMOTE_POS && mRemotePosition > 0 && mVideoInfo != null) {
-            mVideoInfo.resume = mRemotePosition;
-            if (log.isDebugEnabled()) log.debug("applyRemotePositionIfNeeded: Applied mRemotePosition={} to mVideoInfo.resume", mRemotePosition);
-        } else {
-            if (log.isDebugEnabled()) log.debug("applyRemotePositionIfNeeded: Conditions not met. mResume==RESUME_FROM_REMOTE_POS? {}, mRemotePosition>0? {}, mVideoInfo!=null? {}",
-                    mResume == RESUME_FROM_REMOTE_POS, mRemotePosition > 0, mVideoInfo != null);
-        }
-    }
 }

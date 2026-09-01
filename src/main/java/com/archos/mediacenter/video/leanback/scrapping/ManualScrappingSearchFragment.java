@@ -17,8 +17,10 @@ package com.archos.mediacenter.video.leanback.scrapping;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.os.Looper;
 
 import androidx.core.content.ContextCompat;
 import androidx.leanback.app.BackgroundManager;
@@ -44,7 +46,6 @@ import com.archos.mediacenter.video.leanback.adapter.object.EmptyView;
 import com.archos.mediacenter.video.leanback.presenter.EmptyViewPresenter;
 import com.archos.mediacenter.video.leanback.presenter.ScraperBaseTagsPresenter;
 import com.archos.mediacenter.video.leanback.presenter.ScraperSearchResultPresenter;
-import com.archos.mediacenter.video.utils.SerialExecutor;
 import com.archos.mediascraper.BaseTags;
 import com.archos.mediascraper.ScrapeSearchResult;
 import com.archos.mediascraper.Scraper;
@@ -54,7 +55,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by vapillon on 11/06/15.
@@ -71,21 +73,13 @@ public abstract class ManualScrappingSearchFragment extends SafeSearchSupportFra
     Scraper mScraper;
     private List<SearchResult> mSearchResults;
 
-    AsyncTask mSearchTask;
-    AsyncTask mDetailsTask;
+    ScraperSearchTask mSearchTask;
+    ScraperDetailsFetchTask mDetailsTask;
     private BaseTags mNfoTags;
     private int mOffset;
     private NfoTask mNfoTask;
 
-    private static final int SEARCH_REQUEST_CODE = 1;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
-
-    /*
-        Execute in our own serial executor :
-        avoid search task be stuck because of another asynctask (for example file info async task)
-        but still don't run two searchtask in parallel
-     */
-    private Executor mSearchExecutor;
 
 
     /**
@@ -119,7 +113,6 @@ public abstract class ManualScrappingSearchFragment extends SafeSearchSupportFra
         super.onCreate(savedInstanceState);
 
         mScraper = new Scraper(getActivity());
-        mSearchExecutor = new SerialExecutor();
 
         ClassPresenterSelector rowsPresenterSelector = new ClassPresenterSelector();
         rowsPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
@@ -139,19 +132,13 @@ public abstract class ManualScrappingSearchFragment extends SafeSearchSupportFra
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode==SEARCH_REQUEST_CODE&&data!=null){
-            setSearchQuery(data, true);
-        }
-    }
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         Resources r = getResources();
         updateBackground();
         mNfoTask = new NfoTask();
-        mNfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mNfoTask.execute();
     }
 
     private void updateBackground() {
@@ -216,20 +203,23 @@ public abstract class ManualScrappingSearchFragment extends SafeSearchSupportFra
             return false;
         }
 
-        if (mSearchTask!=null) {
-            mSearchTask.cancel(true);
+        if (mSearchTask != null) {
+            mSearchTask.cancel();
         }
-        if (mDetailsTask!=null) {
-            mDetailsTask.cancel(true);
+        if (mDetailsTask != null) {
+            mDetailsTask.cancel();
         }
 
-        mSearchTask = new ScraperSearchTask().executeOnExecutor(mSearchExecutor,text);
+        mSearchTask = new ScraperSearchTask();
+        mSearchTask.execute(text);
         return true;
     }
 
     public void onStop(){
         super.onStop();
-        mNfoTask.cancel(true);
+        mNfoTask.cancel();
+        if (mSearchTask != null) mSearchTask.cancel();
+        if (mDetailsTask != null) mDetailsTask.cancel();
     }
 
     @Override
@@ -242,24 +232,32 @@ public abstract class ManualScrappingSearchFragment extends SafeSearchSupportFra
     protected abstract BaseTags getNfoTags();
 
 
-    private final class NfoTask extends AsyncTask<String, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+    private final class NfoTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
 
+        void execute() {
+            executor.execute(() -> {
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    mNfoTags = getNfoTags();
+                } catch (Exception e) {
+                    log.error("NfoTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                handler.post(() -> {
+                    if (isDetached()) return;
+                    updateRow();
+                });
+            });
         }
 
-        @Override
-        protected Void doInBackground(String... strings) {
-            mNfoTags = getNfoTags();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            if(isDetached()||isCancelled())
-                return;
-            updateRow();
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
@@ -294,7 +292,8 @@ public abstract class ManualScrappingSearchFragment extends SafeSearchSupportFra
             if(mSearchResults!=null) {
                 // Launch the details task to get posters, etc.
                 SearchResult[] array = mSearchResults.toArray(new SearchResult[mSearchResults.size()]);
-                mDetailsTask = new ScraperDetailsFetchTask().executeOnExecutor(mSearchExecutor,array);
+                mDetailsTask = new ScraperDetailsFetchTask();
+                mDetailsTask.execute(array);
             }
         }
     }
@@ -304,24 +303,35 @@ public abstract class ManualScrappingSearchFragment extends SafeSearchSupportFra
     /**
      * This task retrieves the possible matches from the online database for the selected video
      */
-    private final class ScraperSearchTask extends AsyncTask<String, Void, ScrapeSearchResult> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+    private final class ScraperSearchTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
+
+        void execute(String text) {
+            executor.execute(() -> {
+                ScrapeSearchResult result = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    result = performSearch(text);
+                } catch (Exception e) {
+                    log.error("ScraperSearchTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+                if (isCancelled) return;
+                final ScrapeSearchResult finalResult = result;
+                handler.post(() -> {
+                    if (isDetached() || !isAdded()) return;
+                    mSearchResults = (finalResult != null) ? finalResult.results : null;
+                    updateRow();
+                });
+            });
         }
 
-        @Override
-        protected ScrapeSearchResult doInBackground(String... strings) {
-            String search = strings[0];
-            return performSearch(search);
-        }
-
-        @Override
-        protected void onPostExecute(ScrapeSearchResult scrapeSearchResult) {
-            mSearchResults = scrapeSearchResult.results;
-            if(isDetached()||isCancelled()||!isAdded())
-                return;
-            updateRow();
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 
@@ -338,32 +348,47 @@ public abstract class ManualScrappingSearchFragment extends SafeSearchSupportFra
     /**
      * This task get the details (poster) for the search results from ScraperSearchTask
      */
-    private final class ScraperDetailsFetchTask extends AsyncTask<SearchResult, SearchResultDetails, Void> {
-        @Override
-        protected Void doInBackground(SearchResult... searchResults) {
-            int n=mOffset;
-            for (SearchResult result : searchResults) {
-                if (isCancelled()) {
-                    break;
+    private final class ScraperDetailsFetchTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private volatile boolean isCancelled = false;
+
+        void execute(SearchResult[] searchResults) {
+            final int startOffset = mOffset;
+            final ArrayObjectAdapter targetAdapter = mResultsAdapter;
+            final ScraperDetailsFetchTask self = this;
+            executor.execute(() -> {
+                try {
+                    int n = startOffset;
+                    for (SearchResult result : searchResults) {
+                        if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                        final SearchResultDetails details = new SearchResultDetails(n, getTagFromSearchResult(result));
+                        handler.post(() -> {
+                            if (isCancelled || mDetailsTask != self || mResultsAdapter != targetAdapter || !isAdded()) return;
+                            // remove items without a poster
+                            /*
+                            if(details.mPosition<mResultsAdapter.size())
+                                mResultsAdapter.replace(details.mPosition, details.mDetails);
+                            else
+                                mResultsAdapter.add(details.mPosition, details.mDetails);
+                             */
+                            if (details.mDetails != null && details.mDetails.getDefaultPoster() != null) {
+                                mResultsAdapter.add(mResultsAdapter.size(), details.mDetails);
+                            }
+                        });
+                        n++;
+                    }
+                } catch (Exception e) {
+                    log.error("ScraperDetailsFetchTask failed", e);
+                } finally {
+                    executor.shutdown();
                 }
-                publishProgress(new SearchResultDetails(n, getTagFromSearchResult(result)));
-                n++;
-            }
-            return null;
+            });
         }
 
-        @Override
-        protected void onProgressUpdate(SearchResultDetails... values) {
-            // remove items without a poster
-            /*
-            if(values[0].mPosition<mResultsAdapter.size())
-                mResultsAdapter.replace(values[0].mPosition, values[0].mDetails);
-            else
-                mResultsAdapter.add(values[0].mPosition, values[0].mDetails);
-             */
-            if (values[0].mDetails != null && values[0].mDetails.getDefaultPoster() != null) {
-                mResultsAdapter.add(mResultsAdapter.size(), values[0].mDetails);
-            }
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 }

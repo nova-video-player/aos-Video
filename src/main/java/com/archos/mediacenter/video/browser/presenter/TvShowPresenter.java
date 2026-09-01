@@ -63,15 +63,15 @@ public class TvShowPresenter extends CommonPresenter implements Presenter {
 
         int count = tvShow.getSeasonCount();
         if (DBG) Log.d("XXX", "getInfo() count=" + count);
-        String format;
+        String infoText;
         if (count > 1) {
-            format = mContext.getResources().getQuantityText(R.plurals.Nseasons, count).toString();
+            infoText = mContext.getResources().getQuantityString(R.plurals.Nseasons, count, count);
         } else {
             count = tvShow.getEpisodeCount();
-            format = mContext.getResources().getQuantityText(R.plurals.Nepisodes, count).toString();
+            infoText = mContext.getResources().getQuantityString(R.plurals.Nepisodes, count, count);
         }
         if(holder.info!=null)
-            holder.info.setText(String.format(format, count));
+            holder.info.setText(infoText);
         //no resume in tv shows
         holder.bookmark.setVisibility(View.GONE);
         holder.bookmark.setEnabled(false);

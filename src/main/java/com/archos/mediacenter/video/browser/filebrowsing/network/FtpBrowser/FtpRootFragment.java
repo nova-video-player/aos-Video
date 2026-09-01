@@ -47,8 +47,8 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
         super();
     }
     @Override
-    public void onViewCreated (View v, Bundle saved){
-
+    public void onViewCreated(View v, Bundle saved) {
+        super.onViewCreated(v, saved);
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -57,13 +57,10 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
     }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -83,14 +80,13 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
     public boolean onContextItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        switch (itemId) {
-            case R.string.add_to_library:
-                addToIndexed(mSelectedUri, mSelectedName);
-                return true;
-            case R.string.remove_from_shortcuts:
-                ShortcutDb.STATIC.removeShortcut(getContext(), mSelectedUri);
-                ((FtpShortcutAdapter)mAdapter).updateShortcuts(ShortcutDb.STATIC.getAllShortcuts(getActivity()));
-                return true;
+        if (itemId == R.string.add_to_library) {
+            addToIndexed(mSelectedUri, mSelectedName);
+            return true;
+        } else if (itemId == R.string.remove_from_shortcuts) {
+            ShortcutDb.STATIC.removeShortcut(getContext(), mSelectedUri);
+            ((FtpShortcutAdapter)mAdapter).updateShortcuts(ShortcutDb.STATIC.getAllShortcuts(getActivity()));
+            return true;
         }
 
         return super.onContextItemSelected(item);
@@ -158,7 +154,7 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
 
         ActionItem rescanAction = new ActionItem();
         rescanAction.setTitle(getString(R.string.add_to_library));
-        rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_menu_refresh));
+        rescanAction.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_menu_add));
         rescanAction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 addToIndexed(uri, name);

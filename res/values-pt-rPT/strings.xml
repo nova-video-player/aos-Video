@@ -23,7 +23,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Recarregar lista de servidores</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">Ativar partilhas de rede</string>
     <string name="initial_scan">Análise inicial</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Pesquisar</string>
@@ -44,17 +43,9 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">Duração</string>
     <string name="video_sources">Fontes</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">Filme</string>
-    <string name="info_tab_show">Programa</string>
-    <string name="info_tab_episode">Espisódio</string>
-    <string name="info_tab_video">Vídeo</string>
     <string name="info_tab_file">Info do ficheiro</string>
-    <string name="info_tab_backdrop_chooser">Seletor de fundo</string>
-    <string name="info_tab_poster_chooser">Seletor de imagem</string>
-    <string name="info_tab_share">Partilhar</string>
     <string name="info_menu_backdrop_select">Fundo</string>
     <string name="info_menu_series_backdrop_select">Fundo da série</string>
     <string name="info_menu_poster_select">Selecione outra imagem</string>
@@ -76,12 +67,9 @@
     <string name="network_shared_folders">Pastas partilhadas (SMB)</string>
     <string name="network_connected_as">Conectado como %s</string>
     <string name="network_guest">convidado</string>
-    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (Experimental)</string>
     <string name="network_cling">UPNP (Experimental)</string>
-    <string name="recordings_storage">Gravações</string>
     <string name="root_storage">Armazenamento interno</string>
-    <string name="cannot_list">Não foi possivel listar o conteúdo</string>
     <!-- VIDEO -->
     <string name="videos">Vídeos</string>
     <string name="all_videos">Todos os vídeos</string>
@@ -94,15 +82,8 @@
     <string name="all_animes_format">Filmes de animação - %d</string>
     <string name="all_collections">Todas as coleções</string>
     <string name="all_collections_format">Todas as coleções - %d</string>
-    <string name="all_collection_watched">Todas as coleções reproduzidas</string>
-    <string name="all_collection_unwatched">Coleção não reproduzida</string>
-    <plurals name="n_movies_watched">
-        <item quantity="one">%d filme reproduzido</item>
-        <item quantity="other">%d filmes reproduzidos</item>
-    </plurals>
     <string name="not_watched_movies_format">Não visto - %d</string>
     <string name="not_watched_animes_format">Não visto - %d</string>
-    <string name="all_movies_watched">Todos os filmes vistos</string>
     <string name="movies_by_alpha">Filmes por ordem alfabética</string>
     <string name="movies_by_genre">Filmes por género </string>
     <string name="movies_by_rating">Filmes por avaliação</string>
@@ -119,7 +100,6 @@
     <string name="date_view_year">Ano</string>
     <string name="all_movies_and_tv_shows">Filmes e programas de TV</string>
     <string name="directory_deleted">A pasta foi eliminada</string>
-    <string name="file_deleted">O ficheiro foi eliminado</string>
     <string name="resume">Continuar</string>
     <string name="remote_resume">Continuar remotamente</string>
     <string name="bookmark">Marcador</string>
@@ -142,11 +122,8 @@
     <string name="scrap_plot">Argumento</string>
     <string name="scrap_trailer">Trailers</string>
     <string name="scrap_genre">Género</string>
-    <string name="scrap_genre_format">Géneros: %s</string>
     <string name="scrap_genre_title">Géneros</string>
-    <string name="scrap_guests">Convidados</string>
     <!-- Specific strings for TV shows -->
-    <string name="show_network">Rede</string>
     <string name="episode_name">Episódio</string>
     <string name="episode_season">Temporada</string>
     <string name="episode_specials">Especiais</string>
@@ -157,7 +134,6 @@
     <string name="scrap_status_unknown">Desconhecido</string>
     <string name="scraper_notification_progress">%1$d de %2$d ficheiros processados</string>
     <!-- To be translated only in case there is a localized IMDB -->
-    <string name="info_video">Vídeo</string>
     <string name="info_audio">Áudio</string>
     <string name="info_audio_vbr">VBR</string>
     <!-- VIDEO COVER ROLL -->
@@ -178,8 +154,6 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">Centro multimédia</string>
     <string name="view_mode">Modo de exibição</string>
-    <string name="view_mode_list">Lista</string>
-    <string name="view_mode_details">Detalhes</string>
     <string name="switch_to_list">Lista</string>
     <string name="switch_to_grid">Grelha</string>
     <!-- VideoPlayer -->
@@ -235,4 +209,5 @@
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->
     <!--  Nfo File parsing -->
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
 </resources>

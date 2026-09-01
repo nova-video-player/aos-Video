@@ -23,6 +23,7 @@ import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.util.AttributeSet;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
@@ -38,6 +39,24 @@ public class TraktSigninDialogPreference extends Preference {
     private static final int REQUEST_CODE_DEVICE_AUTH = 1001;
 
     private DialogInterface.OnDismissListener mOnDismissListener;
+    private ActivityResultLauncher<Intent> mTraktAuthLauncher;
+
+    public void setLauncher(ActivityResultLauncher<Intent> launcher) {
+        mTraktAuthLauncher = launcher;
+    }
+
+    /**
+     * Called by the launcher callback (or legacy onActivityResult) when device auth finishes.
+     */
+    public void onAuthCompleted(boolean success) {
+        if (success) {
+            if (log.isDebugEnabled()) log.debug("onAuthCompleted: device auth successful");
+            notifyChanged();
+            if (mOnDismissListener != null) mOnDismissListener.onDismiss(null);
+        } else {
+            if (log.isDebugEnabled()) log.debug("onAuthCompleted: device auth cancelled or failed");
+        }
+    }
 
     public TraktSigninDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -79,27 +98,27 @@ public class TraktSigninDialogPreference extends Preference {
 
         if (log.isDebugEnabled()) log.debug("performDeviceAuth: launching TraktDeviceAuthActivity for device flow authentication");
 
-        // Launch device authentication activity
         Intent intent = new Intent(activity, TraktDeviceAuthActivity.class);
+        if (mTraktAuthLauncher != null) {
+            mTraktAuthLauncher.launch(intent);
+        } else {
+            // fallback for contexts without a registered launcher
+            launchLegacy(activity, intent);
+        }
+    }
+
+    @SuppressWarnings("deprecation") // legacy fallback when no ActivityResultLauncher is registered
+    private void launchLegacy(Activity activity, Intent intent) {
         activity.startActivityForResult(intent, REQUEST_CODE_DEVICE_AUTH);
     }
 
     /**
-     * Call this method from the parent Activity's onActivityResult to handle auth completion
+     * @deprecated Use the launcher callback / {@link #onAuthCompleted(boolean)} instead.
      */
+    @Deprecated
     public void onActivityResult(int requestCode, int resultCode) {
-        if (requestCode == REQUEST_CODE_DEVICE_AUTH) {
-            if (resultCode == Activity.RESULT_OK) {
-                if (log.isDebugEnabled()) log.debug("onActivityResult: device auth successful");
-                // Notify that the preference has changed so UI updates
-                notifyChanged();
-                if (mOnDismissListener != null) {
-                    mOnDismissListener.onDismiss(null);
-                }
-            } else {
-                if (log.isDebugEnabled()) log.debug("onActivityResult: device auth cancelled or failed");
-            }
-        }
+        if (requestCode == REQUEST_CODE_DEVICE_AUTH)
+            onAuthCompleted(resultCode == Activity.RESULT_OK);
     }
 
     public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener){
@@ -111,24 +130,6 @@ public class TraktSigninDialogPreference extends Preference {
             if (log.isDebugEnabled()) log.debug("showDialog: trigger onClick");
             this.onClick();
         }
-    }
-
-    /**
-     * Legacy method for dialog management - no-op since we now use Activity
-     * @deprecated Device flow uses Activity instead of Dialog
-     */
-    @Deprecated
-    public boolean isDialogShowing() {
-        return false;
-    }
-
-    /**
-     * Legacy method for dialog management - no-op since we now use Activity
-     * @deprecated Device flow uses Activity instead of Dialog
-     */
-    @Deprecated
-    public void dismissDialog() {
-        // No-op: Activity lifecycle is managed by Android system
     }
 
     private Activity getActivityFromContext(Context context) {

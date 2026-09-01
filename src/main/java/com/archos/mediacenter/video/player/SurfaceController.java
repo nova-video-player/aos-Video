@@ -18,6 +18,8 @@ import com.archos.mediacenter.video.R;
 
 import com.archos.medialib.IMediaPlayer;
 
+import android.os.Build;
+import android.view.SurfaceControl;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
@@ -150,7 +152,7 @@ public class SurfaceController {
         }
         mView.setVisibility(View.VISIBLE);
         mEffectEnable = enable;
-    	updateSurface();
+        updateSurface();
     }
     synchronized public void setMediaPlayer(IMediaPlayer player) {
         mMediaPlayer = player;
@@ -174,7 +176,7 @@ public class SurfaceController {
 
     public void setHdmiPlugged(boolean plugged, int hdmiWidth, int hdmiHeight) {
         if (log.isDebugEnabled()) log.debug("setHdmiPlugged: plugged={}, hdmi=({},{})", plugged, hdmiWidth, hdmiHeight);
-        if (plugged != mHdmiPlugged) {
+        if (plugged != mHdmiPlugged || (plugged && (mHdmiWidth != hdmiWidth || mHdmiHeight != hdmiHeight))) {
             mHdmiPlugged = plugged;
             mHdmiWidth = hdmiWidth;
             mHdmiHeight = hdmiHeight;
@@ -303,7 +305,7 @@ public class SurfaceController {
         //Get the applied cutout size, since it can be changed on the fly now.
         int cutoutLeft, cutoutTop, cutoutRight, cutoutBottom = 0;
         if (mFullScreenWithCutout) 
-            cutoutLeft = cutoutTop = cutoutRight = mCutoutBottom = 0;
+            cutoutLeft = cutoutTop = cutoutRight = cutoutBottom = 0;
         else {
             cutoutLeft = mCutoutLeft;
             cutoutTop = mCutoutTop;
@@ -368,7 +370,7 @@ public class SurfaceController {
                     if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: VideoFormat.ORIGINAL dcar<ar dch={}", dch);
                 } else {
                     //16:9 movie on 4:3 screen
-                    cutoutLeft = cutoutTop = cutoutRight = mCutoutBottom = 0;
+                    cutoutLeft = cutoutTop = cutoutRight = cutoutBottom = 0;
                     dcw = (int) (dch * ar);
                     if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: VideoFormat.ORIGINAL dcar>=ar dcw={}", dcw);
                 }
@@ -431,6 +433,33 @@ public class SurfaceController {
         dcw = Math.round(dcw  / cropW);
         dch = Math.round(dch / cropH);
 
+        if (mHdmiPlugged) {
+            /*
+             * dcw/dch are expressed in the external display coordinate space because the
+             * aspect-ratio calculations above use mHdmiWidth/mHdmiHeight.  mView, however,
+             * is still a child of PlayerActivity on the mirrored phone display, whose
+             * coordinate space is mLcdWidth/mLcdHeight.  Applying HDMI pixels directly as
+             * LayoutParams creates a smaller box whenever both viewports differ (for
+             * example 1920x1080 inside 2404x1080 on a Pixel connected to a TV).
+             *
+             * Map the desired external rectangle back into the local mirrored viewport.
+             * Android's display mirroring then maps it to the corresponding rectangle on
+             * the HDMI output.  This deliberately affects only HDMI mirroring; the normal
+             * phone/tablet path below keeps its existing dimensions unchanged.
+             */
+            int hdmiLayoutWidth = dcw;
+            int hdmiLayoutHeight = dch;
+            if (mHdmiWidth > 0 && mHdmiHeight > 0 && mLcdWidth > 0 && mLcdHeight > 0) {
+                dcw = mapDimension(hdmiLayoutWidth, mHdmiWidth, mLcdWidth);
+                dch = mapDimension(hdmiLayoutHeight, mHdmiHeight, mLcdHeight);
+                if (log.isDebugEnabled()) {
+                    log.debug("CONFIG updateSurface: HDMI layout map external=({},{}) viewport=({},{}) -> local=({},{}) viewport=({},{})",
+                            hdmiLayoutWidth, hdmiLayoutHeight, mHdmiWidth, mHdmiHeight,
+                            dcw, dch, mLcdWidth, mLcdHeight);
+                }
+            }
+        }
+
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: setLayoutParams({},{})", dcw, dch);
 
         // margins to avoid cutout
@@ -459,8 +488,40 @@ public class SurfaceController {
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: ({},{})->({},{}) / formatCrop: ({},{}) / mEffectMode: {}", vw, vh, dcw, dch, cropW, cropH, mEffectMode);
     }
 
+    private static int mapDimension(int dimension, int sourceViewport, int destinationViewport) {
+        return (int) Math.round(dimension * (double) destinationViewport / sourceViewport);
+    }
+
     public int getViewWidth() { return mSurfaceWidth; }
     public int getViewHeight() { return mSurfaceHeight; }
     public int getMarginLeft() { return mMarginLeft; }
     public int getMarginTop() { return mMarginTop; }
+
+    /**
+     * Sets the dataspace on the SurfaceView's SurfaceControl layer so SurfaceFlinger can set up
+     * its HDR composition pipeline from the start, before MediaCodec produces any frames.
+     * Without this, the surface starts as SDR (dataspace 259) and some HWC2 implementations
+     * (e.g. Google TV Streamer) don't dynamically switch to HDR tone-mapping when the dataspace
+     * changes later via the producer (MediaCodec).
+     * @param dataSpace HAL dataspace constant (e.g. 0x10C00000 for BT2020_PQ, 0 to reset)
+     */
+    public void setSurfaceDataSpace(int dataSpace) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            if (log.isDebugEnabled()) log.debug("setSurfaceDataSpace: skipped, API {} < 33", Build.VERSION.SDK_INT);
+            return;
+        }
+        if (mSurfaceView == null) {
+            if (log.isDebugEnabled()) log.debug("setSurfaceDataSpace: skipped, mSurfaceView is null");
+            return;
+        }
+        SurfaceControl sc = mSurfaceView.getSurfaceControl();
+        if (sc == null || !sc.isValid()) {
+            if (log.isDebugEnabled()) log.debug("setSurfaceDataSpace: skipped, SurfaceControl null or invalid");
+            return;
+        }
+        new SurfaceControl.Transaction()
+                .setDataSpace(sc, dataSpace)
+                .apply();
+        if (log.isDebugEnabled()) log.debug("setSurfaceDataSpace: applied dataSpace=0x{}", Integer.toHexString(dataSpace));
+    }
 }

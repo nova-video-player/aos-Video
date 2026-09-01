@@ -23,7 +23,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Uppdatera serverlistan</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">Aktivera nätverksdelning</string>
     <string name="initial_scan">Första skanning</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Sök</string>
@@ -44,17 +43,9 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">Längd</string>
     <string name="video_sources">Källor</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">Film</string>
-    <string name="info_tab_show">Program</string>
-    <string name="info_tab_episode">Avsnitt</string>
-    <string name="info_tab_video">Video</string>
     <string name="info_tab_file">Filinfo</string>
-    <string name="info_tab_backdrop_chooser">Bakgrundsväljare</string>
-    <string name="info_tab_poster_chooser">Affischväljare</string>
-    <string name="info_tab_share">Dela</string>
     <string name="info_menu_backdrop_select">Bakgrund</string>
     <string name="info_menu_series_backdrop_select">Seriebakgrund</string>
     <string name="info_menu_poster_select">Välj en annan affisch</string>
@@ -77,12 +68,9 @@
     <string name="network_shared_folders">Delade mappar (SMB)</string>
     <string name="network_connected_as">Ansluten som %s</string>
     <string name="network_guest">gäst</string>
-    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (experimentell)</string>
     <string name="network_cling">UPNP (Experimentell)</string>
-    <string name="recordings_storage">Inspelningar</string>
     <string name="root_storage">Intern lagring</string>
-    <string name="cannot_list">Kan inte lista innehåll</string>
     <!-- VIDEO -->
     <string name="videos">Videor</string>
     <string name="all_videos">Alla videor</string>
@@ -116,17 +104,14 @@
     <string name="not_watched_animeshows_format">Inte sedd -  %d</string>
     <string name="all_seasons">Alla säsonger</string>
     <string name="directory_deleted">Mappen har tagits bort</string>
-    <string name="file_deleted">Filen har tagits bort</string>
     <string name="resume">Återuppta</string>
     <string name="remote_resume">Fjärråteruppta</string>
     <string name="bookmark">Bokmärk</string>
     <string name="delete">Radera</string>
     <string name="confirm_delete_short">Bekräfta radering</string>
     <string name="delete_resume">Ta bort resume</string>
-    <string name="delete_bookmark">Ta bort bokmärke</string>
     <string name="mark_as_watched">Markera som sedd</string>
     <string name="mark_as_not_watched">Markera som ej sedd</string>
-    <string name="upnp_not_allowed">Du har inte behörighet att komma åt denna UPnP-server. Vänligen ändra din åtkomstkonfiguration först.</string>
     <string name="scrap_no_info">Du har ingen beskrivning av den här videon.</string>
     <string name="scrap_remove">Ta bort information</string>
     <string name="scrap_remove_short">Ta bort</string>
@@ -151,14 +136,10 @@
     <string name="scrap_cast">Roller</string>
     <string name="scrap_cast_format">Roller: %s</string>
     <string name="scrap_genre">Genre</string>
-    <string name="scrap_genre_format">Genrer: %s</string>
     <string name="scrap_genre_title">Genrer</string>
     <string name="scrap_aired">Publicerades</string>
     <string name="scrap_aired_format">Publicerades: %s</string>
-    <string name="scrap_guests">Gäster</string>
-    <string name="scrap_premiered">Premiär</string>
     <!-- Specific strings for TV shows -->
-    <string name="show_network">Nätverk</string>
     <string name="episode_name">Avsnitt</string>
     <string name="episode_season">Säsong</string>
     <string name="episode_specials">Specialare</string>
@@ -189,9 +170,6 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">Media Center</string>
     <string name="view_mode">Visningsläge</string>
-    <string name="view_mode_list">Lista</string>
-    <string name="view_mode_grid">Affischer</string>
-    <string name="view_mode_details">Detaljer</string>
     <string name="switch_to_list">Lista</string>
     <string name="switch_to_grid">Rutnät</string>
     <!-- VideoPlayer -->
@@ -228,7 +206,6 @@
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
     <!-- opensubtitles REST API not recognized languages ea=Spanish (LA)|ex=Extremaduran|me=Montenegrin|ma=Manipuri|pr=Dari|sp=Spanish (EU)|sx=Santali|sy=Syriac|tp=Toki Pona|ze=Chinese bilingual -->
     <!-- Player errors -->
-    <string name="videocodec_not_supported">Videoformatet (<xliff:g id="codec">%s</xliff:g>) stöds ej.</string>
     <string name="player_err_file">Videofilen finns inte.</string>
     <string name="player_err_sizetoobig">Videostorlek för stor</string>
     <string name="player_err_unknown">Okänt fel.</string>
@@ -245,19 +222,10 @@
     <string name="player_err_profile_and_level">\"Profil\" och \"Nivå\"</string>
     <string name="player_err_interlaced">Sammanflätad</string>
     <!-- Player plug-in -->
-    <string name="player_plugin_cinema_title">Bio-plug-in</string>
-    <string name="player_plugin_cinema">Bio-plug-in (DVD, MPEG-2, AC3)</string>
-    <string name="player_plugin_ac3_title">AC3 plug-in</string>
-    <string name="player_plugin_ac3">AC3 plug-in</string>
-    <string name="player_plugin_mpeg2_title">MPEG-2 plug-in</string>
-    <string name="player_plugin_mpeg2">MPEG-2 plug-in (DVD)</string>
     <string name="player_plugin_video_msg">Filen innehåller ett <xliff:g id="video">%1$s</xliff:g> videoformat.</string>
     <string name="player_plugin_audio_msg">Den här filen innehåller ett <xliff:g id="audio">%1$s</xliff:g> ljudformat.</string>
     <string name="player_plugin_video_audio_msg">Den här filen innehåller ett <xliff:g id="video">%1$s</xliff:g> videoformat och ett <xliff:g id="audio">%2$s</xliff:g> ljudformat.</string>
-    <string name="player_plugin_purchase_msg">Du måste köpa <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">Gå till butiken</string>
-    <string name="player_plugin_purchase_archos_msg">Du kan köpa ytterligare codec plug-ins på www.archos.com.</string>
-    <string name="player_plugin_purchase_google_play_msg">Du kan köpa ytterligare codec plug-ins på Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Gå till Google Play</string>
     <string name="plugin_update_required_title">Kodekuppdatering krävs</string>
     <string name="plugin_update_required_message">Det verkar som om du redan har ytterligare codecs installerat för Nova Video Player.\n\nDenna nya version av Nova Video Player kräver en uppdatering av dessa codecs.\n\nGå till Google Play för att uppdatera och installera om codecs.</string>
@@ -275,12 +243,8 @@
     <string name="subtitles_wizard_cache">Cacheminne</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Hämta undertexter online</string>
-    <string name="toast_subloader_sub_found">Undertextspår hittades för detta språk</string>
-    <string name="toast_subloader_sub_not_found">Undertextspår hittades inte för detta språk</string>
     <string name="toast_subloader_service_unreachable">undertext-server-avbrott</string>
-    <string name="menu_subloader_allfolder">Hämta saknade undertexter</string>
     <string name="dialog_subloader_copying">Kopierar undertexter…</string>
-    <string name="dialog_subloader_downloading">Laddar ner undertexter…</string>
     <!-- Subtitle Settings Dialog -->
     <!-- Subtitle Delay Dialog -->
     <!-- Browser.CommonDetailsView -->
@@ -306,7 +270,6 @@
     <string name="last_rescan_never">Aldrig</string>
     <string name="upnp_indexing_warning_title">UPnP-indexering</string>
     <string name="upnp_indexing_warning_message">UPnP-indexering tillåter inte så många funktioner som SMB-indexering.\nDet rekommenderas att indexera en SMB-mapp istället om din server eller dator stöder det.\n</string>
-    <string name="ssh_error">Det går inte att ansluta, vänligen kontrollera din anslutning och inloggningsuppgifter</string>
     <string name="ssh_remote_address">Serveradress</string>
     <string name="ssh_port">Port</string>
     <string name="ssh_password">Lösenord</string>
@@ -315,11 +278,8 @@
     <string name="smb_domain">Domän (valfritt)</string>
     <!-- Preferences -->
     <string name="preferences">Inställningar</string>
-    <string name="get_the_ad_free_version">Hämta den annonsfria versionen på Google Play</string>
     <string name="upgrade_to_add_free_version">Uppgradera till annonsfri version</string>
-    <string name="upgrade_to_add_free_version_description">Köp programlicensen för att ta bort annonserna och aktivera alla funktioner</string>
     <string name="preferences_about">Om</string>
-    <string name="preferences_category_complete">Fullversion</string>
     <string name="preferences_category_video">Video</string>
     <string name="preferences_force_software_decoding">Tvinga programvaruavkodning</string>
     <string name="preferences_force_software_decoding_summary">Du kan prova detta alternativ om videor inte spelas upp korrekt</string>
@@ -333,4 +293,5 @@
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->
     <!--  Nfo File parsing -->
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
 </resources>

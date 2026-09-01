@@ -1,3 +1,17 @@
+// Copyright 2026 Courville Software
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
 import com.archos.mediacenter.utils.ActionBarSubmenu;
@@ -11,8 +25,12 @@ import com.archos.mediacenter.video.utils.TraktSigninDialogPreference;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediaprovider.video.VideoStore;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,8 +44,14 @@ import android.widget.AdapterView;
 
 public class BrowserPlaylists extends BrowserMoviesBy {
 
-    private static final int ACTIVITY_REQUEST_CODE_PREFERENCES = 1012;
     private boolean mHasLaunchedTrakt = false;
+
+    private final ActivityResultLauncher<Intent> traktAuthLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) postBindAdapter();
+                mHasLaunchedTrakt = false;
+            });
 
     @Override
     public int getThumbnailsType() {
@@ -56,28 +80,16 @@ public class BrowserPlaylists extends BrowserMoviesBy {
     protected boolean onEmptyviewButtonClick(){
         if(mHasLaunchedTrakt)
             return true;
-            //connect to trakt
-        TraktSigninDialogPreference dialogPreference = new TraktSigninDialogPreference(getContext(),null);
+        TraktSigninDialogPreference dialogPreference = new TraktSigninDialogPreference(getContext(), null);
+        dialogPreference.setLauncher(traktAuthLauncher);
         dialogPreference.showDialog(true);
-        dialogPreference.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                postBindAdapter();
-                mHasLaunchedTrakt = false;
-            }
-        });
-    mHasLaunchedTrakt = true;
+        mHasLaunchedTrakt = true;
         return true;
     }
+    @SuppressWarnings("deprecation") // ActionBar navigation mode
     public void onResume(){
         super.onResume();
         ((MainActivity)getActivity()).setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-    }
-    @Override
-    public void  onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(ACTIVITY_REQUEST_CODE_PREFERENCES == requestCode)
-            mHasLaunchedTrakt = false;
-        else super.onActivityResult(requestCode, resultCode, data);
     }
     public void addSortOptionsSubmenus(ActionBarSubmenu submenu) {
 	    // MENU_ITEM_NAME is not a typo here, because the year will be copied to the name column
@@ -99,8 +111,10 @@ public class BrowserPlaylists extends BrowserMoviesBy {
         Cursor cursor = ((GroupOfMovieAdapter)mBrowserAdapter).getCursor();
         if (cursor.getCount() > 0 && pos < cursor.getCount()) {
             cursor.moveToPosition(pos);
-            args.putString(BrowserVideosInPlaylist.EXTRA_MAP_MOVIES, cursor.getString(cursor.getColumnIndex(VideosByListLoader.COLUMN_MAP_MOVIE_ID)));
-            args.putString(BrowserVideosInPlaylist.EXTRA_MAP_EPISODES, cursor.getString(cursor.getColumnIndex(VideosByListLoader.COLUMN_MAP_EPISODE_ID)));
+            int movieIdColumn = cursor.getColumnIndex(VideosByListLoader.COLUMN_MAP_MOVIE_ID);
+            int episodeIdColumn = cursor.getColumnIndex(VideosByListLoader.COLUMN_MAP_EPISODE_ID);
+            args.putString(BrowserVideosInPlaylist.EXTRA_MAP_MOVIES, movieIdColumn >= 0 ? cursor.getString(movieIdColumn) : null);
+            args.putString(BrowserVideosInPlaylist.EXTRA_MAP_EPISODES, episodeIdColumn >= 0 ? cursor.getString(episodeIdColumn) : null);
         }
         args.putLong(BrowserVideosInPlaylist.EXTRA_PLAYLIST_ID, mBrowserAdapter.getItemId(pos));
     }
@@ -120,10 +134,8 @@ public class BrowserPlaylists extends BrowserMoviesBy {
         int index = item.getItemId();
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         long listId = mBrowserAdapter.getItemId(info.position);
-        switch (index) {
-            case R.string.delete:
-                getActivity().getContentResolver().delete(VideoStore.List.LIST_CONTENT_URI, VideoStore.List.Columns.ID +" = ?", new String[]{listId+""});
-                break;
+        if (index == R.string.delete) {
+            getActivity().getContentResolver().delete(VideoStore.List.LIST_CONTENT_URI, VideoStore.List.Columns.ID +" = ?", new String[]{listId+""});
         }
         return true;
     }

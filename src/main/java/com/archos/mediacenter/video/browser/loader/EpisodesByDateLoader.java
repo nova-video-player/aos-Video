@@ -21,7 +21,6 @@ import com.archos.mediaprovider.video.VideoStore;
 
 public class EpisodesByDateLoader extends MoviesByLoader {
 
-    private Context mContext;
 
     public static enum DateView {
         WEEK, MONTH, YEAR
@@ -33,9 +32,9 @@ public class EpisodesByDateLoader extends MoviesByLoader {
 
     public EpisodesByDateLoader(Context context, DateView dateView) {
         super(context);
-        mContext = context;
         mSortOrder = DEFAULT_SORT;
         mDateView = dateView;
+        if (VideoLoader.VIDEOBY_THROTTLE) setUpdateThrottle(VideoLoader.VIDEOBY_THROTTLE_DELAY);
         setSelection(getSelection(context));
     }
 
@@ -43,6 +42,7 @@ public class EpisodesByDateLoader extends MoviesByLoader {
         super(context);
         mSortOrder = sortOrder;
         mDateView = dateView;
+        if (VideoLoader.VIDEOBY_THROTTLE) setUpdateThrottle(VideoLoader.VIDEOBY_THROTTLE_DELAY);
         setSelection(getSelection(context));
     }
 

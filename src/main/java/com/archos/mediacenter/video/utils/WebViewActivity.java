@@ -15,19 +15,18 @@
 package com.archos.mediacenter.video.utils;
 
 import android.graphics.Bitmap;
-import android.graphics.Insets;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowInsets;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -53,24 +52,25 @@ public class WebViewActivity extends AppCompatActivity {
         mWebView = findViewById(R.id.webview_activity);
 
         // Handle insets for the global window
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            getWindow().getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
-                Insets systemBarsInsets = insets.getInsets(WindowInsets.Type.systemBars());
-                // Adjust padding for the content within the window
-                v.setPadding(systemBarsInsets.left, systemBarsInsets.top, systemBarsInsets.right, systemBarsInsets.bottom);
-                return insets;
-            });
-        } else {
-            getWindow().getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
-                v.setPadding(
-                        insets.getSystemWindowInsetLeft(),
-                        insets.getSystemWindowInsetTop(),
-                        insets.getSystemWindowInsetRight(),
-                        insets.getSystemWindowInsetBottom()
-                );
-                return insets;
-            });
-        }
+        MiscUtils.applySystemWindowInsets(getWindow().getDecorView());
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mWebView != null && mWebView.getUrl() != null && (mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/ads/control")
+                        || mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/video/control"))) {
+                    mWebView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ESCAPE));
+                }
+                else if (mWebView!=null && mWebView.canGoBack() && !mWebView.getUrl().startsWith("https://www.youtube.com/tv#")) {
+                    mWebView.goBack();
+                }
+                else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    setEnabled(true);
+                }
+            }
+        });
     }
 
     @Override
@@ -95,7 +95,6 @@ public class WebViewActivity extends AppCompatActivity {
                 return false;
             }
             // this one is for Android API 24+
-            @RequiresApi(Build.VERSION_CODES.M)
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
@@ -118,20 +117,6 @@ public class WebViewActivity extends AppCompatActivity {
                 }
             });
         }  
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mWebView != null && mWebView.getUrl() != null && (mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/ads/control")
-                || mWebView.getUrl().startsWith("https://www.youtube.com/tv#/watch/video/control"))) {
-            mWebView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ESCAPE));
-        }
-        else if (mWebView!=null && mWebView.canGoBack() && !mWebView.getUrl().startsWith("https://www.youtube.com/tv#")) {
-            mWebView.goBack();
-        }
-        else {
-            super.onBackPressed();;
-        }
     }
 
     @Override

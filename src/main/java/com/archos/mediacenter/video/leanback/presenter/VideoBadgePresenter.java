@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.presenter;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -128,7 +130,7 @@ public class VideoBadgePresenter extends Presenter {
                 mSourceTextView.setText("Local");
             }
             else {
-                mSourceTextView.setText(source.getScheme().toUpperCase().replace("UPNP", "UPnP"));
+                mSourceTextView.setText(source.getScheme().toUpperCase(Locale.ROOT).replace("UPNP", "UPnP"));
             }
 
         }

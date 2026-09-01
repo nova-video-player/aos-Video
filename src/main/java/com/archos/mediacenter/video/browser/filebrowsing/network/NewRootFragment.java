@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser.filebrowsing.network;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +29,8 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.os.BundleCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -139,8 +142,6 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
 
     public NewRootFragment() {
         if (log.isDebugEnabled()) log.debug("SambaDiscoveryFragment() constructor {}", this);
-        setRetainInstance(false);
-
     }
     @Override
     public void onAttach(Context context){
@@ -163,31 +164,40 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
     protected abstract RootFragmentAdapter getAdapter();
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, R.string.rescan_indexed_folders, Menu.NONE, R.string.rescan_indexed_folders).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0,  R.string.manually_create_share, Menu.NONE, R.string.manually_create_share).setShowAsAction( MenuItem.SHOW_AS_ACTION_NEVER);
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        if (item.getItemId() == R.string.rescan_indexed_folders) {
-            rescanAvailableShortcuts();
-            return true;
-        }
-        else if(item.getItemId() == R.string.manually_create_share){
-            CreateShareDialog shareDialog = new CreateShareDialog();
-            shareDialog.setRetainInstance(true); // the dialog is dismissed at screen rotation, that's better than a crash...
-            shareDialog.show(getParentFragmentManager(), "CreateShareDialog");
-            shareDialog.setOnShortcutCreatedListener(new CreateShareDialog.OnShortcutCreatedListener() {
-                @Override
-                public void onShortcutCreated(String path) {
-                    loadIndexedShortcuts();
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+                menu.add(0, R.string.rescan_indexed_folders, Menu.NONE, R.string.rescan_indexed_folders).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                menu.add(0, R.string.manually_create_share, Menu.NONE, R.string.manually_create_share).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                onContributeMenu(menu);
+            }
+            @SuppressWarnings("deprecation") // setRetainInstance: keeps dialog listener instance until ViewModel refactor
+            @Override
+            public boolean onMenuItemSelected(MenuItem item) {
+                if (item.getItemId() == R.string.rescan_indexed_folders) {
+                    rescanAvailableShortcuts();
+                    return true;
+                } else if (item.getItemId() == R.string.manually_create_share) {
+                    CreateShareDialog shareDialog = new CreateShareDialog();
+                    shareDialog.setRetainInstance(true);
+                    shareDialog.show(getParentFragmentManager(), "CreateShareDialog");
+                    shareDialog.setOnShortcutCreatedListener(new CreateShareDialog.OnShortcutCreatedListener() {
+                        @Override
+                        public void onShortcutCreated(String path) {
+                            loadIndexedShortcuts();
+                        }
+                    });
+                    return true;
                 }
-            });
-             return true;
-        }
-        return false;
+                return onHandleMenuItem(item);
+            }
+        }, getViewLifecycleOwner());
     }
+
+    protected void onContributeMenu(Menu menu) {}
+    protected boolean onHandleMenuItem(MenuItem item) { return false; }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -201,25 +211,18 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
     public boolean onContextItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        switch (itemId) {
-            case R.string.remove_from_indexed_folders:
-                //If we are scraping, we need to stop that.
-                if (LoaderUtils.getScrapeInProgress()) {
-                    //Stop the scrape.
-                    LoaderUtils.setScrapeInProgress(false);
-                }
-
-                removeShortcut(mSelectedShortcut);
-                return true;
-
-            case R.string.open_indexed_folder:
-                onShortcutTap(Uri.parse(mSelectedShortcut.getUri()));
-                return true;
-
-            case R.string.network_reindex:
-                // Make as if the user had clicked on the refresh icon and validated the "re-scan content" item
-                NetworkScanner.scanVideos(getActivity(), Uri.parse(mSelectedShortcut.getUri()));
-                return true;
+        if (itemId == R.string.remove_from_indexed_folders) {
+            if (LoaderUtils.getScrapeInProgress()) {
+                LoaderUtils.setScrapeInProgress(false);
+            }
+            removeShortcut(mSelectedShortcut);
+            return true;
+        } else if (itemId == R.string.open_indexed_folder) {
+            onShortcutTap(Uri.parse(mSelectedShortcut.getUri()));
+            return true;
+        } else if (itemId == R.string.network_reindex) {
+            NetworkScanner.scanVideos(getActivity(), Uri.parse(mSelectedShortcut.getUri()));
+            return true;
         }
 
         return super.onContextItemSelected(item);
@@ -231,7 +234,7 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
         String text = getString(R.string.indexed_folder_removed, shortcut.getName());
         Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
         // Send a delete request to MediaScanner
-        NetworkScanner.removeVideos(getActivity(), shortcut.getUri());
+        NetworkScanner.removeIndexedVideos(getActivity(), shortcut.getUri());
 
         // Update the menu items
         getActivity().invalidateOptionsMenu();
@@ -240,7 +243,6 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (log.isDebugEnabled()) log.debug("onCreate");
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -277,7 +279,7 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
         mDiscoveryList.setFocusable(false);
         if (savedInstanceState!=null) {
             mAdapter.onRestoreInstanceState(savedInstanceState); // Restore the adapter "saved instance" parameters
-            mLayoutManager.onRestoreInstanceState(savedInstanceState.getParcelable("mLayoutManager")); // Restore the layout manager state
+            mLayoutManager.onRestoreInstanceState(BundleCompat.getParcelable(savedInstanceState, "mLayoutManager", Parcelable.class)); // Restore the layout manager state
         }
 
         loadIndexedShortcuts();

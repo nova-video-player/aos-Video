@@ -15,10 +15,12 @@
 package com.archos.mediacenter.video.info;
 
 import android.os.Bundle;
+import android.view.View;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.utils.MiscUtils;
 
 public class VideoInfoPosterBackdropActivity extends FragmentActivity {
     public static final  String EXTRA_VIDEO = "extra_video";
@@ -29,6 +31,7 @@ public class VideoInfoPosterBackdropActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_info_posterandbackdrop);
+        applySystemInsets(findViewById(R.id.root));
         Fragment frag = null;
         if(getIntent().getBooleanExtra(EXTRA_CHOOSE_BACKDROP, false))
             frag = new VideoInfoBackdropChooserFragment();
@@ -37,13 +40,11 @@ public class VideoInfoPosterBackdropActivity extends FragmentActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.root,frag)
-                .addToBackStack(null).commit();
+                .commit();
     }
 
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+    private void applySystemInsets(View root) {
+        MiscUtils.applySystemWindowInsets(root, true, (v, left, top, right, bottom) ->
+                v.setPadding(left, top, right, bottom));
     }
 }

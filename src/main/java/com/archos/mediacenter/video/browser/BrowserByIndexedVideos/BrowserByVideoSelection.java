@@ -1,3 +1,16 @@
+// Copyright 2026 Courville Software
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
@@ -7,8 +20,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.core.view.MenuItemCompat;
+import androidx.core.view.MenuProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
@@ -67,7 +82,7 @@ public class BrowserByVideoSelection extends CursorBrowserByVideo {
 		// Save the sort mode
 		mPreferences.edit()
 		.putString(SORT_PARAM_KEY, mSortOrder)
-		.commit();
+		.apply();
 
 		super.onDestroy();
 	}
@@ -102,39 +117,47 @@ public class BrowserByVideoSelection extends CursorBrowserByVideo {
 	    return mTitle;
 	}
 
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu!=null) {
-			// Add the "sort mode" item
-			MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
-			sortMenuItem.setIcon(R.drawable.ic_menu_sort);
-			sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			mSortModeSubmenu.attachMenuItem(sortMenuItem);
-
-			mSortModeSubmenu.clear();
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_asc,      MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_desc,     MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_year_asc,      MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_year_desc,     MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_duration_asc,  MENU_ITEM_SORT+MENU_ITEM_DURATION+MENU_ITEM_ASC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_duration_desc, MENU_ITEM_SORT+MENU_ITEM_DURATION+MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_rating_asc,    MENU_ITEM_SORT+MENU_ITEM_RATING  +MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_added_desc,MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_DESC);
-			mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_added_asc, MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_ASC);
-
-			// Init with the current value
-			int initId = sortorder2itemid(mSortOrder);
-			if (initId==-1) { // not found
-				mSortModeSubmenu.selectSubmenuItem(0);
-			}
-			else {
-				int position = mSortModeSubmenu.getPosition(initId);
-				if (position<0) { // not found
-				    position=0;
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		requireActivity().addMenuProvider(new MenuProvider() {
+			@Override
+			public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+				menu.removeItem(Browser.MENU_VIEW_MODE);
+				if (mBrowserAdapter != null && !mBrowserAdapter.isEmpty() && mSortModeSubmenu != null) {
+					MenuItem sortMenuItem = menu.add(Browser.MENU_VIEW_MODE_GROUP, Browser.MENU_VIEW_MODE, Menu.NONE, R.string.sort_mode);
+					sortMenuItem.setIcon(R.drawable.ic_menu_sort);
+					sortMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+					mSortModeSubmenu.attachMenuItem(sortMenuItem);
+					mSortModeSubmenu.clear();
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_asc,       MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_ASC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_name_desc,      MENU_ITEM_SORT+MENU_ITEM_NAME    +MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_year_asc,       MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_ASC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_year_desc,      MENU_ITEM_SORT+MENU_ITEM_YEAR    +MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_duration_asc,   MENU_ITEM_SORT+MENU_ITEM_DURATION+MENU_ITEM_ASC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_duration_desc,  MENU_ITEM_SORT+MENU_ITEM_DURATION+MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_rating_asc,     MENU_ITEM_SORT+MENU_ITEM_RATING  +MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_added_desc, MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_DESC);
+					mSortModeSubmenu.addSubmenuItem(0, R.string.sort_by_date_added_asc,  MENU_ITEM_SORT+MENU_ITEM_ADDED+MENU_ITEM_ASC);
+					int initId = sortorder2itemid(mSortOrder);
+					if (initId == -1) {
+						mSortModeSubmenu.selectSubmenuItem(0);
+					} else {
+						int position = mSortModeSubmenu.getPosition(initId);
+						mSortModeSubmenu.selectSubmenuItem(position < 0 ? 0 : position);
+					}
 				}
-				mSortModeSubmenu.selectSubmenuItem(position);
 			}
-		}
+			@Override
+			public void onPrepareMenu(Menu menu) {
+				MenuItem item = menu.findItem(Browser.MENU_VIEW_MODE);
+				if (item != null) item.setIcon(R.drawable.ic_menu_sort);
+			}
+			@Override
+			public boolean onMenuItemSelected(MenuItem item) {
+				return false;
+			}
+		}, getViewLifecycleOwner());
 	}
 	@Override
 	public void onSubmenuItemSelected(ActionBarSubmenu submenu, int position, long itemId) {

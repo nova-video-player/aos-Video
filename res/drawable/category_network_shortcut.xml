@@ -1,0 +1,12 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base network icon -->
+    <item android:drawable="@drawable/category_common_network" />
+    <!-- Small link badge in bottom-right corner -->
+    <item
+        android:width="14dp"
+        android:height="14dp"
+        android:bottom="-4dp"
+        android:right="-2dp"
+        android:gravity="bottom|end"
+        android:drawable="@drawable/ic_link_badge" />
+</layer-list>

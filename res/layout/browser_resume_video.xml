@@ -9,6 +9,7 @@ access to last video played. -->
     android:id="@+id/global_resume"
     android:layout_width="match_parent"
     android:layout_height="@dimen/global_resume_video_height"
+    android:background="@drawable/rounded_rectangle_grey"
     android:focusable="true"
     >
 

@@ -83,8 +83,9 @@ public class MovieByPresenter extends CommonPresenter{
         }
 
 
-        holder.info.setText(((Pair<String,String>)object).second);
-        holder.name.setText(((Pair<String,String>)object).first);
+        Pair<?, ?> pair = (Pair<?, ?>) object;
+        holder.info.setText(pair.second != null ? pair.second.toString() : "");
+        holder.name.setText(pair.first != null ? pair.first.toString() : "");
         if(holder.expanded!=null)
             holder.expanded.setVisibility(View.GONE);
 

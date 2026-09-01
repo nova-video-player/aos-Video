@@ -16,11 +16,14 @@ package com.archos.mediacenter.video.leanback;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
+import android.widget.ImageView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.fragment.app.Fragment;
 import androidx.leanback.widget.BaseCardView;
 import androidx.leanback.widget.ImageCardView;
 import androidx.leanback.widget.OnItemViewClickedListener;
@@ -28,6 +31,7 @@ import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.Row;
 import androidx.leanback.widget.RowPresenter;
 
+import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Collection;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -35,16 +39,38 @@ import com.archos.mediacenter.video.leanback.collections.CollectionActivity;
 import com.archos.mediacenter.video.leanback.collections.CollectionFragment;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsActivity;
 import com.archos.mediacenter.video.leanback.details.VideoDetailsFragment;
+import com.archos.mediacenter.video.leanback.details.VideoDetailsTransitionBackdropCache;
+import com.archos.mediacenter.video.leanback.details.VideoDetailsTransitionPosterCache;
 import com.archos.mediacenter.video.leanback.presenter.ListPresenter;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowActivity;
+import com.archos.mediacenter.video.leanback.tvshow.TvshowMoreDetailsActivity;
 import com.archos.mediacenter.video.leanback.tvshow.TvshowFragment;
+import com.archos.mediacenter.video.leanback.tvshow.TvshowMoreDetailsFragment;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by vapillon on 13/04/15.
  */
 public class VideoViewClickedListener implements OnItemViewClickedListener {
 
+    private static final Logger log = LoggerFactory.getLogger(VideoViewClickedListener.class);
+
     final private Activity mActivity;
+
+    private static void traceVideoDetailsLaunch(long launchUptimeMs, String event) {
+        if (log.isDebugEnabled()) {
+            log.debug("details timing: event={}, sinceTapMs={}", event,
+                    SystemClock.elapsedRealtime() - launchUptimeMs);
+        }
+    }
+
+    private static void traceNextSourceFrame(View sourceView, long launchUptimeMs) {
+        if (sourceView == null || !log.isDebugEnabled()) return;
+        sourceView.postOnAnimation(() -> traceVideoDetailsLaunch(launchUptimeMs,
+                "source-next-frame-after-launch-request"));
+    }
 
     public VideoViewClickedListener(Activity activity) {
         mActivity = activity;
@@ -67,37 +93,66 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
     }
 
     public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean forceSelection, long listId) {
-        showVideoDetails(activity,video, itemViewHolder, true, forceSelection, true, listId, null, -1);
+        showVideoDetails(activity, video, itemViewHolder, true, forceSelection, true, listId, null);
     }
 
-    public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean animate, boolean forceSelection, boolean shouldLoadBackdrop, long listId, Fragment fragment, int requestCode) {
+    public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean animate, boolean forceSelection, boolean shouldLoadBackdrop, long listId, ActivityResultLauncher<Intent> launcher) {
         Intent intent = new Intent(activity, VideoDetailsActivity.class);
         intent.putExtra(VideoDetailsFragment.EXTRA_VIDEO, video);
         intent.putExtra(VideoDetailsFragment.EXTRA_LIST_ID, listId);
         intent.putExtra(VideoDetailsFragment.EXTRA_FORCE_VIDEO_SELECTION, forceSelection);
-        intent.putExtra(VideoDetailsFragment.EXTRA_SHOULD_LOAD_BACKDROP,shouldLoadBackdrop);
+        intent.putExtra(VideoDetailsFragment.EXTRA_SHOULD_LOAD_BACKDROP, shouldLoadBackdrop);
+        // Carries one monotonic origin through the transition so the details screen can
+        // report where a cold-start delay is spent.
+        long launchUptimeMs = SystemClock.elapsedRealtime();
+        intent.putExtra(VideoDetailsFragment.EXTRA_DETAILS_LAUNCH_UPTIME_MS, launchUptimeMs);
+        traceVideoDetailsLaunch(launchUptimeMs, "source-click-handler");
         View sourceView = null;
         if (itemViewHolder.view instanceof ImageCardView) {
             sourceView = ((ImageCardView) itemViewHolder.view).getMainImageView();
         } else if (itemViewHolder instanceof ListPresenter.ListViewHolder){
             sourceView = ((ListPresenter.ListViewHolder)itemViewHolder).getImageView();
         }
-        if(animate) {
-            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    activity,
-                    sourceView,
-                    VideoDetailsActivity.SHARED_ELEMENT_NAME).toBundle();
-
-            if (fragment == null || requestCode == -1)
-                activity.startActivity(intent, bundle);
-            else
-                fragment.startActivityForResult(intent, requestCode, bundle);
+        if (sourceView instanceof ImageView) {
+            Drawable drawable = ((ImageView) sourceView).getDrawable();
+            VideoDetailsTransitionPosterCache.put(launchUptimeMs, drawable);
         }
-        else{
-            if (fragment == null || requestCode == -1)
-                activity.startActivity(intent);
+        if (activity instanceof TvshowActivity || activity instanceof TvshowMoreDetailsActivity) {
+            ImageView backdropView = activity.findViewById(R.id.details_backdrop);
+            java.io.File backdropFile = null;
+            if (activity instanceof androidx.fragment.app.FragmentActivity) {
+                androidx.fragment.app.Fragment fragment = ((androidx.fragment.app.FragmentActivity) activity).getSupportFragmentManager().findFragmentById(R.id.main_browse_fragment);
+                if (fragment instanceof TvshowFragment) {
+                    backdropFile = ((TvshowFragment) fragment).getBackdropController().getCurrentlyDisplayedFile();
+                } else if (fragment instanceof TvshowMoreDetailsFragment) {
+                    backdropFile = ((TvshowMoreDetailsFragment) fragment).getBackdropController().getCurrentlyDisplayedFile();
+                }
+            }
+            if (backdropView != null && backdropView.getDrawable() != null) {
+                VideoDetailsTransitionBackdropCache.put(launchUptimeMs, backdropView.getDrawable(), backdropFile);
+            }
+        }
+        if (animate) {
+            traceVideoDetailsLaunch(launchUptimeMs, "source-transition-options-start");
+            ActivityOptionsCompat opts = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity, sourceView, VideoDetailsActivity.SHARED_ELEMENT_NAME);
+            Bundle optionsBundle = opts.toBundle();
+            traceVideoDetailsLaunch(launchUptimeMs, "source-transition-options-ready");
+            traceNextSourceFrame(sourceView, launchUptimeMs);
+            if (launcher != null) {
+                traceVideoDetailsLaunch(launchUptimeMs, "source-before-launcher-launch");
+                launcher.launch(intent, opts);
+                traceVideoDetailsLaunch(launchUptimeMs, "source-after-launcher-launch");
+            } else {
+                traceVideoDetailsLaunch(launchUptimeMs, "source-before-startActivity");
+                activity.startActivity(intent, optionsBundle);
+                traceVideoDetailsLaunch(launchUptimeMs, "source-after-startActivity");
+            }
+        } else {
+            if (launcher != null)
+                launcher.launch(intent);
             else
-                fragment.startActivityForResult(intent, requestCode);
+                activity.startActivity(intent);
         }
     }
 

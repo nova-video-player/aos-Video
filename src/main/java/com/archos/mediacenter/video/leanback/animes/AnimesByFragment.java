@@ -127,41 +127,6 @@ public abstract class AnimesByFragment extends BrowseSupportFragment implements 
         } else {
             throw new IllegalArgumentException("Did not find R.id.browse_frame in BrowseFragment! Need to update the emptyview hack!");
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        mOverlay.destroy();
-        // Unregister theme change listener
-        if (mThemeChangeListener != null) {
-            ThemeManager.getInstance(getActivity()).unregisterThemeChangeListener(mThemeChangeListener);
-        }
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDestroy() {
-        // Save the sort mode
-        mPrefs.edit().putString(getSortOrderParamKey(), mSortOrder).commit();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mOverlay.resume();
-        updateBackground();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mOverlay.pause();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mSortOrder = mPrefs.getString(getSortOrderParamKey(), AnimesLoader.DEFAULT_SORT);
@@ -195,6 +160,36 @@ public abstract class AnimesByFragment extends BrowseSupportFragment implements 
 
         // Setup theme change listener
         setupThemeListener();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mOverlay.destroy();
+        // Unregister theme change listener
+        if (mThemeChangeListener != null) {
+            ThemeManager.getInstance(getActivity()).unregisterThemeChangeListener(mThemeChangeListener);
+        }
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        // Save the sort mode
+        mPrefs.edit().putString(getSortOrderParamKey(), mSortOrder).apply();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mOverlay.resume();
+        updateBackground();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mOverlay.pause();
     }
 
     private void setupEventListeners() {

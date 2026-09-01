@@ -77,6 +77,16 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
     private EditText addressEt;
     private EditText domainEt;
 
+    private String buildCredentialUri(String scheme, String remote, int port, String path) {
+        String normalizedPath = path;
+        if (normalizedPath == null || normalizedPath.isEmpty()) {
+            normalizedPath = "/";
+        } else if (!normalizedPath.startsWith("/")) {
+            normalizedPath = "/" + normalizedPath;
+        }
+        return scheme + "://" + remote + (port != -1 ? ":" + port : "") + normalizedPath;
+    }
+
     public interface onConnectClickListener {
         public void onConnectClick(String username, String path, String password, int port, int type, String remote, String domain);
     }
@@ -105,9 +115,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
         }
         if(mPassword.isEmpty()&&!mRemote.isEmpty()){
             NetworkCredentialsDatabase database = NetworkCredentialsDatabase.getInstance();
-            String uriToBuild = "";
-            uriToBuild = UriUtils.getTypeUri(mType);
-            uriToBuild +="://"+mRemote+":"+mPort+"/";
+            String uriToBuild = buildCredentialUri(UriUtils.getTypeUri(mType), mRemote, mPort, mPath);
             if (log.isDebugEnabled()) log.debug("onCreateDialog: uriToBuild={}", uriToBuild);
 
             Credential cred = database.getCredential(uriToBuild);
@@ -136,7 +144,6 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                     ((EditText) v.findViewById(R.id.domain)).setText("");
                     v.findViewById(R.id.domain).setVisibility(View.GONE);
                 }
-                ((EditText) v.findViewById(R.id.port)).setText("");
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
@@ -247,9 +254,7 @@ public class NetworkServerCredentialsDialog extends DialogFragment {
                             .putString(NET_LATEST_PATH, path)
                             .apply();
 
-                    String uriToBuild = scheme;
-
-                    uriToBuild +="://"+(!address.isEmpty()?address+(port!=-1?":"+port:""):"")+path;
+                    String uriToBuild = buildCredentialUri(scheme, address, port, path);
                     if (log.isDebugEnabled()) log.debug("onCreateDialog: username={}, domain={}, port={}, remote={}, path={}; type={}", mUsername, mDomain, mPort, mRemote, mPath, mType);
                     if(savePassword.isChecked())
                         NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, uriToBuild, domain, true));

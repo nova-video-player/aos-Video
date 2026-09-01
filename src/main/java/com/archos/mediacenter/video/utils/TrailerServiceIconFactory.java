@@ -21,9 +21,10 @@ import com.archos.mediacenter.video.R;
  */
 public class TrailerServiceIconFactory {
 
-    public static int getIconForService(String service){
-        if("YouTube".equals(service))
+    public static int getIconForService(String service) {
+        if ("YouTube".equalsIgnoreCase(service)) {
             return R.drawable.youtube;
+        }
         return -1;
     }
 }

@@ -18,6 +18,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import java.util.Locale;
 
 import androidx.core.content.ContextCompat;
 import androidx.leanback.widget.ImageCardView;
@@ -51,7 +52,13 @@ public class TrailerPresenter extends PosterImageCardPresenter {
         final VideoViewHolder vh = (VideoViewHolder)viewHolder;
 
         final ImageCardView card = vh.getImageCardView();
-        card.setMainImage(ContextCompat.getDrawable(mContext, TrailerServiceIconFactory.getIconForService(box.mSite)), false);
+        int iconRes = TrailerServiceIconFactory.getIconForService(box.mSite);
+        if (iconRes > 0) {
+            Drawable iconDrawable = ContextCompat.getDrawable(mContext, iconRes);
+            if (iconDrawable != null) {
+                card.setMainImage(iconDrawable, false);
+            }
+        }
         card.setMainImageScaleType(ImageView.ScaleType.CENTER);
         card.setTitleText(box.mName);
 
@@ -75,8 +82,8 @@ public class TrailerPresenter extends PosterImageCardPresenter {
 
     private Uri getImageUrl(ScraperTrailer box) {
         String base = "https://img.youtube.com/vi/%s/0.jpg";
-        if (log.isDebugEnabled()) log.debug("getImageUrl: {}", String.format(base, box.mVideoKey));
-        return Uri.parse(String.format(base, box.mVideoKey));
+        if (log.isDebugEnabled()) log.debug("getImageUrl: {}", String.format(Locale.ROOT, base, box.mVideoKey));
+        return Uri.parse(String.format(Locale.ROOT, base, box.mVideoKey));
     }
 
     @Override

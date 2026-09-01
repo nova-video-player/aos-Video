@@ -38,7 +38,8 @@ public class AllTvShowsAdapter extends PresenterAdapterByCursor  implements Adap
     }
 
     public String getCover() {
-        return getCursor().getString(getCursor().getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_COVER));
+        int coverColumn = getCursor().getColumnIndex(VideoStore.Video.VideoColumns.SCRAPER_S_COVER);
+        return coverColumn >= 0 ? getCursor().getString(coverColumn) : null;
     }
     public Object getItem(int position){
         getCursor().moveToPosition(position);

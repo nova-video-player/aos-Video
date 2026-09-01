@@ -17,12 +17,19 @@ package com.archos.mediacenter.video.leanback.filebrowsing;
 import static com.archos.filecorelibrary.smbj.SmbjUtils.isSMBjEnabled;
 import static com.archos.filecorelibrary.sshj.SshjUtils.isSSHjEnabled;
 
+import androidx.activity.BackEventCompat;
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.core.content.IntentCompat;
 import androidx.fragment.app.Fragment;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.SystemClock;
 import android.view.KeyEvent;
+import android.view.ViewConfiguration;
 
 import com.archos.mediacenter.video.leanback.SingleFragmentActivity;
 import com.archos.mediacenter.video.leanback.network.ftp.FtpListingActivity;
@@ -118,7 +125,7 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
      * Also goBackOneLevel() will return false if this root Uri is the current one
      */
     protected Uri getStartingUri() {
-        Uri uri = (Uri)getIntent().getParcelableExtra(EXTRA_STARTING_URI);
+        Uri uri = IntentCompat.getParcelableExtra(getIntent(), EXTRA_STARTING_URI, Uri.class);
         if (uri==null) {
             // Default to the root
             return getRootUri();
@@ -139,7 +146,7 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
      * goBackOneLevel() will return false if this root Uri is the current one
      */
     protected Uri getRootUri() {
-        Uri uri = (Uri)getIntent().getParcelableExtra(EXTRA_ROOT_URI);
+        Uri uri = IntentCompat.getParcelableExtra(getIntent(), EXTRA_ROOT_URI, Uri.class);
         if (uri==null) {
             throw new IllegalStateException("EXTRA_ROOT_URI Uri is mandatory in the fragment arguments!");
         }
@@ -173,33 +180,56 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        MultiBackHintManager.getInstance(this).onBackPressed();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            private long mBackStartedAt;
 
-        boolean popped = getSupportFragmentManager().popBackStackImmediate();
-        if (!popped) {
-            super.onBackPressed();
-        }
-    }
+            @Override
+            public void handleOnBackStarted(@NonNull BackEventCompat backEvent) {
+                mBackStartedAt = SystemClock.elapsedRealtime();
+            }
 
-    @Override
-    public void onActivityResult(int requestCode, int result, Intent data){
-        super.onActivityResult(requestCode, result, data);
+            @Override
+            public void handleOnBackPressed() {
+                long pressDuration = mBackStartedAt == 0
+                        ? 0 : SystemClock.elapsedRealtime() - mBackStartedAt;
+                mBackStartedAt = 0;
+                if (pressDuration >= ViewConfiguration.getLongPressTimeout()) {
+                    MultiBackHintManager.getInstance(ListingActivity.this).onBackLongPressed();
+                    finish();
+                    return;
+                }
 
-        if(requestCode==REQUEST_INFO_ACTIVITY&&result== RESULT_FILE_DELETED){
-            Uri file = data.getData();
+                MultiBackHintManager.getInstance(ListingActivity.this).onBackPressed();
 
-            for(int i = 0; i<= getSupportFragmentManager().getBackStackEntryCount(); i++){
-                Fragment frag = getSupportFragmentManager().findFragmentByTag("fragment_"+i);//tag specified in fragmenttransaction
-                if(frag != null&&frag instanceof ListingFragment){ //send uri to refresh
-                    ((ListingFragment)frag).onFileDelete(file);
+                boolean popped = getSupportFragmentManager().popBackStackImmediate();
+                if (!popped) {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    setEnabled(true);
                 }
             }
 
+            @Override
+            public void handleOnBackCancelled() {
+                mBackStartedAt = 0;
+            }
+        });
+    }
 
+    public void notifyFileDeleted(Uri file) {
+        for (int i = 0; i <= getSupportFragmentManager().getBackStackEntryCount(); i++) {
+            Fragment frag = getSupportFragmentManager().findFragmentByTag("fragment_" + i);
+            if (frag instanceof ListingFragment) {
+                ((ListingFragment) frag).onFileDelete(file);
+            }
         }
     }
 
+    // onKeyLongPress handles a BACK long-press (quit shortcut), which has no equivalent in
+    // OnBackPressedCallback/predictive-back (that API only covers single back gestures/presses).
+    @SuppressLint("GestureBackNavigation")
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
 

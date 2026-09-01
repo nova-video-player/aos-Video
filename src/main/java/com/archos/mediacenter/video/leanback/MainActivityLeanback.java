@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback;
 
 import static com.archos.filecorelibrary.FileUtils.hasManageExternalStoragePermission;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
@@ -23,11 +24,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 
+import androidx.activity.BackEventCompat;
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 
 import android.view.KeyEvent;
+import android.view.ViewConfiguration;
 
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.DensityTweak;
@@ -58,6 +65,31 @@ public class MainActivityLeanback extends LeanbackActivity {
     private PermissionChecker mPermissionChecker;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
+    private final ActivityResultLauncher<Intent> preferencesLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == VideoPreferencesCommon.ACTIVITY_RESULT_UI_MODE_CHANGED) {
+                    String newUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this)
+                            .getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
+                    if (!newUiModeLeanback.equals(mCurrentUiModeLeanback)) {
+                        finish();
+                        startActivity(new Intent(this, EntryActivity.class));
+                    }
+                    mCurrentUiModeLeanback = null;
+                } else if (result.getResultCode() == VideoPreferencesCommon.ACTIVITY_RESULT_UI_ZOOM_CHANGED) {
+                    new DensityTweak(this).forceDensityDialogAtNextStart();
+                    finish();
+                    startActivity(new Intent(this, EntryActivity.class));
+                } else if (result.getResultCode() == VideoPreferencesCommon.ACTIVITY_RESULT_THEME_CHANGED) {
+                    ThemeManager.getInstance(this).applyWindowTheme(this);
+                    MainFragment mainFragment = (MainFragment) getSupportFragmentManager()
+                            .findFragmentById(R.id.main_browse_fragment);
+                    if (mainFragment != null) {
+                        mainFragment.refreshTheme();
+                    }
+                }
+            });
+
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -86,6 +118,37 @@ public class MainActivityLeanback extends LeanbackActivity {
         
         ((CustomApplication) getApplication()).loadLocale();
 
+        super.onCreate(savedInstanceState);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            private long mBackStartedAt;
+
+            @Override
+            public void handleOnBackStarted(@NonNull BackEventCompat backEvent) {
+                mBackStartedAt = SystemClock.elapsedRealtime();
+            }
+
+            @Override
+            public void handleOnBackPressed() {
+                long pressDuration = mBackStartedAt == 0
+                        ? 0 : SystemClock.elapsedRealtime() - mBackStartedAt;
+                mBackStartedAt = 0;
+                if (pressDuration >= ViewConfiguration.getLongPressTimeout()) {
+                    startPreferencesActivity();
+                    return;
+                }
+
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+                setEnabled(true);
+            }
+
+            @Override
+            public void handleOnBackCancelled() {
+                mBackStartedAt = 0;
+            }
+        });
+
         // Check if user disabled "Always start in TV interface" - if so, redirect to phone UI
         if (!UiChoiceDialog.applicationIsInLeanbackMode(this)) {
             if (log.isDebugEnabled()) log.debug("onCreate: User disabled leanback mode, redirecting to MainActivity");
@@ -102,18 +165,12 @@ public class MainActivityLeanback extends LeanbackActivity {
             return;
         }
 
-        super.onCreate(savedInstanceState);
-
         // Batch all SharedPreferences operations into single apply
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
 
         // Update uimode/uimode_leanback to reflect we're in leanback mode
         UiChoiceDialog.updateUiModePreferencesInEditor(this, editor);
-
-        // Reset the Video Aspect Ratio on Startup
-        editor.putString("player_pref_auto_format_key", "-1");
-        editor.putString("player_pref_format_key", "0");
 
         // If we are starting the Browser again, we aren't unpausing a Video
         editor.putBoolean("user_paused_video", false);
@@ -177,51 +234,15 @@ public class MainActivityLeanback extends LeanbackActivity {
      * This is ugly I know. It's because VideoViewClickedListener has lost a lot of context...
      */
     public void startPreferencesActivity() {
-        startActivityForResult(new Intent(this, VideoSettingsActivity.class), ACTIVITY_REQUEST_CODE_PREFERENCES);
         // Save the uimode_leanback to check if it changed when back from preferences
         mCurrentUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
+        preferencesLauncher.launch(new Intent(this, VideoSettingsActivity.class));
     }
 
-    /**
-     * Handle the return from VideoSettingsActivity, check if the UiMode has been changed or if
-     * the zoom dialog must be displayed
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Preference activity sets RESULT_OK if something need to be checked when back
-        if (requestCode == ACTIVITY_REQUEST_CODE_PREFERENCES) {
-            if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_UI_MODE_CHANGED) {
-                // Check if the UI mode changed
-                String newUiModeLeanback = PreferenceManager.getDefaultSharedPreferences(this).getString(UiChoiceDialog.UI_CHOICE_LEANBACK_KEY, "-");
-                if (!newUiModeLeanback.equals(mCurrentUiModeLeanback)) {
-                    // ui mode changed -> quit the current activity and restart
-                    finish();
-                    startActivity(new Intent(this, EntryActivity.class));
-                }
-                mCurrentUiModeLeanback = null; // reset
-            } else if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_UI_ZOOM_CHANGED) {
-                new DensityTweak(this)
-                        .forceDensityDialogAtNextStart();
-                // restart the leanback activity for user to change the zoom
-                finish();
-                startActivity(new Intent(this, EntryActivity.class));
-            } else if (resultCode == VideoPreferencesCommon.ACTIVITY_RESULT_THEME_CHANGED) {
-                // Theme changed - update window background and refresh MainFragment
-                ThemeManager.getInstance(this).applyWindowTheme(this);
-                MainFragment mainFragment = (MainFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.main_browse_fragment);
-                if (mainFragment != null) {
-                    mainFragment.refreshTheme();
-                }
-            }
-        }
-    }
-
+    // onKeyLongPress handles a BACK long-press (open settings shortcut), which has no
+    // equivalent in OnBackPressedCallback/predictive-back (that API only covers single back
+    // gestures/presses).
+    @SuppressLint("GestureBackNavigation")
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="player_pref_subtitle_size_default">12</integer> <!-- an integer instead of a dimension because we don't want it to be density-scaled -->
+    <integer name="player_pref_subtitle_vpos_default">0</integer> <!-- an integer instead of a dimension because we don't want it to be density-scaled -->
+</resources>

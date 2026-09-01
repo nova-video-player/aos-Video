@@ -168,28 +168,26 @@ public class MultipleSelectionManager implements ActionMode.Callback {
         else if(mArchosGridView instanceof ListView){
             firstPosition += ((ListView) mArchosGridView).getHeaderViewsCount()   ;
         }
-        switch (item.getItemId()){
-            case R.string.delete:
-                List<Uri> toDelete = new ArrayList<>();
-                for (int i = 0; i < mArchosGridView.getCount(); i++) {
-                    if (mArchosGridView.getCheckedItemPositions().get(i)) {
-                        toDelete.add(mBrowser.getRealPathUriFromPosition(i-firstPosition));
-                    }
+        int actionId = item.getItemId();
+        if (actionId == R.string.delete) {
+            List<Uri> toDelete = new ArrayList<>();
+            for (int i = 0; i < mArchosGridView.getCount(); i++) {
+                if (mArchosGridView.getCheckedItemPositions().get(i)) {
+                    toDelete.add(mBrowser.getRealPathUriFromPosition(i-firstPosition));
                 }
-                mBrowser.showConfirmDeleteDialog(false, toDelete);
-                return true;
-
-            case R.string.copy_on_device_multi:
-                List<Uri> toCopy = new ArrayList<>();
-                for (int i = 0; i < mArchosGridView.getCount(); i++) {
-                    if (mArchosGridView.getCheckedItemPositions().get(i)) {
-                        toCopy.add(mBrowser.getRealPathUriFromPosition(i-firstPosition));
-                    }
+            }
+            mBrowser.showConfirmDeleteDialog(false, toDelete);
+            return true;
+        } else if (actionId == R.string.copy_on_device_multi) {
+            List<Uri> toCopy = new ArrayList<>();
+            for (int i = 0; i < mArchosGridView.getCount(); i++) {
+                if (mArchosGridView.getCheckedItemPositions().get(i)) {
+                    toCopy.add(mBrowser.getRealPathUriFromPosition(i-firstPosition));
                 }
-                mBrowser.startDownloadingVideo(toCopy);
-                return true;
-
-            case R.string.video_browser_unindex_file:
+            }
+            mBrowser.startDownloadingVideo(toCopy);
+            return true;
+        } else if (actionId == R.string.video_browser_unindex_file) {
                 ArrayList<Long> toUnindex = new ArrayList<>();
                 for (int i = 0; i < mArchosGridView.getCount(); i++) {
                     if (mArchosGridView.getCheckedItemPositions().get(i)) {
@@ -202,50 +200,42 @@ public class MultipleSelectionManager implements ActionMode.Callback {
 
                 DbUtils.markHiddenValue(mBrowser.getActivity(),toUnindex.toArray(new Long[1]),1);
 
-                mActionBar.finish();
-                return true;
-            case R.string.video_browser_index_file:
-                for (int i = 0; i < mArchosGridView.getCount(); i++) {
-                    if (mArchosGridView.getCheckedItemPositions().get(i))
-                        VideoStore.requestIndexing(mBrowser.getRealPathUriFromPosition(i-firstPosition), mBrowser.getActivity());
-                }
-
-                return true;
-            case R.string.mark_as_watched:
-                for (int i = 0; i < mArchosGridView.getCount(); i++) {
-                    if (mArchosGridView.getCheckedItemPositions().get(i)){
-                        Object obj = mBrowserAdapter.getItem(i-firstPosition);
-                        if(obj instanceof Video){
-                            final boolean isShowOrSeason = obj instanceof Season || obj instanceof Tvshow;
-                            final boolean isMovieOrEpisode = obj instanceof Movie || obj instanceof Episode;
-                            if((isShowOrSeason||isMovieOrEpisode)&&!((Video)obj).isWatched() || ((Video)obj).getResumeMs() != PlayerActivity.LAST_POSITION_END) {
-                                mBrowser.markAsRead(i-firstPosition, true, mPreferences.getBoolean(BrowserByNetwork.KEY_NETWORK_BOOKMARKS, true));
-                            }
+            mActionBar.finish();
+            return true;
+        } else if (actionId == R.string.video_browser_index_file) {
+            for (int i = 0; i < mArchosGridView.getCount(); i++) {
+                if (mArchosGridView.getCheckedItemPositions().get(i))
+                    VideoStore.requestIndexing(mBrowser.getRealPathUriFromPosition(i-firstPosition), mBrowser.getActivity());
+            }
+            return true;
+        } else if (actionId == R.string.mark_as_watched) {
+            for (int i = 0; i < mArchosGridView.getCount(); i++) {
+                if (mArchosGridView.getCheckedItemPositions().get(i)){
+                    Object obj = mBrowserAdapter.getItem(i-firstPosition);
+                    if(obj instanceof Video){
+                        final boolean isShowOrSeason = obj instanceof Season || obj instanceof Tvshow;
+                        final boolean isMovieOrEpisode = obj instanceof Movie || obj instanceof Episode;
+                        if((isShowOrSeason||isMovieOrEpisode)&&!((Video)obj).isWatched() || ((Video)obj).getResumeMs() != PlayerActivity.LAST_POSITION_END) {
+                            mBrowser.markAsRead(i-firstPosition, true, mPreferences.getBoolean(BrowserByNetwork.KEY_NETWORK_BOOKMARKS, true));
                         }
-
-
-
                     }
                 }
-
-                return true;
-            case R.string.mark_as_not_watched:
-                for (int i = 0; i < mArchosGridView.getCount(); i++) {
-                    if (mArchosGridView.getCheckedItemPositions().get(i)) {
-                        Object obj = mBrowserAdapter.getItem(i-firstPosition);
-                        Uri uri = null;
-                        if(obj instanceof Video){
-                            final boolean isShowOrSeason = obj instanceof Season || obj instanceof Tvshow;
-                            final boolean isMovieOrEpisode = obj instanceof Movie || obj instanceof Episode;
-                            if((isShowOrSeason||isMovieOrEpisode)&&((Video)obj).isWatched() || ((Video)obj).getResumeMs() == PlayerActivity.LAST_POSITION_END) {
-                                mBrowser.markAsNotRead(i-firstPosition, true, mPreferences.getBoolean(BrowserByNetwork.KEY_NETWORK_BOOKMARKS, true));
-                            }
+            }
+            return true;
+        } else if (actionId == R.string.mark_as_not_watched) {
+            for (int i = 0; i < mArchosGridView.getCount(); i++) {
+                if (mArchosGridView.getCheckedItemPositions().get(i)) {
+                    Object obj = mBrowserAdapter.getItem(i-firstPosition);
+                    if(obj instanceof Video){
+                        final boolean isShowOrSeason = obj instanceof Season || obj instanceof Tvshow;
+                        final boolean isMovieOrEpisode = obj instanceof Movie || obj instanceof Episode;
+                        if((isShowOrSeason||isMovieOrEpisode)&&((Video)obj).isWatched() || ((Video)obj).getResumeMs() == PlayerActivity.LAST_POSITION_END) {
+                            mBrowser.markAsNotRead(i-firstPosition, true, mPreferences.getBoolean(BrowserByNetwork.KEY_NETWORK_BOOKMARKS, true));
                         }
-
-
                     }
                 }
-                return true;
+            }
+            return true;
         }
         return false;
     }

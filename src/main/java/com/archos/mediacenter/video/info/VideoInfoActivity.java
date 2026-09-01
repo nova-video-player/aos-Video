@@ -14,8 +14,6 @@
 
 package com.archos.mediacenter.video.info;
 
-import static com.archos.mediacenter.video.utils.VideoUtils.isColorDark;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -27,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
@@ -38,6 +37,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
+import com.archos.mediacenter.video.utils.MiscUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -71,6 +71,7 @@ public class VideoInfoActivity extends AppCompatActivity {
     private Fragment mCurrentFragment;
 
 
+    @SuppressWarnings({"deprecation", "unchecked"}) // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (DBG) Log.d(TAG,"onCreate");
@@ -78,7 +79,9 @@ public class VideoInfoActivity extends AppCompatActivity {
         ViewGroup globalLayout = (ViewGroup) getWindow().getDecorView();
 
         if(getIntent().hasExtra(EXTRA_VIDEO_PATHS))
-            mPaths = (ArrayList)getIntent().getSerializableExtra(EXTRA_VIDEO_PATHS);
+            mPaths = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? getIntent().getSerializableExtra(EXTRA_VIDEO_PATHS, ArrayList.class)
+                    : (ArrayList) getIntent().getSerializableExtra(EXTRA_VIDEO_PATHS);
         if(mPaths==null) {
             mPaths = new ArrayList<>();
             if(getIntent().getData()!=null)
@@ -87,7 +90,9 @@ public class VideoInfoActivity extends AppCompatActivity {
         mId = getIntent().getLongExtra(EXTRA_VIDEO_ID, -1);
         mCurrentPosition = getIntent().getIntExtra(EXTRA_CURRENT_POSITION, 0);
         if(getIntent().hasExtra(EXTRA_VIDEO))
-            mCurrentVideo = (Video) getIntent().getSerializableExtra(EXTRA_VIDEO);
+            mCurrentVideo = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? getIntent().getSerializableExtra(EXTRA_VIDEO, Video.class)
+                    : (Video) getIntent().getSerializableExtra(EXTRA_VIDEO);
 
         mForceCurrentPosition = getIntent().getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false);
         mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, null);
@@ -130,16 +135,16 @@ public class VideoInfoActivity extends AppCompatActivity {
         return mGlobalBackdrop;
     }
 
+    @SuppressWarnings("deprecation")
     public void setBackgroundColor(int color) {
         getWindow().getDecorView().setBackgroundColor(color);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
             WindowInsetsControllerCompat insetsController = new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
             insetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-            insetsController.setAppearanceLightStatusBars(isColorDark(color));
-            insetsController.setAppearanceLightNavigationBars(isColorDark(color));
+            MiscUtils.applyStatusBarIconContrast(insetsController, color);
         } else {
-            // For older APIs, use the deprecated methods
+            // For older APIs (API < 29), setStatusBarColor/setNavigationBarColor are the only option
             getWindow().setNavigationBarColor(color);
             getWindow().setStatusBarColor(color);
         }
@@ -165,6 +170,7 @@ public class VideoInfoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressWarnings("deprecation") // legacy overload retained for callers without ActivityResultLauncher
     public static void startInstance(Context context,
                                      Fragment fragment,
                                      Video currentVideo,
@@ -175,26 +181,46 @@ public class VideoInfoActivity extends AppCompatActivity {
                                      long playlistId){
 
         if (DBG) Log.d(TAG, "startInstance: " + currentVideo.getFilePath());
+        Intent intent = buildIntent(context, currentVideo, currentPosition, paths, id, forceVideoSelection, playlistId);
+        if (fragment != null) {
+            fragment.startActivityForResult(intent, 0);
+        } else if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).startActivityForResult(intent, 0);
+        } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            context.startActivity(intent);
+        }
+    }
+
+    public static void startInstance(ActivityResultLauncher<Intent> launcher,
+                                     Context context,
+                                     Video currentVideo,
+                                     int currentPosition,
+                                     ArrayList<Uri> paths,
+                                     long id,
+                                     boolean forceVideoSelection,
+                                     long playlistId){
+        if (DBG) Log.d(TAG, "startInstance (launcher): " + currentVideo.getFilePath());
+        launcher.launch(buildIntent(context, currentVideo, currentPosition, paths, id, forceVideoSelection, playlistId));
+    }
+
+    private static Intent buildIntent(Context context,
+                                      Video currentVideo,
+                                      int currentPosition,
+                                      ArrayList<Uri> paths,
+                                      long id,
+                                      boolean forceVideoSelection,
+                                      long playlistId) {
         Intent intent = new Intent(context, VideoInfoActivity.class);
-        if(currentVideo!=null)
+        if (currentVideo != null)
             intent.putExtra(VideoInfoActivityFragment.EXTRA_VIDEO, currentVideo);
-        if(paths!=null)
+        if (paths != null)
             intent.putExtra(EXTRA_VIDEO_PATHS, paths);
-        intent.putExtra(EXTRA_FORCE_VIDEO_SELECTION,forceVideoSelection);
+        intent.putExtra(EXTRA_FORCE_VIDEO_SELECTION, forceVideoSelection);
         intent.putExtra(EXTRA_VIDEO_ID, id);
         intent.putExtra(EXTRA_PLAYLIST_ID, playlistId);
         intent.putExtra(EXTRA_CURRENT_POSITION, currentPosition);
-        if(fragment!=null) {
-            fragment.startActivityForResult(intent, 0);
-        }else if(context instanceof AppCompatActivity)
-            ((AppCompatActivity) context).startActivityForResult(intent, 0);
-        else {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            context.startActivity(intent);
-
-        }
-
-
+        return intent;
     }
     public static void startInstance(Context context, Video video, Uri path, Long id){
         if (DBG) Log.d(TAG, "startInstance: " + path);
@@ -203,6 +229,7 @@ public class VideoInfoActivity extends AppCompatActivity {
         startInstance(context,null,video, 0,paths,id, false, -1);
     }
 
+    @SuppressWarnings("deprecation") // FragmentStatePagerAdapter: pending ViewPager2 migration
     private static class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
         // Fields to hold the data previously accessed from the outer class

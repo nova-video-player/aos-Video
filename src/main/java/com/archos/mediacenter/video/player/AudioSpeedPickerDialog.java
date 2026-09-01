@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -42,7 +43,7 @@ public class AudioSpeedPickerDialog extends AlertDialog implements OnClickListen
     private final AudioSpeedPickerAbstract mAudioSpeedPicker;
     private final OnAudioSpeedChangeListener mCallBack;
 
-    private final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             AudioSpeedPickerDialog.this.handleMessage(msg);
@@ -89,12 +90,13 @@ public class AudioSpeedPickerDialog extends AlertDialog implements OnClickListen
 
     @Override
     public void onStop() {
+        super.onStop();
         mHandler.removeCallbacksAndMessages(null);
         if (mCallBack != null) {
             mCallBack.onAudioSpeedChange(mAudioSpeedPicker, mAudioSpeedPicker.getSpeed());
         }
         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putFloat(getContext().getResources().getString(R.string.save_audio_speed_setting_pref_key),
-                mSaveSettingCB.isChecked()?PlayerService.sPlayerService.getAudioSpeed():1.0f).commit();
+                mSaveSettingCB.isChecked()?PlayerService.sPlayerService.getAudioSpeed():1.0f).apply();
     }
 
     @Override

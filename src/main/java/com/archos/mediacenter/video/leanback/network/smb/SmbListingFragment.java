@@ -75,7 +75,7 @@ public class SmbListingFragment extends NetworkListingFragment {
     }
 
     @Override
-    protected void updateVideosMapAndFileList(List<? extends MetaFile2> mListedFiles, HashMap<String, Video> indexedVideosMap) {
+    protected List<? extends MetaFile2> updateVideosMapAndFileList(List<? extends MetaFile2> mListedFiles, HashMap<String, Video> indexedVideosMap) {
         ArrayList<MetaFile2> newList = new ArrayList<>();
         HashMap<Uri, VideoDbInfo> resumes = new HashMap<>();
         for (MetaFile2 item : mListedFiles) {
@@ -110,8 +110,7 @@ public class SmbListingFragment extends NetworkListingFragment {
                 }
             }
         }
-        mListedFiles.clear();
-        ((ArrayList<MetaFile2>) mListedFiles).addAll(newList);
+        return newList;
     }
 
     private void askForCredentials() {

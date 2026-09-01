@@ -15,6 +15,8 @@
 
 package com.archos.mediacenter.video.browser.adapters;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.database.Cursor;
 import androidx.recyclerview.widget.RecyclerView;
@@ -195,7 +197,7 @@ public abstract class RecyclerViewPresenterAdapterByCursor extends RecyclerView.
     public String getExtension(String filename) {
         int dotPos = filename.lastIndexOf('.');
         if (dotPos >= 0 && dotPos < filename.length()) {
-            return filename.substring(dotPos + 1).toLowerCase();
+            return filename.substring(dotPos + 1).toLowerCase(Locale.ROOT);
         }
         return null;
     }

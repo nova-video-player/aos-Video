@@ -49,6 +49,7 @@ import com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser.Upn
 
 import java.util.ArrayList;
 
+@SuppressWarnings("deprecation") // ActionBar navigation mode: legacy list navigation
 public class BrowserCategoryVideo extends BrowserCategory implements androidx.appcompat.app.ActionBar.OnNavigationListener {
     static final String TAG = "BrowserCategoryVideo";
 
@@ -62,6 +63,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
             R.string.movies_by_genre,
     };
 
+    @SuppressWarnings("unchecked")
     static final Class<? extends Fragment> MOVIE_CATEGORIES_CLASSES[] = new Class[]{
             BrowserAllMovies.class,
             BrowserMoviesByYear.class,
@@ -73,7 +75,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
      */
     private boolean mNavigationItemListenerActive = true;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
-    private static final int ITEM_ID_VIDEO_FOLDER = ITEM_ID_OFFSET + 0;
+    // ITEM_ID_VIDEO_FOLDER is defined in BrowserCategory
     private static final int ITEM_ID_MOVIES = ITEM_ID_OFFSET + 1;
     private static final int ITEM_ID_TV_SHOWS = ITEM_ID_OFFSET + 2;
     private static final int ITEM_ID_ALL_VIDEOS = ITEM_ID_OFFSET + 3;
@@ -94,19 +96,20 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
     }
 
     @Override
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
-        if (bundle!=null) {
-            int navigationMode = bundle.getInt(KEY_ACTIONBAR_NAVIGATION_MODE, ActionBar.NAVIGATION_MODE_STANDARD);
-            if (navigationMode==ActionBar.NAVIGATION_MODE_LIST) {
-                setupMovieActionBarNavigation(false); // false because the corresponding fragment is already re-created by the framework after rotation
-            } else {
-                setNavigationMode(navigationMode);
-            }
-        }
-    }
     public void onViewCreated(View v, Bundle save){
         super.onViewCreated(v, save);
+        if (save!=null) {
+            v.post(() -> {
+                if (!isAdded())
+                    return;
+                int navigationMode = save.getInt(KEY_ACTIONBAR_NAVIGATION_MODE, ActionBar.NAVIGATION_MODE_STANDARD);
+                if (navigationMode==ActionBar.NAVIGATION_MODE_LIST) {
+                    setupMovieActionBarNavigation(false); // false because the corresponding fragment is already re-created by the framework after rotation
+                } else {
+                    setNavigationMode(navigationMode);
+                }
+            });
+        }
         // Apply theme colors to actionbar - defer to onResume when ActionBar is available
         // Register theme change listener
         mThemeChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -218,11 +221,6 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
         itemData.text = R.string.not_played_yet_videos;
         categoryList.add(itemData);*/
 
-        itemData = new ItemData();
-        itemData.icon = R.drawable.category_common_folder;
-        itemData.text = R.string.video_folder;
-        itemData.id = ITEM_ID_VIDEO_FOLDER;
-        categoryList.add(itemData);
     }
 
 
@@ -236,7 +234,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("video/*");
-            startActivityForResult(intent.createChooser(intent, "Choose file"), FILE_CHOOSER_ACTIVITY_REQUEST_CODE);
+            fileChooserLauncher.launch(intent.createChooser(intent, "Choose file"));
             //restore browser
             mSelectedItemId = mOldSelectedItemId;
             return ;
@@ -271,7 +269,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
         for (int i=0; i<MOVIE_CATEGORIES_NAMES_ID.length; i++) {
             movieCategoriesNames[i] = getResources().getString(MOVIE_CATEGORIES_NAMES_ID[i]);
         }
-        ab.setListNavigationCallbacks( new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, movieCategoriesNames), this);
+        ab.setListNavigationCallbacks( new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, movieCategoriesNames), this);
 
         // Set default value
         int defaultListPosition = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(KEY_ACTIONBAR_NAVIGATION_POSITION, KEY_ACTIONBAR_NAVIGATION_POSITION_DEFAULT);
@@ -296,7 +294,7 @@ public class BrowserCategoryVideo extends BrowserCategory implements androidx.ap
         // Save the current position to the preferences
         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
         .putInt(KEY_ACTIONBAR_NAVIGATION_POSITION, itemPosition)
-        .commit();
+        .apply();
         return true;
     }
 

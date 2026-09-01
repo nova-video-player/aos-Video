@@ -62,12 +62,21 @@ public enum ShortcutDb {
      * @return
      */
     public CursorLoader getAllShortcutsCursorLoader(Context context) {
-        return new CursorLoader(context) {
-            @Override
-            public Cursor loadInBackground() {
-                return getCursorAllShortcuts(getContext());
-            }
-        };
+        return new ShortcutsCursorLoader(context, this);
+    }
+
+    private static class ShortcutsCursorLoader extends CursorLoader {
+        private final ShortcutDb mShortcutDb;
+
+        public ShortcutsCursorLoader(Context context, ShortcutDb shortcutDb) {
+            super(context);
+            mShortcutDb = shortcutDb;
+        }
+
+        @Override
+        public Cursor loadInBackground() {
+            return mShortcutDb.getCursorAllShortcuts(getContext());
+        }
     }
 
     public long isShortcut(Context context, String path) {

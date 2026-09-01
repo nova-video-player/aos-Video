@@ -37,6 +37,6 @@ class RemoteViewsFactoryRecentlyAdded extends RemoteViewsFactoryBase {
     	String sortOrder = VideoStore.MediaColumns.DATE_ADDED + " DESC" + " LIMIT " + maxItemCount;
         ContentResolver resolver = context.getContentResolver();
         mCursor = resolver.query(MEDIA_DB_CONTENT_URI, VIDEO_FILES_COLUMNS, WHERE_NOT_HIDDEN, null, sortOrder);
-		return (mCursor !=null);
+        return (mCursor !=null);
     }
 }

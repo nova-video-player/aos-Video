@@ -31,6 +31,7 @@ public class OAuthData {
 
 	public String provider;		/** name of the provider */
 	public String state;		/** state send */
+	public String returnedState;	/** state returned by the authorization server */
 	public String token;
 	public String code;/** token received */
 	public String secret;		/** secret received (only in oauth1) */

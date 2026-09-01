@@ -14,17 +14,24 @@
 
 package com.archos.mediacenter.video.leanback.overlay;
 
+import java.util.Locale;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
+
+import com.archos.mediacenter.video.player.Player;
+import com.archos.mediacenter.video.player.PlayerService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,8 +41,11 @@ import java.util.Date;
  */
 public class Clock {
 
-    private static final String TAG = "Clock";
-    private final static boolean DBG = false;
+    private static final Logger log = LoggerFactory.getLogger(Clock.class);
+
+    public static String formatTimeWithArrow(String startText, String endText) {
+        return startText + " → " + endText;
+    }
 
     final Context mContext;
     final private TextView mClockTextView;
@@ -45,9 +55,9 @@ public class Clock {
         mContext = context;
 
         if (DateFormat.is24HourFormat(mContext)) {
-            mDateFormat = new SimpleDateFormat("HH:mm");
+            mDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         } else {
-            mDateFormat = new SimpleDateFormat("h:mm");
+            mDateFormat = new SimpleDateFormat("h:mm", Locale.getDefault());
         }
 
         mClockTextView = (TextView)overlayContainer.findViewById(R.id.clock);
@@ -62,11 +72,13 @@ public class Clock {
     }
 
     public void resume() {
+        if (log.isDebugEnabled()) log.debug("resume");
         mContext.registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         updateClock();
     }
 
     public void pause() {
+        if (log.isDebugEnabled()) log.debug("pause");
         // We do not change the visibility of the clock here to have a smooth transition between fragments with clock
         mContext.unregisterReceiver(mReceiver);
     }
@@ -74,12 +86,40 @@ public class Clock {
     final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (DBG) Log.d(TAG, "onReceive " + intent);
+            if (log.isDebugEnabled()) log.debug("onReceive: {}", intent);
             updateClock();
         }
     };
 
     private void updateClock() {
-        mClockTextView.setText(mDateFormat.format(new Date()));
+        long now = System.currentTimeMillis();
+        String currentClockText = mDateFormat.format(new Date(now));
+        boolean hasFloatingPlayer = PlayerService.sPlayerService != null
+                && Player.sPlayer != null
+                && Player.sPlayer.isFloatingPlayer()
+                && Player.sPlayer.isPlaying();
+
+        if (log.isDebugEnabled()) {
+            log.debug("updateClock: hasFloatingPlayer={}, sPlayerService={}, sPlayer={}, isPlaying={}",
+                    hasFloatingPlayer,
+                    PlayerService.sPlayerService != null,
+                    Player.sPlayer != null,
+                    Player.sPlayer != null ? Player.sPlayer.isPlaying() : false);
+        }
+
+        if (hasFloatingPlayer) {
+            int duration = Player.sPlayer.getDuration();
+            int position = Player.sPlayer.getCurrentPosition();
+            float speed = PlayerService.sPlayerService.getAudioSpeed();
+            if (speed <= 0f) speed = 1.0f;
+
+            if (duration > 0 && duration > position) {
+                long remainingMs = (long) ((duration - position) / speed);
+                String endClockText = mDateFormat.format(new Date(now + remainingMs));
+                mClockTextView.setText(formatTimeWithArrow(currentClockText, endClockText));
+                return;
+            }
+        }
+        mClockTextView.setText(currentClockText);
     }
 }

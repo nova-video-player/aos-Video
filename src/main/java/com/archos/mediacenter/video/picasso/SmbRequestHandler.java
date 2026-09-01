@@ -60,9 +60,29 @@ public class SmbRequestHandler extends RequestHandler {
             return null;
         }
 
-        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-        inputStream.close();
-        if (bitmap==null) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 1;
+        if (request.hasSize()) {
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(inputStream, null, options);
+            try {
+                inputStream.close();
+            } catch (IOException ignored) {}
+            options.inSampleSize = com.archos.mediacenter.utils.BitmapUtils.calculateInSampleSize(options, request.targetWidth, request.targetHeight);
+            options.inJustDecodeBounds = false;
+            try {
+                inputStream = editor.getInputStream();
+            } catch (IOException e) {
+                Log.e(TAG, "Failed to get the input stream for " + request.uri, e);
+                return null;
+            }
+        }
+
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+        try {
+            inputStream.close();
+        } catch (IOException ignored) {}
+        if (bitmap == null) {
             return null;
         }
         else {

@@ -15,8 +15,7 @@
 package com.archos.mediacenter.video.player.tvmenu;
 
 import android.content.Context;
-import android.os.Build;
-import android.text.Html;
+import androidx.core.text.HtmlCompat;
 import android.text.SpannableString;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -126,11 +125,7 @@ public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
         this.text=text;
         SpannableString spannableText;
         // Apply SpannableString only for checkable items (RadioButtons)
-        if (Build.VERSION.SDK_INT >= 24) {
-            spannableText = new SpannableString(Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY));
-        } else {
-            spannableText = new SpannableString(Html.fromHtml(text));
-        }
+        spannableText = new SpannableString(HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY));
         ((TextView) findViewById(R.id.info_text)).setText(spannableText);
         if(slaveView!=null)
             slaveView.setText(text);

@@ -76,14 +76,6 @@
 
     <!-- Player Settings -->
 
-    <!-- Info dialog -->
-    <style name="InfoDialogButton" parent="Widget.AppCompat.Button.Small">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingRight">11dip</item>
-        <item name="android:paddingLeft">11dip</item>
-    </style>
-
     <!-- Archos GridView theme for the browser -->
     <style name="ArchosGridView">
         <item name="android:id">@id/browser_items</item>
@@ -164,16 +156,6 @@
 
     <style name="BrowserText.Name.Video">
         <item name="android:paddingTop">0dip</item>
-    </style>
-
-    <style name="BrowserText.Info.InfoBlue.Video">
-        <item name="android:paddingTop">3dip</item>
-    </style>
-
-    <style name="BrowserText.Number.Video" parent="MainLine">
-        <item name="android:singleLine">true</item>
-        <item name="android:paddingTop">6dip</item>
-        <item name="android:gravity">center_horizontal</item>
     </style>
 
     <!-- Cover text descriptions -->
@@ -265,11 +247,6 @@
    	<style name="VideoInfoFileInfo" parent="textAppearanceMedium">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="VideoInfoFileInfo.Title">
-        <item name="android:textColor">@color/lightblue500</item>
-        <item name="android:drawablePadding">4dip</item>
     </style>
 
     <style name="VideoPreferenceAboutButton">

@@ -23,8 +23,4 @@ public class AnimesByYearActivity extends SingleFragmentActivity {
     public Fragment getFragmentInstance() {
         return new AnimesByYearFragment();
     }
-
-    public void onBackPressed(){
-        finish();
-    }
 }

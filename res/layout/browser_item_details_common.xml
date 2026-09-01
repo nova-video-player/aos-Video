@@ -46,7 +46,7 @@
         android:id="@+id/info"
         style="@style/BrowserText.Info.Video"
         android:layout_below="@id/detail_line_two"
-        android:layout_toRightOf="@id/left_area" /> -->>
+        android:layout_toRightOf="@id/left_area" /> -->
 
     <!-- Movie   : cast -->
     <!-- TV show : plot -->

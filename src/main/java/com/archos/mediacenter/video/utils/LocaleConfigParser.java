@@ -40,9 +40,9 @@ public class LocaleConfigParser {
                     String country = parser.getAttributeValue(null, "country");
                     if (language != null) {
                         if (country != null) {
-                            locales.add(new Locale(language, country));
+                            locales.add(Locale.forLanguageTag(language + "-" + country));
                         } else {
-                            locales.add(new Locale(language));
+                            locales.add(Locale.forLanguageTag(language));
                         }
                     }
                 }

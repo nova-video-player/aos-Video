@@ -108,14 +108,31 @@ public class AudioDelayPicker extends AudioDelayPickerAbstract {
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-        mMinusButton.setEnabled(enabled);
-        mPlusButton.setEnabled(enabled);
+        updateButtons();
     }
 
     @Override
     public void updateDelay(int delay) {
         super.updateDelay(delay);
         mAudioDelayTv.setText(getFormattedDelay().toString());
+        updateButtons();
+    }
+
+    @Override
+    public void setMin(int min) {
+        super.setMin(min);
+        updateButtons();
+    }
+
+    @Override
+    public void setMax(int max) {
+        super.setMax(max);
+        updateButtons();
+    }
+
+    private void updateButtons() {
+        mMinusButton.setEnabled(isEnabled() && (!hasMin || getDelay() > mMin));
+        mPlusButton.setEnabled(isEnabled() && (!hasMax || getDelay() < mMax));
     }
 
     private Runnable repeatMinusClickRunnable = new Runnable() {

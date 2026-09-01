@@ -41,8 +41,6 @@ public class CredentialsManagerPreferencesFragment extends Fragment implements C
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setHasOptionsMenu(true);
     }
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState){
@@ -60,10 +58,6 @@ public class CredentialsManagerPreferencesFragment extends Fragment implements C
         refreshCredentialsList();
         return v;
     }
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
 
 
     @Override

@@ -183,6 +183,7 @@ public class RescanFragment extends GuidedStepSupportFragment implements Network
         }
     }
 
+    @SuppressWarnings("deprecation") // WIFI_SLEEP_POLICY*: legacy setting query
     private void refreshLastRescanAction() {
         String message;
         boolean clickable = false;

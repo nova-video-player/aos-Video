@@ -80,7 +80,7 @@ public class Collection extends Base implements Serializable {
     }
 
     public String getCountString(Context context) {
-        return String.format(context.getResources().getQuantityText(R.plurals.Nmovies, mCollMovieCount).toString(), mCollMovieCount);
+        return context.getResources().getQuantityString(R.plurals.Nmovies, mCollMovieCount, mCollMovieCount);
     }
 
     public int getCollectionCount() {

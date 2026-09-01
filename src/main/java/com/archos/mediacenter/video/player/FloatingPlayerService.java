@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.player;
 
+import android.annotation.SuppressLint;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -25,15 +27,18 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import androidx.preference.PreferenceManager;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -76,6 +81,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
     private WindowManager mWindowManager;
     private View mFloatingPlayerRootView;
+    @SuppressLint("StaticFieldLeak")
     public static FloatingPlayerService sFloatingPlayerService;
     private boolean contains;
     private SurfaceController mSurfaceController;
@@ -162,12 +168,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
                 }
             }
         }        ;
-        if (Build.VERSION.SDK_INT >= 33) {
-            registerReceiver(mReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            registerReceiver(mReceiver, filter);
-        }
-
+        ContextCompat.registerReceiver(this, mReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
     }
     @Override
     public int onStartCommand(Intent intent,int flags, int startID){
@@ -180,6 +181,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     public void onDestroy(){
         super.onDestroy();
         sFloatingPlayerService = null;
+        mFloatingPlayerRootView = null;
         unbindService(mPlayerServiceConnection);
         unregisterReceiver(mReceiver);
     }
@@ -216,6 +218,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
         setMusicVolume(mVolumeLevel.getProgress());
     }
 
+    @SuppressWarnings("deprecation") // TYPE_PHONE deprecated API 26; already in SDK_INT < O branch; TYPE_APPLICATION_OVERLAY used on O+
     @Nullable
     public void addFloatingView() {
         //PlayerService.sPlayerService.startStatusbarNotification(false);
@@ -339,6 +342,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
                         return (float) Math.sqrt(x * x + y * y);
                     }
 
+                    @SuppressWarnings("deprecation") // getSize/getRealSize: API 30+ uses getCurrentWindowMetrics
                     public boolean onTouch(View v, MotionEvent event) {
 
                         // Dump touch event to log
@@ -394,9 +398,13 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
                                     mode = DRAG;
                                 }
                                 if (mode == DRAG) {
-                                    Display display = mWindowManager.getDefaultDisplay();
                                     Point size = new Point();
-                                    display.getSize(size);
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                        Rect b = mWindowManager.getCurrentWindowMetrics().getBounds();
+                                        size.set(b.width(), b.height());
+                                    } else {
+                                        mWindowManager.getDefaultDisplay().getSize(size);
+                                    }
                                     int x = initialX + (int) (event.getRawX() - initialTouchX);
                                     int y = initialY + (int) (event.getRawY() - initialTouchY);
                                     if (x + mParamsF.width <= size.x && x >= 0)
@@ -426,9 +434,13 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
                                     float newDist = spacing(event);
                                     if (newDist > 10f) {
                                         //Get display width, we cant go over.
-                                        Display display = mWindowManager.getDefaultDisplay();
                                         Point point = new Point();
-                                        display.getRealSize(point);
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                            Rect b = mWindowManager.getCurrentWindowMetrics().getBounds();
+                                            point.set(b.width(), b.height());
+                                        } else {
+                                            mWindowManager.getDefaultDisplay().getRealSize(point);
+                                        }
 
                                         //We start at our minimum size.
                                         int width = (int) (initialWidth + (newDist - oldDist));
@@ -469,8 +481,9 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
             // Get the last intent which has all video data, then add the position extra
             Intent intentToUse = PlayerService.sPlayerService.getLastIntent();
-            if (mStartIntent != null && mStartIntent.hasExtra("floating_player_position")) {
-                intentToUse.putExtra("floating_player_position", mStartIntent.getIntExtra("floating_player_position", -1));
+            if (mStartIntent != null && mStartIntent.hasExtra(ExternalResumeIntent.FLOATING_POSITION)) {
+                intentToUse.putExtra(ExternalResumeIntent.FLOATING_POSITION,
+                        mStartIntent.getIntExtra(ExternalResumeIntent.FLOATING_POSITION, -1));
                 if (log.isDebugEnabled()) log.debug("addFloatingView: Added floating_player_position to intent");
                 mFloatingPlayerSize = mStartIntent.getIntExtra("floating_player_size", STARTING_WIDTH);
             }
@@ -495,11 +508,11 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
         intent.putExtra(PlayerActivity.LAUNCH_FROM_FLOATING_PLAYER, true);
 
-        // Pass current playback position from floating player
-        if (Player.sPlayer != null) {
-            int currentPos = Player.sPlayer.getCurrentPosition();
-            intent.putExtra("position", currentPos);
-            intent.removeExtra("floating_player_position");
+        // Pass the position owned by PlayerService to the new frontend.
+        if (PlayerService.sPlayerService != null) {
+            int currentPos = PlayerService.sPlayerService.getPlaybackSnapshot().getPositionMs();
+            intent.putExtra(ExternalResumeIntent.POSITION, currentPos);
+            intent.removeExtra(ExternalResumeIntent.FLOATING_POSITION);
         }
         startActivity(intent);
     }
@@ -531,12 +544,16 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
         updateSubsSize();
     }
+    @SuppressWarnings("deprecation") // getRealSize: API 30+ uses getCurrentWindowMetrics
     public void updateSubsSize(){
         if(mSize>=0) {
-            Display display = mWindowManager.getDefaultDisplay();
             Point point = new Point();
-            display.getRealSize(point);
-            display.getSize(point);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Rect b = mWindowManager.getCurrentWindowMetrics().getBounds();
+                point.set(b.width(), b.height());
+            } else {
+                mWindowManager.getDefaultDisplay().getRealSize(point);
+            }
             int size = (int) ((mParamsF.width / (float)(Math.max(point.y, point.x))) * mSize);
             int vpos = (int) ((mParamsF.height / (float)(Math.min(point.y, point.x))) * mVPos);
             mSubtitleManager.setSize(size);
@@ -555,7 +572,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
         }
     }
 
-    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -639,7 +656,12 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
     @Override
     public void onFirstPlay() {
-        
+
+    }
+
+    @Override
+    public void onIntroDbReady() {
+        // no TV menu in floating mode
     }
 
     @Override
@@ -864,7 +886,6 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
         if (mVolumeLevel != null && mAudioManager != null) {
             int volume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
             mVolumeLevel.setProgress(volume);
-            setMusicVolume(volume);
         }
     }
     private SeekBar.OnSeekBarChangeListener mVolumeLevelListener = new SeekBar.OnSeekBarChangeListener() {

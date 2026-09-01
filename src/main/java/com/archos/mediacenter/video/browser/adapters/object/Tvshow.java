@@ -113,9 +113,9 @@ public class Tvshow extends Base implements Serializable {
 
     public String getCountString(Context context) {
         if (mSeasonCount > 1) {
-            return String.format(context.getResources().getQuantityText(R.plurals.Nseasons, mSeasonCount).toString(), mSeasonCount);
+            return context.getResources().getQuantityString(R.plurals.Nseasons, mSeasonCount, mSeasonCount);
         } else {
-            return String.format(context.getResources().getQuantityText(R.plurals.Nepisodes, mEpisodeCount).toString(), mEpisodeCount);
+            return context.getResources().getQuantityString(R.plurals.Nepisodes, mEpisodeCount, mEpisodeCount);
         }
     }
 

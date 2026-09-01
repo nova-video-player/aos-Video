@@ -5,15 +5,15 @@ buildscript {
         maven { url = 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.13.2'
+        classpath 'com.android.tools.build:gradle:9.3.2'
         //classpath 'app.brant:amazonappstorepublisher:0.1.0'
         //classpath 'com.github.BrantApps.gradle-amazon-app-store-publisher:amazonappstorepublisher:master-SNAPSHOT'
     }
 }
 
 plugins {
-    id "com.github.triplet.play" version "3.13.0" apply false
-    id "io.sentry.android.gradle" version "6.0.0" apply false
+    id "com.github.triplet.play" version "4.1.1" apply false
+    id "io.sentry.android.gradle" version "6.19.0" apply false
     //id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
@@ -57,7 +57,7 @@ allprojects {
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile).tap {
             configureEach {
-                options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+                options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Xmaxwarns" << "10000"
             }
         }
         // check tasks to add via ./gradlew tasks --all | grep DuplicateClasses
@@ -121,7 +121,7 @@ android {
     }
     packagingOptions {
         jniLibs {
-            useLegacyPackaging = false
+            useLegacyPackaging = true
         }
     }
     compileOptions {
@@ -134,8 +134,9 @@ android {
         aidl = true
         buildConfig = true
         renderScript = false
+        resValues = true
     }
-    compileSdk = 36
+    compileSdk = 37
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -144,18 +145,22 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
+        test {
+            java.srcDirs = ['src/test/java']
+            resources.srcDirs = ['src/test/resources']
+        }
     }
     defaultConfig {
         applicationId = "org.courville.nova"
         generatedDensities = []
         minSdkVersion 23
-        targetSdkVersion 35
+        targetSdkVersion 36
         multiDexEnabled = true
         // below version tracks the one from F-Droid or universal package when generated with ./gradlew -Puniversal
         // this is overridden when using split apk and normal split apk generation or oneapk amazon generation
         // amazon apk is generated with ./gradlew -Poneapk
-        versionCode = 6040029
-        versionName = '6.4.29'
+        versionCode = 6040059
+        versionName = '6.4.59'
         def novaVersionName = versionName
         if (! project.hasProperty("universal")) {
             // override versionName and versionCode to get it dependent on the date
@@ -193,9 +198,7 @@ android {
             buildConfigField "String", "SENTRY_DSN", "\"\"";
         }
         resValue "string", "VERSION_NAME", versionName
-        resValue "string", "APPLICATION_ID", applicationId
         resValue "string", "APP_INFO", "Nova v" + versionName + " (" + applicationId + ")"
-        resValue "string", "APP_VERSION", novaVersionName
     }
     bundle {
         language {
@@ -295,31 +298,26 @@ android {
         }
     }
     lint {
-        abortOnError false // Set to false to only fail on fatal issues
-        disable 'all'
-        enable 'NewApi'
-        fatal 'NewApi'
-        warning 'MissingSuperCall' // Downgrade MissingSuperCall to a warning
-        disable 'MissingTranslation'
+        abortOnError = true
+        checkReleaseBuilds = false
+        showAll = true
+        disable 'MissingTranslation', 'ExtraTranslation', 'MissingQuantity', 'ImpliedQuantity'
+        enable 'SuspiciousIndentation'
     }
 
-    applicationVariants.configureEach { variant ->
-        variant.outputs.all { output ->
-            def api = defaultConfig.minSdkVersion.apiLevel
-            if (project.hasProperty("universal")) { // only one apk
-                outputFileName = outputFileName.replace("-release", "-universal-release")
-            }
-            outputFileName = outputFileName.replace("-noamazon-", "-")
-                    .replace("-manageexternalstorage-", "-")
-            variant.getAssembleProvider().configure() {
-                // Run lint during assembly to ensure the build fails on errors like NewApi
-                it.dependsOn("lint" + variant.name.capitalize())
-                it.doLast {
-                    println("generated: " + outputFileName + " (" + versionName + ", " + versionCode + ")");
-                }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+        unitTests.all {
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen {false}
+                showStandardStreams = true
             }
         }
     }
+
 
     dependenciesInfo {
         if (project.hasProperty("universal")) {
@@ -328,52 +326,94 @@ android {
             includeInBundle = false
         }
     }
-    buildFeatures {
-	aidl = true
+}
+
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.outputs.forEach { output ->
+            String currentName = output.outputFileName.get()
+            String newName = currentName
+            if (project.hasProperty("universal")) {
+                newName = newName.replace("-release", "-universal-release")
+            }
+            newName = newName.replace("-noamazon-", "-").replace("-manageexternalstorage-", "-")
+            output.outputFileName.set(newName)
+        }
+        List<String> outputInfo = []
+        variant.outputs.forEach { output ->
+            outputInfo.add("generated: " + output.outputFileName.get() + " (" + output.versionName.orNull + ", " + output.versionCode.orNull + ")")
+        }
+        String variantName = variant.name.capitalize()
+        project.tasks.configureEach { task ->
+            if (task.name == "assemble${variantName}") {
+                task.dependsOn("lint${variantName}")
+                task.doLast {
+                    outputInfo.each { println(it) }
+                }
+            }
+        }
     }
 }
 
 dependencies {
     implementation project(':FileCoreLibrary')
     implementation project(':MediaLib')
-    implementation 'androidx.lifecycle:lifecycle-process:2.10.0'
+    implementation 'androidx.lifecycle:lifecycle-process:2.11.0'
     // needed for old Android versions when using java 17
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.9'
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'androidx.tvprovider:tvprovider:1.1.0'
-    implementation 'androidx.media:media:1.7.1'
-    implementation 'androidx.core:core:1.17.0'
+    implementation 'androidx.media:media:1.8.0'
+    implementation 'androidx.core:core:1.19.0'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
-    implementation 'androidx.fragment:fragment:1.8.9'
+    implementation 'androidx.fragment:fragment:1.9.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.appcompat:appcompat:1.8.0'
+    // Uses the installed browser for OAuth without embedding a browser engine.
+    implementation 'androidx.browser:browser:1.9.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation ('com.github.ksoichiro:android-observablescrollview:1.6.0') {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'com.android.support', module: 'support-v4'
     }
-    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'com.google.android.material:material:1.14.0'
     implementation 'androidx.leanback:leanback:1.2.0'
     implementation 'androidx.leanback:leanback-preference:1.2.0'
     implementation 'androidx.tvprovider:tvprovider:1.1.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:5.3.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.5.0'
     implementation 'com.github.tony19:logback-android:3.0.0'
-    implementation 'io.sentry:sentry-android:8.31.0'
-    implementation 'io.sentry:sentry:8.31.0'
+    implementation 'io.sentry:sentry-android:8.53.0'
+    implementation 'io.sentry:sentry:8.53.0'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:5.23.0'
+    testImplementation 'org.robolectric:robolectric:4.16.1'
+    testImplementation 'androidx.test:core:1.7.0'
+    testImplementation 'org.slf4j:slf4j-api:2.0.18'
+    testImplementation 'ch.qos.logback:logback-classic:1.6.3'
 }
 
 configurations { // try to exclude device specific libraries interfering
     configureEach {
         exclude group: 'jcifs', module: 'jcifs' // try to avoid conflict with jcifs-ng on Konka Android TV 2861
+        // xpp3 and stax ship classes (XmlPullParser, javax.xml.namespace.*) already in the Android SDK;
+        // including them causes R8 9.x to crash with a class-hierarchy invariant violation
+        exclude group: 'xpp3', module: 'xpp3'
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'stax', module: 'stax'
     }
 }
 
 // to avoid duplicate classes
 configurations.implementation {
     exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+}
+
+configurations.matching { it.name.toLowerCase().contains("unittest") }.configureEach {
+    exclude group: 'com.github.tony19', module: 'logback-android'
 }

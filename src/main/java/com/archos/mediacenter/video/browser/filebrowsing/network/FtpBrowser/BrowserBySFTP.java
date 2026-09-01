@@ -15,10 +15,13 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser;
 
+import java.util.Locale;
+
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,7 +55,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
     // was protected before...
     public static final String CURRENT_DIRECTORY = "currentDirectory";
 
-    protected final Handler mHandler = new Handler() {
+    protected final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             switch(msg.what){
@@ -228,7 +231,7 @@ public class BrowserBySFTP extends BrowserByNetwork implements ListingEngine.Lis
                      name = ((MetaFile2)obj).getName();
                  else
                      name = ((Video)obj).getName();
-                 if(name.toLowerCase().contains(filter.toLowerCase())||filter.isEmpty()) {
+                 if(name.toLowerCase(Locale.getDefault()).contains(filter.toLowerCase(Locale.getDefault()))||filter.isEmpty()) {
                      if(obj instanceof Video && mFirstFileIndex == -1)
                          mFirstFileIndex = mItemList.size();
                      mItemList.add(obj);

@@ -14,7 +14,9 @@
 
 package com.archos.mediacenter.video.cover;
 
+
 import com.archos.mediacenter.cover.ArtworkFactory;
+import com.archos.mediacenter.utils.BitmapUtils;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.EpisodeInfo;
@@ -29,6 +31,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * This class is used TV Show Episodes
@@ -45,22 +48,11 @@ public class EpisodeCover extends BaseVideoCover {
 	EpisodeInfo mEpisodeInfo;
 	private boolean mScraperInfoHasBeenChecked = false;
 
-	// Layout stuff is done only once for all Cover instances
-    //TVSHOW
-    private static View sDescriptionViewTVShow = null;
-    private static TextView sTVShowName = null;
-    private static TextView sTVShowSeasonAndEpisode = null;
-    private static TextView sTVShowEpisodeName = null;
-    private static TextView sTVShowDuration = null;
-
-	private static View sOverlayDescriptionView = null;
-	private static TextView sOverlayDescriptionText = null; // in case of overlay description with handle a single line of text
-
 	public EpisodeCover(long videoId, String filepath, long durationMs, long scraperId) {
 		super(videoId, filepath, durationMs);
 		if (DBG) Log.d(TAG, "EpisodeCover(" + videoId +"|"+filepath+"|"+durationMs+"|"+scraperId);
-        mScraperId = scraperId;
-    }
+		mScraperId = scraperId;
+	}
 
 	@Override
 	public String getCoverID() {
@@ -69,21 +61,6 @@ public class EpisodeCover extends BaseVideoCover {
 
 	static public String computeCoverID(long libraryId) {
 		return "VEP"+libraryId; //Video EPisode
-	}
-
-	/**
-	 * Destroy all cached layout, bitmaps, etc.
-	 * Called when the screen size is changed, for example.
-	 */
-	public static void resetCachedGraphicStuff() {
-	    sDescriptionViewTVShow = null;
-	    sTVShowName = null;
-	    sTVShowSeasonAndEpisode = null;
-	    sTVShowEpisodeName = null;
-	    sTVShowDuration = null;
-
-	    sOverlayDescriptionView = null;
-	    sOverlayDescriptionText = null;
 	}
 
 	/**
@@ -112,7 +89,7 @@ public class EpisodeCover extends BaseVideoCover {
 			    if (coverFile!=null) {
 			        final String coverPath = coverFile.getPath();
 			        if (DBG) Log.d(TAG, "try to decode coverPath=" + coverPath);
-			        coverBitmap = BitmapFactory.decodeFile(coverPath);
+			        coverBitmap = BitmapUtils.decodeSampledBitmapFromFile(coverPath, 500, 750);
 			    }
 			}
 
@@ -149,15 +126,14 @@ public class EpisodeCover extends BaseVideoCover {
 				}
 			}
 
-	        // Description view
-	        View descriptionView = null;
-	        if (descriptionOnCover && (mEpisodeInfo.isValid())) {
-	    		if (sOverlayDescriptionView==null) {
-	    			inflateOverlayDescriptionLayout(factory);
-	    		}
-	    		sOverlayDescriptionText.setText(mEpisodeInfo.getSXEY());
-	        	descriptionView = sOverlayDescriptionView;
-	        }
+			// Description view
+			View descriptionView = null;
+			if (descriptionOnCover && (mEpisodeInfo.isValid())) {
+				View overlayView = factory.getCachedView(R.layout.cover_overlay_description_episode);
+				TextView overlayText = overlayView.findViewById(R.id.main);
+				overlayText.setText(mEpisodeInfo.getSXEY());
+				descriptionView = overlayView;
+			}
 
 			// Add the shadow effect
 	        Bitmap shadowedCover = factory.addShadowAndDescription(coverBitmap, descriptionView, crop, scaleFactor, null);
@@ -183,30 +159,28 @@ public class EpisodeCover extends BaseVideoCover {
 
 	@Override
 	public Bitmap getDescription( ArtworkFactory factory ) {
-		View view;
+		View view = factory.getCachedView(R.layout.cover_floating_description_episode);
+		TextView tvShowName = view.findViewById(R.id.show_name);
+		TextView tvShowSeasonAndEpisode = view.findViewById(R.id.season_and_episode);
+		TextView tvShowEpisodeName = view.findViewById(R.id.episode_name);
+		TextView tvShowDuration = view.findViewById(R.id.duration);
 
-        // Inflate the layout in case it has not been inflated yet for this Cover class
-        if (sDescriptionViewTVShow==null) {
-            inflateDescriptionLayoutTVShow(factory);
-        }
-        view = sDescriptionViewTVShow;
-
-        if (checkScraperInfo(factory)) {
-	        sTVShowName.setText(mEpisodeInfo.getShowTitle());
-            sTVShowSeasonAndEpisode.setText(EpisodeInfo.getEpisodeIdentificationString(factory.getContext().getResources(),
-                                                                                 mEpisodeInfo.getSeasonNumber(),
-                                                                                 mEpisodeInfo.getEpisodeNumber()));
-            String episodeNameFormat = factory.getContext().getString(R.string.quotation_format);
-	        sTVShowEpisodeName.setText(String.format(episodeNameFormat, mEpisodeInfo.getEpisodeTitle()));
-        }
+		if (checkScraperInfo(factory)) {
+			tvShowName.setText(mEpisodeInfo.getShowTitle());
+			tvShowSeasonAndEpisode.setText(EpisodeInfo.getEpisodeIdentificationString(factory.getContext().getResources(),
+					mEpisodeInfo.getSeasonNumber(),
+					mEpisodeInfo.getEpisodeNumber()));
+			String episodeNameFormat = factory.getContext().getString(R.string.quotation_format);
+			tvShowEpisodeName.setText(String.format(Locale.getDefault(), episodeNameFormat, mEpisodeInfo.getEpisodeTitle()));
+		}
 		else {
 			// Scraper info not available or not valid => fall-back on filename (this is not a common expected use-case...)
-			sTVShowName.setText(factory.removeFilenameExtension((new File(mFilepath)).getName()));
-			sTVShowSeasonAndEpisode.setText("-");
-			sTVShowEpisodeName.setText("-");
+			tvShowName.setText(factory.removeFilenameExtension((new File(mFilepath)).getName()));
+			tvShowSeasonAndEpisode.setText("-");
+			tvShowEpisodeName.setText("-");
 		}
 
-        sTVShowDuration.setText(MediaUtils.formatTime(mDurationMs));
+		tvShowDuration.setText(MediaUtils.formatTime(mDurationMs));
 
 		// Update the layout setup to take care of the updated text views
 		view.measure(View.MeasureSpec.makeMeasureSpec(DESCRIPTION_TEXTURE_WIDTH, View.MeasureSpec.EXACTLY),
@@ -214,26 +188,5 @@ public class EpisodeCover extends BaseVideoCover {
 		view.layout(0, 0, DESCRIPTION_TEXTURE_WIDTH, DESCRIPTION_TEXTURE_HEIGHT);
 
 		return factory.createViewBitmap(view, DESCRIPTION_TEXTURE_WIDTH, DESCRIPTION_TEXTURE_HEIGHT);
-	}
-
-    /**
-     * Inflate the (static) layout used for the TVShow description texture
-     */
-    private static void inflateDescriptionLayoutTVShow( ArtworkFactory factory ) {
-        sDescriptionViewTVShow = factory.getLayoutInflater().inflate(R.layout.cover_floating_description_episode, null);
-        sTVShowName = (TextView)sDescriptionViewTVShow.findViewById(R.id.show_name);
-        sTVShowSeasonAndEpisode = (TextView)sDescriptionViewTVShow.findViewById(R.id.season_and_episode);
-        sTVShowEpisodeName = (TextView)sDescriptionViewTVShow.findViewById(R.id.episode_name);
-        sTVShowDuration = (TextView)sDescriptionViewTVShow.findViewById(R.id.duration);
-
-        sDescriptionViewTVShow.setLayoutParams( new FrameLayout.LayoutParams(DESCRIPTION_TEXTURE_WIDTH,DESCRIPTION_TEXTURE_HEIGHT) );
-    }
-
-	/**
-	 * Inflate the (static) layout used for the overlay description texture
-	 */
-	private static void inflateOverlayDescriptionLayout( ArtworkFactory factory ) {
-		sOverlayDescriptionView = factory.getLayoutInflater().inflate(R.layout.cover_overlay_description_episode, null);
-		sOverlayDescriptionText = (TextView)sOverlayDescriptionView.findViewById(R.id.main);
 	}
 }

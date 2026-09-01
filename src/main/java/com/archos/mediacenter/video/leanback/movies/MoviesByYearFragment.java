@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.leanback.movies;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
 import androidx.loader.content.Loader;
 import androidx.preference.PreferenceManager;
 
@@ -52,8 +53,8 @@ public class MoviesByYearFragment extends VideosByFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         setTitle(getString(R.string.movies_by_year));
 
@@ -86,6 +87,11 @@ public class MoviesByYearFragment extends VideosByFragment {
     @Override
     protected String getSortOrderParamKey() {
         return SORT_PARAM_KEY;
+    }
+
+    @Override
+    protected boolean shouldDeferRowLoadersDuringBackgroundWork() {
+        return true;
     }
 
 }

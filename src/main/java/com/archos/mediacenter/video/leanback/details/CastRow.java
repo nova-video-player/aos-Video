@@ -15,24 +15,25 @@
 package com.archos.mediacenter.video.leanback.details;
 
 import androidx.leanback.widget.HeaderItem;
-import android.text.SpannableString;
+
+import com.archos.mediascraper.BaseTags;
 
 /**
  * Created by vapillon on 16/07/15.
  */
 public class CastRow extends FullWidthRow {
 
-    final private SpannableString mCast;
+    final private BaseTags mTags;
     final private String mDirectors;
 
-    public CastRow(String header, SpannableString cast, String directors) {
+    public CastRow(String header, BaseTags tags, String directors) {
         super(new HeaderItem(header));
-        mCast = cast;
+        mTags = tags;
         mDirectors = directors;
     }
 
-    public SpannableString getCast() {
-        return mCast;
+    public BaseTags getTags() {
+        return mTags;
     }
     public String getDirectors() {
         return mDirectors;

@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.browser;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -74,6 +75,7 @@ abstract public class BrowserActivity extends AppCompatActivity {
 
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
+    @SuppressWarnings("deprecation") // getLastCustomNonConfigurationInstance: CoverRoll GL context retention
     public void onCreate(Bundle savedInstanceState) {
         ThemeManager.getInstance(this).applyWindowTheme(this);
         super.onCreate(savedInstanceState);
@@ -121,11 +123,7 @@ abstract public class BrowserActivity extends AppCompatActivity {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Cover.LAUNCH_CONTENT_BROWSER_INTENT);
-        if (Build.VERSION.SDK_INT >= 33) {
-            registerReceiver(mCoverLaunchListener, filter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            registerReceiver(mCoverLaunchListener, filter);
-        }
+        ContextCompat.registerReceiver(this, mCoverLaunchListener, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
         updateGlobalResume();
 
@@ -156,6 +154,7 @@ abstract public class BrowserActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @SuppressWarnings("deprecation") // onRetainCustomNonConfigurationInstance: CoverRoll GL context retention
     public Object onRetainCustomNonConfigurationInstance() {
         NonConfigurationInstance nci = new NonConfigurationInstance();
         if (mCoverRoll != null) 
@@ -190,6 +189,7 @@ abstract public class BrowserActivity extends AppCompatActivity {
     /**
      * Go back to the MediaCenter's main screen.
      */
+    @SuppressWarnings("deprecation") // ActionBar navigation mode
     public void goHome() {
         // Clear the back stack
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

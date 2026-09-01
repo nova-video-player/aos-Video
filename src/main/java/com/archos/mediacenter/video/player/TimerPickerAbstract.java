@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.player;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
@@ -58,7 +60,7 @@ public abstract class TimerPickerAbstract extends FrameLayout {
     }
 
     public CharSequence getFormattedDelay() {
-        return String.format("%d h %d m", mHour, mMinute);
+        return String.format(Locale.getDefault(), "%d h %d m", mHour, mMinute);
    }
 
     @Override

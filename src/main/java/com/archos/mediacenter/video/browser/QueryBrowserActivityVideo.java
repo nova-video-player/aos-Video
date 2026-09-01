@@ -78,7 +78,7 @@ public class QueryBrowserActivityVideo extends AppCompatActivity {
 
     private void resumeVideo(Uri uri) {
 
-        VideoInfoActivity.startInstance(this, null, uri, new Long(-1));
+        VideoInfoActivity.startInstance(this, null, uri, -1L);
 
     }
 }

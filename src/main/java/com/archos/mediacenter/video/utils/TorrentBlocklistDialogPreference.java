@@ -15,12 +15,15 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -46,6 +49,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 
@@ -170,36 +175,45 @@ public class TorrentBlocklistDialogPreference extends Preference {
         }
     }
 
+    private boolean isContextValid() {
+        Context context = getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                break;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            return !activity.isFinishing() && !activity.isDestroyed();
+        }
+        return context != null;
+    }
+
     private void startDownload(final String url) {
-        if (url == null)
+        if (url == null || !isContextValid())
             return;
 
-        new AsyncTask<Void, Void, Integer>() {
-            @Override
-            protected void onPreExecute() {
-                mProgress.show();
-            }
+        try {
+            mProgress.show();
+        } catch (Exception e) {
+            return;
+        }
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            int result = -1;
+            try {
+                URL urlCo = new URL(url);
+                URLConnection mUrlConnection = urlCo.openConnection();
+                mUrlConnection.setConnectTimeout(20000);
+                mUrlConnection.setReadTimeout(40000);
+                int error = ((HttpURLConnection) mUrlConnection).getResponseCode();
+                ((HttpURLConnection) mUrlConnection).setInstanceFollowRedirects(true);
 
-            @Override
-            protected void onProgressUpdate(Void... rien) {
-            }
-
-            @Override
-            protected Integer doInBackground(Void... rien) {
-
-
-                try {
-                    URL urlCo = new URL(url);
-                    URLConnection mUrlConnection = urlCo.openConnection();
-                    mUrlConnection.setConnectTimeout(20000);
-                    mUrlConnection.setReadTimeout(40000);
-                    int error = ((HttpURLConnection) mUrlConnection).getResponseCode();
-                    ((HttpURLConnection) mUrlConnection).setInstanceFollowRedirects(true);
-
-                    if (!(200 <= error && 300 > error))
-                        //error
-                        return error;
-
+                if (!(200 <= error && 300 > error)) {
+                    result = error;
+                } else {
                     InputStream inputStream = mUrlConnection.getInputStream();
                     FileOutputStream fileOutput = getContext().openFileOutput(TorrentObserverService.BLOCKLIST, Context.MODE_PRIVATE);
                     byte[] buffer = new byte[1024];
@@ -208,75 +222,72 @@ public class TorrentBlocklistDialogPreference extends Preference {
                         fileOutput.write(buffer, 0, bufferLength);
                     }
                     fileOutput.close();
+                    result = 200;
                     //now we check is gzip
                     try {
-                        getContext().openFileInput(
-                                TorrentObserverService.BLOCKLIST);
+                        getContext().openFileInput(TorrentObserverService.BLOCKLIST);
                         InputStream is;
                         try {
-                            is = new GZIPInputStream(
-                                    getContext().openFileInput(
-                                            TorrentObserverService.BLOCKLIST));
+                            is = new GZIPInputStream(getContext().openFileInput(TorrentObserverService.BLOCKLIST));
                         } catch (IOException e) {
-                            return 200;
+                            is = null;
                         }
-
-                        FileOutputStream output = getContext().openFileOutput(
-                                TorrentObserverService.BLOCKLIST + "_tmp", Context.MODE_PRIVATE);
-                        int bufferSize = 1024;
-                        buffer = new byte[bufferSize];
-                        int len = 0;
-                        while ((len = is.read(buffer)) != -1) {
-                            output.write(buffer, 0, len);
-                        }
-                        try {
-                            output.close();
-                            is.close();
-                            is = getContext().openFileInput(TorrentObserverService.BLOCKLIST + "_tmp");
-                            output = getContext().openFileOutput(
-                                    TorrentObserverService.BLOCKLIST, Context.MODE_PRIVATE);
+                        if (is != null) {
+                            FileOutputStream output = getContext().openFileOutput(TorrentObserverService.BLOCKLIST + "_tmp", Context.MODE_PRIVATE);
+                            int bufferSize = 1024;
                             buffer = new byte[bufferSize];
-                            len = 0;
+                            int len = 0;
                             while ((len = is.read(buffer)) != -1) {
                                 output.write(buffer, 0, len);
                             }
-                            output.close();
-                            is.close();
-                            getContext().getFileStreamPath(TorrentObserverService.BLOCKLIST + "_tmp").delete();
-                            return 200;
-                        } catch (IOException i) {
+                            try {
+                                output.close();
+                                is.close();
+                                is = getContext().openFileInput(TorrentObserverService.BLOCKLIST + "_tmp");
+                                output = getContext().openFileOutput(TorrentObserverService.BLOCKLIST, Context.MODE_PRIVATE);
+                                buffer = new byte[bufferSize];
+                                len = 0;
+                                while ((len = is.read(buffer)) != -1) {
+                                    output.write(buffer, 0, len);
+                                }
+                                output.close();
+                                is.close();
+                                getContext().getFileStreamPath(TorrentObserverService.BLOCKLIST + "_tmp").delete();
+                            } catch (IOException i) {
+                            }
                         }
                     } catch (ZipException z) {
-                        return 200;
-                    } //not a gzip
-                    catch (FileNotFoundException e) {
-
+                        // not a gzip, result stays 200
+                    } catch (FileNotFoundException e) {
                     } catch (IOException e) {
                     }
-                } catch (IOException e) {
-                } catch (IllegalStateException e) {
                 }
-                return -1;
-
+            } catch (IOException e) {
+            } catch (IllegalStateException e) {
             }
-
-            @Override
-            protected void onPostExecute(Integer success) {
-                mProgress.dismiss();
-                if (200 <= success && 300 > success) {
-                    //saving url
-                    setSummary(url);
-                    mCurrentBlockList = url;
-                    getSharedPreferences().edit().putString(getKey(), url).commit();
-                    Toast.makeText(getContext(), getErrorString(200), Toast.LENGTH_SHORT).show();
-                    mView.findViewById(R.id.button).setVisibility(View.VISIBLE);
-                } else {
-                    showErrorDialog(getErrorString(success));
+            final int finalResult = result;
+            handler.post(() -> {
+                if (isContextValid()) {
+                    try {
+                        if (mProgress.isShowing()) {
+                            mProgress.dismiss();
+                        }
+                    } catch (Exception e) {
+                        // ignore if already detached
+                    }
+                    if (200 <= finalResult && 300 > finalResult) {
+                        setSummary(url);
+                        mCurrentBlockList = url;
+                        getSharedPreferences().edit().putString(getKey(), url).apply();
+                        Toast.makeText(getContext(), getErrorString(200), Toast.LENGTH_SHORT).show();
+                        mView.findViewById(R.id.button).setVisibility(View.VISIBLE);
+                    } else {
+                        showErrorDialog(getErrorString(finalResult));
+                    }
                 }
-
-            }
-        }.execute();
-
+            });
+            executor.shutdown();
+        });
     }
 
     private String getErrorString(int success) {
@@ -295,10 +306,17 @@ public class TorrentBlocklistDialogPreference extends Preference {
     }
 
     private void showErrorDialog(String message) {
-        new AlertDialog.Builder(getContext())
-                .setTitle(R.string.error_listing)
-                .setMessage(message)
-                .create().show();
+        if (!isContextValid()) {
+            return;
+        }
+        try {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.error_listing)
+                    .setMessage(message)
+                    .create().show();
+        } catch (Exception e) {
+            // ignore window manager exceptions if activity state changed asynchronously
+        }
     }
 
 }

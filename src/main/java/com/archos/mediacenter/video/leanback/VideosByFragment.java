@@ -1,3 +1,17 @@
+// Copyright 2026 Courville Software
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package com.archos.mediacenter.video.leanback;
 
 import android.content.Context;
@@ -37,6 +51,9 @@ import androidx.preference.PreferenceManager;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.mappers.VideoCursorMapper;
 import com.archos.mediacenter.video.browser.loader.MoviesByLoader;
+import com.archos.mediaprovider.ImportState;
+import com.archos.mediaprovider.video.LoaderUtils;
+import com.archos.mediaprovider.video.NetworkScannerReceiver;
 import com.archos.mediacenter.video.utils.ThemeManager;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.browser.loader.MoviesLoader;
@@ -78,6 +95,8 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
      * keep a reference of the cursor containing the categories to check if there is actually an update when we get a new one
      */
     private Cursor mCurrentCategoriesCursor;
+    private boolean mRowsLoadDeferred;
+    private boolean mBackgroundWorkWasOngoing;
 
     private String mDefaultSort;
 
@@ -95,6 +114,10 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
     abstract protected String item2SortOrder(int item);
     abstract protected int sortOrder2Item(String sortOrder);
     abstract protected String getSortOrderParamKey();
+
+    protected boolean shouldDeferRowLoadersDuringBackgroundWork() {
+        return false;
+    }
 
     public VideosByFragment() {
         this(MoviesLoader.DEFAULT_SORT);
@@ -129,40 +152,10 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         } else {
             throw new IllegalArgumentException("Did not find R.id.browse_frame in BrowseFragment! Need to update the emptyview hack!");
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (log.isDebugEnabled()) log.debug("onDestroyView");
-        mOverlay.destroy();
-        // Unregister theme change listener
-        if (mThemeChangeListener != null) {
-            ThemeManager.getInstance(getActivity()).unregisterThemeChangeListener(mThemeChangeListener);
-        }
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onResume() {
-        if (log.isDebugEnabled()) log.debug("onResume");
-        super.onResume();
-        mOverlay.resume();
-    }
-
-    @Override
-    public void onPause() {
-        if (log.isDebugEnabled()) log.debug("onPause");
-        super.onPause();
-        mOverlay.pause();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        if (log.isDebugEnabled()) log.debug("onActivityCreated");
-        super.onActivityCreated(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mSortOrder = mPrefs.getString(getSortOrderParamKey(), mDefaultSort);
+        mSortIgnoreArticles = com.archos.mediacenter.video.utils.SortUtils.isIgnoreArticlesEnabled(getActivity());
 
         Resources r = getResources();
         updateBackground();
@@ -194,6 +187,47 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         setupThemeListener();
     }
 
+    @Override
+    public void onDestroyView() {
+        if (log.isDebugEnabled()) log.debug("onDestroyView");
+        clearRowAdapters();
+        mCurrentCategoriesCursor = null;
+        mOverlay.destroy();
+        // Unregister theme change listener
+        if (mThemeChangeListener != null) {
+            ThemeManager.getInstance(getActivity()).unregisterThemeChangeListener(mThemeChangeListener);
+        }
+        super.onDestroyView();
+    }
+
+    private boolean mSortIgnoreArticles;
+
+    @Override
+    public void onResume() {
+        if (log.isDebugEnabled()) log.debug("onResume");
+        super.onResume();
+        mBackgroundWorkWasOngoing = isBackgroundWorkOngoing();
+        mOverlay.resume();
+        boolean newSortIgnoreArticles = com.archos.mediacenter.video.utils.SortUtils.isIgnoreArticlesEnabled(getActivity());
+        if (newSortIgnoreArticles != mSortIgnoreArticles) {
+            mSortIgnoreArticles = newSortIgnoreArticles;
+            if (mCurrentCategoriesCursor != null) {
+                boolean deferRowLoaders = shouldDeferRowLoadersDuringBackgroundWork() && isBackgroundWorkOngoing();
+                loadCategoriesRows(mCurrentCategoriesCursor, !deferRowLoaders);
+                mRowsLoadDeferred = deferRowLoaders;
+            } else {
+                LoaderManager.getInstance(this).restartLoader(-1, null, this);
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (log.isDebugEnabled()) log.debug("onPause");
+        super.onPause();
+        mOverlay.pause();
+    }
+
     private void setupEventListeners() {
         setOnSearchClickedListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -205,8 +239,10 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
                                     mSortOrderItem = which;
                                     mSortOrder = item2SortOrder(mSortOrderItem);
                                     // Save the sort mode
-                                    mPrefs.edit().putString(getSortOrderParamKey(), mSortOrder).commit();
-                                    loadCategoriesRows(mCurrentCategoriesCursor);
+                                    mPrefs.edit().putString(getSortOrderParamKey(), mSortOrder).apply();
+                                    boolean deferRowLoaders = shouldDeferRowLoadersDuringBackgroundWork() && isBackgroundWorkOngoing();
+                                    loadCategoriesRows(mCurrentCategoriesCursor, !deferRowLoaders);
+                                    mRowsLoadDeferred = deferRowLoaders;
                                 }
                                 dialog.dismiss();
                             }
@@ -236,19 +272,35 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
             if (log.isDebugEnabled()) log.debug("onLoadFinished: activity null exiting");
             return;
         }
+        boolean backgroundWorkOngoing = isBackgroundWorkOngoing();
+        if (mRowsLoadDeferred && mBackgroundWorkWasOngoing && !backgroundWorkOngoing) {
+            if (log.isDebugEnabled()) log.debug("onLoadFinished: background work finished, forcing category reload");
+            mBackgroundWorkWasOngoing = false;
+            LoaderManager.getInstance(this).restartLoader(-1, null, this);
+            return;
+        }
+        mBackgroundWorkWasOngoing = backgroundWorkOngoing;
         // List of categories
         if (cursorLoader.getId() == -1) {
-            // Empty view visibility
+            boolean deferRowLoaders = shouldDeferRowLoadersDuringBackgroundWork() && backgroundWorkOngoing;
+            if (deferRowLoaders) {
+                showDeferredLoadingState();
+                mCurrentCategoriesCursor = c;
+                mRowsLoadDeferred = true;
+                return;
+            }
+            mEmptyView.setText(R.string.you_have_no_movies);
             mEmptyView.setVisibility(c.getCount() > 0 ? View.GONE : View.VISIBLE);
             if (mCurrentCategoriesCursor != null) {
-                if (!isCategoriesListModified(mCurrentCategoriesCursor, c)) {
+                if (!mRowsLoadDeferred && !isCategoriesListModified(mCurrentCategoriesCursor, c)) {
                     // no actual modification, no need to rebuild all the rows
                     mCurrentCategoriesCursor = c; // keep the reference to the new cursor because the old one won't be valid anymore
                     return;
                 }
             }
             mCurrentCategoriesCursor = c;
-            loadCategoriesRows(c);
+            loadCategoriesRows(c, !deferRowLoaders);
+            mRowsLoadDeferred = deferRowLoaders;
             if (STOP_LOADING) cursorLoader.stopLoading();
         }
         // One of the row
@@ -265,6 +317,26 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         if (log.isDebugEnabled()) log.debug("onLoaderReset");
+        if (cursorLoader.getId() == -1) {
+            mCurrentCategoriesCursor = null;
+            mRowsLoadDeferred = false;
+            mBackgroundWorkWasOngoing = false;
+            return;
+        }
+        CursorObjectAdapter adapter = mAdaptersMap.get(cursorLoader.getId());
+        if (adapter != null) {
+            adapter.changeCursor(null);
+        }
+    }
+
+    private void clearRowAdapters() {
+        for (int i = 0; i < mAdaptersMap.size(); i++) {
+            CursorObjectAdapter adapter = mAdaptersMap.valueAt(i);
+            if (adapter != null) {
+                adapter.changeCursor(null);
+            }
+        }
+        mAdaptersMap.clear();
     }
 
     private boolean isCategoriesListModified(Cursor oldCursor, Cursor newCursor) {
@@ -298,7 +370,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         return false;
     }
 
-    private void loadCategoriesRows(Cursor c) {
+    private void loadCategoriesRows(Cursor c, boolean loadSubsetRows) {
         if (c == null) {
             if (log.isDebugEnabled()) log.debug("loadCategoriesRows: cursor null exiting");
             return;
@@ -308,7 +380,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         int listOfMovieIdsColumn = c.getColumnIndex(MoviesByLoader.COLUMN_LIST_OF_MOVIE_IDS);
 
         mRowsAdapter.clear();
-        mAdaptersMap.clear();
+        clearRowAdapters();
         
         // NOTE: A first version was using a CursorObjectAdapter for the rows.
         // The problem was that when any DB update occurred (resume point...) I found no way
@@ -333,15 +405,17 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
             rows.add(new ListRow(subsetId, new HeaderItem(subsetName), subsetAdapter));
             mAdaptersMap.append(subsetId, subsetAdapter);
 
-            // Start the loader manager for this row
-            Bundle args = new Bundle();
-            args.putString("ids", listOfMovieIds);
-            args.putString("sort", mSortOrder);
-            // cf. https://github.com/nova-video-player/aos-AVP/issues/141
-            try {
-                LoaderManager.getInstance(this).restartLoader(subsetId, args, this);
-            } catch (Exception e) {
-                log.warn("caught exception in loadCategoriesRows ",e);
+            if (loadSubsetRows) {
+                // Start the loader manager for this row
+                Bundle args = new Bundle();
+                args.putString("ids", listOfMovieIds);
+                args.putString("sort", mSortOrder);
+                // cf. https://github.com/nova-video-player/aos-AVP/issues/141
+                try {
+                    LoaderManager.getInstance(this).restartLoader(subsetId, args, this);
+                } catch (Exception e) {
+                    log.warn("caught exception in loadCategoriesRows ",e);
+                }
             }
 
             c.moveToNext();
@@ -350,6 +424,19 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         mRowsAdapter.addAll(0,rows);
         // unregister observer to not get notifications of content change
         if (UNREGISTER_OBSERVERS) mRowsAdapter.unregisterAllObservers();
+    }
+
+    private void showDeferredLoadingState() {
+        mRowsAdapter.clear();
+        clearRowAdapters();
+        mEmptyView.setText(R.string.not_available_during_media_scanning);
+        mEmptyView.setVisibility(View.VISIBLE);
+    }
+
+    private boolean isBackgroundWorkOngoing() {
+        return NetworkScannerReceiver.isScannerWorking()
+                || LoaderUtils.getScrapeInProgress()
+                || ImportState.VIDEO.isInitialImport();
     }
 
     private void updateBackground() {

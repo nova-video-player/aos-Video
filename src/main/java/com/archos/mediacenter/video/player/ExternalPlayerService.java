@@ -1,3 +1,17 @@
+// Copyright 2026 Courville Software
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package com.archos.mediacenter.video.player;
 
 import android.app.Notification;
@@ -16,6 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
+import com.archos.environment.ArchosUtils;
 import com.archos.mediacenter.video.R;
 
 import org.slf4j.Logger;
@@ -106,20 +121,38 @@ public class ExternalPlayerService extends Service {
     }
 
     private static Intent createServiceIntent(Context context) {
-        return new Intent(context, ExternalPlayerService.class);
+        Context ctx = context != null ? context : ArchosUtils.getGlobalContext();
+        if (ctx == null) return null;
+        return new Intent(ctx, ExternalPlayerService.class);
     }
 
     public static void startService(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            final Intent intent = createServiceIntent(context);
-            context.startForegroundService(intent);
+            Context ctx = context != null ? context : ArchosUtils.getGlobalContext();
+            if (ctx == null) return;
+            final Intent intent = createServiceIntent(ctx);
+            if (intent != null) {
+                try {
+                    ctx.startForegroundService(intent);
+                } catch (Exception e) {
+                    log.error("startService: failed to start foreground service", e);
+                }
+            }
         }
     }
 
     public static void stopService(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            final Intent intent = createServiceIntent(context);
-            context.stopService(intent);
+            Context ctx = context != null ? context : ArchosUtils.getGlobalContext();
+            if (ctx == null) return;
+            final Intent intent = createServiceIntent(ctx);
+            if (intent != null) {
+                try {
+                    ctx.stopService(intent);
+                } catch (Exception e) {
+                    log.error("stopService: failed to stop service", e);
+                }
+            }
         }
     }
 

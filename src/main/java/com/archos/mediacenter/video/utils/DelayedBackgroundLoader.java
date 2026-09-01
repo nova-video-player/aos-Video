@@ -19,6 +19,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
+import com.archos.mediacenter.utils.BitmapUtils;
 import com.archos.mediacenter.utils.imageview.ImageProcessor;
 import com.archos.mediacenter.utils.imageview.LoadTaskItem;
 import com.archos.mediacenter.utils.imageview.LoadResult.Status;
@@ -52,7 +53,7 @@ public class DelayedBackgroundLoader extends ImageProcessor {
             if (file != null) {
                 image.download(mContext);
                 try {
-                    taskItem.result.bitmap = BitmapFactory.decodeFile(file);
+                    taskItem.result.bitmap = BitmapUtils.decodeSampledBitmapFromFile(file, 1920, 1080);
                     if (log.isDebugEnabled()) log.debug("background:loadBitmap - loaded.");
                 } catch (OutOfMemoryError e) {
                     log.error("background:loadBitmap - No more memory!", e);

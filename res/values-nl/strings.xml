@@ -23,7 +23,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Serverlijst opnieuw laden</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">Delen via het netwerk inschakelen</string>
     <string name="initial_scan">Initiële scan</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Zoeken</string>
@@ -44,17 +43,9 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">Tijdsduur</string>
     <string name="video_sources">Bronnen</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">Film</string>
-    <string name="info_tab_show">Programma</string>
-    <string name="info_tab_episode">Aflevering</string>
-    <string name="info_tab_video">Video</string>
     <string name="info_tab_file">Bestandsinformatie</string>
-    <string name="info_tab_backdrop_chooser">Achtergrond kiezer</string>
-    <string name="info_tab_poster_chooser">Poster kiezer</string>
-    <string name="info_tab_share">Delen</string>
     <string name="info_menu_backdrop_select">Achtergrond</string>
     <string name="info_menu_series_backdrop_select">Serie achtergrond</string>
     <string name="info_menu_poster_select">Kies een andere poster</string>
@@ -77,12 +68,9 @@
     <string name="network_shared_folders">Gedeelde mappen (SMB)</string>
     <string name="network_connected_as">Verbonden als %s</string>
     <string name="network_guest">gast</string>
-    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (Experimenteel)</string>
     <string name="network_cling">UPNP (experimenteel)</string>
-    <string name="recordings_storage">Opnames</string>
     <string name="root_storage">Interne opslag</string>
-    <string name="cannot_list">Kan de inhoud niet weergeven</string>
     <!-- VIDEO -->
     <string name="videos">Video\'s</string>
     <string name="all_videos">Alle video\'s</string>
@@ -95,16 +83,8 @@
     <string name="all_animes_format">Animatie films -  %d</string>
     <string name="all_collections">Alle collecties</string>
     <string name="all_collections_format">Alle collecties -  %d</string>
-    <string name="all_collection_watched">Alle collecties bekeken</string>
-    <string name="all_collection_unwatched">Collectie niet bekeken</string>
-    <plurals name="n_movies_watched">
-        <item quantity="one">%d film bekeken</item>
-        <item quantity="other">%d films bekeken</item>
-    </plurals>
     <string name="not_watched_movies_format">Niet bekeken -  %d</string>
     <string name="not_watched_animes_format">Niet bekeken -  %d</string>
-    <string name="no_movie_watched">Geen film bekeken</string>
-    <string name="all_movies_watched">Alle films bekeken</string>
     <string name="movies_by_alpha">Films alfabetisch</string>
     <string name="movies_by_genre">Films op genre</string>
     <string name="movies_by_rating">Films per rating</string>
@@ -126,24 +106,18 @@
     <string name="date_view_year">Jaar</string>
     <string name="all_movies_and_tv_shows">Films en tv-series</string>
     <string name="non_scraped_videos">Videos zonder opgehaalde informatie</string>
-    <string name="no_server">Geen mediaserver gevonden</string>
     <string name="cannot_open_video">Kan deze video niet openen</string>
     <string name="confirm_delete">Wilt u dit echt verwijderen?</string>
     <string name="deleting">Bezig met verwijderen, een ogenblik…</string>
-    <string name="cannot_delete_directory">De map kan niet worden verwijderd</string>
-    <string name="cannot_delete_file">Kan het bestand niet verwijderen</string>
     <string name="directory_deleted">De map is verwijderd</string>
-    <string name="file_deleted">Het bestand is verwijderd</string>
     <string name="resume">Hervatten</string>
     <string name="remote_resume">Hervatten op afstand</string>
     <string name="bookmark">Bladwijzer</string>
     <string name="delete">Verwijderen</string>
     <string name="confirm_delete_short">Bevestig verwijderen</string>
     <string name="delete_resume">Hervatten verwijderen</string>
-    <string name="delete_bookmark">Bladwijzer verwijderen</string>
     <string name="mark_as_watched">Markeer als bekeken</string>
     <string name="mark_as_not_watched">Markeer als niet bekeken</string>
-    <string name="upnp_not_allowed">U hebt geen toegang tot deze UPNP-server. Wijzig eerst uw toegangsconfiguratie.</string>
     <string name="scrap_no_info">U heeft geen beschrijving van een film of tv-programma voor deze video.</string>
     <string name="scrap_remove">Beschrijving verwijderen</string>
     <string name="scrap_remove_short">Verwijderen</string>
@@ -168,14 +142,10 @@
     <string name="scrap_cast">Acteurs</string>
     <string name="scrap_cast_format">Acteurs: %s</string>
     <string name="scrap_genre">Genre</string>
-    <string name="scrap_genre_format">Genres: %s</string>
     <string name="scrap_genre_title">Genres</string>
     <string name="scrap_aired">Uitgezonden</string>
     <string name="scrap_aired_format">Uitgezonden: %s</string>
-    <string name="scrap_guests">Gasten</string>
-    <string name="scrap_premiered">Première</string>
     <!-- Specific strings for TV shows -->
-    <string name="show_network">Netwerk</string>
     <string name="episode_name">Aflevering</string>
     <string name="episode_season">Seizoen</string>
     <string name="episode_specials">Specials</string>
@@ -186,9 +156,6 @@
     <string name="how_to_mark_season_watched">Klik op een seizoen om alle afleveringen te markeren als bekeken of als niet bekeken</string>
     <string name="how_to_unindex_season">Klik op een seizoen om al zijn afleveringen uit de bibliotheek te verwijderen</string>
     <string name="how_to_delete_season">Klik op een seizoen om alle afleveringen te verwijderen</string>
-    <string name="mark_show_watched">Markeer alle afleveringen bekeken of niet bekeken</string>
-    <string name="unindex_show">Verwijder alle afleveringen uit de bibliotheek</string>
-    <string name="delete_show">Verwijder alle afleveringen</string>
     <string name="no_episode_watched">Geen aflevering bekeken</string>
     <string name="all_episodes_watched">Alle afleveringen bekeken</string>
     <plurals name="n_episodes_watched">
@@ -231,13 +198,9 @@
     <string name="preference_display_all_files">Alle bestanden in browser weergeven</string>
     <string name="preference_display_all_files_summary">Toon ook niet-videobestanden</string>
     <string name="info_processing">Media-eigenschappen controleren…</string>
-    <string name="info_video">Video</string>
     <string name="info_audio">Audio</string>
     <string name="info_audio_vbr">VBR</string>
-    <string name="info_plugin_required">(plug-in vereist)</string>
     <string name="info_subtitle">Ondertiteling</string>
-    <string name="info_resume">Hervatten positie</string>
-    <string name="info_bookmark">Positie markeren</string>
     <string name="info_file">Bestandsinformatie</string>
     <string name="use_remote_resume">Doorgaan vanaf netwerkpositie?</string>
     <!-- VIDEO COVER ROLL -->
@@ -266,9 +229,6 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">Mediacenter</string>
     <string name="view_mode">Weergavemodus</string>
-    <string name="view_mode_list">Lijst</string>
-    <string name="view_mode_grid">Posters</string>
-    <string name="view_mode_details">Details</string>
     <string name="switch_to_list">Lijst</string>
     <string name="switch_to_grid">Raster</string>
     <!-- VideoPlayer -->
@@ -320,8 +280,6 @@
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Kan de video niet afspelen</string>
     <string name="player_err_cantplaysound">Kan audio track niet afspelen</string>
-    <string name="audiocodec_not_supported">Dit audioformaat (<xliff:g id="codec">%s</xliff:g>) wordt niet ondersteund.</string>
-    <string name="videocodec_not_supported">Dit videoformaat (<xliff:g id="codec">%s</xliff:g>) wordt niet ondersteund.</string>
     <string name="player_err_file">Het videobestand bestaat niet.</string>
     <string name="player_err_sizetoobig">Videogrootte te groot</string>
     <string name="player_err_unknown">Onbekende fout.</string>
@@ -338,19 +296,10 @@
     <string name="player_err_profile_and_level">\"Profiel\" en \"Niveau\"</string>
     <string name="player_err_interlaced">Interlaced</string>
     <!-- Player plug-in -->
-    <string name="player_plugin_cinema_title">Cinema plug-in</string>
-    <string name="player_plugin_cinema">Cinema plug-in (DVD, MPEG-2, AC3)</string>
-    <string name="player_plugin_ac3_title">AC3 plug-in</string>
-    <string name="player_plugin_ac3">AC3 plug-in</string>
-    <string name="player_plugin_mpeg2_title">MPEG-2 plug-in</string>
-    <string name="player_plugin_mpeg2">MPEG-2 plug-in (DVD)</string>
     <string name="player_plugin_video_msg">Dit bestand bevat een <xliff:g id="video">%1$s</xliff:g> videoformaat.</string>
     <string name="player_plugin_audio_msg">Dit bestand bevat een <xliff:g id="audio">%1$s</xliff:g> audio formaat.</string>
     <string name="player_plugin_video_audio_msg">Dit bestand bevat een <xliff:g id="video">%1$s</xliff:g> video formaat en een <xliff:g id="audio">%2$s</xliff:g> audio formaat.</string>
-    <string name="player_plugin_purchase_msg">U moet de <xliff:g id="plugin">%1$s</xliff:g> aanschaffen</string>
     <string name="player_plugin_purchase">Ga naar de winkel</string>
-    <string name="player_plugin_purchase_archos_msg">U kunt aanvullende codec-plug-ins aanschaffen op www.archos.com.</string>
-    <string name="player_plugin_purchase_google_play_msg">U kunt aanvullende codec-plug-ins aanschaffen via Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Ga naar Google Play</string>
     <string name="plugin_update_required_title">Sorry, update is vereist</string>
     <string name="plugin_update_required_message">Het lijkt erop dat u al aanvullende codecs heeft geïnstalleerd voor Nova Video Player.\n\nDeze nieuwe versie van Nova Video Player vereist een update van deze codecs.\n\nGa naar Google Play om de codecs bij te werken en opnieuw te installeren.</string>
@@ -368,22 +317,13 @@
     <string name="subtitles_wizard_cache">Cache</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Ondertitels online ophalen</string>
-    <string name="toast_subloader_sub_found">Ondertiteling gevonden voor deze taal</string>
-    <string name="toast_subloader_sub_not_found">Geen ondertiteling gevonden voor deze taal</string>
     <string name="toast_subloader_service_unreachable">uitval webservice ondertitelingen</string>
-    <string name="menu_subloader_allfolder">Haal ontbrekende ondertiteling op</string>
     <string name="dialog_subloader_copying">Ondertitels kopiëren…</string>
-    <string name="dialog_subloader_downloading">Ondertitels downloaden…</string>
-    <string name="dialog_subloader_sumup">Download voltooid</string>
-    <string name="dialog_subloader_success">Ondertiteling gevonden voor:</string>
     <string name="dialog_subloader_fails">Geen ondertiteling gevonden voor:</string>
-    <string name="sub_force_all_title">Forceer ondertitels downloaden</string>
-    <string name="sub_force_all">Al uw video\'s hebben al minstens één ondertiteling. Wilt u het downloaden van nieuwe ondertitels forceren?</string>
     <string name="dialog_subloader_nonetwork_title">Geen internetverbinding</string>
     <string name="dialog_subloader_nonetwork_message">Een internetverbinding is vereist om ondertitels te downloaden</string>
     <string name="dialog_subloader_connecting">Verbinding maken met www.openondertitels.org…</string>
     <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_settings_title">Ondertitel-instellingen</string>
     <string name="subtitle_sample_text">\"voorbeeld\"</string>
     <string name="subtitle_size_text">Grootte:</string>
     <string name="subtitle_style_text">Stijl:</string>
@@ -408,21 +348,14 @@
     <string name="loading_torrent">Torrent wordt geladen…</string>
     <string name="error_no_video_file">Geen video bestanden</string>
     <string name="torrent_file_to_play">Kies een bestand om te spelen</string>
-    <string name="torrent_buy_premium_message">Torrent streaming is alleen beschikbaar met betaalde versie</string>
-    <string name="torrent_buy_premium">Koop de volledige versie</string>
     <!-- Shortcuts -->
-    <string name="add_to_shortcuts">Maak een shortcut</string>
     <string name="add_ssh_server">Blader door een FTP-server</string>
     <string name="add_ssh_shortcut">Voeg toe als snelkoppeling</string>
     <string name="ssh_prompt">FTP-type</string>
-    <string name="ssh_empty_view"> \"Je kunt bladeren en spelen vanaf je eigen ftp server\"</string>
     <string name="remove_from_shortcuts">Verwijder de snelkoppeling</string>
-    <string name="shortcut_added">Snelkoppeling %s aangemaakt</string>
     <string name="shortcut_removed">Snelkoppeling %s verwijderd</string>
     <string name="server_not_available">De server is momenteel niet beschikbaar</string>
-    <string name="cannot_open_shortcut">De inhoud van deze snelkoppeling is momenteel niet beschikbaar.\nControleer of u de vereiste rechten hebt.</string>
     <string name="network_shortcuts">Netwerksnelkoppelingen</string>
-    <string name="media_servers">Mediaservers</string>
     <string name="shortcut_list_empty">Geen netwerksnelkoppelingen aangemaakt.\n\nOm snelkoppelingen aan te maken naar uw favoriete externe mappen, klik lang op de doelmappen en selecteer \"%s\" in de top actiebalk.</string>
     <string name="ftp_shortcut_list_empty">Om snelkoppelingen aan te maken naar uw favoriete externe mappen, selecteer \"%s\" in de top actiebalk bij het bladeren door een server.</string>
     <string name="indexed_folders">Geïndexeerde mappen</string>
@@ -440,7 +373,6 @@
     <string name="last_rescan_never">Nooit</string>
     <string name="upnp_indexing_warning_title">UPnP indexeren</string>
     <string name="upnp_indexing_warning_message">UPnP indexering staat niet zoveel functies toe als SMB indexering.\nHet wordt aanbevolen om een SMB map te indexeren als uw server of PC dit ondersteunt.\n</string>
-    <string name="ssh_error">Kan geen verbinding maken: controleer uw verbinding en referenties</string>
     <string name="ssh_remote_address">Extern adres</string>
     <string name="ssh_port">Poort</string>
     <string name="ssh_password">Wachtwoord</string>
@@ -449,10 +381,7 @@
     <string name="smb_domain">Domein (optioneel)</string>
     <!-- Preferences -->
     <string name="preferences">Voorkeuren</string>
-    <string name="get_the_ad_free_version">Krijg de advertentievrije versie op Google Play</string>
     <string name="upgrade_to_add_free_version">Upgrade naar advertentievrije versie</string>
-    <string name="upgrade_to_add_free_version_description">Koop de app licentie om de advertenties te verwijderen en alle functies in te schakelen</string>
-    <string name="preferences_category_complete">Volledige versie</string>
     <string name="preferences_category_video">Video</string>
     <string name="preferences_force_software_decoding">Forceer software decodering</string>
     <string name="preferences_force_software_decoding_summary">U kunt deze optie proberen als sommige video\'s niet correct afspelen</string>
@@ -467,7 +396,6 @@
     <string name="preference_cutout_short_edges_summary">Sta volledig scherm toe in landscape met uitsparingen</string>
     <string name="category_languages">Ondertitels</string>
     <string name="subtitles_hide_default">Verberg ondertitels standaard</string>
-    <string name="subtitles_hide_default_summary">Controleer of u ondertitels standaard wilt verbergen</string>
     <string name="preferences_languages">Ondertitels download talen</string>
     <string name="summary_list_preference_primary">Selecteer uw talen voor het downloaden van ondertitels</string>
     <string name="favSubLang_title">Ondertitels leestaal</string>
@@ -477,7 +405,6 @@
     <string name="preferences_video_about">Over</string>
     <string name="preferences_video_os_text">Ondertitels verstrekt door</string>
     <string name="preferences_video_tmdb_text">Film/TV Show informatie verstrekt door</string>
-    <string name="preferences_video_tvdb_text">TV-serie informatie verstrekt door</string>
     <string name="preferences_video_trakt_text">Video scrobbler aangeboden door</string>
     <string name="preferences_video_licenses">Licenties</string>
     <string name="preferences_network_mobile_vpn_summary">Gebruik het alleen met VPN-configuratie en pas op voor uw gegevensgebruik.</string>
@@ -486,8 +413,6 @@
     <string name="preferences_video_advanced_quit_title">Algemene voorkeuren</string>
     <string name="preferences_video_advanced_quit_summary">Ga terug naar algemene voorkeuren</string>
     <string name="trakt_change">Een wijziging van Trakt API vereist een herverbinding.</string>
-    <string name="tv_scraper">TV-series</string>
-    <string name="movie_scraper">Films</string>
     <string name="enable_auto_scrap">Automatisch info krijgen voor nieuwe video\'s</string>
     <string name="locale">Systeemtaal</string>
     <string name="yes">Ja</string>
@@ -499,10 +424,6 @@
     <string name="video_info_custom_search_file_hint">"\"Film naam\" of \"Tv-serie naam S01E01\""</string>
     <string name="video_info_custom_search_show_hint">Naam van de TV-serie</string>
     <string name="scrap_show_no_result">Geen overeenkomende serie online gevonden.</string>
-    <string name="video_info_backdrop_select">Selecteer een andere afbeelding</string>
-    <string name="video_info_backdrop_remove">Verwijder</string>
-    <string name="video_info_backdrop_set_as">Afbeelding instellen als</string>
-    <string name="video_info_share_message">"Ik heb de video \"%1$s\" op mijn Nova %2$s bekeken"</string>
     <string name="notification_mode">Meldingen</string>
     <string name="notifications_all">Alle meldingen</string>
     <string name="notifications_alerts">Alleen waarschuwingen van meldingen</string>
@@ -511,7 +432,6 @@
     <string name="format_fullscreen">Volledig Scherm</string>
     <string name="format_optimized">Geoptimaliseerd</string>
     <string name="format_original">Origineel</string>
-    <string name="stereo_dive_enable">Stereo-dive effect</string>
     <!-- Help overlay -->
     <!-- Info dialog, not indexed file -->
     <!-- Brightness -->
@@ -566,6 +486,7 @@
     <string name="codepage_1257">Baltisch (CP1257)</string>
     <string name="codepage_1258">Vietnamees (CP1258)</string>
     <string name="codepage_extra_874">(CP874)</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Alle video\'s</string>
     <string name="hide_seen">Niet bekeken</string>
     <string name="search_results">Zoek resultaten</string>
@@ -597,7 +518,6 @@
     <string name="leanback_scrap">Krijg info</string>
     <string name="leanback_scrap_choose_the_description">Kies info</string>
     <string name="leanback_scrap_choose_the_description_for">"Kies info voor \"%s\""</string>
-    <string name="leanback_scrap_searching_general_hint">Naam van de film of TV-serie</string>
     <string name="leanback_scrap_searching_tvshow_hint">Naam van de TV-serie</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Orginele interface</string>

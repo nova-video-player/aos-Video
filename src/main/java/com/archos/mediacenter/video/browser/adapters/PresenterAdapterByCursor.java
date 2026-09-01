@@ -15,6 +15,8 @@
 
 package com.archos.mediacenter.video.browser.adapters;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.util.SparseArray;
@@ -136,7 +138,8 @@ public abstract class PresenterAdapterByCursor extends CursorAdapter implements 
 
 
     public String getCover() {
-        return getCursor().getString(getCursor().getColumnIndex(COVER_PATH));
+        int coverColumn = getCursor().getColumnIndex(COVER_PATH);
+        return coverColumn >= 0 ? getCursor().getString(coverColumn) : null;
     }
     // check for local stored subtitles
     private void buildAvailableSubtitlesFileList() {
@@ -174,7 +177,7 @@ public abstract class PresenterAdapterByCursor extends CursorAdapter implements 
     public String getExtension(String filename) {
         int dotPos = filename.lastIndexOf('.');
         if (dotPos >= 0 && dotPos < filename.length()) {
-            return filename.substring(dotPos + 1).toLowerCase();
+            return filename.substring(dotPos + 1).toLowerCase(Locale.ROOT);
         }
         return null;
     }

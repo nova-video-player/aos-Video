@@ -15,8 +15,6 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
-import static com.archos.mediacenter.video.utils.VideoUtils.isColorDark;
-
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -49,6 +47,7 @@ import com.archos.mediacenter.video.browser.loader.EpisodesLoader;
 import com.archos.mediacenter.video.browser.presenter.EpisodeListDetailedPresenter;
 import com.archos.mediacenter.video.browser.presenter.EpisodePresenter;
 import com.archos.mediacenter.video.info.VideoInfoCommonClass;
+import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.mediacenter.video.utils.ThemeManager;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediaprovider.video.VideoStore;
@@ -90,6 +89,7 @@ public class BrowserByShow extends BrowserWithShowHeader {
         ((ListView)mArchosGridView).setDividerHeight(3);
     }
     @Override
+    @SuppressWarnings("deprecation")
     public void onDestroyView() {
         super.onDestroyView();
         ((ListView)mArchosGridView).setDivider(null); //unset otherwise, crash in listview
@@ -99,8 +99,13 @@ public class BrowserByShow extends BrowserWithShowHeader {
             ((MainActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(ThemeManager.getInstance(getContext()).getToolbarBackgroundColor())
             );
+            WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            // setStatusBarColor is deprecated and ignored on Android 15+ (edge-to-edge enforced,
+            // bar is already transparent there)
+            if (Build.VERSION.SDK_INT < 35) {
+                getActivity().getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+            }
         }
     }
 
@@ -223,6 +228,7 @@ public class BrowserByShow extends BrowserWithShowHeader {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void setColor(int color) {
         int darkColor = VideoInfoCommonClass.getDarkerColor(color);
         ColorDrawable[] colord = {new ColorDrawable(mLastColor), new ColorDrawable(darkColor)};
@@ -234,10 +240,9 @@ public class BrowserByShow extends BrowserWithShowHeader {
             WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
             WindowInsetsControllerCompat insetsController = new WindowInsetsControllerCompat(getActivity().getWindow(), getActivity().getWindow().getDecorView());
             insetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-            insetsController.setAppearanceLightStatusBars(isColorDark(darkColor));
-            insetsController.setAppearanceLightNavigationBars(isColorDark(darkColor));
+            MiscUtils.applyStatusBarIconContrast(insetsController, darkColor);
         } else {
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getActivity().getWindow().setStatusBarColor(VideoInfoCommonClass.getAlphaColor(darkColor, 160));
         }

@@ -61,6 +61,7 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
     private ArrayList<View> others;
     private int lastFocused;
     private String text;
+    private String text2;
     private TVCardView slaveView;
     private Context mContext;
     private AttributeSet attrs;
@@ -221,6 +222,8 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
             this.slaveView.setOffDrawable(off);
             this.slaveView.setOnDrawable(on);
             this.slaveView.setText(text);
+            if(text2!=null)
+                this.slaveView.setText2(text2);
             this.slaveView.setVisibility(getVisibility());
             this.slaveView.setOriginalWidth(originalWidth);
             this.slaveView.setOriginalHeight(originalHeight);
@@ -277,9 +280,9 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
     }
 
     public boolean isViewInCard(View v){
-    	ViewParent p;
-    	if(v==this)
-        	return true;
+        ViewParent p;
+        if(v==this)
+            return true;
         while(v!=null&&(p=v.getParent())!=null){
             if(p==this){
                 return true;
@@ -311,10 +314,13 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
     }
     
     public void setText2(String txt) {
+        this.text2 = txt;
         TextView textView = (TextView)findViewById(R.id.info_text2);
 
         textView.setText(txt);
         textView.setVisibility(View.VISIBLE);
+        if(slaveView!=null)
+            slaveView.setText2(txt);
     }
 
     public void setDrawable(Drawable d) {
@@ -399,7 +405,6 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
         }
 
     }
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void setElevation(long elevation){
         super.setElevation(elevation);
     }

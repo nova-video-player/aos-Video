@@ -29,6 +29,17 @@ public class ISO639codes {
 
     private static final Logger log = LoggerFactory.getLogger(ISO639codes.class);
 
+    static public String generateTrackName(Context context, String string, String lang, String format, int disposition, boolean titleFirst) {
+        String dispLabel = VideoUtils.getTrackDispositionLabel(context, disposition, titleFirst);
+        String unknownTrackName = context.getText(R.string.unknown_track_name).toString();
+        String langName = (lang != null && !lang.isEmpty()) ? getLanguageNameForLetterCode(context, lang) : "";
+
+        String result = com.archos.mediacenter.utils.ISO639codes.generateTrackName(string, lang, langName, format, disposition, titleFirst, dispLabel, unknownTrackName);
+
+        if (log.isDebugEnabled()) log.debug("generateTrackName: result={}", result);
+        return result;
+    }
+
     static public String generateTrackName(Context context, String string, String lang, String format, boolean titleFirst) {
         // generate track name as "title (language)" from lang XYZ or XY letter code
         String result = com.archos.mediacenter.utils.ISO639codes.generateTrackName(string, lang, format, titleFirst);

@@ -69,6 +69,16 @@ public class FtpServerCredentialsDialog extends DialogFragment {
     private EditText portEt;
     private EditText addressEt;
 
+    private String buildCredentialUri(String scheme, String remote, int port, String path) {
+        String normalizedPath = path;
+        if (normalizedPath == null || normalizedPath.isEmpty()) {
+            normalizedPath = "/";
+        } else if (!normalizedPath.startsWith("/")) {
+            normalizedPath = "/" + normalizedPath;
+        }
+        return scheme + "://" + remote + (port != -1 ? ":" + port : "") + normalizedPath;
+    }
+
     public interface onConnectClickListener{
         public void onConnectClick(String username, String path, String password, int port, int type, String remote);
     }
@@ -102,7 +112,7 @@ public class FtpServerCredentialsDialog extends DialogFragment {
                 default:
                     throw new IllegalArgumentException("Invalid FTP type "+mType);
             }
-            uriToBuild +="://"+mRemote+":"+mPort+"/";
+            uriToBuild = buildCredentialUri(uriToBuild, mRemote, mPort, mPath);
             Credential cred = database.getCredential(uriToBuild);
             if(cred!=null){
                 mPassword= cred.getPassword();
@@ -211,8 +221,7 @@ public class FtpServerCredentialsDialog extends DialogFragment {
                     .putString(FTP_LATEST_USERNAME, username)
                     .apply();
 
-                    String uriToBuild = scheme;
-                    uriToBuild +="://"+(!address.isEmpty()?address+(port!=-1?":"+port:""):"")+path;
+                    String uriToBuild = buildCredentialUri(scheme, address, port, path);
                     if(savePassword.isChecked())
                         NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, uriToBuild,"",true));
                     else

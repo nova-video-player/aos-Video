@@ -1,60 +1,13 @@
-# To enable ProGuard in your project, edit project.properties
-# to define the proguard.config property as described in that file.
-#
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in ${sdk.dir}/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the ProGuard
-# include property in project.properties.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# R8 obfuscates eligible third-party code. The Nova package rules below retain
+# readable names in user-provided logcat reports.
 
-# Add any project specific keep options here:
+-keepattributes SourceFile,LineNumberTable,Exceptions,InnerClasses,Signature,EnclosingMethod,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
 
--dontusemixedcaseclassnames
--dontskipnonpubliclibraryclasses
--dontpreverify
--dontshrink
--dontoptimize
--dontobfuscate
+#### Application & project internal classes ####
+-keep class com.archos.mediacenter.** { *; }
+-keep class org.courville.nova.** { *; }
 
--renamesourcefileattribute SourceFile
--keepattributes SourceFile,LineNumberTable
--keepattributes Exceptions,InnerClasses
-
--keep public class org.courville.nova.CustomApplication { *; }
--keep class com.archos.mediacenter.LibAvosReceiver
--keep class com.archos.mediacenter.video.utils.CodecDiscovery {*;}
-
-#### MediaLib ####
--keep class com.archos.medialib.AvosMediaPlayer {
-  private void postEventFromNative(java.lang.Object, int, int, int, java.lang.Object);
-}
--keep class com.archos.medialib.Subtitle {
-  public java.lang.Object createTimedTextSubtitle(int, int, java.lang.String);
-  public java.lang.Object createTimedBitmapSubtitle(int, int, int, int, int, int, android.graphics.Bitmap);
-}
--keep class com.archos.medialib.AvosMediaMetadataRetriever {
-  private long mMediaMetadataRetrieverHandle;
-}
--keep class com.archos.medialib.AvosMediaPlayer {
-  private long mMediaPlayerHandle;
-  private long mNativeWindowHandle;
-}
--keep class com.archos.medialib.AvosBitmapHelper {
-  public android.graphics.Bitmap createRGBBitmap(int[], int, int, int, int, int, int);
-}
-
--keep class com.archos.mediacenter.video.browser.Browser** { *; }
-
--dontwarn javax.**
--dontwarn org.eclipse.jetty.jmx.ObjectMBean
--dontwarn com.sun.**
--dontwarn org.seamless.**
--dontwarn org.eclipse.jetty.**
--dontnote org.eclipse.jetty.**
-
+#### Serializable ####
 -keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
     private static final java.io.ObjectStreamField[] serialPersistentFields;
@@ -64,59 +17,21 @@
     java.lang.Object readResolve();
 }
 
-
-#apache http
+#### Suppress warnings from optional/platform-specific third-party libraries ####
+-dontwarn javax.**
+-dontwarn com.sun.**
 -dontwarn org.apache.**
-
-#okhttp3
+-dontwarn org.seamless.**
+-dontwarn org.eclipse.jetty.**
+-dontnote org.eclipse.jetty.**
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
-
 -dontwarn org.ietf.**
--dontwarn java.lang.annotation.Annotation
-
-# Retain generic type information for use by reflection by converters and adapters.
--keepattributes Signature
-# Retain declared checked exceptions for use by a Proxy instance.
--keepattributes Exceptions
-
-## retrofit2 rules https://github.com/square/retrofit/blob/master/retrofit/src/main/resources/META-INF/proguard/retrofit2.pro
-# Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
-# EnclosingMethod is required to use InnerClasses.
--keepattributes Signature, InnerClasses, EnclosingMethod
-
-# Retrofit does reflection on method and parameter annotations.
--keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
-
-# Retain service method parameters when optimizing.
--keepclassmembers,allowshrinking,allowobfuscation interface * {
-    @retrofit2.http.* <methods>;
-}
-
-# Guarded by a NoClassDefFoundError try/catch and only used when on the classpath.
--dontwarn kotlin.Unit
-
-# Top-level functions that can only be used by Kotlin.
--dontwarn retrofit2.KotlinExtensions$*
-
-# With R8 full mode, it sees no subtypes of Retrofit interfaces since they are created with a Proxy
-# and replaces all potential values with null. Explicitly keeping the interfaces prevents this.
--if interface * { @retrofit2.http.* <methods>; }
--keep,allowobfuscation interface <1>
-
--dontwarn android.content.res.**
-
 -dontwarn org.newsclub.net.unix.AFUNIXServerSocketChannel
 -dontwarn org.newsclub.net.unix.AFUNIXSocketAddress
 -dontwarn org.newsclub.net.unix.AFUNIXSocketChannel
 -dontwarn sun.security.x509.X509Key
-
 -dontwarn org.bouncycastle.crypto.DefaultBufferedBlockCipher
 -dontwarn org.bouncycastle.crypto.modes.CBCModeCipher
 -dontwarn org.bouncycastle.crypto.modes.CTRModeCipher
-
--keep class com.hierynomus.smbj.** { *; }
--keep class org.slf4j.** { *; }
--keep class org.eclipse.jetty.** { *; }
-# jupnp
 -dontwarn org.osgi.framework.**
 -dontwarn org.osgi.service.**

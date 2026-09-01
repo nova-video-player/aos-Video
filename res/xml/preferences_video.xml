@@ -50,6 +50,15 @@
             android:summary="@string/audio_interface_choice_summary"
             android:title="@string/audio_interface_choice_title"
             app:iconSpaceReserved="false"/>
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/audio_decoder_choice_entries"
+            android:entryValues="@array/audio_decoder_choice_entryvalues"
+            android:key="audio_decoder_choice"
+            android:persistent="true"
+            android:summary="@string/audio_decoder_choice_summary"
+            android:title="@string/audio_decoder_choice_title"
+            app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="enable_cutout_mode_short_edges"
@@ -64,13 +73,6 @@
             android:summary="@string/preference_enable_cutout_both_sidesx_summary"
             android:title="@string/preference_enable_cutout_both_sidesx"
             app:iconSpaceReserved="false" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="allow_3rd_party_player"
-            android:persistent="true"
-            android:summary="@string/preferences_allow_3rd_party_player_summary"
-            android:title="@string/preferences_allow_3rd_party_player"
-            app:iconSpaceReserved="false"/>
         <ListPreference
             android:defaultValue="0"
             android:dialogTitle="@string/preferences_force_audio_passthrough"
@@ -103,7 +105,7 @@
             android:title="@string/preferences_audio_speed_audiotrack"
             app:iconSpaceReserved="false"/>
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="enable_dynamic_audio_delay"
             android:persistent="true"
             android:summary="@string/preferences_enable_dynamic_audio_delay_summary"
@@ -143,12 +145,22 @@
             android:summary="@string/preference_tv_refreshrate_switch_summary"
             android:title="@string/preference_tv_refreshrate_switch"
             app:iconSpaceReserved="false"/>
+        <ListPreference
+            android:defaultValue="auto"
+            android:dialogTitle="@string/preference_dolby_vision_mode"
+            android:entries="@array/pref_dolby_vision_mode_entries"
+            android:entryValues="@array/pref_dolby_vision_mode_values"
+            android:key="dolby_vision_mode"
+            android:persistent="true"
+            android:title="@string/preference_dolby_vision_mode"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="disable_dolby_vision"
+            android:key="prefer_original_audio_track"
             android:persistent="true"
-            android:summary="@string/preference_remove_dolby_vision_summary"
-            android:title="@string/preference_remove_dolby_vision"
+            android:summary="@string/prefer_original_audio_track_summary"
+            android:title="@string/prefer_original_audio_track_title"
             app:iconSpaceReserved="false"/>
         <ListPreference
             android:defaultValue="0"
@@ -216,10 +228,10 @@
             app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="enable_android_frame_timing"
+            android:key="allow_3rd_party_player"
             android:persistent="true"
-            android:summary="@string/enable_android_frame_timing_summary"
-            android:title="@string/enable_android_frame_timing"
+            android:summary="@string/preferences_allow_3rd_party_player_summary"
+            android:title="@string/preferences_allow_3rd_party_player"
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_user_interface" android:key="category_user_interface"
@@ -247,6 +259,13 @@
             android:persistent="true"
             android:summary="@string/hide_watched_videos_summary"
             android:title="@string/hide_watched_videos"
+            app:iconSpaceReserved="false"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="sort_ignore_articles"
+            android:persistent="true"
+            android:summary="@string/preferences_sort_ignore_articles_summary"
+            android:title="@string/preferences_sort_ignore_articles_title"
             app:iconSpaceReserved="false"/>
 
         <ListPreference

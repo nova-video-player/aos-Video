@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.player;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
@@ -64,7 +66,7 @@ public abstract class AudioDelayPickerAbstract extends FrameLayout {
     }
 
     public CharSequence getFormattedDelay() {
-        return String.format("%s %d m %d s %03d ms", mSign == 1 ? " " : "-", mMinute, mSecond, mMilliSecond);
+        return String.format(Locale.getDefault(), "%s %d m %d s %03d ms", mSign == 1 ? " " : "-", mMinute, mSecond, mMilliSecond);
    }
 
     @Override

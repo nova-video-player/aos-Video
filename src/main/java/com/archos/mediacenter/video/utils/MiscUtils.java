@@ -36,6 +36,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import android.view.WindowMetrics;
 
 import static android.view.RoundedCorner.POSITION_BOTTOM_LEFT;
@@ -126,6 +129,7 @@ public class MiscUtils {
                 || Build.PRODUCT.contains("simulator");
     }
 
+    @SuppressWarnings("deprecation") // bundle.get: debug dumping only
     public static void dumpBundle(Bundle bundle, String TAG, Boolean isDebug) {
         if (isDebug) {
             if (bundle != null) {
@@ -355,6 +359,7 @@ public class MiscUtils {
 
 
     // this adjust margins but not view size
+    @SuppressWarnings("deprecation") // getDefaultDisplay: pre-R fallback
     public static void adjustViewLayoutForInsets(Context context, View rootView, View viewLayout, String viewName, boolean navigationBarShowing, boolean systemBarShowing, boolean actionBarShowing,
                                                  boolean controlBarShowing, boolean isNavBarOnBottom, boolean isGestureAreaShowing,
                                                  int additionalBottomMargin, int alreadyAppliedBottomMargin,
@@ -383,8 +388,15 @@ public class MiscUtils {
         int left, top, right, bottom;
         left = top = right = bottom = 0;
         int systemBarLeft, systemBarTop, systemBarRight, systemBarBottom;
-        boolean navAreaPresentOnBottom = (isGestureAreaShowing || (isNavBarOnBottom && navigationBarShowing));
-        int rotation = (PlayerActivity.isRotationLocked() ? PlayerActivity.getLockedRotation(): ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation());
+        boolean navAreaPresentOnBottom = (isGestureAreaShowing && controlBarShowing) || (isNavBarOnBottom && navigationBarShowing);
+        int rotation;
+        if (PlayerActivity.isRotationLocked()) {
+            rotation = PlayerActivity.getLockedRotation();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            rotation = context.getDisplay().getRotation();
+        } else {
+            rotation = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        }
 
         WindowInsets insets = rootView.getRootWindowInsets();
         if (insets == null) return;
@@ -423,13 +435,15 @@ public class MiscUtils {
             systemBarRight = systemBarsInsets.right;
             systemBarBottom = systemBarsInsets.bottom;
         } else {
-            if (log.isDebugEnabled()) log.debug("adjustViewLayoutForInsets: {} LTRB insets=({},{},{},{}), cutout=({},{},{},{})", viewName, insets.getSystemWindowInsetLeft(), insets.getSystemWindowInsetTop(), insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom(),
+            WindowInsetsCompat insetsCompat = WindowInsetsCompat.toWindowInsetsCompat(insets);
+            androidx.core.graphics.Insets systemBarsInsets = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars());
+            if (log.isDebugEnabled()) log.debug("adjustViewLayoutForInsets: {} LTRB insets=({},{},{},{}), cutout=({},{},{},{})", viewName, systemBarsInsets.left, systemBarsInsets.top, systemBarsInsets.right, systemBarsInsets.bottom,
                     mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom);
             radius = 0;
-            systemBarLeft = insets.getSystemWindowInsetLeft();
-            systemBarTop = insets.getSystemWindowInsetTop();
-            systemBarRight = insets.getSystemWindowInsetRight();
-            systemBarBottom = insets.getSystemWindowInsetBottom();
+            systemBarLeft = systemBarsInsets.left;
+            systemBarTop = systemBarsInsets.top;
+            systemBarRight = systemBarsInsets.right;
+            systemBarBottom = systemBarsInsets.bottom;
         }
         // avoidRoundEdges is false for gfx subtitleView
         if (avoidRoundEdges) { // at this point left/top/right/bottom is already set to cutout insets if applied
@@ -441,11 +455,17 @@ public class MiscUtils {
             bottom = calcMarginAvoidEdge(bottom, top, 0);
         }
         int uncompressibleBottom = bottom; // keep it for later since it represents the bottom margin that cannot be compressed i.e. not influenced by OSD playerController or system bars
+        int effectiveBottomInset = systemBarBottom;
+        if (isGestureAreaShowing && controlBarShowing) {
+            effectiveBottomInset = Math.max(systemBarBottom, MiscUtils.getGestureAreaHeight(context));
+        } else if (isNavBarOnBottom && navigationBarShowing) {
+            effectiveBottomInset = Math.max(systemBarBottom, MiscUtils.getNavigationBarHeight(context));
+        }
         // only shift if not already overlapping
         if (adjustLeft && systemBarShowing && left < systemBarLeft) left += systemBarLeft - left;
         if (adjustTop && systemBarShowing && top < systemBarTop) top += systemBarTop - top;
         if (adjustRight && systemBarShowing && right < systemBarRight) right += systemBarRight - right;
-        if (adjustBottom && navAreaPresentOnBottom && bottom < systemBarBottom) bottom += systemBarBottom - bottom; // bottom margin is 0 if no navigation bar
+        if (adjustBottom && navAreaPresentOnBottom && bottom < effectiveBottomInset) bottom += effectiveBottomInset - bottom; // bottom margin is 0 if no navigation bar
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) viewLayout.getLayoutParams();
         int prevLeft, prevTop, prevRight, prevBottom;
         prevLeft = layoutParams.leftMargin; prevTop = layoutParams.topMargin; prevRight = layoutParams.rightMargin; prevBottom = layoutParams.bottomMargin;
@@ -461,7 +481,7 @@ public class MiscUtils {
                 viewName, prevLeft, prevTop, prevRight, prevBottom,
                 left, top, right, shiftBottom, applyGlobalShift, globalShiftLeft, globalShiftUp, centerLeftMargin, centerTopMargin);
         // do not delay when having a gfx subtitle or floating player hence ! applyGlobalShift
-        if (! applyGlobalShift && prevBottom > uncompressibleBottom && shiftBottom == uncompressibleBottom && navAreaPresentOnBottom) {
+        if (! isGestureAreaShowing && ! applyGlobalShift && prevBottom > uncompressibleBottom && shiftBottom == uncompressibleBottom && navAreaPresentOnBottom) {
             if (log.isDebugEnabled()) log.debug("adjustViewLayoutForInsets: Delaying relayout due to give time to navigation bar to fade out");
             // Schedule the delayed relayout
             if (relayoutRunnable != null) {
@@ -486,12 +506,7 @@ public class MiscUtils {
                 viewLayout.requestLayout();
                 if (log.isDebugEnabled()) log.debug("adjustViewLayoutForInsets: Delayed relayout applied");
             };
-            int delay = 0;
-            if (isGestureAreaShowing) {
-                delay = DELAY_MILLIS_GESTURE_NAVIGATION;
-            } else if (isNavBarOnBottom && navigationBarShowing) {
-                delay = DELAY_MILLIS_NORMAL;
-            }
+            int delay = (isNavBarOnBottom && navigationBarShowing) ? DELAY_MILLIS_NORMAL : 0;
             // wait a little: avoid a glitch (subtitles being displayed under the system bar for x ms), note that gesture bar fades away slowly
             getHandler().postDelayed(relayoutRunnable, delay);
         } else {
@@ -539,5 +554,78 @@ public class MiscUtils {
                 setter.setCutoutMetrics(0, 0, 0, 0);
             }
         }
+    }
+
+    public interface OnSystemInsetsListener {
+        void onApplyInsets(View v, int left, int top, int right, int bottom);
+    }
+
+    public static void applySystemWindowInsets(View view) {
+        applySystemWindowInsets(view, false, (v, left, top, right, bottom) ->
+                v.setPadding(left, top, right, bottom));
+    }
+
+    /**
+     * Sets the status/navigation bar icon appearance to stay legible against the given
+     * background color: dark icons on a light background, light (white) icons on a dark
+     * background.
+     * NOTE: setAppearanceLightStatusBars(true) means "the bar background is light, so use
+     * dark icons" - callers must pass whether the background is LIGHT, not whether it is dark.
+     */
+    public static void applyStatusBarIconContrast(WindowInsetsControllerCompat insetsController, int backgroundColor) {
+        if (insetsController == null) return;
+        boolean isBackgroundLight = !VideoUtils.isColorDark(backgroundColor);
+        insetsController.setAppearanceLightStatusBars(isBackgroundLight);
+        insetsController.setAppearanceLightNavigationBars(isBackgroundLight);
+    }
+
+    @SuppressWarnings("deprecation") // getSystemWindowInset*: pre-R fallback
+    public static void applySystemWindowInsets(View view, boolean includeCutout, OnSystemInsetsListener listener) {
+        if (view == null) return;
+        view.setOnApplyWindowInsetsListener((v, insets) -> {
+            int left = 0, top = 0, right = 0, bottom = 0;
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    Insets systemBars = insets.getInsets(WindowInsets.Type.systemBars());
+                    left = systemBars.left;
+                    top = systemBars.top;
+                    right = systemBars.right;
+                    bottom = systemBars.bottom;
+                    if (includeCutout) {
+                        Insets cutout = insets.getInsets(WindowInsets.Type.displayCutout());
+                        left = Math.max(left, cutout.left);
+                        top = Math.max(top, cutout.top);
+                        right = Math.max(right, cutout.right);
+                        bottom = Math.max(bottom, cutout.bottom);
+                    }
+                } else {
+                    WindowInsetsCompat insetsCompat = WindowInsetsCompat.toWindowInsetsCompat(insets);
+                    androidx.core.graphics.Insets systemBars = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars());
+                    left = systemBars.left;
+                    top = systemBars.top;
+                    right = systemBars.right;
+                    bottom = systemBars.bottom;
+                    if (includeCutout) {
+                        androidx.core.graphics.Insets cutout = insetsCompat.getInsets(WindowInsetsCompat.Type.displayCutout());
+                        left = Math.max(left, cutout.left);
+                        top = Math.max(top, cutout.top);
+                        right = Math.max(right, cutout.right);
+                        bottom = Math.max(bottom, cutout.bottom);
+                    }
+                }
+            } catch (Throwable t) {
+                if (log.isDebugEnabled()) log.debug("applySystemWindowInsets: caught exception getting insets", t);
+                try {
+                    left = insets.getSystemWindowInsetLeft();
+                    top = insets.getSystemWindowInsetTop();
+                    right = insets.getSystemWindowInsetRight();
+                    bottom = insets.getSystemWindowInsetBottom();
+                } catch (Throwable ignored) {}
+            }
+            if (listener != null) {
+                listener.onApplyInsets(v, left, top, right, bottom);
+            }
+            return insets;
+        });
     }
 }

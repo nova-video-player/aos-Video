@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.player;
 
 import android.content.Context;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.DisplayMetrics;
@@ -156,9 +157,8 @@ public class StereoDiveEffect extends VideoEffect {
     private int[] textures = new int[3];
 
     public StereoDiveEffect(Context context) {
-        mDpm = new DisplayMetrics();
         mActivity = context;
-        getWindowManager(context).getDefaultDisplay().getMetrics(mDpm);
+        mDpm = context.getResources().getDisplayMetrics();
         generateVideoVertices();
         generateVideoTextures();
         generateUITextures();
@@ -189,9 +189,15 @@ public class StereoDiveEffect extends VideoEffect {
         }
     }
     
+    @SuppressWarnings("deprecation") // getDefaultDisplay: API 30+ uses context.getDisplay()
     private static int getScreenOrientation(Context context) {
-        int rotation = getWindowManager(context).getDefaultDisplay().getRotation();
-        return ((8-rotation+1)%4);
+        int rotation;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            rotation = context.getDisplay().getRotation();
+        } else {
+            rotation = getWindowManager(context).getDefaultDisplay().getRotation();
+        }
+        return ((8 - rotation + 1) % 4);
     }
 
     private static WindowManager getWindowManager(Context context) {

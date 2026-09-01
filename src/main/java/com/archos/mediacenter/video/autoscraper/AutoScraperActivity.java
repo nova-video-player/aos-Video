@@ -29,9 +29,11 @@ import android.database.MatrixCursor;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.BaseColumns;
@@ -60,6 +62,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -99,6 +102,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -213,6 +218,21 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (isResultTaskActive()) {
+                    // We want this activity to keep on running in the background and go back
+                    // to the previous activity => bring the previous activity back to front
+                    startBrowserActivity();
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    setEnabled(true);
+                }
+            }
+        });
+
         getWindow().setFlags(LayoutParams.FLAG_NOT_TOUCH_MODAL, LayoutParams.FLAG_NOT_TOUCH_MODAL);
         getWindow().setFlags(LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
 
@@ -325,8 +345,8 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
         if (mFilesProcessed > 0)
             TraktService.onNewVideo(this);
 
-        if (isResultTaskActive()) {
-            mResultTask.cancel(true);
+        if (mResultTask != null && !mResultTask.isCancelled) {
+            mResultTask.cancel();
         }
 
         mScraper = null;
@@ -359,19 +379,6 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
     //*****************************************************************************
     // Activity events management
     //*****************************************************************************
-
-    @Override
-    public void onBackPressed() {
-        if (isResultTaskActive()) {
-            // We want this activity to keep on running in the background and go back
-            // to the previous activity => bring the previous activity back to front
-            startBrowserActivity();
-        }
-        else {
-            // Keep the standard BACK behaviour
-            super.onBackPressed();
-        }
-    }
 
     private void startBrowserActivity() {
         Intent intent = new Intent(this, MainActivity.class);
@@ -421,7 +428,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                         public void onClick(DialogInterface dialog, int id) {
                             if (mResultTask!=null) { // How can this be null ? I don't know, but we got a crash report on GooglePlay console...
                                 // Abort the scraper task and exit the activity
-                                mResultTask.cancel(true);
+                                mResultTask.cancel();
                             }
                             finish();
                         }
@@ -535,7 +542,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
 
         Intent notificationIntent = new Intent(context, AutoScraperActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent,
-                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT: PendingIntent.FLAG_UPDATE_CURRENT));
+                PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Create a new notification builder
         mNotificationBuilder = new NotificationCompat.Builder(context, mNotifChannelId)
@@ -692,11 +699,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
     }
 
     private boolean isResultTaskActive() {
-        if (mResultTask != null && mResultTask.getStatus() !=
-            AsyncTask.Status.FINISHED && !mResultTask.isCancelled()) {
-            return true;
-        }
-        return false;
+        return mResultTask != null && !mResultTask.isFinished && !mResultTask.isCancelled;
     }
 
     private View buildEmptyView() {
@@ -998,7 +1001,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
             if (Build.VERSION.SDK_INT >= 29) {
                 vh.initial_spinbar.getIndeterminateDrawable().setColorFilter(new BlendModeColorFilter(accentColor, BlendMode.MULTIPLY));
             } else {
-                vh.initial_spinbar.getIndeterminateDrawable().setColorFilter(accentColor, PorterDuff.Mode.MULTIPLY);
+                vh.initial_spinbar.getIndeterminateDrawable().setColorFilter(new PorterDuffColorFilter(accentColor, PorterDuff.Mode.MULTIPLY));
             }
             v.setTag(vh);
             return v;
@@ -1121,16 +1124,47 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
     // Scraper task
     //*****************************************************************************
 
-    private class ScraperResultTask extends AsyncTask<Void, Integer, Integer> {
+    private class ScraperResultTask {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        volatile boolean isCancelled = false;
+        volatile boolean isFinished = false;
+
         AutoScraperActivity mActivity;
 
         public ScraperResultTask(AutoScraperActivity currentActivity) {
-            super();
             mActivity = currentActivity;
         }
 
-        @Override
-        protected Integer doInBackground(Void... params) {
+        void execute() {
+            executor.execute(() -> {
+                Integer result = null;
+                try {
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                    result = doWork();
+                } catch (Exception e) {
+                    log.error("ScraperResultTask failed", e);
+                } finally {
+                    executor.shutdown();
+                    isFinished = true;
+                }
+                if (isCancelled) return;
+                final Integer finalResult = result;
+                handler.post(() -> {
+                    if (isCancelled) return;
+                    // All files have been processed
+                    if (mInBackground) {
+                        // The activity is running in the background => just exit it
+                        finish();
+                    } else {
+                        // The activity is visible => update the control buttons
+                        updateControlButtons(true);
+                    }
+                });
+            });
+        }
+
+        private Integer doWork() {
             NfoWriter.ExportContext exportContext;
             if (NfoWriter.isNfoAutoExportEnabled(AutoScraperActivity.this)) {
                 exportContext = new NfoWriter.ExportContext();
@@ -1157,7 +1191,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                     continue;
                 }
 
-                publishProgress(Integer.valueOf(fileIndex), Integer.valueOf(itemProperties.status));
+                updateProgress(fileIndex, itemProperties.status);
 
                 // Try to retrieve the poster and the tags for this file
                 BaseTags tags = null;
@@ -1208,7 +1242,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                         int epEpisode = epTags.getEpisode();
                         if (ttl != null && !ttl.isEmpty()) {
                             if (epSeason > 0 && epEpisode > 0) {
-                                ttl = String.format(EPISODE_FORMAT, ttl, epSeason, epEpisode);
+                                ttl = String.format(Locale.getDefault(), EPISODE_FORMAT, ttl, epSeason, epEpisode);
                             }
                             itemProperties.title = ttl;
                         }
@@ -1243,7 +1277,6 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                         // Note: This will do the updateScraperInfoInMediaLib stuff for us
                         tags.save(AutoScraperActivity.this, itemProperties.id);
 
-                        // TODO make this nicer.
                         if (exportContext != null) {
                             // also auto-export all the data
                             Uri videoFile = Uri.parse(path);
@@ -1251,7 +1284,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                                 try {
                                     NfoWriter.export(videoFile, tags, exportContext);
                                 } catch (IOException e) {
-                                    log.error("caught IOException: ",e);
+                                    log.error("caught IOException: ", e);
                                 }
                             }
                         }
@@ -1261,8 +1294,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                 // Update the medialib depending on the results
                 if (typeId != -1) {
                     itemProperties.status = ITEM_STATUS_SUCCESS;
-                }
-                else {
+                } else {
                     // Failed => set the scraper fields to -1 so that we will be able
                     // to skip this file when launching the automated process again
                     if (log.isDebugEnabled()) log.debug("failed => update medialib with scraperId=-1");
@@ -1271,126 +1303,116 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
                 }
 
                 // Display the updated info and status of the processed file
-                publishProgress(Integer.valueOf(fileIndex), Integer.valueOf(itemProperties.status));
+                updateProgress(fileIndex, itemProperties.status);
 
-                if (isCancelled()) {
+                if (isCancelled) {
                     // Exit the task
                     if (log.isDebugEnabled()) log.debug("ScraperResultTask : task aborted");
                     return Integer.valueOf(0);
                 }
             }
 
+            if (exportContext != null) {
+                // drain the queued NFO exports for this batch before returning
+                NfoWriter.awaitPendingExports();
+            }
             if (log.isDebugEnabled()) log.debug("ScraperResultTask : all files processed");
             return Integer.valueOf(1);
         }
 
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            int fileIndex = progress[0].intValue();
-            int status = progress[1].intValue();
-            if (log.isDebugEnabled()) log.debug("onProgressUpdate : updating item {}", fileIndex);
+        private void updateProgress(int fileIndex, int status) {
+            handler.post(() -> {
+                if (isCancelled) return;
+                if (log.isDebugEnabled()) log.debug("updateProgress : updating item {}", fileIndex);
 
-            // Update the display with the retrieved poster and infos
-            mActivity.invalidateItem(fileIndex);
+                // Update the display with the retrieved poster and infos
+                mActivity.invalidateItem(fileIndex);
 
-            // NOTE: for display reasons the list is scrolled:
-            // - when starting to process an item in focus mode (remote control or keyboard)
-            // - after processing an item in touch mode
-            if (status == ITEM_STATUS_BUSY) {
-                //----------------------------------------------------------------------------------------
-                // Smart automatic scrolling of the list in focus mode:
-                //
-                // Try to scroll the list so that the item beeing processed is displayed at the bottom of the list
-                // and stop scrolling as soon as the user starts to navigate with the UP or DOWN keys
-                //----------------------------------------------------------------------------------------
-                if (!mScrollingWithKeys && !mActivity.mListView.isInTouchMode()) {
-                    int firstVisibleItemPosition = mActivity.mListView.getFirstVisiblePosition();
-                    int lastVisibleItemPosition = mActivity.mListView.getLastVisiblePosition();
-
-                    if (firstVisibleItemPosition == 0 && mFilesProcessed <= lastVisibleItemPosition) {
-                        // The list has not been scrolled yet and the item beeing processed is still visible
-                        // => no need to scroll yet, so keep the first item selected and position it at the top of the list
-                        mActivity.mListView.setSelectionFromTop(0, 0);
-                    }
-                    else {
-                        // The list has started to scroll or the next item to process is not visible
-                        // => select the next item to process and position it at the bottom of the list
-                        int listViewHeight = mActivity.mListView.getHeight();
-                        int initialItemHeight = mActivity.mAdapter.mThumbnailHeight;
-                        mActivity.mListView.setSelectionFromTop(mFilesProcessed, listViewHeight - initialItemHeight);
-                    }
-                }
-            }
-            else {
-                // A file has been processed => update the number of processed files
-                mFilesProcessed = fileIndex + 1;
-                boolean taskDone = (mFilesProcessed >= mFileCount || isCancelled());
-
-                if (!taskDone) {
-                    int firstVisibleItemPosition = mActivity.mListView.getFirstVisiblePosition();
-                    int lastVisibleItemPosition = mActivity.mListView.getLastVisiblePosition();
-
-                    //--------------------------------------------------------------------------
-                    // Smart automatic scrolling of the list in touch mode:
+                // NOTE: for display reasons the list is scrolled:
+                // - when starting to process an item in focus mode (remote control or keyboard)
+                // - after processing an item in touch mode
+                if (status == ITEM_STATUS_BUSY) {
+                    //----------------------------------------------------------------------------------------
+                    // Smart automatic scrolling of the list in focus mode:
                     //
-                    // Make the next item to process visible if the current one is visible
-                    // and the user is not currently scrolling the list.
-                    //--------------------------------------------------------------------------
-                    if (mActivity.mListView.isInTouchMode()) {
-                        // Check if the item which was just processed is visible
-                        boolean isPreviousItemVisible = (fileIndex >= firstVisibleItemPosition && fileIndex <= lastVisibleItemPosition);
+                    // Try to scroll the list so that the item being processed is displayed at the bottom of the list
+                    // and stop scrolling as soon as the user starts to navigate with the UP or DOWN keys
+                    //----------------------------------------------------------------------------------------
+                    if (!mScrollingWithKeys && !mActivity.mListView.isInTouchMode()) {
+                        int firstVisibleItemPosition = mActivity.mListView.getFirstVisiblePosition();
+                        int lastVisibleItemPosition = mActivity.mListView.getLastVisiblePosition();
 
-                        // Check if the user is already scrolling the list
-                        boolean isUserScrolling = (mActivity.mMyScrollState == MY_SCROLL_STATE_USER);
-                        boolean isAutoScrolling = (mActivity.mMyScrollState == MY_SCROLL_STATE_AUTO);
+                        if (firstVisibleItemPosition == 0 && mFilesProcessed <= lastVisibleItemPosition) {
+                            // The list has not been scrolled yet and the item being processed is still visible
+                            // => no need to scroll yet, so keep the first item selected and position it at the top of the list
+                            mActivity.mListView.setSelectionFromTop(0, 0);
+                        } else {
+                            // The list has started to scroll or the next item to process is not visible
+                            // => select the next item to process and position it at the bottom of the list
+                            int listViewHeight = mActivity.mListView.getHeight();
+                            int initialItemHeight = mActivity.mAdapter.mThumbnailHeight;
+                            mActivity.mListView.setSelectionFromTop(mFilesProcessed, listViewHeight - initialItemHeight);
+                        }
+                    }
+                } else {
+                    // A file has been processed => update the number of processed files
+                    mFilesProcessed = fileIndex + 1;
+                    boolean taskDone = (mFilesProcessed >= mFileCount || isCancelled);
 
-                        // NOTE: smoothScrollToPosition() takes some time so when video has been processed very quickly
-                        // we may start processing the next one before scrolling is stopped. In that case 
-                        // firstVisibleItemPosition and lastVisibleItemPosition are not updated yet => check  
-                        // isAutoScrolling to make sure to keep on scrolling anyway if needed
-                        if ((isPreviousItemVisible && !isUserScrolling) || isAutoScrolling) {
-                            // Scroll the list if needed to make the current item visible
-                            mActivity.mListView.smoothScrollToPosition(mFilesProcessed);
+                    if (!taskDone) {
+                        int firstVisibleItemPosition = mActivity.mListView.getFirstVisiblePosition();
+                        int lastVisibleItemPosition = mActivity.mListView.getLastVisiblePosition();
 
-                            // Assume we are now in auto scroll mode even if no scrolling is applied
-                            // and onScrollStateChanged() is not called
-                            mActivity.mMyScrollState = MY_SCROLL_STATE_AUTO;
+                        //--------------------------------------------------------------------------
+                        // Smart automatic scrolling of the list in touch mode:
+                        //
+                        // Make the next item to process visible if the current one is visible
+                        // and the user is not currently scrolling the list.
+                        //--------------------------------------------------------------------------
+                        if (mActivity.mListView.isInTouchMode()) {
+                            // Check if the item which was just processed is visible
+                            boolean isPreviousItemVisible = (fileIndex >= firstVisibleItemPosition && fileIndex <= lastVisibleItemPosition);
+
+                            // Check if the user is already scrolling the list
+                            boolean isUserScrolling = (mActivity.mMyScrollState == MY_SCROLL_STATE_USER);
+                            boolean isAutoScrolling = (mActivity.mMyScrollState == MY_SCROLL_STATE_AUTO);
+
+                            // NOTE: smoothScrollToPosition() takes some time so when video has been processed very quickly
+                            // we may start processing the next one before scrolling is stopped. In that case
+                            // firstVisibleItemPosition and lastVisibleItemPosition are not updated yet => check
+                            // isAutoScrolling to make sure to keep on scrolling anyway if needed
+                            if ((isPreviousItemVisible && !isUserScrolling) || isAutoScrolling) {
+                                // Scroll the list if needed to make the current item visible
+                                mActivity.mListView.smoothScrollToPosition(mFilesProcessed);
+
+                                // Assume we are now in auto scroll mode even if no scrolling is applied
+                                // and onScrollStateChanged() is not called
+                                mActivity.mMyScrollState = MY_SCROLL_STATE_AUTO;
+                            }
+                        }
+                    } else if (!mActivity.mListView.isInTouchMode()) {
+                        // All done in focus mode => select the last item to make sure it is fully visible
+                        // in case a poster was found (otherwise only the upper part would be visible)
+                        mActivity.mListView.setSelection(mFilesProcessed - 1);
+                    }
+
+                    if (mNotification != null) {
+                        // Handle the statusbar notification
+                        if (taskDone) {
+                            // Search done or cancelled => remove the notification
+                            removeStatusbarNotification();
+                        } else {
+                            // Search in progress => update the display of the number of files processed
+                            updateStatusbarNotification();
                         }
                     }
                 }
-                else if (!mActivity.mListView.isInTouchMode()) {
-                    // All done in focus mode => select the last item to make sure it is fully visible
-                    // in case a poster was found (otherwise only the upper part would be visible)
-                    mActivity.mListView.setSelection(mFilesProcessed - 1);
-                }
-
-                if (mNotification != null) {
-                    // Handle the statusbar notification
-                    if (taskDone) {
-                        // Search done or cancelled => remove the notification
-                        removeStatusbarNotification();
-                    } else {
-                        // Search in progress => update the display of the number of files processed
-                        updateStatusbarNotification();
-                    }
-                }
-            }
+            });
         }
 
-        /**
-        * This method is only called when doInBackground() finishes normally
-        */
-        @Override
-        protected void onPostExecute(Integer result) {
-            // All files have been processed
-            if (mInBackground) {
-                // The activity is running in the background => just exit it
-                finish();
-            }
-            else {
-                // The activity is visible => update the control buttons
-                updateControlButtons(true);
-            }
+        void cancel() {
+            isCancelled = true;
+            executor.shutdownNow();
         }
     }
 }

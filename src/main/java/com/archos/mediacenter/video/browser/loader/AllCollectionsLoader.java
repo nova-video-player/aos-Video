@@ -37,7 +37,6 @@ public class AllCollectionsLoader extends VideoLoader {
     public final static String COLUMN_COLLECTION_MOVIE_COUNT = "collection_movie_count";
     public final static String COLUMN_COLLECTION_MOVIE_WATCHED_COUNT = "collection_movie_watched_count";
     private String mSortOrder;
-    private Context mContext;
 
     private boolean mCollectionWatched;
 
@@ -51,7 +50,6 @@ public class AllCollectionsLoader extends VideoLoader {
 
     public AllCollectionsLoader(Context context, String SortOrder, boolean collectionWatched) {
         super(context);
-        mContext = context;
         mSortOrder = SortOrder;
         mCollectionWatched = collectionWatched;
         if (DBG) {
@@ -65,7 +63,7 @@ public class AllCollectionsLoader extends VideoLoader {
 
     @Override
     public String getSortOrder() {
-        return mSortOrder;
+        return com.archos.mediacenter.video.utils.SortUtils.resolveSortOrder(getContext(), com.archos.mediacenter.video.utils.SortUtils.SortScope.COLLECTION, mSortOrder);
     }
 
     @Override
@@ -73,6 +71,7 @@ public class AllCollectionsLoader extends VideoLoader {
         return new String[] {
                 VideoStore.Video.VideoColumns.SCRAPER_C_ID + " AS " + BaseColumns._ID,
                 VideoStore.Video.VideoColumns.SCRAPER_C_NAME + " AS " + COLUMN_NAME,
+                VideoStore.Video.VideoColumns.SCRAPER_C_SORT_NAME,
                 VideoStore.Video.VideoColumns.SCRAPER_C_DESCRIPTION,
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + ") AS " + COLUMN_COLLECTION_COUNT,
                 "COUNT(DISTINCT " + VideoStore.Video.VideoColumns.SCRAPER_C_ID + " || ',' || " + VideoStore.Video.VideoColumns.SCRAPER_M_IMDB_ID + ") AS " + COLUMN_COLLECTION_MOVIE_COUNT,

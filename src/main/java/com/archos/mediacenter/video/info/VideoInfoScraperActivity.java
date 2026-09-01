@@ -15,6 +15,9 @@
 package com.archos.mediacenter.video.info;
 
 import android.os.Bundle;
+import android.view.View;
+
+import com.archos.mediacenter.video.utils.MiscUtils;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -35,8 +38,9 @@ public class VideoInfoScraperActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_info_posterandbackdrop);
+        applySystemInsets(findViewById(R.id.root));
         Fragment frag;
-        if(getIntent().getSerializableExtra(EXTRA_VIDEO)!=null) {
+        if (getIntent().hasExtra(EXTRA_VIDEO)) {
             if (DBG) Log.d(TAG, "onCreate: detected video");
             frag = new VideoInfoScraperSearchFragment();
         } else {
@@ -46,13 +50,14 @@ public class VideoInfoScraperActivity extends FragmentActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.root,frag)
-                .addToBackStack(null).commit();
+                .commit();
     }
 
-    @Override
-    public void onBackPressed(){
-        finish();
+    private void applySystemInsets(View root) {
+        MiscUtils.applySystemWindowInsets(root, true, (v, left, top, right, bottom) ->
+                v.setPadding(left, top, right, bottom));
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

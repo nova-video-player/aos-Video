@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback.details;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -26,15 +27,31 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediacenter.video.leanback.LeanbackActivity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class VideoDetailsActivity extends LeanbackActivity {
+
+    private static final Logger log = LoggerFactory.getLogger(VideoDetailsActivity.class);
 
     public static final String SHARED_ELEMENT_NAME = "hero";
     public static final String SLIDE_TRANSITION_EXTRA = "slide_transition";
     public static final String SLIDE_DIRECTION_EXTRA = "slide_direction";
 
+    private void traceDetails(String event) {
+        if (!log.isDebugEnabled()) return;
+        long launchUptimeMs = getIntent().getLongExtra(
+                VideoDetailsFragment.EXTRA_DETAILS_LAUNCH_UPTIME_MS, -1);
+        String elapsed = launchUptimeMs >= 0
+                ? String.valueOf(SystemClock.elapsedRealtime() - launchUptimeMs)
+                : "n/a";
+        log.debug("details timing: event={}, sinceTapMs={}", event, elapsed);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        traceDetails("activity-onCreate");
 
         // Lollipop only :-(
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
@@ -49,15 +66,39 @@ public class VideoDetailsActivity extends LeanbackActivity {
         }
 
         setContentView(R.layout.androidtv_details_activity);
+
+        android.widget.ImageView backdropView = findViewById(R.id.details_backdrop);
+        if (backdropView != null) {
+            long launchUptimeMs = getIntent().getLongExtra(VideoDetailsFragment.EXTRA_DETAILS_LAUNCH_UPTIME_MS, -1);
+            if (launchUptimeMs != -1) {
+                VideoDetailsTransitionBackdropCache.Entry entry = VideoDetailsTransitionBackdropCache.takeEntry(launchUptimeMs);
+                if (entry != null) {
+                    android.graphics.Bitmap transitionBackdrop = entry.getBitmap();
+                    if (transitionBackdrop != null && !transitionBackdrop.isRecycled()) {
+                        backdropView.setImageBitmap(transitionBackdrop);
+                        backdropView.setVisibility(android.view.View.VISIBLE);
+                        backdropView.setAlpha(1.0f);
+                    }
+                    if (entry.file != null) {
+                        androidx.fragment.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_browse_fragment);
+                        if (fragment instanceof VideoDetailsFragment) {
+                            ((VideoDetailsFragment) fragment).setCurrentlyDisplayedBackdropFile(entry.file);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void onPause(){
+        traceDetails("activity-onPause");
         super.onPause();
         if(getIntent().getBooleanExtra(VideoDetailsFragment.EXTRA_LAUNCHED_FROM_PLAYER, false))
             TorrentObserverService.paused(this);
     }
     public void onResume(){
         super.onResume();
+        traceDetails("activity-onResume");
         if(getIntent().getBooleanExtra(VideoDetailsFragment.EXTRA_LAUNCHED_FROM_PLAYER, false))
             TorrentObserverService.resumed(this);
     }

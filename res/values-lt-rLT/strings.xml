@@ -23,7 +23,6 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Atnaujinti serverių sąrašą</string>
     <!-- Menu item to enable network shares -->
-    <string name="enable_network_shares">Įjungti dalinimąsi tinkle</string>
     <string name="initial_scan">Pradinis nuskaitymas</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Paieška</string>
@@ -44,17 +43,9 @@
     <!--The fast scroll thumb will show one character from this string depending on the position in the list -->
     <string name="fast_scroll_alphabet">\u0020AĄBCČDEĘĖFGHIĮYJKLMNOPQRSŠTUŲŪVWXZŽ</string>
     <!-- The string used in file/folder infos dialog. -->
-    <string name="info_duration">Trukmė</string>
     <string name="video_sources">Šaltiniai</string>
     <!-- Infos dialog tabs -->
-    <string name="info_tab_movie">Filmas</string>
-    <string name="info_tab_show">Serialas</string>
-    <string name="info_tab_episode">Serija</string>
-    <string name="info_tab_video">Video</string>
     <string name="info_tab_file">Failo duomenys</string>
-    <string name="info_tab_backdrop_chooser">Fono pasirinkimas</string>
-    <string name="info_tab_poster_chooser">Viršelio pasirinkimas</string>
-    <string name="info_tab_share">Dalintis</string>
     <string name="info_menu_backdrop_select">Fonas</string>
     <string name="info_menu_series_backdrop_select">Serijų fonas</string>
     <string name="info_menu_poster_select">Pasirinkti kitą viršelį</string>
@@ -77,12 +68,9 @@
     <string name="network_shared_folders">Bendrinami aplankai (SMB)</string>
     <string name="network_connected_as">Prisijungta kaip %s</string>
     <string name="network_guest">svečias</string>
-    <string name="sftp_folders">FTP</string>
     <string name="network_jcifs">Samba (Eksperimentinis)</string>
     <string name="network_cling">UPNP (Eksperimentinis)</string>
-    <string name="recordings_storage">Įrašai</string>
     <string name="root_storage">Vidinė saugykla</string>
-    <string name="cannot_list">Neįmanoma parodyti turinio</string>
     <!-- VIDEO -->
     <string name="videos">Vaizdo įrašai</string>
     <string name="all_videos">Visi vaizdo įrašai</string>
@@ -95,18 +83,8 @@
     <string name="all_animes_format">Animaciniai filmai  -  %d</string>
     <string name="all_collections">Visos kolekcijos</string>
     <string name="all_collections_format">Visos kolekcijos  -  %d</string>
-    <string name="all_collection_watched">Visos kolekcijos žiūrėtos</string>
-    <string name="all_collection_unwatched">Nežiūrėtos kolekcijos</string>
-    <plurals name="n_movies_watched">
-        <item quantity="one">%d filmas žiūrėtas</item>
-        <item quantity="few">%d filmai žiūrėti</item>
-        <item quantity="many">%d filmų žiūrėta</item>
-        <item quantity="other">%d filmų žiūrėta</item>
-    </plurals>
     <string name="not_watched_movies_format">Nežiūrėta - %d</string>
     <string name="not_watched_animes_format">Nežiūrėta - %d</string>
-    <string name="no_movie_watched">Nėra žiūrėtų filmų</string>
-    <string name="all_movies_watched">Visi filmai žiūrėti</string>
     <string name="movies_by_alpha">Filmai pagal abėcėlę</string>
     <string name="movies_by_genre">Filmai pagal žanrą</string>
     <string name="movies_by_rating">Filmai pagal reitingą</string>
@@ -134,24 +112,18 @@
     <string name="date_view_year">Metai</string>
     <string name="all_movies_and_tv_shows">Filmai ir serialai</string>
     <string name="non_scraped_videos">Neatpažinti video</string>
-    <string name="no_server">Nerastas media serveris</string>
     <string name="cannot_open_video">Šio video parodyti nepavyko</string>
     <string name="confirm_delete">Ar tikrai norite ištrinti?</string>
     <string name="deleting">Palaukite, trinama…</string>
-    <string name="cannot_delete_directory">Aplanko ištrinti nepavyko</string>
-    <string name="cannot_delete_file">Failo ištrinti nepavyko</string>
     <string name="directory_deleted">Aplankas ištrintas</string>
-    <string name="file_deleted">Failas ištrintas</string>
     <string name="resume">Tęsti</string>
     <string name="remote_resume">Tęsti iš tinklo</string>
     <string name="bookmark">Žymė</string>
     <string name="delete">Ištrinti</string>
     <string name="confirm_delete_short">Patvirtinti ištrinimą</string>
     <string name="delete_resume">Tęsti trinimą</string>
-    <string name="delete_bookmark">Ištrinti žymę</string>
     <string name="mark_as_watched">Pažymėti kaip žiūrėtą</string>
     <string name="mark_as_not_watched">Pažymėti kaip nežiūrėtą</string>
-    <string name="upnp_not_allowed">Neturite priėjimo prie UPNP serverio. Pakeiskite priėjimo nustatymus.</string>
     <string name="scrap_no_info">Nėra aprašymo šiam video.</string>
     <string name="scrap_remove">Pašalinti info</string>
     <string name="scrap_remove_short">Pašalinti</string>
@@ -176,14 +148,10 @@
     <string name="scrap_cast">Aktoriai</string>
     <string name="scrap_cast_format">Aktoriai: %s</string>
     <string name="scrap_genre">Žanras</string>
-    <string name="scrap_genre_format">Žanrai: %s</string>
     <string name="scrap_genre_title">Žanrai</string>
     <string name="scrap_aired">Rodomas nuo</string>
     <string name="scrap_aired_format">Rodomas nuo: %s</string>
-    <string name="scrap_guests">Svečiai</string>
-    <string name="scrap_premiered">Premjera</string>
     <!-- Specific strings for TV shows -->
-    <string name="show_network">Tinklas</string>
     <string name="episode_name">Serija</string>
     <string name="episode_season">Sezonas</string>
     <string name="episode_specials">Specialūs leidimai</string>
@@ -194,9 +162,6 @@
     <string name="how_to_mark_season_watched">Paspauskite ant sezono norėdami pažymėti visas serijas žiūrėtomis ar nežiūrėtomis</string>
     <string name="how_to_unindex_season">Paspauskite ant sezono, norėdami pašalinti visas jo serijas iš mediatekos</string>
     <string name="how_to_delete_season">Paspauskite ant sezono, norėdami ištrinti visas jo serijas</string>
-    <string name="mark_show_watched">Pažymėti visas serijas žiūrėtomis ar nežiūrėtomis</string>
-    <string name="unindex_show">Pašalinti visas serijas iš mediatekos</string>
-    <string name="delete_show">Ištrinti visas serijas</string>
     <string name="no_episode_watched">Serijos nežiūrėtos</string>
     <string name="all_episodes_watched">Visos serijos žiūrėtos</string>
     <plurals name="n_episodes_watched">
@@ -241,13 +206,9 @@
     <string name="preference_display_all_files">Rodyti visus failus naršyklėje</string>
     <string name="preference_display_all_files_summary">Taip pat rodyti ne video failus</string>
     <string name="info_processing">Tikrinamos media savybės…</string>
-    <string name="info_video">Video</string>
     <string name="info_audio">Audio</string>
     <string name="info_audio_vbr">VBR</string>
-    <string name="info_plugin_required">(reikalingas papildinys)</string>
     <string name="info_subtitle">Subtitrai</string>
-    <string name="info_resume">Tęsti</string>
-    <string name="info_bookmark">Žymėti rodymo vietą</string>
     <string name="info_file">Failo info</string>
     <string name="use_remote_resume">Tęsti iš tinklo?</string>
     <!-- VIDEO COVER ROLL -->
@@ -284,9 +245,6 @@
     <!-- Media Center -->
     <string name="mediacenterlabel">Media Centras</string>
     <string name="view_mode">Režimas</string>
-    <string name="view_mode_list">Sąrašas</string>
-    <string name="view_mode_grid">Viršeliai</string>
-    <string name="view_mode_details">Išsamiai</string>
     <string name="switch_to_list">Sąrašas</string>
     <string name="switch_to_grid">Tinklelis</string>
     <!-- VideoPlayer -->
@@ -338,8 +296,6 @@
     <!-- Player errors -->
     <string name="player_err_cantplayvideo">Negalima leisti video</string>
     <string name="player_err_cantplaysound">Negalima leisti garso takelio</string>
-    <string name="audiocodec_not_supported">Šis audio formatas (<xliff:g id="codec">%s</xliff:g>) nepalaikomas.</string>
-    <string name="videocodec_not_supported">Šis video formatas (<xliff:g id="codec">%s</xliff:g>) nepalaikomas.</string>
     <string name="player_err_file">Šio video failo nebėra.</string>
     <string name="player_err_sizetoobig">Video failas per didelis</string>
     <string name="player_err_unknown">Nežinoma klaida.</string>
@@ -356,19 +312,10 @@
     <string name="player_err_profile_and_level">\"Profilis\" ir \"Lygis\"</string>
     <string name="player_err_interlaced">Progresinis</string>
     <!-- Player plug-in -->
-    <string name="player_plugin_cinema_title">Kino papildinys</string>
-    <string name="player_plugin_cinema">Kino papildinys (DVD, MPEG-2, AC3)</string>
-    <string name="player_plugin_ac3_title">AC3 papildinys</string>
-    <string name="player_plugin_ac3">AC3 papildinys</string>
-    <string name="player_plugin_mpeg2_title">MPEG-2 papildinys</string>
-    <string name="player_plugin_mpeg2">MPEG-2 papildinys (DVD)</string>
     <string name="player_plugin_video_msg">Šis failas yra <xliff:g id="video">%1$s</xliff:g> video formato.</string>
     <string name="player_plugin_audio_msg">Šis failas yra <xliff:g id="audio">%1$s</xliff:g> audio formato.</string>
     <string name="player_plugin_video_audio_msg">Šis failas yra <xliff:g id="video">%1$s</xliff:g> video formato ir <xliff:g id="audio">%2$s</xliff:g> audio formato.</string>
-    <string name="player_plugin_purchase_msg">Turite įsigyti <xliff:g id="plugin">%1$s</xliff:g></string>
     <string name="player_plugin_purchase">Eiti į parduotuvę</string>
-    <string name="player_plugin_purchase_archos_msg">Galite įsigyti reikalingus kodekų papildinius www.archos.com.</string>
-    <string name="player_plugin_purchase_google_play_msg">Galite įsigyti reikalingus kodekų papildinius Google Play.</string>
     <string name="player_plugin_purchase_google_play_button">Eiti į Google Play</string>
     <string name="plugin_update_required_title">Reikia atnaujinti kodekus</string>
     <string name="plugin_update_required_message">Panašu, kad jau turite Nova Video grotuvui reikiamus papildomus kodekus.\n\nŠiai naujai Nova Video grotuvo versijai reikia atnaujintų kodekų.\n\nEikite į Google Play ir atnaujinkite arba įdiekite iš naujo kodekus.</string>
@@ -386,17 +333,9 @@
     <string name="subtitles_wizard_cache">Laikini failai</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Ieškoti subtitrų internete</string>
-    <string name="toast_subloader_sub_found">Šiai kalbai subtitrai rasti</string>
-    <string name="toast_subloader_sub_not_found">Šiai kalbai subtitrai nerasti</string>
     <string name="toast_subloader_service_unreachable">subtitrų serveris nepasiekiamas</string>
-    <string name="menu_subloader_allfolder">Ieškoti trūkstamų subtitrų</string>
     <string name="dialog_subloader_copying">Kopijuojami subtitrai…</string>
-    <string name="dialog_subloader_downloading">Atsiunčiami subtitrai…</string>
-    <string name="dialog_subloader_sumup">Atsiųsta</string>
-    <string name="dialog_subloader_success">Rasti subtitrai:</string>
     <string name="dialog_subloader_fails">Subtitrai nerasti:</string>
-    <string name="sub_force_all_title">Priverstinai atsiųsti subtitrus</string>
-    <string name="sub_force_all">Visi jūsų video turi bent po vieną subtitrų failą. Ar norite atsiųsti daugiau naujų subtitrų?</string>
     <string name="dialog_subloader_nonetwork_title">Nėra interneto</string>
     <string name="dialog_subloader_nonetwork_message">Reikalingas interneto ryšys norint atsisiųsti subtitrus</string>
     <string name="dialog_subloader_connecting">Prisijungiama prie www.opensubtitles.com…</string>
@@ -405,7 +344,6 @@
     <string name="toast_subloader_credentials_empty">Norėdami atsiųsti titrus, nustatymuose įveskite savo opensubtitles paskyrą</string>
     <string name="toast_subloader_login_failed">Neteisingi opensubtitles prisijungimo duomenys arba paslauga nepasiekiama</string>
     <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_settings_title">Subtitrų nustatymai</string>
     <string name="subtitle_sample_text">\"pavyzdys\"</string>
     <string name="subtitle_size_text">Dydis:</string>
     <string name="subtitle_style_text">Stilius:</string>
@@ -430,21 +368,14 @@
     <string name="loading_torrent">Įkeliamas torrent…</string>
     <string name="error_no_video_file">Nėra vaizdo įrašų</string>
     <string name="torrent_file_to_play">Pasirinkite failą</string>
-    <string name="torrent_buy_premium_message">Torrent transliavimas galimas tik mokamoje versijoje</string>
-    <string name="torrent_buy_premium">Įsigyti premium versiją</string>
     <!-- Shortcuts -->
-    <string name="add_to_shortcuts">Sukurti nuorodą</string>
     <string name="add_ssh_server">Naršyti FTP serverį</string>
     <string name="add_ssh_shortcut">Pridėti kaip nuorodą</string>
     <string name="ssh_prompt">FTP tipas</string>
-    <string name="ssh_empty_view"> \"Galite naršyti ir žiūrėti iš savo ftp serverio\"</string>
     <string name="remove_from_shortcuts">Pašalinti nuorodą</string>
-    <string name="shortcut_added">Nuoroda %s sukurta</string>
     <string name="shortcut_removed">Nuoroda %s pašalinta</string>
     <string name="server_not_available">Šiuo metu serveris nepasiekimas</string>
-    <string name="cannot_open_shortcut">Turinys iš šios nuorodos šiuo metu nepasiekiamas.\nPatikrinkite ar turite reikalingus leidimus.</string>
     <string name="network_shortcuts">Tinklo nuorodos</string>
-    <string name="media_servers">Media serveriai</string>
     <string name="shortcut_list_empty">Nėra tinklo nuorodų.\n\nNorėdami sukurti nuorodas į mėgiamus tinklo aplankus, ilgai palaikykite ant norimo aplanko ir pasirinkite \"%s\" viršutinėje veiksmų juostoje.</string>
     <string name="ftp_shortcut_list_empty">Norėdami sukurti nuorodas į mėgiamus tinklo aplankus, pasirinkite \"%s\" viršutinėje veiksmų juostoje kai naršote serverį.</string>
     <string name="indexed_folders">Indeksuoti aplankai</string>
@@ -462,7 +393,6 @@
     <string name="last_rescan_never">Niekada</string>
     <string name="upnp_indexing_warning_title">UPnP indeksavimas</string>
     <string name="upnp_indexing_warning_message">UPnP indeksavimas nesuteikia tiek galimybių kaip SMB indeksavimas.\nRekomenduojama indeksuoti SMB aplanką jei jūsų serveris ar kompiuteris tai palaiko.\n</string>
-    <string name="ssh_error">Nepavyko prisijungti : patikrinkite tinklo ryšį ir prisijungimo duomenis</string>
     <string name="ssh_remote_address">Nuotolinis adresas</string>
     <string name="ssh_port">Prievadas</string>
     <string name="ssh_password">Slaptažodis</string>
@@ -470,11 +400,8 @@
     <string name="ssh_shortcut_name">Nuorodos pavadinimas</string>
     <!-- Preferences -->
     <string name="preferences">Nustatymai</string>
-    <string name="get_the_ad_free_version">Gaukite versiją be reklamų iš Google Play</string>
     <string name="upgrade_to_add_free_version">Įsigyti programos versiją be reklamos</string>
-    <string name="upgrade_to_add_free_version_description">Norėdami naudotis pilnu funkcionalumu ir nematyti reklamos įsigykite programos licenciją</string>
     <string name="preferences_about">Apie</string>
-    <string name="preferences_category_complete">Pilna versija</string>
     <string name="preferences_category_video">Video</string>
     <string name="preferences_force_software_decoding">Priverstinis programinis dekodavimas</string>
     <string name="preferences_force_software_decoding_summary">Galite išbandyti šį pasirinkimą jei kai kurie filmai atkuriami netinkamai</string>
@@ -492,7 +419,6 @@
     <string name="preference_cutout_short_edges_summary">Rodyti vaizda visame ekrane įrenginiuose su iškirpimais ekrane</string>
     <string name="category_languages">Subtitrai</string>
     <string name="subtitles_hide_default">Pagal nutylėjimą slėpti subtitrus</string>
-    <string name="subtitles_hide_default_summary">Pažymėkite, jei norite slėpti subtitrus</string>
     <string name="subtitles_credentials_title">Opensubtitles paskyra</string>
     <string name="subtitles_credentials_summary">Norėdami atsiųsti titrus, nustatymuose įveskite savo opensubtitles paskyrą</string>
     <string name="preferences_languages">Subtitrų kalbos</string>
@@ -503,7 +429,6 @@
     <string name="ui_mode_summary">TV arba Planšetės/Telefono sąsaja</string>
     <string name="preferences_video_about">Apie</string>
     <string name="preferences_video_os_text">Subtitrus teikia</string>
-    <string name="preferences_video_tvdb_text">Serialų informaciją teikia</string>
     <string name="preferences_video_trakt_text">Video atpažinimą teikia</string>
     <string name="preferences_video_licenses">Licencijos</string>
     <string name="preferences_network_mobile_vpn_summary">Naudokite tik su VPN ir nepamirškite apie duomenų naudojimą.</string>
@@ -512,8 +437,6 @@
     <string name="preferences_video_advanced_quit_title">Pagrindiniai nustatymai</string>
     <string name="preferences_video_advanced_quit_summary">Grįžti į pagrindinius nustatymus</string>
     <string name="trakt_change">Dėl pakeitimų Trakt API reikia prisijungti iš naujo.</string>
-    <string name="tv_scraper">Serialai</string>
-    <string name="movie_scraper">Filmai</string>
     <string name="enable_auto_scrap">Naujiems video automatiškai ieškoti informacijos</string>
     <string name="locale">Sistemos kalba</string>
     <string name="yes">Taip</string>
@@ -525,10 +448,6 @@
     <string name="video_info_custom_search_file_hint">"\"Filmo pavadinimas\" arba \"Serialo pavadinimas S01E01\""</string>
     <string name="video_info_custom_search_show_hint">Serialo pavadinimas</string>
     <string name="scrap_show_no_result">Tinkamas serialas nerastas.</string>
-    <string name="video_info_backdrop_select">Pasirinkite kitą paveikslėlį</string>
-    <string name="video_info_backdrop_remove">Pašalinti</string>
-    <string name="video_info_backdrop_set_as">Nustatyti paveikslėlį kaip</string>
-    <string name="video_info_share_message">"Žiūriu video \"%1$s\" su Nova %2$s"</string>
     <string name="notification_mode">Pranešimai</string>
     <string name="notifications_all">Visi pranešimai</string>
     <string name="notifications_alerts">Tik pranešimai</string>
@@ -538,17 +457,13 @@
     <string name="format_optimized">Optimizuoti</string>
     <string name="format_original">Originalas</string>
     <string name="format_stretched">Ištempta</string>
-    <string name="stereo_dive_enable">Stereo efektas</string>
-    <string name="stereo_dive_disable">Išjungti stereo efektą</string>
     <string name="rotation_unlock">Įjungti automatinį ekrano pasukimą</string>
     <string name="rotation_locked">Automatinis ekrano pasukimas išjungtas</string>
     <string name="rotation_unlocked">Automatinis ekrano pasukimas įjungtas</string>
     <string name="network_reindex">Nuskaityti turinį dar kartą</string>
     <!-- Help overlay -->
     <string name="help_overlay_menu">TV meniu rodymui\npaspauskite mygtuką į viršų</string>
-    <string name="help_overlay_ssh_indexing_text">Pasirinkite \"Pridėti kaip nuorodą\" greitam serverio pasiekimui.</string>
     <string name="help_overlay_network_indexing_text1">Paspausdami šį meniu punktą įkelsite turinį iš šio aplanko į savo mediateką.</string>
-    <string name="help_overlay_network_indexing_text1_lb">Naudodami + mygtuką pridėsite aplanko ir poaplankių turinį į mediateką.</string>
     <string name="help_overlay_network_indexing_text2">Tai leis jums ieškoti viršelių ir aprašymų filmams bei serialams.</string>
     <string name="help_overlay_scraper_text">Paspauskite šį menių punktą viršelių ir aprašymų paieškai tinkle. </string>
     <string name="new_videos_count">Nauji video: %d</string>
@@ -562,12 +477,9 @@
     <string name="connection_abnormally_long">Susijungimas neįprastai ilgas. Nutraukti?</string>
     <string name="connection_reset">Nutraukti</string>
     <!-- Info dialog, not indexed file -->
-    <string name="video_info_unindexed_message">Failas dar neindeksuotas jūsų mediatekoje.\nViršelių ir info paieška galima tik indeksuotiems failams.\nAr norite indeksuoti dabar?</string>
-    <string name="video_info_unindexed_message2">Failas apdorojamas. Tai gali užtrukti.</string>
     <string name="video_browser_index_file">Pridėti į mediateką</string>
     <string name="video_browser_unindex_file">Pašalinti iš mediatekos</string>
     <!-- Brightness -->
-    <string name="auto_brightness_message">Šviesumas negali būti keičiamas nes įrenginyje įjungtas automatinis reguliavimas.</string>
     <!--  Nfo File parsing -->
     <string name="network_nfo_parse">Apdoroti \'.nfo\' failus</string>
     <string name="network_nfo_parse_summary">Įtraukti Kodi \'.nfo\' failus nuskaitant media informaciją aprašymų ir viršelių gavimui.</string>
@@ -672,7 +584,6 @@
     <string name="torrent_blocklist">Blokuojami</string>
     <string name="blocklist_empty">URL neturi būti tuščia</string>
     <string name="blocklist_invalid">Blokuojamų sąrašas netinkamas</string>
-    <string name="blocklist_downloading">Atsiunčiamas blokuojamų sąrašas</string>
     <string name="blocklist_file_not_found">Failas nerastas</string>
     <string name="blocklist_success">Blokuojami atnaujinti</string>
     <string name="blocklist_unknown_error">Nežinoma</string>
@@ -683,18 +594,14 @@
     <string name="share_infos_incomplete">Turite įvesti kelią</string>
     <string name="share_path">Kelias</string>
     <string name="category_trakt">Trakt</string>
-    <string name="trakt_user">Naudotojo vardas</string>
-    <string name="trakt_password">Slaptažodis</string>
     <string name="trakt_signin">Prisijungti</string>
     <string name="trakt_list_signin">Prisijungti prie Trakt</string>
-    <string name="trakt_status_login">Prisijungiama&#8230;</string>
     <string name="trakt_signin_summary_logged">Prisijungta</string>
     <string name="trakt_signin_summary_logged_error">Autentifikavimo klaida</string>
     <string name="trakt_signin_summary">Neprisijungta</string>
     <string name="trakt_relog_description">Klaida jungiantis prie Trakt. Prisijunkite dar kartą.</string>
     <string name="trakt_signin_dialog_title">Prisijungti</string>
     <string name="trakt_signin_title">Prisijungti</string>
-    <string name="trakt_wipe_dialog_title">Atsijungi iš Trakt.tv\?</string>
     <string name="trakt_wipe_title">Atsijungi iš Trakt.tv</string>
     <string name="trakt_live_scrobbling_title">Atpažinimas</string>
     <string name="trakt_live_scrobbling_summary">Dalintis peržiūrėtais video Trakt</string>
@@ -704,6 +611,7 @@
     <string name="trakt_sync_trakt_resume">Naudoti Trakt tęsimo poziciją kai ji tolimesnė nei lokali</string>
     <string name="trakt_sync_collection_summary">Automatiškai pridėti visus video iš Nova mediatekos į Trakt kolekciją</string>
     <string name="trakt_toast_syncing">Sinchronizuojama su Trakt&#8230;</string>
+    <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Visi vaizdo įrašai</string>
     <string name="hide_seen">Nežiūrėta</string>
     <string name="search_results">Paieškos rezultatai</string>
@@ -735,7 +643,6 @@
     <string name="leanback_scrap">Ieškoti info</string>
     <string name="leanback_scrap_choose_the_description">Pasirinkti info</string>
     <string name="leanback_scrap_choose_the_description_for">"Pasirinkti info \"%s\""</string>
-    <string name="leanback_scrap_searching_general_hint">Filmo ar serialo pavadinimas</string>
     <string name="leanback_scrap_searching_tvshow_hint">Serialo pavadinimas</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Klasikinė sąsaja</string>
@@ -769,7 +676,6 @@
     <string name="rescan_when_opening_application">Nuskaityti atidarius programą</string>
     <string name="last_rescan_occured">Paskutinį kartą nuskaityta:</string>
     <string name="error_permission_display_over_apps">Lango režimui reikia spec. leidimų, kad galėtų būti rodomas virš kitų programų. Suteikite Nova Video grotuvui šį leidimą ir perjunkite į lango režimą.</string>
-    <string name="intro_overlay_text">Palieskite video transliavimui į TV</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Daugiau</string>
@@ -790,44 +696,23 @@
     <string name="system">Sistema</string>
     <string name="keep_setting">Globalus nustatymas</string>
     <string name="select_sub_file"><![CDATA[Nerasti tiksliai sutampantys titrai failui <font color=#29b6f6><i>%s</i></font><br />Pabandykite rasti šiame sąraše:]]></string>
-    <string name="switch_remote_empty_message">Perjungimas į nuotolinio ekrano režimą gali suteikti daugiau galimybių</string>
-    <string name="cast_stream_mode">Transliavimo režimas</string>
-    <string name="cast_remote_display_mode">Nuotolinis ekranas</string>
-    <string name="cast_remote_display_mode_description">visi formatai palaikomi Nova Video grotuvo gali būti peržiūrimi nuotoliniame ekrane. Tačiau kokybė gali būti prastesnė.</string>
-    <string name="cast_stream_mode_description">Optimali kokybė, tačiau ne visi formatai palaikomi</string>
     <string name="sleep_timer_title">Miego laikmatis</string>
     <string name="sleep_timer_description">Stabdyti video po: </string>
-    <string name="cast_mode">Transliavimo režimas</string>
-    <string name="cast_info">Info</string>
-    <string name="troubleshoot_streammode_msg">Šiuo metu Nova Video grotuvas yra transliavimo režime.
-        \nSuteikiama gera vaizdo kokybė, tačiau gali kilti problemų su garso takeliais ir subtitrais.
-        Pabandykite perjungti į nuotolinio ekrano režimą.</string>
-    <string name="troubleshoot_remotemode_msg">Šiuo metu Nova video grotuvas yra nuotolinio ekrano režime.
-        \nPriklausomai nuo jūsų įrenginio ir tinklo kokybės, galite pajusti kokybės ir našumo problemas. </string>
     <string name="picture_in_picture">Vaizdas vaizde</string>
     <string name="cast">Transliavimas</string>
-    <string name="cast_warning">Transliavimo palaikymas ribojamas Chromecast kodekų ribojimu. Šių ribojimų sumažinimui realizuoti du transliavimo būdai: Chromecast ir Screencast. Atminkite, kad kokybės ir našumo problemos gali kilti dėl tinklo ar įrenginio apribojimų.</string>
-    <string name="cast_warning_title">Eksperimentinė funkcija</string>
-    <string name="cast_fallback_message">Klaida: grįžta į ekrano transliavimą</string>
-    <string name="cast_introduction">Nauja, eksperimentinė funkcija : \nGoogle cast</string>
-    <string name="cast_select_for_full_control">Palieskite valdiklio išplėtimui</string>
     <string name="cast_audio_background">Garso nebus kai Nova Video grotuvas bus fone</string>
     <string name="help_faq">Pagalba / DUK</string>
     <string name="provider_folders">Debesis</string>
-    <string name="learn_more">Sužinoti daugiau</string>
-    <string name="learn_more_about_codecs">Nova Video grotuvas gali atkurti tik tuos video, kuriuos palaiko jūsų įrenginys. Dėl licencijų, kai vieni formatai negali būti pridėti, kitus galite įsigyti Google Play.</string>
     <string name="rate_us">Jei patinka ši programa, įvertinkite 5 žvaigždutėmis</string>
     <string name="rate_us_title">☆ Palaikykite mus</string>
     <string name="create_new_list">Sukurti naują sąrašą</string>
     <string name="add_to_list">Pridėti į sąrašą</string>
     <string name="no_resume_available">Tęsti šiuo metu negalima</string>
     <string name="no_list_detected">Sąrašas nerastas. Sąrašas gali būti sukurtas pridedant naujus elementus tiesiai iš video info, arba sinchronizuotas su Trakt paskyra.</string>
-    <string name="premium_already_purchased">Jūs jau turite Premium</string>
     <string name="remove_from_list">Pašalinti iš sąrašo</string>
     <string name="warning_swdec">Įspėjimas: aparatinis dekodavimas išjungtas!</string>
     <string name="list_title">Sąrašo pavadinimas</string>
     <string name="loading">Įkeliama…</string>
-    <string name="connecting">Jungiamasi…</string>
     <string name="refreshrate_failed">Nepavyko nustatyti reikiamo kadrų dažnio</string>
     <string name="sponsor">Nova rėmėjas</string>
     <string name="enable_sponsor_title">Įjungti Nova rėmėjo nuorodą</string>

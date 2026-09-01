@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.browser;
 
+import android.annotation.SuppressLint;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,7 +31,6 @@ import com.archos.mediacenter.video.utils.TorrentPathDialogPreference;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.Handler;
@@ -47,6 +48,8 @@ import org.slf4j.LoggerFactory;
 public class TorrentObserverService extends Service implements DefaultLifecycleObserver {
 
     private static final Logger log = LoggerFactory.getLogger(TorrentObserverService.class);
+    @SuppressLint("StaticFieldLeak")
+    private static volatile TorrentObserverService sInstance;
 
     private static final String DEFAULT_TORRENT_PATH = "/sdcard/";
     public static final String BLOCKLIST = "blocklist";
@@ -118,6 +121,7 @@ public class TorrentObserverService extends Service implements DefaultLifecycleO
     @Override
     public void onCreate() {
         super.onCreate();
+        sInstance = this;
         // Register as a lifecycle observer
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
     }
@@ -127,9 +131,9 @@ public class TorrentObserverService extends Service implements DefaultLifecycleO
         if(i==null)
             return START_STICKY;
         if (log.isDebugEnabled()) log.debug("Got intent {}", i.getAction());
-        if(i.getAction().equals(intentPaused)) {
+        if(intentPaused.equals(i.getAction())) {
             _paused();
-        } else if(i.getAction().equals(intentResumed)) {
+        } else if(intentResumed.equals(i.getAction())) {
             _resumed();
         }
         return START_STICKY;
@@ -137,14 +141,30 @@ public class TorrentObserverService extends Service implements DefaultLifecycleO
 
     static public void paused(Context ctxt) {
         if (log.isDebugEnabled()) log.debug("Sending paused intent");
-        Intent i = new Intent(intentPaused, Uri.EMPTY, ctxt.getApplicationContext(), TorrentObserverService.class);
-        ctxt.getApplicationContext().startService(i);
+        TorrentObserverService service = sInstance;
+        if (service != null) {
+            service._paused();
+        }
     }
 
     static public void resumed(Context ctxt) {
         if (log.isDebugEnabled()) log.debug("Sending resumed intent");
-        Intent i = new Intent(intentResumed, Uri.EMPTY, ctxt.getApplicationContext(), TorrentObserverService.class);
-        ctxt.getApplicationContext().startService(i);
+        TorrentObserverService service = sInstance;
+        if (service == null) {
+            return;
+        }
+        service._resumed();
+
+        // Keep the bound torrent service alive across the loader/player binding handoff. Do not
+        // include the resume action because it was delivered directly above.
+        Intent i = new Intent(ctxt.getApplicationContext(), TorrentObserverService.class);
+        try {
+            ctxt.getApplicationContext().startService(i);
+        } catch (IllegalStateException e) {
+            // An activity can reach onResume before Android marks the app as foreground. The
+            // existing bound service has already received the resume signal, so this is harmless.
+            log.warn("Unable to keep torrent observer started while app is considered background: {}", e.getMessage());
+        }
     }
 
     public void setObserver(TorrentThreadObserver observer){
@@ -472,6 +492,10 @@ public class TorrentObserverService extends Service implements DefaultLifecycleO
     @Override
     public void onDestroy() {
         if (log.isDebugEnabled()) log.debug("onDestroy()");
+        if (sInstance == this) {
+            sInstance = null;
+        }
+        ProcessLifecycleOwner.get().getLifecycle().removeObserver(this);
         cleanup(); // Call cleanup here
         super.onDestroy();
     }
