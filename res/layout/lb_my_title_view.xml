@@ -33,9 +33,9 @@
         android:id="@+id/title_orb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical|start"
+        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
+        android:layout_marginTop="27dip"
         android:layout_marginEnd="28dip"
         android:transitionGroup="true"
         android:visibility="visible" />
@@ -44,8 +44,7 @@
         android:id="@+id/title_orb2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical|start"
+        android:layout_alignTop="@id/title_orb"
         android:layout_toEndOf="@id/title_orb"
         android:layout_marginEnd="28dip"
         android:transitionGroup="true"
@@ -55,8 +54,7 @@
         android:id="@+id/title_orb3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical|start"
+        android:layout_alignTop="@id/title_orb"
         android:layout_toEndOf="@id/title_orb2"
         android:layout_marginEnd="28dip"
         android:transitionGroup="true"
@@ -66,8 +64,7 @@
         android:id="@+id/title_orb4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical|start"
+        android:layout_alignTop="@id/title_orb"
         android:layout_toEndOf="@id/title_orb3"
         android:layout_marginEnd="28dip"
         android:transitionGroup="true"
@@ -77,8 +74,7 @@
         android:id="@+id/title_orb5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical|start"
+        android:layout_alignTop="@id/title_orb"
         android:layout_toEndOf="@id/title_orb4"
         android:transitionGroup="true"
         android:visibility="visible" />
@@ -91,7 +87,8 @@
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@id/title_orb5"
         android:layout_marginStart="16dp"
-        android:layout_centerVertical="true"
+        android:layout_alignTop="@id/title_orb"
+        android:layout_alignBottom="@id/title_orb"
         android:gravity="end|center_vertical"
         android:maxLines="1"
         android:ellipsize="none"
@@ -103,18 +100,19 @@
         android:id="@+id/hint_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_alignTop="@id/title_orb3"
+        android:layout_marginTop="-19dip"
         android:layout_gravity="center_vertical|start"
-        android:layout_toEndOf="@id/title_orb3"
-        android:layout_marginStart="16dip"
+        android:layout_toEndOf="@id/title_orb4"
+        android:layout_marginStart="-14dip"
         android:visibility="gone" />
 
-    <!-- HINT: using translationY to put it under the Orb to avoid enlarging the parent viewgroup ;-) -->
+    <!-- HINT: align to top of Orb with fixed translationY to put it consistently under the Orb -->
     <TextView
         android:id="@+id/orb1_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/title_orb"
+        android:layout_alignTop="@+id/title_orb"
         android:layout_alignEnd="@+id/title_orb"
         android:layout_alignStart="@+id/title_orb"
         android:layout_marginEnd="-64dip"
@@ -124,14 +122,13 @@
         android:textColor="@color/leanback_discreet_text_over_background"
         android:singleLine="true"
         android:gravity="center"
-        android:translationY="32dip"/>
+        android:translationY="56dip"/>
 
-    <!-- HINT: using translationY to put it under the Orb to avoid enlarging the parent viewgroup ;-) -->
     <TextView
         android:id="@+id/orb2_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/title_orb2"
+        android:layout_alignTop="@+id/title_orb2"
         android:layout_alignEnd="@+id/title_orb2"
         android:layout_alignStart="@+id/title_orb2"
         android:layout_marginEnd="-64dip"
@@ -141,14 +138,13 @@
         android:textColor="@color/leanback_discreet_text_over_background"
         android:singleLine="true"
         android:gravity="center"
-        android:translationY="32dip"/>
+        android:translationY="56dip"/>
 
-    <!-- HINT: using translationY to put it under the Orb to avoid enlarging the parent viewgroup ;-) -->
     <TextView
         android:id="@+id/orb3_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/title_orb3"
+        android:layout_alignTop="@+id/title_orb3"
         android:layout_alignEnd="@+id/title_orb3"
         android:layout_alignStart="@+id/title_orb3"
         android:layout_marginEnd="-64dip"
@@ -158,13 +154,13 @@
         android:textColor="@color/leanback_discreet_text_over_background"
         android:singleLine="true"
         android:gravity="center"
-        android:translationY="32dip"/>
+        android:translationY="56dip"/>
 
     <TextView
         android:id="@+id/orb4_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/title_orb4"
+        android:layout_alignTop="@+id/title_orb4"
         android:layout_alignEnd="@+id/title_orb4"
         android:layout_alignStart="@+id/title_orb4"
         android:layout_marginEnd="-64dip"
@@ -174,13 +170,13 @@
         android:textColor="@color/leanback_discreet_text_over_background"
         android:singleLine="true"
         android:gravity="center"
-        android:translationY="32dip"/>
+        android:translationY="56dip"/>
 
     <TextView
         android:id="@+id/orb5_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/title_orb5"
+        android:layout_alignTop="@+id/title_orb5"
         android:layout_alignEnd="@+id/title_orb5"
         android:layout_alignStart="@+id/title_orb5"
         android:layout_marginEnd="-64dip"
@@ -190,6 +186,6 @@
         android:textColor="@color/leanback_discreet_text_over_background"
         android:singleLine="true"
         android:gravity="center"
-        android:translationY="32dip"/>
+        android:translationY="56dip"/>
 
 </merge>
