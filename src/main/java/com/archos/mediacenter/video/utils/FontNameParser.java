@@ -49,10 +49,8 @@ public class FontNameParser {
          * information beyond the family (e.g. "Bahnschrift" + "Bold" -> "Bahnschrift Bold"),
          * or just the family if the style is redundant/generic (e.g. "Regular"). */
         public String displayLabel() {
-            if (style == null || style.isEmpty() ||
-                    style.equalsIgnoreCase("Regular") || style.equalsIgnoreCase(family)) {
+            if (style == null || style.isEmpty())
                 return family;
-            }
             return family + " " + style;
         }
     }
