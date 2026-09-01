@@ -529,6 +529,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         // file has been parsed (one file can yield 0, 1, or many entries).
         java.util.List<CharSequence> entryLabels = new java.util.ArrayList<>();
         java.util.List<CharSequence> entryValues = new java.util.ArrayList<>();
+        java.util.Set<String> seenLabels = new java.util.HashSet<>();
 
         for (java.io.File file : files) {
             FontNameParser.Entry[] parsed = FontNameParser.parse(file.getAbsolutePath());
@@ -537,8 +538,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 continue;
             }
             for (FontNameParser.Entry entry : parsed) {
-                entryLabels.add(entry.displayLabel());
-                entryValues.add(file.getName() + entry.encodeSelector());
+                String label = entry.displayLabel();
+                if (seenLabels.add(label)) {
+                    entryLabels.add(label);
+                    entryValues.add(file.getName() + entry.encodeSelector());
+                }
             }
         }
 
