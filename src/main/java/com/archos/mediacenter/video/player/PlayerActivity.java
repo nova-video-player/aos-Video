@@ -803,6 +803,26 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             log.info("onStart: Set max PCM channels to {}", maxPcmChannels);
             LibAvos.setPcmChannelMasks(CustomApplication.getHdmiChannelMasks());
             LibAvos.setPassthrough(CustomApplication.isPassthroughSupported() ? Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0") ) : 0);
+            // Dolby Vision playback mode: passthrough to the device DV decoder (0) or
+            // software HEVC decode + GPU tone-mapping to HDR10 (1, mpv/libplacebo style)
+            LibAvos.setDolbyVisionMode(Integer.parseInt(mPreferences.getString(VideoPreferencesCommon.KEY_DOLBY_VISION_MODE, "0")));
+            // Dolby Vision tone-map target luminance: "0" = auto (display reported max)
+            float dvTargetNits = 0f;
+            try {
+                dvTargetNits = Float.parseFloat(mPreferences.getString(VideoPreferencesCommon.KEY_DOLBY_VISION_TARGET_NITS, "0"));
+            } catch (NumberFormatException ignored) {
+            }
+            if (dvTargetNits <= 0f && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                android.view.Display.HdrCapabilities hdrCaps = getWindowManager().getDefaultDisplay().getHdrCapabilities();
+                if (hdrCaps != null && hdrCaps.getDesiredMaxLuminance() > 0f) {
+                    dvTargetNits = hdrCaps.getDesiredMaxLuminance();
+                    if (log.isDebugEnabled()) log.debug("onStart: DV tone-map auto target {} nits from display", dvTargetNits);
+                }
+            }
+            LibAvos.setDolbyVisionTargetNits(dvTargetNits);
+            // DV plane scaler (EL residual + chroma upscale = mpv --cscale equivalent);
+            // default 0 = inherit from the main scaler (lanczos, same as mpv's default)
+            LibAvos.setDolbyVisionPlaneScaler(Integer.parseInt(mPreferences.getString(VideoPreferencesCommon.KEY_DOLBY_VISION_PLANE_SCALER, "0")));
             if (mPreferences.getBoolean(VideoPreferencesCommon.KEY_FORCE_AUDIO_PASSTHROUGH, false)) {
                 long forcedFlags = CustomApplication.allHdmiAudioCodecs;
                 if (!CustomApplication.isIecEncapsulationCapable()) {

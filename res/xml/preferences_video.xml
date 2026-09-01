@@ -151,6 +151,33 @@
             android:title="@string/preference_remove_dolby_vision"
             app:iconSpaceReserved="false"/>
         <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="@string/preference_dolby_vision_mode"
+            android:entries="@array/pref_dolby_vision_mode_entries"
+            android:entryValues="@array/pref_dolby_vision_mode_values"
+            android:key="dolby_vision_mode"
+            android:persistent="true"
+            android:summary="@string/preference_dolby_vision_mode_summary"
+            android:title="@string/preference_dolby_vision_mode"
+            app:iconSpaceReserved="false"/>
+        <com.archos.mediacenter.video.utils.DolbyVisionNitsPreference
+            android:defaultValue="0"
+            android:key="dolby_vision_target_nits"
+            android:persistent="true"
+            android:summary="@string/preference_dolby_vision_target_nits_summary"
+            android:title="@string/preference_dolby_vision_target_nits"
+            app:iconSpaceReserved="false"/>
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="@string/preference_dolby_vision_plane_scaler"
+            android:entries="@array/pref_dolby_vision_plane_scaler_entries"
+            android:entryValues="@array/pref_dolby_vision_plane_scaler_values"
+            android:key="dolby_vision_plane_scaler"
+            android:persistent="true"
+            android:summary="@string/preference_dolby_vision_plane_scaler_summary"
+            android:title="@string/preference_dolby_vision_plane_scaler"
+            app:iconSpaceReserved="false"/>
+        <ListPreference
             android:dialogTitle="@string/favAudioLang_title"
             android:entries="@array/entries_list_preference"
             android:entryValues="@array/entryvalues_list_preference"
