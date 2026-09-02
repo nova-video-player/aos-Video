@@ -537,7 +537,7 @@
     <string name="preferences_enable_dynamic_audio_delay_title">Dynamic audio/video delay estimation</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Use dynamic latency estimation for better audio/video sync especially with bluetooth headsets. Disable if experiencing sync issues.</string>
     <string name="preferences_disable_downmix_title">Disable audio stereo downmix</string>
-    <string name="preferences_disable_downmix_summary">Always decode all channels and let Android downmix depending on audio output capability (can result in loosing voice channels)</string>
+    <string name="preferences_disable_downmix_summary">Always decode all channels and let Android downmix depending on audio output capability (can result in losing voice channels)</string>
     <string name="preferences_enable_downmix_androidtv_title">Force audio stereo downmix</string>
     <string name="preferences_enable_downmix_androidtv_summary">Always downmix multiple channels audio track to stereo (to be selected if voice channels are not audible)</string>
     <string name="preferences_allow_3rd_party_player">Allow using another video player</string>
