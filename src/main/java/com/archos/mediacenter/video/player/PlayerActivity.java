@@ -3195,6 +3195,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mUri = mVideoInfo.uri;
             if (log.isDebugEnabled()) log.debug("setVideoInfo mVideoId: {}", mVideoId);
 
+            if (getIntent() != null && mUri != null) {
+                getIntent().setData(mUri);
+                getIntent().removeExtra("title");
+                getIntent().removeExtra(Intent.EXTRA_TITLE);
+                getIntent().removeExtra("extra_name");
+            }
+
             if (!mCling && !TextUtils.isEmpty(mVideoInfo.title)) {
                 mTitle = mVideoInfo.title;
             }
@@ -4497,6 +4504,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         public void setUri(Uri uri, Uri streamingUri){
             mUri = uri;
             mStreamingUri = streamingUri;
+            if (getIntent() != null) {
+                getIntent().setData(uri);
+                if (streamingUri != null) {
+                    getIntent().putExtra(KEY_STREAMING_URI, streamingUri);
+                } else {
+                    getIntent().removeExtra(KEY_STREAMING_URI);
+                }
+            }
             final String scheme = mUri.getScheme();
             if (getIntent().getStringExtra("title") != null)
                 mTitle = getIntent().getStringExtra("title");
