@@ -154,6 +154,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_PARSER_SYNC_MODE = "parser_sync_mode";
     public static final String KEY_DOLBY_VISION_MODE = "dolby_vision_mode";
     public static final String KEY_DISABLE_DOLBY_VISION = "disable_dolby_vision";
+    public static final String KEY_DOLBY_VISION_MODE = "dolby_vision_mode";
+    public static final String KEY_DOLBY_VISION_TARGET_NITS = "dolby_vision_target_nits";
+    public static final String KEY_DOLBY_VISION_PLANE_SCALER = "dolby_vision_plane_scaler";
     public static final String KEY_STREAM_BUFFER_SIZE = "stream_buffer_size";
     public static final String KEY_STREAM_MAX_IFRAME_SIZE = "stream_max_iframe_size";
     public static final String KEY_PLAYBACK_SPEED = "playback_speed";
