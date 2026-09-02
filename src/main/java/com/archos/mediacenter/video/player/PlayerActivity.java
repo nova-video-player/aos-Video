@@ -966,6 +966,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         if (log.isDebugEnabled()) log.debug("onStart: Setting audio transformer");
         if (LibAvos.isAvailable()) {
             VideoPreferencesCommon.resetPassthroughPref(mPreferences); // note this resets the audio_speed if in passthrough to 1.0f in prefs
+            VideoPreferencesCommon.migrateDolbyVisionRenderModePreference(mPreferences); // carry the pre-rename pipeline pref over (once) so an upgrade keeps tone-map selected
             // enable passthrough only if HDMI is connected and enabled in options
             // Use effective max PCM channels
             int maxPcmChannels = CustomApplication.getEffectiveMaxPcmChannels();
@@ -983,7 +984,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             resetUnsupportedPassthroughAudioDelayPreset();
             // Dolby Vision playback mode: passthrough to the device DV decoder (0) or
             // software HEVC decode + GPU tone-mapping to HDR10 (1, mpv/libplacebo style)
-            LibAvos.setDolbyVisionMode(Integer.parseInt(mPreferences.getString(VideoPreferencesCommon.KEY_DOLBY_VISION_MODE, "0")));
+            LibAvos.setDolbyVisionMode(Integer.parseInt(mPreferences.getString(VideoPreferencesCommon.KEY_DOLBY_VISION_RENDER_MODE, "0")));
             // Dolby Vision tone-map target luminance: "0" = auto (display reported max)
             float dvTargetNits = 0f;
             try {

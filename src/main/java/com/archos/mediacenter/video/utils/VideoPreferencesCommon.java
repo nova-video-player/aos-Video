@@ -154,7 +154,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_PARSER_SYNC_MODE = "parser_sync_mode";
     public static final String KEY_DOLBY_VISION_MODE = "dolby_vision_mode";
     public static final String KEY_DISABLE_DOLBY_VISION = "disable_dolby_vision";
-    public static final String KEY_DOLBY_VISION_MODE = "dolby_vision_mode";
+    /** Native DV pipeline select (passthrough vs GPU tone-map) - distinct from
+     * upstream's dolby_vision_mode track-handling pref, which CodecDiscovery owns. */
+    public static final String KEY_DOLBY_VISION_RENDER_MODE = "dolby_vision_render_mode";
     public static final String KEY_DOLBY_VISION_TARGET_NITS = "dolby_vision_target_nits";
     public static final String KEY_DOLBY_VISION_PLANE_SCALER = "dolby_vision_plane_scaler";
     public static final String KEY_STREAM_BUFFER_SIZE = "stream_buffer_size";
@@ -633,6 +635,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         mSharedPreferences = getPreferenceManager().getSharedPreferences();
         migrateDolbyVisionPreference(mSharedPreferences);
+        migrateDolbyVisionRenderModePreference(mSharedPreferences);
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
         final Preference pref = (Preference) findPreference(KEY_VIDEO_OS);
         pref.setEnabled(true);
@@ -1416,6 +1419,26 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         String doViModeValue = getDolbyVisionModeValue(sharedPreferences.getBoolean(KEY_DISABLE_DOLBY_VISION, false));
         sharedPreferences.edit().putString(KEY_DOLBY_VISION_MODE, doViModeValue).apply();
+    }
+
+    /**
+     * The native-pipeline select (passthrough vs GPU tone-map) previously lived under
+     * the same "dolby_vision_mode" key as upstream's DV track-handling pref. Carry the
+     * user's choice over to the renamed "dolby_vision_render_mode" key once, so an
+     * upgrade never silently falls back to passthrough.
+     */
+    public static void migrateDolbyVisionRenderModePreference(SharedPreferences sharedPreferences) {
+        if (sharedPreferences.contains(KEY_DOLBY_VISION_RENDER_MODE)
+                || !sharedPreferences.contains(KEY_DOLBY_VISION_MODE)) {
+            return;
+        }
+
+        // Pre-rename values were the native pipeline modes "0" (passthrough) and
+        // "1" (tone-map); anything else (upstream's auto/off/force from a newer
+        // install) defaults to passthrough.
+        String legacy = sharedPreferences.getString(KEY_DOLBY_VISION_MODE, "0");
+        String renderMode = "1".equals(legacy) ? "1" : "0";
+        sharedPreferences.edit().putString(KEY_DOLBY_VISION_RENDER_MODE, renderMode).apply();
     }
 
     private int findLanguageIndex(List<String> languageEntryValues, String language) {
