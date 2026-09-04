@@ -62,6 +62,14 @@ found its end is **extended** across any other eligible segment that starts at
 or before the running end and ends later, chaining until no further extension is
 possible. The result is a **single seek to the furthest merged end**.
 
+### Safety buffer
+
+To prevent jarring cuts or missing dialogue right at the transition back into the
+media, a safety buffer of `AUTO_SKIP_BUFFER_MS` (2000 ms) is subtracted from the
+target end timestamp (`Math.max(0, skip.endMs - AUTO_SKIP_BUFFER_MS)`). If the
+buffered target is already at or before the current playback position, skipping is
+bypassed.
+
 ### End-of-media guard
 
 If the (merged) skip target lands within `AUTO_SKIP_END_MARGIN_MS` (5000 ms) of
@@ -117,15 +125,17 @@ recapEnabled = mPlayMode == PLAYMODE_BINGE && mArrivedViaBingeTransition;
 
 skip = segments.findSkip(position, introEnabled, recapEnabled);   // MediaLib
 if (skip == null) return;
+targetMs = max(0, skip.endMs - AUTO_SKIP_BUFFER_MS);
+if (targetMs <= position) return;
 if (skip.endMs == mLastAutoSkippedEndMs) return;   // anti-fight
 mLastAutoSkippedEndMs = skip.endMs;
 
-if (duration > 0 && skip.endMs >= duration - AUTO_SKIP_END_MARGIN_MS) {
+if (duration > 0 && targetMs >= duration - AUTO_SKIP_END_MARGIN_MS) {
     showAutoSkipToast(skip.type);
     onCompletion();        // end-of-media guard: complete instead of seek
     return;
 }
-seekTo(skip.endMs);
+seekTo(targetMs);
 showAutoSkipToast(skip.type);
 ```
 
