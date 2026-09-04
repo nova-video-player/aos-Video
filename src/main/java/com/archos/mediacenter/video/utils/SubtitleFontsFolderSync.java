@@ -20,6 +20,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.DocumentsContract;
 
+import androidx.preference.PreferenceManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,44 +40,33 @@ import java.util.Set;
  * Custom subtitle fonts folder (MX Player / mpv-android style third-party fonts dir),
  * implemented via the Storage Access Framework instead of a raw filesystem path.
  *
- * WHY SAF AND NOT A PLAIN FOLDER PATH: this app only requests/holds the granular
- * "Photos and videos" media permissions (READ_MEDIA_IMAGES/READ_MEDIA_VIDEO), not
- * MANAGE_EXTERNAL_STORAGE. Under Android scoped storage, a shared folder like
- * Download/Subtitles is only visible to File.listFiles() for (a) media files the OS
- * classifies as photo/video/audio, or (b) files the app itself created -- confirmed by
- * direct logcat testing: a .mkv placed in a folder shows up in the RAW unfiltered
- * File.listFiles() result, a .ttf placed in the SAME folder does not appear AT ALL, not
- * merely filtered by app logic. SAF's ACTION_OPEN_DOCUMENT_TREE grant is a completely
- * separate access path from that media permission model: once the user taps "USE THIS
- * FOLDER" for a directory, the app gets a persistable content:// URI grant to that
- * specific tree, independent of and unaffected by the media-only permission scope.
+ * WHY SAF AND NOT A PLAIN FOLDER PATH: this app only holds the granular "Photos and
+ * videos" media permissions, not MANAGE_EXTERNAL_STORAGE. Under scoped storage, a plain
+ * folder listing only shows files the OS classifies as photo/video/audio, so font files
+ * in a shared folder wouldn't be visible. SAF's ACTION_OPEN_DOCUMENT_TREE grant is a
+ * separate access path, unaffected by that media-only scope, and can be persisted via
+ * takePersistableUriPermission().
  *
- * WHY COPY INTO A CACHE DIR RATHER THAN READ SAF DIRECTLY FROM NATIVE CODE: the native
- * side (sub_format_ssa.c's load_fonts_dir()) does plain opendir()/fopen()/fread() on a
- * filesystem path -- there is no such thing as a filesystem path for a content:// URI,
- * so native code cannot open one directly, and there's no clean way to hand a
- * ParcelFileDescriptor across the JNI boundary into that existing code without a much
- * larger rewrite of the SSA backend. Copying matched font files into
- * getCacheDir()/subtitle_fonts/ instead means: (1) the existing native pipeline needs
- * ZERO changes -- it keeps reading a plain directory path exactly as before, just
- * pointed at this cache dir instead of a user-visible one; (2) the copy only needs to
- * happen when the SAF folder changes, not on every video (see syncIfNeeded() below).
+ * WHY COPY INTO getFilesDir() (NOT getCacheDir()) RATHER THAN READ SAF DIRECTLY FROM
+ * NATIVE CODE: the native side (sub_format_ssa.c's load_fonts_dir()) does plain
+ * opendir()/fopen()/fread() on a filesystem path, so it can't open a content:// URI
+ * directly. Copying matched fonts into a plain app-private directory means the native
+ * pipeline needs zero changes. getFilesDir() over getCacheDir() specifically: the OS can
+ * reclaim cache dir contents under storage pressure with no notification, which left
+ * KEY_SUBTITLE_FONTS_FOLDER pointing at a directory that no longer existed between
+ * Settings visits. getFilesDir() only clears on Clear Data/uninstall, same as
+ * SharedPreferences, so the pref and the directory it points at always stay in sync.
  *
- * WHY RAW ContentResolver.query() INSTEAD OF DocumentFile: an earlier revision used
- * androidx.documentfile.provider.DocumentFile's fromTreeUri()/listFiles(), which is
- * correct but expensive at scale -- DocumentFile's isFile()/getName()/lastModified()/
- * length() are each their OWN independent ContentResolver round trip per child, so
- * listing a folder of N fonts cost up to 4N SAF queries. Every method below instead
- * does exactly ONE ContentResolver.query() over the tree's children, requesting every
- * column needed (document ID, name, mimetype, size, lastModified) in a single
- * projection -- this is the pattern Android's own SAF performance guidance recommends
- * over DocumentFile for anything beyond a handful of files.
+ * WHY RAW ContentResolver.query() INSTEAD OF DocumentFile: DocumentFile's isFile()/
+ * getName()/lastModified()/length() are each their own ContentResolver round trip, so
+ * listing N fonts costs up to 4N SAF queries. Every method below does exactly ONE
+ * ContentResolver.query() requesting every needed column in a single projection.
  */
 public class SubtitleFontsFolderSync {
 
     private static final Logger log = LoggerFactory.getLogger(SubtitleFontsFolderSync.class);
 
-    private static final String CACHE_SUBDIR = "subtitle_fonts";
+    private static final String FONTS_SUBDIR = "subtitle_fonts";
 
     private static final String[] QUERY_PROJECTION = {
             DocumentsContract.Document.COLUMN_DOCUMENT_ID,
@@ -102,13 +93,14 @@ public class SubtitleFontsFolderSync {
         return FONT_EXTENSIONS.contains(name.substring(dot + 1).toLowerCase(Locale.ROOT));
     }
 
-    /** Returns the app-private cache directory native code should be pointed at (via
+    /** Returns the app-private directory native code should be pointed at (via
      * SubtitleEngine.setFontsFolder()) -- this is always a plain filesystem path,
      * regardless of what SAF tree URI it was last synced from. Safe to call even if
      * nothing has ever been synced yet (returns the directory whether or not it has
-     * been created/populated). */
-    public static File getCacheDir(Context context) {
-        return new File(context.getCacheDir(), CACHE_SUBDIR);
+     * been created/populated). Deliberately under getFilesDir(), not getCacheDir() --
+     * see the class-level Javadoc for why. */
+    public static File getFontsStoreDir(Context context) {
+        return new File(context.getFilesDir(), FONTS_SUBDIR);
     }
 
     /** One font document discovered by a single batched query -- documentId/name/size/
@@ -201,7 +193,7 @@ public class SubtitleFontsFolderSync {
 
     /**
      * Copies every `docs` entry (already fetched by queryFontDocs() -- no further SAF
-     * queries here) into `cacheDir`, wiping it first. Deliberately NOT incremental/diffed
+     * queries here) into `storeDir`, wiping it first. Deliberately NOT incremental/diffed
      * against the previous contents -- SAF trees are typically small (a folder of fonts,
      * not a media library), and a full wipe-and-recopy avoids an entire class of bugs
      * around stale cached fonts outliving a file the user removed from the SAF folder.
@@ -209,9 +201,9 @@ public class SubtitleFontsFolderSync {
      * by syncFromTree() and syncIfNeeded() below so there's exactly one place that talks
      * to ContentResolver.openInputStream().
      */
-    private static int copyToCache(Context context, Uri treeUri, List<FontDoc> docs, File cacheDir) {
-        if (cacheDir.exists()) {
-            File[] stale = cacheDir.listFiles();
+    private static int copyToCache(Context context, Uri treeUri, List<FontDoc> docs, File storeDir) {
+        if (storeDir.exists()) {
+            File[] stale = storeDir.listFiles();
             if (stale != null) {
                 for (File f : stale) {
                     if (!f.delete()) {
@@ -219,8 +211,8 @@ public class SubtitleFontsFolderSync {
                     }
                 }
             }
-        } else if (!cacheDir.mkdirs()) {
-            log.warn("copyToCache: failed to create cache dir '{}'", cacheDir.getAbsolutePath());
+        } else if (!storeDir.mkdirs()) {
+            log.warn("copyToCache: failed to create fonts store dir '{}'", storeDir.getAbsolutePath());
             return -1;
         }
 
@@ -228,7 +220,7 @@ public class SubtitleFontsFolderSync {
         int copied = 0;
         for (FontDoc doc : docs) {
             Uri docUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, doc.documentId);
-            File destFile = new File(cacheDir, doc.name);
+            File destFile = new File(storeDir, doc.name);
             try (InputStream in = resolver.openInputStream(docUri);
                  OutputStream out = new FileOutputStream(destFile)) {
                 if (in == null) {
@@ -244,7 +236,7 @@ public class SubtitleFontsFolderSync {
             }
         }
 
-        log.debug("copyToCache: copied {} font file(s) from '{}' into '{}'", copied, treeUri, cacheDir.getAbsolutePath());
+        log.debug("copyToCache: copied {} font file(s) from '{}' into '{}'", copied, treeUri, storeDir.getAbsolutePath());
         return copied;
     }
 
@@ -269,7 +261,7 @@ public class SubtitleFontsFolderSync {
         if (treeUri == null) return -1;
         QueryResult qr = queryFontDocs(context, treeUri);
         if (!qr.ok) return -1;
-        return copyToCache(context, treeUri, qr.docs, getCacheDir(context));
+        return copyToCache(context, treeUri, qr.docs, getFontsStoreDir(context));
     }
 
     /**
@@ -298,8 +290,8 @@ public class SubtitleFontsFolderSync {
         QueryResult qr = queryFontDocs(context, treeUri);
         if (!qr.ok) return -1;
 
-        File cacheDir = getCacheDir(context);
-        File[] cached = cacheDir.listFiles();
+        File storeDir = getFontsStoreDir(context);
+        File[] cached = storeDir.listFiles();
         int cachedCount = cached == null ? 0 : cached.length;
 
         boolean upToDate = qr.docs.size() == cachedCount && signature(qr.docs) == signature(cached);
@@ -308,6 +300,34 @@ public class SubtitleFontsFolderSync {
             return cachedCount;
         }
 
-        return copyToCache(context, treeUri, qr.docs, cacheDir);
+        return copyToCache(context, treeUri, qr.docs, storeDir);
+    }
+
+    /**
+     * Playback-path entry point, distinct from the Settings-path ones above
+     * (syncFromTree/syncIfNeeded), which are the only places a SAF round trip
+     * (queryFontDocs()) ever happens. This is a plain synchronous disk read of whatever's
+     * already in the store dir -- no SAF query, no background thread -- called directly
+     * right before wiring the result into SubtitleEngine.setFontsFolder(), immediately
+     * before openVideo(). Safe to call inline because the store dir lives under
+     * getFilesDir() and only empties on Clear Data/uninstall, never mid-session.
+     *
+     * SAF freshness (did the user add/remove/replace a font since the last sync?) is
+     * exclusively a Settings-screen concern -- VideoPreferencesCommon resyncs via
+     * syncFromTree()/syncIfNeeded(). This method never re-checks SAF itself.
+     *
+     * Returns the plain filesystem path to hand to native code, or null if no custom
+     * fonts folder is configured, or if the store dir is empty (nothing synced yet).
+     */
+    public static String getFontsStorePath(Context context) {
+        String uriString = PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(VideoPreferencesCommon.KEY_SUBTITLE_FONTS_FOLDER_URI, null);
+        if (uriString == null) return null;
+
+        File storeDir = getFontsStoreDir(context);
+        String[] existing = storeDir.list(); // names only -- emptiness check doesn't need File objects
+        boolean alreadyPopulated = existing != null && existing.length > 0;
+
+        return alreadyPopulated ? storeDir.getAbsolutePath() : null;
     }
 }
