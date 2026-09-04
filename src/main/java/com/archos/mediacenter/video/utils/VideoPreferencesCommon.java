@@ -192,11 +192,13 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_AUDIO_INTERFACE_CHOICE = "audio_interface_choice";
     public static final String KEY_AUDIO_DECODER_CHOICE = "audio_decoder_choice";
     public static final String KEY_SUBTITLES_HIDE = "subtitles_hide_default";
-    // KEY_SUBTITLE_FONTS_FOLDER now stores a plain filesystem path to this app's PRIVATE
-    // cache directory (SubtitleFontsFolderSync.getCacheDir()) that native code reads
-    // directly -- NOT the user-facing folder they picked. That's KEY_SUBTITLE_FONTS_FOLDER_URI
-    // below (the durable SAF content:// tree URI), which Settings uses to re-sync the cache
-    // dir and to render the preference summary; Player.java only ever needs the cache path.
+    // KEY_SUBTITLE_FONTS_FOLDER stores a plain filesystem path to this app's private
+    // fonts store dir (SubtitleFontsFolderSync.getFontsStoreDir(), under getFilesDir())
+    // that native code reads directly -- NOT the user-facing folder they picked. That's
+    // KEY_SUBTITLE_FONTS_FOLDER_URI below (the durable SAF content:// tree URI), which
+    // Settings uses to re-sync the store dir and render the preference summary. This
+    // pref is only refreshed here in Settings; Player.java reads the store dir via
+    // SubtitleFontsFolderSync.getFontsStorePath() instead of this pref directly.
     public static final String KEY_SUBTITLE_FONTS_FOLDER = "subtitle_fonts_folder";
     public static final String KEY_SUBTITLE_FONTS_FOLDER_URI = "subtitle_fonts_folder_uri";
     public static final String KEY_SUBTITLE_DEFAULT_FONT = "subtitle_default_font";
@@ -419,17 +421,17 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     // thread; both callers post to it via Handler(Looper.getMainLooper()) after their
     // background-thread SubtitleFontsFolderSync call returns.
     private void onFontsFolderSynced(Context context, Uri treeUri, int resultCount) {
-        java.io.File cacheDir = SubtitleFontsFolderSync.getCacheDir(context);
+        java.io.File storeDir = SubtitleFontsFolderSync.getFontsStoreDir(context);
         if (resultCount >= 0) {
-            // Only the cache path (not the SAF URI) is what Player.java/native code
+            // Only the store path (not the SAF URI) is what Player.java/native code
             // ever reads -- see the KEY_SUBTITLE_FONTS_FOLDER comment at its
             // declaration above.
             PreferenceManager.getDefaultSharedPreferences(context)
-                    .edit().putString(KEY_SUBTITLE_FONTS_FOLDER, cacheDir.getAbsolutePath()).apply();
+                    .edit().putString(KEY_SUBTITLE_FONTS_FOLDER, storeDir.getAbsolutePath()).apply();
         } else {
-            log.warn("onFontsFolderSynced: sync failed for '{}', leaving previous cache dir contents in place", treeUri);
+            log.warn("onFontsFolderSynced: sync failed for '{}', leaving previous store dir contents in place", treeUri);
         }
-        refreshSubtitleDefaultFontList(cacheDir);
+        refreshSubtitleDefaultFontList(storeDir);
     }
 
     // Entry point for the picker-result path (onFontsFolderTreeResult): a resync is always
@@ -459,7 +461,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     }
 
     // Populates the "default font" ListPreference from whatever's currently in the app's
-    // private fonts cache dir (see SubtitleFontsFolderSync) -- unlike an earlier revision of
+    // private fonts store dir (see SubtitleFontsFolderSync) -- unlike an earlier revision of
     // this method, this now lists EVERY selectable (family, style) combination each font file
     // actually contains, not just one entry per file. A single font file can legitimately
     // contain many: a .ttc collection bundles several distinct fonts, and a variable font
@@ -480,7 +482,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     // decodes this suffix to select the exact same face/instance FreeType reported here,
     // rather than only ever resolving a file's default state.
     //
-    // `dir` here is ALWAYS this app's own private cache directory (getCacheDir()-based),
+    // `dir` here is ALWAYS this app's own private store directory (getFontsStoreDir()-based),
     // never a user-picked path -- so there's no permission concern to check.
     private void refreshSubtitleDefaultFontList(java.io.File dir) {
         ListPreference defaultFontPref = (ListPreference) findPreference(KEY_SUBTITLE_DEFAULT_FONT);

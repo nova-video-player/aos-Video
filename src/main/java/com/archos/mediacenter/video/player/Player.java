@@ -51,6 +51,7 @@ import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.CodecDiscovery;
+import com.archos.mediacenter.video.utils.SubtitleFontsFolderSync;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.IMediaPlayer;
@@ -494,15 +495,17 @@ public class Player implements IPlayerControl,
         openVideo();
     }
 
-    // Reads the custom-fonts-folder settings from SharedPreferences and pushes them into the
-    // native engine. KEY_SUBTITLE_FONTS_FOLDER is always this app's own private cache
-    // directory path (see SubtitleFontsFolderSync in VideoPreferencesCommon.java), kept in
-    // sync with whatever SAF folder the user picked in Settings -- native code never sees the
-    // user's actual folder or a content:// URI, just a plain path it can fopen() exactly as
-    // before. These are picked up fresh by the SSA backend the NEXT time a track is opened
-    // (sub_engine_open_track() snapshots them into SUB_FORMAT_OPEN_PARAMS every call -- see
-    // sub_engine.c), so calling this before openVideo() below is what makes the setting apply
-    // to the video about to start, without needing any live mid-playback update path.
+    // Reads the custom-fonts-folder settings and pushes them into the native engine.
+    // fontsFolder goes through SubtitleFontsFolderSync.getFontsStorePath() rather than
+    // reading KEY_SUBTITLE_FONTS_FOLDER directly, since that pref is only refreshed when
+    // Settings is opened or the folder is (re)picked.
+    //
+    // Both calls are synchronous, with no background thread and no SAF query: read-only
+    // disk access is all getFontsStorePath() ever does (see its Javadoc). This has to be
+    // synchronous because sub_engine_open_track() snapshots fontsFolder fresh per video
+    // and doesn't carry over what a previous video set, so it must be current before
+    // openVideo() below, every time. SAF freshness is a Settings-screen-only concern --
+    // see VideoPreferencesCommon's syncFromTree()/syncIfNeeded().
     //
     // Deliberately does NOT also push defaultFont through setFontFamily(): an earlier revision
     // did, via a stripFontExtension() filename guess (mirroring a since-removed native-side
@@ -518,10 +521,16 @@ public class Player implements IPlayerControl,
     private void applySubtitleFontSettings() {
         if (mSubtitleEngine == null) return;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String fontsFolder = prefs.getString(VideoPreferencesCommon.KEY_SUBTITLE_FONTS_FOLDER, null);
         String defaultFont = prefs.getString(VideoPreferencesCommon.KEY_SUBTITLE_DEFAULT_FONT, null);
-        mSubtitleEngine.setFontsFolder(fontsFolder);
         mSubtitleEngine.setDefaultFontName(defaultFont);
+
+        // Unconditional, same as setDefaultFontName() above: mSubtitleEngine is reused
+        // across every video played within this Player instance (see setVideoURI()'s
+        // comment), so a null here still needs to reach the engine to clear out whatever
+        // a previous video may have left set -- guarding this on non-null would let a
+        // stale folder from an earlier video silently keep applying to this one.
+        String fontsFolder = SubtitleFontsFolderSync.getFontsStorePath(mContext);
+        mSubtitleEngine.setFontsFolder(fontsFolder);
     }
 
     @SuppressWarnings("deprecation") // abandonAudioFocus: API 26+ uses abandonAudioFocusRequest
