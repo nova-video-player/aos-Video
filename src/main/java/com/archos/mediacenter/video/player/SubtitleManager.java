@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.player;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.MiscUtils;
+import com.archos.mediacenter.video.utils.SubtitleFontsFolderSync;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
 import android.content.Context;
@@ -317,18 +318,25 @@ public class SubtitleManager {
      * these settings are only pushed to the engine reactively by setFontsFolder()/
      * setDefaultFontName() above, so a fresh engine needs an explicit initial push of
      * whatever the user saved in a previous session.
+     *
+     * The fonts folder path is resolved via SubtitleFontsFolderSync.getFontsStorePath()
+     * rather than loadSavedFontsFolder()'s raw pref read, so a fresh engine gets a
+     * verified-current path even if the on-disk store went stale/missing since the last
+     * Settings visit. That call is synchronous disk-only I/O, so it's made directly here
+     * rather than dispatched to a background thread.
      */
     public void applySavedFontSettings() {
         if (Player.sPlayer == null || Player.sPlayer.getSubtitleEngine() == null) return;
-        String savedFolder = loadSavedFontsFolder();
         String savedDefaultFont = loadSavedDefaultFontName();
-        mFontsFolderPath = savedFolder;
         mDefaultFontName = savedDefaultFont;
-        if (savedFolder != null) {
-            Player.sPlayer.getSubtitleEngine().setFontsFolder(savedFolder);
-        }
         if (savedDefaultFont != null) {
             Player.sPlayer.getSubtitleEngine().setDefaultFontName(savedDefaultFont);
+        }
+
+        String savedFolder = SubtitleFontsFolderSync.getFontsStorePath(mContext);
+        mFontsFolderPath = savedFolder;
+        if (savedFolder != null) {
+            Player.sPlayer.getSubtitleEngine().setFontsFolder(savedFolder);
         }
     }
 
