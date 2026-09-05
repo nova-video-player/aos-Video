@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.leanback.network.smb;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.archos.filecorelibrary.ListingEngine;
 import com.archos.filecorelibrary.MetaFile2;
@@ -42,6 +43,8 @@ public class SmbListingFragment extends NetworkListingFragment {
 
     private static final Logger log = LoggerFactory.getLogger(SmbListingFragment.class);
 
+    private boolean mCredentialsJustProvided = false;
+
     @Override
     protected  ListingFragment instantiateNewFragment() {
         return new SmbListingFragment();
@@ -64,7 +67,22 @@ public class SmbListingFragment extends NetworkListingFragment {
     @Override
     public void onCredentialRequired(Exception e) {
         if (log.isDebugEnabled()) log.debug("onCredentialRequired: ask for credentials");
+        if (mCredentialsJustProvided) {
+            log.warn("onCredentialRequired: credentials just provided but authentication failed, breaking loop");
+            mCredentialsJustProvided = false;
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), R.string.error_credentials, Toast.LENGTH_SHORT).show();
+            }
+            onListingFatalError(e, ListingEngine.ErrorEnum.ERROR_AUTHENTICATION);
+            return;
+        }
         askForCredentials();
+    }
+
+    @Override
+    public void onListingUpdate(List<? extends MetaFile2> files) {
+        mCredentialsJustProvided = false;
+        super.onListingUpdate(files);
     }
 
     @Override
@@ -130,8 +148,16 @@ public class SmbListingFragment extends NetworkListingFragment {
                 @Override
                 public void onConnectClick(String username, Uri path, String password, String domain) {
                     mUri = path;
+                    mCredentialsJustProvided = true;
                     setConnectionDescription();
                     startListing(mUri);
+                }
+            });
+            dialog.setOnCancelClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCredentialsJustProvided = false;
+                    onListingFatalError(null, ListingEngine.ErrorEnum.ERROR_AUTHENTICATION);
                 }
             });
             dialog.show(getParentFragmentManager(), SmbServerCredentialsDialog.class.getCanonicalName());

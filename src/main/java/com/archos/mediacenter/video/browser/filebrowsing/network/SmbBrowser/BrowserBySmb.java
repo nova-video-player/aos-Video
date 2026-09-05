@@ -24,12 +24,16 @@ import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.widget.TextViewCompat;
 
+import com.archos.filecorelibrary.MetaFile2;
 import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.filebrowsing.network.BrowserByNetwork;
+
+import java.util.List;
 
 /**
  * Created by alexandre on 29/10/15.
@@ -59,12 +63,27 @@ public class BrowserBySmb extends BrowserByNetwork {
         displayConnectionDescription();
     }
 
+    private boolean mCredentialsJustProvided = false;
+
     @Override
     public void onCredentialRequired(Exception e) {
         super.onCredentialRequired(e);
+        if (mCredentialsJustProvided) {
+            mCredentialsJustProvided = false;
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), R.string.error_credentials, Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
         // We are in a protected folder => ask the user to enter the login and password
         Log.w("jcifs2", "listing error - no permission");
         askForCredentials();
+    }
+
+    @Override
+    public void onListingUpdate(List<? extends MetaFile2> files) {
+        mCredentialsJustProvided = false;
+        super.onListingUpdate(files);
     }
 
     private void askForCredentials() {
@@ -89,6 +108,7 @@ public class BrowserBySmb extends BrowserByNetwork {
             @Override
             public void onConnectClick(String username, Uri path, String password) {
                 mCurrentDirectory = path;
+                mCredentialsJustProvided = true;
                 getConnectionUser();
                 displayConnectionDescription();
                 listFiles(true);
