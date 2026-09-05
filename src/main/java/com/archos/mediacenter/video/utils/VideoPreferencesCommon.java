@@ -13,6 +13,7 @@
 // limitations under the License.
 package com.archos.mediacenter.video.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -85,6 +86,7 @@ import com.archos.mediaprovider.video.LoaderUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -190,6 +192,16 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_AUDIO_INTERFACE_CHOICE = "audio_interface_choice";
     public static final String KEY_AUDIO_DECODER_CHOICE = "audio_decoder_choice";
     public static final String KEY_SUBTITLES_HIDE = "subtitles_hide_default";
+    // KEY_SUBTITLE_FONTS_FOLDER stores a plain filesystem path to this app's private
+    // fonts store dir (SubtitleFontsFolderSync.getFontsStoreDir(), under getFilesDir())
+    // that native code reads directly -- NOT the user-facing folder they picked. That's
+    // KEY_SUBTITLE_FONTS_FOLDER_URI below (the durable SAF content:// tree URI), which
+    // Settings uses to re-sync the store dir and render the preference summary. This
+    // pref is only refreshed here in Settings; Player.java reads the store dir via
+    // SubtitleFontsFolderSync.getFontsStorePath() instead of this pref directly.
+    public static final String KEY_SUBTITLE_FONTS_FOLDER = "subtitle_fonts_folder";
+    public static final String KEY_SUBTITLE_FONTS_FOLDER_URI = "subtitle_fonts_folder_uri";
+    public static final String KEY_SUBTITLE_DEFAULT_FONT = "subtitle_default_font";
     public static final String KEY_SUBTITLES_FAV_LANG = "favSubLang";
     public static final String KEY_AUDIO_TRACK_FAV_LANG = "favAudioLang";
     public static final String KEY_PREFER_ORIGINAL_AUDIO_TRACK = "prefer_original_audio_track";
@@ -324,6 +336,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     List<String> UiLanguageListEntryValues = new ArrayList<>();
 
     private final ActivityResultLauncher<Intent> mFolderPickerLauncher;
+    private final ActivityResultLauncher<Intent> mFontsFolderTreeLauncher;
     private final ActivityResultLauncher<Intent> mTraktAuthLauncher;
 
     public VideoPreferencesCommon(PreferenceFragmentCompat preferencesFragment) {
@@ -331,6 +344,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mFolderPickerLauncher = preferencesFragment.registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 this::onFolderPickerResult);
+        mFontsFolderTreeLauncher = preferencesFragment.registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::onFontsFolderTreeResult);
         mTraktAuthLauncher = preferencesFragment.registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 this::onTraktAuthResult);
@@ -349,6 +365,193 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                     if (pref != null) pref.notifyChanged();
                 }
             }
+        }
+    }
+
+    // Handles the result of FontsFolderSafPreference's ACTION_OPEN_DOCUMENT_TREE launch.
+    // Separate from onFolderPickerResult() above both because it's a structurally different
+    // result shape (a content:// tree URI, not a plain path string) and because
+    // registerForActivityResult() callbacks are matched by request code under the hood --
+    // routing two different pickers through one shared callback isn't workable here anyway.
+    //
+    // Why SAF instead of the old FolderPicker-based flow: this app only holds the granular
+    // "Photos and videos" media permissions, not MANAGE_EXTERNAL_STORAGE. Under scoped
+    // storage, a plain filesystem folder listing only shows files the OS classifies as
+    // photo/video/audio, or files the app created -- confirmed by direct logcat testing that
+    // a .ttf placed in a folder doesn't appear even in the RAW unfiltered File.listFiles()
+    // result for that directory. ACTION_OPEN_DOCUMENT_TREE is a separate access path,
+    // unaffected by that media-only permission scope: the user grants access to one specific
+    // folder via the system Files app, and the resulting content:// tree URI can be
+    // persisted indefinitely via takePersistableUriPermission().
+    @SuppressLint("WrongConstant") // lint can't reduce Intent.getFlags() & (READ|WRITE) to @Intent.AccessUriMode, see https://developer.android.com/training/data-storage/shared/documents-files#persist-permissions
+    private void onFontsFolderTreeResult(ActivityResult result) {
+        if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) return;
+        Uri treeUri = result.getData().getData();
+        if (treeUri == null) return;
+
+        Context context = getActivity();
+        if (context == null) return;
+
+        // Persist the grant so it survives app restarts/reboots -- without this, the
+        // content:// URI stops being readable the next time the process starts, since SAF
+        // grants are otherwise scoped to the lifetime of this specific result callback.
+        try {
+            context.getContentResolver().takePersistableUriPermission(treeUri,
+                    result.getData().getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION));
+        } catch (SecurityException e) {
+            log.warn("onFontsFolderTreeResult: failed to persist URI permission for '{}': {}", treeUri, e.getMessage());
+            return;
+        }
+
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit().putString(KEY_SUBTITLE_FONTS_FOLDER_URI, treeUri.toString()).apply();
+
+        FontsFolderSafPreference pref =
+                (FontsFolderSafPreference) findPreference(KEY_SUBTITLE_FONTS_FOLDER_URI);
+        if (pref != null) pref.notifyChanged();
+
+        // The actual copy-into-cache-dir work does file I/O (reads every font file via
+        // ContentResolver) -- must not run on the UI thread this callback fires on.
+        syncFontsFolderAndRefreshList(context, treeUri);
+    }
+
+    // Shared "given a sync/check result count, update prefs + refresh the ListPreference"
+    // tail -- called from both entry points below (picker-result and Settings-reopened) so
+    // this UI-thread bookkeeping isn't duplicated between them. Must be called on the UI
+    // thread; both callers post to it via Handler(Looper.getMainLooper()) after their
+    // background-thread SubtitleFontsFolderSync call returns.
+    private void onFontsFolderSynced(Context context, Uri treeUri, int resultCount) {
+        java.io.File storeDir = SubtitleFontsFolderSync.getFontsStoreDir(context);
+        if (resultCount >= 0) {
+            // Only the store path (not the SAF URI) is what Player.java/native code
+            // ever reads -- see the KEY_SUBTITLE_FONTS_FOLDER comment at its
+            // declaration above.
+            PreferenceManager.getDefaultSharedPreferences(context)
+                    .edit().putString(KEY_SUBTITLE_FONTS_FOLDER, storeDir.getAbsolutePath()).apply();
+        } else {
+            log.warn("onFontsFolderSynced: sync failed for '{}', leaving previous store dir contents in place", treeUri);
+        }
+        refreshSubtitleDefaultFontList(storeDir);
+    }
+
+    // Entry point for the picker-result path (onFontsFolderTreeResult): a resync is always
+    // needed here (the user just picked/changed the folder), so this goes straight to
+    // SubtitleFontsFolderSync.syncFromTree() on a background thread -- no signature check
+    // first, since we already know one would come back stale.
+    private void syncFontsFolderAndRefreshList(Context context, Uri treeUri) {
+        new Thread(() -> {
+            int copied = SubtitleFontsFolderSync.syncFromTree(context, treeUri);
+            new Handler(Looper.getMainLooper()).post(() -> onFontsFolderSynced(context, treeUri, copied));
+        }, "SubtitleFontsFolderSync").start();
+    }
+
+    // Entry point for the Settings-screen-(re)opened path (onCreatePreferences): unlike the
+    // picker-result path above, here we don't yet know whether a resync is even needed.
+    // SubtitleFontsFolderSync.syncIfNeeded() does exactly ONE SAF query total to both decide
+    // AND (if needed) perform the resync, run on a background thread -- both the check
+    // itself and, in the "already up to date" case, refreshSubtitleDefaultFontList() (which
+    // calls the native FreeType-based FontNameParser.parse() once per cached font file) used
+    // to run directly on the UI thread here, which was a real source of jank opening Settings
+    // whenever a fonts folder was configured.
+    private void refreshFontsFolderAsync(Context context, Uri treeUri) {
+        new Thread(() -> {
+            int count = SubtitleFontsFolderSync.syncIfNeeded(context, treeUri);
+            new Handler(Looper.getMainLooper()).post(() -> onFontsFolderSynced(context, treeUri, count));
+        }, "SubtitleFontsFolderCheck").start();
+    }
+
+    // Populates the "default font" ListPreference from whatever's currently in the app's
+    // private fonts store dir (see SubtitleFontsFolderSync) -- unlike an earlier revision of
+    // this method, this now lists EVERY selectable (family, style) combination each font file
+    // actually contains, not just one entry per file. A single font file can legitimately
+    // contain many: a .ttc collection bundles several distinct fonts, and a variable font
+    // (e.g. bahnschrift.ttf) reports many named instances ("Bahnschrift Bold",
+    // "Bahnschrift SemiCondensed", ...) all under one file -- confirmed via fc-scan showing
+    // bahnschrift.ttf alone has 15 distinct (family, style) combinations.
+    //
+    // Real names come from FontNameParser (JNI -> font_name_parser.c, FreeType-based),
+    // reading each file's actual name table -- NOT guessed from the filename, which was
+    // confirmed wrong for real fonts (bahnschrift.ttf's family is "Bahnschrift", unrelated to
+    // its filename by any string transform; Roboto-Medium.ttf's real family is
+    // "Roboto"/"Roboto Medium", not "Roboto-Medium").
+    //
+    // Stored preference value format: "filename" for a file's default/only entry (face 0,
+    // instance 0 -- the overwhelmingly common case), or "filename#faceIndex.namedInstance" for
+    // a SPECIFIC entry when a file yields more than one (matches
+    // FontNameParser.Entry.encodeSelector()). Native code's resolve_real_family_name()
+    // decodes this suffix to select the exact same face/instance FreeType reported here,
+    // rather than only ever resolving a file's default state.
+    //
+    // `dir` here is ALWAYS this app's own private store directory (getFontsStoreDir()-based),
+    // never a user-picked path -- so there's no permission concern to check.
+    private void refreshSubtitleDefaultFontList(java.io.File dir) {
+        ListPreference defaultFontPref = (ListPreference) findPreference(KEY_SUBTITLE_DEFAULT_FONT);
+        if (defaultFontPref == null) return;
+
+        java.io.File[] files = dir.listFiles();
+        if (files == null) files = new java.io.File[0];
+        Arrays.sort(files, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
+
+        log.debug("refreshSubtitleDefaultFontList: scanning {} font file(s) in '{}'", files.length, dir.getAbsolutePath());
+
+        // Each entry pairs a display label (shown in the list) with the stored value
+        // (filename + optional selector suffix) -- built up across all files/entries before
+        // handing off to the ListPreference, since the final count isn't known until every
+        // file has been parsed (one file can yield 0, 1, or many entries).
+        java.util.List<CharSequence> entryLabels = new java.util.ArrayList<>();
+        java.util.List<CharSequence> entryValues = new java.util.ArrayList<>();
+        java.util.Set<String> seenLabels = new java.util.HashSet<>();
+
+        for (java.io.File file : files) {
+            FontNameParser.Entry[] parsed = FontNameParser.parse(file.getAbsolutePath());
+            if (parsed.length == 0) {
+                log.warn("refreshSubtitleDefaultFontList: '{}' could not be parsed as a font, skipping", file.getName());
+                continue;
+            }
+            for (FontNameParser.Entry entry : parsed) {
+                String label = entry.displayLabel();
+                if (seenLabels.add(label)) {
+                    entryLabels.add(label);
+                    entryValues.add(file.getName() + entry.encodeSelector());
+                }
+            }
+        }
+
+        log.debug("refreshSubtitleDefaultFontList: found {} selectable font entries across {} file(s)",
+                entryLabels.size(), files.length);
+
+        if (entryLabels.isEmpty()) {
+            defaultFontPref.setEntries(new CharSequence[0]);
+            defaultFontPref.setEntryValues(new CharSequence[0]);
+            defaultFontPref.setEnabled(false);
+            // No explicit summary needed here: the preference's
+            // app:useSimpleSummaryProvider="true" (see preferences_video.xml)
+            // already renders "Not set" on its own once getEntry() has
+            // nothing to resolve the current value against (empty
+            // entries/entryValues -> findIndexOfValue() returns -1 ->
+            // getEntry() returns null).
+            return;
+        }
+
+        CharSequence[] entries = entryLabels.toArray(new CharSequence[0]);
+        CharSequence[] entryValuesArr = entryValues.toArray(new CharSequence[0]);
+
+        defaultFontPref.setEntries(entries);
+        defaultFontPref.setEntryValues(entryValuesArr);
+        defaultFontPref.setEnabled(true);
+
+        // Keep the current selection only if it still exists in the (possibly changed) set of
+        // entries; otherwise fall back to the first one found rather than pointing at nothing.
+        String currentValue = mSharedPreferences.getString(KEY_SUBTITLE_DEFAULT_FONT, null);
+        boolean stillValid = false;
+        for (CharSequence v : entryValuesArr) {
+            if (v.toString().equals(currentValue)) { stillValid = true; break; }
+        }
+        if (!stillValid) {
+            String fallback = entryValuesArr[0].toString();
+            defaultFontPref.setValue(fallback);
+            PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .edit().putString(KEY_SUBTITLE_DEFAULT_FONT, fallback).apply();
         }
     }
 
@@ -627,6 +830,26 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         TorrentPathDialogPreference torrentPref =
                 (TorrentPathDialogPreference) findPreference(KEY_TORRENT_PATH);
         if (torrentPref != null) torrentPref.setFolderPickerLauncher(mFolderPickerLauncher);
+
+        FontsFolderSafPreference fontsFolderPref =
+                (FontsFolderSafPreference) findPreference(KEY_SUBTITLE_FONTS_FOLDER_URI);
+        if (fontsFolderPref != null) {
+            fontsFolderPref.setTreePickerLauncher(mFontsFolderTreeLauncher);
+            String savedUriString = mSharedPreferences.getString(KEY_SUBTITLE_FONTS_FOLDER_URI, null);
+            if (savedUriString != null) {
+                Uri savedTreeUri = Uri.parse(savedUriString);
+                Context context = getActivity();
+                // Re-sync opportunistically when the Settings screen is reopened: SAF trees
+                // can change (fonts added/removed via a file manager) without this app ever
+                // being told, unlike a live filesystem watch. The whole check-and-maybe-sync
+                // (SubtitleFontsFolderSync.syncIfNeeded(), one SAF query total either way) and
+                // the list refresh run off the UI thread -- see refreshFontsFolderAsync()'s
+                // doc comment for why that's needed here.
+                if (context != null) {
+                    refreshFontsFolderAsync(context, savedTreeUri);
+                }
+            }
+        }
 
         mSharedPreferences = getPreferenceManager().getSharedPreferences();
         migrateDolbyVisionPreference(mSharedPreferences);

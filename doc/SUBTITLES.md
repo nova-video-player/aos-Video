@@ -1,62 +1,77 @@
 # Subtitle Display Pipeline
 
-This document describes how Nova displays subtitles today. The pipeline is split
-between native AVOS subtitle decoding, the `MediaLib` JNI bridge, and the `Video`
-player UI.
+This document describes how Nova displays subtitles today. Subtitles are
+decoded, styled, and rendered entirely in native code (`libass` + OpenGL). No
+subtitle text or bitmap crosses the JNI boundary into Java. Java's role is
+limited to telling the native engine *how* to render — style, position,
+surface lifecycle — never *what* to render.
 
 ## High-level flow
 
-1. Native AVOS parses subtitle tracks together with the media stream.
-2. The native subtitle thread decodes the selected subtitle track into a
-   `VIDEO_FRAME`.
-3. `Source/avos_mp_video.c` receives `STREAM_SUBTITLE_CHANGED`, converts the
-   current subtitle frame to an AVOS message, and sends `MEDIA_SUBTITLE`.
-4. `jni/libavosjni/avos_media_player.c` converts the native AVOS message to a
-   Java `com.archos.medialib.Subtitle`.
-5. `MediaLib` dispatches the event through `IMediaPlayer.OnSubtitleListener`.
-6. `Video` forwards the subtitle event to `SubtitleManager`.
-7. `SubtitleManager` schedules display/removal, then renders either text through
-   `Subtitle3DTextView`/`SubtitleTextView` or graphics through `SubtitleGfxView`.
+1. Native AVOS parses subtitle tracks together with the media stream, and
+   separately discovers external subtitle files alongside the video.
+2. For the selected track, `Source/stream_subtitle.c` (internal/embedded
+   tracks) or `Source/stream_sub_ext.c` (external files) feeds the cue data
+   directly into the native `SUB_ENGINE` via `sub_engine_feed*()` — a plain C
+   function call on the decode thread, not a JNI hop.
+3. `Source/sub_engine.c` dispatches to a format backend: `sub_format_srt.c`
+   and `sub_format_ssa.c` both wrap `libass`, while `sub_format_gfx.c`
+   handles PGS/VobSub bitmap tracks without `libass`.
+4. `Source/sub_render_gl.c` rasterizes whatever the active format backend
+   returns and draws it onto the video's OpenGL surface.
+5. `SubtitleEngine.java` (backed by `jni/libavosjni/jni_sub_engine.c`) is the
+   Java control surface: it drives the native engine's lifecycle and pushes
+   user style preferences down through JNI setters. It never receives
+   subtitle content.
+6. `SubtitleManager.java` persists the user's style preferences, forwards
+   them to `SubtitleEngine`, and manages the subtitle surface's
+   position/insets within the player view hierarchy.
 
-The important consequence is that AVOS decodes and timestamps subtitles, but the
-Android UI owns final display, positioning, color, font size, background, and
-visibility.
+Native owns subtitle *content, timing, and drawing*; Java owns only *style
+preferences and surface plumbing*.
 
 ## Native subtitle decoding
-
-The active subtitle is stored in `STREAM.subtitle`, with decoded output stored in
-`STREAM.subtitle_frame`.
 
 `Source/stream_subtitle.c` drives subtitle decoding from
 `stream_sub_dec_thread()`:
 
 - `_sub_decode()` runs while the stream has a valid subtitle track and is not
-  paused.
-- It uses `s->video_time` as the reference clock.
-- It subtracts `s->subtitle_offset` before deciding which subtitle is due.
-- Internal subtitles use `_get_next_int_sub()`.
-- External subtitles use `_get_next_ext_sub()`.
-- When a subtitle frame is produced, `_output_sub()` adds
-  `s->subtitle_offset` back to `frame->time` and emits
-  `STREAM_SUBTITLE_CHANGED`.
+  paused, using `s->video_time` as the reference clock and subtracting
+  `s->subtitle_offset` before deciding which subtitle is due.
+- Internal subtitles use `_get_next_int_sub()`, which classifies the track
+  format into one of three cases and feeds the native `SUB_ENGINE` directly
+  (`sub_engine_feed*()`, a plain C call — no JNI, no `VIDEO_FRAME` handed to
+  Java):
+  - **Case 1 — raw passthrough** (`SUB_FORMAT_SSA`, `SUB_FORMAT_TEXT`): the
+    demuxed packet is already clean text; `sub_engine_open_track()` opens the
+    track with no `sub_dec`, and packets are fed straight to
+    `sub_engine_feed()`.
+  - **Case 2 — ffdec-then-engine** (`SUB_FORMAT_WEBVTT`, `SUB_FORMAT_MOV_TEXT`):
+    `codec_ffsub.c` decodes the binary-wrapped packet to plain text first,
+    then that text is fed to the engine as `SUB_FMT_SRT`.
+  - **Case 3 — ffdec-then-engine-bitmap** (`SUB_FORMAT_PGS`, `SUB_FORMAT_DVD_GFX`):
+    `codec_ffsub.c` decodes to BGRA pixels; `_feed_bitmap_to_engine()`
+    uploads them via `sub_engine_feed_bitmap()` for `Source/sub_render_gl.c`
+    to upload as a texture.
+- External subtitles use `_get_next_ext_sub()` (see `Source/stream_sub_ext.c`
+  below).
 
 Subtitle delay and timing ratio are applied in native:
 
 - `avos_mp_video_setsubtitledelay()` calls
-  `stream_set_subtitle_offset(delay + SUBTITLE_SEND_OFFSET)`.
-- `SUBTITLE_SEND_OFFSET` is `-100`, so subtitles are sent about 100 ms early to
-  compensate for app/UI delivery latency.
-- `avos_mp_video_setsubtitleratio()` stores a numerator/denominator pair used by
-  external subtitle timing conversion.
+  `stream_set_subtitle_offset(delay)` directly.
+- `avos_mp_video_setsubtitleratio()` stores a numerator/denominator pair used
+  by external subtitle timing conversion.
 
-Track selection is also native:
+Track selection is also native (`Source/avos_mp_video.c`):
 
-- `avos_mp_video_setsubtitletrack(track < 0)` disables subtitle event sending by
-  setting `video->send_sub = 0`.
+- `avos_mp_video_setsubtitletrack(track < 0)` calls `sub_engine_close_track()`
+  to disable subtitles.
 - Valid tracks call `stream_set_subtitle_stream()`, which pauses the stream,
   closes the old decoder, frees the subtitle frame, selects the new track, and
   reseeks near the current time when possible so internal subtitle decoders are
-  reinitialized.
+  reinitialized. The engine track itself is opened lazily by
+  `stream_subtitle.c` when the first packet on the new track arrives.
 
 External subtitle discovery is refreshed through `stream_check_subtitles()`,
 which compares external subtitle files, rebuilds external subtitle state when it
@@ -223,33 +238,37 @@ no ambiguity about the audio language.
 Text subtitles can come from external subtitle parsers or ffmpeg subtitle
 decoders.
 
-External text subtitles are handled by `Source/stream_sub_ext.c`:
-
-- The converted subtitle list is searched for the first cue active at the
-  current video time.
-- `top` and `bottom` text lines are joined into `frame->data[0]`; if both exist,
-  they are separated with the literal characters `\n`.
-- `frame->time` is set to the subtitle start time and `frame->duration` to
-  `end - start`.
-
-`Source/codec_textsub.c` decodes simple text payloads in the format
-`start:end,text`, then fills `frame->data[0]`, `frame->time`, and
-`frame->duration`.
+External text subtitles are handled by `Source/stream_sub_ext.c`. Format
+parsers (`subtitle_srt.c`, `subtitle_vtt.c`, `subtitle_sub.c`, `subtitle_mpl2.c`,
+`subtitle_smi.c`) are bulk-fed into the native engine **once**, at track open,
+via `stream_sub_ext_feed_engine()` — SRT/VTT stream cue-by-cue as they're
+parsed (`sub_engine_feed_gen()`, gated by a per-track generation token so a
+track switch mid-feed can be safely discarded), while SMI/MicroDVD/MPL2 parse
+into a list first and are then walked synchronously
+(`sub_engine_feed()`). After that initial feed, the engine (`libass`) owns
+the entire timeline itself; nothing is polled per video-time from Java or
+from this file.
 
 `Source/codec_ffsub.c` is used for embedded ffmpeg-supported text formats such
 as `TEXT`, `MOV_TEXT`, `SSA`, and `ASS`.
 
 - Plain `rect->text` is copied into the frame.
-- `rect->ass` is parsed to recover timing and text. The code handles both older
-  ffmpeg `Dialogue:` output and newer comma-separated ffmpeg output.
-- `\N` in ASS text is converted to a newline before Java receives it.
-- If ffmpeg does not provide display timing, the decoder falls back to parsing
-  timing out of the raw subtitle data.
+- `rect->ass` is parsed to recover timing and text when ffmpeg doesn't supply
+  `avpkt->duration` directly. The code handles both older ffmpeg `Dialogue:`
+  output and newer comma-separated ffmpeg output.
+- `AVSubtitle.start_display_time`/`end_display_time` always come back `0`
+  from ffmpeg's `mov_text`/`webvtt` decoders, so `stream_parser_ffmpeg.c`
+  prepends a 4-byte little-endian duration to the packet before it reaches
+  `codec_ffsub.c`; the decoder strips that prefix, forwards it to ffmpeg via
+  `avpkt->duration`, and uses it directly as `frame->duration`.
 
-External SSA parsing also exists in `Source/subtitle_ssa.c`. It reads the
-`[Events]` format, extracts `Start`, `End`, and `Text`, splits text on `\N`, and
-preserves style tags in the text. Java performs the final lightweight style
-cleanup/conversion.
+External ASS/SSA files are handled differently from every other external
+format: `Source/subtitle_ssa.c`'s `parse_SSA()` does not parse cues into a
+list at all — it reads the entire file into a heap buffer
+(`uni_sub->raw_data`/`raw_size`) and sets `is_ssa = 1`. `stream_sub_ext_feed_engine()`
+detects that flag and calls `sub_engine_feed_raw()` once, handing `libass`
+the complete script — `[Script Info]`, `[V4+ Styles]`, `[Events]`, embedded
+fonts — untouched, rather than extracting `Start`/`End`/`Text` per cue.
 
 ### Bitmap
 
@@ -258,214 +277,169 @@ VobSub/DVD and PGS:
 
 - ffmpeg subtitle rectangles are merged into one bounding box.
 - The bitmap data is converted from PAL8 to BGRA.
-- For VobSub with a four-color palette, the code swaps the semi-transparent
-  black and white palette entries before conversion.
+- VobSub's 4-color palette can order fill/outline into any of the 4 slots
+  depending on the source rip, so the decoder counts index usage per rect and
+  normalizes it — the most-used visible index becomes solid black fill, the
+  next becomes white outline — before conversion.
 - `frame->window` stores the subtitle bitmap bounding box.
 - `frame->width`/`frame->height` are set to an original subtitle frame size:
   PGS uses at least `1920x1080`; DVD/VobSub uses at least `720x576`.
 
 PGS has a special end-marker behavior. When ffmpeg returns a bitmap subtitle
 with `sub.format == 0` and `sub.num_rects == 0`, native creates a `1x1` empty
-bitmap with `duration = 0`. This cannot use `-1`, because Java would treat that
-as an untimed subtitle. `SubtitleManager` interprets a zero-duration next
-subtitle as an end signal for the previous bitmap subtitle.
+bitmap with `duration = 0`. `Source/sub_format_gfx.c`'s `gfx_feed_bitmap()`
+treats that zero duration as an end signal — "hide the current subtitle" —
+rather than a real frame.
 
 When PGS timing has no explicit duration, native temporarily assigns
-`duration = 100000`. The real end is then inferred on the Java side when the
-next zero-duration subtitle arrives.
+`duration = 100000`. The real end is inferred natively from the next
+zero-duration packet described above.
 
-## Native-to-Java bridge
+## Native subtitle engine
 
-`Source/avos_mp_video.c::send_subtitle()` converts `STREAM.subtitle_frame` into
-an AVOS message:
+`Source/sub_engine.c` dispatches to one of three `SUB_FORMAT_BACKEND`
+implementations per open track:
 
-- Text tracks call `avos_msg_new_text_subtitle(0, sub_time, duration, text)`.
-- Graphic tracks call
-  `avos_msg_new_bitmap_subtitle(0, sub_time, duration, (IMAGE *)sub_frame)`.
-- `sub_time` is computed as `sub_frame->time - SUBTITLE_SEND_OFFSET`, undoing
-  the `-100 ms` send offset before the Java subtitle object is created.
+- **`sub_format_ssa.c`** (`SUB_FMT_SSA`): owns a real `libass` renderer.
+  `ssa_open()` calls `ass_set_fonts()`; `ssa_feed()` calls `ass_process_data()`
+  once for the full script header/styles and `ass_process_chunk()` per
+  streamed dialogue line. `sync_styles()` re-applies the current
+  `SUB_USER_STYLE` to the `libass` track on every feed, so a style change
+  takes effect without reopening the track.
+- **`sub_format_srt.c`** (`SUB_FMT_SRT`): a thin wrapper around the SSA
+  backend for every plain-text format. `srt_open()` synthesizes a minimal ASS
+  header — aspect-correct `PlayResX`/`PlayResY`, the user's resolved default
+  font, bottom-center alignment — and `srt_feed()` formats each cue as an ASS
+  `Dialogue:`-shaped line before handing it to the same SSA backend. Every
+  text format ends up as `libass` dialogue lines; only real `.ass`/`.ssa`
+  files keep their authentic script.
+- **`sub_format_gfx.c`** (`SUB_FMT_GFX`): no `libass` involved. Stores
+  whatever BGRA-swizzled frame `codec_ffsub.c` last decoded and hands back a
+  clone on each `render_at()` poll until the PGS clear signal described above
+  arrives.
 
-`Source/avos_common.c` stores the transport payload:
+`Source/sub_render_gl.c` rasterizes whatever the active backend returns and
+draws it onto the video's OpenGL surface — normally on its own native render
+thread with no Java involvement per frame. A monotonically increasing frame
+generation counter (`sub_engine_get_frame_generation()`) lets callers cheaply
+detect "nothing changed since last time."
 
-- Text messages contain `position`, `duration`, and UTF-8 text.
-- Bitmap messages contain `position`, `duration`, bitmap left/top coordinates,
-  original frame dimensions, and packed bitmap pixels.
+The engine is a single published instance guarded by an acquire/release/
+publish/retract registry (`Source/sub_engine_registry.c`), so a `STREAM`
+thread holding a `s->sub_engine` snapshot can never be left with a freed
+pointer if Java tears the engine down (e.g. on surface destroy) mid-playback.
+`nativeDestroy()` blocks — up to a bounded 2-second timeout — until every
+outstanding reference has been released before the engine is actually freed.
 
-`jni/libavosjni/avos_media_player.c` runs an event thread for AVOS events. For
-subtitle messages it creates Java objects through static factory methods on
-`com.archos.medialib.Subtitle`:
+## JNI bridge for the subtitle engine
 
-- `createTimedTextSubtitle(position, duration, text)` returns
-  `Subtitle.TimedTextSubtitle`.
-- `createTimedBitmapSubtitle(position, duration, left, top, originalWidth,
-  originalHeight, bitmap)` returns `Subtitle.TimedBitmapSubtitle`.
+`jni/libavosjni/jni_sub_engine.c` is a separate JNI translation unit from
+`libavosjni`'s `avos_media_player.c`/`libavos.c`, dedicated entirely to
+`SubtitleEngine.java`. Unlike the old event-dispatch model, calls only flow
+Java-to-native (control), never native-to-Java (content):
 
-The bitmap bridge uses `create_bitmap()` to create an Android `Bitmap` from the
-native pixel buffer before constructing the Java subtitle object.
+- **Lifecycle & surface**: `nativeCreate`/`nativeDestroy` (wrapping the
+  registry publish/retract above `sub_engine_create`/`destroy`), and
+  `nativeSurfaceCreated`/`Changed`/`Destroyed`, which attach/resize/detach the
+  `ANativeWindow` behind the subtitle `TextureView`.
+- **3D hybrid render bridge**: `nativeSetUIMode` (2D vs SBS/TB), and two
+  bitmap-pull entry points that both call `sub_engine_fill_bitmap()` into a
+  Java `Bitmap` — `nativeFillBitmap` is the cheap version used on every video
+  frame, while `nativeSyncFillBitmap` forces a fresh render and blocks
+  (bounded) until it's applied, used only for the infrequent "redraw right
+  now" path after a style change. `nativeGetSubtitleGeneration` lets Java skip
+  redundant redraws when nothing changed since the last pull.
+- **Style setters**: one native setter per style property (font size/scale/
+  family/bold/color, outline color/width, shadow color/width, background
+  mode/color/opacity, vertical offset, override mode, fonts folder, default
+  font name), each writing into the shared `SUB_STYLE` and calling
+  `sub_engine_force_wake()` so the render thread picks up the change on its
+  next frame.
 
-## MediaLib event dispatch
+## SubtitleManager role
 
-`AvosMediaPlayer` receives native events through
-`postEventFromNative(Object mediaplayer_ref, int what, int arg1, int arg2,
-Object obj)`. It posts them to its `EventHandler`.
+`SubtitleManager` no longer schedules or renders anything — `libass` owns
+cue timing and compositing entirely inside the native engine. Its role is:
 
-`MEDIA_SUBTITLE` is `1000`. The event handler verifies that `msg.obj` is a
-`Subtitle` and calls `mOnSubtitleListener.onSubtitle(mMediaPlayer, subtitle)`.
+- **Style persistence/forwarding**: get/set pairs for color, background
+  opacity/mode, override mode, font size (pt)/scale/family/bold, outline
+  color/width, shadow color/width, background color, custom fonts
+  folder/default font name — each setter both persists the preference and
+  calls the matching `SubtitleEngine` setter.
+- **3D mode wiring**: `setUIMode()` forwards the mode to
+  `SubtitleEngine.setUIMode()`, which is what actually detaches native from
+  the subtitle `TextureView` and hands `VideoEffectRenderer`'s UI overlay
+  surface the rendering role instead — see "Stereoscopic 3D subtitles" below.
+  `SubtitleManager`'s own `setUIExternalSurface()`/`mUiSurface` handling is
+  narrower than it looks: in SBS/TB mode it posts a single transparent clear
+  frame so `VideoEffectRenderer`'s `SurfaceTexture` queue has a valid buffer
+  before the first real subtitle bitmap arrives; outside SBS/TB it correctly
+  does nothing further, since `mUiSurface` isn't the subtitle rendering
+  target in 2D mode at all.
+- **Layout/window management**: sizes and positions the subtitle surface for
+  insets, rotation, and system-UI-visibility changes (see "Layout, insets,
+  and bars" below).
 
-The app registers listeners in this chain:
+Pause, play, and seek no longer need explicit subtitle-scheduler handling —
+there is no display thread to suspend/resume/interrupt; the native engine
+renders whatever `libass`'s internal clock says is current for the position
+`Player` is driving.
 
-- `Player.openVideo()` calls `mMediaPlayer.setOnSubtitleListener(this)`.
-- `Player.onSubtitle()` forwards to `Player.Listener`.
-- `PlayerService.onSubtitle()` forwards to the current frontend.
-- `PlayerActivity` and `FloatingPlayerService` call
-  `SubtitleManager.addSubtitle(subtitle)`.
+## Text tag translation
 
-## Java subtitle model
+Each external text-format parser translates its own dialect into
+ASS-compatible plain text (or real `{\...}` override blocks) *before* the cue
+reaches `Source/sub_format_srt.c`'s shared tag layer, `srt_text_to_ass()`:
 
-`MediaLib/src/com/archos/medialib/Subtitle.java` defines three subtitle shapes:
+- `subtitle_vtt.c`: `<v Speaker>` → `"Speaker: "` prefix, `<c.class>`/`<lang>`
+  unwrapped to plain text; shared `<b>`/`<i>`/`<u>`/`<font>` tags are left
+  alone for the shared layer to handle.
+- `subtitle_sub.c` (MicroDVD): `{y:i/b/u/s}` → `{\i1}`/`{\b1}`/`{\u1}`/`{\s1}`,
+  `{c:$BBGGRR}` → `{\c&HBBGGRR&}`; `{f:...}`/`{s:...}`/`{H:...}` are dropped
+  (no reliable ASS equivalent).
+- `subtitle_mpl2.c`: a leading `/` (per-line italics marker) →
+  `{\i1}...{\i0}`.
+- `subtitle_srt.c`/`sub_format_srt.c`: no format-specific markup of its own;
+  `srt_text_to_ass()` is the shared layer every other parser's output also
+  passes through — it maps `<b>`/`<i>`/`<u>`/`<font color=#RRGGBB>` to ASS
+  override tags, passes any already-present `{\...}` block through
+  byte-for-byte, and silently drops anything else so no stray `<...>` leaks
+  onto the screen as literal text.
 
-- `TextSubtitle`: untimed text, with `duration == -1`.
-- `TimedTextSubtitle`: timed text, with position, duration, and text.
-- `TimedBitmapSubtitle`: timed bitmap, with position, duration, bitmap,
-  original frame size, and bounds.
+All of these parsers force `clean_tags = 0` so styling tags survive to reach
+`libass` instead of being stripped, and two-line cues are concatenated with
+the ASS `\N` line break rather than being split into separate display lines.
+`{\an1}`–`{\an9}` alignment tags and per-cue color/bold/italic/underline are
+therefore handled by `libass` itself, not by Java.
 
-`Subtitle.isTimed()` returns true for timed text and timed bitmap subtitles only
-when `duration != -1`. `duration == 0` is still timed and is used by bitmap
-end markers.
-
-`TimedBitmapSubtitle` builds `bounds` from the native left/top corner plus the
-actual Android bitmap width and height. The original native subtitle frame size
-is available separately through `getFrameWidth()` and `getFrameHeight()`.
-
-## SubtitleManager scheduling
-
-`SubtitleManager` owns the Java display lifecycle. It attaches
-`R.layout.subtitle_layout`, finds:
-
-- `SubtitleSpacerView`
-- `SubtitleGfxView`
-- `Subtitle3DTextView`
-
-Then it starts one `DispSubtitleThread`.
-
-The display thread is deliberately separate from the main looper:
-
-- `addSubtitle()` stores the new subtitle as `mNextSubtitle`.
-- Timed subtitles start or interrupt the thread.
-- Untimed text subtitles replace the currently displayed subtitle immediately.
-- UI work is posted back to the main looper through `SubtitleHandler`.
-
-For timed subtitles:
-
-- A subtitle with `duration > 0` becomes `mCurrentSubtitle` and is displayed.
-- The thread sleeps for the remaining subtitle display duration.
-- If another subtitle arrives before the current one expires, the thread wakes
-  up and recomputes the remaining time.
-- If the next subtitle starts before the current one ends, the current subtitle
-  duration is shortened so the next cue can take over cleanly.
-- If the next subtitle has `duration == 0`, it is treated as an empty/end cue
-  and is discarded after shortening/removing the current subtitle.
-- When no display time remains, `removeSubtitle()` clears the current UI view.
-
-`DispSubtitleThread` is a single-active-cue scheduler. It keeps only
-`mCurrentSubtitle` and `mNextSubtitle`; when `mNextSubtitle` starts before the
-current subtitle would naturally end, the current subtitle is shortened rather
-than composited with the new one. Overlapping SRT/ASS cues are therefore not
-displayed simultaneously in the current design.
-
-Pause, play, and seek are handled by controlling this thread:
-
-- `onPause()` suspends it.
-- `onPlay()` resumes it.
-- `onSeekStart()` clears any displayed subtitle and interrupts the thread.
-
-## Text subtitle rendering
-
-Text subtitles are displayed through `Subtitle3DTextView`, which wraps one or
-two `SubtitleTextView` instances:
-
-- Normal UI mode uses only the primary text view.
-- Side-by-side and top-bottom 3D modes enable the secondary text view and split
-  layout horizontally or vertically.
-
-Before drawing, `SubtitleManager.displayView()`:
-
-1. Switches from graphic layout to text layout when needed.
-2. Extracts alignment from SubRip/SSA-style `{\an1}` through `{\an9}` tags.
-3. Converts the alignment to both TextView position gravity and multiline text
-   justification.
-4. Cleans and lightly converts subtitle text.
-5. Runs the result through `HtmlCompat.fromHtml()`.
-6. Applies a `TextShadowSpan` to the entire resulting spannable.
-7. Sets the text on `Subtitle3DTextView`.
-
-Text cleanup currently includes:
-
-- Trimming leading/trailing whitespace.
-- Converting real newlines and literal `\n` to `<br />`.
-- Recovering some concatenated SRT lines by inserting a break between sentence
-  punctuation and an immediately following capital letter.
-- Converting WebVTT voice tags such as `<v Bob>` into bold speaker prefixes.
-- Converting a limited subset of SSA/ASS tags to HTML:
-  color, bold, italic, underline, and strikethrough.
-- Removing remaining SSA/ASS tags.
-
-`SubtitleTextView` handles the actual drawing:
-
-- Text line spacing is set to `1.15`.
-- Optional per-line rounded black background rectangles are drawn behind text.
-- Optional outline drawing exists but is disabled by default because it is too
-  slow on low-end devices.
-- Text can be drawn either into the normal view canvas or into an external UI
-  `Surface`.
-
-Text size is controlled by `SubtitleManager.setSize(size)`:
-
-- The persisted range is `0..100`.
-- It maps to `TextView.setTextSize()` from `16sp` to `64sp`.
-
-Text color, outline, background visibility, and background opacity are set by
-`SubtitleManager` and persisted from the player subtitle settings UI.
+Text size, color, outline, shadow, and background are no longer per-cue Java
+`TextView` properties — they're global style preferences forwarded through
+`SubtitleManager`'s setters to `SubtitleEngine`'s native `SUB_STYLE` (see
+"JNI bridge for the subtitle engine" above), applied by `libass` uniformly.
 
 ## Graphic subtitle rendering
 
-Bitmap subtitles are displayed through `SubtitleGfxView`.
+Bitmap subtitles (PGS/VobSub) go through `Source/sub_format_gfx.c`, the
+`SUB_FMT_GFX` backend, with no `libass` involved:
 
-`SubtitleManager.displayView()` switches to graphic mode and calls:
+- `gfx_feed_bitmap()` is called from `_feed_bitmap_to_engine()` in
+  `stream_subtitle.c` every time `codec_ffsub.c` produces a decoded frame,
+  including the PGS zero-rect clear frame described above. It swizzles
+  BGRA→RGBA (`codec_ffsub.c` always produces BGRA) and stores a single
+  current frame, replacing whatever was stored before.
+- `gfx_render_at()` is polled by `Source/sub_render_gl.c` every frame. There
+  is no per-frame re-render for bitmap subtitles — it hands back a clone of
+  whatever `codec_ffsub.c` last decoded (or an empty frame on the clear
+  signal) until the next feed. PGS/VobSub durations aren't reliable, so this
+  deliberately shows until cleared rather than doing a time-window check.
+- On seek, `gfx_flush()` clears the stored frame so a stale bitmap can't
+  reappear.
 
-```java
-mSubtitleGfxView.setSubtitle(
-    subtitle.getBitmap(),
-    subtitle.getBounds(),
-    subtitle.getFrameWidth(),
-    subtitle.getFrameHeight()
-);
-```
-
-`SubtitleGfxView.RECT_COORDINATES` is currently `true`. That means bitmap
-subtitle file coordinates are preserved as much as possible:
-
-- The native subtitle frame coordinates are scaled to the current video surface.
-- The bitmap is drawn at the scaled original left/top bounds.
-- The user's vertical subtitle position setting is ignored for graphic subtitles
-  in this mode.
-
-The target dimensions are normally the current `Player` surface controller
-width and height. Floating player mode uses the display dimensions known to the
-subtitle view.
-
-Scaling uses the original subtitle frame aspect ratio and the video surface
-aspect ratio:
-
-- If the subtitle frame is wider than the surface, scaling fills the target
-  width and centers vertically.
-- Otherwise scaling fills the target height and centers horizontally.
-- Stretch/aspect-ratio modes are accounted for by comparing the surface size to
-  the decoded video size.
-
-`SubtitleGfxView.onDraw()` draws the Android bitmap from its full source rect to
-the scaled subtitle bounds. Like text rendering, it can draw into either the
-normal view canvas or an external UI `Surface`.
+Scaling and positioning are handled by `sub_render_gl.c` against the native
+subtitle frame's original bounding box and dimensions
+(`frame->window`/`frame->width`/`frame->height`, set in `codec_ffsub.c` as
+described above) — the same original-coordinates-preserved concern the old
+Java `SubtitleGfxView` handled, now done natively as part of the GL draw.
 
 ## Stereoscopic 3D subtitles
 
@@ -496,93 +470,134 @@ To test the 3D subtitle path, name a clip something like `movie.sbs.mkv` or
 `movie.htb.mkv` with an SRT alongside; it comes up in 3D mode and the subtitle is
 split/duplicated per eye-half.
 
-### Text duplication
+### 2D/3D surface handoff
 
-`Subtitle3DTextView` wraps a primary and a secondary `SubtitleTextView`.
-`setUIMode()` reads the active mode:
+The switch is driven by `SubtitleEngine.is3DMode()` and its
+`TextureView.SurfaceTextureListener` callbacks for the subtitle
+`TextureView`, not by `SubtitleManager`:
 
-- `SBS_MODE` splits the layout horizontally so each text view gets half the
-  width.
-- `TB_MODE` splits the layout vertically so each text view gets half the height.
+- In 2D (`!is3DMode()`), `onSurfaceTextureAvailable`/`SizeChanged`/`Destroyed`
+  call `nativeSurfaceCreated`/`Changed`/`Destroyed` — native's EGL thread owns
+  the subtitle surface directly and renders every frame with no Java
+  involvement (`onSurfaceTextureUpdated` is a deliberate no-op: "the native
+  OpenGL thread owns the render loop in 2D mode").
+- Switching *into* 3D, `setUIMode()` proactively calls
+  `nativeSurfaceDestroyed()` to shut down that EGL attachment; switching back
+  to 2D, it calls `nativeSurfaceCreated()` again against the retained
+  surface. In 3D, the subtitle `TextureView` is therefore untouched by
+  native — `VideoEffectRenderer`'s separate UI overlay surface (`mUiSurface`)
+  is the target instead.
 
-The same cue is drawn into both views, positioned through `setGravity3D()`.
-Normal 2D playback uses only the primary view.
+### External GL surface (3D bitmap pull)
 
-### External GL surface
-
-When an OpenGL video effect is active (3D stereo merge), the video runs through
-`VideoEffectRenderer` with `StereoMergeEffect`/`StereoMergeArchosEffect`, which
-merges the two half-frames into the stereo output. In this mode `Player` calls
-`setUIExternalSurface(mUISurface)`, handing the subtitle views a `Surface` owned
-by the GL renderer instead of the normal view hierarchy.
-
-`SubtitleTextView.setRenderingSurface()` then draws via `Surface.lockCanvas()` /
-`unlockCanvasAndPost()` directly onto that GL surface, so the subtitle pixels are
-composited and warped by the same stereo shader as the video. This external
-surface path is the part most coupled to the custom subtitle views: it draws into
-an arbitrary `Surface` rather than the view's own canvas.
+When an OpenGL video effect is active (3D stereo merge), the video runs
+through `VideoEffectRenderer` with `StereoMergeEffect`/`StereoMergeArchosEffect`,
+which merges the two half-frames into the stereo output.
+`VideoEffectRenderer.primeThreeDSurface()` registers its UI overlay surface
+(`mUiSurface`) with the native engine at init — before any real video frame
+necessarily arrives, so a style change made while playback is paused still
+has a redraw target. On every `onFrameAvailable()` — if
+`SubtitleEngine.is3DMode()` — it calls `draw3DSubtitles()`, which pulls a
+freshly rendered subtitle bitmap from native (`nativeFillBitmap`/
+`nativeSyncFillBitmap`) and blits it into `mUiSurface` for the stereo shader
+to composite alongside the video, duplicating it into both eye-halves as
+part of that same composite. A separate `wakeDrawLoop()` path handles the
+case where a style change needs to be shown while video is paused and
+`onFrameAvailable()` isn't firing.
 
 ## Layout, insets, and bars
 
-`SubtitleManager` adds `subtitle_layout` over the player root view and updates
-its dimensions when the screen or video surface changes.
+`SurfaceController` owns the subtitle `TextureView` alongside the two video
+surfaces (GL-effect and plain), stacking it above both. `TextureView`s are
+opaque by default; `SurfaceController` explicitly calls `setOpaque(false)` on
+it in its constructor — skipping this makes Android treat the layer as a
+solid black box, which optimizes away the video underneath and stalls/crashes
+the hardware decoder. `SurfaceController.setSubtitleTextureCallback()`
+registers `SubtitleEngine` (implementing `TextureView.SurfaceTextureListener`)
+against it, and — since the surface can already exist by the time the
+listener is attached — immediately replays `onSurfaceTextureAvailable()` in
+that case rather than waiting for a callback that already fired.
 
-`adjustView()` delegates inset handling to
-`MiscUtils.adjustViewLayoutForInsets()`:
+`SubtitleManager` still adds `subtitle_layout` over the player root view and
+updates its dimensions when the screen or video surface changes, delegating
+inset handling to `MiscUtils.adjustViewLayoutForInsets()`. Sizing no longer
+branches on subtitle category (`SUBTITLE_CATEGORY_PLAIN_TEXT`/`_ASS`/`_GFX`,
+tracked via `SubtitleManager.setSubtitleIsGfx()`): a single `mUseSubMargins`
+user preference controls whether the subtitle layer is allowed to extend into
+top/bottom letterbox bars, uniformly across all three categories. Left/right
+bars are never used regardless of this preference. When enabled for an
+ASS/SSA track, the matching native-side change is required too —
+`sub_engine_open_track()`'s frame size must widen to the same canvas, or
+`libass`'s `PlayResX`/`PlayResY` scale is computed against the smaller
+video-only box while actually drawing into the larger one. Floating player
+mode has separate size handling and does not enable the external UI surface
+path.
 
-- Text subtitles avoid the player control bar, status/navigation bars, gesture
-  area, and optionally the display cutout.
-- Graphic subtitles keep their native rectangle layout and avoid fewer UI
-  offsets; they can also use a surface-controller-sized layout.
-- Floating player mode has separate size handling and does not enable the
-  external UI surface path.
-
-The user's vertical text subtitle position is implemented with
+The user's vertical text subtitle position is still implemented with
 `SubtitleSpacerView`:
 
 - The setting range is `0..255`.
 - It maps to roughly `0..screenHeight/3`.
 - `SubtitleSpacerView` also displays the temporary position hint baseline while
   the user adjusts vertical position.
-- In graphic mode with `RECT_COORDINATES == true`, this spacer height is forced
-  to zero.
+- Actual subtitle vertical position is `libass`'s `MarginV`, applied natively
+  via `nativeSetVerticalOffset()` — `SubtitleSpacerView` is a UI hint only,
+  not the positioning mechanism itself.
 
 ## Current quirks and debugging notes
 
-- `SUBTITLE_SEND_OFFSET` is applied in native to send subtitle events early, then
-  undone before building the Java subtitle object. Delay changes add the user
-  delay to this offset.
-- Java still owns final display duration. This is important for PGS, where
-  native may send a long placeholder duration and later a zero-duration empty
-  bitmap to end the cue.
-- Overlapping text cues are not composited. Java truncates the current timed cue
-  when a next cue arrives before it ends, and the native external-subtitle path
-  also tracks a single `p->out` cue before advancing.
-- Text and bitmap subtitles use different layout rules. Text respects user
-  vertical position and UI bars; graphics preserve original subtitle rectangle
-  coordinates when `RECT_COORDINATES` is true.
-- Switching between text and bitmap subtitles forces a layout adjustment because
-  the two modes use different sizing/inset behavior.
-- The visible text may differ from native text because Java performs final
-  cleanup, HTML conversion, SSA tag removal, WebVTT voice formatting, and shadow
-  span application.
-- `SubtitleTextView.setVisibility()` and `SubtitleGfxView.setVisibility()` clear
-  the external UI surface when one is attached, preventing stale subtitle pixels.
+- Overlapping text cues are now composited natively by `libass`, unlike the
+  old single-active-cue Java scheduler that truncated the current cue when a
+  new one arrived early.
+- PGS's real end time is still signalled by a zero-rect/zero-duration "clear"
+  packet rather than a reliable duration — only the consumer moved, from
+  Java's `SubtitleManager` to native's `sub_format_gfx.c`.
+- VobSub's palette normalization in `codec_ffsub.c` (dominant index → black
+  fill, next-most-used → white outline) is a heuristic based on pixel counts
+  per decoded rect, not a fixed slot convention — a rip with unusual palette
+  usage could normalize incorrectly.
+- `gl_subtitle_view` (2D, native-direct) and `mUiSurface` (3D, bitmap-pull)
+  are mutually exclusive rendering targets gated by
+  `SubtitleEngine.is3DMode()`, not by anything in `SubtitleManager` —
+  reasoning about "why isn't native drawing to X" for either surface starts
+  there.
+- The subtitle `TextureView` must have `setOpaque(false)` called on it —
+  `TextureView`s default to opaque, and Android will otherwise treat the
+  layer as a solid black box, optimize away the video underneath, and stall
+  or crash the hardware decoder.
+- The visible text may still differ slightly from the raw source: every
+  parser forces `clean_tags = 0` so styling tags survive, but each format's
+  own dialect (VTT voice tags, MicroDVD control codes, MPL2's italics marker)
+  is translated to ASS before `libass` ever sees it.
 
 Useful entry points:
 
-- Native stream timing: `native/avos-*/Source/stream_subtitle.c`
-- Native ffmpeg subtitle decoding: `native/avos-*/Source/codec_ffsub.c`
-- Native external subtitle lookup: `native/avos-*/Source/stream_sub_ext.c`
-- Native SSA parser: `native/avos-*/Source/subtitle_ssa.c`
-- Native event creation: `native/avos-*/Source/avos_mp_video.c`
-- JNI event bridge: `native/avos-*/jni/libavosjni/avos_media_player.c`
-- Java subtitle object: `MediaLib/src/com/archos/medialib/Subtitle.java`
-- Java event dispatch: `MediaLib/src/com/archos/medialib/AvosMediaPlayer.java`
-- App scheduling/rendering: `Video/src/main/java/com/archos/mediacenter/video/player/SubtitleManager.java`
-- Text drawing: `Video/src/main/java/com/archos/mediacenter/video/player/SubtitleTextView.java`
-- 3D text duplication: `Video/src/main/java/com/archos/mediacenter/video/player/Subtitle3DTextView.java`
-- 3D filename detection: `MediaLib/src/com/archos/mediaprovider/video/VideoNameProcessor.java`
-- 3D effect/mode selection: `Video/src/main/java/com/archos/mediacenter/video/player/PlayerActivity.java`
-- 3D GL stereo merge: `Video/src/main/java/com/archos/mediacenter/video/player/StereoMergeArchosEffect.java`
-- Graphic drawing: `Video/src/main/java/com/archos/mediacenter/video/player/SubtitleGfxView.java`
+- Native internal-track classification and engine feed:
+  `native/avos/Source/stream_subtitle.c`
+- Native ffmpeg subtitle decoding: `native/avos/Source/codec_ffsub.c`
+- Native external subtitle discovery and engine feed:
+  `native/avos/Source/stream_sub_ext.c`
+- External format parsers: `native/avos/Source/subtitle_srt.c`,
+  `subtitle_vtt.c`, `subtitle_ssa.c`, `subtitle_sub.c`, `subtitle_mpl2.c`,
+  `subtitle_smi.c`, `subtitle_idx.c`, `subtitle_pgs.c`, `subtitle_formats.c`
+- Native subtitle engine and format backends: `native/avos/Source/sub_engine.c`,
+  `sub_format_srt.c`, `sub_format_ssa.c`, `sub_format_gfx.c`
+- GPU rendering: `native/avos/Source/sub_render_gl.c`
+- Engine lifecycle/thread-safety: `native/avos/Source/sub_engine_registry.c`
+- Track selection, delay: `native/avos/Source/avos_mp_video.c`
+- JNI bridge for the subtitle engine:
+  `native/avos/jni/libavosjni/jni_sub_engine.c`
+- Java engine control surface:
+  `Video/src/main/java/com/archos/mediacenter/video/player/SubtitleEngine.java`
+- App style/layout forwarding:
+  `Video/src/main/java/com/archos/mediacenter/video/player/SubtitleManager.java`
+- Surface ownership and sizing:
+  `Video/src/main/java/com/archos/mediacenter/video/player/SurfaceController.java`
+- 3D compositing bridge:
+  `Video/src/main/java/com/archos/mediacenter/video/player/VideoEffectRenderer.java`
+- 3D filename detection:
+  `MediaLib/src/com/archos/mediaprovider/video/VideoNameProcessor.java`
+- 3D effect/mode selection:
+  `Video/src/main/java/com/archos/mediacenter/video/player/PlayerActivity.java`
+- 3D GL stereo merge:
+  `Video/src/main/java/com/archos/mediacenter/video/player/StereoMergeArchosEffect.java`

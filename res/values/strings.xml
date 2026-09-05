@@ -437,8 +437,31 @@
     <string name="subtitle_style_text">Style:</string>
     <string name="subtitle_vert_text">Vertical Position:</string>
     <string name="subtitle_outline">Outline subtitles</string>
-    <string name="subtitle_background_text">Subtitle background</string>
-    <string name="subtitle_bg_opacity_text">Background opacity</string>
+    <string name="subtitle_background_text">Subtitle Background:</string>
+    <string name="subtitle_bg_opacity_text">Background Opacity:</string>
+
+    <!-- Subtitle Settings Dialog — libass styling system additions -->
+    <string name="subtitle_override_mode_text">Style Source:</string>
+    <string name="subtitle_override_embedded">Embedded</string>
+    <string name="subtitle_override_custom">Custom</string>
+    <string name="subtitle_override_scale_only">Scale Only</string>
+    <string name="subtitle_override_embedded_hint">Using the subtitle file\'s own styling. Custom style options below are inactive.</string>
+
+    <string name="subtitle_bold_text">Bold</string>
+    <string name="subtitle_text_color_text">Text color:</string>
+    <string name="subtitle_scale_text">Scale:</string>
+
+    <string name="subtitle_bg_mode_floating">No Background</string>
+    <string name="subtitle_bg_mode_boxed_line">Line Background</string>
+    <string name="subtitle_bg_mode_boxed_block">Block Background</string>
+
+    <string name="subtitle_outline_width_text">Outline Width:</string>
+    <string name="subtitle_outline_color_text">Outline Color:</string>
+    <string name="subtitle_shadow_width_text">Shadow Width:</string>
+    <string name="subtitle_shadow_color_text">Shadow Color:</string>
+    <string name="subtitle_padding_text">Padding:</string>
+    <string name="subtitle_background_color_text">Background Color:</string>
+
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Speed Adjustment</string>
     <string name="subtitle_delay_radio_none">none</string>
@@ -564,6 +587,11 @@
     <string name="category_languages">Subtitles</string>
     <string name="subtitles_hide_default">Hide subtitles by default</string>
     <string name="subtitles_hide_default_summary">Hide regular subtitles by default; matching forced subtitles may still be shown</string>
+    <string name="subtitle_use_margins_title">Render subtitles in black bars</string>
+    <string name="subtitle_use_margins_summary">Show subtitles in the letterbox area below the picture instead of overlapping the video</string>
+    <string name="subtitle_fonts_folder_title">Custom fonts folder</string>
+    <string name="subtitle_fonts_folder_summary">Pick a folder of .ttf/.otf/.ttc fonts to use for subtitles, instead of the built-in fonts</string>
+    <string name="subtitle_default_font_title">Default subtitle font</string>
     <string name="subtitles_credentials_title">OpenSubtitles credentials</string>
     <string name="subtitles_credentials_summary">Provide your opensubtitles credentials to be able to download subtitles</string>
 

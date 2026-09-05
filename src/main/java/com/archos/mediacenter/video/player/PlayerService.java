@@ -72,7 +72,6 @@ import com.archos.mediacenter.video.leanback.channels.ChannelManager;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediacenter.video.utils.AdditionalServiceSingleton;
-import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
 import com.archos.mediascraper.BaseTags;
@@ -1079,6 +1078,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mPlayerFrontend = null;
         stopAndSaveVideoState();
         Player.sPlayer.setListener(null);
+        if (!prepareForSurfaceSwitch) {
+            // Genuinely done with this Player (not handing it off to the floating player) --
+            // this is the ONE place a live Player is discarded, so it's the one place
+            // responsible for releasing it. See Player.releasePlayer() for why routing every
+            // discard through here is what keeps at most one SubtitleEngine alive at a time.
+            Player.sPlayer.releasePlayer();
+        }
         Player.sPlayer = null;
         playerFrontend.onFrontendDetached();
         if (!prepareForSurfaceSwitch) {
@@ -2519,13 +2525,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onBufferingUpdate(int percent) {
         if(mPlayerFrontend!=null) {
             mPlayerFrontend.onBufferingUpdate(percent);
-        }
-    }
-
-    @Override
-    public void onSubtitle(Subtitle subtitle) {
-        if(mPlayerFrontend!=null) {
-            mPlayerFrontend.onSubtitle(subtitle);
         }
     }
 
