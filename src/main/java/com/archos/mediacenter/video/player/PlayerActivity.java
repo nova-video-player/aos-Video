@@ -522,7 +522,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     }
 
     private boolean isSpatializationPreferenceEnabled() {
-        return mPreferences.getBoolean(KEY_SPATIALIZATION_ENABLED, true);
+        return mPreferences.getBoolean(KEY_SPATIALIZATION_ENABLED, false);
     }
 
     private boolean isSpatializationEnabledForPlayback() {

@@ -253,6 +253,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mPlaybackSpeed = null;
     private CheckBoxPreference mAudioSpeedAudiotrack = null;
     private CheckBoxPreference mEnableDynamicAudioDelay = null;
+    private CheckBoxPreference mEnableSpatialization = null;
     private CheckBoxPreference mDisableDownmix = null;
     private CheckBoxPreference mEnableDownmixATV = null;
     private ListPreference mActivateRefreshrateTVSwitch = null;
@@ -516,6 +517,45 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         }
     }
 
+    /**
+     * Update the enabled and selectable state of the platform spatialization preference.
+     * Mirrors PlayerActivity.isSpatializationToggleAvailable(): the toggle is only
+     * meaningful when the platform supports it and audio passthrough is not forced.
+     * Selectable is kept in sync with enabled so the preference is skipped by dpad
+     * navigation (leanback) when greyed out.
+     *
+     * @param platformSupported true if the device/platform supports the Spatializer
+     * @param passthroughEnabled true if audio passthrough is currently forced
+     */
+    private void updateSpatializationPreferenceState(boolean platformSupported, boolean passthroughEnabled) {
+        if (mEnableSpatialization == null) {
+            return;
+        }
+        boolean toggleAvailable = platformSupported && !passthroughEnabled;
+        mEnableSpatialization.setEnabled(toggleAvailable);
+        mEnableSpatialization.setSelectable(toggleAvailable);
+    }
+
+    /**
+     * Update the enabled and selectable state of the downmix preferences
+     * (disable_downmix on phone/tablet, enable_downmix_androidtv on TV) based on
+     * whether something else already forces the downmix decision: audio passthrough
+     * or platform spatialization being enabled both make these preferences moot
+     * (see PlayerActivity.applyDownmixPreferenceToAvos()).
+     *
+     * @param overridden true if passthrough or spatialization already dictates the downmix behavior
+     */
+    private void updateDownmixPreferencesState(boolean overridden) {
+        if (mDisableDownmix != null) {
+            mDisableDownmix.setEnabled(!overridden);
+            mDisableDownmix.setSelectable(!overridden);
+        }
+        if (mEnableDownmixATV != null) {
+            mEnableDownmixATV.setEnabled(!overridden);
+            mEnableDownmixATV.setSelectable(!overridden);
+        }
+    }
+
     public static boolean isAudioSpeedEnabled(SharedPreferences preferences) {
         if (preferences == null) return false;
         if (!preferences.getBoolean(KEY_PLAYBACK_SPEED, false)) return false;
@@ -665,6 +705,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mPlaybackSpeed = (CheckBoxPreference) findPreference(KEY_PLAYBACK_SPEED);
         mAudioSpeedAudiotrack = (CheckBoxPreference) findPreference(KEY_AUDIO_SPEED_AUDIOTRACK);
         mEnableDynamicAudioDelay = (CheckBoxPreference) findPreference(KEY_ENABLE_DYNAMIC_AUDIO_DELAY);
+        mEnableSpatialization = (CheckBoxPreference) findPreference("player_spatialization_enabled");
         mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");
         mEnableDownmixATV = (CheckBoxPreference) findPreference("enable_downmix_androidtv");
         final ListPreference mForceAudioPassthroughMultiple = (ListPreference) findPreference("force_audio_passthrough_multiple");
@@ -681,9 +722,24 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             removeMode1FromPassthroughOptions(mForceAudioPassthroughMultiple);
         }
 
+        // Mirrors PlayerActivity.isSpatializationSupportedByPlatform(): device/platform must
+        // support the Spatializer and be able to spatialize 5.1 or 7.1 content.
+        int spatializerCapabilities = CustomApplication.getSpatializerCapabilities();
+        final boolean isSpatializationSupportedByPlatform = Build.VERSION.SDK_INT >= 32
+                && (spatializerCapabilities & CodecDiscovery.SPATIALIZER_CAP_SUPPORTED) != 0
+                && (spatializerCapabilities & CodecDiscovery.SPATIALIZER_CAP_AVAILABLE) != 0
+                && (spatializerCapabilities & (CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_5_1
+                        | CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_7_1)) != 0;
+        mEnableSpatialization.setOnPreferenceChangeListener((preference, newValue) -> {
+            updateDownmixPreferencesState(isSpatializationSupportedByPlatform && (Boolean) newValue);
+            return true;
+        });
+
         // Get initial frame timing state
         boolean frameTimingEnabled = mSharedPreferences.getBoolean("enable_android_frame_timing", false);
 
+        boolean spatializationOverridesDownmix = isSpatializationSupportedByPlatform
+                && mEnableSpatialization.isChecked();
         if (isPassthroughSupported) {
             String passthroughMode = mSharedPreferences.getString("force_audio_passthrough_multiple", "0");
             boolean passthroughEnabled = !"0".equals(passthroughMode);
@@ -691,8 +747,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             mForceAudioPassthrough.setSelectable(passthroughEnabled);
             updateAudioSpeedState(passthroughEnabled);
             updateAudioDecoderChoiceState(passthroughEnabled);
-            mDisableDownmix.setEnabled(!passthroughEnabled);
-            mDisableDownmix.setSelectable(!passthroughEnabled);
+            updateSpatializationPreferenceState(isSpatializationSupportedByPlatform, passthroughEnabled);
+            updateDownmixPreferencesState(passthroughEnabled || spatializationOverridesDownmix);
             // Dynamic audio delay depends on both passthrough and frame timing
             updateDynamicAudioDelayState(passthroughEnabled, frameTimingEnabled);
             mForceAudioPassthroughMultiple.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -701,8 +757,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 mForceAudioPassthrough.setSelectable(newPassthroughEnabled);
                 updateAudioSpeedState(newPassthroughEnabled);
                 updateAudioDecoderChoiceState(newPassthroughEnabled);
-                mDisableDownmix.setEnabled(!newPassthroughEnabled);
-                mDisableDownmix.setSelectable(!newPassthroughEnabled);
+                updateSpatializationPreferenceState(isSpatializationSupportedByPlatform, newPassthroughEnabled);
+                updateDownmixPreferencesState(newPassthroughEnabled
+                        || (isSpatializationSupportedByPlatform && mEnableSpatialization.isChecked()));
                 return true;
             });
         } else {
@@ -713,8 +770,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             }
             updateAudioSpeedState(false);
             updateAudioDecoderChoiceState(false);
-            mDisableDownmix.setEnabled(true);
-            mDisableDownmix.setSelectable(true);
+            updateSpatializationPreferenceState(isSpatializationSupportedByPlatform, false);
+            updateDownmixPreferencesState(spatializationOverridesDownmix);
             // Frame timing can still affect dynamic audio delay even without passthrough
             updateDynamicAudioDelayState(false, frameTimingEnabled);
         }
