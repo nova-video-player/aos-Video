@@ -53,6 +53,7 @@ import com.archos.mediacenter.video.utils.CodecDiscovery;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.IMediaPlayer;
+import com.archos.medialib.LibAvos;
 import com.archos.medialib.MediaFactory;
 import com.archos.medialib.MediaMetadata;
 import com.archos.medialib.Subtitle;
@@ -1043,7 +1044,17 @@ public class Player implements IPlayerControl,
             setHdrCapabilities();
 
             int refreshRateSwitchMode = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString("enable_tv_refreshrate_switch_mode","0"));
-            boolean refreshRateSwitchEnabled = (refreshRateSwitchMode!= 0);
+            boolean refreshRateSwitchEnabled = (refreshRateSwitchMode != 0 && refreshRateSwitchMode != 4);
+
+            /* Mode 4 "No sync (try if you experience lags)": free-running
+             * presents - the native dovi sink swaps at a uniform content-fps
+             * grid, no vsync/display-mode interaction at all. For panels that
+             * override every refresh-rate hint (Samsung HRR) and judder under
+             * paced/scheduled presents. The native side reads the flag once
+             * at sink open, so it must be set before playback starts. */
+            LibAvos.setPresentFreeRun(refreshRateSwitchMode == 4);
+            if (refreshRateSwitchMode == 4 && log.isDebugEnabled())
+                log.debug("CONFIG refresh-rate sync mode 4: no-sync free-run presents");
 
             CustomApplication.setSupportedRefreshRates(getSupportedRefreshRates());
 
@@ -1196,6 +1207,8 @@ public class Player implements IPlayerControl,
             return;
         mCurrentFps = milliFps / 1000.0f;
         int refreshRateSwitchMode = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString("enable_tv_refreshrate_switch_mode","0"));
+        if (refreshRateSwitchMode == 4)
+            return; /* no-sync free-run: never touch the display mode */
         if (refreshRateSwitchMode == 3)
             applyClosestRefreshMode(mCurrentFps);
     }

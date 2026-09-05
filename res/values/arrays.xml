@@ -34,6 +34,7 @@
         <item>@string/preferences_tv_refreshrate_switch_mode_selection</item>
         <item>@string/preferences_tv_refreshrate_switch_match_frame_rate</item>
         <item>@string/preferences_tv_refreshrate_switch_closest</item>
+        <item>@string/preferences_tv_refreshrate_switch_no_sync</item>
     </string-array>
 
     <string-array name="pref_tv_refreshrate_values">
@@ -41,6 +42,7 @@
         <item>1</item>
         <item>2</item>
         <item>3</item>
+        <item>4</item>
     </string-array>
 
     <string-array name="pref_dolby_vision_render_mode_entries" translatable="false">
