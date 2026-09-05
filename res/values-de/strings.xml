@@ -270,6 +270,14 @@
     <string name="pref_play_mode_entry_repeat_folder">Ordner wiederholt</string>
     <string name="pref_play_mode_entry_repeat_single">Einzeln wiederholt</string>
     <string name="pref_play_mode_entry_binge">Binge Watching</string>
+    <string name="pref_introdb_autoskip_title">Intro/Outro überspringen</string>
+    <string name="introdb_autoskip">Automatisch überspringen</string>
+    <string name="introdb_segment_intro">Intro</string>
+    <string name="introdb_segment_recap">Zusammenfassung</string>
+    <string name="introdb_segment_outro">Outro</string>
+    <string name="introdb_segment_credits">Mitwirkende</string>
+    <string name="introdb_segment_preview">Vorschau</string>
+    <string name="introdb_segment_end">Ende</string>
     <string name="pref_audio_parameters_title">Sound</string>
     <string name="pref_audio_filt_title">Lautstärke erhöhen</string>
     <string name="pref_audio_filt_night_mode">Nachtmodus</string>
@@ -370,6 +378,14 @@
     <string name="toast_subloader_login_failed">Falsche opensubtitles-Anmeldedaten oder Dienst nicht verfügbar</string>
     <string name="toast_subloader_quota_exceeded">OpenSubtitles-Download-Quote überschritten</string>
     <string name="opensubtitles_quota_reset_time_remaining">Quote zurückgesetzt in %s</string>
+    <string name="opensubtitles_summary_anonymous">Anonym</string>
+    <string name="opensubtitles_summary_user_account">Benutzerkonto</string>
+    <string name="opensubtitles_summary_not_checked">Noch nicht überprüft</string>
+    <string name="opensubtitles_summary_credentials_verified">Nachweise überprüft</string>
+    <string name="opensubtitles_summary_login_failed">Fehler bei der Anmeldung</string>
+    <string name="opensubtitles_summary_service_unavailable">Dienst nicht verfügbar</string>
+    <string name="opensubtitles_summary_quota_exhausted">Kontingent erschöpft</string>
+    <string name="opensubtitles_summary_status">%1$s · %2$s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_sample_text">\"Beispiel\"</string>
     <string name="subtitle_size_text">Größe:</string>
@@ -495,6 +511,7 @@
     <string name="preference_enable_cutout_both_sidesx_summary">Anzeige auf beiden Seiten gleich beschneiden, sodass der Bildschirm symmetrisch ist.</string>
     <string name="category_languages">Untertitel</string>
     <string name="subtitles_hide_default">Untertitel standardmäßig ausblenden</string>
+    <string name="subtitles_hide_default_summary">Standardmäßig normale Untertitel ausblenden, passende erzwungene Untertitel werden möglicherweise weiterhin angezeigt</string>
     <string name="subtitles_credentials_title">OpenSubtitles-Anmeldedaten</string>
     <string name="subtitles_credentials_summary">Geben Sie Ihre Zugangsdaten für opensubtitles.com in den Einstellungen an, um Untertitel herunterladen zu können</string>
     <string name="preferences_languages">Download-Sprachen für Untertitel</string>
@@ -503,6 +520,8 @@
     <string name="favSubLang_summary">Wählen Sie Ihre bevorzugte Sprache zum Lesen von Untertiteln</string>
     <string name="favAudioLang_title">Bevorzugte Audio-Sprache</string>
     <string name="favAudioLang_summary">Wählen Sie Ihre bevorzugte Audiospur-Sprache</string>
+    <string name="prefer_original_audio_track_title">Originaltonspur bevorzugen</string>
+    <string name="prefer_original_audio_track_summary">Verwende die Tonspur, die der Originalsprache des Films oder der Serie entspricht sowie passende erzwungene Untertitel, sofern verfügbar</string>
     <string name="ui_language_title">Wählen Sie die Sprache der Benutzeroberfläche</string>
     <string name="UiLang_title">Sprache der Benutzeroberfläche</string>
     <string name="UiLang_summary">Sprache der nova-Benutzeroberfläche festlegen. \"System\" auswählen zum Verwenden vom System-Standard</string>
@@ -637,6 +656,8 @@
     <string name="audio_decoder_choice_title">Audio-Decodierer auswählen</string>
     <string name="audio_decoder_choice_summary">Legt fest, ob die Audio-Dekodierung FFmpeg oder MediaCodec bevorzugt.</string>
     <string name="audio_decoder_auto">Automatisch</string>
+    <string name="audio_decoder_prefer_ffmpeg">FFmpeg bevorzugen (Standard)</string>
+    <string name="audio_decoder_prefer_mediacodec">MediaCodec bevorzugen (experimentell)</string>
     <string name="audio_interface_opensles">OpenSL ES erzwingen</string>
     <string name="audio_interface_audiotrack">Audiospur erzwingen</string>
     <string name="audio_interface_any">Standardlogik</string>
@@ -651,6 +672,8 @@
     <string name="status_disabled">Deaktiviert</string>
     <string name="status_multichannel">Mehrkanal</string>
     <string name="preferences_user_interface">Benutzeroberfläche</string>
+    <string name="preferences_sort_ignore_articles_title">Beim Sortieren führende Artikel ignorieren</string>
+    <string name="preferences_sort_ignore_articles_summary">Beim alphabetischen Sortieren von Titeln führende Artikel wie „The“, „A“, „Le“ oder „Das“ ignorieren</string>
     <string name="preferences_display_resume_box_summary">Button zum Fortsetzen des letzten Videos auf dem Hauptbildschirm anzeigen oder ausblenden</string>
     <string name="preferences_display_resume_box">Wiederherstellungsfeld anzeigen</string>
     <string name="reset_brightness_on_start">Videohelligkeit merken.</string>
@@ -758,7 +781,16 @@
     <string name="trakt_device_auth_invalid_code">Fehler beim Abrufen eines gültigen Gerätecodes von Trakt. Bitte erneut versuchen.</string>
     <string name="trakt_device_auth_timeout">Code ist abgelaufen. Bitte erneut versuchen.</string>
     <string name="trakt_account_locked">Trakt-Konto gesperrt. Auf trakt.tv entsperren oder später erneut versuchen.</string>
+    <string name="trakt_social_signin_unsupported">Die Anmeldung über Google, Facebook oder Apple wird hier nicht unterstützt. Bitte melden Sie sich stattdessen mit Ihrem Trakt-Benutzernamen und -Passwort an.</string>
     <string name="connect_trakt">Mit Trakt verbinden</string>
+    <string name="trakt_sync_status_never">Noch nicht synchronisiert</string>
+    <string name="trakt_sync_status_ok">Letzte Synchronisierung: vor %1$s</string>
+    <string name="trakt_sync_status_ok_skipped">Letzte Synchronisierung: vor %1$s · %2$d Video(s) ausstehend (unbekannte Dauer)</string>
+    <string name="trakt_sync_status_ok_meta_skipped">Letzte Synchronisierung: vor %1$s · %2$d Scrobble(s) übersprungen (fehlende Metadaten)</string>
+    <string name="trakt_sync_status_ok_both_skipped">Letzte Synchronisierung: vor %1$s · %2$d ausstehend (Dauer unbekannt), %3$d Scrobble(s) übersprungen (fehlende Metadaten)</string>
+    <string name="trakt_sync_status_error_network">Letzte Synchronisierung fehlgeschlagen: Netzwerkfehler</string>
+    <string name="trakt_sync_status_error_auth">Authentifizierungsfehler - bitte melden Sie sich erneut an</string>
+    <string name="trakt_sync_status_error_locked">Konto gesperrt – auf trakt.tv entsperren</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Alle Videos</string>
     <string name="hide_seen">Nicht angeschaut</string>
@@ -840,6 +872,10 @@
     <string name="rescrap_all_title">Rescrape alles</string>
     <string name="rescrap_all_movies_title">Rescrape alle Filme</string>
     <string name="rescrap_all_collections_title">Rescrape alle Sammlungen</string>
+    <string name="recreate_sort_titles_title">Sortiertitel neu erstellen</string>
+    <string name="recreate_sort_titles_summary">Sortiertitel für Filme, Serien und Sammlungen neu berechnen</string>
+    <string name="recreate_sort_titles_in_progress">Sortiertitel werden neu erstellt</string>
+    <string name="recreate_sort_titles_done">Sortiertitel neu erstellt</string>
     <string name="nfo_export_manual_title">Bereits gescrapte Videos exportieren</string>
     <string name="nfo_export_manual_summary">.nfo-Dateien von jedem bereits gescraptem Video exportieren</string>
     <string name="db_export_manual_title">Mediendatenbank exportieren</string>
@@ -898,4 +934,12 @@
     <string name="external_player_service_title">Externe Player-Wiedergabe</string>
     <string name="external_player_service_description">Nova Video Player bietet Inhalte für einen externen Player an</string>
     <string name="stop">Stopp</string>
+    <string name="s_visual_impaired">sehbehindert</string>
+    <string name="s_audio_description">Audiodeskription</string>
+    <string name="s_original">Original</string>
+    <string name="s_translated">übersetzt</string>
+    <string name="s_dubbed">synchronisiert</string>
+    <string name="s_commentary">Kommentar</string>
+    <string name="s_lyrics">Text</string>
+    <string name="s_karaoke">Karaoke</string>
 </resources>

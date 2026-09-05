@@ -519,6 +519,7 @@
     <string name="preference_enable_cutout_both_sidesx_summary">Przytnij obraz równo z obu stron, aby ekran był symetryczny.</string>
     <string name="category_languages">Napisy</string>
     <string name="subtitles_hide_default">Domyślnie ukryj napisy</string>
+    <string name="subtitles_hide_default_summary">Domyślnie ukryj napisy (wymuszone napisy mogą być nadal wyświetlane)</string>
     <string name="subtitles_credentials_title">Dane logowania OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Podaj dane logowania do OpenSubtitles, aby pobierać napisy</string>
     <string name="preferences_languages">Język pobieranych napisów</string>
@@ -527,6 +528,8 @@
     <string name="favSubLang_summary">Wybierz preferowany język napisów</string>
     <string name="favAudioLang_title">Preferowany język ścieżki dźwiękowej</string>
     <string name="favAudioLang_summary">Wybierz swój ulubiony język ścieżki dźwiękowej</string>
+    <string name="prefer_original_audio_track_title">Preferuj oryginalną ścieżkę dźwiękową</string>
+    <string name="prefer_original_audio_track_summary">Użyj oryginalnej ścieżki dźwiękowej filmu, gdy jest dostępna</string>
     <string name="ui_language_title">Wybierz język interfejsu</string>
     <string name="UiLang_title">Język interfejsu</string>
     <string name="UiLang_summary">Ustaw język interfejsu Nova, taki sam jak język systemowy</string>
@@ -551,7 +554,7 @@
     <string name="trakt_change">Modyfikacja Trakt API wymaga restartu połączenia.</string>
     <string name="enable_auto_scrap">Automatycznie pobierz opis dla nowych filmów</string>
     <string name="enable_scrape_from_db_title">Użyj pobranych wcześniej informacji</string>
-    <string name="enable_scrape_from_db_summary">Jeśli zostanie znaleziony duplikat filmu, skorzystaj z już zebranych informacji. Wyłącz tę opcję, aby przyspieszyć zbieranie danych</string>
+    <string name="enable_scrape_from_db_summary">Jeśli zostanie znaleziony duplikat filmu, skorzystaj z już zebranych informacji. Wyłącz tę opcję, aby przyspieszyć wstępne zbieranie danych</string>
     <string name="enable_adult_scrap_title">Filmy wideo dla dorosłych</string>
     <string name="enable_adult_scrap_summary">Włącz pobieranie informacji o filmach dla dorosłych (domyślnie wyłączone)</string>
     <string name="locale">Język systemu</string>
@@ -677,6 +680,8 @@
     <string name="status_disabled">wyłączone</string>
     <string name="status_multichannel">wielokanałowy</string>
     <string name="preferences_user_interface">Interfejs użytkownika</string>
+    <string name="preferences_sort_ignore_articles_title">Ignoruj ​​przedimki podczas sortowania</string>
+    <string name="preferences_sort_ignore_articles_summary">Podczas sortowania alfabetycznego zignoruj ​​przedimki, takie jak „The”, „A”, „Le”, „Das”</string>
     <string name="preferences_display_resume_box_summary">Wyświetl lub ukryj przycisk wznawiający najnowsze wideo na ekranie głównym</string>
     <string name="preferences_display_resume_box">Wyświetl pole wznowienia</string>
     <string name="reset_brightness_on_start">Zapamiętaj jasność wideo.</string>
@@ -876,6 +881,10 @@
     <string name="rescrap_all_title">Aktualizuj wszystko</string>
     <string name="rescrap_all_movies_title">Zaktualizuj wszystkie filmy</string>
     <string name="rescrap_all_collections_title">Zaktualizuj informacje dla wszystkich kolekcji</string>
+    <string name="recreate_sort_titles_title">Sortuj ponownie</string>
+    <string name="recreate_sort_titles_summary">Sortuj ponownie filmy, seriale, kolekcje</string>
+    <string name="recreate_sort_titles_in_progress">Sortowanie w toku</string>
+    <string name="recreate_sort_titles_done">Sortowanie zakończone</string>
     <string name="nfo_export_manual_title">Eksportuj zaktualizowane wideo</string>
     <string name="nfo_export_manual_summary">Eksportuj pliki .nfo wszystkich zaktualizowanych plików wideo</string>
     <string name="db_export_manual_title">Eksportuj bazę multimediów</string>

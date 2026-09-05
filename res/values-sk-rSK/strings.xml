@@ -519,6 +519,7 @@
     <string name="preference_enable_cutout_both_sidesx_summary">Orezajte displej rovnako na oboch stranách, aby bol obrazovka symetrická.</string>
     <string name="category_languages">Titulky</string>
     <string name="subtitles_hide_default">Skryť predvolené titulky</string>
+    <string name="subtitles_hide_default_summary">V predvolenom nastavení skryť titulky; môžu sa naďalej zobrazovať \"forced\" titulky</string>
     <string name="subtitles_credentials_title">Prihlasovacie údaje k službe OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Poskytnite svoje prihlasovacie údaje Opensubtitles, aby ste mohli sťahovať titulky</string>
     <string name="preferences_languages">Jazyky sťahovania titulkov</string>
@@ -527,6 +528,8 @@
     <string name="favSubLang_summary">Výber obľúbeného jazyka na zobrazenie titulkov</string>
     <string name="favAudioLang_title">Preferovaný jazyk zvuku</string>
     <string name="favAudioLang_summary">Vyberte si obľúbený jazyk zvukovej stopy</string>
+    <string name="prefer_original_audio_track_title">Uprednostniť pôvodnú zvukovú stopu</string>
+    <string name="prefer_original_audio_track_summary">Ak je k dispozícii, použiť zvukovú stopu v pôvodnom jazyku filmu alebo seriálu</string>
     <string name="ui_language_title">Výber jazyka používateľského rozhrania</string>
     <string name="UiLang_title">Jazyk používateľského rozhrania</string>
     <string name="UiLang_summary">Nastavenie jazyka používateľského rozhrania Nova, výber systému pre použitie predvoleného systémového jazyka</string>
@@ -677,6 +680,8 @@
     <string name="status_disabled">vypnuté</string>
     <string name="status_multichannel">viackanálový</string>
     <string name="preferences_user_interface">Užívateľské rozhranie</string>
+    <string name="preferences_sort_ignore_articles_title">Pri triedení ignorovať začiatočné členy</string>
+    <string name="preferences_sort_ignore_articles_summary">Pri abecednom zoradení názvov ignorujte začiatočné členy, ako sú „The“, „A“, „Le“, „Das“</string>
     <string name="preferences_display_resume_box_summary">Zobrazenie alebo skrytie tlačidla obnovenia najnovšieho videa na hlavnej obrazovke</string>
     <string name="preferences_display_resume_box">Zobrazenie panelu pre obnovenie</string>
     <string name="reset_brightness_on_start">Zapamätať si jas videa.</string>
@@ -876,6 +881,10 @@
     <string name="rescrap_all_title">Opätovné získanie informácií o všetkých položkách</string>
     <string name="rescrap_all_movies_title">Opätovné získavanie informácií o všetkých filmoch</string>
     <string name="rescrap_all_collections_title">Opätovné získavanie informácií o všetkých zbierkach</string>
+    <string name="recreate_sort_titles_title">Znovu vytvoriť názvy triedení</string>
+    <string name="recreate_sort_titles_summary">Prepočítať názvy v poradí pre filmy, televízne seriály a zbierky</string>
+    <string name="recreate_sort_titles_in_progress">Prebieha opätovné vytvorenie názvov triedení</string>
+    <string name="recreate_sort_titles_done">Znovu vytvorené triedenie titulov</string>
     <string name="nfo_export_manual_title">Exportovať videa so získanými informáciami</string>
     <string name="nfo_export_manual_summary">Exportovať súbory .nfo pre všetky získané informácie z videí</string>
     <string name="db_export_manual_title">Exportovať databázu médií</string>

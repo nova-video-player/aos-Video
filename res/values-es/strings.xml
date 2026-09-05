@@ -512,6 +512,7 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="preference_enable_cutout_both_sidesx_summary">Corta la pantalla por igual en ambos lados, por lo que la pantalla es simétrica.</string>
     <string name="category_languages">Subtítulos</string>
     <string name="subtitles_hide_default">Ocultar subtítulos por defecto</string>
+    <string name="subtitles_hide_default_summary">Ocultar subtítulos regulares de forma predeterminada; los subtítulos forzados que coincidan pueden ser mostrados</string>
     <string name="subtitles_credentials_title">Credenciales de Opensubtitles</string>
     <string name="subtitles_credentials_summary">Proporcione sus credenciales de opensubtitles para poder descargar subtítulos</string>
     <string name="preferences_languages">Idiomas de descarga de subtítulos</string>
@@ -520,6 +521,8 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="favSubLang_summary">Seleccione el idioma para la lectura de subtítulos</string>
     <string name="favAudioLang_title">Idioma preferido de audio</string>
     <string name="favAudioLang_summary">Elige tu idioma de pista de audio favorito</string>
+    <string name="prefer_original_audio_track_title">Preferir pista de audio original</string>
+    <string name="prefer_original_audio_track_summary">Usar la pista que coincida con la película o el idioma original de la serie cuando esté disponible</string>
     <string name="ui_language_title">Eligir un idioma para la interfaz de usuario</string>
     <string name="UiLang_title">Idioma de la interfaz de usuario</string>
     <string name="UiLang_summary">Establecer el idioma de la interfaz de usuario de Nova, seleccione \'sistema\' para usar el definido por defecto para el sistema</string>
@@ -670,6 +673,8 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="status_disabled">desactivada</string>
     <string name="status_multichannel">multicanal</string>
     <string name="preferences_user_interface">Interfaz de usuario</string>
+    <string name="preferences_sort_ignore_articles_title">Ignorar los artículos iniciales al ordenar</string>
+    <string name="preferences_sort_ignore_articles_summary">Ignorar artículos destacados como \"El\", \"La\", \"Los\", \"Las\" al ordenar títulos alfabéticamente</string>
     <string name="preferences_display_resume_box_summary">Mostrar u ocultar el botón reanudar el último vídeo en la pantalla principal</string>
     <string name="preferences_display_resume_box">Mostrar cuadro de reanudación</string>
     <string name="reset_brightness_on_start">Recordar el brillo del vídeo.</string>
@@ -869,6 +874,10 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="rescrap_all_title">Procesar todo</string>
     <string name="rescrap_all_movies_title">Procesar todas las películas</string>
     <string name="rescrap_all_collections_title">Procesar todas las colecciones</string>
+    <string name="recreate_sort_titles_title">Recrear títulos cortos</string>
+    <string name="recreate_sort_titles_summary">Recrear títulos cortos de películas, series y colecciones</string>
+    <string name="recreate_sort_titles_in_progress">Recreación de títulos cortos en progreso</string>
+    <string name="recreate_sort_titles_done">Títulos cortos recreados</string>
     <string name="nfo_export_manual_title">Exportar vídeos ya indexados</string>
     <string name="nfo_export_manual_summary">Exportar archivos .nfo de los vídeos ya indexados</string>
     <string name="db_export_manual_title">Exportar base de datos</string>
