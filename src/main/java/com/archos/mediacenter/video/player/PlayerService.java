@@ -2008,6 +2008,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         Integer originalLanguageDefaultMatchTrack = null;
         String originalLanguage = mVideoInfo.scraperOriginalLanguage;
         boolean chooseInitialAudioTrack = (mVideoInfo.audioTrack < 0 || mVideoInfo.audioTrack >= nbTrack || !vMetadata.getAudioTrack(mVideoInfo.audioTrack).supported) && firstTimeAudioCalled;
+        if (chooseInitialAudioTrack && log.isDebugEnabled()) {
+            log.debug("onAudioMetadataUpdated: favorite audio: tag={}; current locale: tag={}, country={}, display={}",
+                    mAudioTrackFavoriteLanguage, Locale.getDefault().toLanguageTag(), Locale.getDefault().getCountry(), Locale.getDefault().getDisplayLanguage());
+        }
         boolean preferOriginalLanguage = mPreferOriginalAudioTrack && originalLanguage != null
                 && !originalLanguage.isEmpty() && !"und".equalsIgnoreCase(originalLanguage);
         supported = false;
@@ -2179,7 +2183,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: active audio and preferred subtitles match current locale {} -> selected forced or untagged default external track {}", currentLocaleLanguage, mVideoInfo.subtitleTrack);
                 } else {
                     Locale locale = Locale.forLanguageTag(mSubsFavoriteLanguage);
-                    if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: favorite locale {}, current locale {}", locale.getDisplayLanguage(), Locale.getDefault().getDisplayLanguage());
+                    if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: favorite: tag={}, display={}; current locale: tag={}, country={}, display={}",
+                            mSubsFavoriteLanguage, locale.getDisplayLanguage(),
+                            Locale.getDefault().toLanguageTag(), Locale.getDefault().getCountry(), Locale.getDefault().getDisplayLanguage());
                     String trackName = "";
                     String lang = null;
                     Integer languageMatchTrack = null;
