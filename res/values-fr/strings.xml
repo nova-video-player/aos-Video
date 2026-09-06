@@ -484,6 +484,8 @@
     <string name="preferences_audio_speed_audiotrack_summary">Utiliser AudioTrack au lieu du filtre FFmpeg atempo pour contrôler la vitesse de lecture. ⚠ Expérimental : peut ne pas fonctionner sur toutes les configurations.</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Estimation dynamique du retard audio/vidéo</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Utiliser l\'estimation de latence dynamique pour une meilleure synchronisation audio/vidéo, en particulier avec des casques bluetooth. Désactiver des problèmes de synchronisation sont rencontrés.</string>
+    <string name="preferences_enable_spatialization_title">Spatialisation système</string>
+    <string name="preferences_enable_spatialization_summary">Utilisez la spatialisation de la plateforme pour restituer l\'audio multicanal au lieu de le convertir en stéréo (nécessite un appareil et une sortie audio compatibles). Modifiable également depuis le menu audio du lecteur.</string>
     <string name="preferences_disable_downmix_title">Désactiver le mixage audio stéréo</string>
     <string name="preferences_disable_downmix_summary">Toujours décoder tous les canaux et laisser Android remixer l\'audio en fonction des capacités du récepteur (peut résulter dans la perte du canal voix)</string>
     <string name="preferences_enable_downmix_androidtv_title">Forcer le mixage audio stéréo</string>

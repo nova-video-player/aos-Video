@@ -93,7 +93,7 @@
     <string name="movies_by_genre">Filme nach Genre</string>
     <string name="movies_by_rating">Filme nach Bewertung</string>
     <string name="movie_collections">Sammlungen</string>
-    <string name="anime_collections">Anime-Sammlungen</string>
+    <string name="anime_collections">Animationssammlungen</string>
     <string name="movies_by_year">Filme nach Jahr</string>
     <string name="all_tv_shows">TV-Serien</string>
     <string name="all_tvshows">Alle TV-Serien</string>
@@ -227,7 +227,7 @@
     <string name="you_have_no_movies">Keine Filme</string>
     <string name="you_have_no_animes">Keine Animationsfilme</string>
     <string name="you_have_no_movie_collections">Keine Sammlungen</string>
-    <string name="you_have_no_anime_collections">Keine Anime-Sammlungen</string>
+    <string name="you_have_no_anime_collections">Keine Animationssammlungen</string>
     <string name="you_have_no_tv_shows">Keine TV-Serien</string>
     <string name="you_have_no_anime_shows">Keine Animationsserien</string>
     <string name="you_have_no_non_scraped_videos">Keine nicht gescrapten Videos</string>
