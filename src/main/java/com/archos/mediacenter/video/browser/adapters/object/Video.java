@@ -111,7 +111,15 @@ public class Video extends Base implements Serializable {
         }
         int lastSlash = filePath.lastIndexOf('/');
         if (lastSlash>=0 && filePath.length()>lastSlash+1) {
-            return filePath.substring(lastSlash+1);
+            String name = filePath.substring(lastSlash+1);
+            // Local paths (starting with "/") are raw filesystem paths, not URIs, and must not be
+            // decoded. Network paths (smb://, ftp://, etc.) are stored percent-encoded in the DB
+            // (see VideoUtils.getFileUriFromMediaLibPath), so decode here or names with special
+            // characters like '#' or '[' would display as "%23"/"%5B".
+            if (!filePath.startsWith("/")) {
+                name = Uri.decode(name);
+            }
+            return name;
         } else {
             return filePath;
         }
