@@ -49,9 +49,8 @@ wanted, so they are never skipped outside the binge condition above.
 A segment is a skip candidate only if:
 
 - its type is in the currently-eligible set (per the two flags above), **and**
-- it has a **concrete end** (`endMs != null`); a null end means "end of media"
-  and is never used as a seek target (we must never jump to EOF), **and**
-- `endMs > currentPosition` (the segment is still ahead), **and**
+- it has a concrete end (`endMs != null`) or media duration is known (`durationMs > 0`, where a null end represents running to the end of media), **and**
+- `end > currentPosition` (the segment is still ahead), **and**
 - it **contains** the current position.
 
 ### Overlap merge
@@ -123,7 +122,8 @@ if (!introEnabled) return;
 // recap rides on the same toggle, gated by the binge conditions
 recapEnabled = mPlayMode == PLAYMODE_BINGE && mArrivedViaBingeTransition;
 
-skip = segments.findSkip(position, introEnabled, recapEnabled);   // MediaLib
+duration = player.getDuration();
+skip = segments.findSkip(position, duration, introEnabled, recapEnabled);   // MediaLib
 if (skip == null) return;
 targetMs = max(0, skip.endMs - AUTO_SKIP_BUFFER_MS);
 if (targetMs <= position) return;
@@ -144,14 +144,16 @@ showAutoSkipToast(skip.type);
 The eligible-type selection and overlap merge live in the model:
 
 ```
-findSkip(positionMs, includeStandard, includeRecap)
+findSkip(positionMs, durationMs, includeStandard, includeRecap)
   types = eligibleTypes(includeStandard, includeRecap)
           // standard:        INTRO, CREDITS, OUTRO, PREVIEW
           // recap:           RECAP
           // both:            INTRO, RECAP, CREDITS, OUTRO, PREVIEW
   for type in priority order:
-     for segment of that type with concrete end ahead of position, containing position:
-        return Skip(type, mergedEnd(segment.endMs, types))   // overlap merge
+     for segment of that type containing position:
+        end = segment.endMs != null ? segment.endMs : (durationMs > 0 ? durationMs : null)
+        if (end == null || end <= positionMs) continue
+        return Skip(type, mergedEnd(end, durationMs, types))   // overlap merge
   return null
 ```
 

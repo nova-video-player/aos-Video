@@ -1774,7 +1774,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // first episode of the binge keeps its recap).
         boolean recapEnabled = mPlayMode == PLAYMODE_BINGE && mArrivedViaBingeTransition;
         if (position < 0) return;
-        IntroSegments.Skip skip = segments.findSkip(position, introEnabled, recapEnabled);
+        int duration = Player.sPlayer.getDuration();
+        IntroSegments.Skip skip = segments.findSkip(position, duration, introEnabled, recapEnabled);
         if (skip == null) return;
         long targetMs = Math.max(0, skip.endMs - AUTO_SKIP_BUFFER_MS);
         if (targetMs <= position) return;
@@ -1784,7 +1785,6 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // When the skip target reaches the end of the media (e.g. an outro that runs to the
         // file end), seeking there fails ("stream_seek time err") and breaks playback. End the
         // video naturally instead, which advances to the next episode (binge) or stops cleanly.
-        int duration = Player.sPlayer.getDuration();
         if (duration > 0 && targetMs >= duration - AUTO_SKIP_END_MARGIN_MS) {
             if (log.isDebugEnabled()) log.debug("autoSkipIfNeeded: skipping {} from {} reaches end ({}), completing", skip.type, position, duration);
             showAutoSkipToast(skip.type);
