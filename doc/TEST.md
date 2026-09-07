@@ -198,3 +198,48 @@ name,audioTracks,subtitleTracks,uiLocale,favAudioLang,favSubLang,hideSubtitles,p
   - `path`: Non-empty if external subtitle file
 - **`expectedAudioTrack`**: 0-based index of selected audio track.
 - **`expectedSubtitleTrack`**: 0-based index of selected subtitle track, or `-1` for no subtitles.
+
+---
+
+## FileCoreLibrary: Remote Transfer Speed Test (`SpeedTestTransferTest`)
+
+**Class**: `com.archos.filecorelibrary.SpeedTestTransferTest` (module `FileCoreLibrary`)
+
+An opt-in, real-network diagnostic host test that benchmarks download throughput across all remote-file implementations Nova ships — jcifs-ng, smbj, sftp (jsch), sshj, webdav and webdavs — through Nova's actual local httpproxy (`StreamOverHttp`, the same class `SmbProxy` uses to feed the player). It is not a real unit test: it opens real connections to real servers, so it is skipped by default and must never run in CI.
+
+### Why it's opt-in
+
+The test is guarded by an `assumeTrue(...)` check in `@Before` keyed off a system property; if the property isn't set (or doesn't point to a real file), the test is reported as **SKIPPED**, not failed. This follows the same pattern already used by `RealDatabasePruningTest` in `MediaLib` (`-Dnova.test.mediaDbPath`).
+
+### CSV input format
+
+One `url,user,password` row per line (comma-separated). Blank lines and lines starting with `#` are ignored. The scheme of each URL selects the implementation under test:
+
+```text
+smb://host/share/path/file      -> jcifs-ng
+smbj://host/share/path/file     -> smbj
+sftp://host/path/file           -> sftp (jsch)
+sshj://host/path/file           -> sshj
+webdav://host/path/file         -> webdav (http)
+webdavs://host/path/file        -> webdav (https)
+```
+
+List the same file twice, once under `smb://` and once under `smbj://` (or `sftp://` / `sshj://`), to compare the two implementations of a given protocol head to head against the same server.
+
+**The CSV must never be committed** — it contains real server addresses and credentials. Keep it outside the repository (e.g. `/absolute/path/to/servers.csv`).
+
+### Running the test
+
+Run from the `Video` directory (`FileCoreLibrary` has no `gradlew` of its own; it's included as a subproject of `Video/settings.gradle`):
+
+```bash
+cd Video
+./gradlew :FileCoreLibrary:testDebugUnitTest --tests "*SpeedTestTransferTest" \
+    -Dnova.test.speedtestCsv=/absolute/path/to/servers.csv
+```
+
+Output is a results table printed to stdout with bytes transferred, elapsed seconds, and MB/s per row; failed rows show the exception instead.
+
+### Test Reports
+- **HTML Report**: `FileCoreLibrary/build/reports/tests/testDebugUnitTest/index.html`
+- **JUnit XML Results**: `FileCoreLibrary/build/test-results/testDebugUnitTest/`
