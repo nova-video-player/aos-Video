@@ -350,6 +350,46 @@ public class SubtitleTrackSelectionPolicyTest {
         assertEquals("Traditional Chinese variant must be selected for zh-tw preference", 1, sub);
     }
 
+    @Test
+    public void testAllTracksMarkedForcedInMultiTrackContainer_IgnoresBogusForcedBit() throws Exception {
+        // Reproduces issue #1940 (e.g. 23.mkv): container has 14 tracks, all marked default+forced (65).
+        // User prefers Chinese (zh) subtitles with English audio.
+        VideoMetadata vMetadata = createMetadata(
+                new AudioFixture("English", "eng", 1, true),
+                new SubFixture("Swedish", "swe", "", 65, false, 0),
+                new SubFixture("Finnish", "fin", "", 65, false, 0),
+                new SubFixture("Chinese (Traditional)", "chi", "", 65, false, 0),
+                new SubFixture("Chinese (Simplified)", "chi", "", 65, false, 0)
+        );
+        int sub = runSubtitleSelection(vMetadata, 0, "en", "zh", false);
+        assertEquals("Multi-track container with all tracks marked forced must ignore forced bit and select preferred subtitle", 2, sub);
+    }
+
+    @Test
+    public void testAllTracksMarkedForced_HonorsExplicitForcedInTitle() throws Exception {
+        // Multi-track container with all tracks marked forced (65), but one track is explicitly titled "Forced".
+        VideoMetadata vMetadata = createMetadata(
+                new AudioFixture("English", "eng", 1, true),
+                new SubFixture("Chinese (Forced)", "chi", "", 65, false, 0),
+                new SubFixture("Chinese (Full)", "chi", "", 65, false, 0)
+        );
+        int sub = runSubtitleSelection(vMetadata, 0, "en", "zh", false);
+        assertEquals("Track with explicit 'Forced' in title must still be treated as forced", 1, sub);
+    }
+
+    @Test
+    public void testChineseVariantPreferenceWithAllTracksMarkedForced() throws Exception {
+        // User prefers Traditional Chinese (zh-tw / zh-hk) with all tracks marked forced (65)
+        VideoMetadata vMetadata = createMetadata(
+                new AudioFixture("English", "eng", 1, true),
+                new SubFixture("Swedish", "swe", "", 65, false, 0),
+                new SubFixture("Chinese (Simplified)", "chi", "", 65, false, 0),
+                new SubFixture("Chinese (Traditional)", "chi", "", 65, false, 0)
+        );
+        int sub = runSubtitleSelection(vMetadata, 0, "zh-tw", "zh-tw", false);
+        assertEquals("Traditional Chinese variant must be selected even when all tracks have forced disposition", 2, sub);
+    }
+
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------

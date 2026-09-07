@@ -2186,6 +2186,22 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: favorite: tag={}, display={}; current locale: tag={}, country={}, display={}",
                             mSubsFavoriteLanguage, locale.getDisplayLanguage(),
                             Locale.getDefault().toLanguageTag(), Locale.getDefault().getCountry(), Locale.getDefault().getDisplayLanguage());
+                    // In some multi-sub containers (e.g. streaming/WEB-DL rips), muxers incorrectly set the
+                    // forced disposition flag on every single subtitle track. If all subtitle tracks are flagged
+                    // forced, ignore the container disposition bit during full-subtitle candidate selection
+                    // and rely on explicit text in track title or path instead.
+                    boolean allSubtitleTracksAreForced = nbTrack > 1;
+                    if (allSubtitleTracksAreForced) {
+                        for (int i = 0; i < nbTrack; ++i) {
+                            if (!isForcedSubtitleTrack(vMetadata.getSubtitleTrack(i))) {
+                                allSubtitleTracksAreForced = false;
+                                break;
+                            }
+                        }
+                        if (allSubtitleTracksAreForced && log.isDebugEnabled()) {
+                            log.debug("onSubtitleMetadataUpdated: all {} subtitle tracks are marked forced -> ignoring container forced disposition for full sub candidate selection", nbTrack);
+                        }
+                    }
                     String trackName = "";
                     String lang = null;
                     Integer languageMatchTrack = null;
@@ -2194,33 +2210,38 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     Integer englishMatchTrack = null;
                     Integer englishDefaultMatchTrack = null;
                     for (int i = 0; i < nbTrack; ++i) { // select default track
-                        trackName = vMetadata.getSubtitleTrack(i).name;
+                        VideoMetadata.SubtitleTrack subTrack = vMetadata.getSubtitleTrack(i);
+                        trackName = subTrack.name;
                         // select default locale and avoid forced subs
-                        if (vMetadata.getSubtitleTrack(i).isExternal) {
+                        if (subTrack.isExternal) {
                             // this returns the subtitle format (e.g. SRT/VTT) if subFileName is video.<ext> and videoFileName is video.mkv
-                            lang = getSubLanguageFromSubPathAndVideoPath(getApplicationContext(), vMetadata.getSubtitleTrack(i).path, vMetadata.getFile().getPath());
-                            if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: subtrack {}, ext sub found lang={} ({})", i, lang, vMetadata.getSubtitleTrack(i).path);
+                            lang = getSubLanguageFromSubPathAndVideoPath(getApplicationContext(), subTrack.path, vMetadata.getFile().getPath());
+                            if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: subtrack {}, ext sub found lang={} ({})", i, lang, subTrack.path);
                         } else {
-                            lang = ISO639codes.getLanguageNameForLetterCode(vMetadata.getSubtitleTrack(i).language);
+                            lang = ISO639codes.getLanguageNameForLetterCode(subTrack.language);
                             if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: subtrack {}, int sub found lang={} ({})", i, lang, trackName);
                         }
                         if (lang == null || lang.isEmpty()) {
                             if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: no language found in track/file name -> set it to unknown");
                             lang = getText(R.string.unknown_track_name).toString();
                         } else {
-                            if (isForcedSubtitleTrack(vMetadata.getSubtitleTrack(i))) {
+                            boolean isForced = allSubtitleTracksAreForced
+                                    ? (stringContainsForced(subTrack.name) || (subTrack.isExternal && stringContainsForced(subTrack.path)))
+                                    : isForcedSubtitleTrack(subTrack);
+                            if (isForced) {
                                 if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: skip track: {} with identified lang: {} because it contains forced sub", trackName, lang);
                             } else {
-                                if (lang.toLowerCase(Locale.getDefault()).contains(locale.getDisplayLanguage().toLowerCase(Locale.getDefault()))) {
+                                String trackLangCode = subTrack.isExternal ? extractLanguageCode(lang) : subTrack.language;
+                                if (ISO639codes.isFavoriteLanguageMatch(mSubsFavoriteLanguage, trackLangCode)) {
                                     if (languageMatchTrack == null) {
-                                        if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: track {} identified lang: {} matches locale language {}", trackName, lang, locale.getDisplayLanguage());
+                                        if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: track {} identified lang: {} matches favorite language {}", trackName, lang, mSubsFavoriteLanguage);
                                         languageMatchTrack = i;
                                     }
                                     // among same-language tracks (e.g. Simplified/Traditional Chinese subs both
                                     // tagged "Chinese"), the container's own "default" disposition flag is the
                                     // best signal of the intended track when no title hint disambiguates it
-                                    if (languageDefaultMatchTrack == null && (vMetadata.getSubtitleTrack(i).disposition & VideoUtils.AV_DISPOSITION_DEFAULT) != 0) {
-                                        if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: track {} identified lang: {} matches locale language {} and is marked default", trackName, lang, locale.getDisplayLanguage());
+                                    if (languageDefaultMatchTrack == null && (subTrack.disposition & VideoUtils.AV_DISPOSITION_DEFAULT) != 0) {
+                                        if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: track {} identified lang: {} matches favorite language {} and is marked default", trackName, lang, mSubsFavoriteLanguage);
                                         languageDefaultMatchTrack = i;
                                     }
                                     // best-effort disambiguation between Chinese sub-variants (Mainland/HK/Taiwan)
@@ -2231,7 +2252,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                                         languageVariantMatchTrack = i;
                                     }
                                 } else {
-                                    if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: skip track: {} identified lang: {} != locale language {}", trackName, lang, locale.getDisplayLanguage());
+                                    if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: skip track: {} identified lang: {} != favorite language {}", trackName, lang, mSubsFavoriteLanguage);
                                 }
                                 if (selectedAudioIsOutsideCurrentLocale
                                         && isSubtitleTrackInLanguage(vMetadata, i, "en")) {
@@ -2240,13 +2261,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                                         englishMatchTrack = i;
                                     }
                                     if (englishDefaultMatchTrack == null
-                                            && (vMetadata.getSubtitleTrack(i).disposition & VideoUtils.AV_DISPOSITION_DEFAULT) != 0) {
+                                            && (subTrack.disposition & VideoUtils.AV_DISPOSITION_DEFAULT) != 0) {
                                         englishDefaultMatchTrack = i;
                                     }
                                 }
                             }
                         }
-                        if (vMetadata.getSubtitleTrack(i).isExternal && isGenericTextSubtitleFormat(lang)) {
+                        if (subTrack.isExternal && isGenericTextSubtitleFormat(lang)) {
                             if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: found external text track {} ({}) -> setting fallbackTextTrack={}", i, lang, i);
                             fallbackTextTrack = i;
                         }
@@ -2271,10 +2292,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                             newTrack = Objects.requireNonNullElse(fallbackTextTrack, newSubtitleTrack); // strategy to revert to newSubtitleTrack if lang not found (legacy)
                             revertTrackName = "newSubtitleTrack";
                         }
-                        if (newTrack < nbTrack && isForcedSubtitleTrack(vMetadata.getSubtitleTrack(newTrack))) {
-                            if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: fallback {} is forced -> selected none track", newTrack);
-                            newTrack = noneTrack;
-                            revertTrackName = "noneTrack";
+                        if (newTrack < nbTrack) {
+                            VideoMetadata.SubtitleTrack fallbackSubTrack = vMetadata.getSubtitleTrack(newTrack);
+                            boolean fallbackIsForced = allSubtitleTracksAreForced
+                                    ? (fallbackSubTrack != null && (stringContainsForced(fallbackSubTrack.name) || (fallbackSubTrack.isExternal && stringContainsForced(fallbackSubTrack.path))))
+                                    : isForcedSubtitleTrack(fallbackSubTrack);
+                            if (fallbackIsForced) {
+                                if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: fallback {} is forced -> selected none track", newTrack);
+                                newTrack = noneTrack;
+                                revertTrackName = "noneTrack";
+                            }
                         }
                         if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: no default sub found mVideoInfo.subtitleTrack: {} -> setting {} or external text ({}) track if exists -> videoInfo.subtitleTrack={}", mVideoInfo.subtitleTrack, revertTrackName, fallbackTextTrack, newTrack);
                         mVideoInfo.subtitleTrack = newTrack;

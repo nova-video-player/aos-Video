@@ -92,8 +92,13 @@ Current automatic selection works as follows:
    suppresses full local-language subtitles and selects the matching forced
    track, or none if it is absent.
 5. In every other case, Nova scans for a non-forced full subtitle matching
-   `favSubLang`, using Chinese title variants and the `default` disposition as
-   tie breakers. Forced tracks are not candidates for this full-subtitle scan.
+   `favSubLang` (using normalized language codes via `isFavoriteLanguageMatch`),
+   using Chinese title variants and the `default` disposition as tie breakers.
+   Forced tracks are not candidates for this full-subtitle scan, unless all
+   subtitle tracks in the container are marked with the forced disposition bit
+   (indicating a mislabeled/bogus container disposition), in which case the
+   disposition-based forced flag is ignored during full-subtitle selection unless
+   the track's title explicitly indicates "forced".
 6. If no preferred-language full subtitle exists, *Hide subtitles by default*
    is off, and the valid active audio language differs from the device locale,
    Nova falls back to a non-forced English full subtitle. A matching `default`
@@ -132,7 +137,13 @@ A forced track must not be treated as a better version of a full subtitle track:
 - Nova renders one subtitle track at a time. A forced track therefore cannot be
   overlaid on a selected full subtitle track; the full track wins.
 
-For embedded tracks, the FFmpeg `forced` disposition is authoritative. For
+For embedded tracks, the FFmpeg `forced` disposition is normally authoritative.
+However, if every subtitle track in a multi-track container has the `forced`
+disposition bit set, the container is deemed mislabeled (a known quirk of certain
+WEB-DL/streaming rips where the muxer sets `disposition: default, forced` on every
+stream). In that case, Nova ignores the container's `forced` disposition bit during
+full-subtitle candidate selection so that dialogue tracks are not starved out,
+relying instead on track titles or filenames for explicit "forced" indicators. For
 external tracks and containers that omit the disposition, a `forced` token in a
 normalized title or filename is a fallback heuristic only. Classification must
 be retained separately from the localized display name. The display name and
