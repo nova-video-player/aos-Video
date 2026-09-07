@@ -436,6 +436,12 @@ public class Player implements IPlayerControl,
         if (log.isDebugEnabled()) log.debug("stopPlayback");
         mHandler.removeCallbacks(mPreparedAsync);
         stayAwake(false);
+        // Free-run present mode hygiene: the native side reads the flag at
+        // each stream's first frame, so a stale-true global cannot corrupt a
+        // LATER stream opened after the pref changed - but resetting it here
+        // (the canonical stop path) keeps the global exactly as long as the
+        // playback that requested it.
+        LibAvos.setPresentFreeRun(false);
         if (mEffectRenderer != null) {
             mEffectRenderer.pause();
         }
