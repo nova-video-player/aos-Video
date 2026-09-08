@@ -441,7 +441,13 @@ public class Player implements IPlayerControl,
         // LATER stream opened after the pref changed - but resetting it here
         // (the canonical stop path) keeps the global exactly as long as the
         // playback that requested it.
-        LibAvos.setPresentFreeRun(false);
+        // Guarded like every other LibAvos call site: when the avos native
+        // libs failed to load, MediaFactory silently falls back to
+        // AndroidMediaPlayer, and this canonical stop path (surfaceDestroyed,
+        // onSurfaceTextureDestroyed, onError, controller swap) would throw
+        // UnsatisfiedLinkError on the UI thread without the guard.
+        if (LibAvos.isAvailable())
+            LibAvos.setPresentFreeRun(false);
         if (mEffectRenderer != null) {
             mEffectRenderer.pause();
         }
@@ -1057,8 +1063,12 @@ public class Player implements IPlayerControl,
              * grid, no vsync/display-mode interaction at all. For panels that
              * override every refresh-rate hint (Samsung HRR) and judder under
              * paced/scheduled presents. The native side reads the flag once
-             * at sink open, so it must be set before playback starts. */
-            LibAvos.setPresentFreeRun(refreshRateSwitchMode == 4);
+             * at sink open, so it must be set before playback starts.
+             * Guarded: onPrepared also runs for the AndroidMediaPlayer
+             * fallback path when the avos libs failed to load - an unguarded
+             * call would crash mid-prepare. */
+            if (LibAvos.isAvailable())
+                LibAvos.setPresentFreeRun(refreshRateSwitchMode == 4);
             if (refreshRateSwitchMode == 4 && log.isDebugEnabled())
                 log.debug("CONFIG refresh-rate sync mode 4: no-sync free-run presents");
 
