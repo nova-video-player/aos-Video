@@ -492,10 +492,12 @@
     <string name="preferences_audio_speed_audiotrack_summary">Na ovládanie rýchlosti prehrávania použite AudioTrack namiesto filtra FFmpeg atempo. Experimentálne: nemusí fungovať vo všetkých konfiguráciách.</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Odhad dynamického oneskorenia zvuku/videa</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Použite dynamické odhadovanie latencie pre lepšiu synchronizáciu zvuku a videa, najmä pri bluetooth slúchadlách. Vypnite túto funkciu, ak máte problémy so synchronizáciou.</string>
-    <string name="preferences_disable_downmix_title">Vypnutie stereo downmixu zvuku</string>
-    <string name="preferences_disable_downmix_summary">Vždy dekódovať všetky zvukové kanály a nechať Android downmixovať v závislosti od možností zvukového výstupu (môže dôjsť k strate hlasových kanálov)</string>
-    <string name="preferences_enable_downmix_androidtv_title">Vynútenie stereo downmixu zvuku</string>
-    <string name="preferences_enable_downmix_androidtv_summary">Vždy downmixovať viackanálovú zvukovú stopu na stereo (vyberie sa, ak hlasové kanály nie sú počuteľné)</string>
+    <string name="preferences_enable_spatialization_title">Priestorová platforma</string>
+    <string name="preferences_enable_spatialization_summary">Na prehrávanie viackanálového zvuku použite funkciu „Priestorová platforma\" namiesto konverzie na stereo (vyžaduje kompatibilné zariadenie a zvukový výstup). Túto funkciu je možné zapnúť alebo vypnúť aj v ponuke zvuku.</string>
+    <string name="preferences_disable_downmix_title">Vypnúť konverziu zvuku na stereo</string>
+    <string name="preferences_disable_downmix_summary">Vždy dekódovať všetky zvukové kanály a nechať Android znížiť zvukové kanály závislosti od možností zvukového výstupu (môže dôjsť k strate hlasových kanálov)</string>
+    <string name="preferences_enable_downmix_androidtv_title">Vynútiť konverziu zvuku na stereo</string>
+    <string name="preferences_enable_downmix_androidtv_summary">Vždy znížiť kanály viackanálového zvuku na stereo stopu (vyberte, ak nie sú hlasové kanály počuteľné)</string>
     <string name="preferences_allow_3rd_party_player">Povoliť používanie iného prehrávača videa</string>
     <string name="preferences_allow_3rd_party_player_summary">Pri spustení prehrávania videa systém Android navrhne ďalšie kompatibilné aplikácie prehrávača videa. Upozorňujeme, že niektoré funkcie nebudú fungovať (obnovenie, záložky atď.)</string>
     <string name="preference_tv_3d_automatic_switch">Povolenie automatického prepnutia 3D TV</string>

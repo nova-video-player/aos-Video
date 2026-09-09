@@ -485,6 +485,8 @@
 Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Estimación dinámica de retardo de audio/vídeo</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Usa estimaciones dinámicas de latencia para una mejor sincronización de audio/vídeo especialmente con auriculares bluetooth. Desactiva si experimentas problemas de sincronización.</string>
+    <string name="preferences_enable_spatialization_title">Espacialización de la plataforma</string>
+    <string name="preferences_enable_spatialization_summary">Utiliza el espacializador del sistema operativo para renderizar audio multicanal en lugar de reducirlo a estéreo (requiere un dispositivo y salida de audio compatibles). También se puede cambiar desde el menú de audio del reproductor.</string>
     <string name="preferences_disable_downmix_title">Desactivar reducción a estéreo</string>
     <string name="preferences_disable_downmix_summary">Decodifica siempre todos los canales y permite que Android realice una reducción a estéreo dependiendo de las capacidades de salida de audio (puede provocar la pérdida de canales de voz)</string>
     <string name="preferences_enable_downmix_androidtv_title">Forzar reducción a estéreo</string>

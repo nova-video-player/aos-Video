@@ -480,6 +480,8 @@
     <string name="preferences_audio_speed_audiotrack_summary">使用 AudioTrack 而非 FFmpeg 的 atempo 滤镜来控制播放速度。实验性功能：可能不适用于所有配置。</string>
     <string name="preferences_enable_dynamic_audio_delay_title">动态音频/视频延迟估算</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">使用动态延迟估算可获得更佳的音频/视频同步效果，尤其是在使用蓝牙耳机时。如果遇到同步问题，请禁用此功能。</string>
+    <string name="preferences_enable_spatialization_title">平台空间音频</string>
+    <string name="preferences_enable_spatialization_summary">使用平台空间音频渲染器渲染多声道音频，而非下混成立体声（需要兼容的设备与音频输出）。也可在播放器音频菜单中切换该功能。</string>
     <string name="preferences_disable_downmix_title">禁用混音至立体声</string>
     <string name="preferences_disable_downmix_summary">始终解码所有声道，并让 Android 根据音频输出能力进行混音（可能会导致声道丢失）</string>
     <string name="preferences_enable_downmix_androidtv_title">强制音频立体声降低混频</string>
@@ -658,7 +660,7 @@
     <string name="audio_interface_audiotrack">强制使用音轨模式</string>
     <string name="audio_interface_any">默认逻辑</string>
     <string name="mediacodec_audio_capabilities">MediaCodec 音频功能</string>
-    <string name="spatialization_capabilities">平台空间化</string>
+    <string name="spatialization_capabilities">平台空间音频</string>
     <string name="status_unsupported_api">不受支持（API %1$d）</string>
     <string name="status_not_supported">不支持</string>
     <string name="status_supported">支持</string>

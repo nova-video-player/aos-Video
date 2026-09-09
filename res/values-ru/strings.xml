@@ -473,6 +473,8 @@
     <string name="preferences_audio_speed_audiotrack_summary">Использовать AudioTrack вместо фильтра FFmpeg atempo для управления скоростью воспроизведения. Экспирементально: может не работать на всех конфигурациях</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Динамическая оценка задержки звука/видео</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Использовать динамическую оценку задержки для лучшей синхронизации звука и видео, особенно с гарнитурой Bluetooth. Отключите, если возникают проблемы с синхронизацией.</string>
+    <string name="preferences_enable_spatialization_title">Платформенный преобразователь</string>
+    <string name="preferences_enable_spatialization_summary">Используйте этот платформенный преобразователь для отображения многоканального аудио вместо понижения в стерео (требуется совместимое устройство и аудиовыход). Также можно переключать из аудио меню плеера.</string>
     <string name="preferences_disable_downmix_title">Запретить даунмикс звука в стерео</string>
     <string name="preferences_disable_downmix_summary">Всегда декодировать все каналы, микширование производится средствами ОС в зависимости от характеристик аудиовыхода (может привести к потери голосовых каналов)</string>
     <string name="preferences_enable_downmix_androidtv_title">Принудительный вывод в стерео</string>

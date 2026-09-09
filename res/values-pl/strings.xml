@@ -492,6 +492,8 @@
     <string name="preferences_audio_speed_audiotrack_summary">Użyj AudioTrack zamiast filtra atempo FFmpeg do kontroli prędkości odtwarzania. ⚠️ Funkcja eksperymentalna, może nie działać na wszystkich konfiguracjach</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Dynamiczne szacowanie opóźnienia audio/wideo</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Użyj dynamicznego szacowania opóźnienia dla lepszej synchronizacji audio/wideo (dla połączenia BT). Wyłącz, jeśli występują problemy z synchronizacją</string>
+    <string name="preferences_enable_spatialization_title">Przestrzenność</string>
+    <string name="preferences_enable_spatialization_summary">Użyj spatializera do renderowania wielokanałowego dźwięku zamiast wymuszanego stereo (wymaga kompatybilnego urządzenia i wyjścia audio). Można przełączyć również w menu odtwarzania dźwięku.</string>
     <string name="preferences_disable_downmix_title">Wyłącz wymuszanie dźwięku stereo</string>
     <string name="preferences_disable_downmix_summary">Zawsze dekoduj wszystkie kanały i niech Android decyduje o sposobie miksowania (możliwa utrata kanałów dialogowych)</string>
     <string name="preferences_enable_downmix_androidtv_title">Wymuś dźwięk stereo</string>
