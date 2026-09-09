@@ -181,13 +181,27 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
         })
         .setPositiveButton(android.R.string.ok,new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
-                String username = mUsernameEt.getText().toString();
+                String username = mUsernameEt.getText().toString().trim();
                 final String password = mPasswordEt.getText().toString();
-                final String domain = mDomainEt.getText().toString();
+                String domain = mDomainEt.getText().toString().trim();
 
                 final int type = mTypeSp.getSelectedItemPosition();
-                final String address = mAddressEt.getText().toString();
-                String path = mPathEt.getText().toString();
+                final String address = mAddressEt.getText().toString().trim();
+                String path = mPathEt.getText().toString().trim();
+
+                if (domain.isEmpty() && UriUtils.requiresDomain(type)) {
+                    int ci = username.indexOf('@');
+                    if (ci > 0) {
+                        domain = username.substring(ci + 1).trim();
+                        username = username.substring(0, ci).trim();
+                    } else {
+                        ci = username.indexOf('\\');
+                        if (ci > 0) {
+                            domain = username.substring(0, ci).trim();
+                            username = username.substring(ci + 1).trim();
+                        }
+                    }
+                }
 
                 int port = -1;
                 if (! mPortEt.getText().toString().isEmpty()) {
@@ -236,13 +250,14 @@ public abstract class ServerCredentialsDialog extends DialogFragment {
                 if(validUri){
 
                     String uriToBuild = createUri();
-                    onConnectClick(username, Uri.parse(uriToBuild), password);
+                    Credential cred = new Credential(username, password, uriToBuild, domain, true);
+                    onConnectClick(cred.getUsername(), Uri.parse(uriToBuild), password);
                     if(mSavePassword.isChecked())
-                        NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, uriToBuild, domain,true));
+                        NetworkCredentialsDatabase.getInstance().saveCredential(cred);
                     else
-                        NetworkCredentialsDatabase.getInstance().addCredential(new Credential(username, password, uriToBuild, domain,true));
+                        NetworkCredentialsDatabase.getInstance().addCredential(cred);
                     if(mOnConnectClick!=null){
-                        mOnConnectClick.onConnectClick(username, Uri.parse(uriToBuild), password);
+                        mOnConnectClick.onConnectClick(cred.getUsername(), Uri.parse(uriToBuild), password);
                     }
 
                 }

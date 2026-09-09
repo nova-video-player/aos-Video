@@ -116,6 +116,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
     public static final String ARG_URI = "URI";
     public static final String ARG_TITLE = "TITLE";
     public static final String ARG_IS_ROOT = "IS_ROOT";
+    public static final String ARG_CREDENTIALS_JUST_PROVIDED = "CREDENTIALS_JUST_PROVIDED";
 
     private DisplayMode mDisplayMode;
     private SharedPreferences mPrefs;

@@ -353,6 +353,7 @@ public class NetworkRootFragment extends BrowseSupportFragment {
                             intent.putExtra(ListingActivity.EXTRA_ROOT_URI, uri);
                             String shareName = FileUtils.getName(uri);
                             intent.putExtra(ListingActivity.EXTRA_ROOT_NAME, (shareName==null || shareName.isEmpty())?uri.getHost():shareName);
+                            intent.putExtra(ListingActivity.EXTRA_CREDENTIALS_JUST_PROVIDED, true);
                             browsingLauncher.launch(intent);
                         }
                     });

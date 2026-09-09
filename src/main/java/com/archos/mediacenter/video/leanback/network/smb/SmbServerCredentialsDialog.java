@@ -121,22 +121,36 @@ public class SmbServerCredentialsDialog extends DialogFragment {
             public void onClick(DialogInterface dialog,int id) {
                 if(!usernameEt.getText().toString().isEmpty()){
 
-                    final String username = usernameEt.getText().toString();
+                    String username = usernameEt.getText().toString().trim();
                     final String password = passwordEt.getText().toString();
-                    final String domain = domainEt.getText().toString();
+                    String domain = domainEt.getText().toString().trim();
+
+                    if (domain.isEmpty()) {
+                        int ci = username.indexOf('@');
+                        if (ci > 0) {
+                            domain = username.substring(ci + 1).trim();
+                            username = username.substring(0, ci).trim();
+                        } else {
+                            ci = username.indexOf('\\');
+                            if (ci > 0) {
+                                domain = username.substring(0, ci).trim();
+                                username = username.substring(ci + 1).trim();
+                            }
+                        }
+                    }
 
                     // Store new values to preferences
                     mPreferences.edit()
-
                     .putString(SMB_LATEST_USERNAME, username)
                     .apply();
 
+                    Credential cred = new Credential(username, password, mUri.toString(), domain, true);
                     if(savePassword.isChecked())
-                        NetworkCredentialsDatabase.getInstance().saveCredential(new Credential(username, password, mUri.toString(), domain,true));
+                        NetworkCredentialsDatabase.getInstance().saveCredential(cred);
                     else
-                        NetworkCredentialsDatabase.getInstance().addCredential(new Credential(username, password, mUri.toString(), domain,true));
+                        NetworkCredentialsDatabase.getInstance().addCredential(cred);
                     if(mOnConnectClick!=null){
-                        mOnConnectClick.onConnectClick(username, mUri, password, domain);
+                        mOnConnectClick.onConnectClick(cred.getUsername(), mUri, password, cred.getDomain());
                     }
 
                 }

@@ -64,6 +64,11 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
     public static final String EXTRA_ROOT_NAME = "ROOT_NAME";
 
     /**
+     * True if credentials were just entered right before launching the listing
+     */
+    public static final String EXTRA_CREDENTIALS_JUST_PROVIDED = "CREDENTIALS_JUST_PROVIDED";
+
+    /**
      * Get the fragment to start with
      */
     abstract protected ListingFragment getStartingFragment();
@@ -175,6 +180,10 @@ public abstract  class ListingActivity extends SingleFragmentActivity {
         args.putParcelable(ListingFragment.ARG_URI, (Parcelable)getStartingUri());
         args.putString(ListingFragment.ARG_TITLE, getStartingName());
         args.putBoolean(ListingFragment.ARG_IS_ROOT, true); // this is the first fragment in the activity
+        if (getIntent().hasExtra(EXTRA_CREDENTIALS_JUST_PROVIDED)) {
+            args.putBoolean(ListingFragment.ARG_CREDENTIALS_JUST_PROVIDED,
+                    getIntent().getBooleanExtra(EXTRA_CREDENTIALS_JUST_PROVIDED, false));
+        }
         frag.setArguments(args);
         return frag;
     }

@@ -53,6 +53,9 @@ public class SmbListingFragment extends NetworkListingFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (getArguments() != null && getArguments().containsKey(ARG_CREDENTIALS_JUST_PROVIDED)) {
+            mCredentialsJustProvided = getArguments().getBoolean(ARG_CREDENTIALS_JUST_PROVIDED, false);
+        }
         // First orb is for credentials
         getTitleView().setOrb1IconResId(R.drawable.orb_cred);
         getTitleView().setOnOrb1ClickedListener(new View.OnClickListener() {
