@@ -113,8 +113,7 @@ public class SmbServerCredentialsDialog extends DialogFragment {
         .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if(mOnCancelClickListener!=null)
-                    mOnCancelClickListener.onClick(null);
+                handleCancel();
             }
         })
         .setPositiveButton(android.R.string.ok,new DialogInterface.OnClickListener() {
@@ -160,6 +159,23 @@ public class SmbServerCredentialsDialog extends DialogFragment {
         mDialog = builder.create();
 
         return mDialog;
+    }
+
+    private boolean mCancelHandled = false;
+
+    private void handleCancel() {
+        if (!mCancelHandled) {
+            mCancelHandled = true;
+            if (mOnCancelClickListener != null) {
+                mOnCancelClickListener.onClick(null);
+            }
+        }
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        handleCancel();
     }
 
     public void setOnConnectClickListener(onConnectClickListener onConnectClick) {

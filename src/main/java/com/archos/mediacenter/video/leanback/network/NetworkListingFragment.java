@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.network;
 
+import android.net.Uri;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,10 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.archos.customizedleanback.widget.MyTitleView;
 import com.archos.filecorelibrary.FileUtils;
+import com.archos.filecorelibrary.ListingEngine;
+import com.archos.filecorelibrary.MetaFile2;
+import com.archos.filecorelibrary.samba.NetworkCredentialsDatabase;
+import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.utils.ShortcutDbAdapter;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.ShortcutDb;
@@ -31,6 +36,8 @@ import com.archos.mediaprovider.NetworkScanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Created by vapillon on 17/04/15.
@@ -48,6 +55,7 @@ public class NetworkListingFragment extends ListingFragment {
     private boolean isCurrentDirectoryShortcut = false;
 
     private boolean removeFromLibrary = false;
+    protected boolean mCredentialsJustProvided = false;
 
     @Override
     protected  ListingFragment instantiateNewFragment() {
@@ -64,6 +72,104 @@ public class NetworkListingFragment extends ListingFragment {
         super.onViewCreated(view, savedInstanceState);
         checkIfIsShortcut();
         updateShortcutState();
+        setupCredentialsOrb();
+    }
+
+    protected void setupCredentialsOrb() {
+        if (mUri != null && "upnp".equals(mUri.getScheme())) {
+            return;
+        }
+        if (getArguments() != null && getArguments().containsKey(ARG_CREDENTIALS_JUST_PROVIDED)) {
+            mCredentialsJustProvided = getArguments().getBoolean(ARG_CREDENTIALS_JUST_PROVIDED, false);
+        }
+        // First orb is for credentials
+        getTitleView().setOrb1IconResId(R.drawable.orb_cred);
+        getTitleView().setOnOrb1ClickedListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                askForCredentials();
+            }
+        });
+        setConnectionDescription();
+    }
+
+    @Override
+    public void onCredentialRequired(Exception e) {
+        if (log.isDebugEnabled()) log.debug("onCredentialRequired: ask for credentials");
+        if (mCredentialsJustProvided) {
+            log.warn("onCredentialRequired: credentials just provided but authentication failed, breaking loop");
+            mCredentialsJustProvided = false;
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), R.string.error_credentials, Toast.LENGTH_SHORT).show();
+            }
+            onListingFatalError(e, ListingEngine.ErrorEnum.ERROR_AUTHENTICATION);
+            return;
+        }
+        askForCredentials();
+    }
+
+    @Override
+    public void onListingUpdate(List<? extends MetaFile2> files) {
+        mCredentialsJustProvided = false;
+        super.onListingUpdate(files);
+    }
+
+    protected void askForCredentials() {
+        if (getParentFragmentManager().findFragmentByTag(NetworkServerCredentialsDialog.class.getCanonicalName()) == null) {
+            NetworkServerCredentialsDialog dialog = new NetworkServerCredentialsDialog();
+            Bundle args = new Bundle();
+            if (mUri != null) {
+                NetworkCredentialsDatabase.Credential cred = NetworkCredentialsDatabase.getInstance().getCredential(mUri.toString());
+                if (cred != null) {
+                    args.putString(NetworkServerCredentialsDialog.USERNAME, cred.getUsername());
+                    args.putString(NetworkServerCredentialsDialog.PASSWORD, cred.getPassword());
+                }
+                args.putString(NetworkServerCredentialsDialog.PATH, mUri.getPath());
+                args.putInt(NetworkServerCredentialsDialog.PORT, mUri.getPort());
+                args.putString(NetworkServerCredentialsDialog.REMOTE, mUri.getHost());
+                Integer type = UriUtils.getUriType(mUri);
+                if (type != null && type != -1) {
+                    args.putInt(NetworkServerCredentialsDialog.TYPE, type);
+                }
+                dialog.setArguments(args);
+            }
+            dialog.setOnConnectClickListener(new NetworkServerCredentialsDialog.onConnectClickListener() {
+                @Override
+                public void onConnectClick(String username, String path, String password, int port, int type, String remote, String domain) {
+                    String scheme = UriUtils.getTypeUri(type);
+                    if (path.isEmpty() || !path.startsWith("/")) {
+                        path = "/" + path;
+                    }
+                    String uriToBuild = scheme + "://" + (!remote.isEmpty() ? remote + (port != -1 ? ":" + port : "") : "") + path;
+                    mUri = Uri.parse(uriToBuild);
+                    mCredentialsJustProvided = true;
+                    setConnectionDescription();
+                    startListing(mUri);
+                }
+            });
+            dialog.setOnCancelClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCredentialsJustProvided = false;
+                    onListingFatalError(null, ListingEngine.ErrorEnum.ERROR_AUTHENTICATION);
+                }
+            });
+            dialog.show(getParentFragmentManager(), NetworkServerCredentialsDialog.class.getCanonicalName());
+        }
+    }
+
+    protected void setConnectionDescription() {
+        if (mUri != null) {
+            String description = getString(R.string.network_guest);
+            NetworkCredentialsDatabase.Credential cred = NetworkCredentialsDatabase.getInstance().getCredential(mUri.toString());
+            if (cred != null) {
+                String userName = cred.getUsername();
+                if (userName != null && !userName.isEmpty()) {
+                    description = userName;
+                }
+            }
+            getTitleView().setOnOrb1Description(getString(R.string.network_connected_as, description));
+        }
     }
 
     private final View.OnClickListener mOrbClickListener = new View.OnClickListener() {

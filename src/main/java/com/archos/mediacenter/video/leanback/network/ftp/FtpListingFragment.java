@@ -116,7 +116,8 @@ public class FtpListingFragment extends NetworkListingFragment {
             askForCredentials();
     }
 
-    private void askForCredentials() {
+    @Override
+    protected void askForCredentials() {
         if(getParentFragmentManager().findFragmentByTag(FtpServerCredentialsDialog.class.getCanonicalName())==null) {
             FtpServerCredentialsDialog dialog = new FtpServerCredentialsDialog();
             Bundle args = new Bundle();
@@ -161,6 +162,8 @@ public class FtpListingFragment extends NetworkListingFragment {
                         path = "/" + path;
                     uriToBuild += "://" + (!remote.isEmpty() ? remote + (port != -1 ? ":" + port : "") : "") + path;
                     mUri = Uri.parse(uriToBuild);
+                    mCredentialsJustProvided = true;
+                    setConnectionDescription();
                     startListing(mUri);
                 }
 
@@ -168,6 +171,8 @@ public class FtpListingFragment extends NetworkListingFragment {
             dialog.setOnCancelClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mCredentialsJustProvided = false;
+                    onListingFatalError(null, ListingEngine.ErrorEnum.ERROR_AUTHENTICATION);
                 }
             });
             dialog.show(getParentFragmentManager(), FtpServerCredentialsDialog.class.getCanonicalName());
@@ -175,10 +180,10 @@ public class FtpListingFragment extends NetworkListingFragment {
     }
 
     @Override
-    public void onCredentialRequired(Exception e){
+    public void onCredentialRequired(Exception e) {
         mLongConnectionMessage.setVisibility(View.GONE);
         mActionButton.setVisibility(View.GONE);
         mHandler.removeMessages(LONG_CONNECTION);
-        askForCredentials();
+        super.onCredentialRequired(e);
     }
 }

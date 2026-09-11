@@ -17,7 +17,7 @@ package com.archos.mediacenter.video.leanback.network.smb;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
+
 
 import com.archos.filecorelibrary.ListingEngine;
 import com.archos.filecorelibrary.MetaFile2;
@@ -43,49 +43,9 @@ public class SmbListingFragment extends NetworkListingFragment {
 
     private static final Logger log = LoggerFactory.getLogger(SmbListingFragment.class);
 
-    private boolean mCredentialsJustProvided = false;
-
     @Override
     protected  ListingFragment instantiateNewFragment() {
         return new SmbListingFragment();
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (getArguments() != null && getArguments().containsKey(ARG_CREDENTIALS_JUST_PROVIDED)) {
-            mCredentialsJustProvided = getArguments().getBoolean(ARG_CREDENTIALS_JUST_PROVIDED, false);
-        }
-        // First orb is for credentials
-        getTitleView().setOrb1IconResId(R.drawable.orb_cred);
-        getTitleView().setOnOrb1ClickedListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                askForCredentials();
-            }
-        });
-        setConnectionDescription();
-    }
-
-    @Override
-    public void onCredentialRequired(Exception e) {
-        if (log.isDebugEnabled()) log.debug("onCredentialRequired: ask for credentials");
-        if (mCredentialsJustProvided) {
-            log.warn("onCredentialRequired: credentials just provided but authentication failed, breaking loop");
-            mCredentialsJustProvided = false;
-            if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.error_credentials, Toast.LENGTH_SHORT).show();
-            }
-            onListingFatalError(e, ListingEngine.ErrorEnum.ERROR_AUTHENTICATION);
-            return;
-        }
-        askForCredentials();
-    }
-
-    @Override
-    public void onListingUpdate(List<? extends MetaFile2> files) {
-        mCredentialsJustProvided = false;
-        super.onListingUpdate(files);
     }
 
     @Override
@@ -134,7 +94,8 @@ public class SmbListingFragment extends NetworkListingFragment {
         return newList;
     }
 
-    private void askForCredentials() {
+    @Override
+    protected void askForCredentials() {
         if (getParentFragmentManager().findFragmentByTag(SmbServerCredentialsDialog.class.getCanonicalName()) == null) {
             SmbServerCredentialsDialog dialog = new SmbServerCredentialsDialog();
             Bundle args = new Bundle();
@@ -166,19 +127,4 @@ public class SmbListingFragment extends NetworkListingFragment {
             dialog.show(getParentFragmentManager(), SmbServerCredentialsDialog.class.getCanonicalName());
         }
     }
-
-    private void setConnectionDescription() {
-        if (mUri != null) {
-            String description = getString(R.string.network_guest);
-            NetworkCredentialsDatabase.Credential cred = NetworkCredentialsDatabase.getInstance().getCredential(mUri.toString());
-            if (cred != null) {
-                String userName = cred.getUsername();
-                if (userName != null && !userName.isEmpty()) {
-                    description = userName;
-                }
-            }
-            getTitleView().setOnOrb1Description(getString(R.string.network_connected_as, description));
-        }
-    }
-
 }
