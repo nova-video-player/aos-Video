@@ -546,6 +546,11 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                             if (mSaveRequested) {
                                 current = mSaveRequestId;
                                 if (log.isDebugEnabled()) log.debug("fetching / saving item: {}", current);
+                                // Only the actual confirmed save needs every season: this
+                                // bundle is otherwise reused above to fetch a lightweight
+                                // preview for each candidate in the results list, where
+                                // fetching all seasons per candidate would be wasteful.
+                                b.putBoolean(Scraper.ITEM_REQUEST_ALL_SEASONS, true);
                                 ScrapeDetailResult detail = Scraper.getDetails(matches.get(current), b);
                                 if (detail.isOkay()) {
                                     tag = detail.tag;
@@ -774,9 +779,15 @@ public class VideoInfoShowScraperFragment extends Fragment implements
             if (log.isDebugEnabled()) log.debug("buildTag allEpisodes.size={} epnum={}, season={}, showId={}", allEpisodes.size(), epnum, season, showTags.getId());
             EpisodeTags episodeTag = null;
             if (!allEpisodes.isEmpty()) {
-                String key = season + "|" + epnum;
-                if (log.isDebugEnabled()) log.debug("buildTag: allEpisodes not empty trying to find {}", key);
-                episodeTag = allEpisodes.get(key);
+                // Note: allEpisodes is keyed "showId|season|episode|language" (see
+                // ShowIdEpisodes.getEpisodes), not "season|episode", so match by field instead.
+                if (log.isDebugEnabled()) log.debug("buildTag: allEpisodes not empty trying to find s{}e{}", season, epnum);
+                for (EpisodeTags candidate : allEpisodes.values()) {
+                    if (candidate.getSeason() == season && candidate.getEpisode() == epnum) {
+                        episodeTag = candidate;
+                        break;
+                    }
+                }
             }
             if (episodeTag == null) {
                 if (log.isDebugEnabled()) log.debug("buildTag: shoot episode not in allEpisodes");

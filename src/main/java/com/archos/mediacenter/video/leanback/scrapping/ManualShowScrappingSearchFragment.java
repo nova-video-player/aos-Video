@@ -327,6 +327,10 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
             // TODO MARC not sure we need all
             b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
             b.putBoolean(Scraper.ITEM_REQUEST_REFRESH_SHOW_METADATA, true);
+            // Only the actual confirmed save needs every season: getTagFromSearchResult()
+            // above reuses this same bundle shape for a lightweight preview per candidate
+            // in the results list, where fetching all seasons per candidate would be wasteful.
+            b.putBoolean(Scraper.ITEM_REQUEST_ALL_SEASONS, true);
             ScrapeDetailResult detail = Scraper.getDetails(sr, b);
             HashMap<String, EpisodeTags> epMap = null;
             if (detail.isOkay()) {
@@ -430,7 +434,17 @@ public class ManualShowScrappingSearchFragment extends ManualScrappingSearchFrag
 
         private EpisodeTags getEpisode(Map<String, EpisodeTags> map, int episode, int season, ShowTags show) {
             // TODO: handle map being null to avoid crash
-            EpisodeTags newEpTag = map.get(season + "|" + episode);
+            // Note: map is keyed "showId|season|episode|language" (see ShowIdEpisodes.getEpisodes),
+            // not "season|episode", so look it up by matching fields instead of guessing the key.
+            EpisodeTags newEpTag = null;
+            if (map != null) {
+                for (EpisodeTags candidate : map.values()) {
+                    if (candidate.getSeason() == season && candidate.getEpisode() == episode) {
+                        newEpTag = candidate;
+                        break;
+                    }
+                }
+            }
             if (newEpTag == null) {
                 newEpTag = new EpisodeTags();
                 // assume episode / season of request
