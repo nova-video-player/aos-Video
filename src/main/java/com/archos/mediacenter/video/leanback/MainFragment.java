@@ -850,7 +850,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                                             R.drawable.ic_incognito,  R.drawable.ic_incognito_off, PrivateMode.isActive()));
         mPreferencesRowAdapter.add(new Icon(Icon.ID.LEGACY_UI, getString(R.string.leanback_legacy_ui), R.drawable.ic_tablet_cellphone));
         mPreferencesRowAdapter.add(new Icon(Icon.ID.HELP_FAQ, getString(R.string.help_faq), R.drawable.ic_help_circle));
-        mPreferencesRowAdapter.add(new Icon(Icon.ID.OPEN_NETWORK_STREAM, getString(R.string.open_network_stream), R.drawable.ic_baseline_speed_24));
 
         if (BuildConfig.ENABLE_SPONSOR) mEnableSponsor = mPrefs.getBoolean(VideoPreferencesCommon.KEY_ENABLE_SPONSOR, VideoPreferencesCommon.ENABLE_SPONSOR_DEFAULT) && BuildConfig.ENABLE_SPONSOR;
         if (((! ArchosUtils.isInstalledfromPlayStore(getActivity().getApplicationContext())) || mEnableSponsor) && BuildConfig.ENABLE_SPONSOR) {
@@ -1756,6 +1755,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
 
         mFileBrowsingRowAdapter.clear();
         mFileBrowsingRowAdapter.add(new Box(Box.ID.NETWORK, getString(R.string.network_storage), R.drawable.filetype_new_server));
+        mFileBrowsingRowAdapter.add(new Box(Box.ID.OPEN_NETWORK_STREAM, getString(R.string.open_network_stream), R.drawable.ic_baseline_speed_24));
         mFileBrowsingRowAdapter.add(new Box(Box.ID.FOLDERS, getString(R.string.internal_storage), R.drawable.filetype_new_folder));
 
         if (hasExternal) {
@@ -1862,6 +1862,8 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     }
                     case NETWORK ->
                             vActivity.startActivity(new Intent(vActivity, NetworkRootActivity.class));
+                    case OPEN_NETWORK_STREAM ->
+                            showNetworkStreamDialog();
                     case NON_SCRAPED_VIDEOS ->
                             vActivity.startActivity(new Intent(vActivity, NonScrapedVideosActivity.class));
                     case ALL_TVSHOWS ->
@@ -1910,9 +1912,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                         break;
                     case SPONSOR:
                         WebUtils.openWebLink(vActivity,getString(R.string.sponsor_url));
-                        break;
-                    case OPEN_NETWORK_STREAM:
-                        showNetworkStreamDialog();
                         break;
                 }
             }

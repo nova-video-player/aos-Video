@@ -25,8 +25,7 @@ public class Icon {
         PRIVATE_MODE,
         LEGACY_UI,
         HELP_FAQ,
-        SPONSOR,
-        OPEN_NETWORK_STREAM
+        SPONSOR
     }
 
     final private ID mId;
