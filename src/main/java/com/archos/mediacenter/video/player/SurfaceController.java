@@ -55,7 +55,7 @@ public class SurfaceController {
         public static final int FORCE185 = 5;
         public static final int FORCE239 = 6;
         public static final int AUTO = 7;
-        
+
         public static final double VIDEO_FORMAT_AUTO_THRES = 0.7;
 
         private final int[] mode = {ORIGINAL, STRETCH_XY, FULL_SCREEN, FORCE43, FORCE169, FORCE185, FORCE239, AUTO};
@@ -97,6 +97,7 @@ public class SurfaceController {
     private View mView;
     private SurfaceView mSurfaceView = null;
     private TextureView mEffectView = null;
+    private TextureView mSubtitleView = null; // NEW: The OpenGL Subtitle Layer
     private IMediaPlayer mMediaPlayer = null;
     private SurfaceController.Listener      mSurfaceListener;
     private int         mLcdWidth = 0;
@@ -115,6 +116,24 @@ public class SurfaceController {
     private int mEffectMode = VideoEffect.getDefaultMode();
     private int mEffectType = VideoEffect.getDefaultType();
 
+    // --- Subtitle surface sizing ---
+    // Three genuine categories (see PlayerActivity.updateSubtitleLayoutMode() for how the
+    // active track maps to one of these). Kept for SubtitleManager.setSubtitleIsGfx() and for
+    // the native engine's backend selection -- mSubtitleView's sizing itself no longer branches
+    // on category (see mUseSubMargins below).
+    public static final int SUBTITLE_CATEGORY_PLAIN_TEXT = 0; // SRT/VTT
+    public static final int SUBTITLE_CATEGORY_ASS         = 1; // embedded/external ASS/SSA
+    public static final int SUBTITLE_CATEGORY_GFX         = 2; // VobSub .idx/.sub, PGS
+
+    private int mSubtitleCategory = SUBTITLE_CATEGORY_PLAIN_TEXT;
+    // User preference (pref_play_subtitle_use_margins_key): when true, ALL subtitle categories
+    // -- plain text, ASS/SSA, and GFX alike -- are allowed to use top/bottom letterbox bars
+    // (mpv's sub-use-margins equivalent). Left/right bars are NEVER used regardless of this
+    // flag -- see updateSurface()'s mSubtitleView sizing block below. For ASS this also
+    // requires a matching native-side change (sub_engine_open_track() in sub_engine.c) so
+    // libass's own frame-size call reflects the same expanded canvas Java is now handing it.
+    private boolean mUseSubMargins = true;
+
     private int mCutoutLeft = 0;
     private int mCutoutTop = 0;
     private int mCutoutRight = 0;
@@ -127,9 +146,17 @@ public class SurfaceController {
 
     public SurfaceController(View rootView) {
         ViewGroup mLp = (ViewGroup)rootView;
- 
+
         mEffectView =  (TextureView) mLp.findViewById(R.id.gl_surface_view);
         mSurfaceView =  (SurfaceView) mLp.findViewById(R.id.surface_view);
+        mSubtitleView = (TextureView) mLp.findViewById(R.id.gl_subtitle_view); // NEW
+        // --- NATIVE OPENGL UPGRADE FIX ---
+        // CRITICAL: TextureViews are opaque by default! If we don't set this to false,
+        // Android thinks this view is a solid black box, optimizes out the 3D video
+        // underneath it, and causes the hardware MediaCodec to stall and crash!
+        if (mSubtitleView != null) {
+            mSubtitleView.setOpaque(false);
+        }
         if (mEffectEnable) {
             mView = mEffectView;
             mSurfaceView.setVisibility(View.GONE);
@@ -138,7 +165,7 @@ public class SurfaceController {
              mEffectView.setVisibility(View.GONE);
         }
     }
-  
+
     public void setGLSupportEnabled(boolean enable){
         if (log.isDebugEnabled()) log.debug("setGLSupportEnabled: {}", enable);
         if (mEffectEnable == enable) return;
@@ -146,9 +173,9 @@ public class SurfaceController {
         if (enable) {
             //Need openGL, let's use TextureView
             mView = mEffectView;
-         } else {
-             //Do not need openGL, let's use SurfaceView
-             mView = mSurfaceView;
+        } else {
+            //Do not need openGL, let's use SurfaceView
+            mView = mSurfaceView;
         }
         mView.setVisibility(View.VISIBLE);
         mEffectEnable = enable;
@@ -163,7 +190,7 @@ public class SurfaceController {
         if (mSurfaceView != null)
             mSurfaceView.getHolder().addCallback(callback);
     }
-    
+
     public boolean supportOpenGLVideoEffect() {
         if (log.isDebugEnabled()) log.debug("supportOpenGLVideoEffect: {}", (mEffectView == mView) && (VideoEffect.openGLRequested(mEffectType)));
         return (mEffectView == mView) && (VideoEffect.openGLRequested(mEffectType));
@@ -173,6 +200,19 @@ public class SurfaceController {
         if (mEffectView != null)
             mEffectView.setSurfaceTextureListener(callback);
     }
+
+    public void setSubtitleTextureCallback(TextureView.SurfaceTextureListener callback) {
+        if (mSubtitleView != null) {
+            mSubtitleView.setSurfaceTextureListener(callback);
+            if (callback != null && mSubtitleView.isAvailable()) {
+                callback.onSurfaceTextureAvailable(mSubtitleView.getSurfaceTexture(),
+                    mSubtitleView.getWidth(), mSubtitleView.getHeight());
+            }
+        }
+    }
+
+    public int getSubtitleViewWidth() { return mSubtitleView != null ? mSubtitleView.getWidth() : 0; }
+    public int getSubtitleViewHeight() { return mSubtitleView != null ? mSubtitleView.getHeight() : 0; }
 
     public void setHdmiPlugged(boolean plugged, int hdmiWidth, int hdmiHeight) {
         if (log.isDebugEnabled()) log.debug("setHdmiPlugged: plugged={}, hdmi=({},{})", plugged, hdmiWidth, hdmiHeight);
@@ -212,6 +252,27 @@ public class SurfaceController {
     public void setListener(SurfaceController.Listener listener) {
         mSurfaceListener = listener;
     }
+
+    /**
+     * Called whenever the active subtitle track's category becomes known or changes (see
+     * PlayerActivity.updateSubtitleLayoutMode()), and whenever the use-margins preference
+     * changes, so updateSurface() can size mSubtitleView appropriately:
+     *   - useMargins=true  : full video width, extended into top/bottom letterbox bars only
+     *     (never left/right), regardless of category (plain text, ASS, or GFX alike).
+     *   - useMargins=false : tethered exactly to the video's own on-screen box, same as the
+     *     video view itself.
+     * category is still recorded (SubtitleManager.setSubtitleIsGfx() and the native engine's
+     * backend selection depend on it) even though it no longer affects sizing here.
+     * Triggers an immediate relayout if either value actually changed and a video is already
+     * laid out.
+     */
+    public void setSubtitleLayoutMode(int category, boolean useMargins) {
+        if (mSubtitleCategory == category && mUseSubMargins == useMargins) return;
+        mSubtitleCategory = category;
+        mUseSubMargins = useMargins;
+        updateSurface();
+    }
+
     public int getMax(){
         return getVideoFormat().getMax();
     }
@@ -265,12 +326,12 @@ public class SurfaceController {
         mEffectMode = mode;
         updateSurface();
     }
-    
+
     public void setEffectType(int type) {
         mEffectType = type;
         updateSurface();
     }
-    
+
     public void setProjectorMode(boolean projectorMode){
         //Get the layout paramters for the Views.
         FrameLayout.LayoutParams paramsEffect = (FrameLayout.LayoutParams) mEffectView.getLayoutParams();
@@ -284,27 +345,27 @@ public class SurfaceController {
         mSurfaceView.setLayoutParams(paramsSurface);
         mEffectView.setLayoutParams(paramsEffect);
     }
-    
+
     synchronized public void updateSurface() {
         if (log.isDebugEnabled()) log.debug("updateSurface");
         // get screen size
         int dw, dh, vw, vh, fmt, dcw, dch;
         float cropW = 1.0f;
         float cropH = 1.0f;
-        
+
         //Get the Video Size
         vw = mVideoWidth;
         vh = mVideoHeight;
 
         // calculate aspect ratio
         double sar = (double) vw / (double) vh; // sar = source aspect ratio (video)
-        
+
         //Get the Pixel Aspect Ratio
         double par = mVideoAspect;
 
         //Get the applied cutout size, since it can be changed on the fly now.
         int cutoutLeft, cutoutTop, cutoutRight, cutoutBottom = 0;
-        if (mFullScreenWithCutout) 
+        if (mFullScreenWithCutout)
             cutoutLeft = cutoutTop = cutoutRight = cutoutBottom = 0;
         else {
             cutoutLeft = mCutoutLeft;
@@ -320,7 +381,7 @@ public class SurfaceController {
                 else if (cutoutRight > 0 && cutoutLeft == 0)
                     cutoutLeft = cutoutRight;
             }
-        } 
+        }
 
         //Get the Display size, with and wihtout cutout.
         if (mHdmiPlugged) {
@@ -340,12 +401,12 @@ public class SurfaceController {
         //Get the Display aspect ratio, with and without cutouts.
         double dar = (double) dw / (double) dh;     // display aspect ratio
         double dcar = (double) dcw / (double) dch;  // display aspect ratio without cutout
-        
+
         //Early exit in case of error or nothing to do (yet)
         if (mMediaPlayer == null) log.warn("updateSurface: mMediaPlayer is null!");
         if (vw <= 0 || vh <= 0 || dcw <= 0 || dch <= 0 || mMediaPlayer == null)
             return;
-        
+
         //Do the Aspect Ratio Override if required.
         fmt = getVideoFormat().getFmt();
         double ar = switch (fmt) {
@@ -356,7 +417,7 @@ public class SurfaceController {
             default -> par * sar;
         };
 
-        //Is the STRETCH_XY doing Y? 
+        //Is the STRETCH_XY doing Y?
         willStretchY = (dcar < ar) ;
 
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: sar={}, ar={}, dar={}, dcar={}", sar, ar, dar, dcar);
@@ -382,20 +443,20 @@ public class SurfaceController {
                     //THERE IS NO POSSIBLE WAY TO AVOID THE CUTOUT, AND KEEP ASPECT.
                     //NOT KEEPING ASPECT MAKES THIS FULL_SCREEN.
                     //I HATE THIS CASE!
-                    
+
                     //I have now made it so that if cutouts are not enabled, this works normally
                     //It also works normally in Portrait, since the problem is a landscape only issue
                     //If cutouts are enabled, you cannot stretch Cinema Vertically on Phone.
                     //If I allowed this, the rules would not be respected and Cutout pref would not be honored.
                      if (dcar < 1 || mFullScreenWithCutout)
                         dcw = (int) (dch * (ar));
-                        //cropW = (float) dcar / (float) ar;        //Cropping won't help you! We need a way to not draw the left and r-ecentre, cutting equal left and right. 
+                        //cropW = (float) dcar / (float) ar;        //Cropping won't help you! We need a way to not draw the left and r-ecentre, cutting equal left and right.
                     else {
                         //WE ARE FULLSCREEN, turn Video with Cutouts ON to FIX!
                         if (!mCutoutBugToasted) Toast.makeText(mView.getContext(), R.string.toast_cutout_aspect_ratio_fix, Toast.LENGTH_SHORT).show();
                         mCutoutBugToasted = true;
                     }
-                    
+
                 } else
                     //This stops the Fullscreen Video with Cutouts button from moving Video side to side
                     //It doesnt take up the whole width, so we will just set cutouts to 0 and have same postition
@@ -468,6 +529,7 @@ public class SurfaceController {
         mMarginTop = mHdmiPlugged || mFullScreenWithCutout ? 0 : (int)((cutoutTop - cutoutBottom)/ 2.0f);
 
         ViewGroup.LayoutParams lp = mView.getLayoutParams();
+        ViewGroup.LayoutParams subLp = mSubtitleView != null ? mSubtitleView.getLayoutParams() : null; // NEW
         if (lp instanceof ViewGroup.MarginLayoutParams marginParams) {
             if (log.isDebugEnabled()) log.debug("MARC works with MarginLayoutParams"); // TODO MARC it works!!!
             lp.width = dcw;
@@ -481,10 +543,56 @@ public class SurfaceController {
             lp.height = dch;
             mView.setLayoutParams(lp);
         }
+
+        // mSubtitleView's sizing depends only on the use-margins preference now -- it applies
+        // uniformly to every subtitle category (plain text, ASS/SSA, and GFX alike). The
+        // category enum is still tracked (SubtitleManager.setSubtitleIsGfx() and the native
+        // engine still need to know which backend/format is active), but it no longer gates
+        // whether margins are used.
+        //
+        //   mUseSubMargins=false: tethered exactly like mView (dcw x dch, same margins) --
+        //   clipped to the video's own box, no black-bar usage.
+        //
+        //   mUseSubMargins=true: WIDTH stays exactly dcw (matches the video view's own width,
+        //   same horizontal margin) -- left/right bars are intentionally NEVER used, regardless
+        //   of this preference. HEIGHT extends to fill the full available vertical space
+        //   (letterbox bars included) ONLY when willStretchY is true, i.e. only when top/bottom
+        //   bars actually exist for this content/screen combination (see the ar/dcar comparison
+        //   above -- willStretchY is recomputed fresh every call, so this generalizes correctly
+        //   across any screen aspect ratio, not just 16:9). When willStretchY is false (bars are
+        //   left/right instead, or there are none at all), there's nothing vertical to gain, so
+        //   it falls back to the same tethered sizing as the non-margins case.
+        //
+        //   For ASS specifically, expanding the canvas also requires the native side to widen
+        //   what it tells libass its frame size is (see sub_engine_open_track() in
+        //   sub_engine.c) -- otherwise the track's own PlayResX/PlayResY scale would be computed
+        //   against the old, smaller video-only canvas while actually being drawn into the
+        //   larger one, distorting text size/position. That native-side change is separate from
+        //   this Java layout change; both are needed together.
+        boolean extendVertically = mUseSubMargins && willStretchY;
+
+        if (subLp instanceof ViewGroup.MarginLayoutParams subMarginParams) {
+            subMarginParams.width = dcw;
+            if (extendVertically) {
+                subMarginParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                subMarginParams.setMargins(mMarginLeft, 0, 0, 0);
+            } else {
+                subMarginParams.height = dch;
+                subMarginParams.setMargins(mMarginLeft, mMarginTop, 0, 0);
+            }
+            mSubtitleView.setLayoutParams(subMarginParams);
+        } else if (subLp != null) {
+            subLp.width = dcw;
+            subLp.height = extendVertically ? ViewGroup.LayoutParams.MATCH_PARENT : dch;
+            mSubtitleView.setLayoutParams(subLp);
+        }
+
         mView.invalidate();
+        if (mSubtitleView != null) mSubtitleView.invalidate(); // NEW
 
         mSurfaceWidth = dcw;
         mSurfaceHeight = dch;
+
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: ({},{})->({},{}) / formatCrop: ({},{}) / mEffectMode: {}", vw, vh, dcw, dch, cropW, cropH, mEffectMode);
     }
 
