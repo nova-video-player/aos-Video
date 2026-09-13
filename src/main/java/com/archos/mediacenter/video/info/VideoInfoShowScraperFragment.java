@@ -87,6 +87,11 @@ public class VideoInfoShowScraperFragment extends Fragment implements
     private SearchTask mCurrentSearchTask;
     private ShowTags mShowTag;
     private final List<ProgressItem> mResultsList;
+    // Search results kept around after the search task itself has finished, so that a
+    // full-seasons fetch can still be issued for the clicked candidate at save time
+    // (see onItemClick): by the time results are shown, mCurrentSearchTask is usually
+    // already null, so it cannot be relied upon to trigger that fetch.
+    private volatile List<SearchResult> mLastMatches;
 
     private ListView mListView;
     private ScraperResultsAdapter mAdapter;
@@ -262,20 +267,18 @@ public class VideoInfoShowScraperFragment extends Fragment implements
     // ---------------------- IMPLEMENTS OnItemClickListener ---------------- //
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (log.isDebugEnabled()) log.debug("onItemClick");
-        HashMap<String,EpisodeTags> map = position < mResultsList.size() ? mResultsList.get(position).epMap : null;
-        if (map != null) {
-            if (log.isDebugEnabled()) log.debug("onItemClick: map not null");
-            SaveItem item = new SaveItem();
-            item.source = map;
-            item.target = mShowTag;
-            item.sendOnSuccess = mHandler.obtainMessage();
+        SearchResult result = (mLastMatches != null && position < mLastMatches.size())
+                ? mLastMatches.get(position) : null;
+        if (result != null) {
+            // Always fetch fresh, full-seasons details for the actual save: the per-candidate
+            // preview (mResultsList/epMap) only ever covers a single season, so reusing it here
+            // would silently overwrite every other season's episodes with blank placeholder
+            // tags (aos-AVP#1838).
+            if (log.isDebugEnabled()) log.debug("onItemClick: fetching full-seasons details for save");
             cancelCurrentTask();
-            EpSaveTask.createAndRun(getActivity(), item);
-        } else if (mCurrentSearchTask != null) {
-            if (log.isDebugEnabled()) log.debug("onItemClick: requestSave");
-            mCurrentSearchTask.requestSave(position, mShowTag, getActivity(), mHandler.obtainMessage());
+            SaveTask.createAndRun(getActivity(), result, mShowTag, mHandler.obtainMessage());
         } else {
-            log.error("onItemClick: failed to save, no task & no result available");
+            log.error("onItemClick: failed to save, no matching search result for position {}", position);
         }
         setDisplayState(DisplayState.APPLY_RESULT);
     }
@@ -476,23 +479,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         private volatile boolean mPause;
         private final Object mWaitObject = new Object();
 
-        private volatile boolean mSaveRequested;
-        private volatile int mSaveRequestId;
-        private volatile Context mSaveContext;
-        private volatile ShowTags mSaveTarget;
-        private volatile Message mSaveMessage;
-
         public SearchTask() { /* empty */ }
-
-        public void requestSave(int resultId, ShowTags saveTarget, Context saveContext, Message message) {
-            if (log.isDebugEnabled()) log.debug("SearchTask.requestSave: {}", resultId);
-            mSaveRequestId = resultId;
-            mSaveContext = saveContext.getApplicationContext();
-            mSaveTarget = saveTarget;
-            mSaveMessage = message;
-            // set this true last so above is initialized
-            mSaveRequested = true;
-        }
 
         public void pause() {
             synchronized (mWaitObject) {
@@ -532,6 +519,7 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                         // search for query + " S1E1" so we get show results only
                         mSearchInfo.setUserInput(query + " S1E1");
                         List<SearchResult> matches = mScraper.getAllMatches(mSearchInfo).results;
+                        mLastMatches = matches;
                         publishProgressSafe(new ProgressItem(matches));
                         int count = matches != null ? matches.size() : 0;
                         int current = 0;
@@ -543,30 +531,6 @@ public class VideoInfoShowScraperFragment extends Fragment implements
                             if (isCancelled) return;
                             BaseTags tag = null;
                             HashMap<String, EpisodeTags> epMap = null;
-                            if (mSaveRequested) {
-                                current = mSaveRequestId;
-                                if (log.isDebugEnabled()) log.debug("fetching / saving item: {}", current);
-                                // Only the actual confirmed save needs every season: this
-                                // bundle is otherwise reused above to fetch a lightweight
-                                // preview for each candidate in the results list, where
-                                // fetching all seasons per candidate would be wasteful.
-                                b.putBoolean(Scraper.ITEM_REQUEST_ALL_SEASONS, true);
-                                ScrapeDetailResult detail = Scraper.getDetails(matches.get(current), b);
-                                if (detail.isOkay()) {
-                                    tag = detail.tag;
-                                    Bundle episodeList = detail.extras;
-                                    epMap = toMap(episodeList);
-                                    SaveItem saveItem = new SaveItem();
-                                    saveItem.source = epMap;
-                                    saveItem.target = mSaveTarget;
-                                    saveItem.sendOnSuccess = mSaveMessage;
-                                    EpSaveTask.createAndRun(mSaveContext, saveItem);
-                                    mSaveContext = null;
-                                    mSaveTarget = null;
-                                    mSaveMessage = null;
-                                }
-                                break; // fall through to onSearchFinished
-                            }
                             if (log.isDebugEnabled()) log.debug("mScraperService.getDetailsSpecial - {}", current);
                             ScrapeDetailResult detail = Scraper.getDetails(matches.get(current), b);
                             if (detail.isOkay()) {
@@ -628,6 +592,55 @@ public class VideoInfoShowScraperFragment extends Fragment implements
         ShowTags target;
         Map<String, EpisodeTags> source;
         Message sendOnSuccess;
+    }
+
+    /**
+     * Fetches full, all-seasons details for a single confirmed show selection (see
+     * onItemClick) and hands the result off to {@link EpSaveTask}. Kept separate from the
+     * per-candidate preview fetch in {@link SearchTask}, which only ever fetches one season
+     * for performance.
+     */
+    private static class SaveTask {
+        public static void createAndRun(Context context, SearchResult result, ShowTags target, Message message) {
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.execute(() -> {
+                try {
+                    Bundle b = new Bundle();
+                    b.putBoolean(Scraper.ITEM_REQUEST_ALL_EPISODES, true);
+                    b.putBoolean(Scraper.ITEM_REQUEST_REFRESH_SHOW_METADATA, true);
+                    b.putBoolean(Scraper.ITEM_REQUEST_ALL_SEASONS, true);
+                    ScrapeDetailResult detail = Scraper.getDetails(result, b);
+                    if (detail.isOkay()) {
+                        SaveItem item = new SaveItem();
+                        item.source = toMap(detail.extras);
+                        item.target = target;
+                        item.sendOnSuccess = message;
+                        EpSaveTask.createAndRun(context, item);
+                    } else {
+                        log.warn("SaveTask: full-seasons details fetch failed for {}", result);
+                    }
+                } catch (Exception e) {
+                    log.error("SaveTask failed", e);
+                } finally {
+                    executor.shutdown();
+                }
+            });
+        }
+
+        @SuppressWarnings("deprecation") // getParcelable: API 33+ branch uses typed form; else branch suppressed
+        private static HashMap<String, EpisodeTags> toMap(Bundle b) {
+            int size = b != null ? b.size() : 0;
+            HashMap<String, EpisodeTags> result = new HashMap<String, EpisodeTags>(size);
+            if (b != null) {
+                b.setClassLoader(BaseTags.class.getClassLoader());
+                for (String key : b.keySet()) {
+                    result.put(key, Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                            ? b.getParcelable(key, EpisodeTags.class)
+                            : b.<EpisodeTags>getParcelable(key));
+                }
+            }
+            return result;
+        }
     }
 
     private static class EpSaveTask {
