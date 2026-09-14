@@ -1037,7 +1037,7 @@
     <string name="external_player_service_description">Nova Video Player provides content for an external player</string>
     <string name="stop">Stop</string>
 
-    <string name="s_visual_impaired">visual impaired</string>
+<string name="s_visual_impaired">visual impaired</string>
     <string name="s_audio_description">audio description</string>
     <string name="s_descriptions">descriptions</string>
     <string name="s_forced">forced</string>
@@ -1047,5 +1047,12 @@
     <string name="s_commentary">commentary</string>
     <string name="s_lyrics">lyrics</string>
     <string name="s_karaoke">karaoke</string>
+
+    <!-- Network stream dialog -->
+    <string name="open_network_stream">Open Network Stream</string>
+    <string name="open_network_stream_title">Enter URL</string>
+    <string name="open_network_stream_hint">https://example.com/video.mp4</string>
+    <string name="open_network_stream_play">Play</string>
+    <string name="open_network_stream_cancel">Cancel</string>
 
 </resources>
