@@ -499,66 +499,68 @@ abstract public class BrowserCategory extends ListFragment {
         ExtStorageManager storageManager = ExtStorageManager.getExtStorageManager();
         final boolean hasExternal = storageManager.hasExtStorage();
         final boolean isConnected = isConnected();
-        if (hasExternal|| isConnected || NetworkState.isNetworkConnected(getActivity())) {
-            mCategoryList.add(getText(R.string.leanback_browsing));
+        // internal storage browsing has no dependency on external storage or network
+        // availability: always show it, regardless of connectivity state (it previously
+        // vanished together with the network-only entries when offline with no removable
+        // media attached, e.g. airplane mode)
+        mCategoryList.add(getText(R.string.leanback_browsing));
 
-            {
-                ItemData itemData2 = new ItemData();
-                itemData2.icon = R.drawable.category_common_folder;
-                itemData2.text = R.string.root_storage;
-                itemData2.id = ITEM_ID_VIDEO_FOLDER;
-                mCategoryList.add(itemData2);
-            }
+        {
+            ItemData itemData2 = new ItemData();
+            itemData2.icon = R.drawable.category_common_folder;
+            itemData2.text = R.string.root_storage;
+            itemData2.id = ITEM_ID_VIDEO_FOLDER;
+            mCategoryList.add(itemData2);
+        }
 
-            if (hasExternal) {
-                for(String s : storageManager.getExtSdcards()) {
-                    ItemData itemData = new ItemData();
-                    itemData.icon = R.drawable.category_common_sdcard;
-                    itemData.text = R.string.sd_card_storage;
-                    itemData.path = s;
-                    itemData.id = ITEM_ID_BROWSER;
-                    mCategoryList.add(itemData);
-                }
-                for(String s : storageManager.getExtUsbStorages()) {
-                    ItemData itemData = new ItemData();
-                    itemData.icon = R.drawable.category_common_usb;
-                    itemData.text = R.string.usb_host_storage;
-                    itemData.path = s;
-                    itemData.id = ITEM_ID_BROWSER;
-                    mCategoryList.add(itemData);
-                }
-                for(String s : storageManager.getExtOtherStorages()) {
-                    ItemData itemData = new ItemData();
-                    itemData.icon = R.drawable.category_common_folder;
-                    itemData.text = R.string.other_storage;
-                    itemData.path = s;
-                    itemData.id = ITEM_ID_BROWSER;
-                    mCategoryList.add(itemData);
-                }
-            }
-
-            if (isConnected){
+        if (hasExternal) {
+            for(String s : storageManager.getExtSdcards()) {
                 ItemData itemData = new ItemData();
-                itemData.icon = R.drawable.category_common_network;
-                itemData.text = R.string.network_shared_folders;
-                itemData.id = ITEM_ID_SMB;
+                itemData.icon = R.drawable.category_common_sdcard;
+                itemData.text = R.string.sd_card_storage;
+                itemData.path = s;
+                itemData.id = ITEM_ID_BROWSER;
                 mCategoryList.add(itemData);
             }
+            for(String s : storageManager.getExtUsbStorages()) {
+                ItemData itemData = new ItemData();
+                itemData.icon = R.drawable.category_common_usb;
+                itemData.text = R.string.usb_host_storage;
+                itemData.path = s;
+                itemData.id = ITEM_ID_BROWSER;
+                mCategoryList.add(itemData);
+            }
+            for(String s : storageManager.getExtOtherStorages()) {
+                ItemData itemData = new ItemData();
+                itemData.icon = R.drawable.category_common_folder;
+                itemData.text = R.string.other_storage;
+                itemData.path = s;
+                itemData.id = ITEM_ID_BROWSER;
+                mCategoryList.add(itemData);
+            }
+        }
 
-            if (isConnected){
-                ItemData itemData = new ItemData();
-                itemData.icon = R.drawable.category_common_network;
-                itemData.text = R.string.network_media_servers;
-                itemData.id = ITEM_ID_UPNP;
-                mCategoryList.add(itemData);
-            }
-            if ( NetworkState.isNetworkConnected(getActivity())){
-                ItemData itemData = new ItemData();
-                itemData.icon = R.drawable.category_network_shortcut;
-                itemData.text = R.string.network_shortcuts;
-                itemData.id = ITEM_ID_NETWORK;
-                mCategoryList.add(itemData);
-            }
+        if (isConnected){
+            ItemData itemData = new ItemData();
+            itemData.icon = R.drawable.category_common_network;
+            itemData.text = R.string.network_shared_folders;
+            itemData.id = ITEM_ID_SMB;
+            mCategoryList.add(itemData);
+        }
+
+        if (isConnected){
+            ItemData itemData = new ItemData();
+            itemData.icon = R.drawable.category_common_network;
+            itemData.text = R.string.network_media_servers;
+            itemData.id = ITEM_ID_UPNP;
+            mCategoryList.add(itemData);
+        }
+        if ( NetworkState.isNetworkConnected(getActivity())){
+            ItemData itemData = new ItemData();
+            itemData.icon = R.drawable.category_network_shortcut;
+            itemData.text = R.string.network_shortcuts;
+            itemData.id = ITEM_ID_NETWORK;
+            mCategoryList.add(itemData);
         }
         // one could argue that "cloud" should be made available only if connected
         // but offline capability is present in drive and provider is more generic
