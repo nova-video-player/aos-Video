@@ -63,7 +63,7 @@ public class VideoUtils {
     private static final String[] VIDEO_MIME_TYPES_ARRAY = {"video/", "application/x-bittorrent"};
 
     // keep in sync with com.archos.mediaprovider.ArchosMediaFile
-    private static final String[] SUBTITLES_ARRAY = { "srt", "smi", "ssa", "ass", "srr", "idx", "sub", "mpl", "txt", "vtt"};
+    private static final String[] SUBTITLES_ARRAY = { "srt", "smi", "ssa", "ass", "srr", "idx", "sub", "mpl", "txt", "vtt", "sup"};
     private static final List<String> SUBTITLES_ARRAYLIST = Arrays.asList(SUBTITLES_ARRAY);
 
     // Preferences

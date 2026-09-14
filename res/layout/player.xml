@@ -34,6 +34,15 @@
                 android:layout_gravity="center" />
     </FrameLayout>
 
+    <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+            <TextureView android:id="@+id/gl_subtitle_view"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center" />
+    </FrameLayout>
+
     <LinearLayout android:id="@+id/progress_indicator"
             android:orientation="vertical"
             android:layout_centerInParent="true"
