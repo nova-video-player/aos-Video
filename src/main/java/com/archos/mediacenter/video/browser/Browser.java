@@ -439,6 +439,50 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     /**
      * According the view mode, get the common object for the adapter.
      */
+    /**
+     * AppCompat toolbar/action-mode action buttons (e.g. the overflow "more" button) default to
+     * non-focusable while the window is in touch mode, which strands D-pad/remote navigation on
+     * TV devices that also report touch capability. Force every actually clickable descendant
+     * (the real action buttons, not their container ViewGroups) focusable, wire D-pad DOWN to
+     * bring focus back to the grid (since these system-managed views don't share the grid's key
+     * listener), and return the first one found so it can be given initial focus
+     * (nova-video-player/aos-AVP#1952, #1797).
+     */
+    private static View makeClickableDescendantsFocusable(View view, final AbsListView returnFocusTo) {
+        if (view == null) return null;
+        View firstFocusable = null;
+        if (view.isClickable()) {
+            view.setFocusable(true);
+            view.setFocusableInTouchMode(true);
+            view.setOnKeyListener(new OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_DOWN
+                            && returnFocusTo != null) {
+                        if (log.isDebugEnabled())
+                            log.debug("barKey: returnFocusTo=" + returnFocusTo + " focusable=" + returnFocusTo.isFocusable()
+                                    + " selectedPosition=" + returnFocusTo.getSelectedItemPosition());
+                        boolean result = returnFocusTo.requestFocus();
+                        if (log.isDebugEnabled())
+                            log.debug("barKey: returnFocusTo.requestFocus()=" + result + " isFocused=" + returnFocusTo.isFocused()
+                                    + " selectedPositionAfter=" + returnFocusTo.getSelectedItemPosition());
+                        return result;
+                    }
+                    return false;
+                }
+            });
+            firstFocusable = view;
+        }
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                View childFocusable = makeClickableDescendantsFocusable(group.getChildAt(i), returnFocusTo);
+                if (firstFocusable == null) firstFocusable = childFocusable;
+            }
+        }
+        return firstFocusable;
+    }
+
     private void initList(final AbsListView list){
         list.setOnItemClickListener(this);
         list.setOnItemLongClickListener(this);
@@ -465,6 +509,42 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                   * So we scroll it manually.
                   * 
                   */
+                // D-pad UP from the top row doesn't reliably reach the bar above the grid by
+                // default focus search on some TV/remote setups, trapping remote users inside
+                // the grid (nova-video-player/aos-AVP#1952, #1797). Explicitly route focus to
+                // the multi-select action bar (CAB) when active, or otherwise to the main
+                // toolbar (whose overflow menu is how multi-select gets enabled in the first
+                // place).
+                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_UP
+                        && getActivity() != null) {
+                    int selectedPosition = mArchosGridView.getSelectedItemPosition();
+                    int columns = (mArchosGridView instanceof GridView) ? ((GridView) mArchosGridView).getNumColumns() : 1;
+                    if (log.isDebugEnabled())
+                        log.debug("onKey: DPAD_UP selectedPosition=" + selectedPosition + " columns=" + columns
+                                + " actionModeActive=" + (mActionModeManager != null));
+                    if (selectedPosition >= 0 && selectedPosition < columns) {
+                        View barToFocus = (mActionModeManager != null)
+                                ? getActivity().getWindow().getDecorView().findViewById(androidx.appcompat.R.id.action_mode_bar)
+                                : getActivity().findViewById(R.id.main_toolbar);
+                        if (log.isDebugEnabled())
+                            log.debug("onKey: barToFocus=" + barToFocus + " childCount="
+                                    + (barToFocus instanceof ViewGroup ? ((ViewGroup) barToFocus).getChildCount() : -1));
+                        if (barToFocus != null) {
+                            View clickableTarget = makeClickableDescendantsFocusable(barToFocus, mArchosGridView);
+                            if (log.isDebugEnabled())
+                                log.debug("onKey: clickableTarget=" + clickableTarget);
+                            if (clickableTarget != null) {
+                                boolean focused = clickableTarget.requestFocus();
+                                if (log.isDebugEnabled())
+                                    log.debug("onKey: requestFocus()=" + focused + " isFocused=" + clickableTarget.isFocused()
+                                            + " focusable=" + clickableTarget.isFocusable() + " visibility=" + clickableTarget.getVisibility());
+                                if (focused) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
                 if (event.getAction() == KeyEvent.ACTION_DOWN && mArchosGridView instanceof ListView) {
                     if (keyCode == KeyEvent.KEYCODE_DPAD_UP && mArchosGridView.getFirstVisiblePosition() == mArchosGridView.getSelectedItemPosition() && mArchosGridView.getSelectedItemPosition() > 0) {
 
@@ -1156,6 +1236,15 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
         setViewMode(newMode);
         bindAdapter();
+        // setViewMode() hides the previously shown AbsListView (archos_list_view or
+        // archos_grid_view) and shows the other one, but never moves focus onto it: whatever
+        // had focus before (e.g. the view-mode menu item) is left as-is once the old view
+        // becomes GONE. On D-pad/remote navigation this left mArchosGridView in an
+        // inconsistent focus state, so the custom key routing used to enter/exit the
+        // multi-select action bar (which always operates on the current mArchosGridView)
+        // became unreliable after switching between grid and list mode
+        // (nova-video-player/aos-AVP#1952, #1797).
+        mArchosGridView.requestFocus();
     }
 
     @Override
