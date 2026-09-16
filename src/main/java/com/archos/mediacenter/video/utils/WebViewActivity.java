@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -82,6 +83,7 @@ public class WebViewActivity extends AppCompatActivity {
         mWebView.loadUrl(mUri.toString());
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private static void initWebView(WebView webview, Uri uri) {
         webview.setFocusable(true);
         webview.setInitialScale(0); // imdb does not look good in fullscreen with anything but this

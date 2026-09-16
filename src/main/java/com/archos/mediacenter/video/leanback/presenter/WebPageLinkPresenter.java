@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.presenter;
 
+import android.annotation.SuppressLint;
 import androidx.annotation.RequiresApi;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -99,6 +100,7 @@ public class WebPageLinkPresenter extends Presenter {
             }
         }
 
+        @SuppressLint("SetJavaScriptEnabled")
         private void initWebView() {
             mWebView.setFocusable(false);
             mWebView.setInitialScale(80);

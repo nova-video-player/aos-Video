@@ -191,10 +191,12 @@
                 android:resource="@xml/searchable_video" />
         </activity>
 
-        <!-- Provides search suggestions for video search. -->
+        <!-- Provides search suggestions for video search. Exported for system search integration. -->
         <provider
             android:name="com.archos.mediacenter.video.browser.SearchProviderVideo"
-            android:authorities="browser.SearchProviderVideocommunity" />
+            android:authorities="browser.SearchProviderVideocommunity"
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -1179,7 +1181,8 @@
             android:exported="false" android:foregroundServiceType="mediaPlayback"/>
 
         <service android:name="com.archos.mediacenter.video.player.PlayerService"
-            android:exported="true" android:foregroundServiceType="mediaPlayback"/>
+            android:exported="true" android:foregroundServiceType="mediaPlayback"
+            tools:ignore="ExportedService" />
 
         <service
             android:name=".player.ExternalPlayerService"
@@ -1197,7 +1200,8 @@
 
         <receiver
             android:name="com.archos.mediacenter.LibAvosReceiver"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="com.archos.mediacenter.NEW_PLUGINS" />
             </intent-filter>
@@ -1241,7 +1245,8 @@
         <provider
             android:name="com.archos.mediaprovider.video.VideoProvider"
             android:authorities="com.archos.media.videocommunity;com.archos.media.scrapercommunity"
-            android:exported="true" />
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
         <!-- BroadcastReceiver to trigger database import -->
         <receiver
             android:name="com.archos.mediaprovider.video.VideoStoreImportReceiver"
@@ -1323,7 +1328,8 @@
             android:name="com.archos.mediaprovider.MediaRetrieverService"
             android:process=":scanner"
             android:exported="true"
-            android:enabled="true"/>
+            android:enabled="true"
+            tools:ignore="ExportedService"/>
 
         <!-- Service doing the import -->
         <service android:name="com.archos.mediaprovider.video.VideoStoreImportService"/>
@@ -1723,10 +1729,12 @@
                 android:resource="@xml/androidtv_searchable_video" />
         </activity>
 
+        <!-- Android TV Leanback search provider queried by system search box -->
         <provider
             android:name="com.archos.mediacenter.video.leanback.search.VideoSearchProvider"
             android:authorities="${applicationId}.leanback.search.VideoSearchProvider"
-            android:exported="true" />
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
 
 
         <activity
