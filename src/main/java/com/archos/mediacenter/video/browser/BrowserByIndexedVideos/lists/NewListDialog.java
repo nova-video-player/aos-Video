@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -42,11 +43,12 @@ public class NewListDialog extends DialogFragment {
 
     private View mView;
 
+    @SuppressLint("InflateParams") // Custom view for AlertDialog.Builder.setView() has no parent container at inflation
     @SuppressWarnings("deprecation") // getSerializable: API 33+ branch uses typed form; else branch suppressed
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        mView = LayoutInflater.from(getActivity()).inflate(R.layout.list_creator_layout, null);
+        mView = getLayoutInflater().inflate(R.layout.list_creator_layout, null);
         builder.setView(mView);
         builder.setTitle(R.string.list_title);
         builder.setPositiveButton(android.R.string.ok

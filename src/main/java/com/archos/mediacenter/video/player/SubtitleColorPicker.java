@@ -143,7 +143,7 @@ public class SubtitleColorPicker extends LinearLayout  {
                 line.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
                 addView(line);
             }
-            View box = inflater.inflate(R.layout.subtitle_color_picker_box, null);
+            View box = inflater.inflate(R.layout.subtitle_color_picker_box, line, false);
             colorBoxes.add(box);
             final int finalPos = i;
             box.findViewById(R.id.color).setBackgroundColor(Color.parseColor(color));

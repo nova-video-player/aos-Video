@@ -233,7 +233,7 @@ public class FolderPicker extends FragmentActivity {
             }
 
             if (mLayoutInflater == null) {
-                mLayoutInflater = LayoutInflater.from(getActivity().getApplicationContext());
+                mLayoutInflater = getLayoutInflater();
             }
         }
 

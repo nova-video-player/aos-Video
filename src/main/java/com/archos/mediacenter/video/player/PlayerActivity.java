@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.player;
 
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.PictureInPictureParams;
@@ -1645,6 +1646,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     // TV Menu
 
+    @SuppressLint("InflateParams")
     private void createTVTimerDialog(){
         View dialogMainView = (View)LayoutInflater.from(mContext)
                 .inflate(R.layout.card_dialog_layout, null);
@@ -1683,6 +1685,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         tvPicker.requestFocus();
     }
 
+    @SuppressLint("InflateParams")
     private void createTVSubtitleDialog() {
         View dialogMainView = LayoutInflater.from(mContext)
                 .inflate(R.layout.card_dialog_layout, null);
@@ -1739,6 +1742,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         tvPicker.requestFocus();
     }
 
+    @SuppressLint("InflateParams")
     private void createTVSubtitleSettingsDialog() {
         float density = getApplicationContext().getResources().getDisplayMetrics().density;
         float pickerWidth= (float)100 * density;
@@ -1882,6 +1886,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         tvPicker.requestFocus();
     }
 
+    @SuppressLint("InflateParams")
     private void createTVAudioDelayDialog() {
         View dialogContainer = (View)LayoutInflater.from(mContext).inflate(R.layout.card_dialog_layout, null);
         View dialogView = dialogContainer.findViewById(R.id.card_view);
@@ -1964,6 +1969,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         tvPicker.requestFocus();
     }
 
+    @SuppressLint("InflateParams")
     private void createTVAudioSpeedDialog() {
         View dialogContainer = (View)LayoutInflater.from(mContext).inflate(R.layout.card_dialog_layout, null);
         View dialogView = dialogContainer.findViewById(R.id.card_view);

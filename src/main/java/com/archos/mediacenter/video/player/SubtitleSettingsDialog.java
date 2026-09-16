@@ -16,6 +16,7 @@
 
 package com.archos.mediacenter.video.player;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -83,6 +84,7 @@ public class SubtitleSettingsDialog extends AlertDialog implements
         init(context, subtitleManager);
     }
 
+    @SuppressLint("InflateParams") // Custom content view for AlertDialog.setView() has no parent container at inflation
     private void init(Context context, final SubtitleManager stm) {
         mSubtitleManager = stm;
         mSize = stm.getSize();

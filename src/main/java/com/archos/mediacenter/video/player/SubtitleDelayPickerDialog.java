@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.player;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -63,6 +64,7 @@ public class SubtitleDelayPickerDialog extends AlertDialog implements OnClickLis
 
  
 
+    @SuppressLint("InflateParams") // Custom content view for AlertDialog.setView() has no parent container at inflation
     public SubtitleDelayPickerDialog(Context context, OnDelayChangeListener callBack, int delay, int ratio, boolean hasRatio) {
         super(context);
 

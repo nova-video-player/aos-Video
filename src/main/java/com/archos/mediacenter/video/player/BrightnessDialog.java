@@ -16,6 +16,7 @@
 
 package com.archos.mediacenter.video.player;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -72,6 +73,7 @@ public class BrightnessDialog extends AlertDialog implements SeekBar.OnSeekBarCh
      * This method is only called once when the dialog is shown for the first time
      * (closing the dialog does not destroy it so it will only be destroyed when exiting the video player)
      */
+    @SuppressLint("InflateParams") // Custom content view for AlertDialog.setView() has no parent container at inflation
     private void init(Context context) {
         mContext= context;
         mContentResolver = context.getContentResolver();

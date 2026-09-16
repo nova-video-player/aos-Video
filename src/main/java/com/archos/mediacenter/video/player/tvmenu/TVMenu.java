@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.player.tvmenu;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.text.Html;
@@ -185,11 +186,11 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
         View v2;
         if(isCheckable){
             v = (View)LayoutInflater.from(mContext)
-                    .inflate(R.layout.menu_item_checkable_layout, null);
+                    .inflate(R.layout.menu_item_checkable_layout, this, false);
         }
         else{
             v = (View)LayoutInflater.from(mContext)
-                    .inflate(R.layout.menu_item_layout, null);
+                    .inflate(R.layout.menu_item_layout, this, false);
         }
         
         TVMenuItem tvmi = (TVMenuItem)v;
@@ -202,7 +203,7 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
     public TVMenuItem createAndAddTVSwitchableMenuItem(String text,  boolean isChecked){
         View v;
         v = (View)LayoutInflater.from(mContext)
-                    .inflate(R.layout.menu_item_switchable_layout, null);
+                    .inflate(R.layout.menu_item_switchable_layout, this, false);
        
         TVMenuItem tvmi = (TVMenuItem)v;
         tvmi.setText(text);
@@ -215,10 +216,10 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
         View v2;
         
         v = (View)LayoutInflater.from(mContext)
-                    .inflate(R.layout.menu_item_slide_layout, null);
+                    .inflate(R.layout.menu_item_slide_layout, this, false);
             
         v2 = (View)LayoutInflater.from(mContext)
-                    .inflate(R.layout.menu_item_slide_layout, null);
+                    .inflate(R.layout.menu_item_slide_layout, slaveView != null ? slaveView : this, false);
             
         
         
@@ -233,7 +234,7 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
     }
     
     public View createAndAddSeparator() {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.menu_separator_layout, null);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.menu_separator_layout, this, false);
         v.setTag("separator"); // Set a tag to identify separator views
         addTVMenuItem(v);
         return v;
@@ -252,7 +253,7 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
         else if(slaveView!=null){// we add a separator
             
             View v2 = (View)LayoutInflater.from(mContext)
-            .inflate(R.layout.menu_separator_layout, null);
+            .inflate(R.layout.menu_separator_layout, slaveView, false);
             slaveView.addTVMenuItem(v2);
         }
 
@@ -318,7 +319,7 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
                 else{// we add a separator
                 
                     View v2 = (View)LayoutInflater.from(mContext)
-                    .inflate(R.layout.menu_separator_layout, null);
+                    .inflate(R.layout.menu_separator_layout, slaveView, false);
                     slaveView.addTVMenuItem(v2);
                 }
             }
@@ -336,6 +337,7 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
         }
         return height;
     }
+    @SuppressLint("InflateParams") // Root TVMenu LinearLayout slave is inflated detached and attached to slave controller hierarchy
     @Override
     public View createSlaveView() {
         // TODO Auto-generated method stub

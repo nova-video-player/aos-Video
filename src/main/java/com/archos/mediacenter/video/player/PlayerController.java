@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.player;
 
 import static androidx.core.content.ContextCompat.getDrawable;
 
+import android.annotation.SuppressLint;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.content.Context;
@@ -283,6 +284,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mOnControlBarVisibilityListener = listener;
     }
 
+    @SuppressLint("InflateParams") // mVideoTitle is detached view for ActionBar setCustomView
     @SuppressWarnings("deprecation") // setStatusBarColor: pre-API 35 fallback
     public PlayerController(Context context, Window window, ViewGroup playerView, SurfaceController surfaceController, Settings settings, ActionBar actionBar) {
         mContext = context;
@@ -644,6 +646,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     // setOnSystemUiVisibilityChangeListener is the only reliable way to track transient bar visibility;
     // no WindowInsetsControllerCompat equivalent exists for this use case.
+    @SuppressLint("InflateParams") // Controller views are detached before being added with custom RelativeLayout.LayoutParams to mPlayerView
     @SuppressWarnings("deprecation")
     private void attachWindow() {
         SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -2628,6 +2631,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
     }
 
+    @SuppressLint("InflateParams") // Controller view is inflated then added into playerControllersContainer
     private void inflateRightView(){
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mControllerViewRight= inflater.inflate(R.layout.player_controller_inside, null);

@@ -169,7 +169,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.video_info_scraper_search, null);
+        mView = inflater.inflate(R.layout.video_info_scraper_search, container, false);
         return mView;
     }
     @Override

@@ -95,7 +95,7 @@ public class VideoInfoActivity extends AppCompatActivity {
                     : (Video) getIntent().getSerializableExtra(EXTRA_VIDEO);
 
         mForceCurrentPosition = getIntent().getBooleanExtra(EXTRA_FORCE_VIDEO_SELECTION, false);
-        mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, null);
+        mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, globalLayout, false);
         setContentView(R.layout.activity_video_info);
         mViewPager = (ViewPager)findViewById(R.id.pager);
         mViewPager.setAdapter(new ScreenSlidePagerAdapter(

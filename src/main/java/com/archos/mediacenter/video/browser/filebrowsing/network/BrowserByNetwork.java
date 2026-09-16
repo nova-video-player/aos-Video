@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -272,6 +273,7 @@ public class BrowserByNetwork extends BrowserByFolder {
             createShortcut(mShortcutPath, mShortcutName);
         }
     };
+    @SuppressLint("InflateParams") // Custom action view for MenuItem has no parent ViewGroup during inflation
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

@@ -15,6 +15,7 @@
 
 package com.archos.mediacenter.video.browser;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -122,6 +123,7 @@ public class NewVideosActionProvider extends ActionProvider implements
         }
     }
 
+    @SuppressLint("InflateParams") // ActionProvider contract does not provide a parent ViewGroup
     @Override
     public View onCreateActionView() {
         if (log.isDebugEnabled()) log.debug("onCreateActionView");
@@ -160,6 +162,7 @@ public class NewVideosActionProvider extends ActionProvider implements
         }
     }
 
+    @SuppressLint("InflateParams") // PopupWindow content view is detached from view hierarchy until attached by window manager
     private DropDownWindow getPopopWindow(View anchor) {
         Context context = anchor.getContext();
         LayoutInflater infl = LayoutInflater.from(context);

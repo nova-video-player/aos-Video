@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.player.tvmenu;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -297,9 +298,10 @@ public class AudioSpeedTVPicker extends AudioSpeedPickerAbstract implements TVSl
         updateSpeedText(getSpeed());
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View createSlaveView() {
-        // TODO Auto-generated method stub
+        // Detached template view created for secondary display/slave mirroring
         setSlaveView((AudioSpeedTVPicker) LayoutInflater.from(mContext)
                 .inflate(R.layout.audio_speed_tv_picker, null));
         return slaveView;

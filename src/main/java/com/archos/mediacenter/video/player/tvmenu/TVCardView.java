@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.player.tvmenu;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -586,10 +587,10 @@ public class TVCardView extends FrameLayout implements Checkable, FocusableTVCar
         
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View createSlaveView() {
-        // TODO Auto-generated method stub
-        
+        // Detached template view created for secondary display/slave mirroring
         View v = (View)LayoutInflater.from(mContext).inflate(R.layout.card_layout, null);
         TVCardView tvcv =(TVCardView) v.findViewById(R.id.card_view);
         tvcv.setParentView(v);

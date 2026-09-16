@@ -334,6 +334,7 @@ public class ThumbnailEngineVideo extends ThumbnailEngine {
 	    private ImageView mCompositionTwo_left;
 	    private ImageView mCompositionTwo_right;
 
+	    @SuppressLint("InflateParams") // Offscreen view inflation for canvas bitmap rendering; layout params set manually below
 	    public PosterCompositionStuff(LayoutInflater li, int width, int height) {
 	        if (DBG) Log.d(TAG, "PosterCompositionStuff "+width+" "+height);
 

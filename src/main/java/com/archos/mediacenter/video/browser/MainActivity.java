@@ -410,7 +410,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         }
 
         ViewGroup globalLayout = (ViewGroup) getWindow().getDecorView();
-        mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, null);
+        mGlobalBackdrop = getLayoutInflater().inflate(R.layout.browser_main_video_backdrop, globalLayout, false);
         globalLayout.addView(mGlobalBackdrop, 0);
         if(Trakt.isTraktV1Enabled(this,PreferenceManager.getDefaultSharedPreferences(this)))
         {

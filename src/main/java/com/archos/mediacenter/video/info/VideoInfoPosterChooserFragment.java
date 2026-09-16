@@ -101,7 +101,7 @@ public class VideoInfoPosterChooserFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.video_info_poster_chooser, null);
+        mView = inflater.inflate(R.layout.video_info_poster_chooser, container, false);
         return mView;
     }
     @Override

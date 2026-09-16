@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.player.tvmenu;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -290,9 +291,10 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
         
     }
     
+    @SuppressLint("InflateParams")
     @Override
     public View createSlaveView() {
-        // TODO Auto-generated method stub
+        // Detached template view created for secondary display/slave mirroring
         View v = (View)LayoutInflater.from(mContext).inflate(R.layout.card_dialog_layout, null);
         TVCardDialog tvcv =(TVCardDialog) v.findViewById(R.id.card_view);
 

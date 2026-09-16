@@ -151,7 +151,7 @@ public class VideoBadgePresenter extends Presenter {
                 JSONArray array = obj.getJSONArray("audiotracks");
                 for(int i = 0; i<array.length(); i++){
                     String format = array.getJSONObject(i).getString("format");
-                    View v = LayoutInflater.from(mContext).inflate(R.layout.leanback_audio_format_badge_presenter, null);
+                    View v = LayoutInflater.from(mContext).inflate(R.layout.leanback_audio_format_badge_presenter, mAudioFormatContainer, false);
                     TextView tv = (TextView) v.findViewById(R.id.audio_format);
                     tv.setText(format);
                     String channel = array.getJSONObject(i).getString("channels");

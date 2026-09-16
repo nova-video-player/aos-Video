@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.player.tvmenu;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import androidx.core.text.HtmlCompat;
 import android.text.SpannableString;
@@ -227,6 +228,7 @@ public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
         return ((TextView)findViewById(R.id.info_text)).getLineCount()*((TextView)findViewById(R.id.info_text)).getLineHeight();
     }
 
+    @SuppressLint("InflateParams") // Slave TVMenuItem is inflated detached to be added to slave TVMenu hierarchy
     @Override
     public View createSlaveView() {
         // TODO Auto-generated method stub

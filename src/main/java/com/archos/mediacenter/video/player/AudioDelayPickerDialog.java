@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.player;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -59,6 +60,7 @@ public class AudioDelayPickerDialog extends AlertDialog implements OnClickListen
         this(context, callBack, delay, false);
     }
 
+    @SuppressLint("InflateParams") // Custom content view for AlertDialog.setView() has no parent container at inflation
     public AudioDelayPickerDialog(Context context, OnAudioDelayChangeListener callBack, int delay, boolean disablePositiveDelay) {
         super(context);
         log.error("AudioDelayPickerDialog: delay={}", delay);

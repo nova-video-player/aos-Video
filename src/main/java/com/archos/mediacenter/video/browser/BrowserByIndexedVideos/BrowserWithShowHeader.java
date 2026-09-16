@@ -161,7 +161,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
         mApplicationBackdrop = (ImageView) (((MainActivity) getActivity()).getGlobalBackdropView().findViewById(R.id.backdrop));
         mApplicationBackdrop.setAlpha(0f);
         mBackgroundSetter = new ImageViewSetter(getActivity(), config);
-        mHeaderView = LayoutInflater.from(getContext()).inflate(R.layout.browser_item_header_show, null);
+        mHeaderView = LayoutInflater.from(getContext()).inflate(R.layout.browser_item_header_show, (ViewGroup) mArchosGridView, false);
         mHeaderView.findViewById(R.id.loading).setVisibility(View.VISIBLE);
         mHeaderView.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.video_details_item_height_new));
         setContentInfoVisibility(false);

@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.utils.credentialsmanager;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -43,6 +44,7 @@ public class CredentialsEditorDialog extends DialogFragment {
     }
     public CredentialsEditorDialog(){
     }
+    @SuppressLint("InflateParams") // Custom view for AlertDialog.Builder.setView() has no parent container at inflation
     @SuppressWarnings("deprecation") // getSerializable: API 33+ branch uses typed form; else branch suppressed
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -53,7 +55,7 @@ public class CredentialsEditorDialog extends DialogFragment {
         if (mCredential == null)
             throw new IllegalArgumentException(this.getClass().getCanonicalName()+" needs a "+NetworkCredentialsDatabase.Credential.class.getName()+" as argument");
 
-        LayoutInflater factory = LayoutInflater.from(getActivity());
+        LayoutInflater factory = getLayoutInflater();
         final View textEntryView = factory.inflate(com.archos.filecorelibrary.R.layout.samba_password_request, null);
         final EditText usernameET = (EditText) textEntryView.findViewById(com.archos.filecorelibrary.R.id.username_edit);
         usernameET.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -87,8 +89,15 @@ public class CredentialsEditorDialog extends DialogFragment {
         })
         .setNegativeButton(getText(android.R.string.cancel), null)
         .create();
-        dialog.setOnDismissListener(mOnDismissListener);
         return dialog;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (mOnDismissListener != null) {
+            mOnDismissListener.onDismiss(dialog);
+        }
     }
     public void setOnModifyListener(OnModifyListener onModifyListener){
         mOnModifyListener = onModifyListener;

@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.player.tvmenu;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -288,9 +289,10 @@ public class TimerDelayTVPicker extends TimerPickerAbstract implements TVSlaveVi
         updatePreviousDrawable((getDelay() != mMin || !hasMin) ? R.drawable.arrow_left : -1);
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View createSlaveView() {
-        // TODO Auto-generated method stub
+        // Detached template view created for secondary display/slave mirroring
         setSlaveView((TimerDelayTVPicker) LayoutInflater.from(mContext)
                 .inflate(R.layout.audio_delay_tv_picker, null));
         return slaveView;
