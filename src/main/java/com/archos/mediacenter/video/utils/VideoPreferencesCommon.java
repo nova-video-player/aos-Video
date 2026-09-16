@@ -13,6 +13,7 @@
 // limitations under the License.
 package com.archos.mediacenter.video.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -1190,9 +1191,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
         ListPreference lp = (ListPreference) findPreference("codepage");
         int cp = MediaFactory.getCodepage();
-        int cpStringID = getResources().getIdentifier("codepage_extra_" + cp, "string", getActivity().getPackageName());
-        if (cpStringID == 0)
-            cpStringID = R.string.codepage_extra_1252;
+        int cpStringID = getCodepageStringId(cp);
         CharSequence [] entryArray = lp.getEntries();
         entryArray[0] = getResources().getString(R.string.codepage_default,getResources().getString(cpStringID));
         lp.setEntries(entryArray);
@@ -1477,6 +1476,14 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 }
             });
         }
+    }
+
+    @SuppressLint("DiscouragedApi")
+    private int getCodepageStringId(int cp) {
+        int cpStringID = getResources().getIdentifier("codepage_extra_" + cp, "string", getActivity().getPackageName());
+        if (cpStringID == 0)
+            cpStringID = R.string.codepage_extra_1252;
+        return cpStringID;
     }
 
     private static String getDolbyVisionModeValue(boolean isDisabled) {

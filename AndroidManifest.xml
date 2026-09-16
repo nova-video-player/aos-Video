@@ -60,6 +60,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!--<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />-->
@@ -99,6 +100,7 @@
 
     <application
         android:name=".CustomApplication"
+        tools:ignore="PictureInPictureIssue"
         android:allowTaskReparenting="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -1108,7 +1110,7 @@
             android:exported="true"
             android:launchMode="singleTask">
             <!-- Handle browser redirect for OAuth phone/tablet flow (legacy localhost) -->
-            <intent-filter>
+            <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -1381,7 +1383,7 @@
                 <data android:host="*" />
                 <data android:pathPattern=".*\\.torrent" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -1393,7 +1395,7 @@
                     android:pathPattern=".*\\.torrent"
                     android:scheme="http" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -1405,7 +1407,7 @@
                     android:pathPattern=".*\\.torrent"
                     android:scheme="https" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -1416,7 +1418,7 @@
                     android:mimeType="application/x-bittorrent"
                     android:scheme="http" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -1541,7 +1543,6 @@
             android:name="com.archos.mediacenter.video.leanback.MainActivityLeanback"
             android:exported="true"
             android:launchMode="singleTask"
-            android:label="@string/nova"
             android:taskAffinity="archos.task.video"
             android:theme="@style/MyLeanbackTheme.Launcher">
             <intent-filter>

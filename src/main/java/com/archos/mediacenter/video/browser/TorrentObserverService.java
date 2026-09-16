@@ -32,6 +32,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -51,7 +52,7 @@ public class TorrentObserverService extends Service implements DefaultLifecycleO
     @SuppressLint("StaticFieldLeak")
     private static volatile TorrentObserverService sInstance;
 
-    private static final String DEFAULT_TORRENT_PATH = "/sdcard/";
+    private static final String DEFAULT_TORRENT_PATH = Environment.getExternalStorageDirectory().getPath() + "/";
     public static final String BLOCKLIST = "blocklist";
     private Context mContext;
     private  String mTorrent;

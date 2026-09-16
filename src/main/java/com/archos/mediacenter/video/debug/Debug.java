@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.debug;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 
 import com.archos.environment.ArchosUtils;
 
@@ -31,7 +32,7 @@ import java.io.IOException;
 public class Debug {
 
     private static FileWriter fw;
-    public static String ARCHOS_DEBUG_FOLDER_PATH = "/sdcard/archos_debug/";
+    public static String ARCHOS_DEBUG_FOLDER_PATH = Environment.getExternalStorageDirectory().getPath() + "/archos_debug/";
     private static String DEBUG_LOG_FILE="logcat";
 
     public static void startLogcatRecording(){

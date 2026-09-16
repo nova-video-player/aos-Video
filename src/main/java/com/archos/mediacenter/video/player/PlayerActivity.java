@@ -2331,11 +2331,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
                     if(v == vPicInPic){
-                        if (Build.VERSION.SDK_INT>=26)
-                            enterPictureInPictureMode(new PictureInPictureParams.Builder().build());
-                        else
-                            if (Build.VERSION.SDK_INT>=24)
-                                enterPictureInPictureMode();
+                        if (Build.VERSION.SDK_INT>=26) {
+                            PictureInPictureParams.Builder builder = new PictureInPictureParams.Builder();
+                            if (mRootView != null) {
+                                Rect sourceRectHint = new Rect();
+                                mRootView.getGlobalVisibleRect(sourceRectHint);
+                                builder.setSourceRectHint(sourceRectHint);
+                            }
+                            enterPictureInPictureMode(builder.build());
+                        } else if (Build.VERSION.SDK_INT>=24) {
+                            enterPictureInPictureMode();
+                        }
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {

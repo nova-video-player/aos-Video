@@ -772,18 +772,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         hasManageExternalStoragePermissionInManifest = hasPermission("android.permission.MANAGE_EXTERNAL_STORAGE", mContext);
         if (log.isTraceEnabled()) log.trace("onCreate: has permission android.permission.MANAGE_EXTERNAL_STORAGE {}", hasManageExternalStoragePermissionInManifest);
 
-        // Amazon has an "optional" check that when opening IEC61937, the content is stereo
-        // It is pushed into some weird vendor callbacks, I have no idea what they are supposed to mean
-        // But anyway we can allow IEC61937 @ 8 channels by removing this thing
-        try {
-            Class<?> fireOSInit = Class.forName("com.amazon.fireos.FireOSInit");
-            Field f = fireOSInit.getDeclaredField("sVendorCallbacks");
-            f.setAccessible(true);
-            Object o = f.get(null);
-            Map<?, ?> m = (Map<?, ?>) o;
-            m.remove(Class.forName("android.media.VendorAudioTrackCallback"));
-        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException | NullPointerException e) {
-        }
+        fixAmazonAudioTrackCallback();
 
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -809,6 +798,22 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 refreshSpatializerCapabilities("onCreate");
             }
         }.start();
+    }
+
+    @SuppressLint("PrivateApi")
+    private void fixAmazonAudioTrackCallback() {
+        // Amazon has an "optional" check that when opening IEC61937, the content is stereo
+        // It is pushed into some weird vendor callbacks, I have no idea what they are supposed to mean
+        // But anyway we can allow IEC61937 @ 8 channels by removing this thing
+        try {
+            Class<?> fireOSInit = Class.forName("com.amazon.fireos.FireOSInit");
+            java.lang.reflect.Field f = fireOSInit.getDeclaredField("sVendorCallbacks");
+            f.setAccessible(true);
+            Object o = f.get(null);
+            java.util.Map<?, ?> m = (java.util.Map<?, ?>) o;
+            m.remove(Class.forName("android.media.VendorAudioTrackCallback"));
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException | NullPointerException e) {
+        }
     }
 
     /**
@@ -1368,6 +1373,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         setLocale(localeCode, getResources());
     }
 
+    @SuppressLint("AppBundleLocaleChanges")
     @SuppressWarnings("deprecation") // updateConfiguration: needed for locale injection pre-API 33
     public static void setLocale(String localeCode, Resources resources) {
         // Warning no log.debug at this stage

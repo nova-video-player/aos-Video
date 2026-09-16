@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.utils;
 
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -184,6 +185,7 @@ public class VideoUtils {
         return "";
     }
 
+    @SuppressLint("DiscouragedApi")
     static public CharSequence getLanguageString(Context context, CharSequence name) {
         final Resources resources = context.getResources();
         CharSequence lang;

@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -164,6 +165,7 @@ public class MiscUtils {
         return null;
     }
 
+    @SuppressLint({"InternalInsetResource", "DiscouragedApi"})
     public static int getNavigationBarHeight(Context context) {
         int navigationBarHeight = 0;
         Resources resources = context.getResources();
@@ -199,7 +201,16 @@ public class MiscUtils {
         return 0;
     }
 
+    @SuppressLint({"InternalInsetResource", "DiscouragedApi"})
     public static int getStatusBarHeight(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            if (windowManager != null) {
+                WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+                Insets insets = windowMetrics.getWindowInsets().getInsetsIgnoringVisibility(WindowInsets.Type.statusBars());
+                if (insets.top > 0) return insets.top;
+            }
+        }
         int result = 0;
         int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0)
@@ -207,6 +218,7 @@ public class MiscUtils {
         return result;
     }
 
+    @SuppressLint("DiscouragedApi")
     private static boolean hasNavigationBar(Resources resources) {
         int navBarId = resources.getIdentifier("config_showNavigationBar", "bool", "android");
         if (log.isDebugEnabled()) log.debug("hasNavigationBar: navBarId={}, hasNavBar={}", navBarId, resources.getBoolean(navBarId));
@@ -262,12 +274,14 @@ public class MiscUtils {
         return true;
     }
 
+    @SuppressLint("DiscouragedApi")
     public static boolean hasNavBar(Resources resources) {
         int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
         if (id > 0) return resources.getBoolean(id);
         else return false;
     }
 
+    @SuppressLint({"InternalInsetResource", "DiscouragedApi"})
     public static int getSystemBarHeight(Resources resources) {
         if (!hasNavBar(resources))
             return 0;
@@ -281,6 +295,7 @@ public class MiscUtils {
         return 0;
     }
 
+    @SuppressLint({"InternalInsetResource", "DiscouragedApi"})
     public static int getSystemBarWidth(Resources resources) {
         if (hasNavBar(resources)) return 0;
         int orientation = resources.getConfiguration().orientation;
