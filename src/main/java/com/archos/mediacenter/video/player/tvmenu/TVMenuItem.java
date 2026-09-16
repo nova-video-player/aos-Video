@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.player.tvmenu;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.text.HtmlCompat;
 import android.text.SpannableString;
 import android.util.AttributeSet;
@@ -237,7 +238,7 @@ public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
             slaveView = (TVMenuItem)LayoutInflater.from(mContext)
                     .inflate(R.layout.menu_item_checkable_layout, null);
         }
-        else if(findViewById(R.id.info_text)!=null && findViewById(R.id.info_text) instanceof Switch){
+        else if (findViewById(R.id.info_text) != null && (findViewById(R.id.info_text) instanceof SwitchCompat || findViewById(R.id.info_text) instanceof Switch)) {
             slaveView = (TVMenuItem)LayoutInflater.from(mContext)
                     .inflate(R.layout.menu_item_switchable_layout, null);
         }

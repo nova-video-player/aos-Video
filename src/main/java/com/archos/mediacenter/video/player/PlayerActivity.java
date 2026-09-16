@@ -93,6 +93,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.preference.PreferenceManager;
@@ -2706,7 +2707,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     content.addView(rb);
                 }
 
-                Switch tb = new Switch(mContext);
+                SwitchCompat tb = new SwitchCompat(mContext);
                 tb.setText(R.string.pref_introdb_autoskip_title);
                 tb.setPadding(pad, pad, pad, pad);
                 tb.setChecked(mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED));
@@ -2769,7 +2770,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 				});
 				return sb;
 			} else if (position == 1) {
-                            Switch tb = new Switch(mContext);
+                            SwitchCompat tb = new SwitchCompat(mContext);
                             tb.setText(R.string.pref_audio_filt_title);
                             tb.setPadding(20,20, 20, 20);
                             tb.setChecked( PlayerService.sPlayerService.mAudioFilt>0);
@@ -2783,7 +2784,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                             return tb;
                         }
                         else {
-                            Switch tb = new Switch(mContext);
+                            SwitchCompat tb = new SwitchCompat(mContext);
                             tb.setText(R.string.pref_audio_filt_night_mode);
                             tb.setPadding(20,20, 20, 20);
                             tb.setChecked(PlayerService.sPlayerService.mNightModeOn);
@@ -2832,7 +2833,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (!isStereoEffectOn()) return true;
 
                 AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                Switch tb = new Switch(mContext);
+                SwitchCompat tb = new SwitchCompat(mContext);
                 tb.setText(R.string.pref_s3d_mode_title);
                 tb.setTextSize(25);
                 tb.setPadding(20,20, 20, 20);

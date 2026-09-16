@@ -2,10 +2,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/preferencesFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="com.archos.mediacenter.video.utils.VideoPreferencesFragment" />
+        android:name="com.archos.mediacenter.video.utils.VideoPreferencesFragment" />
 
 </RelativeLayout>

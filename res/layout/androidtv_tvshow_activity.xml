@@ -28,7 +28,7 @@
         android:importantForAccessibility="no"
         android:scaleType="centerCrop" />
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_browse_fragment"
         android:name="com.archos.mediacenter.video.leanback.tvshow.TvshowFragment"
         android:layout_width="match_parent"

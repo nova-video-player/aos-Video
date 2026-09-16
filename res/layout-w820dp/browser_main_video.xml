@@ -48,12 +48,12 @@ category, and contents.
 
             <!-- Category view at the middle -->
 
-            <fragment
+            <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/category"
                 android:layout_width="@dimen/categories_list_width"
                 android:layout_height="0dip"
                 android:layout_weight="1"
-                class="com.archos.mediacenter.video.browser.BrowserCategoryVideo" />
+                android:name="com.archos.mediacenter.video.browser.BrowserCategoryVideo" />
 
             <!-- Global resume at the middle and below the category view -->
 

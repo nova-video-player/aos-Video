@@ -8,7 +8,7 @@
     android:orientation="horizontal"
     android:padding="1dp" >
 
-  <Switch
+  <androidx.appcompat.widget.SwitchCompat
       android:id="@+id/info_text"
       android:layout_width="match_parent"
       android:layout_height="match_parent"

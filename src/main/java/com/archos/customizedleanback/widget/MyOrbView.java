@@ -17,6 +17,7 @@
 package com.archos.customizedleanback.widget;
 
 import android.animation.ArgbEvaluator;
+import android.annotation.SuppressLint;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
@@ -156,6 +157,7 @@ public class MyOrbView extends FrameLayout implements View.OnClickListener {
         this(context, attrs, R.attr.searchOrbViewStyle);
     }
 
+    @SuppressLint("CustomViewStyleable") // Customizes Leanback SearchOrbView; reuses lbSearchOrbView styleable attributes
     public MyOrbView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 

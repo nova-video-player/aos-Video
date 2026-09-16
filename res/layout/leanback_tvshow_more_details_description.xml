@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/date"
             android:layout_marginRight="32dip"
-            android:drawableLeft="@drawable/little_star"
+            app:drawableLeftCompat="@drawable/little_star"
             android:drawablePadding="4dip"
             android:text="7,3"
             />
