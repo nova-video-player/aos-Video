@@ -5,7 +5,7 @@
               android:layout_marginTop="16dip"
               android:gravity="center_vertical" >
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView
             android:id="@+id/separator_name"
             android:layout_width="match_parent"
             android:layout_height="@dimen/video_list_item_height"

@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.leanback.network.rescan;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -183,6 +184,7 @@ public class RescanFragment extends GuidedStepSupportFragment implements Network
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @SuppressWarnings("deprecation") // WIFI_SLEEP_POLICY*: legacy setting query
     private void refreshLastRescanAction() {
         String message;
@@ -210,6 +212,7 @@ public class RescanFragment extends GuidedStepSupportFragment implements Network
             getGuidedActionsStylist().getActionsGridView().getAdapter().notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void refreshManualRescanAction() {
         if(NetworkScannerServiceVideo.isScannerAlive()) {
             GuidedAction act = getActionById(MANUAL_RESCAN_ID);

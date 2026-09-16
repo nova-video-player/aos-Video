@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.browser.filebrowsing.network.UpnpBrowser;
 
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -38,6 +39,7 @@ import java.util.List;
 /**
  * Created by alexandre on 28/05/15.
  */
+@SuppressLint("NotifyDataSetChanged")
 public class UpnpRootFragment extends UpnpSmbCommonRootFragment implements UpnpServiceManager.Listener {
     private static final String TAG = "SmbRootFragment";
     private static final boolean DBG = false;

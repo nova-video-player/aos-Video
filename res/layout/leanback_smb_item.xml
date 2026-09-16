@@ -58,8 +58,6 @@
             android:id="@+id/secondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/image"
             android:ellipsize="end"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"

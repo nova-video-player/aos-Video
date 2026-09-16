@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -111,6 +112,7 @@ public class ShortcutRootFragment extends NewRootFragment implements View.OnClic
     @Override
     protected void rescanAvailableShortcuts() {}
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void loadIndexedShortcuts() {
         Cursor cursor = ShortcutDbAdapter.VIDEO.getAllShortcuts(getActivity(), null, null); // get all shortcuts

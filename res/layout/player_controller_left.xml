@@ -17,7 +17,8 @@
     android:gravity="center"
     android:orientation="vertical"
     android:visibility="gone"
-    tools:context="com.archos.mediacenter.video.player.PlayerActivity" >
+    tools:context="com.archos.mediacenter.video.player.PlayerActivity"
+    tools:ignore="Overdraw" >
 
     <com.archos.mediacenter.utils.RepeatingImageButton
         android:id="@+id/volume_up"

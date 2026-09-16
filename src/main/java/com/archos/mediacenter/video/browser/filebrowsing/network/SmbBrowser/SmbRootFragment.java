@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser;
 
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -47,6 +48,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by alexandre on 28/05/15.
  */
+@SuppressLint("NotifyDataSetChanged")
 public class SmbRootFragment extends UpnpSmbCommonRootFragment implements SambaDiscovery.Listener {
     private static final Logger log = LoggerFactory.getLogger(SmbRootFragment.class);
     private SambaDiscovery mSambaDiscovery;

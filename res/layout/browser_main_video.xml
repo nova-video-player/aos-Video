@@ -6,10 +6,11 @@ category, and contents.
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    tools:ignore="InconsistentLayout" >
 
     <com.archos.mediacenter.video.browser.BrowserLayout
 
@@ -36,12 +37,11 @@ category, and contents.
 
 
 
-            <FrameLayout
+            <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/content"
                 android:layout_below="@+id/main_toolbar"
                 android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
-                android:layout_weight="1"
                 android:layout_height="match_parent" />
 
             <!-- Private mode indicator icon -->
@@ -75,7 +75,7 @@ category, and contents.
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/category"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:name="com.archos.mediacenter.video.browser.BrowserCategoryVideo"
                 />

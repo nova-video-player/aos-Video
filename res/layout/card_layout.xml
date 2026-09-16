@@ -34,7 +34,7 @@
                     android:focusable="false"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    tools:ignore="UseCompoundDrawables" >
+                    tools:ignore="UseCompoundDrawables,UselessParent" >
 
                     <ImageView
                         android:id="@+id/imageView"

@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network.FtpBrowser;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -103,6 +104,7 @@ public class FtpRootFragment extends NewRootFragment implements View.OnClickList
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void loadIndexedShortcuts() {
         Cursor cursor = ShortcutDbAdapter.VIDEO.getAllShortcuts(getActivity(), ShortcutDbAdapter.KEY_PATH+" LIKE ?",new String[]{"%ftp%://%"});

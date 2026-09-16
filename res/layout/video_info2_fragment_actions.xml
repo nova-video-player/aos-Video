@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="left"
     android:layout_gravity="bottom"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     card_view:cardCornerRadius="@dimen/video_info_cardview_corner"
     card_view:cardElevation="@dimen/video_info_cardview_elevation"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="InconsistentLayout">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

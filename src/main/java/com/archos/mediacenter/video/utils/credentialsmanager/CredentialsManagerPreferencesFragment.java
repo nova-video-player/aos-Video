@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.utils.credentialsmanager;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -70,6 +71,7 @@ public class CredentialsManagerPreferencesFragment extends Fragment implements C
         super.onPause();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void refreshCredentialsList(){
         mCredentials = NetworkCredentialsDatabase.getInstance().getAllPersistentCredentials();
         if(mCredentials.size()>0) {

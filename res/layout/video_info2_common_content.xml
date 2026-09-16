@@ -23,7 +23,7 @@
 
 
         </FrameLayout>
-        <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        <androidx.cardview.widget.CardView
             android:gravity="left"
             android:layout_gravity="bottom"
             android:id="@+id/buttons_container"

@@ -17,6 +17,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -27,7 +28,8 @@
     android:paddingLeft="15dip"
     android:paddingRight="15dip"
     android:paddingBottom="5dip"
-    android:background="@color/lb_basic_card_info_bg_color">
+    android:background="@color/lb_basic_card_info_bg_color"
+    tools:ignore="Overdraw">
 
     <ImageView
         android:id="@+id/image_3d"

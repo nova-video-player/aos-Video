@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.browser.filebrowsing.network;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -156,6 +157,7 @@ public abstract class NewRootFragment extends Fragment implements WorkgroupShort
         NetworkScannerServiceVideo.addListener(this);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onScannerStateChanged() {
         mAdapter.notifyDataSetChanged();

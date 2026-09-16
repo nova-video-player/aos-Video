@@ -17,10 +17,12 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="@dimen/box_width"
     android:layout_height="@dimen/box_height"
-    android:background="@color/lb_basic_card_info_bg_color">
+    android:background="@color/lb_basic_card_info_bg_color"
+    tools:ignore="Overdraw">
 
     <FrameLayout
         android:id="@+id/image_container"

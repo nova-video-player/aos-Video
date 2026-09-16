@@ -19,7 +19,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RootActivity"
-    tools:deviceIds="tv">
+    tools:deviceIds="tv"
+    tools:ignore="MergeRootFrame">
 
     <ImageView
         android:id="@+id/details_backdrop"
@@ -33,6 +34,5 @@
         android:id="@+id/main_browse_fragment"
         android:name="com.archos.mediacenter.video.leanback.details.VideoDetailsFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:ignore="MergeRootFrame" />
+        android:layout_height="match_parent" />
 </FrameLayout>
