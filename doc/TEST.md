@@ -243,3 +243,73 @@ Output is a results table printed to stdout with bytes transferred, elapsed seco
 ### Test Reports
 - **HTML Report**: `FileCoreLibrary/build/reports/tests/testDebugUnitTest/index.html`
 - **JUnit XML Results**: `FileCoreLibrary/build/test-results/testDebugUnitTest/`
+
+### Running on a real device
+
+The host test above runs on Robolectric, i.e. the development machine's JVM and JCE providers —
+useful for correctness, but meaningless for on-device performance questions (e.g. whether
+Conscrypt/ARM crypto extensions actually speed up SFTP/SMB transfers on a given SoC), since the
+host JVM never touches the device's ART runtime, Conscrypt provider or network stack.
+
+**Class**: `com.archos.filecorelibrary.SpeedTestTransferTest` (module `FileCoreLibrary`,
+`androidTest/java` source set) — an on-device instrumented counterpart of the host test, same
+CSV format and scheme-to-implementation mapping. It only builds/installs `FileCoreLibrary` plus
+the androidx.test runner as a small instrumentation APK (`com.archos.filecorelibrary.test`), not
+the full Nova app (no `Video` assemble required).
+
+Build the androidTest APK:
+
+```bash
+cd Video
+./gradlew :FileCoreLibrary:assembleDebugAndroidTest
+```
+
+`./gradlew :FileCoreLibrary:connectedDebugAndroidTest` (with a Gradle-level `--tests` filter or
+`-Pandroid.testInstrumentationRunnerArguments...`) does **not** work for this test: `--tests` is
+not a valid flag for `connectedDebugAndroidTest` (that's a JVM `test`-task-only option), and
+instrumented tests don't inherit `-D` JVM system properties either way. Instead, install the APK
+and drive it directly with `adb shell am instrument`, passing the CSV path as an `-e` runner
+argument:
+
+```bash
+# Install the self-instrumenting test APK
+adb install -r -t FileCoreLibrary/build/outputs/apk/androidTest/debug/FileCoreLibrary-debug-androidTest.apk
+
+# Seed the CSV into the test package's private data dir (NOT /sdcard/Android/data/<pkg>/ -
+# scoped storage rejects reads there even after chmod on some API levels/devices). run-as writes
+# it as the app's own UID so it's guaranteed readable by the test process.
+adb push /absolute/path/to/servers.csv /sdcard/Download/servers.csv
+adb shell "cat /sdcard/Download/servers.csv | run-as com.archos.filecorelibrary.test sh -c 'mkdir -p files && cat > files/servers.csv'"
+
+# Run just SpeedTestTransferTest
+adb shell am instrument -w -r \
+  -e class com.archos.filecorelibrary.SpeedTestTransferTest \
+  -e speedtestCsv /data/user/0/com.archos.filecorelibrary.test/files/servers.csv \
+  com.archos.filecorelibrary.test/androidx.test.runner.AndroidJUnitRunner
+```
+
+This requires a connected/authorized device (`adb devices`). `compareTransferRates` output
+(`System.out.println`) is not shown by `am instrument` — read it from logcat after the run:
+
+```bash
+adb logcat -d -s System.out
+```
+
+Re-run after reinstalling the APK (e.g. after code changes): reinstalling wipes the app's private
+data dir, so the `run-as ... cat > files/servers.csv` seeding step must be repeated.
+
+#### Cleartext localhost networking
+
+`StreamOverHttp` (the local httpproxy `compareTransferRates` drives requests through) serves
+plaintext HTTP on `http://localhost:<port>`. A bare androidTest APK has no network security
+config, so API 28+ blocks this by default with `Cleartext HTTP traffic to localhost not
+permitted`. This is already handled by `FileCoreLibrary/androidTest/AndroidManifest.xml` +
+`FileCoreLibrary/androidTest/res/xml/network_security_config_test.xml`, which permit cleartext
+**only** to `localhost`/`127.0.0.1` (not a blanket allow) — scoped to the androidTest APK, the
+main app manifest/config is untouched.
+
+### Test Reports (on-device)
+- **HTML Report**: `FileCoreLibrary/build/reports/androidTests/connected/debug/index.html`
+- **JUnit XML Results**: `FileCoreLibrary/build/outputs/androidTest-results/connected/debug/`
+  (only populated when run via `connectedDebugAndroidTest`; `am instrument` directly does not
+  write these)
