@@ -14,12 +14,14 @@
     <FrameLayout
         android:id="@+id/tv_menu_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layoutDirection="ltr" >
 
         <FrameLayout
             android:id="@+id/my_recycler_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="top|start"
             android:scrollbars="horizontal" >
         </FrameLayout>
     </FrameLayout>
