@@ -7,6 +7,7 @@ for informations (duration for files, number of files for directories).
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="@dimen/video_list_item_height"
     android:descendantFocusability="blocksDescendants"
@@ -32,6 +33,7 @@ for informations (duration for files, number of files for directories).
             android:layout_marginTop="@dimen/video_list_thumbnail_margin_top"
             android:background="@drawable/rounded_rectangle"
             android:clipToOutline="true"
+            tools:ignore="UnusedAttribute"
             android:scaleType="centerCrop" />
 
 

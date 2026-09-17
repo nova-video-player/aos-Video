@@ -14,15 +14,12 @@
      limitations under the License.
 -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- ============ COVER ROLL ============ -->
-    <dimen name="MessageBox_width">200dip</dimen>
-    <dimen name="MessageBox_fontsize">17dip</dimen>
-    <dimen name="ContentLabel_fontsize">18dip</dimen>
-    <dimen name="cover_description_floating_large">23px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
-    <dimen name="cover_description_floating_small">17px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
-    <dimen name="cover_description_overlay_medium">13px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
-    <dimen name="cover_description_overlay_small">10px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
+    <dimen name="cover_description_floating_large" tools:ignore="PxUsage">23px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
+    <dimen name="cover_description_floating_small" tools:ignore="PxUsage">17px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
+    <dimen name="cover_description_overlay_medium" tools:ignore="PxUsage">13px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
+    <dimen name="cover_description_overlay_small" tools:ignore="PxUsage">10px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
 
     <!-- ============ MUSIC & VIDEO BROWSER ============ -->
     <dimen name="content_list_left_margin">24dip</dimen>
@@ -72,17 +69,9 @@
     <dimen name="item_horizontal_offset">0dp</dimen>
     <dimen name="video_resume_slider_length_list">100dp</dimen>
     
-    <dimen name="radio_button_width">40dp</dimen>               <!-- based on btn_radio_off/on bitmaps in the framework (not public) -->
-
     <dimen name="connection_button_height">38dip</dimen>
     <dimen name="connection_button_vertical_spacing">4dip</dimen>
     <dimen name="connection_button_padding">24dip</dimen>
-
-    <!-- ============ QUICK ACTION ============ -->
-    <dimen name="popup_horizontal_offset">16dip</dimen>
-
-    <!-- must be set so that the arrows and the popup are exactly overlapping -->
-    <dimen name="quick_action_anchor_size">24dip</dimen>    <!-- used to adjust the vertical distance between the popup and the anchor -->
 
 
      <!-- ============ VIDEO INFO BROWSER ============ -->
@@ -93,7 +82,7 @@
     <!-- ============ VIDEO PLAYER ============ -->
     <dimen name="volume_button_vertical_margin">10dip</dimen>
 
-    <dimen name="player_time_text_size">14dip</dimen>
+    <dimen name="player_time_text_size">14sp</dimen>
     <dimen name="player_button_padding_full">8dip</dimen>
     <dimen name="player_button_padding_half">8dip</dimen>
     <dimen name="player_button_padding_small">2dip</dimen>

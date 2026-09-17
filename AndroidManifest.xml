@@ -19,7 +19,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="auto"
     android:sharedUserId="archos.openmediacenter"
-    android:sharedUserMaxSdkVersion="32">
+    android:sharedUserMaxSdkVersion="32"
+    tools:ignore="UnusedAttribute">
 
     <supports-screens android:largeScreens="true" />
 

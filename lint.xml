@@ -10,4 +10,19 @@
     <issue id="TrustAllX509TrustManager">
         <ignore path="**/*.jar" />
     </issue>
+
+    <!--
+      Leanback TV UI customization: Custom Leanback presenters, widgets, and layout
+      subclasses override and reference AndroidX Leanback resources by design
+      for TV D-pad presentation.
+    -->
+    <issue id="PrivateResource">
+        <ignore regexp=".*androidx\.leanback.*" />
+    </issue>
+
+    <!--
+      Nova uses single-source high-resolution raster and vector drawables; full
+      cross-density duplication across legacy densities is not maintained.
+    -->
+    <issue id="IconDensities" severity="ignore" />
 </lint>

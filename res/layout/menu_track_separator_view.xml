@@ -5,5 +5,5 @@
     android:minWidth="@dimen/track_menu_minWidth"
     android:background="#ff303030"
     android:layout_width="match_parent"
-    android:layout_height="2px"
+    android:layout_height="1dp"
     tools:ignore="Overdraw" />

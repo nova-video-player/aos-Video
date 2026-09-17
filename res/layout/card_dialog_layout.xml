@@ -30,7 +30,7 @@
                 android:background="@null"
                 android:gravity="center_horizontal"
                 android:textColor="#ffffff"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
             <com.archos.mediacenter.video.player.tvmenu.TVScrollView
                 android:id="@+id/contentScrollView"

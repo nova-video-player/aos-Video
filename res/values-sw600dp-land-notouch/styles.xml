@@ -97,14 +97,14 @@
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:typeface">sans</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">20dip</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="SecondaryLine">
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:typeface">sans</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">17dip</item>
+        <item name="android:textSize">17sp</item>
     </style>
 
     <style name="TinyLine" parent="textAppearanceSmall">
@@ -136,7 +136,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textSize">17dip</item>
+        <item name="android:textSize">17sp</item>
     </style>
 
     <style name="BrowserTinyText.Name" parent="TinyLine">

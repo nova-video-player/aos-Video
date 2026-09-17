@@ -10,6 +10,6 @@
         android:layout_marginRight="8dip"
         android:layout_marginTop="4dip"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="14dip" />
+        android:textSize="14sp" />
 
 </merge>

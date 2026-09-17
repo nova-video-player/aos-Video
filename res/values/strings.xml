@@ -26,7 +26,7 @@
     <!-- Menu item to enable network shares -->
 
 
-    <string name="initial_scan">Initial scan</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Initial scan</string>
 
     <!-- Library screen, menu item -->
     <string name="search_title">Search</string>
@@ -74,7 +74,7 @@
     <string name="video_lists">Playlists</string>
     
     <!-- The string used in main storage list -->
-    <string name="external_storage">External</string>
+    <string name="external_storage" tools:ignore="UnusedResources">External</string>
     <string name="internal_storage">Internal</string>
     <string name="network_storage">Network</string>
     <string name="sd_card_storage">SD card</string>
@@ -99,7 +99,7 @@
     <string name="all_movies">All movies</string>
     <string name="all_movies_format">All movies  -  %d</string>
     <string name="all_animes_format">Animation movies  -  %d</string>
-    <string name="all_collections">All collections</string>
+    <string name="all_collections" tools:ignore="UnusedResources">All collections</string>
     <string name="all_collections_format">All collections  -  %d</string>
     <string name="not_watched_movies_format">Not watched  -  %d</string>
     <string name="not_watched_animes_format">Not watched  -  %d</string>
@@ -238,7 +238,7 @@
     <string name="preference_display_all_files">Display all files in browser</string>
     <string name="preference_display_all_files_summary">Display non-video files too</string>
     <string name="info_processing">Checking media properties…</string>
-    <string name="info_audio">Audio</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Audio</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Subtitle</string>
     <string name="info_file">File info</string>
@@ -294,11 +294,11 @@
 
     <string name="player_pref_audio_speed_title">Playback speed</string>
 
-    <string name="floating_player_restore">Restore</string>
-    <string name="floating_player_play">Play</string>
-    <string name="floating_player_pause">Pause</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Restore</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Play</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Pause</string>
     <string name="player_pref_audio_delay_title">Audio delay</string>
-    <string name="now_playing">Now playing</string>
+    <string name="now_playing" tools:ignore="UnusedResources">Now playing</string>
     <string name="player_window_mode">Window mode</string>
     <string name="pref_play_mode_title">Play mode</string>
     <string name="pref_play_mode_entry_single">Single</string>
@@ -389,7 +389,7 @@
     <string name="player_plugin_video_msg">This file contains an <xliff:g id="video">%1$s</xliff:g> video format.</string>
     <string name="player_plugin_audio_msg">This file contains an <xliff:g id="audio">%1$s</xliff:g> audio format.</string>
     <string name="player_plugin_video_audio_msg">This file contains an <xliff:g id="video">%1$s</xliff:g> video format and an <xliff:g id="audio">%2$s</xliff:g> audio format.</string>
-    <string name="player_plugin_purchase">Go to the Store</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Go to the Store</string>
     <string name="player_plugin_purchase_google_play_button">Go to Google Play</string>
     <string name="plugin_update_required_title">Codec update required</string>
     <string name="plugin_update_required_message">It looks like you already have additional codecs installed for Nova Video Player.\n\nThis new version of Nova Video Player requires an update of these codecs.\n\nPlease go to Google Play to update and re-install the codecs.</string>
@@ -451,7 +451,7 @@
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
 
-    <string name="error_permission">Not enough permissions</string>
+    <string name="error_permission" tools:ignore="UnusedResources">Not enough permissions</string>
     <string name="error_permission_storage">Nova Video Player needs storage permission to read local videos, please, grant this permission.</string>
     <string name="error_permission_all_file_access">Nova Video Player needs all external storage management permission to properly manage local videos/NFO files, please, grant this permission.</string>
     <string name="allow">Allow</string>
@@ -473,7 +473,7 @@
     <string name="protocol_prompt">Protocol type</string>
     <string name="remove_from_shortcuts">Remove the shortcut</string>
     <string name="shortcut_removed">Shortcut %s removed</string>
-    <string name="server_not_available">The server is currently not available</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">The server is currently not available</string>
     <string name="network_shortcuts">Network shortcuts</string>
     <string name="shortcut_list_empty">No network shortcuts created.\n\nTo create shortcuts to your favorite remote folders long-click on the target folders and select \"%s\" in the top action bar.</string>
     <string name="ftp_shortcut_list_empty">To create shortcuts to your favorite remote folders, select \"%s\" in the top action bar when browsing a server.</string>
@@ -839,7 +839,7 @@
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">Sign in</string>
     <string name="trakt_list_signin">Sign into Trakt</string>
-    <string name="trakt_signin_summary_logged">Signed in</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">Signed in</string>
     <string name="trakt_signin_summary_logged_error">Authentication error</string>
     <string name="trakt_signin_summary">Not signed in</string>
     <string name="trakt_relog_description">An issue with Trakt has been detected and credentials must be reset, please login again.</string>
@@ -849,14 +849,14 @@
     <string name="trakt_live_scrobbling_title">Live scrobbler</string>
     <string name="trakt_live_scrobbling_summary">Share videos being watched on Trakt</string>
     <string name="trakt_getfull_summary">Trakt scrobbler is only available with paid version</string>
-    <string name="trakt_sync_collection_title">Synchronize TV show and movie collections</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">Synchronize TV show and movie collections</string>
     <string name="trakt_sync_trakt_resume_title">Sync trakt resume position</string>
     <string name="trakt_sync_trakt_resume">Use trakt resume position when more advanced than local</string>
     <string name="trakt_force_push_title">Force re-upload to Trakt</string>
     <string name="trakt_force_push_summary">One-time upload of watched status and resume points to Trakt</string>
     <string name="trakt_force_pull_title">Force re-import from Trakt</string>
     <string name="trakt_force_pull_summary">One-time import of watched status and resume points to Trakt</string>
-    <string name="trakt_sync_collection_summary">Automatically add all videos from your Nova library to your Trakt collection</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">Automatically add all videos from your Nova library to your Trakt collection</string>
     <string name="trakt_toast_syncing">Syncing with Trakt&#8230;</string>
     <string name="trakt_device_auth_step1">1. On your phone or computer, go to:</string>
     <string name="trakt_device_auth_step2">2. Enter this code:</string>
@@ -1000,7 +1000,7 @@
     <string name="sleep_timer_title">Sleep timer</string>
     <string name="sleep_timer_description">Stop video after: </string>
     <string name="picture_in_picture">Picture in picture</string>
-    <string name="cast">Cast</string>
+    <string name="cast" tools:ignore="UnusedResources">Cast</string>
     <string name="cast_audio_background">Sound won\'t work while Nova Video Player is in background</string>
     <string name="help_faq">Help / FAQ</string>
     <string name="provider_folders">Cloud</string>

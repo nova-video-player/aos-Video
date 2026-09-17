@@ -5,13 +5,13 @@
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:typeface">sans</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">20dip</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="SecondaryLine" parent="textAppearanceMedium">
         <item name="android:typeface">sans</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">17dip</item>
+        <item name="android:textSize">17sp</item>
     </style>
 
     <style name="TinyLine" parent="textAppearanceSmall">

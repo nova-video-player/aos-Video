@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
 
-        android:textSize="10dip"
+        android:textSize="11sp"
         android:paddingLeft="3dip"
         android:gravity="center_horizontal"
         android:text="1"

@@ -40,7 +40,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:textStyle="bold"
-            android:textSize="11dip" />
+            android:textSize="11sp" />
 
         <FrameLayout
             android:id="@+id/counter_group"
@@ -61,7 +61,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:singleLine="true"
-                android:textSize="11dip" />
+                android:textSize="11sp" />
         </FrameLayout>
     </LinearLayout>
 

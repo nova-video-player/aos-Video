@@ -14,17 +14,14 @@
      limitations under the License.
 -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 <dimen name="player2014_bar_width">40dip</dimen>
     
     <!-- ============ COVER ROLL ============ -->
-<dimen name="MessageBox_width">150dip</dimen>
-<dimen name="MessageBox_fontsize">12dip</dimen>
-<dimen name="ContentLabel_fontsize">13dip</dimen>
-<dimen name="cover_description_floating_large">17px</dimen>
-<dimen name="cover_description_floating_small">12px</dimen>
-<dimen name="cover_description_overlay_medium">9px</dimen>
-<dimen name="cover_description_overlay_small">7px</dimen>
+<dimen name="cover_description_floating_large" tools:ignore="PxUsage">17px</dimen>
+<dimen name="cover_description_floating_small" tools:ignore="PxUsage">12px</dimen>
+<dimen name="cover_description_overlay_medium" tools:ignore="PxUsage">9px</dimen>
+<dimen name="cover_description_overlay_small" tools:ignore="PxUsage">7px</dimen>
 
     <!-- ============ MUSIC & VIDEO BROWSER ============ -->
 <dimen name="content_list_left_margin">18dip</dimen>
@@ -74,22 +71,14 @@
 <dimen name="item_horizontal_offset">0dp</dimen>
 <dimen name="video_resume_slider_length_list">75dp</dimen>
     
-<dimen name="radio_button_width">30dp</dimen>
-
 <dimen name="connection_button_height">28dip</dimen>
 <dimen name="connection_button_vertical_spacing">2dip</dimen>
 <dimen name="connection_button_padding">12dip</dimen>
 
-    <!-- ============ QUICK ACTION ============ -->
-<dimen name="popup_horizontal_offset">12dip</dimen>
-
-    <!-- must be set so that the arrows and the popup are exactly overlapping -->
-<dimen name="quick_action_anchor_size">18dip</dimen>
-
    <!-- ============ VIDEO PLAYER ============ -->
 <dimen name="volume_button_vertical_margin">0dip</dimen>
 
-<dimen name="player_time_text_size">14dip</dimen>
+<dimen name="player_time_text_size">14sp</dimen>
 <dimen name="player_button_padding_full">6dip</dimen>
 <dimen name="player_button_padding_half">6dip</dimen>
 <dimen name="player_button_padding_small">1dip</dimen>
