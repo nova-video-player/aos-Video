@@ -28,6 +28,7 @@
         <item name="colorPrimaryDark">#002642</item>
         <item name="colorAccent">@color/lightblue400</item>
         <item name="alertDialogTheme">@style/Theme.AlertDialog</item>
+        <item name="detailsActionButtonStyle">@style/MyDetailsActionButtonStyle</item>
     </style>
 
     <!-- Black theme variant for leanback -->
@@ -44,6 +45,12 @@
         <item name="colorPrimaryDark">#000000</item>
         <item name="colorAccent">@color/theme_accent_black</item>
         <item name="alertDialogTheme">@style/Theme.AlertDialog.Black</item>
+        <item name="detailsActionButtonStyle">@style/MyDetailsActionButtonStyle</item>
+    </style>
+
+    <style name="MyDetailsActionButtonStyle" parent="Widget.Leanback.DetailsActionButtonStyle">
+        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <!-- Neutral launcher theme for leanback to avoid blue flash -->
