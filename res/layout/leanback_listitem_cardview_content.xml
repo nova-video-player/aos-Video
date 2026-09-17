@@ -74,6 +74,7 @@
             android:maxLines="2"
             android:singleLine="false"
             android:text="Long name of the video that can be very very long"
+            android:textAlignment="viewStart"
             android:textColor="@color/lb_basic_card_title_text_color"
             android:textSize="@dimen/list_item_title_text_size" />
 
@@ -86,6 +87,7 @@
             android:fontFamily="sans-serif-condensed"
             android:singleLine="true"
             android:text="details about the video"
+            android:textAlignment="viewStart"
             android:textColor="@color/lb_basic_card_content_text_color"
             android:textSize="@dimen/list_item_content_text_size" />
 

@@ -44,7 +44,15 @@ public class CustomImageCardview extends ImageCardView {
 
         mainRoot.addView(getMainImageView());
         //when removing ellipse, we have a problem in browser layout : this seems to fix it
-        ((TextView)findViewById(R.id.content_text)).setEllipsize(TextUtils.TruncateAt.END);
+        TextView contentView = (TextView) findViewById(R.id.content_text);
+        if (contentView != null) {
+            contentView.setEllipsize(TextUtils.TruncateAt.END);
+            contentView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+        }
+        TextView titleView = (TextView) findViewById(R.id.title_text);
+        if (titleView != null) {
+            titleView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+        }
     }
 
     public void addViewToRoot(View v){
