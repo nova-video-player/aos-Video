@@ -301,11 +301,8 @@ android {
         abortOnError = true
         checkReleaseBuilds = false
         showAll = true
-        // Third-party network libraries (Bouncy Castle, Commons Net, Jetty) bundle
-        // trust-all managers for optional self-signed certificate handling in local network
-        // protocols (FTPS, WebDAV, UPnP).
-        disable 'MissingTranslation', 'ExtraTranslation', 'MissingQuantity', 'ImpliedQuantity',
-                'TrustAllX509TrustManager'
+        lintConfig = file("lint.xml")
+        disable 'MissingTranslation', 'ExtraTranslation', 'MissingQuantity', 'ImpliedQuantity'
         enable 'SuspiciousIndentation'
     }
 
