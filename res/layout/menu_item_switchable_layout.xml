@@ -3,27 +3,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/test"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="wrap_content"
+    android:minHeight="40dp"
+    android:gravity="center_vertical"
     android:focusable="true"
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal"
-    android:padding="1dp" >
+    android:padding="2dp" >
 
-  <androidx.appcompat.widget.SwitchCompat
-      android:id="@+id/info_text"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="@null"
-      android:ellipsize="marquee"
-      android:focusable="false"
-      android:paddingStart="10dp"
-      android:paddingEnd="12dp"
-      android:singleLine="true"
-      android:switchMinWidth="0dp"
-      android:textColor="#ffffff"
-      android:textOff="O"
-      android:textOn="I"
-      android:textSize="@dimen/tv_menu_font_size"
-      tools:ignore="HardcodedText" />
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/info_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:background="@null"
+        android:ellipsize="marquee"
+        android:focusable="false"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="12dp"
+        android:singleLine="true"
+        android:switchMinWidth="0dp"
+        android:textColor="#ffffff"
+        android:textOff="O"
+        android:textOn="I"
+        android:textSize="@dimen/tv_menu_font_size"
+        tools:ignore="HardcodedText" />
 
 </com.archos.mediacenter.video.player.tvmenu.TVMenuItem>
