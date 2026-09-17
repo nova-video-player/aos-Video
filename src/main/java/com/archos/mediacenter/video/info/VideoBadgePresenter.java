@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.info;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -134,6 +135,7 @@ public class VideoBadgePresenter implements Presenter {
             }
         }
 
+        @SuppressLint("SetTextI18n")
         public void setSource(Uri source){
             if(source.equals(mSelectedUri)){
                 ((CardView)mRootView).setCardBackgroundColor(mBackgroundColor);

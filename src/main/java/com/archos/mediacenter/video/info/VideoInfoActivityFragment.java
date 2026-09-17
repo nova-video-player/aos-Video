@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.info;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -723,6 +724,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         updateUI(); // be sure to be on right state
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateActionButtons(){
         if (log.isDebugEnabled()) log.debug("updateActionButtons: RemoteResumeMs={}, getResumeMs={}", mCurrentVideo.getRemoteResumeMs(), mCurrentVideo.getResumeMs());
         if(mCurrentVideo.getRemoteResumeMs()>0&&mCurrentVideo.getResumeMs()!=mCurrentVideo.getRemoteResumeMs()) {

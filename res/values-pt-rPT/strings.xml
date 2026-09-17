@@ -107,7 +107,7 @@
     <string name="scrap_remove_short">Remover</string>
     <!-- for small screens -->
     <string name="scrap_change_initializing">A iniciar…</string>
-    <string name="scrap_change_finalizing">A finalizar...</string>
+    <string name="scrap_change_finalizing">A finalizar&#8230;</string>
     <string name="scrap_get_title">A obter informação</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Realizador</string>

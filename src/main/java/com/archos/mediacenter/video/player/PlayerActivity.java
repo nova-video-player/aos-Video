@@ -4418,6 +4418,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
         }
 
+        @SuppressLint("SetTextI18n")
         public void onBufferingUpdate(int percent) {
             if (!mPlayer.isInPlaybackState()) {
                 mBufferView.setText(" "+percent+"%");

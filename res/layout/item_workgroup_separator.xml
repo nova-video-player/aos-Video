@@ -14,7 +14,7 @@
     android:focusable="false"
 
     android:singleLine="true"
-    android:text="Workgroup"
+    android:text="@string/workgroup"
     android:textAllCaps="true"
     android:textAppearance="?android:attr/textAppearanceSmall"
     android:textStyle="bold" />

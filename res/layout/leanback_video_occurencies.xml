@@ -23,7 +23,7 @@
     android:paddingTop="1dip"
     android:gravity="center_horizontal"
     android:background="@drawable/count_left_corner"
-    tools:ignore="Overdraw"
+    tools:ignore="Overdraw,HardcodedText"
     >
 
     <TextView

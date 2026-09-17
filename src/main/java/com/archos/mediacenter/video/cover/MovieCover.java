@@ -22,6 +22,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.MovieInfo;
 import com.archos.mediaprovider.video.VideoStore.Video;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -156,6 +157,7 @@ public class MovieCover extends BaseVideoCover {
 	}
 
 	@Override
+	@SuppressLint("SetTextI18n")
 	public Bitmap getDescription( ArtworkFactory factory ) {
 		View view = factory.getCachedView(R.layout.cover_floating_description_movie);
 		TextView movieTitle = view.findViewById(R.id.movie_title);

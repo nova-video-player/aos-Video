@@ -56,7 +56,7 @@ public class HeaderShowPresenter extends CommonPresenter {
         }
         // Set TV show season
         if(holder.number!=null)
-            holder.number.setText(mContext.getResources()   .getString(R.string.episode_season) + " " + ((Season) object).getSeasonNumber());
+            holder.number.setText(mContext.getResources().getString(R.string.season_identification, ((Season) object).getSeasonNumber()));
         return view;
     }
 

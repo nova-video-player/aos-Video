@@ -853,7 +853,7 @@
     <string name="media_library_export_in_progress">Експортування медіатеки, облікових даних і ярликів</string>
     <string name="media_library_import_in_progress">Імпортування медіатеки, облікових даних і ярликів</string>
     <string name="media_library_export_success">Медіатеку, облікові дані та ярлики успішно експортовано до: \n %s</string>
-    <string name="media_library_import_success">Медіатеку, облікові дані та ярлики успішно імпортовано. Перезапуск застосунку...</string>
+    <string name="media_library_import_success">Медіатеку, облікові дані та ярлики успішно імпортовано. Перезапуск застосунку&#8230;</string>
     <string name="media_library_import_error">Помилка під час імпорту медіатеки</string>
     <string name="media_library_export_error">Помилка під час експорту медіатеки</string>
     <string name="media_library_export_dir_not_found">Каталог для експорту не знайдено</string>

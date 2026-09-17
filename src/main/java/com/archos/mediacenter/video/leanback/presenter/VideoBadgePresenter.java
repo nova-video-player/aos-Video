@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback.presenter;
 
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -120,6 +121,7 @@ public class VideoBadgePresenter extends Presenter {
             }
         }
 
+        @SuppressLint("SetTextI18n")
         public void setSource(Uri source){
             if(source.equals(mSelectedUri)){
                 mRootView.setBackgroundColor(mBackgroundColor);

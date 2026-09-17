@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.leanback.tvshow;
 
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.graphics.Paint;
 import androidx.leanback.widget.Presenter;
 import android.view.LayoutInflater;
@@ -138,6 +139,7 @@ public class TvshowDetailsDescriptionPresenter extends Presenter {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void setTextOrSetGoneIfZero(TextView mTextView, float value) {
         if (value == 0f) {
             mTextView.setVisibility(View.GONE);

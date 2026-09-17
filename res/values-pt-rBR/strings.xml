@@ -209,11 +209,11 @@
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Armazenamento</string>
     <string name="rescan_storage">Verificar armazenamento</string>
-    <string name="rescanning">Verificando novamente dispositivos de armazenamento...</string>
+    <string name="rescanning">Verificando novamente dispositivos de armazenamento&#8230;</string>
     <string name="rescan_storage_summary">Verifique novamente os dispositivos de armazenamento interno, cartão SD e USB.</string>
     <string name="preference_display_all_files">Exibir todos os arquivos no explorador</string>
     <string name="preference_display_all_files_summary">Exibe também arquivos que não são de vídeo.</string>
-    <string name="info_processing">Verificando propriedades de mídia...</string>
+    <string name="info_processing">Verificando propriedades de mídia&#8230;</string>
     <string name="info_audio">Áudio</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Legendas</string>
@@ -350,7 +350,7 @@
     <string name="player_plugin_purchase">Ir para a Loja</string>
     <string name="player_plugin_purchase_google_play_button">Acesse a Google Play</string>
     <string name="plugin_update_required_title">Atualização de codec necessária</string>
-    <string name="plugin_update_required_message">Parece que você já possui codecs adicionais instalados para o Nova Video Player.\n\nEsta nova versão do Nova Video Player exige uma atualização destes codecs.\n\nPor favor, acesse a Google Play para atualizar e reinstalar os codecs.</string>
+    <string name="plugin_update_required_message" tools:ignore="Typos">Parece que você já possui codecs adicionais instalados para o Nova Video Player.\n\nEsta nova versão do Nova Video Player exige uma atualização destes codecs.\n\nPor favor, acesse a Google Play para atualizar e reinstalar os codecs.</string>
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">Selecionar legendas no armazenamento</string>
     <string name="subtitles_wizard_no_files">Nenhum arquivo de legenda encontrado</string>
@@ -405,8 +405,8 @@
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
     <string name="error_permission">Sem permissões suficientes</string>
-    <string name="error_permission_storage">O Nova Video Player precisa de permissão de armazenamento para acessar vídeos locais. Por favor, conceda esta permissão.</string>
-    <string name="error_permission_all_file_access">O Nova Video Player precisa de todas as permissões de gerenciamento de armazenamento externo para gerenciar vídeos locais/arquivos NFO corretamente, por favor, conceda essa permissão.</string>
+    <string name="error_permission_storage" tools:ignore="Typos">O Nova Video Player precisa de permissão de armazenamento para acessar vídeos locais. Por favor, conceda esta permissão.</string>
+    <string name="error_permission_all_file_access" tools:ignore="Typos">O Nova Video Player precisa de todas as permissões de gerenciamento de armazenamento externo para gerenciar vídeos locais/arquivos NFO corretamente, por favor, conceda essa permissão.</string>
     <string name="allow">Permitir</string>
     <string name="exit">Sair</string>
     <!-- torrent -->
@@ -618,7 +618,7 @@
     <string name="ask_to_mail_media_DB">Deseja enviar o banco de dados de vídeos para a equipe de desenvolvimento do Nova para ajudar na análise de um erro?\n\nOs arquivos de vídeo (naturalmente) não são enviados, apenas a lista completa de nomes de arquivos.</string>
     <string name="no_email_installed">Nenhum aplicativo de e-mail encontrado</string>
     <string name="zipping_library_before_mailing">Zipping uma cópia da biblioteca antes de enviá-la…</string>
-    <string name="zipped_library_mail_subject">Backup do Banco de Dados do Nova Video</string>
+    <string name="zipped_library_mail_subject" tools:ignore="Typos">Backup do Banco de Dados do Nova Video</string>
     <string name="zipped_library_mail_text">Por favor, descreva o problema encontrado.\n\n</string>
     <string name="sort_mode">Modo de Ordenação</string>
     <string name="sort_by_name_asc">Ordenar por nome (A - Z)</string>
@@ -777,7 +777,7 @@
     <string name="trakt_toast_syncing">Sincronizando com o Trakt&#8230;</string>
     <string name="trakt_device_auth_step1">1. No celular ou computador, acesse:</string>
     <string name="trakt_device_auth_step2">2. Insira este código:</string>
-    <string name="trakt_device_auth_waiting">Aguardando autorização...</string>
+    <string name="trakt_device_auth_waiting">Aguardando autorização&#8230;</string>
     <string name="trakt_device_auth_success">Conectado com sucesso!</string>
     <string name="trakt_device_auth_error">Falha na autenticação. Por favor, tente novamente.</string>
     <string name="trakt_device_auth_invalid_code">Falha ao obter um código de dispositivo válido do Trakt. Por favor, tente novamente.</string>
@@ -830,7 +830,7 @@
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Interface normal</string>
     <string name="leanback_hint_long_press_on_back">DICA: manter o botão VOLTAR pressionado fecha o explorador de arquivos</string>
-    <string name="leanback_archos_video_webview">Nova Video WebView</string>
+    <string name="leanback_archos_video_webview" tools:ignore="Typos">Nova Video WebView</string>
     <string name="file_access_error">Não foi possível acessar o arquivo</string>
     <string name="always_leanback_on_tv">Sempre iniciar na interface de TV</string>
     <string name="always_leanback_on_tv_summary">Sempre iniciar na interface de TV. Desative para usar a interface clássica.</string>
@@ -850,7 +850,7 @@
     <string name="rescan_error_wifi">Erro: o Wi-Fi estava desligado durante a verificação</string>
     <string name="rescan_error_wifi_click_for_more_info">clique para mais informações</string>
     <string name="rescan_error_server">Erro: não foi possível conectar ao servidor</string>
-    <string name="scan_running">Verificando...</string>
+    <string name="scan_running">Verificando&#8230;</string>
     <string name="scheduled_rescan">Verificação agendada</string>
     <string name="scheduled_rescan_period">Intervalo de verificação</string>
     <string name="scheduled_rescan_period_no">Nenhuma</string>
@@ -862,7 +862,7 @@
     <string name="scheduled_rescan_time">Horário de verificação</string>
     <string name="rescan_when_opening_application">Verificação ao abrir o aplicativo</string>
     <string name="last_rescan_occured">Última verificação:</string>
-    <string name="error_permission_display_over_apps">O modo janela requer permissões especiais para ser exibido sobre outros aplicativos. Por favor, conceda esta permissão ao Nova Video Player para alternar para o modo janela.</string>
+    <string name="error_permission_display_over_apps" tools:ignore="Typos">O modo janela requer permissões especiais para ser exibido sobre outros aplicativos. Por favor, conceda esta permissão ao Nova Video Player para alternar para o modo janela.</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Ver mais</string>
@@ -891,7 +891,7 @@
     <string name="media_library_export_in_progress">Exportando biblioteca de mídia, credenciais e atalhos</string>
     <string name="media_library_import_in_progress">Importando biblioteca de mídia, credenciais e atalhos</string>
     <string name="media_library_export_success">Biblioteca de mídia, credenciais e atalhos exportados com sucesso para:\n%s</string>
-    <string name="media_library_import_success">Biblioteca de mídia, credenciais e atalhos importados com sucesso. Reiniciando o aplicativo...</string>
+    <string name="media_library_import_success">Biblioteca de mídia, credenciais e atalhos importados com sucesso. Reiniciando o aplicativo&#8230;</string>
     <string name="media_library_import_error">Erro ao importar biblioteca de mídia</string>
     <string name="media_library_export_error">Erro ao exportar biblioteca de mídia</string>
     <string name="media_library_export_dir_not_found">Diretório de exportação não encontrado</string>
@@ -908,7 +908,7 @@
     <string name="sleep_timer_description">Parar o vídeo após: </string>
     <string name="picture_in_picture">Picture-in-picture</string>
     <string name="cast">Transmitir</string>
-    <string name="cast_audio_background">O áudio não funcionará com o Nova Video Player em segundo plano</string>
+    <string name="cast_audio_background" tools:ignore="Typos">O áudio não funcionará com o Nova Video Player em segundo plano</string>
     <string name="help_faq">Ajuda / FAQ</string>
     <string name="provider_folders">Nuvem</string>
     <string name="rate_us">Gosta do aplicativo? Apoie-nos com uma avaliação de 5 estrelas</string>
@@ -935,7 +935,7 @@
     <string name="v5_v6_upgrade_info">AVISO: esta atualização principal do Nova exige uma nova verificação de toda a coleção de vídeos para obter as informações multimídia novamente.
         É altamente recomendável reiniciar a partir de uma instalação limpa para evitar problemas. Por favor, consulte as Perguntas Frequentes (FAQ) para mais detalhes.</string>
     <string name="external_player_service_title">Reprodução em player externo</string>
-    <string name="external_player_service_description">O Nova Video Player fornece conteúdo para um player externo</string>
+    <string name="external_player_service_description" tools:ignore="Typos">O Nova Video Player fornece conteúdo para um player externo</string>
     <string name="stop">Parar</string>
     <string name="s_visual_impaired">deficientes visuais</string>
     <string name="s_audio_description">audiodescrição</string>

@@ -504,9 +504,9 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="preferences_tv_refreshrate_switch_disabled">Desactivado</string>
     <string name="preferences_tv_refreshrate_switch_mode_selection">Mostrar modo de selección que coincide con fps de vídeo</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">Función de coincidencia de ratio de fotogramas para Android 12 +</string>
-    <string name="preference_dolby_vision_mode">Modo Dolby Vision</string>
-    <string name="preference_force_dolby_vision">Forzar Dolby Vision</string>
-    <string name="preference_remove_dolby_vision">Desactivar Dolby Vision</string>
+    <string name="preference_dolby_vision_mode" tools:ignore="Typos">Modo Dolby Vision</string>
+    <string name="preference_force_dolby_vision" tools:ignore="Typos">Forzar Dolby Vision</string>
+    <string name="preference_remove_dolby_vision" tools:ignore="Typos">Desactivar Dolby Vision</string>
     <string name="preference_cutout_short_edges">Pantalla completa con recortes de pantalla</string>
     <string name="preference_cutout_short_edges_summary">Permite visualización de vídeo horizontal en pantalla completa con recortes</string>
     <string name="toast_cutout_aspect_ratio_fix">Activar vídeo a pantalla completa con recortes para que la relación de aspecto sea correcta.</string>
@@ -892,7 +892,7 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="media_library_export_in_progress">Exportando biblioteca de medios, credenciales y accesos directos</string>
     <string name="media_library_import_in_progress">Importando biblioteca de medios, credenciales y accesos directos</string>
     <string name="media_library_export_success">Biblioteca de medios, credenciales y accesos directos exportados con éxito a:\n%s</string>
-    <string name="media_library_import_success">Biblioteca de medios, credenciales y accesos directos importados con éxito. Reiniciando la aplicación...</string>
+    <string name="media_library_import_success">Biblioteca de medios, credenciales y accesos directos importados con éxito. Reiniciando la aplicación&#8230;</string>
     <string name="media_library_import_error">Error importando biblioteca de medios</string>
     <string name="media_library_export_error">Error al exportar la biblioteca de medios</string>
     <string name="media_library_export_dir_not_found">Directorio de exportación no encontrado</string>

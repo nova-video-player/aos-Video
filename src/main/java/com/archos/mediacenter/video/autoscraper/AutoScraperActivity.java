@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.autoscraper;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
@@ -1008,6 +1009,7 @@ public class AutoScraperActivity extends AppCompatActivity implements AbsListVie
         }
 
         @Override
+        @SuppressLint("SetTextI18n")
         public void bindView(View view, Context context, Cursor cursor) {
             // Default values
             int duration = 0;

@@ -48,7 +48,7 @@
                 style="@android:style/Widget.Holo.Button.Borderless.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@android:string/yes" />
+                android:text="@android:string/ok" />
         </LinearLayout>
     </LinearLayout>
 
@@ -88,7 +88,7 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@android:string/no" />
+                android:text="@string/no" />
 
             <Button
                 android:id="@+id/empty_view_yes_button"
@@ -96,7 +96,7 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@android:string/yes" />
+                android:text="@string/yes" />
         </LinearLayout>
     </LinearLayout>
 

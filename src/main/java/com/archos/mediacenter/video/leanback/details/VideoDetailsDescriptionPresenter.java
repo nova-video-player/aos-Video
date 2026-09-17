@@ -15,6 +15,7 @@
 package com.archos.mediacenter.video.leanback.details;
 
 import android.animation.LayoutTransition;
+import android.annotation.SuppressLint;
 import android.graphics.Paint;
 import androidx.leanback.widget.Presenter;
 import android.view.LayoutInflater;
@@ -231,6 +232,7 @@ public class VideoDetailsDescriptionPresenter extends Presenter {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void setTextOrSetGoneIfZero(TextView mTextView, float value) {
         if (value == 0f) {
             mTextView.setVisibility(View.GONE);

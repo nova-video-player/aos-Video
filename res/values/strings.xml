@@ -185,7 +185,7 @@
     <string name="episode_name">Episode</string>
     <string name="episode_season">Season</string>
     <string name="episode_specials">Specials</string>
-    <string name="episode_identification">Season %1$d Episode %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">Season %1$d Episode %2$d</string>
     <string name="season_identification">Season %1$d</string>
     <string name="next_episode">Next episode</string>
     <string name="list_episodes">List episodes</string>
@@ -215,11 +215,11 @@
     <string name="scraper_no_files">No files to process</string>
     <string name="scraper_no_new_files">No new files to process</string>
     <string name="scraper_no_new_files_in_folder">No new files to process in this folder</string>
-    <string name="scraper_folder_no_files">However there are still %d videos for which no info was found formerly.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">However there are still %d videos for which no info was found formerly.</string>
     <string name="scraper_folder_no_file">However there is still one video for which no info was found formerly.</string>
     <string name="scraper_folder_try_again">Would you like to try again?</string>
     <string name="scraper_notification_title">Searching info online</string>
-    <string name="scraper_notification_progress">"%1$d of %2$d files processed</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">"%1$d of %2$d files processed</string>
     <string name="scraper_no_episode_found">No episode found</string>
     <string name="scraper_suggest_message">You can search posters and info online for your videos by means of the \'Search info online\' menu.</string>
 
@@ -415,7 +415,7 @@
     <string name="dialog_subloader_nonetwork_title">No Internet connection</string>
     <string name="dialog_subloader_nonetwork_message">An internet connection is required to download subtitles</string>
     <string name="dialog_subloader_connecting">Connecting to opensubtitles service…</string>
-    <string name="opensubtitles_quota_download_remaining">OpenSubtitles download quota: %1$d/%2$d remaining</string>
+    <string name="opensubtitles_quota_download_remaining" tools:ignore="PluralsCandidate">OpenSubtitles download quota: %1$d/%2$d remaining</string>
     <string name="dialog_subloader_credentials">Opensubtitles credentials</string>
     <string name="dialog_subloader_credentials_empty">You must specify a valid username and password!</string>
     <string name="toast_subloader_credentials_empty">Provide your opensubtitles credentials in settings to be able to download more subtitles</string>
@@ -870,9 +870,9 @@
     <string name="connect_trakt">Connect to Trakt</string>
     <string name="trakt_sync_status_never">Not yet synced</string>
     <string name="trakt_sync_status_ok">Last sync: %1$s ago</string>
-    <string name="trakt_sync_status_ok_skipped">Last sync: %1$s ago · %2$d video(s) pending (unknown duration)</string>
-    <string name="trakt_sync_status_ok_meta_skipped">Last sync: %1$s ago · %2$d scrobble(s) skipped (missing metadata)</string>
-    <string name="trakt_sync_status_ok_both_skipped">Last sync: %1$s ago · %2$d pending (unknown duration), %3$d scrobble(s) skipped (missing metadata)</string>
+    <string name="trakt_sync_status_ok_skipped" tools:ignore="PluralsCandidate">Last sync: %1$s ago · %2$d video(s) pending (unknown duration)</string>
+    <string name="trakt_sync_status_ok_meta_skipped" tools:ignore="PluralsCandidate">Last sync: %1$s ago · %2$d scrobble(s) skipped (missing metadata)</string>
+    <string name="trakt_sync_status_ok_both_skipped" tools:ignore="PluralsCandidate">Last sync: %1$s ago · %2$d pending (unknown duration), %3$d scrobble(s) skipped (missing metadata)</string>
     <string name="trakt_sync_status_error_network">Last sync failed: network error</string>
     <string name="trakt_sync_status_error_auth">Authentication error — please sign in again</string>
     <string name="trakt_sync_status_error_locked">Account locked — unlock on trakt.tv</string>
@@ -983,7 +983,7 @@
     <string name="media_library_export_in_progress">Exporting media library, credentials, and shortcuts</string>
     <string name="media_library_import_in_progress">Importing media library, credentials, and shortcuts</string>
     <string name="media_library_export_success">Media library, credentials, and shortcuts exported successfully to:\n%s</string>
-    <string name="media_library_import_success">Media library, credentials, and shortcuts imported successfully. Restarting app...</string>
+    <string name="media_library_import_success">Media library, credentials, and shortcuts imported successfully. Restarting app&#8230;</string>
     <string name="media_library_import_error">Error importing media library</string>
     <string name="media_library_export_error">Error exporting media library</string>
     <string name="media_library_export_dir_not_found">Export directory not found</string>
@@ -1030,7 +1030,7 @@
     <string name="supported_refresh_rates">Supported refresh rates:</string>
 
     <string name="upgrade_info">Upgrade information</string>
-    <string name="v5_v6_upgrade_info">WARNING: this Nova major update requires to rescan all video collection for multimedia information re-aquisition.
+    <string name="v5_v6_upgrade_info">WARNING: this Nova major update requires to rescan all video collection for multimedia information re-acquisition.
         It is strongly advised to restart from a clean install to avoid problems. Please check FAQ for details.</string>
 
     <string name="external_player_service_title">External player playback</string>
@@ -1047,5 +1047,11 @@
     <string name="s_commentary">commentary</string>
     <string name="s_lyrics">lyrics</string>
     <string name="s_karaoke">karaoke</string>
+
+    <string name="ui_choice_title">It seems that you are using Nova Video Player on a TV.\nIf it is actually the case, we recommend using our new TV user interface</string>
+    <string name="ui_choice_tv">TV interface</string>
+    <string name="ui_choice_tablet">Tablet interface</string>
+    <string name="ui_choice_help">You can change your choice in the application settings later</string>
+    <string name="workgroup">Workgroup</string>
 
 </resources>

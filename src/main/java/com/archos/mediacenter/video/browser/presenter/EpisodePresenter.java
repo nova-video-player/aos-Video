@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.browser.presenter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
@@ -41,6 +42,7 @@ public class EpisodePresenter extends VideoPresenter implements Presenter {
     }
 
     @Override
+    @SuppressLint("SetTextI18n")
     public View bindView(View view, Object object, ThumbnailEngine.Result result, int positionInAdapter) {
         super.bindView(view, object, result, positionInAdapter);
         Episode episode = (Episode) object;

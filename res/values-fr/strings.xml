@@ -891,7 +891,7 @@
     <string name="media_library_export_in_progress">Exportation de la médiathèque, des identifiants et des raccourcis</string>
     <string name="media_library_import_in_progress">Importation de la médiathèque, des identifiants et des raccourcis</string>
     <string name="media_library_export_success">Médiathèque, identifiants et raccourcis exportés avec succès vers:\n%s</string>
-    <string name="media_library_import_success">La médiathèque, les identifiants et les raccourcis ont été importés avec succès. Redémarrage de l\'application...</string>
+    <string name="media_library_import_success">La médiathèque, les identifiants et les raccourcis ont été importés avec succès. Redémarrage de l\'application&#8230;</string>
     <string name="media_library_import_error">Erreur lors de l\'importation de la médiathèque</string>
     <string name="media_library_export_error">Erreur lors de l\'exportation de la médiathèque</string>
     <string name="media_library_export_dir_not_found">Répertoire d\'exportation introuvable</string>

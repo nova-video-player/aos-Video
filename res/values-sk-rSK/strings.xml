@@ -122,7 +122,7 @@
     <string name="non_scraped_videos_format">Videá bez stiahnutia  -  %d</string>
     <string name="cannot_open_video">Nie je možné otvoriť video</string>
     <string name="confirm_delete">Naozaj ho chcete odstrániť?</string>
-    <string name="deleting">Počkajte, prosím, kým sa odstráni...</string>
+    <string name="deleting">Počkajte, prosím, kým sa odstráni&#8230;</string>
     <string name="directory_deleted">Priečinok bol odstránený</string>
     <string name="resume">Pokračovať</string>
     <string name="remote_resume">Pokračovať (na sieti)</string>
@@ -140,8 +140,8 @@
     <string name="scrap_series_change">Zmeniť informácie o sérii</string>
     <string name="scrap_change_confirmation">Zmeniť všetky epizódy z\n\t\"%1$s\"\nna\n\t\"%2$s\"?</string>
     <string name="scrap_change_title">Úprava všetkých epizód</string>
-    <string name="scrap_change_initializing">Inicializácia...</string>
-    <string name="scrap_change_finalizing">Dokončovanie...</string>
+    <string name="scrap_change_initializing">Inicializácia&#8230;</string>
+    <string name="scrap_change_finalizing">Dokončovanie&#8230;</string>
     <string name="scrap_get_title">Získavanie informácií</string>
     <!-- Generic strings for Movies or TV shows -->
     <string name="scrap_director">Režisér</string>
@@ -180,14 +180,14 @@
         <item quantity="many">%d epizód videných </item>
         <item quantity="other">%d epizód videných </item>
     </plurals>
-    <string name="scrap_processing">Získavanie metadát...</string>
+    <string name="scrap_processing">Získavanie metadát&#8230;</string>
     <string name="scrap_no_network">Nie je pripojené k sieti</string>
     <string name="scrap_enable_network_first">"Aby ste mohli spustiť túto aplikáciu, najprv sa pripojte k sieti"</string>
     <string name="scrap_failed">Film nebo nájdení v online databáze</string>
     <string name="start_auto_scraper_activity">Vyhľadať informácie online</string>
     <string name="scraper_settigns">Plagáty &amp; popisy</string>
     <string name="scrap_status_initial">Čakanie v poradí</string>
-    <string name="scrap_status_busy">Vyhľadávanie...</string>
+    <string name="scrap_status_busy">Vyhľadávanie&#8230;</string>
     <string name="scrap_status_success">Aktualizované</string>
     <string name="scrap_status_failed">Informácie neboli nájdené</string>
     <string name="scrap_status_rejected">Informácie boli odstránené</string>
@@ -215,7 +215,7 @@
     <string name="rescan_storage_summary">Skenovanie interných pamäťových zariadení, pamäťových kariet SD a pamäťových zariadení USB</string>
     <string name="preference_display_all_files">Zobrazenie všetkých súborov v prehliadači</string>
     <string name="preference_display_all_files_summary">Zobrazenie aj iných ako video súborov</string>
-    <string name="info_processing">Kontrola vlastností médií...</string>
+    <string name="info_processing">Kontrola vlastností médií&#8230;</string>
     <string name="info_audio">Zvuk</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Titulky</string>
@@ -374,11 +374,11 @@
     <!-- Subloader -->
     <string name="get_subtitles_online">Získajte titulky online</string>
     <string name="toast_subloader_service_unreachable">výpadok webovej služby s titulkami</string>
-    <string name="dialog_subloader_copying">Kopírovanie titulkov...</string>
+    <string name="dialog_subloader_copying">Kopírovanie titulkov&#8230;</string>
     <string name="dialog_subloader_fails">Titulky neboli nájdené pre:</string>
     <string name="dialog_subloader_nonetwork_title">Žiadne internetové pripojenie</string>
     <string name="dialog_subloader_nonetwork_message">Na stiahnutie titulkov je potrebné internetové pripojenie</string>
-    <string name="dialog_subloader_connecting">Pripojenie na www.opensubtitles.com...</string>
+    <string name="dialog_subloader_connecting">Pripojenie na www.opensubtitles.com&#8230;</string>
     <string name="opensubtitles_quota_download_remaining">Kvóta na stiahnutie z OpenSubtitles: Zostávajúce %1$d/%2$d</string>
     <string name="dialog_subloader_credentials">Prihlasovacie údaje k titulkom Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Musíte zadať platné meno používateľa a heslo!</string>
@@ -422,7 +422,7 @@
     <string name="error_protocol_not_supported">Chyba: protokol nie je podporovaný</string>
     <string name="error_loading_torrent">Chyba pri načítaní torrentu</string>
     <string name="error_downloading_not_enough_space">Chyba pri sťahovaní torrentu: nie je dostatok miesta</string>
-    <string name="loading_torrent">Načítanie torrentu...</string>
+    <string name="loading_torrent">Načítanie torrentu&#8230;</string>
     <string name="error_no_video_file">Žiadne video súbory</string>
     <string name="torrent_file_to_play">Výber súboru na prehrávanie</string>
     <!-- Shortcuts -->
@@ -625,7 +625,7 @@
     <string name="network_nfo_parse_summary">Čítanie súborov Kodi \'.nfo\' počas (opätovného) skenovania na zhromažďovanie informácií o médiách a plagátoch.</string>
     <string name="ask_to_mail_media_DB">Chcete poslať svoju databázu videí vývojovému tímu Novy, aby ste im pomohli skontrolovať chybu?\n\nVideo súbory sa (samozrejme) neposielajú, ale posiela sa úplný zoznam názvov súborov.</string>
     <string name="no_email_installed">Nenájdená e-mailová aplikácia</string>
-    <string name="zipping_library_before_mailing">Zipovanie kópie knižnice pred odoslaním...</string>
+    <string name="zipping_library_before_mailing">Zipovanie kópie knižnice pred odoslaním&#8230;</string>
     <string name="zipped_library_mail_subject">Výpis databázy Nova Video</string>
     <string name="zipped_library_mail_text">Opíšte, prosím, problém, ktorý máte\n\n</string>
     <string name="sort_mode">Spôsob triedenia</string>
@@ -785,7 +785,7 @@
     <string name="trakt_toast_syncing">Synchronizácia s Trakt&#8230;</string>
     <string name="trakt_device_auth_step1">1. V telefóne alebo počítači prejdite na:</string>
     <string name="trakt_device_auth_step2">2. Zadajte tento kód:</string>
-    <string name="trakt_device_auth_waiting">Čakám na autorizáciu...</string>
+    <string name="trakt_device_auth_waiting">Čakám na autorizáciu&#8230;</string>
     <string name="trakt_device_auth_success">Pripojenie úspešné!</string>
     <string name="trakt_device_auth_error">Overenie sa nepodarilo. Skúste to znovu.</string>
     <string name="trakt_device_auth_invalid_code">Nepodarilo sa získať platný kód zariadenia od služby Trakt. Skúste to prosím znova.</string>
@@ -899,7 +899,7 @@
     <string name="media_library_export_in_progress">Exportovanie knižnice médií, poverení a skratiek</string>
     <string name="media_library_import_in_progress">Importovanie knižnice médií, poverení a skratiek</string>
     <string name="media_library_export_success">Knižnica médií, poverenia a skratky boli úspešne exportované do:\n%s</string>
-    <string name="media_library_import_success">Knižnica médií, poverenia a skratky boli úspešne importované. Reštartovanie aplikácie...</string>
+    <string name="media_library_import_success">Knižnica médií, poverenia a skratky boli úspešne importované. Reštartovanie aplikácie&#8230;</string>
     <string name="media_library_import_error">Chyba pri importovaní mediálnej knižnice</string>
     <string name="media_library_export_error">Chyba pri exporte mediálnej knižnice</string>
     <string name="media_library_export_dir_not_found">Adresár pre export nebol nájdený</string>

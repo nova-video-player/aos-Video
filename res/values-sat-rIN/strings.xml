@@ -121,7 +121,7 @@
     <string name="non_scraped_videos">ᱵᱟᱝ ᱥᱠᱨᱮᱯ ᱵᱷᱤᱰᱤᱭᱳ ᱠᱚ</string>
     <string name="cannot_open_video">ᱱᱚᱣᱟ ᱵᱷᱤᱰᱤᱭᱳ ᱵᱟᱝ ᱡᱷᱤᱡᱽ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ</string>
     <string name="confirm_delete">ᱪᱮᱫ ᱟᱢ ᱥᱟᱹᱨᱤ ᱜᱮ ᱱᱚᱣᱟ ᱰᱤᱞᱤᱴ ᱥᱟᱱᱟᱭᱮᱫ ᱢᱮᱭᱟ?</string>
-    <string name="deleting">ᱰᱤᱞᱤᱴ ᱚᱠᱛᱚ ᱫᱟᱭᱟ ᱠᱟᱛᱮ ᱛᱟᱺᱜᱤᱭ ᱢᱮ...</string>
+    <string name="deleting">ᱰᱤᱞᱤᱴ ᱚᱠᱛᱚ ᱫᱟᱭᱟ ᱠᱟᱛᱮ ᱛᱟᱺᱜᱤᱭ ᱢᱮ&#8230;</string>
     <string name="directory_deleted">ᱯᱷᱚᱞᱰᱟᱨ ᱫᱚ ᱰᱤᱞᱤᱴ ᱮᱱᱟ</string>
     <string name="resume">ᱮᱦᱳᱵ ᱟᱨᱩ</string>
     <string name="remote_resume">ᱨᱤᱢᱚᱴ ᱨᱮᱡᱩᱢ</string>
@@ -139,7 +139,7 @@
     <string name="scrap_series_change">ᱥᱮᱨᱤᱡᱽ ᱵᱟᱯᱟᱰᱟᱭ ᱵᱚᱫᱚᱞ ᱢᱮ</string>
     <!-- Generic strings for Movies or TV shows -->
     <!-- Specific strings for TV shows -->
-    <string name="scrap_status_busy">ᱥᱮᱸᱫᱽᱨᱟ...</string>
+    <string name="scrap_status_busy">ᱥᱮᱸᱫᱽᱨᱟ&#8230;</string>
     <string name="scrap_status_success">ᱱᱟᱣᱟ ᱟᱠᱟᱱᱟ</string>
     <string name="scrap_status_failed">ᱵᱟᱰᱟᱭ ᱵᱟᱝ ᱧᱟᱢ ᱟᱠᱟᱱᱟ</string>
     <string name="scrap_status_rejected">ᱵᱟᱰᱟᱭ ᱚᱪᱚᱜ ᱮᱱᱟ</string>
@@ -167,7 +167,7 @@
     <string name="rescan_storage_summary">ᱫᱚᱦᱲᱟ ᱥᱠᱮᱱ ᱢᱮ ᱤᱱᱴᱚᱨᱱᱟᱞ, SD ᱠᱟᱨᱰ ᱟᱨ USB ᱥᱴᱚᱨᱮᱡᱽ ᱰᱤᱵᱷᱟᱭᱤᱥ ᱠᱚ</string>
     <string name="preference_display_all_files">ᱵᱽᱨᱟᱣᱩᱡᱟᱨ ᱨᱮ ᱥᱟᱱᱟᱢ ᱨᱮᱫ ᱠᱚ ᱩᱫᱩᱜ ᱢᱮ</string>
     <string name="preference_display_all_files_summary">ᱱᱚᱱ-ᱵᱷᱤᱰᱤᱭᱳ ᱨᱮᱫ ᱠᱚ ᱦᱚᱸ ᱩᱫᱩᱜ ᱢᱮ</string>
-    <string name="info_processing">ᱢᱤᱰᱤᱭᱟ ᱜᱩᱱ ᱠᱚ ᱧᱮᱞ ᱵᱤᱰᱟᱹᱣ...</string>
+    <string name="info_processing">ᱢᱤᱰᱤᱭᱟ ᱜᱩᱱ ᱠᱚ ᱧᱮᱞ ᱵᱤᱰᱟᱹᱣ&#8230;</string>
     <string name="info_audio">ᱚᱰᱤᱭᱚ</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">ᱥᱟᱵᱽᱴᱟᱭᱤᱴᱟᱞ</string>

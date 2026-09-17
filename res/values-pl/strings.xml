@@ -899,7 +899,7 @@
     <string name="media_library_export_in_progress">Eksportuj bibliotekę multimediów, dane uwierzytelniające i skróty</string>
     <string name="media_library_import_in_progress">Importuj bibliotekę multimediów, dane uwierzytelniające i skróty</string>
     <string name="media_library_export_success">Biblioteka multimediów, dane uwierzytelniające i skróty wyeksportowane pomyślnie do:\n%s</string>
-    <string name="media_library_import_success">Biblioteka multimediów, dane uwierzytelniające, i skróty zaimportowane pomyślnie. Trwa ponowne uruchamianie aplikacji...</string>
+    <string name="media_library_import_success">Biblioteka multimediów, dane uwierzytelniające, i skróty zaimportowane pomyślnie. Trwa ponowne uruchamianie aplikacji&#8230;</string>
     <string name="media_library_import_error">Błąd podczas importowania biblioteki multimediów</string>
     <string name="media_library_export_error">Błąd podczas eksportowania biblioteki multimediów</string>
     <string name="media_library_export_dir_not_found">Nie znaleziono katalogu eksportu</string>

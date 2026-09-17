@@ -17,9 +17,11 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/smbshortcut_width"
     android:layout_height="@dimen/smbshortcut_height"
-    android:background="@color/lb_basic_card_info_bg_color">
+    android:background="@color/lb_basic_card_info_bg_color"
+    tools:ignore="HardcodedText">
 
     <ImageView
         android:id="@+id/image"

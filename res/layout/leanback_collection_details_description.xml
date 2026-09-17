@@ -17,6 +17,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -27,7 +28,7 @@
         style="?attr/detailsDescriptionTitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Title can be long"
+        tools:text="Title can be long"
         />
 
     <RelativeLayout
@@ -86,6 +87,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/details_group"
         android:maxLines="3"
-        android:text="blabla blabla blabla blabla"
+        tools:text="blabla blabla blabla blabla"
         />
 </RelativeLayout>
