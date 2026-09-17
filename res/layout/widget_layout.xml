@@ -25,20 +25,21 @@
         android:id="@+id/label"
         android:layout_width="match_parent"
         android:layout_height="28dip"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="#60000000"
-        android:gravity="left|center_vertical"
+        android:gravity="start|center_vertical"
         android:maxLines="1"
-        android:paddingLeft="42dip"
-        android:paddingRight="14dip"
+        android:paddingStart="42dip"
+        android:paddingEnd="14dip"
         style="@style/textAppearanceSmall" />
 
     <ImageView
         android:id="@+id/app_icon"
         android:layout_width="28dip"
         android:layout_height="28dip"
-        app:srcCompat="@mipmap/nova" />
+        app:srcCompat="@mipmap/nova"
+        android:contentDescription="@null" />
 
     <GridView
         android:id="@+id/gridview"

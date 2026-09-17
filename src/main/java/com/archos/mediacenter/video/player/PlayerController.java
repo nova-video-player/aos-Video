@@ -327,6 +327,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
          */
         setRecursiveOnTouchListener(new OnTouchListener() {
             
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 // TODO Auto-generated method stub
@@ -338,6 +339,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }, MiscUtils.getActionBarView(mWindow));
         mActionBar.getCustomView().setOnTouchListener(new View.OnTouchListener() {
 
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (mVolumeBar!= null && event.getX() <= mVolumeBar.getWidth()) {
@@ -1887,6 +1889,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         return false;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     public boolean onTouch(View v, MotionEvent event) {
         if (event == null) return false;
         return gestureDetector.onTouchEvent(event);

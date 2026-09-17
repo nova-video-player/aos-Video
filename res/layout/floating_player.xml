@@ -90,7 +90,7 @@
         <include
             android:layout_width="@dimen/player2014_bar_width"
             android:layout_height="fill_parent"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             layout="@layout/player_controller_left"
             android:id="@+id/volume_bar"
             android:layout_alignParentBottom="true"
@@ -101,50 +101,48 @@
             android:layout_height="30dip"
 
             android:src="@drawable/video_reduce_selector"
-            android:layout_marginLeft="3dip"
-            android:layout_marginRight="3dip"
+            android:layout_marginStart="3dip"
+            android:layout_marginEnd="3dip"
             android:layout_alignParentTop="true"
             android:layout_toStartOf="@+id/discrete_button"
-            android:layout_toLeftOf="@+id/discrete_button"
-            />
+        android:contentDescription="@null" />
         <ImageView
             android:id="@+id/discrete_button"
             android:layout_width="30dip"
             android:layout_height="30dip"
             android:src="@drawable/video_fade_selector"
-            android:layout_marginLeft="3dip"
-            android:layout_marginRight="3dip"
+            android:layout_marginStart="3dip"
+            android:layout_marginEnd="3dip"
             android:layout_alignParentTop="true"
             android:layout_toStartOf="@+id/fullscreen_button"
-            android:layout_toLeftOf="@+id/fullscreen_button"
-            />
+        android:contentDescription="@null" />
         <ImageView
             android:id="@+id/fullscreen_button"
             android:layout_width="30dip"
             android:layout_height="30dip"
             android:src="@drawable/video_format_fullscreen_selector"
-            android:layout_marginLeft="3dip"
-            android:layout_marginRight="3dip"
+            android:layout_marginStart="3dip"
+            android:layout_marginEnd="3dip"
             android:layout_alignParentTop="true"
             android:layout_toStartOf="@+id/exit_button"
-            android:layout_toLeftOf="@+id/exit_button"
-            />
+        android:contentDescription="@string/player_window_mode" />
         <ImageView
             android:id="@+id/exit_button"
             android:layout_width="30dip"
             android:layout_height="30dip"
             android:src="@drawable/video_exit_selector"
-            android:layout_marginLeft="3dip"
-            android:layout_marginRight="3dip"
+            android:layout_marginStart="3dip"
+            android:layout_marginEnd="3dip"
             android:layout_alignParentTop="true"
             android:layout_alignEnd="@+id/seek_progress"
-            android:layout_alignRight="@+id/seek_progress"/>
+        android:contentDescription="@null" />
         <ImageView
             android:id="@+id/play_button"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/video_play"/>
+            android:src="@drawable/video_play"
+        android:contentDescription="@string/play_selection" />
 
 
 
@@ -154,8 +152,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="13dip"
-            android:paddingLeft="10dip"
-            android:paddingRight="10dip"
+            android:paddingStart="10dip"
+            android:paddingEnd="10dip"
             android:layout_alignParentBottom="true"
             android:paddingTop="20dip" android:background="@drawable/player_bar_2014"
             android:layout_toEndOf="@+id/volume_bar" />

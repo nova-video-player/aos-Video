@@ -12,13 +12,15 @@
         android:layout_height="wrap_content"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@null" />
     <ImageView
         android:id="@+id/trakt_watched"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/poster"
+        android:layout_alignEnd="@id/poster"
         android:layout_alignTop="@id/poster"
         app:srcCompat="@drawable/watched_icon_corner"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:contentDescription="@null" />
 </RelativeLayout>

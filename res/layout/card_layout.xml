@@ -39,7 +39,8 @@
                     <ImageView
                         android:id="@+id/imageView"
                         android:layout_width="wrap_content"
-                        android:layout_height="60dp" />
+                        android:layout_height="60dp"
+        android:contentDescription="@null" />
 
                     <TextView
                         android:id="@+id/info_text"
@@ -61,8 +62,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="1dp"
                 android:background="@null"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
                 android:textColor="#ffffff"
                 card_view:autoSizeTextType="uniform"
                 card_view:autoSizeMinTextSize="6sp"

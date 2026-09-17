@@ -435,12 +435,12 @@ public class PosterImageCardPresenter extends Presenter {
                 layer.add(posterDrawable);
                 if (mWatchedFlag) {
                     BitmapDrawable icon = (BitmapDrawable) ContextCompat.getDrawable(mContext, R.drawable.watched_icon_corner);
-                    icon.setGravity(Gravity.TOP | Gravity.RIGHT);
+                    icon.setGravity(Gravity.TOP | Gravity.END);
                     layer.add(icon);
                 }
                 if (mPinnedFlag) {
                     BitmapDrawable icon = (BitmapDrawable) ContextCompat.getDrawable(mContext, R.drawable.pinned_icon_corner);
-                    icon.setGravity(Gravity.TOP | Gravity.LEFT);
+                    icon.setGravity(Gravity.TOP | Gravity.START);
                     layer.add(icon);
                 }
                 finalDrawable = new LayerDrawable(layer.toArray(new Drawable[layer.size()]));

@@ -44,7 +44,7 @@
             style="?attr/detailsDescriptionTitleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dip"
+            android:layout_marginEnd="16dip"
             android:text="S1E3"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -74,7 +74,7 @@
             style="?attr/detailsDescriptionSubtitleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="32dip"
+            android:layout_marginEnd="32dip"
             android:maxLines="2"
             android:singleLine="false"
             android:text="2015" />
@@ -84,8 +84,8 @@
             style="?attr/detailsDescriptionSubtitleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="32dip"
-            android:layout_toRightOf="@+id/date"
+            android:layout_marginEnd="32dip"
+            android:layout_toEndOf="@+id/date"
             android:text="1h35" />
 
         <TextView
@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dip"
-            android:layout_toRightOf="@+id/duration"
+            android:layout_toEndOf="@+id/duration"
             app:drawableLeftCompat="@drawable/little_star"
             android:drawablePadding="4dip"
             android:text="7,3" />
@@ -112,8 +112,8 @@
                 android:id="@+id/content_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_marginBottom="1dp"
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -126,8 +126,9 @@
             android:id="@+id/trakt_watched"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/content_rating_container"
-            app:srcCompat="@drawable/trakt_watched" />
+            android:layout_toEndOf="@+id/content_rating_container"
+            app:srcCompat="@drawable/trakt_watched"
+        android:contentDescription="@null" />
 
         <LinearLayout
             android:id="@+id/badges"
@@ -150,8 +151,8 @@
                     android:id="@+id/badge_3d"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:layout_marginBottom="1dp"
                     android:gravity="center_horizontal"
                     android:text="3D"
@@ -174,8 +175,8 @@
                     android:id="@+id/badge_resolution"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:layout_marginBottom="1dp"
                     android:gravity="center_horizontal"
                     android:text="4k"
@@ -198,8 +199,8 @@
                     android:id="@+id/badge_audio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:layout_marginBottom="1dp"
                     android:gravity="center_horizontal"
                     android:text="7.1"

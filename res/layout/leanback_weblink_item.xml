@@ -32,14 +32,16 @@
             android:layout_height="70dip"
             android:layout_centerHorizontal="true"
             android:scaleType="center"
-            app:srcCompat="@drawable/leanback_icon_item_selection_circle" />
+            app:srcCompat="@drawable/leanback_icon_item_selection_circle"
+        android:contentDescription="@null" />
 
         <ImageView
             android:id="@+id/image"
             android:layout_width="150dip"
             android:layout_height="70dip"
             android:padding="12dip"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+        android:contentDescription="@null" />
 
     </RelativeLayout>
 </merge>

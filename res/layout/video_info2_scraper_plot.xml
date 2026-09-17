@@ -16,8 +16,8 @@
     <LinearLayout
 
         android:id="@+id/scraper_plot_content"
-        android:paddingLeft="@dimen/video_info_margin_simple"
-        android:paddingRight="@dimen/video_info_margin_simple"
+        android:paddingStart="@dimen/video_info_margin_simple"
+        android:paddingEnd="@dimen/video_info_margin_simple"
         android:paddingTop="@dimen/video_info_margin_half"
         android:paddingBottom="@dimen/video_info_margin_half"
         android:layout_width="fill_parent"
@@ -39,12 +39,12 @@
             <TextView
                 android:id="@+id/scrap_date"
                 style="@style/VideoInfoFileInfo"
-                android:layout_marginRight="@dimen/video_info_margin_half" />
+                android:layout_marginEnd="@dimen/video_info_margin_half" />
 
             <TextView
                 android:id="@+id/scrap_duration"
                 style="@style/VideoInfoFileInfo"
-                android:layout_marginRight="@dimen/video_info_margin_half"
+                android:layout_marginEnd="@dimen/video_info_margin_half"
                 />
 
 
@@ -55,7 +55,7 @@
                 android:drawablePadding="2dip"
                 app:drawableLeftCompat="@drawable/little_star"
                 android:gravity="center_vertical"
-                android:layout_marginRight="@dimen/video_info_margin_half"/>
+                android:layout_marginEnd="@dimen/video_info_margin_half"/>
 
             <LinearLayout
                 android:id="@+id/content_rating_container"
@@ -69,8 +69,8 @@
                     android:textSize="@dimen/video_info_small_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:layout_marginBottom="1dp"
                     android:gravity="center_horizontal"
                     android:textAppearance="?android:attr/textAppearanceMedium"

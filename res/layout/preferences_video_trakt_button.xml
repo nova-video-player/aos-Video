@@ -9,7 +9,8 @@
         style="@style/VideoPreferenceAboutButton"
         android:src="@drawable/trakt_banner"
         android:scaleType="centerInside"
-        android:adjustViewBounds="true">
+        android:adjustViewBounds="true"
+        android:contentDescription="@null">
     </ImageView>
 
 </LinearLayout>

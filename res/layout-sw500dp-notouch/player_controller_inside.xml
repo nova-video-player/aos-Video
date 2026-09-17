@@ -28,7 +28,7 @@
         android:layout_width="@dimen/player2014_bar_width"
         android:layout_height="fill_parent"
         android:layout_above="@+id/control_bar"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         layout="@layout/player_controller_left" />
 
@@ -59,28 +59,30 @@
         <ImageButton
             android:id="@+id/pause"
             style="@style/PlayerControlButton"
-            android:paddingLeft="@dimen/player_button_padding_full"
-            android:paddingRight="@dimen/player_button_padding_small"
+            android:paddingStart="@dimen/player_button_padding_full"
+            android:paddingEnd="@dimen/player_button_padding_small"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            ads:srcCompat="@drawable/video_play_selector" />
+            ads:srcCompat="@drawable/video_play_selector"
+        android:contentDescription="@string/play_selection" />
 
         <ImageButton
             android:id="@+id/backward"
             style="@style/PlayerControlButton"
-            android:paddingLeft="0dip"
-            android:paddingRight="@dimen/player_button_padding_half"
+            android:paddingStart="0dip"
+            android:paddingEnd="@dimen/player_button_padding_half"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            ads:srcCompat="@drawable/video_backward_selector" />
+            ads:srcCompat="@drawable/video_backward_selector"
+        android:contentDescription="@null" />
 
         <RelativeLayout
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:paddingLeft="0dip"
-            android:paddingRight="0dip" >
+            android:paddingStart="0dip"
+            android:paddingEnd="0dip" >
 
             <com.archos.mediacenter.utils.seekbar.ArchosProgressSlider
                 android:id="@+id/seek_progress"
@@ -88,22 +90,22 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="10dip"
+                android:layout_marginStart="10dip"
                 android:layout_marginTop="2dip"
-                android:layout_marginRight="10dip"
+                android:layout_marginEnd="10dip"
                 android:layout_gravity="center"
-                android:layout_toLeftOf="@id/time"
-                android:layout_toRightOf="@id/time_current" />
+                android:layout_toStartOf="@id/time"
+                android:layout_toEndOf="@id/time_current" />
 
             <TextView
                 android:id="@+id/time_current"
                 android:layout_width="60dip"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="30dip"
+                android:layout_marginStart="30dip"
                 android:layout_gravity="center"
-                android:gravity="right"
+                android:gravity="end"
                 android:textSize="@dimen/player_time_text_size"
                 android:textColor="#ffffff"
                 android:textStyle="bold" />
@@ -114,9 +116,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginTop="2dip"
-                android:layout_marginRight="10dip"
+                android:layout_marginEnd="10dip"
                 android:layout_gravity="center"
                 android:visibility="gone" />
 
@@ -125,8 +127,8 @@
                 android:layout_width="60dip"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="30dip"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="30dip"
                 android:layout_gravity="center"
                 android:textSize="@dimen/player_time_text_size"
                 android:textColor="#ffffff"
@@ -136,30 +138,33 @@
         <ImageButton
             android:id="@+id/forward"
             style="@style/PlayerControlButton"
-            android:paddingLeft="@dimen/player_button_padding_half"
-            android:paddingRight="@dimen/player_button_padding_small"
+            android:paddingStart="@dimen/player_button_padding_half"
+            android:paddingEnd="@dimen/player_button_padding_small"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            ads:srcCompat="@drawable/video_forward_selector" />
+            ads:srcCompat="@drawable/video_forward_selector"
+        android:contentDescription="@null" />
         
         <ImageButton
             android:id="@+id/fullscreen_cutouts"
             style="@style/PlayerControlButton"
-            android:paddingLeft="@dimen/player_button_padding_small"
-            android:paddingRight="@dimen/player_button_padding_full"
+            android:paddingStart="@dimen/player_button_padding_small"
+            android:paddingEnd="@dimen/player_button_padding_full"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:visibility="gone"
-            ads:srcCompat="@drawable/video_fullscreen_cutout_off" />
+            ads:srcCompat="@drawable/video_fullscreen_cutout_off"
+        android:contentDescription="@null" />
 
         <ImageButton
             android:id="@+id/format"
             style="@style/PlayerControlButton"
-            android:paddingLeft="@dimen/player_button_padding_small"
-            android:paddingRight="@dimen/player_button_padding_full"
+            android:paddingStart="@dimen/player_button_padding_small"
+            android:paddingEnd="@dimen/player_button_padding_full"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            ads:srcCompat="@drawable/video_format_0" />
+            ads:srcCompat="@drawable/video_format_0"
+        android:contentDescription="@null" />
 
     </LinearLayout>
 
@@ -178,8 +183,8 @@
         android:layout_marginTop="60dp"
         android:layout_alignParentStart="true"
         android:layout_marginStart="46dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         android:paddingTop="6sp"
         android:paddingBottom="6sp"/>
 
@@ -198,8 +203,8 @@
         android:layout_marginTop="60dp"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="30dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         android:paddingTop="6sp"
         android:paddingBottom="6sp"/>
 

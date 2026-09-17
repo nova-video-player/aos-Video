@@ -41,7 +41,7 @@ category, and contents.
             android:layout_width="wrap_content"
             android:elevation="4dp"
             android:translationZ="4dp"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
@@ -68,7 +68,7 @@ category, and contents.
         <FrameLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/left_view"
+            android:layout_toEndOf="@+id/left_view"
             android:layout_height="match_parent" />
 
         <!-- Private mode indicator icon -->
@@ -82,7 +82,8 @@ category, and contents.
             android:src="@drawable/ic_incognito"
             android:visibility="gone"
             android:alpha="0.6"
-            android:importantForAccessibility="no" />
+            android:importantForAccessibility="no"
+        android:contentDescription="@null" />
 
     </RelativeLayout>
 

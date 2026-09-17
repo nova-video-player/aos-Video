@@ -28,7 +28,8 @@
         android:layout_height="match_parent"
         android:alpha="0"
         android:importantForAccessibility="no"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@null" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_browse_fragment"

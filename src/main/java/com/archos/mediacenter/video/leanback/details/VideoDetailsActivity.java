@@ -57,11 +57,11 @@ public class VideoDetailsActivity extends LeanbackActivity {
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
 
         // Always set the exit transition because the "Next Episode" transition may be needed (we don't know yet)
-        getWindow().setExitTransition(new Slide(Gravity.LEFT));
+        getWindow().setExitTransition(new Slide(Gravity.START));
 
         // Set the enter animation only when asked (i.e. it is a "Next Episode" transition)
         if (getIntent().getBooleanExtra(SLIDE_TRANSITION_EXTRA, false)) {
-            int direction = getIntent().getIntExtra(SLIDE_DIRECTION_EXTRA, Gravity.RIGHT);
+            int direction = getIntent().getIntExtra(SLIDE_DIRECTION_EXTRA, Gravity.END);
             getWindow().setEnterTransition(new Slide(direction));
         }
 

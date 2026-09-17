@@ -2436,11 +2436,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 break;
             case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
             case KeyEvent.KEYCODE_MEDIA_NEXT:
-                direction = Gravity.RIGHT;
+                direction = Gravity.END;
                 break;
             case KeyEvent.KEYCODE_MEDIA_REWIND:
             case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                direction = Gravity.LEFT;
+                direction = Gravity.START;
                 break;
         }
 
@@ -2465,13 +2465,13 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     c.moveToPosition(i);
                     Video v = (Video)new CompatibleCursorMapperConverter(new VideoCursorMapper()).convert(c);
                     if (v.getId() == mVideo.getId()) {
-                        if (direction == Gravity.LEFT) {
+                        if (direction == Gravity.START) {
                             if (i - 1 >= 0)
                                 c.moveToPosition(i - 1);
                             else
                                 c.moveToPosition(c.getCount() - 1);
                         }
-                        else if (direction == Gravity.RIGHT) {
+                        else if (direction == Gravity.END) {
                             if (i + 1 <= c.getCount() - 1)
                                 c.moveToPosition(i + 1);
                             else
@@ -2485,10 +2485,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 }
                 c.close();
                 if (video != null) {
-                    if (direction == Gravity.LEFT)
-                        getActivity().getWindow().setExitTransition(new Slide(Gravity.RIGHT));
-                    else if (direction == Gravity.RIGHT)
-                        getActivity().getWindow().setExitTransition(new Slide(Gravity.LEFT));
+                    if (direction == Gravity.START)
+                        getActivity().getWindow().setExitTransition(new Slide(Gravity.END));
+                    else if (direction == Gravity.END)
+                        getActivity().getWindow().setExitTransition(new Slide(Gravity.START));
                     final Intent intent = new Intent(getActivity(), VideoDetailsActivity.class);
                     intent.putExtra(VideoDetailsFragment.EXTRA_VIDEO, video);
                     intent.putExtra(VideoDetailsActivity.SLIDE_TRANSITION_EXTRA, true);

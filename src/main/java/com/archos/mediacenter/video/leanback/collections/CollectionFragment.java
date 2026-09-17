@@ -621,11 +621,11 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                 break;
             case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
             case KeyEvent.KEYCODE_MEDIA_NEXT:
-                direction = Gravity.RIGHT;
+                direction = Gravity.END;
                 break;
             case KeyEvent.KEYCODE_MEDIA_REWIND:
             case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                direction = Gravity.LEFT;
+                direction = Gravity.START;
                 break;
         }
 
@@ -646,13 +646,13 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                     c.moveToPosition(i);
                     Collection mc = (Collection)new CompatibleCursorMapperConverter(new CollectionCursorMapper()).convert(c);
                     if (mc.getCollectionId() == mCollection.getCollectionId()) {
-                        if (direction == Gravity.LEFT) {
+                        if (direction == Gravity.START) {
                             if (i - 1 >= 0)
                                 c.moveToPosition(i - 1);
                             else
                                 c.moveToPosition(c.getCount() - 1);
                         }
-                        else if (direction == Gravity.RIGHT) {
+                        else if (direction == Gravity.END) {
                             if (i + 1 <= c.getCount() - 1)
                                 c.moveToPosition(i + 1);
                             else
@@ -660,16 +660,16 @@ public class CollectionFragment extends DetailsFragmentWithLessTopOffset impleme
                         }
                         Collection nc = (Collection)new CompatibleCursorMapperConverter(new CollectionCursorMapper()).convert(c);
                         if (nc.getCollectionId() != mc.getCollectionId())
-                            collection = nc;
+                             collection = nc;
                         break;
                     }
                 }
                 c.close();
                 if (collection != null) {
-                    if (direction == Gravity.LEFT)
-                        getActivity().getWindow().setExitTransition(new Slide(Gravity.RIGHT));
-                    else if (direction == Gravity.RIGHT)
-                        getActivity().getWindow().setExitTransition(new Slide(Gravity.LEFT));
+                    if (direction == Gravity.START)
+                        getActivity().getWindow().setExitTransition(new Slide(Gravity.END));
+                    else if (direction == Gravity.END)
+                        getActivity().getWindow().setExitTransition(new Slide(Gravity.START));
                     final Intent intent = new Intent(getActivity(), CollectionActivity.class);
                     intent.putExtra(CollectionFragment.EXTRA_COLLECTION, collection);
                     intent.putExtra(CollectionActivity.SLIDE_TRANSITION_EXTRA, true);

@@ -9,9 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/share_path"
+        android:inputType="textUri"
+        android:importantForAutofill="no"
         android:layout_marginBottom="8dip"
-        android:layout_marginLeft="16dip"
-        android:layout_marginRight="16dip"
+        android:layout_marginStart="16dip"
+        android:layout_marginEnd="16dip"
         android:layout_marginTop="8dip"
         android:text="smb://"
         tools:ignore="HardcodedText" />

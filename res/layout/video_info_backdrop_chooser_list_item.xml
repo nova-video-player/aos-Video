@@ -9,5 +9,5 @@
 	    android:layout_height="@dimen/video_info_backdrop_chooser_image_height"
 	    android:layout_margin="@dimen/video_info_backdrop_chooser_image_margin"
 	    android:background="@color/video_info_list_item_background"
-	    />
+        android:contentDescription="@null" />
 </FrameLayout>

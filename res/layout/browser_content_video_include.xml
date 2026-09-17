@@ -10,7 +10,7 @@
         android:id="@+id/menu_anchor"
         android:layout_width="1px"
         android:layout_height="1px"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:visibility="invisible" />
 
@@ -18,7 +18,7 @@
         android:id="@+id/connection_button"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/connection_button_height"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="@dimen/connection_button_vertical_spacing"
         android:paddingStart="@dimen/connection_button_padding"

@@ -27,7 +27,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/video_info_margin_simple"
+            android:layout_marginStart="@dimen/video_info_margin_simple"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="bottom">
@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_weight="2"
                 android:layout_height="0dp"
-                android:paddingRight="@dimen/video_info_margin_simple"
+                android:paddingEnd="@dimen/video_info_margin_simple"
                 android:layout_marginBottom="@dimen/video_info_margin_half"
                 android:id="@+id/secondary_titlebar"
                 android:paddingTop="@dimen/video_info_margin_half"

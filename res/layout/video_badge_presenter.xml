@@ -7,7 +7,7 @@
     android:id="@+id/horizontalScrollView"
     card_view:cardCornerRadius="12dp"
     android:layout_below="@+id/short_scrap_plot"
-    android:layout_marginRight="@dimen/video_info_margin_simple"
+    android:layout_marginEnd="@dimen/video_info_margin_simple"
     android:layout_marginTop="@dimen/video_info_cardview_top_margin"
     android:layout_height="wrap_content"
     >
@@ -19,8 +19,8 @@
         android:orientation="vertical"
         android:minWidth="120dp"
         android:paddingTop="15dip"
-        android:paddingLeft="0dip"
-        android:paddingRight="0dip"
+        android:paddingStart="0dip"
+        android:paddingEnd="0dip"
         android:paddingBottom="5dip"
         >
 
@@ -32,14 +32,14 @@
             android:scaleType="center"
             android:layout_marginBottom="8dip"
             card_view:srcCompat="@drawable/badge_3d"
-            />
+        android:contentDescription="@null" />
         <ImageView
             android:id="@+id/image_res"
             android:layout_width="58dp"
             android:layout_height="match_parent"
             android:scaleType="center"
             card_view:srcCompat="@drawable/badge_1080"
-            />
+        android:contentDescription="@null" />
 
 
         <TextView

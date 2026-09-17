@@ -28,21 +28,24 @@
         android:layout_height="@dimen/list_thumbnail_height"
         android:layout_alignParentStart="true"
         android:adjustViewBounds="false"
-        android:background="@color/ui_accent_dark"/>
+        android:background="@color/ui_accent_dark"
+        android:contentDescription="@null" />
 
     <ImageView
         android:id="@+id/watched_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/image"
-        app:srcCompat="@drawable/watched_icon_corner"/>
+        app:srcCompat="@drawable/watched_icon_corner"
+        android:contentDescription="@null" />
 
     <ImageView
         android:id="@+id/pinned_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/image"
-        app:srcCompat="@drawable/pinned_icon_corner"/>
+        app:srcCompat="@drawable/pinned_icon_corner"
+        android:contentDescription="@null" />
 
     <View android:id="@+id/resume_bar"
         android:layout_width="66dip"

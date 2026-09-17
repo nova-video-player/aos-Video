@@ -5,5 +5,6 @@
     android:layout_height="@dimen/video_info_poster_chooser_height"
     android:layout_margin="0dp"
     android:background="@color/video_info_list_item_background"
-    android:padding="0dp" />
+    android:padding="0dp"
+        android:contentDescription="@null" />
 

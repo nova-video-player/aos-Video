@@ -11,7 +11,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_gravity="left"
+    android:layout_gravity="start"
     card_view:cardBackgroundColor="@color/grid_item_background"
     card_view:cardCornerRadius="12dp"
     android:layout_width="wrap_content"
@@ -43,7 +43,8 @@
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+        android:contentDescription="@null" />
 
             <TextView
                 android:id="@+id/episode_number_badge"
@@ -66,35 +67,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/thumbnail_container"
-            android:layout_alignRight="@id/thumbnail_container"
+            android:layout_alignEnd="@id/thumbnail_container"
             android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
-            android:layout_marginRight="@dimen/video_3d_label_margin_grid"
+            android:layout_marginEnd="@dimen/video_3d_label_margin_grid"
             card_view:srcCompat="@drawable/label_3d"
-            android:visibility="gone" />
+            android:visibility="gone"
+        android:contentDescription="@null" />
 
         <ImageView
             android:id="@+id/trakt_watched"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/thumbnail_container"
+            android:layout_alignEnd="@id/thumbnail_container"
             android:layout_alignTop="@id/thumbnail_container"
             card_view:srcCompat="@drawable/watched_icon_corner"
-            android:visibility="gone" />
+            android:visibility="gone"
+        android:contentDescription="@null" />
 
         <ImageView
             android:id="@+id/trakt_library"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/thumbnail_container"
+            android:layout_alignStart="@id/thumbnail_container"
             android:layout_alignTop="@id/thumbnail_container"
-            android:layout_marginLeft="@dimen/video_trakt_library_margin_left"
+            android:layout_marginStart="@dimen/video_trakt_library_margin_left"
             card_view:srcCompat="@drawable/label_trakt_library"
-            android:visibility="gone" />
+            android:visibility="gone"
+        android:contentDescription="@null" />
         <include
             layout="@layout/video_occurencies"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/thumbnail_container"
+            android:layout_alignStart="@id/thumbnail_container"
             android:layout_alignTop="@id/thumbnail_container"
             android:visibility="gone" />
 
@@ -114,21 +118,21 @@
             android:layout_below="@id/thumbnail_container"
             android:clickable="false"
             android:indeterminate="false"
-            android:paddingLeft="0dip"
+            android:paddingStart="0dip"
             android:progress="70" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/resume_notif"
-            android:layout_marginLeft="4dip" >
+            android:layout_marginStart="4dip" >
 
             <!-- line 1 = name -->
 
             <TextView
                 android:id="@+id/name"
                 style="@style/BrowserTinyText.Name"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:gravity="top|center"
                 android:paddingTop="5dip" />
@@ -138,11 +142,11 @@
                 android:id="@+id/bottom_row"
                 android:layout_width="match_parent"
                 android:layout_height="18dip"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
                 android:layout_below="@id/name"
-                android:layout_marginRight="6dip"
-                android:gravity="center_vertical|right"
+                android:layout_marginEnd="6dip"
+                android:gravity="center_vertical|end"
                 android:orientation="horizontal" >
 
                 <com.archos.mediacenter.utils.ImageLabel
@@ -150,7 +154,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginRight="8dip"
+                    android:layout_marginEnd="8dip"
                     android:clickable="false"
                     android:visibility="gone"
                     android:src="@drawable/label_bookmark_small" />
@@ -160,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginRight="8dip"
+                    android:layout_marginEnd="8dip"
                     android:clickable="false"
                     android:visibility="gone"
                     android:src="@drawable/label_subtitles_small" />
@@ -170,28 +174,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginRight="2dip"
+                    android:layout_marginEnd="2dip"
                     android:clickable="false"
                     android:visibility="gone"
                     android:src="@drawable/label_network_small" />
                 <TextView
                     android:id="@+id/info"
                     style="@style/BrowserTinyText.Info"
-                    android:layout_marginLeft="4dip" />
+                    android:layout_marginStart="4dip" />
             </LinearLayout>
 
             <ImageButton
                 android:id="@+id/expanded"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_below="@id/name"
                 android:background="@drawable/list_selector_holo_dark"
                 android:paddingBottom="2dip"
-                android:paddingLeft="4dip"
-                android:paddingRight="14dip"
+                android:paddingStart="4dip"
+                android:paddingEnd="14dip"
                 android:paddingTop="2dip"
-                card_view:srcCompat="@drawable/label_infoarrow" />
+                card_view:srcCompat="@drawable/label_infoarrow"
+        android:contentDescription="@null" />
         </RelativeLayout>
 
     </RelativeLayout>

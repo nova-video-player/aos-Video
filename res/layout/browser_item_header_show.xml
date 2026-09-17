@@ -23,44 +23,48 @@
         android:layout_width="@dimen/video_details_poster_width"
         android:layout_height="@dimen/video_details_poster_height"
         android:layout_marginBottom="@dimen/video_details_poster_margin_bottom"
-        android:layout_marginLeft="@dimen/video_details_poster_margin_left"
-        android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"
+        android:layout_marginStart="@dimen/video_details_poster_margin_left"
+        android:layout_marginEnd="@dimen/content_list_space_between_thumbnail_and_name"
         android:layout_marginTop="@dimen/video_details_poster_margin_top"
         android:background="@drawable/rounded_rectangle"
         android:clipToOutline="true"
         tools:ignore="UnusedAttribute"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@null" />
 
     <ImageView
         android:id="@+id/flag_3d"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/thumbnail"
-        android:layout_alignRight="@id/thumbnail"
+        android:layout_alignEnd="@id/thumbnail"
         android:layout_marginBottom="@dimen/video_3d_label_margin_grid"
-        android:layout_marginRight="@dimen/video_3d_label_margin_grid"
+        android:layout_marginEnd="@dimen/video_3d_label_margin_grid"
         app:srcCompat="@drawable/label_3d"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:contentDescription="@null" />
 
     <ImageView
         android:id="@+id/trakt_watched"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/thumbnail"
+        android:layout_alignEnd="@id/thumbnail"
         android:layout_alignTop="@id/thumbnail"
         app:srcCompat="@drawable/watched_icon_corner"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:contentDescription="@null" />
 
     <ImageView
         android:id="@+id/trakt_library"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/thumbnail"
+        android:layout_alignStart="@id/thumbnail"
         android:layout_alignTop="@id/thumbnail"
-        android:layout_marginLeft="@dimen/video_trakt_library_margin_left"
+        android:layout_marginStart="@dimen/video_trakt_library_margin_left"
         android:scaleType="fitStart"
         app:srcCompat="@drawable/label_trakt_library"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:contentDescription="@null" />
 
     <!-- TV show title -->
 
@@ -69,7 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dip"
-        android:layout_toRightOf="@id/thumbnail"
+        android:layout_toEndOf="@id/thumbnail"
         android:paddingTop="8dip"
         android:singleLine="true"
         style="@style/textAppearanceLarge"
@@ -84,7 +88,7 @@
         android:layout_below="@id/name"
         android:layout_marginTop="3dip"
         android:paddingTop="0dip"
-        android:layout_toRightOf="@id/thumbnail"
+        android:layout_toEndOf="@id/thumbnail"
         android:singleLine="true"
         android:layout_width="match_parent" />
     <com.archos.mediacenter.video.browser.BrowserByIndexedVideos.ArchosFadeView
@@ -92,7 +96,6 @@
         android:layout_height="wrap_content"
         android:requiresFadingEdge="vertical"
         android:layout_toEndOf="@+id/thumbnail"
-        android:layout_toRightOf="@+id/thumbnail"
         android:layout_below="@+id/number"
         android:layout_above="@+id/view_more"
         android:id="@+id/scrollView"
@@ -102,7 +105,7 @@
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/plot"
-            android:paddingRight="5dp"
+            android:paddingEnd="5dp"
 
 
             />
@@ -117,13 +120,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/thumbnail"
-        android:layout_toRightOf="@+id/thumbnail"
         android:ellipsize="end"
-        android:gravity="right"
-        android:paddingRight="5dp"
+        android:gravity="end"
+        android:paddingEnd="5dp"
         android:paddingBottom="5dp"
         android:text="@string/view_more"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -145,8 +146,8 @@
             android:textSize="@dimen/video_info_small_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_marginBottom="1dp"
             android:gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -168,7 +169,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/network"
             android:paddingTop="15dp"
-            android:paddingRight="5dp"
+            android:paddingEnd="5dp"
             android:textSize="@dimen/video_info_small_text"
             />
     </LinearLayout>
@@ -187,7 +188,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/premiered"
             android:paddingTop="15dp"
-            android:paddingRight="5dp"
+            android:paddingEnd="5dp"
             android:textSize="@dimen/video_info_small_text"
             />
     </LinearLayout>

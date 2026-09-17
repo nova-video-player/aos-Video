@@ -27,7 +27,8 @@
         android:adjustViewBounds="true"
         android:maxWidth="@dimen/lb_browse_title_icon_max_width"
         app:srcCompat="@null"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:contentDescription="@null" />
 
     <androidx.leanback.widget.SearchOrbView
         android:id="@+id/title_orb"

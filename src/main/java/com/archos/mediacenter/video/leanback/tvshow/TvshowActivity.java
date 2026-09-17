@@ -34,7 +34,7 @@ public class TvshowActivity extends LeanbackActivity {
         super.onCreate(savedInstanceState);
         // Set the enter animation only when asked
         if (getIntent().getBooleanExtra(SLIDE_TRANSITION_EXTRA, false)) {
-            int direction = getIntent().getIntExtra(SLIDE_DIRECTION_EXTRA, Gravity.RIGHT);
+            int direction = getIntent().getIntExtra(SLIDE_DIRECTION_EXTRA, Gravity.END);
             getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
             getWindow().setEnterTransition(new Slide(direction));
         }

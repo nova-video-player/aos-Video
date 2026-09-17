@@ -32,8 +32,8 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/video_info_margin_simple"
-                android:paddingRight="@dimen/video_info_margin_simple"
+                android:paddingStart="@dimen/video_info_margin_simple"
+                android:paddingEnd="@dimen/video_info_margin_simple"
                 android:paddingTop="@dimen/video_info_margin_half"
                 android:paddingBottom="@dimen/video_info_margin_half"
 
@@ -54,8 +54,8 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/video_info_margin_simple"
-            android:paddingRight="@dimen/video_info_margin_simple"
+            android:paddingStart="@dimen/video_info_margin_simple"
+            android:paddingEnd="@dimen/video_info_margin_simple"
             android:paddingTop="@dimen/video_info_margin_half"
             android:paddingBottom="@dimen/video_info_margin_half"
             android:orientation="vertical"
@@ -71,7 +71,9 @@
                     android:padding="5dip"
                     android:layout_height="fill_parent"
                     android:background="@drawable/transparent_ripple"
-                    card_view:srcCompat="@drawable/tvdb_logo" />
+                    card_view:srcCompat="@drawable/tvdb_logo"
+                    android:contentDescription="TheTVDB"
+                    tools:ignore="HardcodedText" />
 
                 <ImageButton
                     android:id="@+id/scrap_link_tmdb"
@@ -79,16 +81,20 @@
                     android:padding="5dip"
                     android:layout_height="fill_parent"
                     android:background="@drawable/transparent_ripple"
-                    card_view:srcCompat="@drawable/tmdb_banner" />
+                    card_view:srcCompat="@drawable/tmdb_banner"
+                    android:contentDescription="TMDb"
+                    tools:ignore="HardcodedText" />
 
                 <ImageButton
                     android:id="@+id/scrap_link_imdb"
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="5dip"
+                    android:layout_marginStart="5dip"
                     android:background="@drawable/transparent_ripple"
                     android:layout_height="fill_parent"
                     android:padding="5dip"
-                    card_view:srcCompat="@drawable/imdb_logo" />
+                    card_view:srcCompat="@drawable/imdb_logo"
+                    android:contentDescription="IMDb"
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
             <LinearLayout
 
@@ -105,7 +111,7 @@
                 <TextView
                     android:id="@+id/scrap_director"
                     style="@style/VideoInfoFileInfo"
-                    android:paddingLeft="8dip" />
+                    android:paddingStart="8dip" />
 
             </LinearLayout>
 
@@ -124,7 +130,7 @@
                 <TextView
                     android:id="@+id/scrap_writer"
                     style="@style/VideoInfoFileInfo"
-                    android:paddingLeft="8dip" />
+                    android:paddingStart="8dip" />
 
             </LinearLayout>
 
@@ -139,7 +145,7 @@
                 <TextView
                     android:id="@+id/scrap_studio"
                     style="@style/VideoInfoFileInfo"
-                    android:paddingLeft="8dip" />
+                    android:paddingStart="8dip" />
             </LinearLayout>
 
             <TextView

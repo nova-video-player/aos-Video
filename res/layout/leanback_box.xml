@@ -36,7 +36,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="center"
-            app:srcCompat="@drawable/filetype_video" />
+            app:srcCompat="@drawable/filetype_video"
+        android:contentDescription="@null" />
     </FrameLayout>
 
     <TextView

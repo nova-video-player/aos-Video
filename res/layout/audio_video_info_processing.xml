@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="11dip"
-    android:paddingRight="11dip"
+    android:paddingStart="11dip"
+    android:paddingEnd="11dip"
     android:paddingTop="6dip"
     android:paddingBottom="6dip"
     android:orientation="horizontal" >
@@ -12,7 +12,7 @@
         android:layout_width="30dip"
         android:layout_height="30dip"
         style="@style/Base.Widget.AppCompat.ProgressBar"
-        android:paddingRight="10dip"
+        android:paddingEnd="10dip"
         android:indeterminate="true" />
 
     <TextView android:layout_width="wrap_content"

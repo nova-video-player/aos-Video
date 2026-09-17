@@ -33,10 +33,10 @@
         android:layout_width="75dip"
         android:layout_height="50dip"
         android:layout_marginTop="70dip"
-        android:layout_marginLeft="10dip"
-        android:layout_marginRight="10dip"
-        android:paddingLeft="30dip"
-        android:paddingRight="30dip"
+        android:layout_marginStart="10dip"
+        android:layout_marginEnd="10dip"
+        android:paddingStart="30dip"
+        android:paddingEnd="30dip"
         style="?android:attr/textAppearanceLarge"
         />
 
@@ -44,8 +44,8 @@
         android:id="@+id/minute"
         android:layout_width="70dip"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dip"
-        android:layout_marginRight="5dip"
+        android:layout_marginStart="5dip"
+        android:layout_marginEnd="5dip"
         android:focusable="true"
         android:focusableInTouchMode="true"
         />
@@ -54,8 +54,8 @@
         android:id="@+id/second"
         android:layout_width="70dip"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dip"
-        android:layout_marginRight="5dip"
+        android:layout_marginStart="5dip"
+        android:layout_marginEnd="5dip"
         android:focusable="true"
         android:focusableInTouchMode="true"
         />
@@ -64,8 +64,8 @@
         android:id="@+id/deci_second"
         android:layout_width="70dip"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dip"
-        android:layout_marginRight="5dip"
+        android:layout_marginStart="5dip"
+        android:layout_marginEnd="5dip"
         android:focusable="true"
         android:focusableInTouchMode="true"
         />

@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.player;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -46,7 +47,8 @@ public class ArchosSeekBar extends AppCompatSeekBar {
        mOnEnableListener = listener;
    }
 
-    public boolean  onTouchEvent(MotionEvent event){
+    @SuppressLint("ClickableViewAccessibility") // Delegates to super.onTouchEvent after handling enable listener
+    public boolean onTouchEvent(MotionEvent event){
         if(!isEnabled()) {
             mOnEnableListener.onEnable();
             setEnabled(true);
@@ -54,4 +56,8 @@ public class ArchosSeekBar extends AppCompatSeekBar {
         return super.onTouchEvent(event);
     }
 
+    @Override
+    public boolean performClick() {
+        return super.performClick();
+    }
 }

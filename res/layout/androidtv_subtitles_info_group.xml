@@ -58,7 +58,7 @@
             android:id="@+id/integrated_subtitles_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dip"
+            android:layout_marginStart="16dip"
             android:layout_marginBottom="7dip">
             <TextView
                 android:id="@+id/integrated_subtitles_values_col1"
@@ -89,7 +89,7 @@
             android:id="@+id/external_subtitles_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dip"
+            android:layout_marginStart="16dip"
             android:layout_marginBottom="7dip">
             <TextView
                 android:id="@+id/external_subtitles_values_col1"
@@ -114,7 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dip"
             android:layout_marginBottom="2dip"
-            android:gravity="left" >
+            android:gravity="start" >
 
             <Button
                 android:id="@+id/action_get_online_subtitles"
@@ -129,8 +129,8 @@
                 style="?attr/detailsActionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/lb_action_1_line_height"
-                android:layout_marginLeft="16dip"
-                android:layout_toRightOf="@id/action_get_online_subtitles"
+                android:layout_marginStart="16dip"
+                android:layout_toEndOf="@id/action_get_online_subtitles"
                 android:lines="1"
                 android:text="@string/get_subtitles_on_drive"/>
         </RelativeLayout>

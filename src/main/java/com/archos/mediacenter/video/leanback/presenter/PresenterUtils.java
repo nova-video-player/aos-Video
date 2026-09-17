@@ -79,7 +79,7 @@ public class PresenterUtils {
         ArrayList<Drawable> layer = new ArrayList<>();
         layer.add(posterDrawable);
         BitmapDrawable icon = (BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.watched_icon_corner);
-        icon.setGravity(Gravity.TOP | Gravity.RIGHT);
+        icon.setGravity(Gravity.TOP | Gravity.END);
         layer.add(icon);
         return drawableToBitmap(new LayerDrawable(layer.toArray(new Drawable[layer.size()])));
     }

@@ -27,7 +27,7 @@
         android:layout_width="@dimen/player2014_bar_width"
         android:layout_height="fill_parent"
         android:layout_above="@+id/control_bar"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         layout="@layout/player_controller_left" />
 
@@ -37,7 +37,7 @@
         android:layout_height="fill_parent"
         android:scrollbars="horizontal"
         android:layout_marginTop="?attr/actionBarSize"
-        android:layout_toRightOf="@+id/volume_bar"
+        android:layout_toEndOf="@+id/volume_bar"
         android:layout_above="@+id/control_bar"
         android:layout_gravity="center"
         android:visibility="invisible">
@@ -53,7 +53,7 @@
         android:layout_height="@dimen/player2014_bar_width"
         android:layout_alignParentBottom="true"
         android:descendantFocusability="blocksDescendants"
-        android:paddingLeft="@dimen/player2014_bar_width"
+        android:paddingStart="@dimen/player2014_bar_width"
         android:background="@drawable/player_bar_2014"
         android:orientation="horizontal"
         android:visibility="invisible" >
@@ -61,33 +61,35 @@
         <ImageButton
             android:id="@+id/pause"
             style="@style/PlayerControlButton"
-            android:layout_marginRight="@dimen/player_button_margin_half"
-            android:paddingLeft="@dimen/player_button_padding_full"
-            android:paddingRight="@dimen/player_button_padding_full"
+            android:layout_marginEnd="@dimen/player_button_margin_half"
+            android:paddingStart="@dimen/player_button_padding_full"
+            android:paddingEnd="@dimen/player_button_padding_full"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            ads:srcCompat="@drawable/video_play_selector" />
+            ads:srcCompat="@drawable/video_play_selector"
+        android:contentDescription="@string/play_selection" />
 
         <ImageButton
             android:id="@+id/backward"
             style="@style/PlayerControlButton"
-            android:layout_marginLeft="@dimen/player_button_margin_half"
-            android:layout_marginRight="@dimen/player_button_margin_half"
-            android:paddingLeft="@dimen/player_button_padding_half"
-            android:paddingRight="@dimen/player_button_padding_half"
+            android:layout_marginStart="@dimen/player_button_margin_half"
+            android:layout_marginEnd="@dimen/player_button_margin_half"
+            android:paddingStart="@dimen/player_button_padding_half"
+            android:paddingEnd="@dimen/player_button_padding_half"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            ads:srcCompat="@drawable/video_backward_selector" />
+            ads:srcCompat="@drawable/video_backward_selector"
+        android:contentDescription="@null" />
 
         <RelativeLayout
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:layout_marginLeft="@dimen/player_button_margin_half"
-            android:layout_marginRight="@dimen/player_button_margin_half"
-            android:paddingLeft="@dimen/player_button_padding_half"
-            android:paddingRight="@dimen/player_button_padding_half">
+            android:layout_marginStart="@dimen/player_button_margin_half"
+            android:layout_marginEnd="@dimen/player_button_margin_half"
+            android:paddingStart="@dimen/player_button_padding_half"
+            android:paddingEnd="@dimen/player_button_padding_half">
 
             <com.archos.mediacenter.utils.seekbar.ArchosProgressSlider
                 android:id="@+id/seek_progress"
@@ -102,7 +104,7 @@
                 android:id="@+id/time_current"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:paddingTop="0dip"
                 android:textSize="@dimen/player_time_text_size"
@@ -115,16 +117,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center"
-                android:layout_marginLeft="5dip"
+                android:layout_marginStart="5dip"
                 android:layout_marginTop="12dip"
-                android:layout_toRightOf="@id/time_current"
+                android:layout_toEndOf="@id/time_current"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:paddingTop="0dip"
                 android:textSize="@dimen/player_time_text_size"
@@ -135,34 +137,37 @@
         <ImageButton
             android:id="@+id/forward"
             style="@style/PlayerControlButton"
-            android:layout_marginLeft="@dimen/player_button_margin_half"
-            android:layout_marginRight="@dimen/player_button_margin_half"
-            android:paddingLeft="@dimen/player_button_padding_half"
-            android:paddingRight="@dimen/player_button_padding_half"
+            android:layout_marginStart="@dimen/player_button_margin_half"
+            android:layout_marginEnd="@dimen/player_button_margin_half"
+            android:paddingStart="@dimen/player_button_padding_half"
+            android:paddingEnd="@dimen/player_button_padding_half"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            ads:srcCompat="@drawable/video_forward_selector" />
+            ads:srcCompat="@drawable/video_forward_selector"
+        android:contentDescription="@null" />
         
         <ImageButton
             android:id="@+id/fullscreen_cutouts"
             style="@style/PlayerControlButton"
-            android:layout_marginLeft="@dimen/player_button_margin_half"
-            android:paddingLeft="@dimen/player_button_padding_full"
-            android:paddingRight="@dimen/player_button_padding_full"
+            android:layout_marginStart="@dimen/player_button_margin_half"
+            android:paddingStart="@dimen/player_button_padding_full"
+            android:paddingEnd="@dimen/player_button_padding_full"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:visibility="gone"
-            ads:srcCompat="@drawable/video_fullscreen_cutout_off" />
+            ads:srcCompat="@drawable/video_fullscreen_cutout_off"
+        android:contentDescription="@null" />
 
         <ImageButton
             android:id="@+id/format"
             style="@style/PlayerControlButton"
-            android:layout_marginLeft="@dimen/player_button_margin_half"
-            android:paddingLeft="@dimen/player_button_padding_full"
-            android:paddingRight="@dimen/player_button_padding_full"
+            android:layout_marginStart="@dimen/player_button_margin_half"
+            android:paddingStart="@dimen/player_button_padding_full"
+            android:paddingEnd="@dimen/player_button_padding_full"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            ads:srcCompat="@drawable/video_format_0" />
+            ads:srcCompat="@drawable/video_format_0"
+        android:contentDescription="@null" />
     </LinearLayout>
 
     <TextView android:id="@+id/osd_left"
@@ -180,8 +185,8 @@
         android:layout_marginTop="100dp"
         android:layout_alignParentStart="true"
         android:layout_marginStart="76dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         android:paddingTop="6sp"
         android:paddingBottom="6sp"/>
 
@@ -200,8 +205,8 @@
         android:layout_marginTop="100dp"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="30dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         android:paddingTop="6sp"
         android:paddingBottom="6sp"/>
 
@@ -222,6 +227,7 @@
         android:layout_centerInParent="true"
         android:src="@drawable/central_play_button"
         android:visibility="gone"
-        android:elevation="10dp" />
+        android:elevation="10dp"
+        android:contentDescription="@null" />
 
 </com.archos.mediacenter.video.player.PlayerControlsRelativeLayout>

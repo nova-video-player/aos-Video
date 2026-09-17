@@ -14,7 +14,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		android:gravity="left"
+		android:gravity="start"
 
 		>
 		<TextView android:id="@+id/file_info_header"
@@ -26,9 +26,9 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			android:gravity="left"
-			android:paddingLeft="@dimen/video_info_margin_simple"
-			android:paddingRight="@dimen/video_info_margin_simple"
+			android:gravity="start"
+			android:paddingStart="@dimen/video_info_margin_simple"
+			android:paddingEnd="@dimen/video_info_margin_simple"
 			android:paddingTop="@dimen/video_info_margin_half"
 			android:paddingBottom="@dimen/video_info_margin_half">
 
@@ -68,12 +68,12 @@
 					android:id="@+id/duration"
 					style="@style/VideoInfoFileInfo"
 
-					android:layout_marginRight="50dip"/>
+					android:layout_marginEnd="50dip"/>
 
 				<TextView
 					android:id="@+id/filesize"
 					style="@style/VideoInfoFileInfo"
-					android:layout_marginLeft="10dip"/>
+					android:layout_marginStart="10dip"/>
 			</LinearLayout>
 
 			<!-- Progress Spinner VideoMetaData -->
@@ -97,9 +97,10 @@
 				<ImageView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginRight="12dip"
+					android:layout_marginEnd="12dip"
 					android:layout_marginTop="0dip"
-					app:srcCompat="@drawable/ic_display_settings_24" />
+					app:srcCompat="@drawable/ic_display_settings_24"
+        android:contentDescription="@null" />
 
 				<LinearLayout
 					android:layout_width="match_parent"
@@ -125,9 +126,10 @@
 				<ImageView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginRight="12dip"
+					android:layout_marginEnd="12dip"
 					android:layout_marginTop="0dip"
-					app:srcCompat="@drawable/ic_settings_input_hdmi_24" />
+					app:srcCompat="@drawable/ic_settings_input_hdmi_24"
+        android:contentDescription="@null" />
 
 				<LinearLayout
 					android:layout_width="match_parent"
@@ -153,9 +155,10 @@
 				<ImageView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginRight="12dip"
+					android:layout_marginEnd="12dip"
 					android:layout_marginTop="0dip"
-					app:srcCompat="@drawable/ic_surround_sound_24" />
+					app:srcCompat="@drawable/ic_surround_sound_24"
+        android:contentDescription="@null" />
 
 				<LinearLayout
 					android:layout_width="match_parent"
@@ -181,9 +184,10 @@
 				<ImageView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginRight="12dip"
+					android:layout_marginEnd="12dip"
 					android:layout_marginTop="0dip"
-					app:srcCompat="@drawable/ic_spatial_audio_24" />
+					app:srcCompat="@drawable/ic_spatial_audio_24"
+        android:contentDescription="@null" />
 
 				<LinearLayout
 					android:layout_width="match_parent"

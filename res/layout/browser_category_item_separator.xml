@@ -9,8 +9,8 @@
     android:gravity="center_vertical"
     android:clickable="false"
     android:focusable="false"
-    android:paddingLeft="8dip"
-    android:paddingRight="8dip"
+    android:paddingStart="8dip"
+    android:paddingEnd="8dip"
     android:background="@android:color/transparent"
 
     android:textColor="@color/ui_text_accent"

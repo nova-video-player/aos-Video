@@ -55,7 +55,8 @@ category, and contents.
                 android:src="@drawable/ic_incognito"
                 android:visibility="gone"
                 android:alpha="0.6"
-                android:importantForAccessibility="no" />
+                android:importantForAccessibility="no"
+        android:contentDescription="@null" />
 
         </RelativeLayout>
 
@@ -65,7 +66,7 @@ category, and contents.
             android:layout_width="@dimen/categories_list_width"
             android:id="@+id/category_container"
             android:fitsSystemWindows="true"
-            android:layout_gravity="left|start"
+            android:layout_gravity="start|start"
             android:background="@color/leanback_background"
             android:layout_height="match_parent"
             android:orientation="vertical" >

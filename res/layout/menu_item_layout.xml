@@ -15,9 +15,9 @@
 		android:singleLine="true"
         android:background="@null"
         android:layout_height="match_parent"
-        android:gravity="left"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:gravity="start"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:textColor="#ffffff"
         android:textSize="@dimen/tv_menu_font_size"
         android:buttonTint="#ffedffff" />

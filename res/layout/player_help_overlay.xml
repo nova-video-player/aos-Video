@@ -22,7 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dip"
-            android:background="@drawable/help_overlay_up_arrow_animated" />
+            android:background="@drawable/help_overlay_up_arrow_animated"
+        android:contentDescription="@null" />
 
         <TextView
             android:layout_width="match_parent"

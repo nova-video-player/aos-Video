@@ -20,21 +20,21 @@ access to last video played. -->
         android:layout_width="@dimen/global_resume_playbutton_width"
         android:layout_height="@dimen/global_resume_playbutton_height"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/global_resume_icon_padding_left"
-        android:layout_marginRight="@dimen/global_resume_icon_padding_right"
+        android:layout_marginStart="@dimen/global_resume_icon_padding_left"
+        android:layout_marginEnd="@dimen/global_resume_icon_padding_right"
         android:background="@drawable/nowplaying_btn_background"
         app:srcCompat="@drawable/nowplaying_play"
-        />
+        android:contentDescription="@null" />
 
     <TextView
         android:id="@+id/global_resume_text"
         style="@style/NowPlaying.Video"
-        android:layout_toRightOf="@id/global_resume_btn"
+        android:layout_toEndOf="@id/global_resume_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="3dip"
-        android:layout_marginRight="3dip"
+        android:layout_marginStart="3dip"
+        android:layout_marginEnd="3dip"
         />
 
     <ImageView
@@ -43,6 +43,6 @@ access to last video played. -->
         android:layout_height="match_parent"
         android:background="@drawable/now_playing_tile_pressed"
         android:visibility="gone"
-        />
+        android:contentDescription="@null" />
 
 </com.archos.mediacenter.utils.GlobalResumeView>

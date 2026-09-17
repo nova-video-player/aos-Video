@@ -18,20 +18,21 @@
             android:id="@+id/image_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dip"
-            android:layout_alignParentLeft="true"
+            android:layout_marginStart="32dip"
+            android:layout_alignParentStart="true"
             android:padding="4dip"
-            app:srcCompat="@drawable/arrow_left" />
+            app:srcCompat="@drawable/arrow_left"
+        android:contentDescription="@null" />
 
         <TextView
             android:id="@+id/text_speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/image_previous"
-            android:layout_toLeftOf="@id/image_next"
+            android:layout_toEndOf="@id/image_previous"
+            android:layout_toStartOf="@id/image_next"
             android:gravity="center"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:layout_centerInParent="true"
             android:textColor="#ffffff"
             android:textSize="@dimen/tv_menu_font_size"
@@ -41,10 +42,11 @@
             android:id="@+id/image_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="32dip"
-            android:layout_alignParentRight="true"
+            android:layout_marginEnd="32dip"
+            android:layout_alignParentEnd="true"
             android:padding="4dip"
-            app:srcCompat="@drawable/arrow_right" />
+            app:srcCompat="@drawable/arrow_right"
+        android:contentDescription="@null" />
 
     </RelativeLayout>
 

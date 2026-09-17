@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.player;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ public class AudioDelayPicker extends AudioDelayPickerAbstract {
         this(context, attrs, 0);
     }
 
+    @SuppressLint("ClickableViewAccessibility") // Repeat click handling returns false to preserve standard Button click processing
     public AudioDelayPicker(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 

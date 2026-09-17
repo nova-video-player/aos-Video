@@ -22,13 +22,13 @@
         android:id="@+id/icon"
         android:background="@color/default_icon_background"
         android:layout_marginBottom="@dimen/video_list_thumbnail_margin_bottom"
-        android:layout_marginLeft="@dimen/video_list_thumbnail_margin_left"
-        android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"
+        android:layout_marginStart="@dimen/video_list_thumbnail_margin_left"
+        android:layout_marginEnd="@dimen/content_list_space_between_thumbnail_and_name"
         android:layout_marginTop="@dimen/video_list_thumbnail_margin_top"
         android:layout_width="70dip"
         android:layout_height="70dip"
         android:layout_gravity="center_vertical"
-/>
+        android:contentDescription="@null" />
 
     <!-- Center vertically the lines of text in the area on right of the icon -->
 
@@ -39,7 +39,7 @@
         android:layout_gravity="center_vertical"
         android:orientation="vertical"
         android:paddingBottom="8dip"
-        android:paddingRight="8dip"
+        android:paddingEnd="8dip"
         android:paddingTop="8dip" >
 
         <TextView

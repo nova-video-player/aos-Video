@@ -8,8 +8,8 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
-    android:paddingLeft="40dip"
-    android:paddingRight="40dip"
+    android:paddingStart="40dip"
+    android:paddingEnd="40dip"
     android:singleLine="true"
 
     android:ellipsize="middle"

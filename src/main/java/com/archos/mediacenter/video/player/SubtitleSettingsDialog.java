@@ -322,6 +322,7 @@ public class SubtitleSettingsDialog extends AlertDialog implements
                 break;
 
             case MotionEvent.ACTION_UP:
+                view.performClick();
                 view.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
                 mHandler.removeMessages(REPEAT_TOUCH_ACTION);
                 mTouchedView = null;

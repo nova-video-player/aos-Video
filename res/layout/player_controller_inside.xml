@@ -51,8 +51,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
         android:background="@drawable/player_bar_2014"
         android:descendantFocusability="blocksDescendants"
@@ -62,8 +62,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"
+            android:layout_marginStart="10dip"
+            android:layout_marginEnd="10dip"
             android:gravity="center_vertical" >
 
             <com.archos.mediacenter.utils.seekbar.ArchosProgressSlider
@@ -79,7 +79,7 @@
                 android:id="@+id/time_current"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:paddingTop="10dip"
                 android:textSize="@dimen/player_time_text_size"
@@ -92,16 +92,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center"
-                android:layout_marginLeft="5dip"
+                android:layout_marginStart="5dip"
                 android:layout_marginTop="12dip"
-                android:layout_toRightOf="@id/time_current"
+                android:layout_toEndOf="@id/time_current"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:paddingTop="10dip"
                 android:textSize="@dimen/player_time_text_size"
@@ -122,66 +122,71 @@
                 android:layout_width="58dp"
                 android:layout_height="58dp"
                 android:paddingBottom="10dip"
-                android:paddingLeft="5dip"
-                android:paddingRight="5dip"
+                android:paddingStart="5dip"
+                android:paddingEnd="5dip"
                 android:scaleType="fitCenter"
-                ads:srcCompat="@drawable/video_play_selector" />
+                ads:srcCompat="@drawable/video_play_selector"
+        android:contentDescription="@string/play_selection" />
 
             <ImageButton
                 android:id="@+id/backward"
                 style="@style/PlayerControlButton"
-                android:layout_marginLeft="-12dip"
-                android:layout_toLeftOf="@id/pause"
+                android:layout_marginStart="-12dip"
+                android:layout_toStartOf="@id/pause"
                 android:layout_width="58dp"
                 android:layout_height="58dp"
                 android:paddingBottom="10dip"
-                android:paddingLeft="5dip"
-                android:paddingRight="5dip"
+                android:paddingStart="5dip"
+                android:paddingEnd="5dip"
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
-                ads:srcCompat="@drawable/video_backward_selector" />
+                ads:srcCompat="@drawable/video_backward_selector"
+        android:contentDescription="@null" />
 
             <ImageButton
                 android:id="@+id/forward"
                 style="@style/PlayerControlButton"
-                android:layout_toRightOf="@id/pause"
+                android:layout_toEndOf="@id/pause"
                 android:layout_width="58dp"
                 android:layout_height="58dp"
                 android:paddingBottom="10dip"
-                android:paddingLeft="5dip"
-                android:paddingRight="5dip"
+                android:paddingStart="5dip"
+                android:paddingEnd="5dip"
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
-                ads:srcCompat="@drawable/video_forward_selector" />
+                ads:srcCompat="@drawable/video_forward_selector"
+        android:contentDescription="@null" />
 
              <ImageButton
                 android:id="@+id/fullscreen_cutouts"
                 style="@style/PlayerControlButton"
-                android:layout_marginLeft="0dip"
-                android:layout_toRightOf="@id/forward"
+                android:layout_marginStart="0dip"
+                android:layout_toEndOf="@id/forward"
                 android:layout_width="58dp"
                 android:layout_height="58dp"
                 android:paddingBottom="10dip"
-                android:paddingLeft="5dip"
-                android:paddingRight="0dip"
+                android:paddingStart="5dip"
+                android:paddingEnd="0dip"
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:visibility="gone"
-                ads:srcCompat="@drawable/video_fullscreen_cutout_off" />
+                ads:srcCompat="@drawable/video_fullscreen_cutout_off"
+        android:contentDescription="@null" />
 
             <ImageButton
                 android:id="@+id/format"
                 style="@style/PlayerControlButton"
-                android:layout_marginLeft="0dip"
-                android:layout_toRightOf="@id/fullscreen_cutouts"
+                android:layout_marginStart="0dip"
+                android:layout_toEndOf="@id/fullscreen_cutouts"
                 android:layout_width="58dp"
                 android:layout_height="58dp"
                 android:paddingBottom="10dip"
-                android:paddingLeft="5dip"
-                android:paddingRight="2dip"
+                android:paddingStart="5dip"
+                android:paddingEnd="2dip"
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
-                ads:srcCompat="@drawable/video_format_0" />
+                ads:srcCompat="@drawable/video_format_0"
+        android:contentDescription="@null" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -200,8 +205,8 @@
         android:layout_marginTop="80dp"
         android:layout_alignParentStart="true"
         android:layout_marginStart="30dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         android:paddingTop="6sp"
         android:paddingBottom="6sp"/>
 
@@ -220,8 +225,8 @@
         android:layout_marginTop="80dp"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="30dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         android:paddingTop="6sp"
         android:paddingBottom="6sp"/>
 
@@ -233,6 +238,7 @@
         android:layout_centerInParent="true"
         android:src="@drawable/central_play_button"
         android:visibility="gone"
-        android:elevation="10dp" />
+        android:elevation="10dp"
+        android:contentDescription="@null" />
 
 </com.archos.mediacenter.video.player.PlayerControlsRelativeLayout>

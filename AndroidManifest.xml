@@ -101,6 +101,7 @@
 
     <application
         android:name=".CustomApplication"
+        android:supportsRtl="true"
         tools:ignore="PictureInPictureIssue"
         android:allowTaskReparenting="true"
         android:hardwareAccelerated="true"

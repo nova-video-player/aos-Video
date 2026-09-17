@@ -22,9 +22,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="left"
-            android:paddingLeft="@dimen/video_info_margin_half"
-            android:paddingRight="@dimen/video_info_margin_half"
+            android:gravity="start"
+            android:paddingStart="@dimen/video_info_margin_half"
+            android:paddingEnd="@dimen/video_info_margin_half"
             android:paddingTop="@dimen/video_info_margin_quarter"
             android:paddingBottom="@dimen/video_info_margin_quarter"
             android:weightSum="1">
@@ -33,7 +33,7 @@
                 android:padding="@dimen/video_info_margin_half"
                 android:textDirection="locale"
                 style="@style/VideoInfoFileInfo"
-                android:paddingLeft="32dip"/>
+                android:paddingStart="32dip"/>
 
             <Button
                 android:id="@+id/subtitles_online"

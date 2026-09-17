@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.player;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -48,6 +49,7 @@ public class AudioSpeedPicker extends AudioSpeedPickerAbstract {
         this(context, attrs, 0);
     }
 
+    @SuppressLint("ClickableViewAccessibility") // Repeat click handling returns false to preserve standard Button click processing
     public AudioSpeedPicker(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 

@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.browser.BrowserByIndexedVideos;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -43,10 +44,16 @@ public class ArchosFadeView extends ScrollView {
         setVerticalScrollBarEnabled(false);
     }
 
+    @SuppressLint("ClickableViewAccessibility") // Passive scrollview overlay; touch is not consumed
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         return false;
 
+    }
+
+    @Override
+    public boolean performClick() {
+        return super.performClick();
     }
 
     @Override

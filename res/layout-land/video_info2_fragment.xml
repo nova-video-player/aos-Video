@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/genres_banner" />
+        app:srcCompat="@drawable/genres_banner"
+        android:contentDescription="@null" />
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -29,8 +30,8 @@
             <RelativeLayout
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:paddingLeft="@dimen/info_activity_horizontal_margin"
-                android:paddingRight="@dimen/video_info_margin_simple"
+                android:paddingStart="@dimen/info_activity_horizontal_margin"
+                android:paddingEnd="@dimen/video_info_margin_simple"
                 android:paddingTop="@dimen/video_info_margin_half"
                 android:paddingBottom="@dimen/video_info_margin_half"
                 android:orientation="vertical"
@@ -49,7 +50,7 @@
                 app:contentInsetStart="0dp"
                 android:layout_margin="0dp"
                 android:background="@android:color/transparent"
-                android:paddingLeft="0dip">
+                android:paddingStart="0dip">
 
 
             </androidx.appcompat.widget.Toolbar>
@@ -64,8 +65,10 @@
             android:layout_margin="@dimen/fab_margin"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:focusable="true"
             android:src="@drawable/button_icon_play"
-            app:elevation="4dp"/>
+            app:elevation="4dp"
+        android:contentDescription="@string/play_selection" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

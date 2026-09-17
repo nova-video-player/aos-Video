@@ -7,8 +7,8 @@
     android:minHeight="48dip"
     android:gravity="center_vertical"
     android:drawablePadding="24dip"
-    android:paddingLeft="16dip"
-    android:paddingRight="16dip"
+    android:paddingStart="16dip"
+    android:paddingEnd="16dip"
     android:background="@drawable/category_item_background_normal"
 
     android:maxLines="2"

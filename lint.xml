@@ -25,4 +25,10 @@
       cross-density duplication across legacy densities is not maintained.
     -->
     <issue id="IconDensities" severity="ignore" />
+
+    <!--
+      Asymmetrical layout padding/margins are intentional across custom media list
+      rows, badges, and Leanback transport bars.
+    -->
+    <issue id="RtlSymmetry" severity="ignore" />
 </lint>

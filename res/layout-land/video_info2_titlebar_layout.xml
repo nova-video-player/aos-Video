@@ -25,8 +25,8 @@
         <TextView
             android:id="@+id/episode_title_view"
             android:layout_below="@+id/title_view"
-            android:layout_toRightOf="@+id/s_e_text_view"
-            android:layout_marginLeft="@dimen/video_info_margin_half"
+            android:layout_toEndOf="@+id/s_e_text_view"
+            android:layout_marginStart="@dimen/video_info_margin_half"
             android:layout_width="wrap_content"
             android:textStyle="italic"
             android:textSize="@dimen/video_info_medium_text"

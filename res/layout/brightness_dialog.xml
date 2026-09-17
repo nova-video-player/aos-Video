@@ -48,8 +48,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/system"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp" />
         </LinearLayout>
 
         <com.archos.mediacenter.video.player.ArchosSeekBar
@@ -61,8 +61,8 @@
             android:gravity="center"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp" />
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp" />
     </LinearLayout>
 
     <!-- Row: Checkbox -->

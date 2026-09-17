@@ -25,8 +25,8 @@
     android:orientation="vertical"
     android:minWidth="150dp"
     android:paddingTop="15dip"
-    android:paddingLeft="15dip"
-    android:paddingRight="15dip"
+    android:paddingStart="15dip"
+    android:paddingEnd="15dip"
     android:paddingBottom="5dip"
     android:background="@color/lb_basic_card_info_bg_color"
     tools:ignore="Overdraw">
@@ -39,14 +39,14 @@
         android:scaleType="center"
         android:layout_marginBottom="8dip"
         app:srcCompat="@drawable/badge_3d"
-        />
+        android:contentDescription="@null" />
     <ImageView  
         android:id="@+id/image_res"
         android:layout_width="58dp"
         android:layout_height="match_parent"
         android:scaleType="center"
         app:srcCompat="@drawable/badge_1080"
-    />
+        android:contentDescription="@null" />
 
 
     <TextView

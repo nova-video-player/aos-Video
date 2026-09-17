@@ -3,8 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:paddingTop="20dip"
-              android:paddingLeft="@dimen/content_list_left_margin"
-              android:paddingRight="@dimen/content_list_left_margin"
+              android:paddingStart="@dimen/content_list_left_margin"
+              android:paddingEnd="@dimen/content_list_left_margin"
               android:orientation="vertical" >
 
     <TextView style="?android:attr/textAppearanceMedium"

@@ -2,7 +2,7 @@
                   android:id="@+id/file_container"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:layout_marginLeft="@dimen/content_list_left_margin"
+                  android:layout_marginStart="@dimen/content_list_left_margin"
                   android:gravity="center_vertical"
                   android:background="@drawable/list_item_background"
                   android:orientation="horizontal" >
@@ -14,8 +14,9 @@
 	               android:scaleType="center"
 	               android:layout_marginTop="@dimen/video_list_thumbnail_margin_top"
 	               android:layout_marginBottom="@dimen/video_list_thumbnail_margin_bottom"
-	               android:layout_marginLeft="@dimen/video_list_thumbnail_margin_left"
-	               android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name"/>
+	               android:layout_marginStart="@dimen/video_list_thumbnail_margin_left"
+	               android:layout_marginEnd="@dimen/content_list_space_between_thumbnail_and_name"
+        android:contentDescription="@null" />
 
         <LinearLayout android:id="@+id/file_info"
                       android:layout_width="match_parent"

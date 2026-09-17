@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/genres_banner" />
+        app:srcCompat="@drawable/genres_banner"
+        android:contentDescription="@null" />
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -34,7 +35,7 @@
             app:contentInsetStart="0dp"
             android:layout_margin="0dp"
             android:background="@android:color/transparent"
-            android:paddingLeft="0dip">
+            android:paddingStart="0dip">
             <!--text size is programmatically changed -->
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -60,8 +61,8 @@
                 <TextView
                     android:id="@+id/episode_title_view"
                     android:layout_below="@+id/title_view"
-                    android:layout_toRightOf="@+id/s_e_text_view"
-                    android:layout_marginLeft="@dimen/video_info_margin_half"
+                    android:layout_toEndOf="@+id/s_e_text_view"
+                    android:layout_marginStart="@dimen/video_info_margin_half"
                     android:layout_width="wrap_content"
                     android:textStyle="italic"
                     android:textSize="@dimen/video_info_medium_text"
@@ -76,9 +77,11 @@
             android:layout_margin="@dimen/fab_margin"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:focusable="true"
             android:src="@drawable/button_icon_play"
             android:visibility="gone"
-            app:elevation="4dp"/>
+            app:elevation="4dp"
+        android:contentDescription="@string/play_selection" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </RelativeLayout>

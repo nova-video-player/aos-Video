@@ -45,7 +45,7 @@
             style="?attr/detailsDescriptionSubtitleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="32dip"
+            android:layout_marginEnd="32dip"
             android:text="2072"
             />
 
@@ -54,8 +54,8 @@
             style="?attr/detailsDescriptionSubtitleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/date"
-            android:layout_marginRight="32dip"
+            android:layout_toEndOf="@+id/date"
+            android:layout_marginEnd="32dip"
             app:drawableLeftCompat="@drawable/little_star"
             android:drawablePadding="4dip"
             android:text="7,3"
@@ -74,8 +74,8 @@
                 android:id="@+id/content_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_marginBottom="1dp"
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -87,8 +87,9 @@
         <ImageView
             android:id="@+id/trakt_watched"
             android:layout_width="wrap_content"
-            android:layout_toRightOf="@+id/rating"
+            android:layout_toEndOf="@+id/rating"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/trakt_watched" />
+            app:srcCompat="@drawable/trakt_watched"
+        android:contentDescription="@null" />
     </RelativeLayout>
 </RelativeLayout>

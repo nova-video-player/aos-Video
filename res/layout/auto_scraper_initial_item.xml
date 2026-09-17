@@ -11,18 +11,19 @@
         android:id="@+id/thumbnail_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="@dimen/content_list_space_between_thumbnail_and_name" >
+        android:layout_marginEnd="@dimen/content_list_space_between_thumbnail_and_name" >
 
         <ImageView
             android:id="@+id/initial_thumbnail"
             android:layout_width="@dimen/auto_scraper_thumbnail_width"
             android:layout_height="@dimen/auto_scraper_thumbnail_height"
             android:layout_marginBottom="@dimen/auto_scraper_thumbnail_margin_bottom"
-            android:layout_marginLeft="@dimen/auto_scraper_thumbnail_margin_left"
+            android:layout_marginStart="@dimen/auto_scraper_thumbnail_margin_left"
             android:layout_marginTop="@dimen/auto_scraper_thumbnail_margin_top"
-            android:scaleType="center" />
+            android:scaleType="center"
+        android:contentDescription="@null" />
 
         <ProgressBar
             android:id="@+id/initial_spinbar"
@@ -39,7 +40,7 @@
     <TextView
         android:id="@+id/initial_name"
         style="@style/BrowserText.Name"
-        android:layout_toRightOf="@id/thumbnail_container" />
+        android:layout_toEndOf="@id/thumbnail_container" />
 
     <!-- Text line 2 = duration -->
 
@@ -47,7 +48,7 @@
         android:id="@+id/initial_duration"
         style="@style/BrowserText.Info.InfoBlue"
         android:layout_below="@id/initial_name"
-        android:layout_toRightOf="@id/thumbnail_container" />
+        android:layout_toEndOf="@id/thumbnail_container" />
 
     <!-- Text line 3 = status -->
 
@@ -56,7 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/initial_duration"
-        android:layout_toRightOf="@id/thumbnail_container"
+        android:layout_toEndOf="@id/thumbnail_container"
         style="@style/textAppearanceSmall"
         android:typeface="sans" />
 

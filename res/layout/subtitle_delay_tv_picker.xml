@@ -49,18 +49,19 @@
             android:id="@+id/image_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dip"
+            android:layout_marginEnd="16dip"
             android:layout_gravity="center_vertical"
             android:padding="4dip"
-            app:srcCompat="@drawable/arrow_left" />
+            app:srcCompat="@drawable/arrow_left"
+        android:contentDescription="@null" />
 
         <TextView
             android:id="@+id/text_delay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="0dip"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:text="0 m 0.0s"
             android:gravity="center"
             android:minWidth="140dip"
@@ -71,11 +72,12 @@
         <ImageView
             android:id="@+id/image_next"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="16dip"
+            android:layout_marginStart="16dip"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="4dip"
-            app:srcCompat="@drawable/arrow_right" />
+            app:srcCompat="@drawable/arrow_right"
+        android:contentDescription="@null" />
     </LinearLayout>
 
 </com.archos.mediacenter.video.player.tvmenu.SubtitleDelayTVPicker>

@@ -36,7 +36,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:scaleType="fitXY"
-        app:srcCompat="?android:attr/listDivider" />
+        app:srcCompat="?android:attr/listDivider"
+        android:contentDescription="@null" />
     <TextView
         android:text="@string/subtitle_delay_speed"
         android:layout_width="wrap_content"

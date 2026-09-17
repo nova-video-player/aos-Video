@@ -14,7 +14,7 @@
         android:id="@+id/name"
         style="@style/BrowserText.Name.Video"
         android:layout_width="fill_parent"
-        android:layout_toRightOf="@id/left_area" />
+        android:layout_toEndOf="@id/left_area" />
 
     <!-- Movie   : director(s) -->
     <!-- TV show : season + episode numbers -->
@@ -25,7 +25,7 @@
         style="@style/BrowserText.Details"
         android:layout_below="@id/name"
         android:layout_marginTop="8dip"
-        android:layout_toRightOf="@id/left_area"
+        android:layout_toEndOf="@id/left_area"
         android:singleLine="true" />
 
     <!-- Movie   : plot -->
@@ -36,7 +36,7 @@
         android:id="@+id/detail_line_two"
         style="@style/BrowserText.Details"
         android:layout_below="@id/detail_line_one"
-        android:layout_toRightOf="@id/left_area"
+        android:layout_toEndOf="@id/left_area"
         android:ellipsize="end"
         android:textStyle="italic" />
 
@@ -58,7 +58,7 @@
         android:layout_below="@id/detail_line_two"
         android:layout_above="@id/rating_and_date"
         android:layout_marginTop="8dip"
-        android:layout_toRightOf="@id/left_area">
+        android:layout_toEndOf="@id/left_area">
 
         <TextView
             android:id="@+id/detail_line_three"
@@ -86,7 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/bottom_row"
         android:layout_marginBottom="10dip"
-        android:layout_toRightOf="@id/left_area"
+        android:layout_toEndOf="@id/left_area"
         layout="@layout/browser_item_details_date_and_rating" />
 
     <!--
@@ -99,14 +99,15 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/video_list_thumbnail_height"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:paddingBottom="2dip"
-        android:paddingLeft="30dip"
+        android:paddingStart="30dip"
         android:paddingTop="30dip"
-        android:paddingRight="@dimen/list_expanded_padding"
+        android:paddingEnd="@dimen/list_expanded_padding"
         android:visibility="gone"
         android:background="@drawable/list_selector_holo_dark"
-        app:srcCompat="@drawable/label_infoarrow" />
+        app:srcCompat="@drawable/label_infoarrow"
+        android:contentDescription="@null" />
     <!--
          Bottom area = progressbar + info icons 
          NOTE: negative right margin to be close to the (i) icon despite it's large left padding (see above)
@@ -117,11 +118,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/expanded"
-        android:paddingRight="@dimen/content_list_right_margin"
+        android:paddingEnd="@dimen/content_list_right_margin"
         android:paddingBottom="10dip"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_toLeftOf="@id/expanded"
+        android:layout_alignParentEnd="true"
+        android:layout_toStartOf="@id/expanded"
         android:orientation="horizontal" >
 
         <ProgressBar
@@ -131,7 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="3dip"
-            android:layout_marginRight="10dip"
+            android:layout_marginEnd="10dip"
             android:clickable="false"
             android:indeterminate="false"
             android:paddingBottom="0dip"
@@ -144,7 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="8dip"
+            android:layout_marginEnd="8dip"
             android:clickable="false"
             android:src="@drawable/label_resume"
             android:visibility="gone" />
@@ -154,7 +155,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="8dip"
+            android:layout_marginEnd="8dip"
             android:clickable="false"
             android:visibility="gone"
             android:src="@drawable/label_bookmark" />
@@ -164,7 +165,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="8dip"
+            android:layout_marginEnd="8dip"
             android:clickable="false"
             android:visibility="gone"
             android:src="@drawable/label_subtitles" />

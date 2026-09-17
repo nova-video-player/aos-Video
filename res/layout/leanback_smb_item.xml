@@ -30,7 +30,8 @@
         android:layout_above="@+id/textviews"
         android:background="@color/ui_accent_dark"
         android:scaleType="center"
-        app:srcCompat="@drawable/filetype_video_server" />
+        app:srcCompat="@drawable/filetype_video_server"
+        android:contentDescription="@null" />
 
     <LinearLayout
         android:id="@+id/textviews"

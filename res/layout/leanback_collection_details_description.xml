@@ -44,7 +44,8 @@
             android:id="@+id/trakt_watched"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/trakt_watched" />
+            app:srcCompat="@drawable/trakt_watched"
+        android:contentDescription="@null" />
 
         <LinearLayout
             android:id="@+id/badges"
@@ -60,21 +61,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dip"
                 app:srcCompat="@drawable/badge_3d"
-                android:visibility="gone"/>
+                android:visibility="gone"
+        android:contentDescription="@null" />
             <ImageView
                 android:id="@+id/badge_resolution"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dip"
                 app:srcCompat="@drawable/badge_1080"
-                android:visibility="gone"/>
+                android:visibility="gone"
+        android:contentDescription="@null" />
             <ImageView
                 android:id="@+id/badge_audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dip"
                 app:srcCompat="@drawable/badge_5_1"
-                android:visibility="gone"/>
+                android:visibility="gone"
+        android:contentDescription="@null" />
 
         </LinearLayout>
     </RelativeLayout>

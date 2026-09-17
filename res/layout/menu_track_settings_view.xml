@@ -2,20 +2,21 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:minWidth="@dimen/track_menu_minWidth"
-        android:paddingLeft="@dimen/track_menu_padding"
-        android:paddingRight="@dimen/track_menu_padding"
+        android:paddingStart="@dimen/track_menu_padding"
+        android:paddingEnd="@dimen/track_menu_padding"
         android:layout_width="match_parent"
         android:layout_height="@dimen/track_menu_layout_width" >
     <ImageView android:id="@+id/icon"
             android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+        android:contentDescription="@null" />
     <TextView android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/icon"
-            android:layout_marginLeft="8dip"
+            android:layout_toEndOf="@id/icon"
+            android:layout_marginStart="8dip"
             android:layout_centerVertical="true"
             android:textDirection="locale"
             android:textAppearance="?attr/textAppearanceLargePopupMenu"

@@ -10,8 +10,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dip"
-        android:layout_marginLeft="@dimen/video_info_margin_half"
-        android:layout_marginRight="@dimen/video_info_margin_half"
+        android:layout_marginStart="@dimen/video_info_margin_half"
+        android:layout_marginEnd="@dimen/video_info_margin_half"
         android:layout_marginTop="@dimen/video_info_margin_half"
         android:gravity="center"
         android:text="@string/scrap_no_info"
@@ -29,8 +29,10 @@
             android:id="@+id/custom_search_edittext"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:hint="@string/search_title"
+            android:importantForAutofill="no"
             android:imeOptions="actionSearch"
             android:inputType="textNoSuggestions" />
 
@@ -58,8 +60,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/video_info_margin_double"
-        android:layout_marginLeft="@dimen/video_info_margin_half"
-        android:layout_marginRight="@dimen/video_info_margin_half"
+        android:layout_marginStart="@dimen/video_info_margin_half"
+        android:layout_marginEnd="@dimen/video_info_margin_half"
         android:layout_marginTop="@dimen/video_info_margin_double"
         android:gravity="center"
         style="@style/textAppearanceMedium"
@@ -70,8 +72,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/video_info_margin_double"
-        android:layout_marginLeft="@dimen/video_info_margin_half"
-        android:layout_marginRight="@dimen/video_info_margin_half"
+        android:layout_marginStart="@dimen/video_info_margin_half"
+        android:layout_marginEnd="@dimen/video_info_margin_half"
         android:layout_marginTop="@dimen/video_info_margin_double"
         android:gravity="center"
         android:orientation="horizontal"
@@ -82,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:paddingRight="10dip" />
+            android:paddingEnd="10dip" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -96,8 +98,8 @@
         android:id="@+id/search_results_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/video_info_margin_half"
-        android:layout_marginRight="@dimen/video_info_margin_half"
+        android:layout_marginStart="@dimen/video_info_margin_half"
+        android:layout_marginEnd="@dimen/video_info_margin_half"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone" >

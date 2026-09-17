@@ -23,8 +23,8 @@
     android:clipToPadding="false"
     android:paddingBottom="@dimen/lb_details_overview_margin_bottom"
     android:background="@null"
-    android:paddingLeft="@dimen/lb_details_overview_margin_start"
-    android:paddingRight="@dimen/lb_details_overview_margin_end"
+    android:paddingStart="@dimen/lb_details_overview_margin_start"
+    android:paddingEnd="@dimen/lb_details_overview_margin_end"
     >
 
     <!-- Background is applied to this inner layout -->

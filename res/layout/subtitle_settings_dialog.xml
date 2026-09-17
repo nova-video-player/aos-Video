@@ -80,17 +80,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/subtitle_size_seekbar"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_alignTop="@+id/subtitle_size_seekbar"
                     android:padding="@dimen/subtitles_settings_dialog_margin_large"
-                    app:srcCompat="@drawable/video_info_arrow_down" />
+                    app:srcCompat="@drawable/video_info_arrow_down"
+        android:contentDescription="@null" />
 
                 <SeekBar
                     android:id="@+id/subtitle_size_seekbar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/right_a"
-                    android:layout_toRightOf="@+id/left_a"
+                    android:layout_toStartOf="@+id/right_a"
+                    android:layout_toEndOf="@+id/left_a"
                     android:paddingBottom="@dimen/subtitles_settings_dialog_margin_large"
                     android:paddingTop="@dimen/subtitles_settings_dialog_margin_large" />
 
@@ -99,10 +100,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/subtitle_size_seekbar"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignTop="@+id/subtitle_size_seekbar"
                     android:padding="@dimen/subtitles_settings_dialog_margin_large"
-                    app:srcCompat="@drawable/video_info_arrow_up" />
+                    app:srcCompat="@drawable/video_info_arrow_up"
+        android:contentDescription="@null" />
 
             </RelativeLayout>
     <!-- simple listDivider, should be using current Theme -->
@@ -119,7 +121,8 @@
                 android:layout_marginBottom="@dimen/subtitles_settings_dialog_margin_large"
                 android:layout_marginTop="@dimen/subtitles_settings_dialog_margin_large"
                 android:scaleType="fitXY"
-                app:srcCompat="?android:attr/listDivider" />
+                app:srcCompat="?android:attr/listDivider"
+        android:contentDescription="@null" />
 
 <!-- Vertical Positon v (seekbar) ^ -->
 
@@ -140,10 +143,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/subtitle_vert_seekbar"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_alignTop="@+id/subtitle_vert_seekbar"
                     android:padding="@dimen/subtitles_settings_dialog_margin_large"
-                    app:srcCompat="@drawable/video_info_arrow_down" />
+                    app:srcCompat="@drawable/video_info_arrow_down"
+        android:contentDescription="@null" />
 
                 <SeekBar
                     android:id="@+id/subtitle_vert_seekbar"
@@ -151,8 +155,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/subtitle_vert_text"
                     android:layout_gravity="center_vertical"
-                    android:layout_toLeftOf="@+id/right_icon"
-                    android:layout_toRightOf="@+id/left_icon"
+                    android:layout_toStartOf="@+id/right_icon"
+                    android:layout_toEndOf="@+id/left_icon"
                     android:paddingBottom="@dimen/subtitles_settings_dialog_margin_large"
                     android:paddingTop="@dimen/subtitles_settings_dialog_margin_large" />
 
@@ -161,10 +165,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/subtitle_vert_seekbar"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignTop="@+id/subtitle_vert_seekbar"
                     android:padding="@dimen/subtitles_settings_dialog_margin_large"
-                    app:srcCompat="@drawable/video_info_arrow_up" />
+                    app:srcCompat="@drawable/video_info_arrow_up"
+        android:contentDescription="@null" />
 
             </RelativeLayout>
 
@@ -193,7 +198,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginLeft="@dimen/subtitles_settings_dialog_margin_small"
+                    android:layout_marginStart="@dimen/subtitles_settings_dialog_margin_small"
                     android:text="@string/subtitle_bg_opacity_text" />
 
                 <SeekBar

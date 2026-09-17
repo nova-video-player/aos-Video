@@ -298,7 +298,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
                         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                         PixelFormat.TRANSPARENT);
             }
-            mParamsF.gravity = Gravity.TOP | Gravity.LEFT;
+            mParamsF.gravity = Gravity.TOP | Gravity.START;
             mParamsF.x = 0;
             mParamsF.y = 100;
             mFloatingPlayerRootView.findViewById(R.id.volume_bar).setVisibility(View.VISIBLE);
@@ -343,6 +343,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
                         return (float) Math.sqrt(x * x + y * y);
                     }
 
+                    @SuppressLint("ClickableViewAccessibility")
                     @SuppressWarnings("deprecation") // getSize/getRealSize: API 30+ uses getCurrentWindowMetrics
                     public boolean onTouch(View v, MotionEvent event) {
 

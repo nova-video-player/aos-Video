@@ -50,7 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dip"
             android:layout_marginTop="0dip"
-            app:srcCompat="@drawable/leanback_info_file"/>
+            app:srcCompat="@drawable/leanback_info_file"
+        android:contentDescription="@null" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -107,7 +108,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dip"
             android:layout_marginTop="0dip"
-            app:srcCompat="@drawable/leanback_info_video"/>
+            app:srcCompat="@drawable/leanback_info_video"
+        android:contentDescription="@null" />
 
         <LinearLayout android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -139,7 +141,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dip"
             android:layout_marginTop="0dip"
-            app:srcCompat="@drawable/leanback_info_audio"/>
+            app:srcCompat="@drawable/leanback_info_audio"
+        android:contentDescription="@null" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -166,7 +169,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dip"
             android:layout_marginTop="0dip"
-            app:srcCompat="@drawable/leanback_info_subtitles"/>
+            app:srcCompat="@drawable/leanback_info_subtitles"
+        android:contentDescription="@null" />
 
         <LinearLayout
             android:layout_width="0dip"

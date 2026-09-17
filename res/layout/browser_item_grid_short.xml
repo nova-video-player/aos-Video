@@ -22,11 +22,12 @@
         android:id="@+id/thumbnail"
         android:layout_width="@dimen/video_info_grid_poster_width"
         android:layout_height="@dimen/video_info_grid_poster_height"
-        android:layout_marginLeft="@dimen/video_grid_poster_margin_left"
-        android:layout_marginRight="@dimen/video_grid_poster_margin_right"
+        android:layout_marginStart="@dimen/video_grid_poster_margin_left"
+        android:layout_marginEnd="@dimen/video_grid_poster_margin_right"
         android:layout_marginTop="@dimen/video_grid_poster_margin_top"
         android:background="@color/default_icon_background"
-        android:scaleType="center" />
+        android:scaleType="center"
+        android:contentDescription="@null" />
 
    
 
@@ -50,8 +51,8 @@
         <TextView
             android:id="@+id/name"
             style="@style/BrowserTinyText.Name"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:paddingTop="5dip" />
 

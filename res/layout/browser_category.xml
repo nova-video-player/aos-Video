@@ -12,6 +12,6 @@
     android:divider="@null"
     android:choiceMode="singleChoice"
     android:listSelector="@drawable/list_selector_categories"
-    android:paddingLeft="0dip"
-    android:paddingRight="0dip"
+    android:paddingStart="0dip"
+    android:paddingEnd="0dip"
     />

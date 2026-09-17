@@ -236,7 +236,7 @@ public class SeasonPresenter extends Presenter {
                 Drawable layer[] = new Drawable[2];
                 layer[0] = posterDrawable;
                 BitmapDrawable icon = (BitmapDrawable) ContextCompat.getDrawable(mContext, R.drawable.watched_icon_corner);
-                icon.setGravity(Gravity.TOP | Gravity.RIGHT);
+                icon.setGravity(Gravity.TOP | Gravity.END);
                 layer[1] = icon;
                 finalDrawable = new LayerDrawable(layer);
             } else {

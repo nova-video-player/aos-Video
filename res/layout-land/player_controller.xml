@@ -4,7 +4,7 @@
     android:id="@+id/playerControllersContainer"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="left"
+    android:gravity="start"
     android:orientation="horizontal" >
 
 </FrameLayout>

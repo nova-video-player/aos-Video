@@ -7,7 +7,7 @@
     android:id="@+id/volume_bar"
     android:layout_width="@dimen/player2014_bar_width"
     android:layout_height="match_parent"
-    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
     android:layout_alignParentTop="true"
     android:layout_marginTop="0dp"
     android:layout_marginBottom="0dp"
@@ -39,8 +39,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
         android:paddingBottom="4dip"
-        android:paddingLeft="17dip"
-        android:paddingRight="17dip"
+        android:paddingStart="17dip"
+        android:paddingEnd="17dip"
         android:paddingTop="4dip" />
 
     <com.archos.mediacenter.utils.RepeatingImageButton

@@ -7,8 +7,8 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingLeft="0dip"
-    android:paddingRight="0dip">
+    android:paddingStart="0dip"
+    android:paddingEnd="0dip">
 
 
     <ImageView
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:scaleType="center"
         app:srcCompat="@drawable/badge_5_1"
-        />
+        android:contentDescription="@null" />
 
     <TextView
         android:layout_width="wrap_content"

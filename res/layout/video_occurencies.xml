@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
 
         android:textSize="11sp"
-        android:paddingLeft="3dip"
+        android:paddingStart="3dip"
         android:gravity="center_horizontal"
         android:text="1"
         android:id="@+id/occurencies_text_view"

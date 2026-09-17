@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="10dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:paddingTop="10dp" >
 
         <LinearLayout
@@ -25,12 +25,14 @@
                 android:id="@+id/icon1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/category_video_movie" />
+                app:srcCompat="@drawable/category_video_movie"
+        android:contentDescription="@null" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/category_video_tvshow" />
+                app:srcCompat="@drawable/category_video_tvshow"
+        android:contentDescription="@null" />
         </LinearLayout>
 
         <TextView
@@ -38,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dip"
+            android:layout_marginStart="20dip"
             android:text="@string/new_videos_scrape_message"
             style="@style/textAppearanceMedium" />
     </LinearLayout>
