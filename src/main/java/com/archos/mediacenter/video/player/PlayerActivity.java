@@ -2799,7 +2799,18 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         mPhonePlayModeIntroFooter = null;
                     }
                 });
-                adb.create().show();
+                AlertDialog dialog = adb.create();
+                dialog.show();
+
+                Window window = dialog.getWindow();
+                if (window != null) {
+                    DisplayMetrics dm = getResources().getDisplayMetrics();
+                    int maxWidth = (int) (380 * dm.density);
+                    if (dm.widthPixels > maxWidth) {
+                        int width = Math.min(maxWidth, (int) (dm.widthPixels * 0.85f));
+                        window.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    }
+                }
 
                 return true;
             }
