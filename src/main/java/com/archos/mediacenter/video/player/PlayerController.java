@@ -491,10 +491,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         ImageButton fullscreenWithCutoutButton = (ImageButton) v.findViewById(R.id.fullscreen_cutouts);
         if (fullscreenWithCutoutButton != null) {
             //If we have a Cutout, show the Fullscreen with Cutouts Button
-            PlayerActivity playerActivity = ((PlayerActivity) mContext);
-            if (playerActivity.mCutoutLeft + playerActivity.mCutoutRight + playerActivity.mCutoutTop + playerActivity.mCutoutBottom > 0) {
+            if (hasCutout()) {
                 setFullscreenWithCutoutButtonIcon(mSurfaceController.mFullScreenWithCutout);
-                fullscreenWithCutoutButton.setVisibility(View.VISIBLE);
+                fullscreenWithCutoutButton.setVisibility((isTVMode || TVUtils.isTV(mContext)) ? View.GONE : View.VISIBLE);
                 fullscreenWithCutoutButton.setOnClickListener(fullscreenWithCutoutListener);
             } else {
                 fullscreenWithCutoutButton.setVisibility(View.GONE);
@@ -2513,17 +2512,25 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
     }
 
+    private boolean hasCutout() {
+        if (mContext instanceof PlayerActivity) {
+            PlayerActivity playerActivity = (PlayerActivity) mContext;
+            return (playerActivity.mCutoutLeft + playerActivity.mCutoutRight + playerActivity.mCutoutTop + playerActivity.mCutoutBottom > 0);
+        }
+        return false;
+    }
+
     private void switchMode(boolean tv) {
         if (TVUtils.isTV(mContext)) {
             tv = true;
         }
         isTVMode=tv;
-        // TODO Auto-generated method stub
         //for view not to be split before window attached
-        if(mControllerViewLeft!=null && !(tv && mControlBarShowing)){
-            if(tv)
-                setUIMode(UIMode);
-            else{
+        if(mControllerViewLeft!=null){
+            if(tv) {
+                if (!mControlBarShowing)
+                    setUIMode(UIMode);
+            } else {
                 setNormalMode();
                 showTVMenu(false);
             }
@@ -2537,6 +2544,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 mControllerViewLeft.findViewById(R.id.forward).setVisibility(tv?View.GONE:View.VISIBLE);
             if( mControllerViewLeft.findViewById(R.id.format)!=null)
                 mControllerViewLeft.findViewById(R.id.format).setVisibility(tv?View.INVISIBLE:View.VISIBLE);
+            if( mControllerViewLeft.findViewById(R.id.fullscreen_cutouts)!=null)
+                mControllerViewLeft.findViewById(R.id.fullscreen_cutouts).setVisibility((tv || !hasCutout())?View.GONE:View.VISIBLE);
             if(mControllerViewRight!=null){
                 if( mControllerViewRight.findViewById(R.id.pause)!=null)
                     mControllerViewRight.findViewById(R.id.pause).setVisibility(tv?View.INVISIBLE:View.VISIBLE);
@@ -2546,6 +2555,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     mControllerViewRight.findViewById(R.id.forward).setVisibility(tv?View.GONE:View.VISIBLE);
                 if( mControllerViewRight.findViewById(R.id.format)!=null)
                     mControllerViewRight.findViewById(R.id.format).setVisibility(tv?View.INVISIBLE:View.VISIBLE);
+                if( mControllerViewRight.findViewById(R.id.fullscreen_cutouts)!=null)
+                    mControllerViewRight.findViewById(R.id.fullscreen_cutouts).setVisibility((tv || !hasCutout())?View.GONE:View.VISIBLE);
             }
             
         }
@@ -2895,7 +2906,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
     
     public void setFullscreenWithCutoutButtonIcon(boolean isFullscreenWithCutout) {
-        if (mFullscreenWithCutoutButton != null)
+        if (mFullscreenWithCutoutButton != null) {
             mFullscreenWithCutoutButton.setImageResource(isFullscreenWithCutout ? R.drawable.video_fullscreen_cutout_on : mSurfaceController.mCutBothSidesX ? R.drawable.video_fullscreen_cutout_off_equal : R.drawable.video_fullscreen_cutout_off);
+            mFullscreenWithCutoutButton.setVisibility((isTVMode || TVUtils.isTV(mContext) || !hasCutout()) ? View.GONE : View.VISIBLE);
+        }
     }
 }
