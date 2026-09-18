@@ -64,6 +64,7 @@
                 android:background="@null"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
+                android:paddingBottom="12dp"
                 android:textColor="#ffffff"
                 card_view:autoSizeTextType="uniform"
                 card_view:autoSizeMinTextSize="6sp"
