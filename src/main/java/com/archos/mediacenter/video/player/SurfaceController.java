@@ -140,9 +140,27 @@ public class SurfaceController {
     private int mCutoutBottom = 0;
     private int mMarginLeft = 0;
     private int mMarginTop = 0;
+    // Cached from updateSurface()'s last run -- see getVideoBoxTop() below.
+    private int mVideoBoxTop = 0;
     private boolean mCutoutBugToasted = false;
     public boolean mFullScreenWithCutout = false;
     public boolean mCutBothSidesX = false;
+
+    /**
+     * Reports where the video's own on-screen box sits within the subtitle canvas,
+     * whenever updateSurface() recomputes it (rotation, use_sub_margins toggling, a new
+     * video's aspect ratio changing the letterbox/pillarbox amount). Mirrors the existing
+     * TextureView.SurfaceTextureListener-based callback pattern used for
+     * setSubtitleTextureCallback() above, just for this one extra piece of geometry that
+     * Android's own TextureView lifecycle doesn't carry.
+     */
+    public interface VideoBoxListener {
+        void onVideoBoxChanged(int x, int y, int w, int h);
+    }
+    private VideoBoxListener mVideoBoxListener;
+    public void setVideoBoxListener(VideoBoxListener listener) {
+        mVideoBoxListener = listener;
+    }
 
     public SurfaceController(View rootView) {
         ViewGroup mLp = (ViewGroup)rootView;
@@ -585,6 +603,26 @@ public class SurfaceController {
         //   this Java layout change; both are needed together.
         boolean extendVertically = mUseSubMargins && willStretchY;
 
+        // Vertical offset of the video's own on-screen box within the subtitle canvas'
+        // own coordinate space, cached for getVideoBoxTop() below.
+        //
+        // When extended, mSubtitleView is MATCH_PARENT with a 0 top margin, so its top
+        // edge sits at parent-relative y=0. mView, however, is only dcw x dch: the
+        // FrameLayout's own gravity="center" (see player.xml) centers it within the full
+        // dh-tall parent FIRST -- offset (dh - dch) / 2 -- and mMarginTop is then applied
+        // ON TOP of that centering, not instead of it. So mView's top edge actually sits
+        // at (dh - dch) / 2 + mMarginTop, and that whole amount -- not mMarginTop alone --
+        // is the video box's vertical offset within the (0-based) canvas. Using mMarginTop
+        // alone silently dropped the (dh - dch) / 2 term, which is exactly half the
+        // letterbox bar height being absorbed -- i.e. precisely the common case this
+        // mechanism exists for -- pushing GFX (PGS/VobSub) bitmaps up by that amount
+        // whenever margins are in use.
+        //
+        // When NOT extended, mSubtitleView is sized/margined identically to mView (same
+        // dcw x dch, same mMarginLeft/mMarginTop), so both get the exact same centering
+        // offset and the same margin -- the two cancel out exactly, offset 0.
+        mVideoBoxTop = extendVertically ? ((dh - dch) / 2 + mMarginTop) : 0;
+
         if (subLp instanceof ViewGroup.MarginLayoutParams subMarginParams) {
             subMarginParams.width = dcw;
             if (extendVertically) {
@@ -607,6 +645,14 @@ public class SurfaceController {
         mSurfaceWidth = dcw;
         mSurfaceHeight = dch;
 
+        // Tell the subtitle engine where the video's own on-screen box sits within the
+        // canvas we just laid out above -- needed for GFX (PGS/VobSub) bitmap positioning,
+        // which is otherwise decoded in the video's own pixel space and has no way to know
+        // this on its own. x is always 0 and w/h always dcw/dch: mView and mSubtitleView
+        // share the same left margin and width in every branch above; only the y offset
+        // depends on whether the canvas was extended to absorb letterbox bars.
+        if (mVideoBoxListener != null) mVideoBoxListener.onVideoBoxChanged(0, getVideoBoxTop(), dcw, dch);
+
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: ({},{})->({},{}) / formatCrop: ({},{}) / mEffectMode: {}", vw, vh, dcw, dch, cropW, cropH, mEffectMode);
     }
 
@@ -619,6 +665,18 @@ public class SurfaceController {
     public int getViewHeight() { return mSurfaceHeight; }
     public int getMarginLeft() { return mMarginLeft; }
     public int getMarginTop() { return mMarginTop; }
+
+    /**
+     * Vertical offset of the video's own on-screen box within the subtitle canvas' own
+     * coordinate space -- 0 when the canvas is tethered exactly to the video (both get the
+     * same centering offset and the same mMarginTop, which cancel out), or
+     * (dh - dch) / 2 + mMarginTop when the canvas has been extended to absorb letterbox
+     * bars (its own top moved to 0 while the video's top -- centered within the taller
+     * parent, then shifted by mMarginTop -- didn't). See the mSubtitleView sizing block
+     * above, where this is actually computed/cached. Horizontal offset is always 0 --
+     * mView and mSubtitleView always share the same left margin and width.
+     */
+    public int getVideoBoxTop() { return mVideoBoxTop; }
 
     /**
      * Sets the dataspace on the SurfaceView's SurfaceControl layer so SurfaceFlinger can set up

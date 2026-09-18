@@ -442,6 +442,7 @@ public class Player implements IPlayerControl,
             mSurfaceController.setTextureCallback(this);
             mSurfaceController.setSurfaceCallback(this);
             mSurfaceController.setSubtitleTextureCallback(mSubtitleEngine);
+            mSurfaceController.setVideoBoxListener(mSubtitleEngine);
         }
     }
     private void setGLSupportEnabled(boolean enable) {
