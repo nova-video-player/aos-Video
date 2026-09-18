@@ -219,16 +219,40 @@ public class OAuthDialog extends Dialog {
         // for Android 23+
         @RequiresApi(Build.VERSION_CODES.M)
         @Override
-        public void onReceivedError(WebView view, WebResourceRequest request,  WebResourceError error)
-        {
-			log.debug("onReceivedError API23+");
-			super.onReceivedError(view, request, error);
-			if(mListener!=null)
+        public void onReceivedError(
+                WebView view,
+                WebResourceRequest request,
+                WebResourceError error) {
+
+            super.onReceivedError(view, request, error);
+
+            if (!request.isForMainFrame()) {
+                log.debug("Ignoring subresource error: "
+                        + request.getUrl()
+                        + ", code=" + error.getErrorCode()
+                        + ", description=" + error.getDescription());
+                return;
+            }
+
+            log.warn("Main frame WebView error: url="
+                    + request.getUrl()
+                    + ", code=" + error.getErrorCode()
+                    + ", description=" + error.getDescription());
+
+            if (mListener != null) {
                 mListener.onFinished(mdata);
-			OAuthDialog.this.dismiss();
-			log.warn("onReceivedError: error code is " + error.getErrorCode() + ", description " + error.getDescription());
-			Toast.makeText(getContext(), "No Internet or code " + + error.getErrorCode() + ", description " + error.getDescription() , Toast.LENGTH_LONG).show();
-		}
+            }
+
+            OAuthDialog.this.dismiss();
+
+            Toast.makeText(
+                    getContext(),
+                    "Unable to load authentication page: "
+                            + error.getDescription(),
+                    Toast.LENGTH_LONG
+            ).show();
+        }
+
 
         /*
         **  Display a dialog when the page start
