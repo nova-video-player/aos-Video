@@ -431,9 +431,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private TVMenuItem mSubtitleDelayMenuItem;
     private TVCardView mSubtitleTVCardView;
     private TVCardView mAudioTracksTVCardView;
+    private TVCardView mPlayModeTVCardView;
     private TVMenu mAudioTracksTVMenu;
     private TVMenu mPlayModeTVMenu;
     private TVMenuItem mIntroSummaryMenuItem;
+    private View mIntroSummarySeparator;
+    private TextView mPhonePlayModeIntroFooter;
     private boolean isTVMode;
     private TorrentObserverService mTorrent;
     private int mTorrentFilePosition = -1;
@@ -2181,11 +2184,23 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     // menu once the segments become available; safe to call repeatedly (e.g. on each menu show).
     public void refreshPlayModeIntroSummary() {
         if (mPlayModeTVMenu == null) return;
+        boolean enabled = mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED);
+        if (!enabled) {
+            if (mIntroSummaryMenuItem != null) mIntroSummaryMenuItem.setVisibility(View.GONE);
+            if (mIntroSummarySeparator != null) mIntroSummarySeparator.setVisibility(View.GONE);
+            triggerPlayModeTVCardViewReFocus();
+            return;
+        }
         IntroSegments segments = (PlayerService.sPlayerService != null) ? PlayerService.sPlayerService.getIntroSegments() : null;
         String summary = (segments != null) ? segments.toSummaryString(PlayerService.introLabels(this), getString(R.string.introdb_segment_end)) : null;
-        if (summary == null) return;
+        if (summary == null) {
+            if (mIntroSummaryMenuItem != null) mIntroSummaryMenuItem.setVisibility(View.GONE);
+            if (mIntroSummarySeparator != null) mIntroSummarySeparator.setVisibility(View.GONE);
+            triggerPlayModeTVCardViewReFocus();
+            return;
+        }
         if (mIntroSummaryMenuItem == null) {
-            mPlayModeTVMenu.createAndAddSeparator();
+            mIntroSummarySeparator = mPlayModeTVMenu.createAndAddSeparator();
             mIntroSummaryMenuItem = mPlayModeTVMenu.createAndAddTVMenuItem(summary, false);
             ViewGroup.LayoutParams lp = mIntroSummaryMenuItem.getLayoutParams();
             if (lp != null) {
@@ -2195,11 +2210,44 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         } else {
             mIntroSummaryMenuItem.setText(summary);
         }
+        if (mIntroSummarySeparator != null) mIntroSummarySeparator.setVisibility(View.VISIBLE);
+        mIntroSummaryMenuItem.setVisibility(View.VISIBLE);
         TextView summaryText = (TextView) mIntroSummaryMenuItem.findViewById(R.id.info_text);
         if (summaryText != null) {
             summaryText.setSingleLine(false);
             summaryText.setMaxLines(6);
             summaryText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
+        }
+        triggerPlayModeTVCardViewReFocus();
+    }
+
+    private void triggerPlayModeTVCardViewReFocus() {
+        if (mPlayModeTVCardView != null && mPlayModeTVCardView.hasFocus()) {
+            mPlayModeTVCardView.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mPlayModeTVCardView != null && mPlayModeTVCardView.hasFocus()) {
+                        mPlayModeTVCardView.focus(true);
+                    }
+                }
+            });
+        }
+    }
+
+    private void refreshPhonePlayModeIntroSummary() {
+        if (mPhonePlayModeIntroFooter == null) return;
+        boolean enabled = mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED);
+        if (!enabled) {
+            mPhonePlayModeIntroFooter.setVisibility(View.GONE);
+            return;
+        }
+        IntroSegments segments = (PlayerService.sPlayerService != null) ? PlayerService.sPlayerService.getIntroSegments() : null;
+        String summary = (segments != null) ? segments.toSummaryString(PlayerService.introLabels(this), getString(R.string.introdb_segment_end)) : null;
+        if (summary != null) {
+            mPhonePlayModeIntroFooter.setText(summary);
+            mPhonePlayModeIntroFooter.setVisibility(View.VISIBLE);
+        } else {
+            mPhonePlayModeIntroFooter.setVisibility(View.GONE);
         }
     }
 
@@ -2390,11 +2438,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     boolean enabled = !mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED);
                     mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_ENABLED, enabled).apply();
                     tvmAutoSkip.setChecked(enabled);
+                    if (enabled && PlayerService.sPlayerService != null) {
+                        PlayerService.sPlayerService.fetchIntroDbIfNeeded();
+                    }
+                    refreshPlayModeIntroSummary();
                 }
             });
 
             mPlayModeTVMenu = tvmPlayMode;
+            mPlayModeTVCardView = tcv;
             mIntroSummaryMenuItem = null;
+            mIntroSummarySeparator = null;
             tcv.addOtherView(tvmPlayMode);
             refreshPlayModeIntroSummary();
             //[/playmode]
@@ -2717,27 +2771,34 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 tb.setText(R.string.pref_introdb_autoskip_title);
                 tb.setPadding(pad, pad, pad, pad);
                 tb.setChecked(mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED));
+                final TextView footer = new TextView(mContext);
+                footer.setEnabled(false);
+                footer.setPadding(pad, pad / 2, pad, pad / 2);
+                mPhonePlayModeIntroFooter = footer;
+                refreshPhonePlayModeIntroSummary();
+
                 tb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_ENABLED, isChecked).apply();
+                        if (isChecked && PlayerService.sPlayerService != null) {
+                            PlayerService.sPlayerService.fetchIntroDbIfNeeded();
+                        }
+                        refreshPhonePlayModeIntroSummary();
                     }
                 });
                 content.addView(tb);
-
-                IntroSegments introSegmentsPhone = (PlayerService.sPlayerService != null) ? PlayerService.sPlayerService.getIntroSegments() : null;
-                String introSummaryPhone = (introSegmentsPhone != null) ? introSegmentsPhone.toSummaryString(PlayerService.introLabels(this), getString(R.string.introdb_segment_end)) : null;
-                if (introSummaryPhone != null) {
-                    TextView footer = new TextView(mContext);
-                    footer.setText(introSummaryPhone);
-                    footer.setEnabled(false);
-                    footer.setPadding(pad, pad / 2, pad, pad / 2);
-                    content.addView(footer);
-                }
+                content.addView(footer);
 
                 ScrollView scroll = new ScrollView(mContext);
                 scroll.addView(content);
                 adb.setView(scroll);
+                adb.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        mPhonePlayModeIntroFooter = null;
+                    }
+                });
                 adb.create().show();
 
                 return true;
@@ -4252,6 +4313,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
         public void onIntroDbReady() {
             refreshPlayModeIntroSummary();
+            refreshPhonePlayModeIntroSummary();
         }
         public void onPause(int state) {
 

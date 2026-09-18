@@ -1669,7 +1669,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      * (GET only, no api key). Runs at most once per video on a background thread; the fused,
      * provider-agnostic result is cached in mIntroSegments for the auto-skip check in the tick.
      */
-    private void fetchIntroDbIfNeeded() {
+    public void fetchIntroDbIfNeeded() {
         if (mVideoInfo == null) return;
         if (!mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED)) return;
         if (!mVideoInfo.isScraped) {
@@ -1678,6 +1678,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
         final Uri uri = mVideoInfo.uri;
         if (uri == null) return;
+        // If already fetched and cached, simply notify the frontend so the UI updates
+        if (mIntroSegments != null) {
+            if (mPlayerFrontend != null) mPlayerFrontend.onIntroDbReady();
+            return;
+        }
         // already fetched (or fetch in flight) for this video
         if (uri.equals(mIntroDbFetchedUri)) return;
         mIntroDbFetchedUri = uri;
