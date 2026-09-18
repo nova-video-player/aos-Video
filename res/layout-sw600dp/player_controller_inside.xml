@@ -6,6 +6,7 @@
     android:id="@+id/playerControllers"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:layoutDirection="ltr"
     tools:ignore="HardcodedText" >
 
     <!-- Control Bar (play/pause/seek) -->

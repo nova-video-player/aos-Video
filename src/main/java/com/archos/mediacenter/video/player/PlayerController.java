@@ -663,12 +663,14 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         int layoutID=R.layout.player_controller;
         mControllerView = inflater.inflate(layoutID, null);
         if (mControllerView == null) return;
+        mControllerView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 
         mControllerView.setOnTouchListener(this);
         mControllerView.setOnGenericMotionListener(this);
         // twice for sidebyside and topbottom view
         mControllerViewLeft= inflater.inflate(R.layout.player_controller_inside, null);
         if (mControllerViewLeft != null) {
+            mControllerViewLeft.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
             mOsdLeftTextView = mControllerViewLeft.findViewById(R.id.osd_left);
             mOsdRightTextView = mControllerViewLeft.findViewById(R.id.osd_right);
             mControllerViewLeft.setOnKeyListener(new View.OnKeyListener() {
@@ -2638,6 +2640,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private void inflateRightView(){
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mControllerViewRight= inflater.inflate(R.layout.player_controller_inside, null);
+        if (mControllerViewRight != null) {
+            mControllerViewRight.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        }
         initControllerView(mControllerViewRight, false);
         playerControllersContainer.addView( mControllerViewRight);
         mTVMenuView2 = mControllerViewRight.findViewById(R.id.my_recycler_view);
