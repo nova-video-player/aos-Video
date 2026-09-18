@@ -26,6 +26,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemClock;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.view.Gravity;
@@ -74,6 +75,7 @@ public class SubtitleManager {
     private boolean mIsSubtitleGfx = false;
     private boolean isFirstTime = true;
     private Subtitle currentSubtitle = null;
+    private boolean mPlaybackPaused;
 
     private boolean mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
     private int mGestureAreaHeight, mControlBarHeight;
@@ -416,182 +418,136 @@ public class SubtitleManager {
     }
 
     final class DispSubtitleThread extends Thread {
-        private boolean mSuspended = true;
         private boolean mRunning = true;
-        private Subtitle mCurrentSubtitle = null;
-        private Subtitle mNextSubtitle = null;
-        private boolean interrupted = false;
+        private boolean mPaused = mPlaybackPaused;
+        private Subtitle mCurrentSubtitle;
+        private Subtitle mNextSubtitle;
+        private long mRemainingMs;
+        private long mDeadlineMs;
+        private long mElapsedMs;
+        private long mRunStartMs;
+
+        // All cue and timer state belongs to this monitor. Paused replay may
+        // replace the visible cue, but never starts its expiration clock.
+        private long remaining(long now) {
+            return mPaused ? mRemainingMs : Math.max(0L, mDeadlineMs - now);
+        }
+
+        private long elapsed(long now) {
+            return mElapsedMs + (mPaused ? 0L : now - mRunStartMs);
+        }
+
+        private void removeCurrent() {
+            if (mCurrentSubtitle != null) removeSubtitle(mCurrentSubtitle);
+            mCurrentSubtitle = null;
+            currentSubtitle = null;
+        }
+
+        private void install(Subtitle subtitle, long now) {
+            removeCurrent();
+            mCurrentSubtitle = subtitle;
+            currentSubtitle = subtitle;
+            mRemainingMs = Math.max(0, subtitle.getDuration());
+            mDeadlineMs = now + mRemainingMs;
+            mElapsedMs = 0;
+            mRunStartMs = now;
+            displaySubtitle(subtitle);
+        }
 
         void quit() {
-            if (log.isDebugEnabled()) log.debug("DispSubtitleThread quit");
-            mRunning = false;
-            mDispSubtitleThread = null;
-            interrupt();
+            synchronized (this) {
+                mRunning = false;
+                notifyAll();
+            }
             try {
                 join();
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 log.error("DispSubtitleThread quit - interrupted", e);
             }
+            mDispSubtitleThread = null;
         }
 
         @Override
         public void run() {
-            if (log.isDebugEnabled()) log.debug("DispSubtitleThread started: set mSubtitleDisplayLeft=0");
-            int mSubtitleDisplayLeft = 0;
-            while (mRunning) {
-                interrupted = false;
-                synchronized (this) {
-                    // wait() until we get a new Subtitle via addSubtitle() / player continues
-                    while (mSuspended) {
-                        if (log.isDebugEnabled()) log.debug("DispSubtitleThread wait()");
-                        try {
-                            wait();
-                        } catch (InterruptedException e) {
-                            if (!mRunning) {
-                                if (log.isDebugEnabled()) log.debug("DispSubtitleThread wait() - interrupted and not running, clear subtitle at {}!", System.currentTimeMillis());
-                                clear();
-                                return;
-                            }
-                            if (log.isDebugEnabled()) log.debug("DispSubtitleThread wait() - interrupted");
-                        }
+            synchronized (this) {
+                while (mRunning) {
+                    long now = SystemClock.uptimeMillis();
+                    if (mCurrentSubtitle == null && mNextSubtitle != null) {
+                        Subtitle next = mNextSubtitle;
+                        mNextSubtitle = null;
+                        install(next, now);
                     }
-                }
-                synchronized (this) {
-                    // we don't have a subtitle, go back to wait()
-                    if ((mCurrentSubtitle == null && mNextSubtitle == null) || (mCurrentSubtitle == null && mNextSubtitle != null && mNextSubtitle.getDuration() == 0)) {
-                        if (log.isDebugEnabled()) log.debug("DispSubtitleThread no valid Subtitle, mNextSubtitle={}+{}ms",
-                                mNextSubtitle != null ? mNextSubtitle.getPosition() : "null",
-                                mNextSubtitle != null ? mNextSubtitle.getDuration() : "null");
-                        if (mNextSubtitle != null) mNextSubtitle = null; // if mCurrentSubtitle is null, receiving zero subtitle has no effect
-                        mSuspended = true;
+                    if (mCurrentSubtitle != null && mCurrentSubtitle.isTimed()
+                            && remaining(now) <= 0) {
+                        removeCurrent();
                         continue;
                     }
-
-                    // we have a subtitle that is not displayed yet
-                    if (mCurrentSubtitle == null) { // new subtitle only considered if current one is not null
-                        mCurrentSubtitle = mNextSubtitle; // the next subtitle has a duration > 0 other wise it would have been filtered out before
-                        currentSubtitle = mCurrentSubtitle;
-                        mNextSubtitle = null;
-                        displaySubtitle(mCurrentSubtitle);
-                        mSubtitleDisplayLeft = mCurrentSubtitle.getDuration();
-                        if (log.isDebugEnabled()) log.debug("DispSubtitleThread displaying new (current=new) subtitle={}+{}ms, bounds={}, mSubtitleDisplayLeft={}", mCurrentSubtitle.getPosition(), mCurrentSubtitle.getDuration(), mCurrentSubtitle.getBounds(), mSubtitleDisplayLeft);
-                    }
-                }
-
-                // outside of synchronized since sleep does NOT release the lock
-                // go to sleep if we have still have mSubtitleDisplayLeft
-                Subtitle currentSub = mCurrentSubtitle;
-                if (mSubtitleDisplayLeft > 0 && currentSub != null) { // we have a subtitle to display
-                    if (log.isDebugEnabled()) log.debug("DispSubtitleThread after displaying mCurrentSubtitle={}+{}ms, sleep for {}", currentSub.getPosition(), currentSub.getDuration(), mSubtitleDisplayLeft);
-                    long sleepStart = System.currentTimeMillis();
                     try {
-                        sleep(mSubtitleDisplayLeft);
-                    } catch (InterruptedException e) { // wake up from sleep
-                        interrupted = true;
-                        long elapsedTime = System.currentTimeMillis() - sleepStart;
-                        Subtitle curSub = mCurrentSubtitle;
-                        Subtitle nxtSub = mNextSubtitle;
-                        if (log.isDebugEnabled()) log.debug("DispSubtitleThread sleep interrupt, waking up after {}ms, mCurrentSubtitle={}+{}ms, mNextSubtitle={}+{}ms, old mSubtitleDisplayLeft={}",
-                                elapsedTime,
-                                curSub != null ? curSub.getPosition() : "null",
-                                curSub != null ? curSub.getDuration() : "null",
-                                nxtSub != null ? nxtSub.getPosition() : "null",
-                                nxtSub != null ? nxtSub.getDuration() : "null",
-                                mSubtitleDisplayLeft);
-                        if (curSub != null && nxtSub != null) {
-                            // woke up from sleep by interrupt because getting new subtitle
-                            int currentPosition = curSub.getPosition() + (int) elapsedTime;
-                            int realCurrentSubtitleDuration;
-                            // need to correct time left only if the next subtitle starts before the current one ends
-                            if (curSub.getPosition() + curSub.getDuration() > nxtSub.getPosition()) {
-                                if (log.isDebugEnabled()) log.debug("DispSubtitleThread: cannot sleep after mNextSubtitle, adjust");
-                                realCurrentSubtitleDuration = nxtSub.getPosition() - curSub.getPosition();
-                                curSub.setDuration(realCurrentSubtitleDuration);
-                                mSubtitleDisplayLeft = nxtSub.getPosition() - currentPosition;
-                            } else {
-                                realCurrentSubtitleDuration = curSub.getDuration();
-                                mSubtitleDisplayLeft -= (int) (System.currentTimeMillis() - sleepStart);
-                            }
-                            if (log.isDebugEnabled()) log.debug("DispSubtitleThread sleep interrupt bcoz received new subtitle, recompute duration currentPosition={}, realCurrentSubtitleDuration={}, updated mSubtitleDisplayLeft={}", currentPosition, realCurrentSubtitleDuration, mSubtitleDisplayLeft);
-                            if (nxtSub.getDuration() == 0) { // this is an empty subtitle that is used to provide the correct duration
-                                if (log.isDebugEnabled()) log.debug("DispSubtitleThread sleep interrupt bcoz received empty Subtitle, dismiss mNextSubtitle");
-                                mNextSubtitle = null; // remove the empty subtitle
-                            }
+                        if (mPaused || mCurrentSubtitle == null || !mCurrentSubtitle.isTimed()) {
+                            wait();
                         } else {
-                            mSubtitleDisplayLeft -= (int) (System.currentTimeMillis() - sleepStart);
-                            if (log.isDebugEnabled()) log.debug("DispSubtitleThread sleep interrupt by seek/exit condition, updated mSubtitleDisplayLeft={}", mSubtitleDisplayLeft);
+                            wait(Math.max(1L, remaining(now)));
                         }
-                    }
-                    // if not interrupted update mSubtitleDisplayLeft (otherwise it is already done)
-                    if (! interrupted) mSubtitleDisplayLeft -= (int) (System.currentTimeMillis() - sleepStart);
-                    if (log.isDebugEnabled()) log.debug("DispSubtitleThread now mSubtitleDisplayLeft={}", mSubtitleDisplayLeft);
-                }
-                // if we slept without interrupt or no display time is left remove the subtitle
-                if (mSubtitleDisplayLeft <= 0) {
-                    if (log.isDebugEnabled()) log.debug("DispSubtitleThread removing subtitle because mSubtitleDisplayLeft={}<0", mSubtitleDisplayLeft);
-                    synchronized (this) {
-                        if (mCurrentSubtitle != null) {
-                            removeSubtitle(mCurrentSubtitle);
-                            mCurrentSubtitle = null;
-                            currentSubtitle = null;
-                            mSubtitleDisplayLeft = 0;
-                        }
+                    } catch (InterruptedException e) {
+                        // Seek/stop or a spurious wakeup: reevaluate under the lock.
                     }
                 }
+                clear();
             }
-            clear();
-            if (log.isDebugEnabled()) log.debug("DispSubtitleThread exited");
         }
 
         synchronized void addSubtitle(Subtitle subtitle) {
-            if (log.isDebugEnabled()) log.debug("DispSubtitleThread addSubtitle isBitmap={} isText={} isTimed={} position={} duration={}", subtitle.isBitmap(), subtitle.isText(), subtitle.isTimed(), subtitle.getPosition(), subtitle.getDuration());
-            mSuspended = false;
-
-            if (subtitle.isTimed()) {
-                mNextSubtitle = subtitle;
-                if (!isAlive()) {
-                    if (log.isDebugEnabled()) log.debug("DispSubtitleThread addSubtitle thread is not alive -> start");
-                    super.start();
-                } else {
-                    if (log.isDebugEnabled()) log.debug("DispSubtitleThread addSubtitle thread is alive -> interrupt");
-                    interrupt();
-                }
+            if (!mRunning) return;
+            long now = SystemClock.uptimeMillis();
+            if (!subtitle.isTimed()) {
+                mNextSubtitle = null;
+                install(subtitle, now);
+            } else if (mPaused) {
+                // Native delivers only the cue active at the paused playhead.
+                mNextSubtitle = null;
+                removeCurrent();
+                if (subtitle.getDuration() > 0) install(subtitle, now);
+            } else if (mCurrentSubtitle == null || !mCurrentSubtitle.isTimed()) {
+                removeCurrent();
+                mNextSubtitle = subtitle.getDuration() > 0 ? subtitle : null;
             } else {
-                if (log.isDebugEnabled()) log.debug("DispSubtitleThread addSubtitle not timed!");
-                if (mCurrentSubtitle != null) {
-                    removeSubtitle(mCurrentSubtitle);
-                    mCurrentSubtitle = null;
-                }
-
-                if (subtitle.getText() != null) {
-                    mCurrentSubtitle = subtitle;
-                    displaySubtitle(mCurrentSubtitle);
-                }
+                // A PGS clear ends the current cue without becoming a visible
+                // cue itself. Use long arithmetic for open-ended PGS durations.
+                long untilNext = Math.max(0L, (long) subtitle.getPosition()
+                        - mCurrentSubtitle.getPosition() - elapsed(now));
+                mRemainingMs = Math.min(remaining(now), untilNext);
+                mDeadlineMs = now + mRemainingMs;
+                mNextSubtitle = subtitle.getDuration() > 0 ? subtitle : null;
             }
+            notifyAll();
         }
 
         synchronized void show() {
-            if (log.isDebugEnabled()) log.debug("DispSubtitleThread show");
-            // could setVisibility here
+            // Visibility is updated by displaySubtitle/removeSubtitle.
         }
 
         synchronized void clear() {
-            if (log.isDebugEnabled()) log.debug("DispSubtitleThread clear");
-            mSuspended = true;
-            if (mCurrentSubtitle != null) {
-                removeSubtitle(mCurrentSubtitle);
-                mCurrentSubtitle = null;
-                mNextSubtitle = null;
-            }
+            mNextSubtitle = null;
+            removeCurrent();
+            mRemainingMs = 0;
+            mElapsedMs = 0;
             mHandler.sendMessage(mHandler.obtainMessage(MSG_STOP_SUBTITLE));
+            notifyAll();
         }
 
-        synchronized void setSuspended(boolean suspended) {
-            if (log.isDebugEnabled()) log.debug("DispSubtitleThread setSuspended");
-            if (mSuspended == suspended)
-                return;
-            mSuspended = suspended;
-            interrupt();
+        synchronized void setSuspended(boolean paused) {
+            if (mPaused == paused) return;
+            long now = SystemClock.uptimeMillis();
+            if (paused) {
+                mRemainingMs = remaining(now);
+                mElapsedMs = elapsed(now);
+            } else {
+                mRunStartMs = now;
+                mDeadlineMs = now + mRemainingMs;
+            }
+            mPaused = paused;
+            notifyAll();
         }
     }
 
@@ -880,11 +836,13 @@ public class SubtitleManager {
     }
 
     public void onPlay() {
+        mPlaybackPaused = false;
         if (mDispSubtitleThread != null)
             mDispSubtitleThread.setSuspended(false);
     }
 
     public void onPause() {
+        mPlaybackPaused = true;
         if (mDispSubtitleThread != null)
             mDispSubtitleThread.setSuspended(true);
     }
