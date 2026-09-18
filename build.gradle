@@ -376,7 +376,7 @@ dependencies {
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.8.0'
     // Uses the installed browser for OAuth without embedding a browser engine.
-    implementation 'androidx.browser:browser:1.9.0'
+    implementation 'androidx.browser:browser:1.10.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation ('com.github.ksoichiro:android-observablescrollview:1.6.0') {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
@@ -388,14 +388,14 @@ dependencies {
     implementation 'androidx.tvprovider:tvprovider:1.1.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:5.5.0'
     implementation 'com.github.tony19:logback-android:3.0.0'
-    implementation 'io.sentry:sentry-android:8.53.0'
-    implementation 'io.sentry:sentry:8.53.0'
+    implementation 'io.sentry:sentry-android:8.56.0'
+    implementation 'io.sentry:sentry:8.56.0'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.23.0'
-    testImplementation 'org.robolectric:robolectric:4.16.1'
+    testImplementation 'org.robolectric:robolectric:4.17'
     testImplementation 'androidx.test:core:1.7.0'
-    testImplementation 'org.slf4j:slf4j-api:2.0.18'
+    testImplementation 'org.slf4j:slf4j-api:2.0.19'
     testImplementation 'ch.qos.logback:logback-classic:1.6.3'
 }
 
