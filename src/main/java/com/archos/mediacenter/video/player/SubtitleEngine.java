@@ -10,7 +10,7 @@ import android.view.TextureView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SubtitleEngine implements TextureView.SurfaceTextureListener {
+public class SubtitleEngine implements TextureView.SurfaceTextureListener, SurfaceController.VideoBoxListener {
 
     private static final Logger log = LoggerFactory.getLogger(SubtitleEngine.class);
 
@@ -132,6 +132,27 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
         if (mCurrentSurface == null || !mCurrentSurface.isValid()) return;
         if (mLast2DWidth <= 0 || mLast2DHeight <= 0) return;
         nativeSurfaceChanged(mNativeEngineHandle, mLast2DWidth, mLast2DHeight);
+    }
+
+    /**
+     * Reports where the video's own on-screen box sits within the subtitle canvas --
+     * needed so PGS/VobSub bitmaps (decoded in the video's own pixel space) land correctly
+     * whenever the canvas's aspect ratio or size diverges from the video's (letterbox,
+     * pillarbox, zoom/crop, stretch). x/y/w/h are in canvas pixels, relative to the
+     * canvas's own top-left.
+     */
+    public void setVideoBox(int x, int y, int w, int h) {
+        if (mNativeEngineHandle != 0) {
+            nativeSetVideoBox(mNativeEngineHandle, x, y, w, h);
+            redraw3DIfNeeded();
+        }
+    }
+
+    // SurfaceController.VideoBoxListener -- see setSubtitleTextureCallback()'s sibling
+    // registration of `this` in Player.java for the TextureView.SurfaceTextureListener side.
+    @Override
+    public void onVideoBoxChanged(int x, int y, int w, int h) {
+        setVideoBox(x, y, w, h);
     }
 
 
@@ -307,6 +328,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener {
     // paused in 3D mode shows up immediately instead of waiting for the next real video
     // frame (see redraw3DIfNeeded()'s doc comment). It's a no-op in 2D mode or while playing,
     // so this costs nothing outside the specific paused+3D case it's fixing.
+    private native void nativeSetVideoBox(long handle, int x, int y, int w, int h);
     public void setFontSize(float pt) { if (mNativeEngineHandle != 0) { nativeSetFontSize(mNativeEngineHandle, pt); redraw3DIfNeeded(); } }
     public void setFontScale(float scale) { if (mNativeEngineHandle != 0) { nativeSetFontScale(mNativeEngineHandle, scale); redraw3DIfNeeded(); } }
     public void setFontFamily(String familyName) { if (mNativeEngineHandle != 0) { nativeSetFontFamily(mNativeEngineHandle, familyName); redraw3DIfNeeded(); } }
