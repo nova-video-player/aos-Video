@@ -4,11 +4,11 @@
     android:id="@+id/test"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="40dp"
+    android:minHeight="32dp"
     android:gravity="center_vertical"
     android:focusable="true"
     android:orientation="horizontal"
-    android:padding="2dp" >
+    android:padding="1dp" >
 
     <RadioButton
         android:id="@+id/info_text"
@@ -18,8 +18,8 @@
         android:background="@null"
         android:buttonTint="#ffedffff"
         android:ellipsize="marquee"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         android:singleLine="true"
