@@ -228,6 +228,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
 
             LayoutInflater li = LayoutInflater.from(this);
             mFloatingPlayerRootView = li.inflate(R.layout.floating_player, null);
+            mFloatingPlayerRootView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
             mPlayerController = mFloatingPlayerRootView.findViewById(R.id.player_controller);
             mPausePlayButton = (ImageView) mPlayerController.findViewById(R.id.play_button);
             mFullscreenButton = (ImageView) mPlayerController.findViewById(R.id.fullscreen_button);
@@ -298,7 +299,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
                         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                         PixelFormat.TRANSPARENT);
             }
-            mParamsF.gravity = Gravity.TOP | Gravity.START;
+            mParamsF.gravity = Gravity.TOP | Gravity.LEFT;
             mParamsF.x = 0;
             mParamsF.y = 100;
             mFloatingPlayerRootView.findViewById(R.id.volume_bar).setVisibility(View.VISIBLE);

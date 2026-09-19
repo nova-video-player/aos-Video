@@ -506,6 +506,7 @@ public class SurfaceController {
         return (int) Math.round(dimension * (double) destinationViewport / sourceViewport);
     }
 
+    public View getView() { return mView; }
     public int getViewWidth() { return mSurfaceWidth; }
     public int getViewHeight() { return mSurfaceHeight; }
     public int getMarginLeft() { return mMarginLeft; }

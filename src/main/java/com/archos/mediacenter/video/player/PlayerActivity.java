@@ -57,6 +57,7 @@ import android.provider.Settings.SettingNotFoundException;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Rational;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -738,6 +739,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         else getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setContentView(R.layout.player);
         mRootView = findViewById(R.id.root);
+        mRootView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 
         mRootView.setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
             @Override
@@ -2354,23 +2356,28 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
                     if(v == vPicInPic){
+                        mPlayerController.showTVMenu(false);
                         if (Build.VERSION.SDK_INT>=26) {
                             PictureInPictureParams.Builder builder = new PictureInPictureParams.Builder();
-                            if (mRootView != null) {
+                            if (mPlayer != null && mPlayer.getVideoWidth() > 0 && mPlayer.getVideoHeight() > 0) {
+                                int vw = mPlayer.getVideoWidth();
+                                int vh = mPlayer.getVideoHeight();
+                                double ratio = (double) vw / vh;
+                                if (ratio >= 1.0 / 2.39 && ratio <= 2.39) {
+                                    builder.setAspectRatio(new Rational(vw, vh));
+                                }
+                            }
+                            View targetView = (mSurfaceController != null && mSurfaceController.getView() != null)
+                                    ? mSurfaceController.getView() : mRootView;
+                            if (targetView != null) {
                                 Rect sourceRectHint = new Rect();
-                                mRootView.getGlobalVisibleRect(sourceRectHint);
+                                targetView.getGlobalVisibleRect(sourceRectHint);
                                 builder.setSourceRectHint(sourceRectHint);
                             }
                             enterPictureInPictureMode(builder.build());
                         } else if (Build.VERSION.SDK_INT>=24) {
                             enterPictureInPictureMode();
                         }
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mPlayerController.showTVMenu(false);
-                            }
-                        });
                     }
                     if (v instanceof TVMenuItem) {
                         int which = tvmFormat.getItemPostion(v);
