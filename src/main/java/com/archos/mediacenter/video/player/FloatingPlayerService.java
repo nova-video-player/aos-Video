@@ -218,7 +218,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
         setMusicVolume(mVolumeLevel.getProgress());
     }
 
-    @SuppressLint("InflateParams") // Floating player window root view is attached directly to WindowManager
+    @SuppressLint({"InflateParams", "RtlHardcoded"}) // Floating view attached to WindowManager; Gravity.LEFT required for absolute screen coordinates
     @SuppressWarnings("deprecation") // TYPE_PHONE deprecated API 26; already in SDK_INT < O branch; TYPE_APPLICATION_OVERLAY used on O+
     @Nullable
     public void addFloatingView() {
