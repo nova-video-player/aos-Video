@@ -139,6 +139,85 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     private static String supportedRefreshRates = "";
     private static AudioManager mAudioManager;
     private static AudioDeviceCallback mAudioDeviceCallback;
+    private static int selectedAudioDeviceId;
+    private static boolean audioRouteResolved;
+    private final android.os.Handler audioRouteHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private final Runnable notifyAudioRoute = () -> {
+        com.archos.mediacenter.video.player.Player player = com.archos.mediacenter.video.player.Player.sPlayer;
+        if (player != null) player.onAudioOutputChanged();
+    };
+
+    private void publishAudioRouteChange() {
+        audioRouteHandler.removeCallbacks(notifyAudioRoute);
+        audioRouteHandler.postDelayed(notifyAudioRoute, 100);
+    }
+
+    private AudioDeviceInfo selectedMediaDevice(AudioDeviceInfo[] connected, String reason) {
+        AudioDeviceInfo routed = LibAvos.getRoutedAudioDevice();
+        // Policy prediction handles a device change before the old track has rerouted.
+        // The track callback is authoritative for what an active AudioTrack actually uses.
+        if (!"trackRoute".equals(reason) && Build.VERSION.SDK_INT >= 33) {
+            try {
+                java.util.List<AudioDeviceInfo> selected = mAudioManager.getAudioDevicesForAttributes(
+                        new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE).build());
+                if (selected.size() == 1) return selected.get(0);
+            } catch (RuntimeException ignored) { }
+        }
+        if (routed != null) {
+            for (AudioDeviceInfo device : connected)
+                if (device.getId() == routed.getId()) return device;
+        }
+        // Older APIs provide no pre-play route query. Until the track reports its
+        // actual route, do not assume connected HDMI wins over private listening.
+        for (AudioDeviceInfo device : connected) {
+            int type = device.getType();
+            if (type == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP || type == AudioDeviceInfo.TYPE_BLUETOOTH_SCO
+                    || type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES || type == AudioDeviceInfo.TYPE_WIRED_HEADSET
+                    || (Build.VERSION.SDK_INT >= 26 && type == AudioDeviceInfo.TYPE_USB_HEADSET)
+                    || (Build.VERSION.SDK_INT >= 31 && (type == AudioDeviceInfo.TYPE_BLE_HEADSET
+                    || type == AudioDeviceInfo.TYPE_BLE_SPEAKER))) return device;
+        }
+        return null;
+    }
+
+    public static String getAudioOutputSignature() {
+        return selectedAudioDeviceId + ":" + getNativeAudioCodecsFlag() + ":" + maxAudioChannelCount
+                + ":" + Arrays.toString(hdmiChannelMasks) + ":" + isIecEncapsulationCapable
+                + ":" + isDirectPcmMultichannelCapable + ":" + getSpatializerCapabilities();
+    }
+
+    // Call only before prepare or after closing the old playback pipeline. These
+    // setters include process-wide backend selection, so they cannot run mid-write.
+    public static void applyAudioOutputToNative(Context context) {
+        if (!LibAvos.isAvailable()) return;
+        android.content.SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int mode = isPassthroughSupported() ? Integer.parseInt(prefs.getString("force_audio_passthrough_multiple", "0")) : 0;
+        long codecs = getNativeAudioCodecsFlag();
+        if (mode != 0 && prefs.getBoolean(VideoPreferencesCommon.KEY_FORCE_AUDIO_PASSTHROUGH, false)) {
+            codecs = allHdmiAudioCodecs;
+            if (!isIecEncapsulationCapable) codecs &= ~(1L << 13);
+        }
+        LibAvos.setMaxPcmChannels(getEffectiveMaxPcmChannels());
+        LibAvos.setPcmChannelMasks(getHdmiChannelMasks());
+        LibAvos.setHdmiSupportedAudioCodecs(codecs);
+        LibAvos.setPassthrough(mode);
+        LibAvos.setMediaCodecAudioCapabilities(getMediaCodecAudioCapabilitiesFlag());
+        int spatial = getSpatializerCapabilities();
+        LibAvos.setSpatializerCapabilities(spatial);
+        boolean spatialEnabled = Build.VERSION.SDK_INT >= 32 && mode == 0
+                && prefs.getBoolean("player_spatialization_enabled", false)
+                && (spatial & CodecDiscovery.SPATIALIZER_CAP_SUPPORTED) != 0
+                && (spatial & CodecDiscovery.SPATIALIZER_CAP_AVAILABLE) != 0
+                && (spatial & (CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_5_1
+                    | CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_7_1)) != 0;
+        LibAvos.setSpatializerEnabled(spatialEnabled);
+        boolean downmix = mode == 0 && !spatialEnabled && (ArchosFeatures.isAndroidTV(context)
+                ? prefs.getBoolean("enable_downmix_androidtv", false)
+                : !(Build.VERSION.SDK_INT >= 24 && prefs.getBoolean("disable_downmix", false)));
+        LibAvos.setDownmix(downmix ? 1 : 0);
+    }
+
     private static boolean isIecEncapsulationCapable = false;
     private static boolean isDirectPcmMultichannelCapable = false;
     private static long mediaCodecAudioCapabilityFlag = 0;
@@ -270,9 +349,19 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
      * the actual audio route.
      */
     private void refreshAudioOutputCapabilities(String reason) {
+        if (android.os.Looper.myLooper() != android.os.Looper.getMainLooper()) {
+            audioRouteHandler.post(() -> refreshAudioOutputCapabilities(reason));
+            return;
+        }
         if (mAudioManager == null) return;
 
         AudioDeviceInfo[] devices = mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
+        AudioDeviceInfo selected = selectedMediaDevice(devices, reason);
+        audioRouteResolved = selected != null;
+        selectedAudioDeviceId = selected == null ? 0 : selected.getId();
+        maxAudioChannelCount = 0;
+        hdmiAudioEncodingsFlags = null;
+        spdifAudioEncodingsFlags = null;
         boolean foundHdmi = false;
         boolean foundSpdif = false;
         boolean isAndroidTv = ArchosFeatures.isAndroidTV(this);
@@ -290,6 +379,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             log.debug("refreshAudioOutputCapabilities({}): {} output device(s)", reason, devices.length);
         }
         for (AudioDeviceInfo device : devices) {
+            if (selected != null && device.getId() != selected.getId()) continue;
             int type = device.getType();
             int[] encodings = device.getEncodings();
             long flags = getEncodingFlags(encodings);
@@ -374,6 +464,8 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
 
         updateIecEncapsulationCapability();
         updateDirectPcmMultichannelCapability();
+        refreshSpatializerCapabilities(reason);
+        publishAudioRouteChange();
 
         if (log != null) {
             log.info("refreshAudioOutputCapabilities({}): hasHdmi={} (type={}) hasSpdif={} maxAudioChannelCount={} hdmiCaps={} spdifCaps={}",
@@ -793,9 +885,12 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 launchSambaDiscovery();
                 if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
                 upgradeActions(appContext);
-                refreshAudioOutputCapabilities("onCreate");
                 refreshMediaCodecAudioCapabilities("onCreate");
-                refreshSpatializerCapabilities("onCreate");
+                audioRouteHandler.post(() -> {
+                    registerHdmiAudioPlugReceiver();
+                    registerAudioDeviceCallback();
+                    refreshAudioOutputCapabilities("onCreate");
+                });
             }
         }.start();
     }
@@ -966,8 +1061,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 TraktService.sync(this, TraktService.FLAG_SYNC_AUTO);
             }
         } else {
-            unRegisterHdmiAudioPlugReceiver();
-            unRegisterAudioDeviceCallback();
+            // Keep audio observers active for picture-in-picture/background playback.
             if (isVideStoreImportReceiverRegistered) {
                 if (log.isDebugEnabled()) log.debug("handleForeGround: app now in BackGround unregisterReceiver for videoStoreImportReceiver");
                 ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in Background unregister videoStoreImportReceiver");
@@ -999,6 +1093,8 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     private void registerAudioDeviceCallback() {
+        if (mAudioDeviceCallback != null || mAudioManager == null) return;
+        LibAvos.setAudioRouteListener(() -> refreshAudioOutputCapabilities("trackRoute"));
         mAudioDeviceCallback = new AudioDeviceCallback() {
             @Override
             public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
@@ -1027,6 +1123,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     private void unRegisterAudioDeviceCallback() {
         if (mAudioDeviceCallback != null) {
             mAudioManager.unregisterAudioDeviceCallback(mAudioDeviceCallback);
+            mAudioDeviceCallback = null;
         }
     }
 
@@ -1045,12 +1142,13 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                     refreshAudioOutputCapabilities("ACTION_HDMI_AUDIO_PLUG");
                     refreshSpatializerCapabilities("ACTION_HDMI_AUDIO_PLUG");
                     // If system reports plugged but device scan didn't find HDMI, fall back to intent values.
-                    if (isPlugged && !hasHdmi) {
+                    if (isPlugged && !hasHdmi && !audioRouteResolved) {
                         hasHdmi = true;
                         hdmiAudioEncodingsFlags = intent.getIntArrayExtra(AudioManager.EXTRA_ENCODINGS);
                         hdmiAudioEncodingFlag = getEncodingFlags(hdmiAudioEncodingsFlags);
                         updateIecEncapsulationCapability();
                         updateDirectPcmMultichannelCapability();
+                        publishAudioRouteChange();
                     }
                 }
 
@@ -1076,7 +1174,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     public static boolean isPassthroughSupported () {
-        return hasHdmi || hasSpdif || ArchosFeatures.isAndroidTV(mContext);
+        return hasHdmi || hasSpdif || (!audioRouteResolved && ArchosFeatures.isAndroidTV(mContext));
     }
 
     public static String[] audioEncodings = new String[] {"INVALID", "DEFAULT", "PCM_16BIT", "PCM_8BIT", "PCM_FLOAT",

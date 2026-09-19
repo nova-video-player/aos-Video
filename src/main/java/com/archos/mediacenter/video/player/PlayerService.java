@@ -14,6 +14,7 @@
 
 package com.archos.mediacenter.video.player;
 
+import android.media.AudioManager;
 import android.annotation.SuppressLint;
 
 import android.app.NotificationChannel;
@@ -319,6 +320,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private boolean mDestroyed;
     private Runnable mAutoSaveTask;
     private CountDownLatch mSubtitlesReadyLatch = null;
+    private int mSourceRequestGeneration;
     private static final long SUBTITLE_ENUMERATION_TIMEOUT_MS = 5000; // 5 second timeout for subtitle enumeration before starting video
 
     public enum PlayerState {
@@ -548,8 +550,10 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
 
         if (log.isDebugEnabled()) log.debug("onCreate: register headsetPluggedReceiver");
-        if (Build.VERSION.SDK_INT >= 33) registerReceiver(headsetPluggedReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG), Context.RECEIVER_NOT_EXPORTED);
-        else registerReceiver(headsetPluggedReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+        IntentFilter outputFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+        outputFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        if (Build.VERSION.SDK_INT >= 33) registerReceiver(headsetPluggedReceiver, outputFilter, Context.RECEIVER_NOT_EXPORTED);
+        else registerReceiver(headsetPluggedReceiver, outputFilter);
         setPlayer();
         Intent intent = new Intent(PLAYER_SERVICE_STARTED);
         intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
@@ -643,6 +647,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             continuingSession = false;
         }
         if (!continuingSession) {
+            ++mSourceRequestGeneration;
             mPlaybackSession.reset(mUri, launchGeneration);
         }
         PlaybackResumePolicy.StartupSource startupSource = PlaybackResumePolicy.chooseStartupSource(
@@ -1007,13 +1012,17 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             prepareSubs();
         if(mPlayerFrontend!=null)
             mPlayerFrontend.setUri(mUri, mStreamingUri);
+        final int generation = ++mSourceRequestGeneration;
+        final Player player = mPlayer;
+        final Uri uri = mStreamingUri;
+        final CountDownLatch subtitlesReady = mSubtitlesReadyLatch;
         new Thread(() -> {
             // Wait for subtitle enumeration to complete before starting video playback
             // This prevents glitches caused by subtitle track selection during playback
-            if (mSubtitlesReadyLatch != null) {
+            if (subtitlesReady != null) {
                 try {
                     if (log.isDebugEnabled()) log.debug("onStreamingUriOK: waiting for subtitles enumeration (timeout={}ms)", SUBTITLE_ENUMERATION_TIMEOUT_MS);
-                    boolean finished = mSubtitlesReadyLatch.await(SUBTITLE_ENUMERATION_TIMEOUT_MS, java.util.concurrent.TimeUnit.MILLISECONDS);
+                    boolean finished = subtitlesReady.await(SUBTITLE_ENUMERATION_TIMEOUT_MS, java.util.concurrent.TimeUnit.MILLISECONDS);
                     if (finished) {
                         if (log.isDebugEnabled()) log.debug("onStreamingUriOK: subtitles enumeration completed successfully");
                     } else {
@@ -1022,9 +1031,13 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 } catch (InterruptedException e) {
                     log.error("onStreamingUriOK: interrupted while waiting for subtitles", e);
                     Thread.currentThread().interrupt();
+                    return;
                 }
             }
-            mPlayer.setVideoURI(mStreamingUri, null);
+            mHandler.post(() -> {
+                if (!mDestroyed && generation == mSourceRequestGeneration && player == mPlayer)
+                    player.setVideoURI(uri, null);
+            });
         }).start();
     }
 
@@ -1095,6 +1108,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     ? mPlayer.getCurrentPosition()
                     : mPlayer.getRelativePosition();
         }
+        if (!capturedFromPlayer && mPlayer != null && mPlayer.hasSuspendedPosition())
+            position = mPlayer.getCurrentPosition();
         if (position < 0) position = 0;
         if (capturedFromPlayer && rewindForResume && position > 3000) position -= 1000;
         mPlaybackSession.lastKnownPositionMs = position;
@@ -1199,6 +1214,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     public void stopAndSaveVideoState(){
+        ++mSourceRequestGeneration;
         if (log.isDebugEnabled()) log.debug("stopAndSaveVideoState");
         if(mIndexHelper!=null) {
             mIndexHelper.abort(); //too late : do not retrieve db info
@@ -1644,7 +1660,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 mPlayerFrontend.onFirstPlay();
                 if (log.isDebugEnabled()) log.debug("postPreparedAndVideoDb: player start PlayerController.STATE_NORMAL");
                 Player.sPlayer.start(PlayerController.STATE_NORMAL);
-                PlayerService.sPlayerService.mPlayerState = PlayerService.PlayerState.PLAYING;
+                // onPlay/onPause records the result, including refused audio focus.
             }
             if(mAudioSubtitleNeedUpdate){ // when we have info about subs or audio track BEFORE mVideoInfo is set
                 if (log.isDebugEnabled()) log.debug("postPreparedAndVideoDb: audiotrack onAudioMetadataUpdated {}", mNewAudioTrack);
@@ -1938,6 +1954,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onPlay(int state) {
         if (log.isDebugEnabled()) log.debug("onPlay");
         mPlayerState = PlayerState.PLAYING;
+        mPlayOnResume = true;
         if (state == PlayerController.STATE_NORMAL) {
             if (log.isDebugEnabled()) log.debug("onPlay: PlayerController.STATE_NORMAL -> startTrakt()");
             startTrakt();
@@ -1956,6 +1973,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onPause(int state) {
         if (log.isDebugEnabled()) log.debug("onPause");
         mPlayerState = PlayerState.PAUSED;
+        if (mPlayer != null && mPlayer.isPauseRequested()) mPlayOnResume = false;
         // pauseTrakt() must run before saveVideoStateIfReady() so that it sets
         // mVideoInfo.traktResume = -progress synchronously before the async DB write captures it
         if (state == PlayerController.STATE_NORMAL) {
@@ -2860,13 +2878,15 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 // intent received just after started reflects only the current state do not process it
                 return;
             }
-            if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
+                if (mPlayer != null) mPlayer.onAudioBecomingNoisy();
+            } else if (Intent.ACTION_HEADSET_PLUG.equals(intent.getAction())) {
                 int state = intent.getIntExtra("state", -1);
                 if (log.isDebugEnabled()) log.debug("headsetPluggedReceiver: headset plug event: {}", state);
                 if (state != -1) {
                     if (state == UNPLUGGED) {
                         if (log.isDebugEnabled()) log.debug("headsetPluggedReceiver: headset unplugged during playback");
-                        if (mPlayer != null && mPlayer.isPlaying()) mPlayer.pause(PlayerController.STATE_NORMAL);
+                        if (mPlayer != null) mPlayer.onAudioBecomingNoisy();
                     } else if (state == PLUGGED) {
                         if (log.isDebugEnabled()) log.debug("headsetPluggedReceiver: headset plugged during playback");
                     }

@@ -160,18 +160,32 @@ public class SurfaceController {
     }
 
     public void setSurfaceCallback(SurfaceHolder.Callback callback) {
-        if (mSurfaceView != null)
-            mSurfaceView.getHolder().addCallback(callback);
+        if (mSurfaceView != null) {
+            SurfaceHolder holder = mSurfaceView.getHolder();
+            holder.addCallback(callback);
+            if (mView == mSurfaceView && holder.getSurface().isValid())
+                callback.surfaceCreated(holder);
+        }
     }
     
+    public void clearCallbacks(SurfaceHolder.Callback surface, TextureView.SurfaceTextureListener texture) {
+        if (mSurfaceView != null) mSurfaceView.getHolder().removeCallback(surface);
+        if (mEffectView != null && mEffectView.getSurfaceTextureListener() == texture)
+            mEffectView.setSurfaceTextureListener(null);
+    }
+
     public boolean supportOpenGLVideoEffect() {
         if (log.isDebugEnabled()) log.debug("supportOpenGLVideoEffect: {}", (mEffectView == mView) && (VideoEffect.openGLRequested(mEffectType)));
         return (mEffectView == mView) && (VideoEffect.openGLRequested(mEffectType));
     }
 
     public void setTextureCallback(TextureView.SurfaceTextureListener callback) {
-        if (mEffectView != null)
+        if (mEffectView != null) {
             mEffectView.setSurfaceTextureListener(callback);
+            if (mView == mEffectView && mEffectView.isAvailable())
+                callback.onSurfaceTextureAvailable(mEffectView.getSurfaceTexture(),
+                        mEffectView.getWidth(), mEffectView.getHeight());
+        }
     }
 
     public void setHdmiPlugged(boolean plugged, int hdmiWidth, int hdmiHeight) {

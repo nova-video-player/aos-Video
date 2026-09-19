@@ -38,8 +38,11 @@ public abstract class TextureSurfaceRenderer implements Runnable
 
     protected int width;
     protected int height;
-    private boolean running;
-    private boolean pause;
+    private volatile boolean running;
+    private volatile boolean pause;
+    private Thread renderThread;
+    private final java.util.concurrent.CountDownLatch initialized = new java.util.concurrent.CountDownLatch(1);
+    private RuntimeException initializationError;
 
     /**
      * @param texture Surface texture on which to render. This has to be called AFTER the texture became available
@@ -57,49 +60,77 @@ public abstract class TextureSurfaceRenderer implements Runnable
         this.texture = texture;
         this.width = width;
         this.height = height;
-        Thread thrd = new Thread(this);
-        thrd.start();
+        if (renderThread != null) throw new IllegalStateException("renderer already started");
+        renderThread = new Thread(this, "Video-effects");
+        renderThread.start();
+        boolean interrupted = false;
+        for (;;) {
+            try { initialized.await(); break; }
+            catch (InterruptedException e) { interrupted = true; }
+        }
+        if (interrupted) Thread.currentThread().interrupt();
+        if (initializationError != null) throw initializationError;
     }
 
     @Override
     public void run()
     {
-        initGL();
-        initGLComponents();
-        Log.d(LOG_TAG, "OpenGL init OK.");
-
-        while (running)
-        {
-            long loopStart = System.currentTimeMillis();
-            if (!pause) {
-                pingFps();
-
-                if (draw())
-                {
-                    egl.eglSwapBuffers(eglDisplay, eglSurface);
-                }
-            }
-
-            long waitDelta = 16 - (System.currentTimeMillis() - loopStart);    // Targeting 60 fps, no need for faster
-            if (waitDelta > 0)
-            {
-                try
-                {
-                    Thread.sleep(waitDelta);
-                }
-                catch (InterruptedException e)
-                {
-                    continue;
-                }
-            }
+        boolean componentsStarted = false;
+        try {
+            initGL();
+            componentsStarted = true;
+            initGLComponents();
+        } catch (RuntimeException e) {
+            initializationError = e;
+            running = false;
+        } finally {
+            initialized.countDown();
         }
+        try {
 
-        deinitGLComponents();
-        deinitGL();
+            while (running)
+            {
+                long loopStart = System.currentTimeMillis();
+                if (!pause) {
+                    pingFps();
+
+                    if (draw())
+                    {
+                        egl.eglSwapBuffers(eglDisplay, eglSurface);
+                    }
+                }
+
+                long waitDelta = 16 - (System.currentTimeMillis() - loopStart);    // Targeting 60 fps, no need for faster
+                if (waitDelta > 0)
+                {
+                    try
+                    {
+                        Thread.sleep(waitDelta);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        continue;
+                    }
+                }
+            }
+
+        } finally {
+            try { if (componentsStarted) deinitGLComponents(); }
+            finally { deinitGL(); }
+        }
     }
     
     void stop() {
         running = false;
+        Thread thread = renderThread;
+        if (thread == null || thread == Thread.currentThread()) return;
+        thread.interrupt(); // also wakes an empty frame queue
+        boolean interrupted = false;
+        while (thread.isAlive()) {
+            try { thread.join(); }
+            catch (InterruptedException e) { interrupted = true; }
+        }
+        if (interrupted) Thread.currentThread().interrupt();
     }
 
     void pause() {
@@ -146,7 +177,7 @@ public abstract class TextureSurfaceRenderer implements Runnable
      */
     public void onPause()
     {
-        running = false;
+        stop();
     }
 
 
@@ -176,9 +207,12 @@ public abstract class TextureSurfaceRenderer implements Runnable
 
     private void deinitGL()
     {
+        if (egl == null || eglDisplay == null || eglDisplay == EGL10.EGL_NO_DISPLAY) return;
         egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
-        egl.eglDestroySurface(eglDisplay, eglSurface);
-        egl.eglDestroyContext(eglDisplay, eglContext);
+        if (eglSurface != null && eglSurface != EGL10.EGL_NO_SURFACE)
+            egl.eglDestroySurface(eglDisplay, eglSurface);
+        if (eglContext != null && eglContext != EGL10.EGL_NO_CONTEXT)
+            egl.eglDestroyContext(eglDisplay, eglContext);
         egl.eglTerminate(eglDisplay);
         Log.d(LOG_TAG, "OpenGL deinit OK.");
     }

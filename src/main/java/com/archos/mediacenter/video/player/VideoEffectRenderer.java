@@ -45,31 +45,6 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
 
     ArrayBlockingQueue<Boolean> mSourceFrameAvailable = new ArrayBlockingQueue<Boolean>(1);
     
-    private Object texSync = new Object();
-    private Object initDone = new Object();
-    
-    private void waitInit() {
-        wait(initDone);
-    }
-    
-    private void notifyInit() {
-        notify(initDone);
-    }
-    
-    private void wait(Object obj) {
-        synchronized(obj) {
-            try {
-                obj.wait();
-             } catch (InterruptedException e) {}
-        }    
-    }
-    
-    private void notify(Object obj) {
-        synchronized(obj) {
-            obj.notify();
-        }
-    }
-    
     public VideoEffectRenderer(Context context, int effectType)
     {
         super();
@@ -84,10 +59,9 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
     }
     
     public void setTexture(SurfaceTexture surface, int width, int height) {
-        super.setTexture(surface, width, height);
         mViewWidth = width;
         mViewHeight = height;
-        waitInit();
+        super.setTexture(surface, width, height);
     }
     
     public int getEffectType() {
@@ -192,7 +166,6 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
             mUISurface.unlockCanvasAndPost(c);
         } catch (Exception e) { }
         }
-        notifyInit();
     }
 
     public void setVideoSize(int videoWidth, int videoHeight, double aspect) {
@@ -204,11 +177,14 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
     @Override
     protected synchronized void deinitGLComponents()
     {
-        if (mEffect != null) {
-	mEffect.deinitGLComponents();
-        mVideoSurfaceTexture.release();
-        mVideoSurfaceTexture.setOnFrameAvailableListener(null);
+        if (mVideoSurfaceTexture != null) {
+            mVideoSurfaceTexture.setOnFrameAvailableListener(null);
+            mVideoSurfaceTexture.release();
+            mVideoSurfaceTexture = null;
         }
+        if (mUISurface != null) { mUISurface.release(); mUISurface = null; }
+        if (mUISurfaceTexture != null) { mUISurfaceTexture.release(); mUISurfaceTexture = null; }
+        if (mEffect != null) mEffect.deinitGLComponents();
     }
 
     public SurfaceTexture getVideoTexture()
@@ -224,10 +200,8 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture)
     {
-	try {
-            mSourceFrameAvailable.put(mTrue);
-        } catch (Exception e) {
-            Log.e(TAG, "FrameAvailable missed");
-        }
+        // A queued notification already asks the renderer for the newest frame.
+        // Never block the main thread while the renderer is paused or stopping.
+        mSourceFrameAvailable.offer(mTrue);
     }
 }

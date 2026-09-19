@@ -62,6 +62,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -135,6 +136,19 @@ public class Player implements IPlayerControl,
     private int         mSurfaceWidth;
     private int         mSurfaceHeight;
     private IMediaPlayer mMediaPlayer;
+    private int mOpenGeneration;
+    private boolean mSessionPrepared;
+    private boolean mRestoringSession;
+    private boolean mMetadataReady;
+    private boolean mHasAudio;
+    private SurfaceTexture mDisplayTexture;
+    private int mFocusEpoch;
+    private AudioManager.OnAudioFocusChangeListener mFocusListener;
+    private boolean mFocusGranted;
+    private boolean mFocusSuspended;
+    private boolean mResumeAfterFocusLoss;
+    private String mAudioOutputSignature;
+
     private int         mVideoWidth;
     private int         mVideoHeight;
     private double      mVideoAspect;
@@ -150,7 +164,7 @@ public class Player implements IPlayerControl,
     private static final float EPSILON = 0.00001f;
     private float       mRefreshRate;
     private int         wantedModeId;
-    private static Window      mWindow;
+    private Window      mWindow;
     private AudioManager mAudioManager;
     private AudioFocusRequest mAudioFocusRequest = null;
     private static float mCurrentRefreshRate = 0.0f;
@@ -176,8 +190,14 @@ public class Player implements IPlayerControl,
 
             if (mCurrentState == STATE_REFRESH_PREPARED) {
                 mCurrentState = STATE_SURFACE_PREPARED;
-                if (mPlayerListener != null) {
-                    mPlayerListener.onPrepared();
+                if (mRestoringSession) {
+                    mRestoringSession = false;
+                    if (mTargetState == STATE_PLAYING) start(PlayerController.STATE_OTHER);
+                    else pause(PlayerController.STATE_OTHER);
+                    if (mPlayerListener != null) mPlayerListener.onOSDUpdate();
+                } else {
+                    mSessionPrepared = true;
+                    if (mPlayerListener != null) mPlayerListener.onPrepared();
                 }
             }
         }
@@ -228,13 +248,12 @@ public class Player implements IPlayerControl,
         }
     };
 
-    private boolean hasBeenSet;
-    private SurfaceController mOldSurfaceController;
     private boolean mForceSoftwareDecoding;
     private int mLastExistState = -1;
 
 
     private class ResumeCtx {
+        private boolean mSubtitleTrackSet;
         private int     mSeek;
         private int     mSubtitleTrack;
         private int     mSubtitleDelay;
@@ -251,6 +270,7 @@ public class Player implements IPlayerControl,
         public void reset() {
             mSeek = -1;
             mSubtitleTrack = -1;
+            mSubtitleTrackSet = false;
             mSubtitleDelay = 0;
             mSubtitleRatioN = -1;
             mSubtitleRatioD = -1;
@@ -264,7 +284,7 @@ public class Player implements IPlayerControl,
             if (mSeek != -1)
                 seekTo(mSeek);
             if (log.isDebugEnabled()) log.debug("onPrepared: subtitleTrack={}", mSubtitleTrack);
-            if (mSubtitleTrack != -1)
+            if (mSubtitleTrackSet)
                 mMediaPlayer.setSubtitleTrack(mSubtitleTrack);
             if (mSubtitleDelay != 0)
                 mMediaPlayer.setSubtitleDelay(mSubtitleDelay);
@@ -279,7 +299,7 @@ public class Player implements IPlayerControl,
             if (log.isTraceEnabled()) log.trace("onPrepared: audioTrack={}", mAudioTrack);
             if (mAudioTrack != -1)
                 mMediaPlayer.setAudioTrack(mAudioTrack);
-            reset();
+            mSeek = -1;
         }
         public void setSeek(int seek) {
             mSeek = seek;
@@ -290,6 +310,7 @@ public class Player implements IPlayerControl,
         public void setSubtitleTrack(int subtitleTrack) {
             if (log.isDebugEnabled()) log.debug("setSubtitleTrack: {}", subtitleTrack);
             mSubtitleTrack = subtitleTrack;
+            mSubtitleTrackSet = true;
         }
         public void setSubtitleDelay(int subtitleDelay) {
             mSubtitleDelay = subtitleDelay;
@@ -355,11 +376,13 @@ public class Player implements IPlayerControl,
     public void setSurfaceController(SurfaceController surfaceController){
         if(surfaceController == mSurfaceController)
             return;
-        mOldSurfaceController = mSurfaceController;
+        if (mDisplayTexture != null) onSurfaceTextureDestroyed(mDisplayTexture);
+        else suspendForSurface();
+        if (mSurfaceController != null) mSurfaceController.clearCallbacks(this, this);
+        mSurfaceHolder = null;
+        mDisplayTexture = null;
+        mVideoTexture = null;
         mSurfaceController = surfaceController;
-        Uri currentUri = mUri;
-        stopPlayback();
-        mUri = currentUri;
         if (mSurfaceController != null) {
             mSurfaceController.setTextureCallback(this);
             mSurfaceController.setSurfaceCallback(this);
@@ -367,11 +390,12 @@ public class Player implements IPlayerControl,
     }
     private void setGLSupportEnabled(boolean enable) {
         if (log.isDebugEnabled()) log.debug("setGLSupportEnabled {}", enable);
+        int target = mTargetState;
         saveUri();
-        pause(PlayerController.STATE_OTHER);
+        suspendForSurface();
         mSurfaceController.setGLSupportEnabled(enable);
-        restoreUri(mSurfaceController.supportOpenGLVideoEffect());
-        start(PlayerController.STATE_OTHER);
+        restoreUri(false); // the new surface callback performs the reopen
+        mTargetState = target;
     }
     
     public int getEffectType() {
@@ -403,7 +427,10 @@ public class Player implements IPlayerControl,
     }
 
     public void setVideoURI(Uri uri, Map<String, String> extraMap) {
+        stopPlayback();
         reset();
+        mMetadataReady = false;
+        mHasAudio = false;
         mUri = uri;
         mExtraMap = extraMap;
         String scheme = mUri.getScheme();
@@ -428,61 +455,90 @@ public class Player implements IPlayerControl,
         openVideo();
     }
 
-    @SuppressWarnings("deprecation") // abandonAudioFocus: API 26+ uses abandonAudioFocusRequest
-    synchronized public void stopPlayback() {
-        // TODO used to have if (PlayerService.sPlayerService != null) PlayerService.sPlayerService.saveVideoStateIfReady();
-        if (log.isDebugEnabled()) log.debug("stopPlayback");
+    @SuppressWarnings("deprecation")
+    private void abandonFocus() {
+        ++mFocusEpoch;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (mAudioFocusRequest != null) mAudioManager.abandonAudioFocusRequest(mAudioFocusRequest);
+            mAudioFocusRequest = null;
+        } else {
+            if (mFocusListener != null) mAudioManager.abandonAudioFocus(mFocusListener);
+        }
+        mFocusListener = null;
+        mFocusGranted = false;
+    }
+
+    private void closeCurrentPlayer() {
+        ++mOpenGeneration;
         mHandler.removeCallbacks(mPreparedAsync);
+        mHandler.removeCallbacks(mRefreshRateCheckerAsync);
+        IMediaPlayer old = mMediaPlayer;
+        mMediaPlayer = null; // callbacks from this instance are now obsolete
+        mCurrentState = STATE_IDLE;
+        mIsBusy = false;
+        mUpdateMetadata = false;
+        if (mSurfaceController != null) mSurfaceController.setMediaPlayer(null);
+        if (mEffectRenderer != null) mEffectRenderer.pause();
+        if (old != null) old.release(); // interrupts prepare/seek and joins rendering
+    }
+
+    private void suspendForSurface() {
+        if (isInPlaybackState()) {
+            mStopPosition = getCurrentPosition();
+            mDuration = getDuration();
+            if (mCanSeekBack || mCanSeekForward) mResumeCtx.setSeek(mStopPosition);
+        }
+        mRestoringSession = mSessionPrepared;
+        closeCurrentPlayer();
         stayAwake(false);
-        if (mEffectRenderer != null) {
-            mEffectRenderer.pause();
-        }
-        if (mMediaPlayer != null) {
-            try {
-                mStopPosition = getCurrentPosition();
-                mDuration = getDuration();
-            } catch (IllegalStateException e) {
-                // not critical
-            }
-            if (mSurfaceController != null)
-                mSurfaceController.setMediaPlayer(null);
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-            mUri = null;
-            mCurrentState = STATE_IDLE;
-            mTargetState  = STATE_IDLE;
+    }
 
-            // Abandone the audio focus
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                if (mAudioFocusRequest != null) mAudioManager.abandonAudioFocusRequest(mAudioFocusRequest);
-                mAudioFocusRequest = null;
-            } else {
-                mAudioManager.abandonAudioFocus(afChangeListener);
-            }
-
+    public void stopPlayback() {
+        if (isInPlaybackState()) {
+            mStopPosition = getCurrentPosition();
+            mDuration = getDuration();
         }
+        closeCurrentPlayer();
+        mUri = null;
+        mTargetState = STATE_IDLE;
+        mSessionPrepared = mRestoringSession = false;
+        mResumeAfterFocusLoss = mFocusSuspended = false;
+        abandonFocus();
+        stayAwake(false);
         mResumeCtx.reset();
     }
 
-    private boolean mIsStoppedByFocusLost;
-    AudioManager.OnAudioFocusChangeListener afChangeListener =
-    new AudioManager.OnAudioFocusChangeListener() {
-        public void onAudioFocusChange(int focusChange) {
-            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-                // Pause playback
-                mIsStoppedByFocusLost = isPlaying()|| mIsStoppedByFocusLost;
-                pause(PlayerController.STATE_OTHER);
-            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                // Resume playback
-                if (!isPlaying()&& mIsStoppedByFocusLost)
-                    start(PlayerController.STATE_OTHER);
-            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                mIsStoppedByFocusLost = isPlaying()|| mIsStoppedByFocusLost;
-                pause(PlayerController.STATE_OTHER);
-            }
+    private final AudioManager.OnAudioFocusChangeListener afChangeListener = focusChange -> {
+        if (!mHasAudio || mUri == null) return;
+        if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+            mFocusGranted = true;
+            mFocusSuspended = false;
+            boolean resume = mResumeAfterFocusLoss && mTargetState == STATE_PLAYING;
+            mResumeAfterFocusLoss = false;
+            if (resume) start(PlayerController.STATE_OTHER);
+        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
+                   focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+            mFocusGranted = false;
+            mFocusSuspended = true;
+            mResumeAfterFocusLoss = mTargetState == STATE_PLAYING;
+            pauseForFocus();
+        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+            mFocusGranted = false;
+            mFocusSuspended = true;
+            mResumeAfterFocusLoss = false;
+            pause(PlayerController.STATE_OTHER);
+            abandonFocus();
         }
     };
+
+    private void pauseForFocus() {
+        pausePlayback(PlayerController.STATE_OTHER);
+    }
+
+    public void onAudioBecomingNoisy() {
+        if ((!mMetadataReady || mHasAudio) && mTargetState == STATE_PLAYING)
+            pause(PlayerController.STATE_NORMAL);
+    }
 
     public void openVideo() {
         if (mUri == null || (mSurfaceHolder == null && mVideoTexture == null)) {
@@ -513,55 +569,61 @@ public class Player implements IPlayerControl,
         // we shouldn't clear the target state, because somebody might have
         // called start() previously
         log.info("openVideo: " + mUri);
-        release(false);
+        closeCurrentPlayer();
         if (mStopPosition != -1) {
             mResumeCtx.setSeek(mStopPosition);
-            mStopPosition = -1;
         }
+        final int generation = mOpenGeneration;
+        final Uri uri = mUri;
+        final Map<String, String> headers = mExtraMap == null ? null : new HashMap<>(mExtraMap);
+        final IMediaPlayer player;
+        try { player = MediaFactory.createPlayer(mContext, mForceSoftwareDecoding); }
+        catch (RuntimeException ex) { onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, ex.getMessage()); return; }
+        mMediaPlayer = player;
+        mCurrentState = STATE_PREPARING;
+        player.setOnPreparedListener(this);
+        player.setOnCompletionListener(this);
+        player.setOnInfoListener(this);
+        player.setOnErrorListener(this);
+        player.setOnBufferingUpdateListener(this);
+        player.setOnRelativePositionUpdateListener(this);
+        player.setOnSeekCompleteListener(this);
+        player.setOnVideoSizeChangedListener(this);
+        player.setOnSubtitleListener(this);
+        mAudioOutputSignature = CustomApplication.getAudioOutputSignature();
+        CustomApplication.applyAudioOutputToNative(mContext);
         new Thread(() -> {
             try {
-                mMediaPlayer = MediaFactory.createPlayer(mContext, mForceSoftwareDecoding);
-                mMediaPlayer.setOnPreparedListener(this);
-                mMediaPlayer.setOnCompletionListener(this);
-                mMediaPlayer.setOnInfoListener(this);
-                mMediaPlayer.setOnErrorListener(this);
-                mMediaPlayer.setOnBufferingUpdateListener(this);
-                mMediaPlayer.setOnRelativePositionUpdateListener(this);
-                mMediaPlayer.setOnSeekCompleteListener(this);
-                mMediaPlayer.setOnVideoSizeChangedListener(this);
-                mMediaPlayer.setOnSubtitleListener(this);
-                mDuration = -1;
-                if (mExtraMap != null)
-                    mMediaPlayer.setDataSource(mContext, mUri, mExtraMap);
-                else
-                    mMediaPlayer.setDataSource(mContext, mUri);
-                if (mSurfaceHolder != null) {
-                    if (log.isDebugEnabled()) log.debug("openVideo: setDisplay based on SurfaceHolder");
-                    mMediaPlayer.setDisplay(mSurfaceHolder);
-                    hasBeenSet=true;
-                }
-                else if (mVideoTexture != null) {
-                    if (log.isDebugEnabled()) log.debug("openVideo: setSurface based on SurfaceTexture");
-                    Surface surface = new Surface(mVideoTexture);
-                    mMediaPlayer.setSurface(surface);
-                    surface.release();
-                }
-
-                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                mMediaPlayer.setScreenOnWhilePlaying(true);
-                if (mResumeCtx.getSeek() != -1 && !mSurfaceController.supportOpenGLVideoEffect()) {
-                    if (mMediaPlayer.setStartTime(mResumeCtx.getSeek()))
-                        mResumeCtx.setSeek(-1);
-                }
-                mMediaPlayer.prepareAsync();
-                // we don't set the target state here either, but preserve the
-                // target state that was there before.
-                mCurrentState = STATE_PREPARING;
-            } catch (NullPointerException | IOException | IllegalArgumentException | IllegalStateException ex) {
-                onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, null);
-                return;
+                if (headers != null) player.setDataSource(mContext, uri, headers);
+                else player.setDataSource(mContext, uri);
+                mHandler.post(() -> {
+                    if (generation != mOpenGeneration || player != mMediaPlayer) return;
+                    try {
+                        if (mSurfaceHolder != null && mSurfaceHolder.getSurface().isValid()) {
+                            player.setDisplay(mSurfaceHolder);
+                        } else if (mVideoTexture != null) {
+                            Surface surface = new Surface(mVideoTexture);
+                            try { player.setSurface(surface); } finally { surface.release(); }
+                        } else {
+                            suspendForSurface();
+                            return;
+                        }
+                        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        player.setScreenOnWhilePlaying(true);
+                        if (mResumeCtx.getSeek() != -1 && !mSurfaceController.supportOpenGLVideoEffect()
+                                && player.setStartTime(mResumeCtx.getSeek())) mResumeCtx.setSeek(-1);
+                        player.prepareAsync();
+                    } catch (IllegalArgumentException | IllegalStateException ex) {
+                        onError(player, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, ex.getMessage());
+                    }
+                });
+            } catch (IOException | RuntimeException ex) {
+                mHandler.post(() -> {
+                    if (generation == mOpenGeneration && player == mMediaPlayer)
+                        onError(player, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, ex.getMessage());
+                });
             }
-        }).start();
+        }, "Player-source-" + generation).start();
     }
 
     /*
@@ -603,8 +665,11 @@ public class Player implements IPlayerControl,
     }
 
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        if (surface != mDisplayTexture) return true;
+        suspendForSurface();
+        mDisplayTexture = null;
         mVideoTexture = null;
-        stopPlayback();
+        mUISurface = null;
         if(mContext instanceof PlayerActivity)
             ((PlayerActivity) mContext).setUIExternalSurface(null);
         if(mContext instanceof FloatingPlayerService)
@@ -618,10 +683,22 @@ public class Player implements IPlayerControl,
 
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         if (log.isDebugEnabled()) log.debug("CONFIG onSurfaceTextureAvailable: {}x{}", width, height);
+        if (surface == mDisplayTexture && mVideoTexture != null) return;
+        if (mSurfaceHolder != null) {
+            suspendForSurface();
+            mSurfaceHolder = null;
+        }
+        if (mDisplayTexture != null && mDisplayTexture != surface)
+            onSurfaceTextureDestroyed(mDisplayTexture);
+        mDisplayTexture = surface;
         if(mEffectRenderer==null)
             mEffectRenderer = new VideoEffectRenderer(mContext, VideoEffect.getDefaultType());
 
-        mEffectRenderer.setTexture(surface, width, height);
+        try { mEffectRenderer.setTexture(surface, width, height); }
+        catch (RuntimeException ex) {
+            onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, ex.getMessage());
+            return;
+        }
         mVideoTexture = mEffectRenderer.getVideoTexture();
         mUISurface = mEffectRenderer.getUISurface();
         if(mContext instanceof PlayerActivity)
@@ -652,34 +729,19 @@ public class Player implements IPlayerControl,
     public void surfaceCreated(SurfaceHolder holder)
     {
         if (log.isDebugEnabled()) log.debug("CONFIG surfaceCreated");
+        if (holder == mSurfaceHolder && mMediaPlayer != null) return;
+        if (mDisplayTexture != null) onSurfaceTextureDestroyed(mDisplayTexture);
         mSurfaceHolder = holder;
         openVideo();
     }
 
     public void surfaceDestroyed(SurfaceHolder holder)
     {
-        // after we return from this we can't use the surface any more
+        if (holder != mSurfaceHolder) return;
+        suspendForSurface(); // joins native consumers before returning to Android
         mSurfaceHolder = null;
         mSurfaceWidth = 0;
         mSurfaceHeight = 0;
-        stopPlayback();
-    }
-
-    /*
-     * release the media player in any state
-     */
-    private void release(boolean cleartargetstate) {
-        if (mMediaPlayer != null) {
-            if (mSurfaceController != null)
-                mSurfaceController.setMediaPlayer(null);
-            mMediaPlayer.reset();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-            mCurrentState = STATE_IDLE;
-            if (cleartargetstate) {
-                mTargetState  = STATE_IDLE;
-            }
-        }
     }
 
     private void saveUri() {
@@ -700,55 +762,71 @@ public class Player implements IPlayerControl,
         if (restartVideo) openVideo();
     }
     
-    @SuppressWarnings("deprecation") // requestAudioFocus: API 26+ uses AudioFocusRequest
-    public void start(int state) {
-        if (log.isDebugEnabled()) log.debug("start");
-
-        mIsStoppedByFocusLost = false;
-        stayAwake(true);
-
-        // Request the audio focus so that other apps can pause playback.
+    @SuppressWarnings("deprecation")
+    private boolean acquireFocus() {
+        if (!mHasAudio) return true;
+        if (mFocusGranted) return true;
+        if (mFocusSuspended) return false;
+        if (mFocusListener == null) {
+            final int epoch = ++mFocusEpoch;
+            mFocusListener = change -> {
+                if (epoch == mFocusEpoch) afChangeListener.onAudioFocusChange(change);
+            };
+        }
+        int result;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mAudioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-                    .setAudioAttributes(
-                            new AudioAttributes.Builder()
-                                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                                    .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
-                                    .build()
-                    )
-                    .setAcceptsDelayedFocusGain(false)
-                    .setOnAudioFocusChangeListener(afChangeListener).build();
-            mAudioManager.requestAudioFocus(mAudioFocusRequest);
+            if (mAudioFocusRequest == null) {
+                mAudioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                        .setAudioAttributes(new AudioAttributes.Builder()
+                                .setUsage(AudioAttributes.USAGE_MEDIA)
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE).build())
+                        .setAcceptsDelayedFocusGain(false)
+                        .setWillPauseWhenDucked(true)
+                        .setOnAudioFocusChangeListener(mFocusListener, mHandler).build();
+            }
+            result = mAudioManager.requestAudioFocus(mAudioFocusRequest);
         } else {
-            mAudioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+            result = mAudioManager.requestAudioFocus(mFocusListener, AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN);
         }
+        return mFocusGranted = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+    }
 
-        if (isInPlaybackState()) {
-            mMediaPlayer.start();
-            mCurrentState = STATE_PLAYING;
-        }
+    public void start(int state) {
         mTargetState = STATE_PLAYING;
-        if (mPlayerListener != null) {
-            mPlayerListener.onPlay(state);
-        } else {
-            if (log.isDebugEnabled()) log.debug("start: no listener");
+        if (state == PlayerController.STATE_NORMAL) {
+            mFocusSuspended = false;
+            mResumeAfterFocusLoss = false;
         }
-
-        if (mEffectRenderer != null) {
-            mEffectRenderer.onPlay();
+        if (!isInPlaybackState() || !mMetadataReady) return;
+        if (!acquireFocus()) {
+            mMediaPlayer.pause();
+            mCurrentState = STATE_PAUSED;
+            if (mPlayerListener != null) mPlayerListener.onPause(PlayerController.STATE_OTHER);
+            stayAwake(false);
+            return;
         }
+        mMediaPlayer.start();
+        mCurrentState = STATE_PLAYING;
+        stayAwake(true);
+        if (mPlayerListener != null) mPlayerListener.onPlay(state);
+        if (mEffectRenderer != null) mEffectRenderer.onPlay();
     }
 
     public void pause(int state) {
+        mResumeAfterFocusLoss = false;
+        mTargetState = STATE_PAUSED;
+        pausePlayback(state);
+    }
+
+    private void pausePlayback(int state) {
         // TODO used to have if (PlayerService.sPlayerService != null) PlayerService.sPlayerService.saveVideoStateIfReady();
         if (log.isDebugEnabled()) log.debug("pause");
         if (isInPlaybackState()) {
-            if (mMediaPlayer.isPlaying()) {
-                mMediaPlayer.pause();
-                mCurrentState = STATE_PAUSED;
-            }
+            // Queue pause even if a preceding native start has not completed yet.
+            mMediaPlayer.pause();
+            mCurrentState = STATE_PAUSED;
         }
-        mTargetState = STATE_PAUSED;
         if (mPlayerListener != null) {
             mPlayerListener.onPause(state);
         } else {
@@ -772,6 +850,10 @@ public class Player implements IPlayerControl,
         return mDuration;
     }
 
+    public boolean hasSuspendedPosition() {
+        return mUri != null && mStopPosition >= 0;
+    }
+
     public int getCurrentPosition() {
         if (isInPlaybackState()) {
             int currentPos = mMediaPlayer.getCurrentPosition();
@@ -792,6 +874,7 @@ public class Player implements IPlayerControl,
     }
     
     public void seekTo(int msec) {
+        mStopPosition = msec;
         if (log.isDebugEnabled()) log.debug("seekTo: {} ms", msec);
         if (isInPlaybackState()) {
             if (mPlayerListener != null) {
@@ -814,6 +897,10 @@ public class Player implements IPlayerControl,
             
     public boolean isPlaying() {
         return isInPlaybackState() && mMediaPlayer.isPlaying();
+    }
+
+    public boolean isPauseRequested() {
+        return mTargetState == STATE_PAUSED;
     }
 
     public boolean isPaused() {
@@ -877,13 +964,12 @@ public class Player implements IPlayerControl,
     }
 
     public boolean setSubtitleTrack(int stream) {
+        mResumeCtx.setSubtitleTrack(stream);
         if (log.isDebugEnabled()) log.debug("setSubtitleTrack: select stream {}", stream);
         if (isInPlaybackState()) {
             return mMediaPlayer.setSubtitleTrack(stream);
-        } else {
-            mResumeCtx.setSubtitleTrack(stream);
-            return true;
         }
+        return true;
     }
 
     public int checkCurrentFileExists(){
@@ -891,10 +977,9 @@ public class Player implements IPlayerControl,
     }
 
     public void setSubtitleDelay(int delay) {
+        mResumeCtx.setSubtitleDelay(delay);
         if (isInPlaybackState()) {
             mMediaPlayer.setSubtitleDelay(delay);
-        } else {
-            mResumeCtx.setSubtitleDelay(delay);
         }
     }
 
@@ -921,58 +1006,64 @@ public class Player implements IPlayerControl,
     }
 
     private void setSubtitleRatio(int n, int d) {
+        mResumeCtx.setSubtitleRatio(n, d);
         if (isInPlaybackState()) {
             try {
                 mMediaPlayer.setSubtitleRatio(n, d);
             } catch (IllegalStateException e) {
                 log.error("setSubtitleRatio fail", e);
             }
-        } else {
-            mResumeCtx.setSubtitleRatio(n, d);
         }
     }
     
     public boolean setAudioFilter(int n, boolean nightOn) {
         int enable = nightOn?1:0;
+        mResumeCtx.setAudioFilter(n, enable);
         if (isInPlaybackState()) {
             mMediaPlayer.setAudioFilter(n, enable);
             return true;
-        } else {
-            mResumeCtx.setAudioFilter(n, enable);
-            return true;
         }
+        return true;
     }
 
     public void setAvDelay(int delay) {
+        mResumeCtx.setAvDelay(delay);
         if (isInPlaybackState()) {
             mMediaPlayer.setAvDelay(delay);
-        } else {
-            mResumeCtx.setAvDelay(delay);
         }
     };
 
     public void setAvSpeed(float speed) {
+        mResumeCtx.setAvSpeed(speed);
         if (isInPlaybackState()) {
             mMediaPlayer.setAvSpeed(speed);
-        } else {
-            mResumeCtx.setAvSpeed(speed);
         }
     };
 
     public boolean setAudioTrack(int stream) {
+        mResumeCtx.setAudioTrack(stream);
         if (log.isDebugEnabled()) log.debug("setAudioTrack: select stream {}", stream);
         if (isInPlaybackState()) {
             return mMediaPlayer.setAudioTrack(stream);
-        } else {
-            mResumeCtx.setAudioTrack(stream);
-            return true;
         }
+        return true;
     }
 
     public void refreshAudioOutput() {
-        if (isInPlaybackState()) {
+        if (isInPlaybackState() && mHasAudio) {
             mMediaPlayer.refreshAudioOutput();
         }
+    }
+
+    public void onAudioOutputChanged() {
+        String signature = CustomApplication.getAudioOutputSignature();
+        if (signature.equals(mAudioOutputSignature)) return;
+        if (mMediaPlayer == null || !mMetadataReady) return; // prepare applies the newest snapshot
+        mAudioOutputSignature = signature;
+        if (!mHasAudio) return;
+        // Close serializes with seek/track switching and preserves the pending seek target.
+        suspendForSurface();
+        openVideo();
     }
 
     private void handleMetadata(IMediaPlayer mp) {
@@ -980,6 +1071,13 @@ public class Player implements IPlayerControl,
         MediaMetadata data = mp.getMediaMetadata(IMediaPlayer.METADATA_ALL,
                                        IMediaPlayer.BYPASS_METADATA_FILTER);
         if (data != null) {
+            if (data.has(IMediaPlayer.METADATA_KEY_NB_AUDIO_TRACK)) {
+                mHasAudio = data.getInt(IMediaPlayer.METADATA_KEY_NB_AUDIO_TRACK) > 0;
+                if (data.has(IMediaPlayer.METADATA_KEY_CURRENT_AUDIO_TRACK))
+                    mHasAudio &= data.getInt(IMediaPlayer.METADATA_KEY_CURRENT_AUDIO_TRACK) >= 0;
+                mMetadataReady = true;
+                if (!mHasAudio) { abandonFocus(); mFocusSuspended = mResumeAfterFocusLoss = false; }
+            }
             boolean enabledUpdate = false;
 
             if (data.has(IMediaPlayer.METADATA_KEY_PAUSE_AVAILABLE)) {
@@ -1022,6 +1120,7 @@ public class Player implements IPlayerControl,
 
     /* IMediaPlayer.Listener */
     public void onPrepared(IMediaPlayer mp) {
+        if (mp != mMediaPlayer) return;
         mCurrentState = STATE_PREPARED;
         if (mSurfaceController != null)
             mSurfaceController.setMediaPlayer(mMediaPlayer);
@@ -1031,6 +1130,12 @@ public class Player implements IPlayerControl,
         if (log.isDebugEnabled()) log.debug("onPrepared: mCanPause={}, mCanSeekForward={}, mCanSeekBack={} -> handleMetadata", mCanPause, mCanSeekForward, mCanSeekBack);
         handleMetadata(mMediaPlayer);
 
+        // No audio tracks is a valid video session, including failed/absent audio decode.
+        mMetadataReady = true;
+        if (mHasAudio && !CustomApplication.getAudioOutputSignature().equals(mAudioOutputSignature)) {
+            onAudioOutputChanged();
+            return;
+        }
         mResumeCtx.onPrepared();
 
         if (mWindow != null) {
@@ -1147,6 +1252,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onCompletion(IMediaPlayer mp) {
+        if (mp != mMediaPlayer) return;
         mCurrentState = STATE_PLAYBACK_COMPLETED;
         mTargetState = STATE_PLAYBACK_COMPLETED;
         if (mPlayerListener != null) {
@@ -1161,6 +1267,7 @@ public class Player implements IPlayerControl,
     }
     public double getVideoAspect() { return mVideoAspect; }
     public void onVideoSizeChanged(IMediaPlayer mp, int width, int height) {
+        if (mp != mMediaPlayer) return;
         mVideoWidth = width;
         mVideoHeight = height;
         if (log.isDebugEnabled()) log.debug("CONFIG OnVideoSizeChanged: {}x{}", mVideoWidth, mVideoHeight);
@@ -1170,6 +1277,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onVideoAspectChanged(IMediaPlayer mp, double aspect) {
+        if (mp != mMediaPlayer) return;
         mVideoAspect = aspect;
         if (log.isDebugEnabled()) log.debug("CONFIG OnVideoAspectChanged: {}", mVideoAspect);
         mSurfaceController.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
@@ -1178,6 +1286,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onSeekComplete(IMediaPlayer mp) {
+        if (mp != mMediaPlayer) return;
         if (log.isDebugEnabled()) log.debug("onSeekComplete");
         if (mPlayerListener != null) {
             mPlayerListener.onSeekComplete();
@@ -1185,6 +1294,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onAllSeekComplete(IMediaPlayer mp) {
+        if (mp != mMediaPlayer) return;
         mIsBusy = false;
         if (mUpdateMetadata) {
             if (log.isDebugEnabled()) log.debug("onAllSeekComplete: mUpdateMetadata = true -> handleMetadata");
@@ -1199,10 +1309,12 @@ public class Player implements IPlayerControl,
     }
 
     public void onRelativePositionUpdate(IMediaPlayer mp, int permil) {
+        if (mp != mMediaPlayer) return;
         mRelativePosition = permil;
     }
 
     public boolean onInfo(IMediaPlayer mp, int what, int extra) {
+        if (mp != mMediaPlayer) return true;
         if (log.isDebugEnabled()) log.debug("onInfo: {} {}", what, extra);
         switch(what) {
         case IMediaPlayer.MEDIA_INFO_METADATA_UPDATE:
@@ -1241,6 +1353,7 @@ public class Player implements IPlayerControl,
     }
 
     public boolean onError(IMediaPlayer mp, int errorCode, int errorQualCode, String msg) {
+        if (mp != mMediaPlayer) return true;
         log.warn("onError: Error: {},{}", errorCode, errorQualCode);
         mCurrentState = STATE_ERROR;
         mTargetState = STATE_ERROR;
@@ -1261,6 +1374,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onBufferingUpdate(IMediaPlayer mp, int percent) {
+        if (mp != mMediaPlayer) return;
         mBufferPosition = percent * 10;
         if (mPlayerListener != null) {
             mPlayerListener.onBufferingUpdate(percent);
@@ -1268,6 +1382,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onSubtitle(IMediaPlayer mp, Subtitle subtitle) {
+        if (mp != mMediaPlayer) return;
         if (log.isDebugEnabled()) log.debug("onSubtitle");
         if (mPlayerListener != null) {
             mPlayerListener.onSubtitle(subtitle);
@@ -1424,10 +1539,11 @@ public class Player implements IPlayerControl,
     }
 
     public static String getHdr(Context context) { // only works with API34...
-        if (mWindow == null || Build.VERSION.SDK_INT < 34) {
+        Window window = sPlayer == null ? null : sPlayer.mWindow;
+        if (window == null || Build.VERSION.SDK_INT < 34) {
             return "";
         }
-        View v = mWindow.getDecorView();
+        View v = window.getDecorView();
         if (v == null) {
             return "";
         }

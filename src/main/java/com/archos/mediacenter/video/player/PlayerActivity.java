@@ -971,34 +971,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         if (log.isDebugEnabled()) log.debug("onStart: Setting audio transformer");
         if (LibAvos.isAvailable()) {
             VideoPreferencesCommon.resetPassthroughPref(mPreferences); // note this resets the audio_speed if in passthrough to 1.0f in prefs
-            // enable passthrough only if HDMI is connected and enabled in options
-            // Use effective max PCM channels
-            int maxPcmChannels = CustomApplication.getEffectiveMaxPcmChannels();
-            log.info("onStart: PCM diagnostic - maxPcmChannels={} hasHdmi={} isIecCapable={} isDirectPcmCapable={} maxAudioChannelCount={}",
-                    maxPcmChannels,
-                    CustomApplication.isHdmiConnected(),
-                    CustomApplication.isIecEncapsulationCapable(),
-                    CustomApplication.isDirectPcmMultichannelCapable(),
-                    CustomApplication.getMaxAudioChannelCount());
-            LibAvos.setMaxPcmChannels(maxPcmChannels);
-            log.info("onStart: Set max PCM channels to {}", maxPcmChannels);
-            LibAvos.setPcmChannelMasks(CustomApplication.getHdmiChannelMasks());
-            int passthroughMode = CustomApplication.isPassthroughSupported() ? Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple","0") ) : 0;
-            LibAvos.setPassthrough(passthroughMode);
+            int passthroughMode = CustomApplication.isPassthroughSupported()
+                    ? Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple", "0")) : 0;
             resetUnsupportedPassthroughAudioDelayPreset();
-            if (mPreferences.getBoolean(VideoPreferencesCommon.KEY_FORCE_AUDIO_PASSTHROUGH, false)) {
-                long forcedFlags = CustomApplication.allHdmiAudioCodecs;
-                if (!CustomApplication.isIecEncapsulationCapable()) {
-                    // Don't fake IEC support on devices that never advertised it; otherwise
-                    // mode 3 fallback gets forced back into IEC and fails on IEC-less eARC.
-                    forcedFlags &= ~(1L << 13); // clear AVOS_ENCODING_IEC61937
-                }
-                LibAvos.setHdmiSupportedAudioCodecs(forcedFlags);
-            } else {
-                LibAvos.setHdmiSupportedAudioCodecs(CustomApplication.getNativeAudioCodecsFlag());
-            }
-            LibAvos.setMediaCodecAudioCapabilities(CustomApplication.getMediaCodecAudioCapabilitiesFlag());
-            LibAvos.setSpatializerCapabilities(CustomApplication.getSpatializerCapabilities());
             mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             applySpatializationPreferenceToAvos();
             // note enable_downmix_androidtv and disable_downmix are the opposite same settings but only one applies to androidTV
@@ -1155,7 +1130,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mPaused = false;
                 mPlayer.checkSubtitles();
                 // Ensure mPlayOnResume stays false if player is paused
-                if (mPlayer.isPaused() && PlayerService.sPlayerService != null) {
+                if (mPlayer.isPauseRequested() && PlayerService.sPlayerService != null) {
                     if (log.isDebugEnabled()) log.debug("onResume: player is paused, ensuring mPlayOnResume = false and mUserPausedVideo = true");
                     mUserPausedVideo = true;
                     PlayerService.sPlayerService.setPlayOnResume(false);
@@ -1208,7 +1183,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
 
         // If player is paused when activity pauses (screen off), preserve pause state
-        if (mPlayer != null && mPlayer.isPaused() && PlayerService.sPlayerService != null) {
+        if (mPlayer != null && mPlayer.isPauseRequested() && PlayerService.sPlayerService != null) {
             if (log.isDebugEnabled()) log.debug("onPause (activity): player is paused, setting mPlayOnResume = false");
             PlayerService.sPlayerService.setPlayOnResume(false);
         }
@@ -4332,9 +4307,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mSubtitleManager.onPause();
             sendVideoStateChanged();
 
-            // Set mPlayOnResume to false for user-initiated pause (STATE_NORMAL)
-            // so that video doesn't auto-play when screen turns back on
-            if (state == PlayerController.STATE_NORMAL && PlayerService.sPlayerService != null) {
+            // Preserve explicit and permanent-focus pauses through Activity recreation.
+            // Transient focus pauses retain the play request and may resume on gain.
+            if (mPlayer.isPauseRequested() && PlayerService.sPlayerService != null) {
                 if (log.isDebugEnabled()) log.debug("onPause: user paused, setting mPlayOnResume = false and mUserPausedVideo = true");
                 mUserPausedVideo = true;
                 PlayerService.sPlayerService.setPlayOnResume(false);
