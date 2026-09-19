@@ -158,7 +158,7 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
 
             return true;
         }
-        else if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ESCAPE || keyCode == KeyEvent.KEYCODE_BUTTON_B) {
+        else if (keyCode == KeyEvent.KEYCODE_ESCAPE || keyCode == KeyEvent.KEYCODE_BUTTON_B) {
             handleBackPressed();
             return true;
         }

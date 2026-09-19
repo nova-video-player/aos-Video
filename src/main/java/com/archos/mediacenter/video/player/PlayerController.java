@@ -2255,7 +2255,6 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             if (event.getAction() == KeyEvent.ACTION_DOWN && mTVMenuAdapter != null) {
                 switch(keyCode) {
                     case KeyEvent.KEYCODE_ESCAPE:
-                    case KeyEvent.KEYCODE_BACK:
                     case KeyEvent.KEYCODE_MENU:
                         showTVMenu(false);
                         return true;
