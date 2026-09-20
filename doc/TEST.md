@@ -238,7 +238,45 @@ cd Video
     -Dnova.test.speedtestCsv=/absolute/path/to/servers.csv
 ```
 
-Output is a results table printed to stdout with bytes transferred, elapsed seconds, and MB/s per row; failed rows show the exception instead.
+Output includes the upstream and HTTP client buffer sizes, followed by a results table with bytes transferred, elapsed seconds, and MiB/s (bytes / 1024² / seconds) per row; failed rows show the exception instead.
+
+### Comparing upstream buffer sizes (host only)
+
+The optional `-Dnova.test.speedtestUpstreamBufferBytes` property sets the proxy's
+`BufferedInputStream` size for every CSV row. It defaults to **81920 bytes (80 KiB)**,
+matching production. The HTTP client buffer stays at 256 KiB and the proxy's socket-write
+buffer stays at 8 KiB. This override does not change the app's default or the device test.
+
+From the `Video` directory, compare 80 KiB and 1 MiB with the same dependency and CSV:
+
+```bash
+for size in 81920 1048576; do
+    ./gradlew :FileCoreLibrary:testDebugUnitTest --rerun-tasks --tests '*SpeedTestTransferTest' \
+        -Dnova.test.speedtestCsv=/absolute/path/to/servers.csv \
+        -Dnova.test.speedtestUpstreamBufferBytes="$size"
+done
+```
+
+For the jcifs-ng comparison, select the dependency in `FileCoreLibrary/build.gradle`:
+
+| Version | Multicredit | Read-ahead |
+| --- | --- | --- |
+| `v2.1.11-upstream` | No | No |
+| `v2.1.11-nova7` | Yes | No |
+| `v2.1.11-nova8` | Yes | Yes |
+
+Use `smb://` for jcifs-ng and `smbj://` for the smbj reference. First compare buffer sizes
+with nova7 to measure the benefit of larger caller reads. Then hold the upstream buffer
+at 1 MiB while comparing nova7 and nova8 to assess the additional benefit of read-ahead.
+The buffer size is a caller-side setting; negotiated server limits and library behavior
+can change actual SMB request sizes.
+
+Repeat runs with the same file and network conditions, reversing the comparison order
+to reduce cache/order bias. Compare transferred byte counts as well as throughput, and
+inspect warnings and failed rows: this diagnostic does not assert the expected file
+length or verify a checksum, so a passing Gradle test alone does not establish transfer
+integrity. Host measurements also need confirmation on the target Android device before
+changing production settings.
 
 ### Test Reports
 - **HTML Report**: `FileCoreLibrary/build/reports/tests/testDebugUnitTest/index.html`
