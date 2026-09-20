@@ -16,13 +16,11 @@ package com.archos.mediacenter.video.player;
 
 import android.content.Context;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.DisplayMetrics;
-import android.view.WindowManager;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.archos.mediacenter.video.utils.MiscUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -189,19 +187,9 @@ public class StereoDiveEffect extends VideoEffect {
         }
     }
     
-    @SuppressWarnings("deprecation") // getDefaultDisplay: API 30+ uses context.getDisplay()
     private static int getScreenOrientation(Context context) {
-        int rotation;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            rotation = context.getDisplay().getRotation();
-        } else {
-            rotation = getWindowManager(context).getDefaultDisplay().getRotation();
-        }
+        int rotation = MiscUtils.getRotation(context);
         return ((8 - rotation + 1) % 4);
-    }
-
-    private static WindowManager getWindowManager(Context context) {
-        return context instanceof AppCompatActivity ?((AppCompatActivity)context).getWindowManager():(WindowManager)context.getSystemService(context.WINDOW_SERVICE);
     }
 
     private void updateCurrentRotation() {

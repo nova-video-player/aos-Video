@@ -25,13 +25,16 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Insets;
+import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.DisplayCutout;
 import android.view.RoundedCorner;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -373,8 +376,53 @@ public class MiscUtils {
     }
 
 
+    /**
+     * Safely obtains a {@link Display} instance.
+     * Checks provided views first, then falls back to {@link Context#getDisplay()} (API 30+)
+     * catching {@link UnsupportedOperationException} for non-visual contexts (e.g. Service or Application),
+     * and finally falls back to {@link DisplayManager} or {@link WindowManager#getDefaultDisplay()}.
+     */
+    @SuppressWarnings("deprecation") // getDefaultDisplay: fallback when context.getDisplay() is not supported on non-visual context
+    public static Display getDisplay(Context context, View... views) {
+        if (views != null) {
+            for (View view : views) {
+                if (view != null && view.getDisplay() != null) {
+                    return view.getDisplay();
+                }
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && context != null) {
+            try {
+                return context.getDisplay();
+            } catch (UnsupportedOperationException ignored) {
+                // Non-visual Context (such as Service or Application)
+            }
+        }
+        if (context != null) {
+            DisplayManager dm = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+            if (dm != null) {
+                Display display = dm.getDisplay(Display.DEFAULT_DISPLAY);
+                if (display != null) {
+                    return display;
+                }
+            }
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            if (wm != null) {
+                return wm.getDefaultDisplay();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Safely obtains the current display rotation.
+     */
+    public static int getRotation(Context context, View... views) {
+        Display display = getDisplay(context, views);
+        return display != null ? display.getRotation() : Surface.ROTATION_0;
+    }
+
     // this adjust margins but not view size
-    @SuppressWarnings("deprecation") // getDefaultDisplay: pre-R fallback
     public static void adjustViewLayoutForInsets(Context context, View rootView, View viewLayout, String viewName, boolean navigationBarShowing, boolean systemBarShowing, boolean actionBarShowing,
                                                  boolean controlBarShowing, boolean isNavBarOnBottom, boolean isGestureAreaShowing,
                                                  int additionalBottomMargin, int alreadyAppliedBottomMargin,
@@ -407,10 +455,8 @@ public class MiscUtils {
         int rotation;
         if (PlayerActivity.isRotationLocked()) {
             rotation = PlayerActivity.getLockedRotation();
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            rotation = context.getDisplay().getRotation();
         } else {
-            rotation = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+            rotation = getRotation(context, rootView, viewLayout);
         }
 
         WindowInsets insets = rootView.getRootWindowInsets();
