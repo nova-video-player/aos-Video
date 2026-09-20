@@ -299,7 +299,7 @@ public class PlayUtils implements IndexHelper.Listener {
                     // Http proxy to allow 3rd party players to play remote files
                     try {
                         if (log.isDebugEnabled()) log.debug("onResumeReady: 3rd party player, non local file, file uri:{}", video.getFileUri());
-                        StreamOverHttp stream = new StreamOverHttp(video.getFileUri(), mimeType);
+                        StreamOverHttp stream = new StreamOverHttp(video.getFileUri(), mimeType, StreamOverHttp.ReadMode.PLAYBACK);
                         dataUri = stream.getEncodedUri(FileUtils.getName(video.getFileUri()));
                     } catch (IOException e) {
                         log.error("onResumeReady: failed to start {}{}", video.getFileUri(), e);

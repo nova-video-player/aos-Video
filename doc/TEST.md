@@ -244,8 +244,11 @@ Output includes the upstream and HTTP client buffer sizes, followed by a results
 
 The optional `-Dnova.test.speedtestUpstreamBufferBytes` property sets the proxy's
 `BufferedInputStream` size for every CSV row. It defaults to **81920 bytes (80 KiB)**,
-matching production. The HTTP client buffer stays at 256 KiB and the proxy's socket-write
-buffer stays at 8 KiB. This override does not change the app's default or the device test.
+matching the general-purpose proxy default. Production playback uses up to 1 MiB for
+the primary jcifs stream; this benchmark uses its explicit size for every backend so
+comparisons remain controlled. The HTTP client buffer stays at 256 KiB and the proxy's
+socket-write buffer stays at 8 KiB. This override does not change the app's settings.
+See [buffer.md](buffer.md) for the complete playback and buffering architecture.
 
 From the `Video` directory, compare 80 KiB and 1 MiB with the same dependency and CSV:
 
@@ -332,6 +335,26 @@ This requires a connected/authorized device (`adb devices`). `compareTransferRat
 ```bash
 adb logcat -d -s System.out
 ```
+
+The device benchmark accepts `-e speedtestUpstreamBufferBytes SIZE`, with the same
+81920-byte default as the host diagnostic. After installing and seeding the CSV,
+compare candidate sizes without rebuilding the APK:
+
+```bash
+for size in 262144 524288 1048576; do
+    adb shell am instrument -w -r \
+        -e class com.archos.filecorelibrary.SpeedTestTransferTest \
+        -e speedtestCsv /data/user/0/com.archos.filecorelibrary.test/files/servers.csv \
+        -e speedtestUpstreamBufferBytes "$size" \
+        com.archos.filecorelibrary.test/androidx.test.runner.AndroidJUnitRunner
+done
+adb logcat -d -s System.out
+```
+
+Each run prints its buffer sizes. Repeat in reverse order and compare complete byte
+counts and warnings as well as MiB/s. This tests backend/proxy throughput on Android;
+startup, seeking, stop/reopen, concurrent scraping, and AVOS memory/GC behavior still
+require real playback checks.
 
 Re-run after reinstalling the APK (e.g. after code changes): reinstalling wipes the app's private
 data dir, so the `run-as ... cat > files/servers.csv` seeding step must be repeated.
