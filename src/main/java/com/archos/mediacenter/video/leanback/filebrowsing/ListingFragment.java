@@ -51,6 +51,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -806,6 +807,7 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
 
     // -----------------------------------------------------
 
+    @SuppressWarnings("unchecked")
     private void openDetailsActivity(Video video, Presenter.ViewHolder itemViewHolder) {
         Intent intent = new Intent(getActivity(), VideoDetailsActivity.class);
         intent.putExtra(VideoDetailsFragment.EXTRA_VIDEO, video);
@@ -817,8 +819,23 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
             sourceView = ((ListPresenter.ListViewHolder)itemViewHolder).getImageView();
         }
 
-        ActivityOptionsCompat opts = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                getActivity(), sourceView, VideoDetailsActivity.SHARED_ELEMENT_NAME);
+        boolean isPortraitPoster = false;
+        if (sourceView instanceof ImageView) {
+            Drawable drawable = ((ImageView) sourceView).getDrawable();
+            if (drawable != null && drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() >= drawable.getIntrinsicWidth()) {
+                isPortraitPoster = true;
+            }
+        }
+
+        ActivityOptionsCompat opts;
+        if (isPortraitPoster) {
+            opts = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    getActivity(), sourceView, VideoDetailsActivity.SHARED_ELEMENT_NAME);
+            intent.putExtra(VideoDetailsFragment.EXTRA_HAS_SHARED_ELEMENT, true);
+        } else {
+            opts = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
+            intent.putExtra(VideoDetailsFragment.EXTRA_HAS_SHARED_ELEMENT, false);
+        }
         infoLauncher.launch(intent, opts);
     }
 

@@ -96,6 +96,7 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
         showVideoDetails(activity, video, itemViewHolder, true, forceSelection, true, listId, null);
     }
 
+    @SuppressWarnings("unchecked")
     public static void showVideoDetails(Activity activity, Video video, Presenter.ViewHolder itemViewHolder, boolean animate, boolean forceSelection, boolean shouldLoadBackdrop, long listId, ActivityResultLauncher<Intent> launcher) {
         Intent intent = new Intent(activity, VideoDetailsActivity.class);
         intent.putExtra(VideoDetailsFragment.EXTRA_VIDEO, video);
@@ -113,10 +114,15 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
         } else if (itemViewHolder instanceof ListPresenter.ListViewHolder){
             sourceView = ((ListPresenter.ListViewHolder)itemViewHolder).getImageView();
         }
+        boolean isPortraitPoster = false;
         if (sourceView instanceof ImageView) {
             Drawable drawable = ((ImageView) sourceView).getDrawable();
-            VideoDetailsTransitionPosterCache.put(launchUptimeMs, drawable);
+            if (drawable != null && drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() >= drawable.getIntrinsicWidth()) {
+                isPortraitPoster = true;
+                VideoDetailsTransitionPosterCache.put(launchUptimeMs, drawable);
+            }
         }
+        intent.putExtra(VideoDetailsFragment.EXTRA_HAS_SHARED_ELEMENT, isPortraitPoster);
         if (activity instanceof TvshowActivity || activity instanceof TvshowMoreDetailsActivity) {
             ImageView backdropView = activity.findViewById(R.id.details_backdrop);
             java.io.File backdropFile = null;
@@ -134,11 +140,18 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
         }
         if (animate) {
             traceVideoDetailsLaunch(launchUptimeMs, "source-transition-options-start");
-            ActivityOptionsCompat opts = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    activity, sourceView, VideoDetailsActivity.SHARED_ELEMENT_NAME);
+            ActivityOptionsCompat opts;
+            if (isPortraitPoster) {
+                opts = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        activity, sourceView, VideoDetailsActivity.SHARED_ELEMENT_NAME);
+            } else {
+                opts = ActivityOptionsCompat.makeSceneTransitionAnimation(activity);
+            }
             Bundle optionsBundle = opts.toBundle();
             traceVideoDetailsLaunch(launchUptimeMs, "source-transition-options-ready");
-            traceNextSourceFrame(sourceView, launchUptimeMs);
+            if (isPortraitPoster) {
+                traceNextSourceFrame(sourceView, launchUptimeMs);
+            }
             if (launcher != null) {
                 traceVideoDetailsLaunch(launchUptimeMs, "source-before-launcher-launch");
                 launcher.launch(intent, opts);

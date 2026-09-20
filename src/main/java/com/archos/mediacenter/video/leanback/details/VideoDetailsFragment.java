@@ -178,6 +178,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     public static final String EXTRA_SHOULD_LOAD_BACKDROP = "should_load_backdrop";
     public static final String EXTRA_DETAILS_LAUNCH_UPTIME_MS = "details_launch_uptime_ms";
+    public static final String EXTRA_HAS_SHARED_ELEMENT = "has_shared_element";
 
 
     public static final int REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY = 985;
@@ -369,12 +370,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mVideoMetadateCache = new HashMap<>();
         mShouldDisplayRemoveFromList = getActivity().getIntent().getLongExtra(EXTRA_LIST_ID, -1) != -1;
 
+        boolean hasSharedElement = getActivity().getIntent().getBooleanExtra(EXTRA_HAS_SHARED_ELEMENT, true);
+
         // minSdk is 23 (> 21), so Window.getSharedElementEnterTransition()/
         // Transition.addListener() - both public android.transition APIs - are always
         // available; no need for androidx.leanback's restricted TransitionHelper/
         // TransitionListener wrappers.
         Transition transition = getActivity().getWindow().getSharedElementEnterTransition();
-        if(transition!=null) {
+        if(hasSharedElement && transition!=null) {
             mAnimationIsRunning = false;
             transition.addListener(new Transition.TransitionListener() {
                 @Override
@@ -418,12 +421,14 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
         mDescriptionPresenter = new VideoDetailsDescriptionPresenter();
         mOverviewRowPresenter = new ArchosDetailsOverviewRowPresenter(mDescriptionPresenter);
-        //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
-        FullWidthDetailsOverviewSharedElementHelper helper = new FullWidthDetailsOverviewSharedElementHelper();
-        // The overview row is now created from the intent before the DB reload, so a short
-        // layout grace period is sufficient; the former 1s timeout visibly held every open.
-        helper.setSharedElementEnterTransition(getActivity(), VideoDetailsActivity.SHARED_ELEMENT_NAME, 200);
-        mOverviewRowPresenter.setListener(helper);
+        if (hasSharedElement) {
+            //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
+            FullWidthDetailsOverviewSharedElementHelper helper = new FullWidthDetailsOverviewSharedElementHelper();
+            // The overview row is now created from the intent before the DB reload, so a short
+            // layout grace period is sufficient; the former 1s timeout visibly held every open.
+            helper.setSharedElementEnterTransition(getActivity(), VideoDetailsActivity.SHARED_ELEMENT_NAME, 200);
+            mOverviewRowPresenter.setListener(helper);
+        }
         mOverviewRowPresenter.setBackgroundColor(ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor());
         mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor()));
         mOverviewRowPresenter.setOnActionClickedListener(mOnActionClickedListener);
