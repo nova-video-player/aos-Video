@@ -33,6 +33,7 @@ public class Box {
         SDCARD,
         OTHER,
         NETWORK,
+        OPEN_NETWORK_STREAM,
         FTP,
         INDEXED_FOLDERS_REFRESH,
         NON_SCRAPED_VIDEOS,
