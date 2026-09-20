@@ -98,8 +98,6 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
 
     private Overlay mOverlay;
     private Handler mHandler;
-    private int oldPos = 0;
-    private int oldSelectedSubPosition = 0;
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
 
     @SuppressWarnings("deprecation") // getSerializableExtra: API 33+ branch uses typed form; else branch suppressed
@@ -169,33 +167,6 @@ public class NetworkShortcutDetailsFragment extends DetailsSupportFragment imple
         Color.colorToHSV(color, hsv);
         hsv[2] *= 0.8f;
         return Color.HSVToColor(hsv);
-    }
-
-    //hack to avoid fullscreen overview
-    @Override
-    protected void onSetRowStatus(RowPresenter presenter, RowPresenter.ViewHolder viewHolder, int
-            adapterPosition, int selectedPosition, int selectedSubPosition) {
-        super.onSetRowStatus(presenter, viewHolder, adapterPosition, selectedPosition, selectedSubPosition);
-        if(selectedPosition == 0 && selectedSubPosition != 0) {
-            if (oldPos == 0 && oldSelectedSubPosition == 0) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setSelectedPosition(1);
-                    }
-                });
-            } else if (oldPos == 1) {
-                setSelectedPosition(1);
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setSelectedPosition(0);
-                    }
-                });
-            }
-        }
-        oldPos = selectedPosition;
-        oldSelectedSubPosition = selectedSubPosition;
     }
 
     public void addActions(DetailsOverviewRow detailRow){

@@ -152,8 +152,6 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
     private int mColor;
     private static int dominantColor = 0;
     private Handler mHandler;
-    private int oldPos = 0;
-    private int oldSelectedSubPosition = 0;
     private boolean mHasDetailRow;
 
     private void setmTvshow(long id) {
@@ -348,33 +346,6 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
         Color.colorToHSV(color, hsv);
         hsv[2] *= 0.8f;
         return Color.HSVToColor(hsv);
-    }
-
-    //hack to avoid fullscreen overview
-    @Override
-    protected void onSetRowStatus(RowPresenter presenter, RowPresenter.ViewHolder viewHolder, int
-            adapterPosition, int selectedPosition, int selectedSubPosition) {
-        super.onSetRowStatus(presenter, viewHolder, adapterPosition, selectedPosition, selectedSubPosition);
-        if(selectedPosition == 0 && selectedSubPosition != 0) {
-            if (oldPos == 0 && oldSelectedSubPosition == 0) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setSelectedPosition(1);
-                    }
-                });
-            } else if (oldPos == 1) {
-                setSelectedPosition(1);
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setSelectedPosition(0);
-                    }
-                });
-            }
-        }
-        oldPos = selectedPosition;
-        oldSelectedSubPosition = selectedSubPosition;
     }
 
     @Override
@@ -899,6 +870,10 @@ public class TvshowFragment extends DetailsFragmentWithLessTopOffset implements 
             isCancelled = true;
             executor.shutdownNow();
         }
+    }
+
+    public int getColor() {
+        return mColor != 0 ? mColor : dominantColor;
     }
 
     public static int getDominantColor() {

@@ -106,8 +106,6 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
     private int mColor;
     private static int dominantColor = 0;
     private Handler mHandler;
-    private int oldPos = 0;
-    private int oldSelectedSubPosition = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -163,44 +161,18 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
                 .getDimensionPixelSize(R.dimen.lb_details_v2_align_pos_for_actions)
                 - getResources().getDimensionPixelSize(R.dimen.lb_details_v2_actions_height));
         alignDef1.setItemAlignmentOffsetPercent(0);
-        // when description is selected, align details_frame to top edge
+        // when description is selected, keep details_frame aligned with actions position
         ItemAlignmentFacet.ItemAlignmentDef alignDef2 = new ItemAlignmentFacet.ItemAlignmentDef();
         alignDef2.setItemAlignmentViewId(R.id.details_frame);
         alignDef2.setItemAlignmentFocusViewId(R.id.details_overview_description);
         alignDef2.setItemAlignmentOffset(- getResources()
-                .getDimensionPixelSize(R.dimen.lb_details_v2_align_pos_for_description));
+                .getDimensionPixelSize(R.dimen.lb_details_v2_align_pos_for_actions)
+                - getResources().getDimensionPixelSize(R.dimen.lb_details_v2_actions_height));
         alignDef2.setItemAlignmentOffsetPercent(0);
         ItemAlignmentFacet.ItemAlignmentDef[] defs =
                 new ItemAlignmentFacet.ItemAlignmentDef[] {alignDef1, alignDef2};
         facet.setAlignmentDefs(defs);
         presenter.setFacet(ItemAlignmentFacet.class, facet);
-    }
-
-    //hack to avoid fullscreen overview
-    @Override
-    protected void onSetRowStatus(RowPresenter presenter, RowPresenter.ViewHolder viewHolder, int
-            adapterPosition, int selectedPosition, int selectedSubPosition) {
-        super.onSetRowStatus(presenter, viewHolder, adapterPosition, selectedPosition, selectedSubPosition);
-        if(selectedPosition == 0 && selectedSubPosition != 0) {
-            if (oldPos == 0 && oldSelectedSubPosition == 0) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setSelectedPosition(1);
-                    }
-                });
-            } else if (oldPos == 1) {
-                setSelectedPosition(1);
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setSelectedPosition(0);
-                    }
-                });
-            }
-        }
-        oldPos = selectedPosition;
-        oldSelectedSubPosition = selectedSubPosition;
     }
 
     @Override
@@ -554,6 +526,10 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
             isCancelled = true;
             executor.shutdownNow();
         }
+    }
+
+    public int getColor() {
+        return mColor != 0 ? mColor : dominantColor;
     }
 
     public static int getDominantColor() {

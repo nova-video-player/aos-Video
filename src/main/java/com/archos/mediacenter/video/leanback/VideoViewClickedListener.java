@@ -130,8 +130,16 @@ public class VideoViewClickedListener implements OnItemViewClickedListener {
                 androidx.fragment.app.Fragment fragment = ((androidx.fragment.app.FragmentActivity) activity).getSupportFragmentManager().findFragmentById(R.id.main_browse_fragment);
                 if (fragment instanceof TvshowFragment) {
                     backdropFile = ((TvshowFragment) fragment).getBackdropController().getCurrentlyDisplayedFile();
+                    int color = ((TvshowFragment) fragment).getColor();
+                    if (color != 0) {
+                        intent.putExtra(VideoDetailsFragment.EXTRA_DETAILS_COLOR, color);
+                    }
                 } else if (fragment instanceof TvshowMoreDetailsFragment) {
                     backdropFile = ((TvshowMoreDetailsFragment) fragment).getBackdropController().getCurrentlyDisplayedFile();
+                    int color = ((TvshowMoreDetailsFragment) fragment).getColor();
+                    if (color != 0) {
+                        intent.putExtra(VideoDetailsFragment.EXTRA_DETAILS_COLOR, color);
+                    }
                 }
             }
             if (backdropView != null && backdropView.getDrawable() != null) {

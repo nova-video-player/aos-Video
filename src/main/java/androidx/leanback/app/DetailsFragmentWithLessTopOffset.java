@@ -14,6 +14,9 @@
 
 package androidx.leanback.app;
 
+import androidx.leanback.R;
+import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter;
+import androidx.leanback.widget.ItemAlignmentFacet;
 import androidx.leanback.widget.VerticalGridView;
 
 /**
@@ -41,5 +44,36 @@ public class DetailsFragmentWithLessTopOffset extends DetailsSupportFragment {
 
         // This works for leanback 22.2.0
          listview.setItemAlignmentOffset( (int)(listview.getItemAlignmentOffset() * mRatio) );
+    }
+
+    @Override
+    protected void setupDetailsOverviewRowPresenter(FullWidthDetailsOverviewRowPresenter presenter) {
+        ItemAlignmentFacet facet = new ItemAlignmentFacet();
+        ItemAlignmentFacet.ItemAlignmentDef alignDef1 = new ItemAlignmentFacet.ItemAlignmentDef();
+        alignDef1.setItemAlignmentViewId(R.id.details_frame);
+        alignDef1.setItemAlignmentOffset(- getResources()
+                .getDimensionPixelSize(R.dimen.lb_details_v2_align_pos_for_actions));
+        alignDef1.setItemAlignmentOffsetPercent(0);
+        ItemAlignmentFacet.ItemAlignmentDef alignDef2 = new ItemAlignmentFacet.ItemAlignmentDef();
+        alignDef2.setItemAlignmentViewId(R.id.details_frame);
+        alignDef2.setItemAlignmentFocusViewId(R.id.details_overview_description);
+        alignDef2.setItemAlignmentOffset(- getResources()
+                .getDimensionPixelSize(R.dimen.lb_details_v2_align_pos_for_actions));
+        alignDef2.setItemAlignmentOffsetPercent(0);
+        ItemAlignmentFacet.ItemAlignmentDef[] defs =
+                new ItemAlignmentFacet.ItemAlignmentDef[] {alignDef1, alignDef2};
+        facet.setAlignmentDefs(defs);
+        presenter.setFacet(ItemAlignmentFacet.class, facet);
+    }
+
+    @Override
+    protected void onSetDetailsOverviewRowStatus(FullWidthDetailsOverviewRowPresenter presenter,
+            FullWidthDetailsOverviewRowPresenter.ViewHolder viewHolder, int adapterPosition,
+            int selectedPosition, int selectedSubPosition) {
+        if (selectedPosition >= adapterPosition) {
+            presenter.setState(viewHolder, FullWidthDetailsOverviewRowPresenter.STATE_HALF);
+        } else {
+            presenter.setState(viewHolder, FullWidthDetailsOverviewRowPresenter.STATE_SMALL);
+        }
     }
 }

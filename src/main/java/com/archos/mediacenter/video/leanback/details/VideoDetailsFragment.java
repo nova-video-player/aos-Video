@@ -179,6 +179,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     public static final String EXTRA_SHOULD_LOAD_BACKDROP = "should_load_backdrop";
     public static final String EXTRA_DETAILS_LAUNCH_UPTIME_MS = "details_launch_uptime_ms";
     public static final String EXTRA_HAS_SHARED_ELEMENT = "has_shared_element";
+    public static final String EXTRA_DETAILS_COLOR = "extra_details_color";
 
 
     public static final int REQUEST_CODE_LOCAL_RESUME_AFTER_ADS_ACTIVITY = 985;
@@ -301,8 +302,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private boolean mShouldDisplayConfirmDelete = false;
 
     private boolean isFilePlayable = true;
-    private int oldPos = 0;
-    private int oldSelectedSubPosition = 0;
 
     private static final String SAVED_DELETE_URIS = "saved_delete_uris";
     private static final String SAVED_DELETE_OPERATION = "saved_delete_operation";
@@ -418,21 +417,23 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         mHandler = new Handler(Looper.getMainLooper());
         setTopOffsetRatio(0.5f);
         XmlDb.getInstance().addResumeChangeListener(this);
-        mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
+        int defaultColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
+        mColor = getActivity().getIntent() != null ? getActivity().getIntent().getIntExtra(EXTRA_DETAILS_COLOR, defaultColor) : defaultColor;
+        dominantColor = mColor;
         mDescriptionPresenter = new VideoDetailsDescriptionPresenter();
         mOverviewRowPresenter = new ArchosDetailsOverviewRowPresenter(mDescriptionPresenter);
         if (hasSharedElement) {
-            //be aware of a hack to avoid fullscreen overview : cf onSetRowStatus
             FullWidthDetailsOverviewSharedElementHelper helper = new FullWidthDetailsOverviewSharedElementHelper();
             // The overview row is now created from the intent before the DB reload, so a short
             // layout grace period is sufficient; the former 1s timeout visibly held every open.
             helper.setSharedElementEnterTransition(getActivity(), VideoDetailsActivity.SHARED_ELEMENT_NAME, 200);
             mOverviewRowPresenter.setListener(helper);
         }
-        mOverviewRowPresenter.setBackgroundColor(ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor());
-        mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor()));
+        mOverviewRowPresenter.setBackgroundColor(mColor);
+        mOverviewRowPresenter.setActionsBackgroundColor(getDarkerColor(mColor));
         mOverviewRowPresenter.setOnActionClickedListener(mOnActionClickedListener);
         mVideoBadgePresenter = new VideoBadgePresenter(getActivity());
+        mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
         mFileListAdapter = new ArrayObjectAdapter(mVideoBadgePresenter);
         mFileListRow = new SelectableListRow(new HeaderItem(getString(R.string.video_sources)),mFileListAdapter);
 
@@ -553,33 +554,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         Color.colorToHSV(color, hsv);
         hsv[2] *= 0.8f;
         return Color.HSVToColor(hsv);
-    }
-
-    //hack to avoid fullscreen overview
-    @Override
-    protected void onSetRowStatus(RowPresenter presenter, RowPresenter.ViewHolder viewHolder, int
-            adapterPosition, int selectedPosition, int selectedSubPosition) {
-        super.onSetRowStatus(presenter, viewHolder, adapterPosition, selectedPosition, selectedSubPosition);
-        if(selectedPosition == 0 && selectedSubPosition != 0) {
-            if (oldPos == 0 && oldSelectedSubPosition == 0) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setSelectedPosition(1);
-                    }
-                });
-            } else if (oldPos == 1) {
-                setSelectedPosition(1);
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setSelectedPosition(0);
-                    }
-                });
-            }
-        }
-        oldPos = selectedPosition;
-        oldSelectedSubPosition = selectedSubPosition;
     }
 
     @Override
@@ -1597,8 +1571,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 Bitmap result = null;
                 try {
                     if (isCancelled || Thread.currentThread().isInterrupted()) return;
-                    mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
-                    mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
 
                     Uri imageUri = null;
                     if (video.getPosterUri()!=null) {
@@ -1645,8 +1617,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                             mColor = palette.getDarkVibrantSwatch().getRgb();
                         else if (palette.getDarkMutedSwatch() != null)
                             mColor = palette.getDarkMutedSwatch().getRgb();
-                        else
-                            mColor = ThemeManager.getInstance(getActivity()).getDetailsPrimaryColor();
                         dominantColor = mColor;
                         mVideoBadgePresenter.setSelectedBackgroundColor(mColor);
                         mOverviewRowPresenter.updateBackgroundColor(mColor);
