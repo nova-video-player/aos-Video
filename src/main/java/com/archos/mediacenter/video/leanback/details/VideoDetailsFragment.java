@@ -160,6 +160,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -1481,8 +1482,11 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         // Check subtitles. Better to do it before VideoInfoTask because it should be quicker and it is displayed higher in the Fragment
         if(mSubtitleListCache.get(video.getFileUri())==null) {
-            mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity());
-            mSubtitleFilesListerTask.execute(video);
+            if (mSubtitleFilesListerTask == null || !mSubtitleFilesListerTask.isLoading(video)) {
+                if (mSubtitleFilesListerTask != null) mSubtitleFilesListerTask.cancel();
+                mSubtitleFilesListerTask = new SubtitleFilesListerTask(getActivity());
+                mSubtitleFilesListerTask.execute(video);
+            }
         } else {
             updateSubtitleRowWhenReady();
         }
@@ -1490,21 +1494,21 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         // Start the video info task only now that the DB UI is ready to setup
         // special case : for upnp:// we need the streaming uri (http)
         String path = video.getFilePath();
-        if(mVideoInfoTask!=null)
-            mVideoInfoTask.cancel();
         if(mVideoMetadateCache.containsKey(path)){
             video.setMetadata(mVideoMetadateCache.get(path));
             updateMetadataWhenReady();
             updateSubtitleRowWhenReady();
 
         }
-        //do not execute file info task when torrent file
-        if(video.getFileUri() == null || mLaunchedFromPlayer) { // avoid NPE on .getLastPathSegment()
-            mVideoInfoTask = new VideoInfoTask();
-            mVideoInfoTask.execute(video);
-        } else if(!FileUtils.getName(video.getFileUri()).endsWith("torrent")) {
-            mVideoInfoTask = new VideoInfoTask();
-            mVideoInfoTask.execute(video);
+        // A DB/poster reload for the same URI can reuse the provisional overview's work.
+        if (mVideoInfoTask == null || !mVideoInfoTask.isLoading(video)) {
+            if (mVideoInfoTask != null) mVideoInfoTask.cancel();
+            // Do not execute file info task when torrent file.
+            if (video.getFileUri() == null || mLaunchedFromPlayer
+                    || !FileUtils.getName(video.getFileUri()).endsWith("torrent")) {
+                mVideoInfoTask = new VideoInfoTask();
+                mVideoInfoTask.execute(video);
+            }
         }
 
         if (poster == null) {
@@ -1637,23 +1641,38 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         private final ExecutorService executor = Executors.newSingleThreadExecutor();
         private final Handler handler = new Handler(Looper.getMainLooper());
         private volatile boolean isCancelled = false;
+        // Accessed only on the main thread, including the completion callback.
+        private String startingPath;
+        private boolean isFinished;
+
+        boolean isLoading(Video video) {
+            return !isCancelled && !isFinished && Objects.equals(startingPath, video.getFilePath());
+        }
 
         void execute(Video video) {
+            startingPath = video.getFilePath();
+            final Activity activity = getActivity();
+            if (activity == null) {
+                cancel();
+                return;
+            }
+            final Context context = activity.getApplicationContext();
+            // Keep fragment cache access on the main thread.
+            final VideoMetadata cachedMetadata = mVideoMetadateCache.get(startingPath);
+            final VideoMetadata playerMetadata = mLaunchedFromPlayer ? mVideoMetadataFromPlayer : null;
+            final android.os.Bundle headersBundle = activity.getIntent().getBundleExtra("headers");
             executor.execute(() -> {
                 VideoMetadata result = null;
                 try {
                     if (isCancelled || Thread.currentThread().isInterrupted()) return;
-                    String startingPath = video.getFilePath();
-                    if(mLaunchedFromPlayer && mVideoMetadataFromPlayer!=null && mVideoMetadataFromPlayer.getVideoTrack()!=null)
-                        result = mVideoMetadataFromPlayer;
-                    else if(mVideoMetadateCache.containsKey(startingPath)){
+                    if(playerMetadata != null && playerMetadata.getVideoTrack() != null)
+                        result = playerMetadata;
+                    else if(cachedMetadata != null){
                         if (log.isDebugEnabled()) log.debug("metadata retrieved from cache {}", startingPath);
-                        result = mVideoMetadateCache.get(startingPath);
+                        result = cachedMetadata;
                     }
                     else {
                         // Pick up any HTTP headers forwarded from the external player intent (e.g. Stremio/debrid)
-                        android.os.Bundle headersBundle = getActivity() != null
-                                ? getActivity().getIntent().getBundleExtra("headers") : null;
                         java.util.Map<String, String> headers = null;
                         if (headersBundle != null && !headersBundle.isEmpty()) {
                             headers = new java.util.HashMap<>();
@@ -1665,10 +1684,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         } else {
                             if (log.isDebugEnabled()) log.debug("VideoInfoTask: no HTTP headers in activity intent");
                         }
-                        VideoMetadata videoMetaData = VideoInfoCommonClass.retrieveMetadata(video, getActivity(), headers);
-                        if(video!=null&&video.isIndexed())
-                            videoMetaData.save(getActivity(), startingPath);
-                        mVideoMetadateCache.put(startingPath, videoMetaData);
+                        VideoMetadata videoMetaData = VideoInfoCommonClass.retrieveMetadata(video, context, headers);
+                        // Cancellation may have happened during SMB I/O. Discard its result
+                        // before writing metadata back to the database or the fragment cache.
+                        if (isCancelled || Thread.currentThread().isInterrupted()) return;
+                        if(videoMetaData != null && video.isIndexed())
+                            videoMetaData.save(context, startingPath);
                         result = videoMetaData;
                     }
                 } catch (Exception e) {
@@ -1679,10 +1700,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 if (isCancelled) return;
                 final VideoMetadata finalResult = result;
                 handler.post(() -> {
-                    if (isCancelled) return;
+                    isFinished = true;
+                    if (isCancelled || mVideoInfoTask != this || mVideo == null
+                            || !Objects.equals(startingPath, mVideo.getFilePath())) return;
+                    if (finalResult != null) mVideoMetadateCache.put(startingPath, finalResult);
                     // Update the video object with the computed metadata
-                    if(mVideo!=null)
-                        mVideo.setMetadata(finalResult);
+                    mVideo.setMetadata(finalResult);
 
                     // Integrated subtitle list is in the metadata
                     updateSubtitleRowWhenReady();
@@ -1693,7 +1716,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         void cancel() {
             isCancelled = true;
-            executor.shutdownNow();
+            // SMB transports are shared. Let in-flight I/O finish and discard its result.
+            executor.shutdown();
         }
     }
 
@@ -1887,6 +1911,12 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         private final ExecutorService executor = Executors.newSingleThreadExecutor();
         private final Handler handler = new Handler(Looper.getMainLooper());
         private volatile boolean isCancelled = false;
+        private Uri fileUri;
+        private boolean isFinished;
+
+        boolean isLoading(Video video) {
+            return !isCancelled && !isFinished && Objects.equals(fileUri, video.getFileUri());
+        }
 
         public SubtitleFilesListerTask(Activity activity){
             mActivity = activity;
@@ -1897,6 +1927,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
 
         void execute(Video video) {
+            fileUri = video.getFileUri();
             executor.execute(() -> {
                 List<SubtitleManager.SubtitleFile> result = null;
                 try {
@@ -1907,7 +1938,6 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground calling listLocalAndRemotesSubtitles");
                     List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(video.getFileUri(), true);
                     if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground completed, found {} subtitles", (list != null ? list.size() : 0));
-                    mSubtitleListCache.put(video.getFileUri(), list);
                     result = list;
                 } catch (Exception e) {
                     log.error("SubtitleFilesListerTask:doInBackground exception", e);
@@ -1921,7 +1951,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 }
                 final List<SubtitleManager.SubtitleFile> finalResult = result;
                 handler.post(() -> {
-                    if (isCancelled) return;
+                    isFinished = true;
+                    if (isCancelled || mSubtitleFilesListerTask != this || mVideo == null
+                            || !Objects.equals(fileUri, mVideo.getFileUri())) return;
+                    mSubtitleListCache.put(fileUri, finalResult);
                     if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask: onPostExecute with {} subtitles", (finalResult != null ? finalResult.size() : 0));
                     mExternalSubtitles = finalResult;
 
@@ -1944,7 +1977,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
         void cancel() {
             isCancelled = true;
-            executor.shutdownNow();
+            // Listing may be using the same SMB connection as metadata or playback.
+            executor.shutdown();
         }
     }
 
