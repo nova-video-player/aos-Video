@@ -156,6 +156,9 @@ public class TVMenu extends LinearLayout implements FocusableTVCardView, TVSlave
 
     public void unCheckAll(){
         for (View v : ti){
+            if (v instanceof TVMenuItem && ((TVMenuItem) v).isSwitchable()) {
+                continue;
+            }
             if(v instanceof Checkable){
                 ((Checkable)v).setChecked(false);
             }

@@ -114,6 +114,11 @@ public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
         return false;
     }
 
+    public boolean isSwitchable() {
+        View infoText = findViewById(R.id.info_text);
+        return infoText instanceof SwitchCompat || infoText instanceof Switch;
+    }
+
     @Override
     public void toggle() {
       

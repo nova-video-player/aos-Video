@@ -435,6 +435,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private TVCardView mPlayModeTVCardView;
     private TVMenu mAudioTracksTVMenu;
     private TVMenu mPlayModeTVMenu;
+    private TVMenuItem mPlayModeAutoSkipMenuItem;
     private TVMenuItem mIntroSummaryMenuItem;
     private View mIntroSummarySeparator;
     private TextView mPhonePlayModeIntroFooter;
@@ -2162,6 +2163,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     public void refreshPlayModeIntroSummary() {
         if (mPlayModeTVMenu == null) return;
         boolean enabled = mPreferences.getBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED);
+        if (mPlayModeAutoSkipMenuItem != null) {
+            mPlayModeAutoSkipMenuItem.setChecked(enabled);
+        }
         if (!enabled) {
             if (mIntroSummaryMenuItem != null) mIntroSummaryMenuItem.setVisibility(View.GONE);
             if (mIntroSummarySeparator != null) mIntroSummarySeparator.setVisibility(View.GONE);
@@ -2394,14 +2398,19 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             tcv = tma.createAndAddView(null, ResourcesCompat.getDrawable(getResources(), R.drawable.tv_playmode, null),
                                        getResources().getString(R.string.pref_play_mode_title));
             final TVMenu tvmPlayMode = tma.createTVMenu();
+            final int playModeCount = getResources().getTextArray(R.array.pref_play_mode_entries).length;
             tvmPlayMode.setOnItemClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (v instanceof TVMenuItem) {
-                        tvmPlayMode.unCheckAll();
-                        ((TVMenuItem) v).toggle();
                         int which = tvmPlayMode.getItemPostion(v);
-                        if (which > -1) {
+                        if (which >= 0 && which < playModeCount) {
+                            for (int i = 0; i < playModeCount; i++) {
+                                View item = tvmPlayMode.getItem(i);
+                                if (item instanceof Checkable) {
+                                    ((Checkable) item).setChecked(item == v);
+                                }
+                            }
                             PlayerService.sPlayerService.menuChangePlayMode(which);
                         }
                     }
@@ -2431,6 +2440,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mPlayModeTVCardView = tcv;
             mIntroSummaryMenuItem = null;
             mIntroSummarySeparator = null;
+            mPlayModeAutoSkipMenuItem = tvmAutoSkip;
             tcv.addOtherView(tvmPlayMode);
             refreshPlayModeIntroSummary();
             //[/playmode]
