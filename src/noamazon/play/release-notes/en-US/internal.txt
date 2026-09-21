@@ -1,9 +1,10 @@
+- ffmpeg 9.0.1 upstep
+- fix jcifs-ng SMB preventing video playback
 - Add provisional video end time on OSD
-- 5s seek base granularity and smoother backward seek
-- Fix judder on some HEVC videos
-- Keep screen awake during active scanning, scraping
-- Improve edge-to-edge display support
-- Restore media info retrieval on cellular network
+- Intro/outro auto-skip feature in player menu
+- Fix locale issues with SMB credentials and host navigation
+- Add option to ignoring leading articles in alphabetical title sorting
+- Fix Trakt resume position conflict handling
 - Restore SAMBA SMBv1 server compatibility by protocol level detection
 - Smarter TV show and movie media scraping
 - Many stability enhancement
