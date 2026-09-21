@@ -215,7 +215,7 @@ abstract public class BrowserCategory extends ListFragment {
         mLayoutCallback = new LayoutCallback();
 
         updateLibrary();
-        mCategoryAdapter = new CategoryAdapter(getActivity().getApplicationContext());
+        mCategoryAdapter = new CategoryAdapter(requireContext());
         setListAdapter(mCategoryAdapter);
 
         // in some release mSelectedItemId and path can be in a weird state
