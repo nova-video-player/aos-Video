@@ -60,21 +60,15 @@
     <!-- Debug permissions -->
     <logger name="com.archos.mediacenter.video.browser.PermissionChecker" level="INFO"/>
 
-    <logger name="com.archos.filecorelibrary.FileUtils" level="DEBUG"/>
-    <logger name="com.archos.filecorelibrary.FileUtilsQ" level="DEBUG"/>
+    <logger name="com.archos.filecorelibrary.FileUtils" level="INFO"/>
+    <logger name="com.archos.filecorelibrary.FileUtilsQ" level="INFO"/>
 
     <!-- Debug network shares -->
-    <logger name="com.archos.filecorelibrary.sshj" level="TRACE"/>
-    <logger name="net.schmizz.sshj" level="DEBUG"/>
-    <logger name="com.archos.filecorelibrary.smbj" level="DEBUG"/>
-    <logger name="com.hierynomus.smbj" level="DEBUG"/>
+    <logger name="com.archos.filecorelibrary.sshj" level="INFO"/>
+    <logger name="com.archos.filecorelibrary.smbj" level="INFO"/>
+    <logger name="com.hierynomus.smbj" level="INFO"/>
     <logger name="com.hierynomus.smbj.share.SmbjPrefetchInputStream" level="INFO"/>
-    <logger name="com.archos.filecorelibrary.webdav" level="TRACE"/>
-    <!-- legacy JSch-based backend (pref_sshj disabled): no internal SLF4J logging exists yet in
-         com.archos.filecorelibrary.sftp, so this level currently has no effect without adding
-         log statements to that package -->
-    <logger name="com.archos.filecorelibrary.sftp" level="TRACE"/>
-    <logger name="com.archos.filecorelibrary.ftp" level="TRACE"/>
+    <logger name="com.archos.filecorelibrary.webdav" level="INFO"/>
 
     <logger name="com.archos.mediacenter.video.browser.filebrowsing.BrowserByFolder" level="INFO"/>
     <logger name="com.archos.mediacenter.video.leanback.filebrowsing.ListingFragment" level="INFO"/>
@@ -84,7 +78,7 @@
     <logger name="org.jupnp" level="ERROR"/>
     <logger name="org.jupnp.transport.impl.DatagramIOImpl" level="OFF"/>
     <logger name="org.jupnp.android.AndroidRouter" level="WARN"/>
-    <logger name="com.archos.filecorelibrary.samba.NetworkCredentialsDatabase" level="DEBUG"/>
+    <logger name="com.archos.filecorelibrary.samba.NetworkCredentialsDatabase" level="INFO"/>
     <logger name="com.archos.mediacenter.video.leanback.network.NetworkServerCredentialsDialog" level="INFO"/>
 
     <!-- bookmarks (also in PlayerService -->
@@ -95,10 +89,9 @@
     <logger name="com.archos.mediaprovider.video.VideoStoreImportReceiver" level="INFO"/>
     <logger name="com.archos.mediaprovider.video.VideoStoreImportService" level="INFO"/>
     <logger name="com.archos.mediaprovider.video.VideoStoreImportImpl" level="INFO"/>
-    <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="DEBUG"/>
+    <logger name="com.archos.mediaprovider.video.NetworkScannerServiceVideo" level="INFO"/>
     <!-- Auto-scrape workflow (checks if NFO parsing is enabled, saves tags) -->
     <logger name="com.archos.mediascraper.AutoScrapeService" level="INFO"/>
-    <logger name="com.archos.mediascraper.NfoExportService" level="INFO"/>
 
     <!-- Local image lookup (findSeasonPoster, findShowPoster, findBackdrop) -->
     <logger name="com.archos.mediascraper.LocalImages" level="INFO"/>
@@ -112,32 +105,28 @@
     <logger name="com.archos.mediacenter.video.leanback.overlay.ScannerAndScraperProgress" level="INFO"/>
     <logger name="com.archos.mediacenter.video.leanback.overlay.Overlay" level="INFO"/>
 
-    <!-- FileEditor -->
-    <logger name="com.archos.filecorelibrary.FileEditor" level="DEBUG"/>
-    <logger name="com.archos.filecorelibrary.FileEditorFactory" level="DEBUG"/>
-
     <logger name="com.archos.mediacenter.video.info.VideoInfoCommonClass" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.VideoMetadata" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.CodecDiscovery" level="INFO"/>
     <logger name="com.archos.medialib.AvosMediaMetadataRetriever" level="INFO"/>
     <logger name="com.archos.medialib.AndroidMediaMetadataRetriever" level="INFO"/>
 
-    <logger name="com.archos.medialib.SmbProxy" level="DEBUG"/>
-    <logger name="com.archos.filecorelibrary.StreamOverHttp" level="DEBUG"/>
+    <logger name="com.archos.medialib.SmbProxy" level="INFO"/>
+    <logger name="com.archos.filecorelibrary.StreamOverHttp" level="INFO"/>
 
     <!-- Debug jcifs -->
     <logger name="jcifs" level="INFO"/>
-    <logger name="com.archos.filecorelibrary.jcifs" level="DEBUG"/>
-    <logger name="com.archos.filecorelibrary.jcifs.JcifsFileEditor" level="DEBUG"/>
-    <logger name="com.archos.filecorelibrary.smbj.SmbjFileEditor" level="DEBUG"/>
-    <logger name="com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser" level="DEBUG"/>
+    <logger name="com.archos.filecorelibrary.jcifs" level="INFO"/>
+    <logger name="com.archos.filecorelibrary.jcifs.JcifsFileEditor" level="INFO"/>
+    <logger name="com.archos.filecorelibrary.smbj.SmbjFileEditor" level="INFO"/>
+    <logger name="com.archos.mediacenter.video.browser.filebrowsing.network.SmbBrowser" level="INFO"/>
     <logger name="jcifs.netbios.UdpDiscovery" level="INFO"/>
     <logger name="jcifs.netbios.NameServiceClientImpl" level="WARN"/>
     <logger name="jcifs.smb.SmbSession" level="INFO"/>
     <logger name="jcifs.smb.SmbSessionImpl" level="INFO"/>
     <logger name="jcifs.util.transport.Transport" level="INFO"/>
     <logger name="jcifs.smb.SmbTransportImpl" level="INFO"/>
-    <logger name="com.archos.filecorelibrary.samba" level="DEBUG"/>
+    <logger name="com.archos.filecorelibrary.samba" level="INFO"/>
 
     <!-- Debug IntroDB skip intro/outro -->
     <logger name="com.archos.mediacenter.utils.introdb.IntroDbApiHelper" level="INFO"/>
@@ -189,8 +178,6 @@
     <logger name="com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.ISO639codes" level="INFO"/>
-    <logger name="com.archos.mediacenter.utils.ISO639codes" level="INFO"/>
-    <logger name="com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.PlayUtils" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.VideoPreferencesCommon" level="INFO"/>
     <logger name="com.archos.mediacenter.video.player.SubtitleManager" level="INFO"/>
