@@ -1507,7 +1507,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                     .apply();
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit()
-                    .putBoolean(VideoPreferencesCommon.KEY_PLAYBACK_SPEED, true)
+                    .putString(VideoPreferencesCommon.KEY_AUDIO_SPEED_MODE, VideoPreferencesCommon.AUDIO_SPEED_MODE_ATEMPO)
                     .apply();
             // disable smbj since it is now no longer faster than jcfis-ng
             PreferenceManager.getDefaultSharedPreferences(context)
@@ -1529,6 +1529,26 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                     .apply();
         }
          */
+
+        // Upgraded from 6.4.64 and below: "playback_speed" + "audio_speed_audiotrack" booleans
+        // replaced by a single "audio_speed_mode" multi-choice preference (Disabled/AudioTrack/atempo/Sonic).
+        if ((novaPreviousVersionArray[0] < 6) ||
+            (novaPreviousVersionArray[0] == 6 && novaPreviousVersionArray[1] < 4) ||
+            (novaPreviousVersionArray[0] == 6 && novaPreviousVersionArray[1] == 4 && novaPreviousVersionArray[2] <= 64)) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            if (preferences.contains("playback_speed")) {
+                boolean wasEnabled = preferences.getBoolean("playback_speed", true);
+                boolean wasAudiotrack = preferences.getBoolean("audio_speed_audiotrack", false);
+                String migratedMode = !wasEnabled ? VideoPreferencesCommon.AUDIO_SPEED_MODE_DISABLED
+                        : wasAudiotrack ? VideoPreferencesCommon.AUDIO_SPEED_MODE_AUDIOTRACK
+                        : VideoPreferencesCommon.AUDIO_SPEED_MODE_ATEMPO;
+                preferences.edit()
+                        .putString(VideoPreferencesCommon.KEY_AUDIO_SPEED_MODE, migratedMode)
+                        .remove("playback_speed")
+                        .remove("audio_speed_audiotrack")
+                        .apply();
+            }
+        }
 
         // Upgraded from 6.4.31 and below: TMDb image sizes changed (posters w342->w780, stills w342->w300,
         // thumbs w154->w185). Clear download caches only — poster/still storage files are still referenced

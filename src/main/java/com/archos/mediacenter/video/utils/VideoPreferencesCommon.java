@@ -157,8 +157,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_DISABLE_DOLBY_VISION = "disable_dolby_vision";
     public static final String KEY_STREAM_BUFFER_SIZE = "stream_buffer_size";
     public static final String KEY_STREAM_MAX_IFRAME_SIZE = "stream_max_iframe_size";
-    public static final String KEY_PLAYBACK_SPEED = "playback_speed";
-    public static final String KEY_AUDIO_SPEED_AUDIOTRACK = "audio_speed_audiotrack";
+    public static final String KEY_AUDIO_SPEED_MODE = "audio_speed_mode";
+    public static final String AUDIO_SPEED_MODE_DISABLED = "0";
+    public static final String AUDIO_SPEED_MODE_AUDIOTRACK = "1";
+    public static final String AUDIO_SPEED_MODE_ATEMPO = "2";
+    public static final String AUDIO_SPEED_MODE_SONIC = "3";
     public static final String KEY_ENABLE_DYNAMIC_AUDIO_DELAY = "enable_dynamic_audio_delay";
     public static final String KEY_ACTIVATE_REFRESHRATE_SWITCH = "enable_tv_refreshrate_switch_mode";
     public static final String KEY_ACTIVATE_3D_SWITCH = "activate_tv_switch";
@@ -251,8 +254,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private ListPreference mAudioDecoderChoicePreferences = null;
     private CheckBoxPreference mForceSwDecPreferences = null;
     private CheckBoxPreference mForceAudioPassthrough = null;
-    private CheckBoxPreference mPlaybackSpeed = null;
-    private CheckBoxPreference mAudioSpeedAudiotrack = null;
+    private ListPreference mAudioSpeedMode = null;
     private CheckBoxPreference mEnableDynamicAudioDelay = null;
     private CheckBoxPreference mEnableSpatialization = null;
     private CheckBoxPreference mDisableDownmix = null;
@@ -559,7 +561,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public static boolean isAudioSpeedEnabled(SharedPreferences preferences) {
         if (preferences == null) return false;
-        if (!preferences.getBoolean(KEY_PLAYBACK_SPEED, false)) return false;
+        if (AUDIO_SPEED_MODE_DISABLED.equals(preferences.getString(KEY_AUDIO_SPEED_MODE, AUDIO_SPEED_MODE_ATEMPO))) return false;
         try {
             if (Integer.parseInt(preferences.getString("force_audio_passthrough_multiple", "0")) > 0) return false;
         } catch (NumberFormatException e) {}
@@ -581,25 +583,19 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     }
 
     /**
-     * Update the enabled and selectable state of audio speed preferences
-     * (playback speed and audiotrack audio speed) based on passthrough settings
-     * and software audio decoder choice. When passthrough is enabled or MediaCodec is used
-     * as the audio decoder (instead of FFmpeg), audio speed controls are disabled,
-     * greyed out and skipeable.
+     * Update the enabled and selectable state of the audio speed mode preference
+     * based on passthrough settings and software audio decoder choice. When passthrough
+     * is enabled or MediaCodec is used as the audio decoder (instead of FFmpeg), audio
+     * speed controls are disabled, greyed out and skipeable.
      *
      * @param passthroughEnabled true if audio passthrough is enabled
      */
     private void updateAudioSpeedState(boolean passthroughEnabled) {
         boolean mediaCodecAudioDecoder = "2".equals(mSharedPreferences.getString(KEY_AUDIO_DECODER_CHOICE, "1"));
         boolean speedAllowed = !passthroughEnabled && !mediaCodecAudioDecoder;
-        if (mPlaybackSpeed != null) {
-            mPlaybackSpeed.setEnabled(speedAllowed);
-            mPlaybackSpeed.setSelectable(speedAllowed);
-        }
-        if (mAudioSpeedAudiotrack != null) {
-            boolean audiotrackAllowed = speedAllowed && (mPlaybackSpeed != null && mPlaybackSpeed.isChecked());
-            mAudioSpeedAudiotrack.setEnabled(audiotrackAllowed);
-            mAudioSpeedAudiotrack.setSelectable(audiotrackAllowed);
+        if (mAudioSpeedMode != null) {
+            mAudioSpeedMode.setEnabled(speedAllowed);
+            mAudioSpeedMode.setSelectable(speedAllowed);
         }
     }
 
@@ -703,8 +699,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mEnableSponsor = (CheckBoxPreference) findPreference(KEY_ENABLE_SPONSOR);
         mWatchingUpNext = (CheckBoxPreference) findPreference(KEY_SHOW_WATCHING_UP_NEXT_ROW);
         mForceAudioPassthrough = (CheckBoxPreference) findPreference(KEY_FORCE_AUDIO_PASSTHROUGH);
-        mPlaybackSpeed = (CheckBoxPreference) findPreference(KEY_PLAYBACK_SPEED);
-        mAudioSpeedAudiotrack = (CheckBoxPreference) findPreference(KEY_AUDIO_SPEED_AUDIOTRACK);
+        mAudioSpeedMode = (ListPreference) findPreference(KEY_AUDIO_SPEED_MODE);
         mEnableDynamicAudioDelay = (CheckBoxPreference) findPreference(KEY_ENABLE_DYNAMIC_AUDIO_DELAY);
         mEnableSpatialization = (CheckBoxPreference) findPreference("player_spatialization_enabled");
         mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");
@@ -777,36 +772,15 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             updateDynamicAudioDelayState(false, frameTimingEnabled);
         }
 
-        if (mPlaybackSpeed != null) {
-            mPlaybackSpeed.setOnPreferenceChangeListener((preference, newValue) -> {
-                boolean isPlaybackSpeedChecked = (Boolean) newValue;
-                boolean passthroughEnabled = CustomApplication.isPassthroughSupported()
-                        && !"0".equals(mSharedPreferences.getString("force_audio_passthrough_multiple", "0"));
-                boolean mediaCodecAudioDecoder = "2".equals(mSharedPreferences.getString(KEY_AUDIO_DECODER_CHOICE, "1"));
-                boolean speedAllowed = !passthroughEnabled && !mediaCodecAudioDecoder;
-                boolean audiotrackAllowed = speedAllowed && isPlaybackSpeedChecked;
-                if (mAudioSpeedAudiotrack != null) {
-                    mAudioSpeedAudiotrack.setEnabled(audiotrackAllowed);
-                    mAudioSpeedAudiotrack.setSelectable(audiotrackAllowed);
-                }
-                return true;
-            });
-        }
-
         if (mAudioDecoderChoicePreferences != null) {
             mAudioDecoderChoicePreferences.setOnPreferenceChangeListener((preference, newValue) -> {
                 boolean passthroughEnabled = CustomApplication.isPassthroughSupported()
                         && !"0".equals(mSharedPreferences.getString("force_audio_passthrough_multiple", "0"));
                 boolean newMediaCodecAudioDecoder = "2".equals(newValue.toString());
                 boolean speedAllowed = !passthroughEnabled && !newMediaCodecAudioDecoder;
-                if (mPlaybackSpeed != null) {
-                    mPlaybackSpeed.setEnabled(speedAllowed);
-                    mPlaybackSpeed.setSelectable(speedAllowed);
-                }
-                if (mAudioSpeedAudiotrack != null) {
-                    boolean audiotrackAllowed = speedAllowed && (mPlaybackSpeed != null && mPlaybackSpeed.isChecked());
-                    mAudioSpeedAudiotrack.setEnabled(audiotrackAllowed);
-                    mAudioSpeedAudiotrack.setSelectable(audiotrackAllowed);
+                if (mAudioSpeedMode != null) {
+                    mAudioSpeedMode.setEnabled(speedAllowed);
+                    mAudioSpeedMode.setSelectable(speedAllowed);
                 }
                 return true;
             });

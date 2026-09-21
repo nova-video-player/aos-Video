@@ -135,6 +135,20 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="audio_speed_mode_entries">
+        <item>@string/audio_speed_mode_disabled</item>
+        <item>@string/audio_speed_mode_audiotrack</item>
+        <item>@string/audio_speed_mode_atempo</item>
+        <item>@string/audio_speed_mode_sonic</item>
+    </string-array>
+
+    <string-array name="audio_speed_mode_entryvalues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
     <string-array name="audio_decoder_choice_entries">
         <item>@string/audio_decoder_auto</item>
         <item>@string/audio_decoder_prefer_ffmpeg</item>

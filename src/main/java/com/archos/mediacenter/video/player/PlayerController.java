@@ -80,7 +80,6 @@ import java.util.Locale;
 
 import com.archos.environment.ArchosFeatures;
 import static com.archos.environment.ArchosFeatures.isChromeOS;
-import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

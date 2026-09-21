@@ -95,8 +95,6 @@ import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.
 import static com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager.getSubLanguageFromSubPathAndVideoPath;
 import com.archos.medialib.LibAvos;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
-import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_AUDIO_SPEED_AUDIOTRACK;
-import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 import static com.archos.mediascraper.StringUtils.stringContainsForced;
 
 import org.slf4j.Logger;

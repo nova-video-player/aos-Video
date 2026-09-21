@@ -168,7 +168,6 @@ import com.archos.mediacenter.utils.ISO639codes;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_MAX_IFRAME_SIZE;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.DEFAULT_STREAM_BUFFER_SIZE;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PARSER_SYNC_MODE;
-import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_PLAYBACK_SPEED;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_STREAM_BUFFER_SIZE;
 import static com.archos.mediacenter.video.utils.VideoPreferencesCommon.KEY_STREAM_MAX_IFRAME_SIZE;
 
@@ -1005,7 +1004,15 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
             LibAvos.setStreamMaxIframeSize(finalSize);
             LibAvos.enableAudioSpeed(VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences));
-            LibAvos.disableAtempoFilter(mPreferences.getBoolean(VideoPreferencesCommon.KEY_AUDIO_SPEED_AUDIOTRACK, false));
+            String audioSpeedMode = mPreferences.getString(VideoPreferencesCommon.KEY_AUDIO_SPEED_MODE, VideoPreferencesCommon.AUDIO_SPEED_MODE_ATEMPO);
+            // Native backend: 0=atempo, 1=AudioTrack PlaybackParams, 2=Sonic
+            int audioSpeedBackend = 0;
+            if (VideoPreferencesCommon.AUDIO_SPEED_MODE_AUDIOTRACK.equals(audioSpeedMode)) {
+                audioSpeedBackend = 1;
+            } else if (VideoPreferencesCommon.AUDIO_SPEED_MODE_SONIC.equals(audioSpeedMode)) {
+                audioSpeedBackend = 2;
+            }
+            LibAvos.setAudioSpeedBackend(audioSpeedBackend);
             LibAvos.setAudioSpeed(audioSpeed); // set audio speed playback (does nothing if audio speed not enabled)
             LibAvos.setDynamicAudioDelay(mPreferences.getBoolean(VideoPreferencesCommon.KEY_ENABLE_DYNAMIC_AUDIO_DELAY, true)); // AVOS applies it only when the active sink path can use dynamic delay.
             LibAvos.parserSyncMode(Integer.parseInt(mPreferences.getString(KEY_PARSER_SYNC_MODE,"0"))); // set lavc parser sync mode (0: PTS, 1 samples)

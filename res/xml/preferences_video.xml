@@ -90,19 +90,14 @@
             android:summary="@string/preferences_force_passthrough_summary"
             android:title="@string/preferences_force_passthrough"
             app:iconSpaceReserved="false"/>
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="playback_speed"
+        <ListPreference
+            android:defaultValue="2"
+            android:entries="@array/audio_speed_mode_entries"
+            android:entryValues="@array/audio_speed_mode_entryvalues"
+            android:key="audio_speed_mode"
             android:persistent="true"
-            android:summary="@string/preferences_playback_speed_summary"
-            android:title="@string/preferences_playback_speed"
-            app:iconSpaceReserved="false"/>
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="audio_speed_audiotrack"
-            android:persistent="true"
-            android:summary="@string/preferences_audio_speed_audiotrack_summary"
-            android:title="@string/preferences_audio_speed_audiotrack"
+            android:summary="@string/preferences_audio_speed_mode_summary"
+            android:title="@string/preferences_audio_speed_mode_title"
             app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="true"
