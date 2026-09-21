@@ -168,7 +168,7 @@ public abstract class BrowserMoviesBy extends CursorBrowserByVideo implements Lo
     @Override
     protected void setupAdapter(boolean createNewAdapter) {
 		if (createNewAdapter || mBrowserAdapter == null) {
-		    mBrowserAdapter = new GroupOfMovieAdapter(getActivity().getApplicationContext(), mThumbnailEngine, mCursor, mViewMode);
+		    mBrowserAdapter = new GroupOfMovieAdapter(requireContext(), mThumbnailEngine, mCursor, mViewMode);
         } else {
             GroupOfMovieAdapter adapter = (GroupOfMovieAdapter)mBrowserAdapter;
             adapter.setData(mCursor, mViewMode);
