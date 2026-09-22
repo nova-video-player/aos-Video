@@ -55,7 +55,9 @@ public class VideoInfoCommonClass {
     public static String getParentPath(Video video) {
         String path = video.getFriendlyPath();
         if (path != null && path.contains("/")) {
-            return path.substring(0, path.lastIndexOf("/"));
+            // the stored path is a URI where delimiters like '#' have to stay percent-encoded: decode
+            // it so the user sees the real folder name
+            return FileUtils.decodeUri(Uri.parse(path.substring(0, path.lastIndexOf("/"))));
         }
         return "";
     }
