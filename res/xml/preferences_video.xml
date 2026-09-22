@@ -106,12 +106,12 @@
             android:summary="@string/preferences_enable_dynamic_audio_delay_summary"
             android:title="@string/preferences_enable_dynamic_audio_delay_title"
             app:iconSpaceReserved="false"/>
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="player_spatialization_enabled"
+        <ListPreference
+            android:key="player_spatialization_mode"
+            android:entries="@array/spatialization_entries"
+            android:entryValues="@array/spatialization_values"
             android:persistent="true"
-            android:summary="@string/preferences_enable_spatialization_summary"
-            android:title="@string/preferences_enable_spatialization_title"
+            android:title="@string/spatialization_title"
             app:iconSpaceReserved="false"/>
         <CheckBoxPreference
             android:defaultValue="false"

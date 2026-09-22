@@ -142,6 +142,7 @@ import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.medialib.IMediaPlayer;
 import com.archos.medialib.LibAvos;
+import com.archos.mediacenter.video.utils.SpatializationSettings;
 import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ScrapeDetailResult;
@@ -215,7 +216,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private static final String KEY_PLAYER_PROJECTOR_MODE = "player_projector_mode_key";
     private static final String KEY_AUDIO_FILT = "pref_audio_filt_int_key"; // used to be "pref_audio_filt_key", containing a string
     private static final String KEY_AUDIO_FILT_NIGHT = "pref_audio_filt_night_int_key";
-    private static final String KEY_SPATIALIZATION_ENABLED = "player_spatialization_enabled";
     private static final String KEY_NOTIFICATIONS_MODE = "notifications_mode";
     private static final String KEY_NETWORK_BOOKMARKS = "network_bookmarks";
     private static final String KEY_LOCK_ROTATION = "pref_lock_rotation";
@@ -513,55 +513,20 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         return (TVUtils.isTV(this) || mHdmiPlugged);
     }
 
-    private boolean isSpatializationSupportedByPlatform() {
-        int capabilities = CustomApplication.getSpatializerCapabilities();
-        return Build.VERSION.SDK_INT >= 32
-                && (capabilities & CodecDiscovery.SPATIALIZER_CAP_SUPPORTED) != 0
-                && (capabilities & CodecDiscovery.SPATIALIZER_CAP_AVAILABLE) != 0
-                && (capabilities & (CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_5_1
-                | CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_7_1)) != 0;
-    }
-
     private boolean isSpatializationToggleAvailable() {
-        return isSpatializationSupportedByPlatform()
-                && Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple", "0")) == 0;
-    }
-
-    private boolean isSpatializationPreferenceEnabled() {
-        return mPreferences.getBoolean(KEY_SPATIALIZATION_ENABLED, false);
-    }
-
-    private boolean isSpatializationEnabledForPlayback() {
-        return isSpatializationToggleAvailable() && isSpatializationPreferenceEnabled();
+        return !SpatializationSettings.isPassthrough(mPreferences);
     }
 
     private void applySpatializationPreferenceToAvos() {
-        if (LibAvos.isAvailable()) {
-            LibAvos.setSpatializerEnabled(isSpatializationEnabledForPlayback());
-        }
+        SpatializationSettings.apply(this, mPreferences, () -> {
+            if (mPlayer != null) mPlayer.refreshAudioOutput();
+            invalidateOptionsMenu();
+            if (isTVMode) refreshAudioTracksTVMenu();
+        });
     }
 
     private void applyDownmixPreferenceToAvos() {
-        if (!LibAvos.isAvailable()) {
-            return;
-        }
-        int passthroughMode = Integer.parseInt(mPreferences.getString("force_audio_passthrough_multiple", "0"));
-        if (passthroughMode > 0) {
-            LibAvos.setDownmix(0);
-            return;
-        }
-        if (isSpatializationEnabledForPlayback()) {
-            LibAvos.setDownmix(0);
-            return;
-        }
-        if (ArchosFeatures.isAndroidTV(this)) {
-            LibAvos.setDownmix(mPreferences.getBoolean("enable_downmix_androidtv", false) ? 1 : 0);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                && mPreferences.getBoolean("disable_downmix", false)) {
-            LibAvos.setDownmix(0);
-        } else {
-            LibAvos.setDownmix(1);
-        }
+        SpatializationSettings.applyDownmix(this, mPreferences);
     }
 
     private boolean isPassthroughAudioDelayLimited() {
@@ -588,21 +553,18 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
     }
 
-    private void setSpatializationPreferenceEnabled(boolean enabled) {
-        mPreferences.edit().putBoolean(KEY_SPATIALIZATION_ENABLED, enabled).apply();
-        applySpatializationPreferenceToAvos();
-        applyDownmixPreferenceToAvos();
-        if (mPlayer != null && mPlayer.isInPlaybackState()) {
-            mPlayer.refreshAudioOutput();
-        }
-        invalidateOptionsMenu();
-        if (isTVMode) {
-            refreshAudioTracksTVMenu();
-        }
-    }
-
-    private void toggleSpatializationPreference() {
-        setSpatializationPreferenceEnabled(!isSpatializationPreferenceEnabled());
+    private void showSpatializationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.spatialization_title)
+                .setSingleChoiceItems(R.array.spatialization_entries, SpatializationSettings.getMode(mPreferences),
+                        (dialog, which) -> {
+                            mPreferences.edit().putString(SpatializationSettings.KEY_MODE, Integer.toString(which)).apply();
+                            applySpatializationPreferenceToAvos();
+                            invalidateOptionsMenu();
+                            if (isTVMode) refreshAudioTracksTVMenu();
+                            dialog.dismiss();
+                        })
+                .setNegativeButton(android.R.string.cancel, null).show();
     }
 
     public static int[] readHdmiSize(Context context) {
@@ -2127,17 +2089,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                 });
 
-                final TVMenuItem tvmiSpatialization = mAudioTracksTVMenu.createAndAddTVSwitchableMenuItem(
-                        getResources().getString(R.string.spatialization_capabilities),
-                        isSpatializationEnabledForPlayback());
+                final TVMenuItem tvmiSpatialization = mAudioTracksTVMenu.createAndAddTVMenuItem(
+                        SpatializationSettings.label(this, mPreferences), false, false);
                 tvmiSpatialization.setDisabled(!isSpatializationToggleAvailable());
-                tvmiSpatialization.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        toggleSpatializationPreference();
-                        tvmiSpatialization.setChecked(isSpatializationEnabledForPlayback());
-                    }
-                });
+                tvmiSpatialization.setOnClickListener(v -> showSpatializationDialog());
 
                 mAudioTracksTVMenu.createAndAddSeparator();
 
@@ -2621,8 +2576,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             menuItem.setVisible(VideoPreferencesCommon.isAudioSpeedEnabled(mPreferences));
             menuItem = menu.add(MENU_OTHER_GROUP, MENU_SPATIALIZATION_ID, Menu.NONE, R.string.spatialization_capabilities);
             if (menuItem != null) {
-                menuItem.setCheckable(true);
-                menuItem.setChecked(isSpatializationEnabledForPlayback());
+                menuItem.setTitle(SpatializationSettings.label(this, mPreferences));
                 menuItem.setEnabled(isSpatializationToggleAvailable());
                 menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
             }
@@ -2670,7 +2624,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         if (menu.findItem(MENU_S3D_ID) != null)
             menu.findItem(MENU_S3D_ID).setVisible(isStereoEffectOn());
         if (menu.findItem(MENU_SPATIALIZATION_ID) != null) {
-            menu.findItem(MENU_SPATIALIZATION_ID).setChecked(isSpatializationEnabledForPlayback());
+            menu.findItem(MENU_SPATIALIZATION_ID).setTitle(SpatializationSettings.label(this, mPreferences));
             menu.findItem(MENU_SPATIALIZATION_ID).setEnabled(isSpatializationToggleAvailable());
         }
         /*if(menu.findItem(MENU_WINDOW_MODE)!=null)
@@ -2902,8 +2856,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 return true;
             }
             case MENU_SPATIALIZATION_ID: {
-                toggleSpatializationPreference();
-                item.setChecked(isSpatializationEnabledForPlayback());
+                showSpatializationDialog();
                 return true;
             }
             case MENU_S3D_ID: {

@@ -1056,4 +1056,20 @@
     <string name="ui_choice_help">You can change your choice in the application settings later</string>
     <string name="workgroup">Workgroup</string>
 
+    <string name="spatialization_title">Spatialization</string>
+    <string name="spatialization_off">Off</string>
+    <string name="spatialization_system">System spatialization</string>
+    <string name="spatialization_tv">TV stereo speakers (experimental)</string>
+    <string name="spatialization_headphones">Stereo headphones (SOFA)</string>
+    <string name="spatialization_unavailable">unavailable</string>
+    <string name="spatialization_profile_error">Could not load the spatialization profile. Spatialization is off.</string>
+    <string-array name="spatialization_entries">
+        <item>@string/spatialization_off</item>
+        <item>@string/spatialization_system</item>
+        <item>@string/spatialization_tv</item>
+        <item>@string/spatialization_headphones</item>
+    </string-array>
+    <string-array name="spatialization_values" translatable="false">
+        <item>0</item><item>1</item><item>2</item><item>3</item>
+    </string-array>
 </resources>

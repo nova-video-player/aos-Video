@@ -52,6 +52,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.CodecDiscovery;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
+import com.archos.mediacenter.video.utils.SpatializationSettings;
 import com.archos.medialib.IMediaPlayer;
 import com.archos.medialib.MediaFactory;
 import com.archos.medialib.MediaMetadata;
@@ -141,6 +142,7 @@ public class Player implements IPlayerControl,
     private boolean mRestoringSession;
     private boolean mMetadataReady;
     private boolean mHasAudio;
+    private boolean mPendingAudioRefresh;
     private SurfaceTexture mDisplayTexture;
     private int mFocusEpoch;
     private AudioManager.OnAudioFocusChangeListener mFocusListener;
@@ -470,6 +472,7 @@ public class Player implements IPlayerControl,
 
     private void closeCurrentPlayer() {
         ++mOpenGeneration;
+        mPendingAudioRefresh = false;
         mHandler.removeCallbacks(mPreparedAsync);
         mHandler.removeCallbacks(mRefreshRateCheckerAsync);
         IMediaPlayer old = mMediaPlayer;
@@ -612,7 +615,15 @@ public class Player implements IPlayerControl,
                         player.setScreenOnWhilePlaying(true);
                         if (mResumeCtx.getSeek() != -1 && !mSurfaceController.supportOpenGLVideoEffect()
                                 && player.setStartTime(mResumeCtx.getSeek())) mResumeCtx.setSeek(-1);
-                        player.prepareAsync();
+                        SpatializationSettings.prepareForPlayback(mContext,
+                                PreferenceManager.getDefaultSharedPreferences(mContext), () -> {
+                            if (generation != mOpenGeneration || player != mMediaPlayer) return;
+                            mPendingAudioRefresh = false; // this prepare already uses the latest configuration
+                            try { player.prepareAsync(); }
+                            catch (IllegalArgumentException | IllegalStateException ex) {
+                                onError(player, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, ex.getMessage());
+                            }
+                        });
                     } catch (IllegalArgumentException | IllegalStateException ex) {
                         onError(player, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, ex.getMessage());
                     }
@@ -1050,6 +1061,10 @@ public class Player implements IPlayerControl,
     }
 
     public void refreshAudioOutput() {
+        if (mCurrentState == STATE_PREPARING) {
+            mPendingAudioRefresh = true;
+            return;
+        }
         if (isInPlaybackState() && mHasAudio) {
             mMediaPlayer.refreshAudioOutput();
         }
@@ -1135,6 +1150,10 @@ public class Player implements IPlayerControl,
         if (mHasAudio && !CustomApplication.getAudioOutputSignature().equals(mAudioOutputSignature)) {
             onAudioOutputChanged();
             return;
+        }
+        if (mPendingAudioRefresh) {
+            mPendingAudioRefresh = false;
+            refreshAudioOutput();
         }
         mResumeCtx.onPrepared();
 

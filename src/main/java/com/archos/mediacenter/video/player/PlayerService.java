@@ -75,6 +75,7 @@ import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediacenter.video.utils.AdditionalServiceSingleton;
 import com.archos.medialib.Subtitle;
+import com.archos.mediacenter.video.utils.SpatializationSettings;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediaprovider.video.VideoStoreImportImpl;
 import com.archos.mediascraper.BaseTags;
@@ -674,6 +675,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 break;
         }
         if (log.isDebugEnabled()) log.debug("onStart() {}", mUri);
+        applySpatializationSettings();
         mStreamingUri = IntentCompat.getParcelableExtra(intent, KEY_STREAMING_URI, Uri.class);
         if(mPlayerFrontend!=null)
             mPlayerFrontend.setUri(mUri, mStreamingUri);
@@ -2849,6 +2851,26 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mNightModeOn = newNightMode;
             setAudioFilt();
         }
+    }
+
+    /** Compatibility with the original SOFA controls: 0=off, 1=TV, 2=headphones. */
+    public void setSofaMode(int mode) {
+        int selected = mode == 1 ? SpatializationSettings.TV : mode == 2 ? SpatializationSettings.HEADPHONES : SpatializationSettings.OFF;
+        mPreferences.edit().putString(SpatializationSettings.KEY_MODE, Integer.toString(selected)).apply();
+        applySpatializationSettings();
+    }
+
+    public void toggleSofaMode() { setSofaMode((getSofaMode() + 1) % 3); }
+
+    public int getSofaMode() {
+        int selected = SpatializationSettings.getMode(mPreferences);
+        return selected >= SpatializationSettings.TV ? selected - 1 : 0;
+    }
+
+    private void applySpatializationSettings() {
+        SpatializationSettings.apply(this, mPreferences, () -> {
+            if (mPlayer != null) mPlayer.refreshAudioOutput();
+        });
     }
 
     public void setAudioFilt() {
