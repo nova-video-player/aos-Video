@@ -415,6 +415,16 @@ public class MiscUtils {
     }
 
     /**
+     * Returns a {@link Context} associated with the display the UI is running on, so that windows
+     * created from it (e.g. Toasts) show up on that display instead of the default one.
+     */
+    public static Context getDisplayContext(Context context, View... views) {
+        if (context == null) return null;
+        Display display = getDisplay(context, views);
+        return display != null ? context.createDisplayContext(display) : context;
+    }
+
+    /**
      * Safely obtains the current display rotation.
      */
     public static int getRotation(Context context, View... views) {

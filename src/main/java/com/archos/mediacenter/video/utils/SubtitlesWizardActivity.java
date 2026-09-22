@@ -98,7 +98,7 @@ public class SubtitlesWizardActivity extends AppCompatActivity implements OnItem
         mListView = (ListView) findViewById(R.id.list_items);
         mListView.setEmptyView(mEmptyView);
 
-        SubtitlesWizardAdapter adapter = new SubtitlesWizardAdapter(getApplication(), this);
+        SubtitlesWizardAdapter adapter = new SubtitlesWizardAdapter(this, this);
         mListView.setAdapter(adapter);
         mListView.setCacheColorHint(0);
         mListView.setOnItemClickListener(this);

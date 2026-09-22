@@ -614,7 +614,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
         setViewMode(viewMode);
 
         mMenuAnchor = mRootView.findViewById(R.id.menu_anchor);
-        mSortModeSubmenu = new ActionBarSubmenu(mContext, inflater, mMenuAnchor);
+        mSortModeSubmenu = new ActionBarSubmenu(requireContext(), inflater, mMenuAnchor);
         mSortModeSubmenu.setListener(this);
         return mRootView;
     }

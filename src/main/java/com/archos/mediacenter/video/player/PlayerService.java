@@ -70,6 +70,7 @@ import com.archos.mediacenter.video.browser.TorrentObserverService;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.leanback.channels.ChannelManager;
+import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.mediacenter.video.utils.AdditionalServiceSingleton;
@@ -256,6 +257,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static PlayerService sPlayerService;
     private SharedPreferences mPreferences;
     private PlayerFrontend mPlayerFrontend;
+    // Display-aware context of the current player UI so that Toasts show up on the display the
+    // video is playing on instead of the default one. Null when no UI frontend is attached.
+    private Context mUiContext;
     private Handler mHandler;
     private Player mPlayer;
     public static final String KEY_STREAMING_URI = "streaming_uri";
@@ -1082,6 +1086,17 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         void onIntroDbReady();
     }
 
+    /**
+     * Called by the player UI so that service Toasts are shown on the display hosting the player.
+     */
+    public void setUiContext(Context context) {
+        mUiContext = context != null ? MiscUtils.getDisplayContext(context) : null;
+    }
+
+    private Context getUiContext() {
+        return mUiContext != null ? mUiContext : getApplicationContext();
+    }
+
     public void removePlayerFrontend(PlayerFrontend playerFrontend, boolean prepareForSurfaceSwitch) {
         if(mPlayerFrontend!=playerFrontend)
             return;
@@ -1766,7 +1781,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      */
     private void showIntroDbDebugToast(final String message) {
         if (!log.isTraceEnabled() || message == null || message.isEmpty()) return;
-        mHandler.post(() -> Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show());
+        mHandler.post(() -> Toast.makeText(getUiContext(), message, Toast.LENGTH_LONG).show());
     }
 
     /**
@@ -1818,7 +1833,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     // User-facing feedback when an auto-skip fires (the user opted in via the Play mode toggle).
     private void showAutoSkipToast(final IntroSegments.Type type) {
         final String message = getString(R.string.introdb_autoskip) + ": " + introLabels(getApplicationContext()).get(type);
-        mHandler.post(() -> Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show());
+        mHandler.post(() -> Toast.makeText(getUiContext(), message, Toast.LENGTH_SHORT).show());
     }
 
     // Translatable display labels for each segment type, resolved from string resources.

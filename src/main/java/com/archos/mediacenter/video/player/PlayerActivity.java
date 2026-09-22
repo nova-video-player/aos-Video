@@ -1099,6 +1099,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         intent.putExtra(ExternalResumeIntent.EXTERNAL_PLAYER_LAUNCH, mIsExternalPlayer);
 
         PlayerService.sPlayerService.switchPlayerFrontend(mPlayerListener);
+        PlayerService.sPlayerService.setUiContext(this);
         Player.sPlayer = mPlayer;
         PlayerService.sPlayerService.setPlayer();
         if(mPermissionChecker.hasExternalPermission(this)) {
@@ -1733,7 +1734,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     @SuppressLint("InflateParams")
     private void createTVSubtitleSettingsDialog() {
-        float density = getApplicationContext().getResources().getDisplayMetrics().density;
+        float density = getResources().getDisplayMetrics().density;
         float pickerWidth= (float)100 * density;
 
         View dialogMainView =   LayoutInflater.from(mContext)

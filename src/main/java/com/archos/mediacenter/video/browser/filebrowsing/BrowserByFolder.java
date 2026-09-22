@@ -835,11 +835,11 @@ abstract public class BrowserByFolder extends BrowserByVideoObjects implements
     }
 
     protected void showToast(int textId) {
-        Toast.makeText(getActivity().getApplicationContext(), textId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), textId, Toast.LENGTH_SHORT).show();
     }
 
     protected void showToast(String text) {
-        Toast.makeText(getActivity().getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
     }
 
     protected void enterDirectory(MetaFile2 metaFile2) {

@@ -58,6 +58,7 @@ import com.archos.mediacenter.utils.RepeatingImageButton;
 import com.archos.mediacenter.utils.seekbar.ArchosProgressSlider;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.utils.MiscUtils;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.medialib.Subtitle;
 
@@ -476,6 +477,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
                 e.printStackTrace();
             }
             PlayerService.sPlayerService.switchPlayerFrontend(this);
+            PlayerService.sPlayerService.setUiContext(MiscUtils.getDisplayContext(this, mFloatingPlayerRootView));
             new Player(this, null, mSurfaceController,false);
 
             PlayerService.sPlayerService.setPlayer();
