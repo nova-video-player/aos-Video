@@ -286,6 +286,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public static final String KEY_ORIGINAL_TORRENT_URL = "original_torrent_uri";
 
     private static final String KEY_HIDE_SUBTITLES = "subtitles_hide_default";
+    private static final String KEY_SHOW_FULL_SUBTITLES_FOR_LOCAL_AUDIO = "subtitles_show_full_for_local_audio";
     private static final String KEY_NETWORK_BOOKMARKS = "network_bookmarks";
     private static final String KEY_SUBTITLES_FAVORITE_LANGUAGE = "favSubLang";
     private static final String KEY_AUDIO_TRACK_FAVORITE_LANGUAGE = "favAudioLang";
@@ -302,6 +303,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private boolean firstTimeAudioCalled = true;
 
     private boolean mHideSubtitles = false;
+    private boolean mShowFullSubsForLocalAudio = false;
     private int mNewSubtitleTrack;
     private boolean mAudioSubtitleNeedUpdate;
     private Intent mIntent;
@@ -593,6 +595,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mNightModeOn = mPreferences.getBoolean(KEY_AUDIO_FILT_NIGHT, false);
         mForceSingleRepeatMode = isDemoMode;
         mHideSubtitles = mPreferences.getBoolean(KEY_HIDE_SUBTITLES, false);
+        mShowFullSubsForLocalAudio = mPreferences.getBoolean(KEY_SHOW_FULL_SUBTITLES_FOR_LOCAL_AUDIO, false);
         mPlayMode = mPreferences.getInt(KEY_PLAY_MODE, PLAYMODE_SINGLE);
         // Any start clears the binge-transition flag; onCompletion re-sets it when auto-advancing.
         mArrivedViaBingeTransition = false;
@@ -2211,7 +2214,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     Integer forcedTrack = selectForcedSubtitleTrack(vMetadata);
                     mVideoInfo.subtitleTrack = Objects.requireNonNullElse(forcedTrack, noneTrack);
                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: hide regular subtitles -> selected forced track {}", mVideoInfo.subtitleTrack);
-                } else if (selectedAudioIsInCurrentLocale
+                } else if (!mShowFullSubsForLocalAudio && selectedAudioIsInCurrentLocale
                         && ISO639codes.isFavoriteLanguageMatch(mSubsFavoriteLanguage, currentLocaleLanguage)) {
                     Integer forcedTrack = selectForcedSubtitleTrack(vMetadata);
                     mVideoInfo.subtitleTrack = Objects.requireNonNullElse(forcedTrack,

@@ -70,8 +70,9 @@ remaining implementation work needed to make forced-track detection reliable.
 ### Current implementation
 
 `PlayerService` reads the audio-selection preferences, one subtitle preference
-(`favSubLang`), and the *Hide subtitles by default* preference. The detailed
-audio policy is specified in [AUDIO_TRACK_SELECTION.md](AUDIO_TRACK_SELECTION.md).
+(`favSubLang`), the *Hide subtitles by default* preference, and the *Show
+subtitles for local-language audio* preference. The detailed audio policy is
+specified in [AUDIO_TRACK_SELECTION.md](AUDIO_TRACK_SELECTION.md).
 The language preferences fall back to the device locale's ISO-639-3 code when
 no value is stored; neither has a distinct **System language** value.
 
@@ -90,7 +91,8 @@ Current automatic selection works as follows:
 4. Otherwise, if `favSubLang` matches the current locale and the active audio
    also matches that locale, Nova treats the user as a native speaker: it
    suppresses full local-language subtitles and selects the matching forced
-   track, or none if it is absent.
+   track, or none if it is absent. This step is skipped, falling through to
+   step 5, when *Show subtitles for local-language audio* is enabled.
 5. In every other case, Nova scans for a non-forced full subtitle matching
    `favSubLang` (using normalized language codes via `isFavoriteLanguageMatch`),
    using Chinese title variants and the `default` disposition as tie breakers.
@@ -152,10 +154,18 @@ in particular, `Forced` may be a secondary UI label and is not a language.
 
 ### Policy using the existing preferences
 
-No new preference is required. `favSubLang` remains the user's single preferred
-full-subtitle language. When it has the same normalized base language as the
-current device locale, Nova assumes it is the user's native language: full
-subtitles in that language are useful for foreign audio, but not for local audio.
+`favSubLang` remains the user's single preferred full-subtitle language. When
+it has the same normalized base language as the current device locale, Nova
+assumes it is the user's native language: full subtitles in that language are
+useful for foreign audio, but not for local audio.
+
+This assumption does not hold for every user: device/system locale is a weak
+signal of native language, especially for English, which is commonly left as
+the out-of-box default regardless of the owner's actual language. The *Show
+subtitles for local-language audio* preference (`subtitles_show_full_for_local_audio`,
+off by default) lets a user opt out of the native-speaker suppression and fall
+back to the normal `favSubLang` full-subtitle scan (step 5) even when audio,
+locale, and `favSubLang` all match.
 
 `subtitles_hide_default` means **hide full subtitles by default; still show
 matching forced subtitles**. Its summary must state this behaviour. It does not
@@ -179,7 +189,8 @@ existing preferences and strict language matching:
 4. If `favSubLang` and the current locale match the active audio language,
    select only a forced track under the same rule as step 3. This is the native
    speaker case: French audio plus French `favSubLang` selects French forced
-   subtitles, not full French subtitles.
+   subtitles, not full French subtitles. Skip this step, falling through to
+   step 5, when *Show subtitles for local-language audio* is enabled.
 5. Otherwise select a non-forced full subtitle matching `favSubLang`. A French
    user watching English audio therefore gets full French subtitles, not an
    English forced track. Apply language-variant and `default` tie breakers only
@@ -221,6 +232,12 @@ manual or full-subtitle selection during an audio change.
 | English | English | English / hide off | `movie.srt` only | `movie.srt` |
 | English | French | French / hide on | English forced only | English forced only |
 | French | French | French / hide on | Forced with no language; one French audio track | Forced track |
+| English | English (any variant) | English / hide off / show-local-audio-subs on | English full; English forced | English full |
+
+All rows assume *Show subtitles for local-language audio* is off (the
+default), except the last row, which shows the native-speaker rule (rows 1-4)
+skipped when that preference is enabled: the full-subtitle scan (step 5)
+runs instead and picks the full track.
 
 The first two rows are the English-native-speaker case. The French rows apply
 the same rule, while a French full-subtitle preference is still respected for
