@@ -25,6 +25,7 @@ import static com.archos.mediacenter.video.utils.CodecDiscovery.getHdrScreenCapa
 import static com.archos.mediacenter.video.utils.CodecDiscovery.resetHdrCapabilities;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.media.AudioAttributes;
@@ -50,12 +51,12 @@ import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.CodecDiscovery;
+import com.archos.mediacenter.video.utils.SubtitleFontsFolderSync;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.IMediaPlayer;
 import com.archos.medialib.MediaFactory;
 import com.archos.medialib.MediaMetadata;
-import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.ArchosMediaCommon;
 
 import java.io.IOException;
@@ -88,7 +89,6 @@ public class Player implements IPlayerControl,
                                IMediaPlayer.OnRelativePositionUpdateListener,
                                IMediaPlayer.OnSeekCompleteListener,
                                IMediaPlayer.OnVideoSizeChangedListener,
-                               IMediaPlayer.OnSubtitleListener,
                                SurfaceHolder.Callback,
                                TextureView.SurfaceTextureListener{
 
@@ -171,6 +171,7 @@ public class Player implements IPlayerControl,
     private static float mCurrentFps = 0.0f;
 
     private VideoEffectRenderer mEffectRenderer;
+    private SubtitleEngine mSubtitleEngine; // NEW: The native subtitle engine
 
     /*
      * Archos
@@ -250,7 +251,60 @@ public class Player implements IPlayerControl,
 
     private boolean mForceSoftwareDecoding;
     private int mLastExistState = -1;
+    private boolean mIsReleased = false;
 
+    // --- NEW: Expose the Subtitle Engine for the UI ---
+    public SubtitleEngine getSubtitleEngine() {
+        return mSubtitleEngine;
+    }
+
+    // Mirrors getSubtitleEngine() above: lets SubtitleEngine reach back into the effect
+    // renderer to wake its draw loop after a paused-3D style change (see
+    // VideoEffectRenderer.wakeDrawLoop()'s doc comment for why that hop is needed).
+    public VideoEffectRenderer getEffectRenderer() {
+        return mEffectRenderer;
+    }
+
+    /**
+     * Explicit, one-time teardown for this Player instance. Call this (and ONLY this) when
+     * whoever holds this Player -- currently always via the Player.sPlayer static, see
+     * PlayerService.removePlayerFrontend() -- is truly done with it and about to drop its last
+     * reference (i.e. isFinishing()/not resuming, never on a plain background/minimize).
+     *
+     * Player is the sole owner of the SubtitleEngine it constructs (mSubtitleEngine = new
+     * SubtitleEngine() in the constructor below) -- nothing else in the app should call
+     * SubtitleEngine.release() directly. Routing all teardown through here is what guarantees
+     * at most one live SubtitleEngine (and therefore native SUB_ENGINE) exists at a time: as
+     * long as every discard of a Player goes through releasePlayer() before the next Player is
+     * constructed, there is no window for two to be alive simultaneously.
+     *
+     * Idempotent: safe to call more than once, subsequent calls are a no-op.
+     */
+    public void releasePlayer() {
+        if (mIsReleased) return;
+        mIsReleased = true;
+        stopPlayback();
+
+        // stopPlayback() above only pauses mEffectRenderer -- its SurfaceTexture frame
+        // callback (onFrameAvailable(), which drives SubtitleEngine.draw3DSubtitles() in 3D
+        // mode) keeps running until the renderer is actually stopped. stop() (as opposed to
+        // pause()) is what tears that callback down; assumed to block until any in-flight
+        // callback invocation has returned, i.e. join semantics. Doing this BEFORE
+        // mSubtitleEngine.release() below is what closes the onFrameAvailable() side of the
+        // native-engine-freed-while-in-use race: once stop() returns, no new
+        // draw3DSubtitles() call can start from that thread, so release() (which still
+        // separately synchronizes with SubtitleEngine's own m3DDrawLock, covering the
+        // remaining UI-thread redraw3DIfNeeded() path) has nothing left to race against.
+        if (mEffectRenderer != null) {
+            mEffectRenderer.stop();
+            mEffectRenderer = null;
+        }
+
+        if (mSubtitleEngine != null) {
+            mSubtitleEngine.release();
+            mSubtitleEngine = null;
+        }
+    }
 
     private class ResumeCtx {
         private boolean mSubtitleTrackSet;
@@ -368,6 +422,7 @@ public class Player implements IPlayerControl,
         mWindow = window;
         mAudioManager = (AudioManager) mContext.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         mEffectRenderer = new VideoEffectRenderer(mContext, VideoEffect.getDefaultType());
+        mSubtitleEngine = new SubtitleEngine(); // NEW: Create the JNI wrapper
         setSurfaceController(surfaceController);
     }
     public void setWindow(Window window){
@@ -386,6 +441,8 @@ public class Player implements IPlayerControl,
         if (mSurfaceController != null) {
             mSurfaceController.setTextureCallback(this);
             mSurfaceController.setSurfaceCallback(this);
+            mSurfaceController.setSubtitleTextureCallback(mSubtitleEngine);
+            mSurfaceController.setVideoBoxListener(mSubtitleEngine);
         }
     }
     private void setGLSupportEnabled(boolean enable) {
@@ -433,6 +490,17 @@ public class Player implements IPlayerControl,
         mHasAudio = false;
         mUri = uri;
         mExtraMap = extraMap;
+
+        // Custom subtitle fonts folder (MX Player / mpv-android style): re-read and re-push
+        // on every new video rather than only once in the Player constructor, because
+        // mSubtitleEngine is created once and reused across every video played within this
+        // same Player/activity instance (see constructor above) -- if the user changes this
+        // setting in the Settings menu and comes back to play another video WITHOUT the
+        // activity being recreated, the old value would otherwise stick around. Cheap no-op
+        // reads if the user never touched the setting (both come back null and the
+        // SubtitleEngine setters below are skipped).
+        applySubtitleFontSettings();
+
         String scheme = mUri.getScheme();
         mIsLocalVideo = false;
         if (scheme == null || scheme.equals("file")) {
@@ -453,6 +521,44 @@ public class Player implements IPlayerControl,
         }
         if (log.isDebugEnabled()) log.debug("setVideoURI: {}", uri);
         openVideo();
+    }
+
+    // Reads the custom-fonts-folder settings and pushes them into the native engine.
+    // fontsFolder goes through SubtitleFontsFolderSync.getFontsStorePath() rather than
+    // reading KEY_SUBTITLE_FONTS_FOLDER directly, since that pref is only refreshed when
+    // Settings is opened or the folder is (re)picked.
+    //
+    // Both calls are synchronous, with no background thread and no SAF query: read-only
+    // disk access is all getFontsStorePath() ever does (see its Javadoc). This has to be
+    // synchronous because sub_engine_open_track() snapshots fontsFolder fresh per video
+    // and doesn't carry over what a previous video set, so it must be current before
+    // openVideo() below, every time. SAF freshness is a Settings-screen-only concern --
+    // see VideoPreferencesCommon's syncFromTree()/syncIfNeeded().
+    //
+    // Deliberately does NOT also push defaultFont through setFontFamily(): an earlier revision
+    // did, via a stripFontExtension() filename guess (mirroring a since-removed native-side
+    // guess) -- that's not just redundant now that font_name_resolve_family() in
+    // font_name_parser.c reads the font's REAL name table instead of guessing, it's actively
+    // counterproductive. sync_styles() in sub_format_ssa.c's force-mode block only substitutes
+    // the correctly-resolved ctx->resolved_default_family in when u.font_family is STILL
+    // exactly sub_style_create()'s untouched factory value ("roboto medium") -- calling
+    // setFontFamily() here every video open overwrites that sentinel with the (wrong, guessed)
+    // stripped filename, permanently defeating the resolved-family fallback for every video
+    // from then on. Leaving font_family alone and passing only setDefaultFontName() is what
+    // lets the native side's correct resolution actually take effect.
+    private void applySubtitleFontSettings() {
+        if (mSubtitleEngine == null) return;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String defaultFont = prefs.getString(VideoPreferencesCommon.KEY_SUBTITLE_DEFAULT_FONT, null);
+        mSubtitleEngine.setDefaultFontName(defaultFont);
+
+        // Unconditional, same as setDefaultFontName() above: mSubtitleEngine is reused
+        // across every video played within this Player instance (see setVideoURI()'s
+        // comment), so a null here still needs to reach the engine to clear out whatever
+        // a previous video may have left set -- guarding this on non-null would let a
+        // stale folder from an earlier video silently keep applying to this one.
+        String fontsFolder = SubtitleFontsFolderSync.getFontsStorePath(mContext);
+        mSubtitleEngine.setFontsFolder(fontsFolder);
     }
 
     @SuppressWarnings("deprecation")
@@ -589,7 +695,6 @@ public class Player implements IPlayerControl,
         player.setOnRelativePositionUpdateListener(this);
         player.setOnSeekCompleteListener(this);
         player.setOnVideoSizeChangedListener(this);
-        player.setOnSubtitleListener(this);
         mAudioOutputSignature = CustomApplication.getAudioOutputSignature();
         CustomApplication.applyAudioOutputToNative(mContext);
         new Thread(() -> {
@@ -1381,14 +1486,6 @@ public class Player implements IPlayerControl,
         }
     }
 
-    public void onSubtitle(IMediaPlayer mp, Subtitle subtitle) {
-        if (mp != mMediaPlayer) return;
-        if (log.isDebugEnabled()) log.debug("onSubtitle");
-        if (mPlayerListener != null) {
-            mPlayerListener.onSubtitle(subtitle);
-        }
-    }
-
     public void setListener(Listener listener) {
         mPlayerListener = listener;
     }
@@ -1407,7 +1504,6 @@ public class Player implements IPlayerControl,
         void onAudioMetadataUpdated(VideoMetadata vMetadata, int currentAudio);
         void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int currentSubtitle);
         void onBufferingUpdate(int percent);
-        void onSubtitle(Subtitle subtitle);
         default void onAudioSpeedApplied(float speed) {}
         default void onAudioTrackSelectionCompleted(int track, boolean success) {}
         default void onSubtitleTrackSelectionCompleted(int track, boolean success) {}

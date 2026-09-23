@@ -97,6 +97,7 @@ public class SurfaceController {
     private View mView;
     private SurfaceView mSurfaceView = null;
     private TextureView mEffectView = null;
+    private TextureView mSubtitleView = null; // NEW: The OpenGL Subtitle Layer
     private IMediaPlayer mMediaPlayer = null;
     private SurfaceController.Listener      mSurfaceListener;
     private int         mLcdWidth = 0;
@@ -115,21 +116,65 @@ public class SurfaceController {
     private int mEffectMode = VideoEffect.getDefaultMode();
     private int mEffectType = VideoEffect.getDefaultType();
 
+    // --- Subtitle surface sizing ---
+    // Three genuine categories (see PlayerActivity.updateSubtitleLayoutMode() for how the
+    // active track maps to one of these). Kept for SubtitleManager.setSubtitleIsGfx() and for
+    // the native engine's backend selection -- mSubtitleView's sizing itself no longer branches
+    // on category (see mUseSubMargins below).
+    public static final int SUBTITLE_CATEGORY_PLAIN_TEXT = 0; // SRT/VTT
+    public static final int SUBTITLE_CATEGORY_ASS         = 1; // embedded/external ASS/SSA
+    public static final int SUBTITLE_CATEGORY_GFX         = 2; // VobSub .idx/.sub, PGS
+
+    private int mSubtitleCategory = SUBTITLE_CATEGORY_PLAIN_TEXT;
+    // User preference (pref_play_subtitle_use_margins_key): when true, ALL subtitle categories
+    // -- plain text, ASS/SSA, and GFX alike -- are allowed to use top/bottom letterbox bars
+    // (mpv's sub-use-margins equivalent). Left/right bars are NEVER used regardless of this
+    // flag -- see updateSurface()'s mSubtitleView sizing block below. For ASS this also
+    // requires a matching native-side change (sub_engine_open_track() in sub_engine.c) so
+    // libass's own frame-size call reflects the same expanded canvas Java is now handing it.
+    private boolean mUseSubMargins = true;
+
     private int mCutoutLeft = 0;
     private int mCutoutTop = 0;
     private int mCutoutRight = 0;
     private int mCutoutBottom = 0;
     private int mMarginLeft = 0;
     private int mMarginTop = 0;
+    // Cached from updateSurface()'s last run -- see getVideoBoxTop() below.
+    private int mVideoBoxTop = 0;
     private boolean mCutoutBugToasted = false;
     public boolean mFullScreenWithCutout = false;
     public boolean mCutBothSidesX = false;
+
+    /**
+     * Reports where the video's own on-screen box sits within the subtitle canvas,
+     * whenever updateSurface() recomputes it (rotation, use_sub_margins toggling, a new
+     * video's aspect ratio changing the letterbox/pillarbox amount). Mirrors the existing
+     * TextureView.SurfaceTextureListener-based callback pattern used for
+     * setSubtitleTextureCallback() above, just for this one extra piece of geometry that
+     * Android's own TextureView lifecycle doesn't carry.
+     */
+    public interface VideoBoxListener {
+        void onVideoBoxChanged(int x, int y, int w, int h);
+    }
+    private VideoBoxListener mVideoBoxListener;
+    public void setVideoBoxListener(VideoBoxListener listener) {
+        mVideoBoxListener = listener;
+    }
 
     public SurfaceController(View rootView) {
         ViewGroup mLp = (ViewGroup)rootView;
  
         mEffectView =  (TextureView) mLp.findViewById(R.id.gl_surface_view);
         mSurfaceView =  (SurfaceView) mLp.findViewById(R.id.surface_view);
+        mSubtitleView = (TextureView) mLp.findViewById(R.id.gl_subtitle_view); // NEW
+        // --- NATIVE OPENGL UPGRADE FIX ---
+        // CRITICAL: TextureViews are opaque by default! If we don't set this to false,
+        // Android thinks this view is a solid black box, optimizes out the 3D video
+        // underneath it, and causes the hardware MediaCodec to stall and crash!
+        if (mSubtitleView != null) {
+            mSubtitleView.setOpaque(false);
+        }
         if (mEffectEnable) {
             mView = mEffectView;
             mSurfaceView.setVisibility(View.GONE);
@@ -146,9 +191,9 @@ public class SurfaceController {
         if (enable) {
             //Need openGL, let's use TextureView
             mView = mEffectView;
-         } else {
-             //Do not need openGL, let's use SurfaceView
-             mView = mSurfaceView;
+        } else {
+            //Do not need openGL, let's use SurfaceView
+            mView = mSurfaceView;
         }
         mView.setVisibility(View.VISIBLE);
         mEffectEnable = enable;
@@ -188,6 +233,19 @@ public class SurfaceController {
         }
     }
 
+    public void setSubtitleTextureCallback(TextureView.SurfaceTextureListener callback) {
+        if (mSubtitleView != null) {
+            mSubtitleView.setSurfaceTextureListener(callback);
+            if (callback != null && mSubtitleView.isAvailable()) {
+                callback.onSurfaceTextureAvailable(mSubtitleView.getSurfaceTexture(),
+                    mSubtitleView.getWidth(), mSubtitleView.getHeight());
+            }
+        }
+    }
+
+    public int getSubtitleViewWidth() { return mSubtitleView != null ? mSubtitleView.getWidth() : 0; }
+    public int getSubtitleViewHeight() { return mSubtitleView != null ? mSubtitleView.getHeight() : 0; }
+
     public void setHdmiPlugged(boolean plugged, int hdmiWidth, int hdmiHeight) {
         if (log.isDebugEnabled()) log.debug("setHdmiPlugged: plugged={}, hdmi=({},{})", plugged, hdmiWidth, hdmiHeight);
         if (plugged != mHdmiPlugged || (plugged && (mHdmiWidth != hdmiWidth || mHdmiHeight != hdmiHeight))) {
@@ -226,6 +284,27 @@ public class SurfaceController {
     public void setListener(SurfaceController.Listener listener) {
         mSurfaceListener = listener;
     }
+
+    /**
+     * Called whenever the active subtitle track's category becomes known or changes (see
+     * PlayerActivity.updateSubtitleLayoutMode()), and whenever the use-margins preference
+     * changes, so updateSurface() can size mSubtitleView appropriately:
+     *   - useMargins=true  : full video width, extended into top/bottom letterbox bars only
+     *     (never left/right), regardless of category (plain text, ASS, or GFX alike).
+     *   - useMargins=false : tethered exactly to the video's own on-screen box, same as the
+     *     video view itself.
+     * category is still recorded (SubtitleManager.setSubtitleIsGfx() and the native engine's
+     * backend selection depend on it) even though it no longer affects sizing here.
+     * Triggers an immediate relayout if either value actually changed and a video is already
+     * laid out.
+     */
+    public void setSubtitleLayoutMode(int category, boolean useMargins) {
+        if (mSubtitleCategory == category && mUseSubMargins == useMargins) return;
+        mSubtitleCategory = category;
+        mUseSubMargins = useMargins;
+        updateSurface();
+    }
+
     public int getMax(){
         return getVideoFormat().getMax();
     }
@@ -482,6 +561,7 @@ public class SurfaceController {
         mMarginTop = mHdmiPlugged || mFullScreenWithCutout ? 0 : (int)((cutoutTop - cutoutBottom)/ 2.0f);
 
         ViewGroup.LayoutParams lp = mView.getLayoutParams();
+        ViewGroup.LayoutParams subLp = mSubtitleView != null ? mSubtitleView.getLayoutParams() : null; // NEW
         if (lp instanceof ViewGroup.MarginLayoutParams marginParams) {
             if (log.isDebugEnabled()) log.debug("MARC works with MarginLayoutParams"); // TODO MARC it works!!!
             lp.width = dcw;
@@ -495,10 +575,84 @@ public class SurfaceController {
             lp.height = dch;
             mView.setLayoutParams(lp);
         }
+
+        // mSubtitleView's sizing depends only on the use-margins preference now -- it applies
+        // uniformly to every subtitle category (plain text, ASS/SSA, and GFX alike). The
+        // category enum is still tracked (SubtitleManager.setSubtitleIsGfx() and the native
+        // engine still need to know which backend/format is active), but it no longer gates
+        // whether margins are used.
+        //
+        //   mUseSubMargins=false: tethered exactly like mView (dcw x dch, same margins) --
+        //   clipped to the video's own box, no black-bar usage.
+        //
+        //   mUseSubMargins=true: WIDTH stays exactly dcw (matches the video view's own width,
+        //   same horizontal margin) -- left/right bars are intentionally NEVER used, regardless
+        //   of this preference. HEIGHT extends to fill the full available vertical space
+        //   (letterbox bars included) ONLY when willStretchY is true, i.e. only when top/bottom
+        //   bars actually exist for this content/screen combination (see the ar/dcar comparison
+        //   above -- willStretchY is recomputed fresh every call, so this generalizes correctly
+        //   across any screen aspect ratio, not just 16:9). When willStretchY is false (bars are
+        //   left/right instead, or there are none at all), there's nothing vertical to gain, so
+        //   it falls back to the same tethered sizing as the non-margins case.
+        //
+        //   For ASS specifically, expanding the canvas also requires the native side to widen
+        //   what it tells libass its frame size is (see sub_engine_open_track() in
+        //   sub_engine.c) -- otherwise the track's own PlayResX/PlayResY scale would be computed
+        //   against the old, smaller video-only canvas while actually being drawn into the
+        //   larger one, distorting text size/position. That native-side change is separate from
+        //   this Java layout change; both are needed together.
+        boolean extendVertically = mUseSubMargins && willStretchY;
+
+        // Vertical offset of the video's own on-screen box within the subtitle canvas'
+        // own coordinate space, cached for getVideoBoxTop() below.
+        //
+        // When extended, mSubtitleView is MATCH_PARENT with a 0 top margin, so its top
+        // edge sits at parent-relative y=0. mView, however, is only dcw x dch: the
+        // FrameLayout's own gravity="center" (see player.xml) centers it within the full
+        // dh-tall parent FIRST -- offset (dh - dch) / 2 -- and mMarginTop is then applied
+        // ON TOP of that centering, not instead of it. So mView's top edge actually sits
+        // at (dh - dch) / 2 + mMarginTop, and that whole amount -- not mMarginTop alone --
+        // is the video box's vertical offset within the (0-based) canvas. Using mMarginTop
+        // alone silently dropped the (dh - dch) / 2 term, which is exactly half the
+        // letterbox bar height being absorbed -- i.e. precisely the common case this
+        // mechanism exists for -- pushing GFX (PGS/VobSub) bitmaps up by that amount
+        // whenever margins are in use.
+        //
+        // When NOT extended, mSubtitleView is sized/margined identically to mView (same
+        // dcw x dch, same mMarginLeft/mMarginTop), so both get the exact same centering
+        // offset and the same margin -- the two cancel out exactly, offset 0.
+        mVideoBoxTop = extendVertically ? ((dh - dch) / 2 + mMarginTop) : 0;
+
+        if (subLp instanceof ViewGroup.MarginLayoutParams subMarginParams) {
+            subMarginParams.width = dcw;
+            if (extendVertically) {
+                subMarginParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                subMarginParams.setMargins(mMarginLeft, 0, 0, 0);
+            } else {
+                subMarginParams.height = dch;
+                subMarginParams.setMargins(mMarginLeft, mMarginTop, 0, 0);
+            }
+            mSubtitleView.setLayoutParams(subMarginParams);
+        } else if (subLp != null) {
+            subLp.width = dcw;
+            subLp.height = extendVertically ? ViewGroup.LayoutParams.MATCH_PARENT : dch;
+            mSubtitleView.setLayoutParams(subLp);
+        }
+
         mView.invalidate();
+        if (mSubtitleView != null) mSubtitleView.invalidate(); // NEW
 
         mSurfaceWidth = dcw;
         mSurfaceHeight = dch;
+
+        // Tell the subtitle engine where the video's own on-screen box sits within the
+        // canvas we just laid out above -- needed for GFX (PGS/VobSub) bitmap positioning,
+        // which is otherwise decoded in the video's own pixel space and has no way to know
+        // this on its own. x is always 0 and w/h always dcw/dch: mView and mSubtitleView
+        // share the same left margin and width in every branch above; only the y offset
+        // depends on whether the canvas was extended to absorb letterbox bars.
+        if (mVideoBoxListener != null) mVideoBoxListener.onVideoBoxChanged(0, getVideoBoxTop(), dcw, dch);
+
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: ({},{})->({},{}) / formatCrop: ({},{}) / mEffectMode: {}", vw, vh, dcw, dch, cropW, cropH, mEffectMode);
     }
 
@@ -511,6 +665,18 @@ public class SurfaceController {
     public int getViewHeight() { return mSurfaceHeight; }
     public int getMarginLeft() { return mMarginLeft; }
     public int getMarginTop() { return mMarginTop; }
+
+    /**
+     * Vertical offset of the video's own on-screen box within the subtitle canvas' own
+     * coordinate space -- 0 when the canvas is tethered exactly to the video (both get the
+     * same centering offset and the same mMarginTop, which cancel out), or
+     * (dh - dch) / 2 + mMarginTop when the canvas has been extended to absorb letterbox
+     * bars (its own top moved to 0 while the video's top -- centered within the taller
+     * parent, then shifted by mMarginTop -- didn't). See the mSubtitleView sizing block
+     * above, where this is actually computed/cached. Horizontal offset is always 0 --
+     * mView and mSubtitleView always share the same left margin and width.
+     */
+    public int getVideoBoxTop() { return mVideoBoxTop; }
 
     /**
      * Sets the dataspace on the SurfaceView's SurfaceControl layer so SurfaceFlinger can set up
