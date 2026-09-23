@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">更新伺服器清單</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">初始化掃描</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">初始化掃描</string>
     <!-- Library screen, menu item -->
     <string name="search_title">搜尋</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -58,7 +58,7 @@
     <string name="recently_played_videos">最近播放</string>
     <string name="video_lists">播放清單</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">外部儲存空間</string>
+    <string name="external_storage" tools:ignore="UnusedResources">外部儲存空間</string>
     <string name="internal_storage">內部儲存空間</string>
     <string name="network_storage">網路儲存空間</string>
     <string name="sd_card_storage">記憶卡</string>
@@ -81,7 +81,7 @@
     <string name="all_movies">所有電影</string>
     <string name="all_movies_format">所有電影  -  %d</string>
     <string name="all_animes_format">電影動畫  -  %d</string>
-    <string name="all_collections">全部收藏</string>
+    <string name="all_collections" tools:ignore="UnusedResources">全部收藏</string>
     <string name="all_collections_format">全部收藏  -  %d</string>
     <string name="not_watched_movies_format">未觀看  -  %d</string>
     <string name="not_watched_animes_format">未觀看  -  %d</string>
@@ -160,7 +160,7 @@
     <string name="episode_name">集數</string>
     <string name="episode_season">季數</string>
     <string name="episode_specials">特別收錄</string>
-    <string name="episode_identification">第 %1$d 季 第 %2$d 集</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">第 %1$d 季 第 %2$d 集</string>
     <string name="season_identification">第 %1$d 季</string>
     <string name="next_episode">下一集</string>
     <string name="list_episodes">劇集列表</string>
@@ -188,11 +188,11 @@
     <string name="scraper_no_files">沒有檔案需要處理</string>
     <string name="scraper_no_new_files">沒有新檔案需要處理</string>
     <string name="scraper_no_new_files_in_folder">此資料夾中沒有新檔案需要處理</string>
-    <string name="scraper_folder_no_files">此處仍有 %d 個影片之前沒有找到資料。</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">此處仍有 %d 個影片之前沒有找到資料。</string>
     <string name="scraper_folder_no_file">此處仍有一個影片之前沒有找到資料。</string>
     <string name="scraper_folder_try_again">是否要再試一次？</string>
     <string name="scraper_notification_title">線上搜尋資料中</string>
-    <string name="scraper_notification_progress">已處理 %1$d/%2$d 的檔案</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">已處理 %1$d/%2$d 的檔案</string>
     <string name="scraper_no_episode_found">未找到劇集</string>
     <string name="scraper_suggest_message">可藉由「線上搜尋資料」選單搜尋您影片的海報和資料。</string>
     <string name="scraper_no_movie_text">目前沒有您電影的海報和說明</string>
@@ -208,7 +208,7 @@
     <string name="preference_display_all_files">在瀏覽器中顯示所有檔案</string>
     <string name="preference_display_all_files_summary">同時顯示非影片檔案</string>
     <string name="info_processing">正在確認媒體的內容&#8230;</string>
-    <string name="info_audio">音訊</string>
+    <string name="info_audio" tools:ignore="UnusedResources">音訊</string>
     <string name="info_audio_vbr">VBR (可變位元率)</string>
     <string name="info_subtitle">字幕</string>
     <string name="info_file">檔案資訊</string>
@@ -249,11 +249,11 @@
     <string name="player_bookmark_set">書籤設定在</string>
     <string name="player_pref_subtitle_delay_title">延遲</string>
     <string name="player_pref_audio_speed_title">播放速度</string>
-    <string name="floating_player_restore">還原</string>
-    <string name="floating_player_play">播放</string>
-    <string name="floating_player_pause">暫停</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">還原</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">播放</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">暫停</string>
     <string name="player_pref_audio_delay_title">音訊延遲</string>
-    <string name="now_playing">正在播放</string>
+    <string name="now_playing" tools:ignore="UnusedResources">正在播放</string>
     <string name="player_window_mode">視窗模式</string>
     <string name="pref_play_mode_title">播放模式</string>
     <string name="pref_play_mode_entry_single">單檔</string>
@@ -330,7 +330,7 @@
     <string name="player_plugin_video_msg">該檔案包含 <xliff:g id="video">%1$s</xliff:g> 影片格式。</string>
     <string name="player_plugin_audio_msg">該檔案包含 <xliff:g id="audio">%1$s</xliff:g> 音訊格式。</string>
     <string name="player_plugin_video_audio_msg">該檔案包含 <xliff:g id="video">%1$s</xliff:g> 影片格式和 <xliff:g id="audio">%2$s</xliff:g> 音訊格式。</string>
-    <string name="player_plugin_purchase">前往商店</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">前往商店</string>
     <string name="player_plugin_purchase_google_play_button">前往 Play 商店</string>
     <string name="plugin_update_required_title">需要更新解碼器</string>
     <string name="plugin_update_required_message">您似乎已經為 Nova Video Player 安裝了額外的解碼套件。\n\n新版的 Nova Video Player 需要更新這些解碼套件，\n\n請至 Play 商店更新和重裝解碼套件。</string>
@@ -354,7 +354,7 @@
     <string name="dialog_subloader_nonetwork_title">沒有網際網路連線</string>
     <string name="dialog_subloader_nonetwork_message">必須有網路連線才能下載字幕</string>
     <string name="dialog_subloader_connecting">正在連結至 www.opensubtitles.com…</string>
-    <string name="opensubtitles_quota_download_remaining">OpenSubtitles 下載剩餘額度: %1$d/%2$d</string>
+    <string name="opensubtitles_quota_download_remaining" tools:ignore="PluralsCandidate">OpenSubtitles 下載剩餘額度: %1$d/%2$d</string>
     <string name="dialog_subloader_credentials">Opensubtitles 憑證</string>
     <string name="dialog_subloader_credentials_empty">您必須提供一組有效的使用者名稱及密碼！</string>
     <string name="toast_subloader_credentials_empty">請在設定選項中提供您的 opensubtitles 憑證以下載字幕</string>
@@ -377,7 +377,7 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
-    <string name="error_permission">權限不足</string>
+    <string name="error_permission" tools:ignore="UnusedResources">權限不足</string>
     <string name="error_permission_storage">Nova Video Player 需要存取權限才能讀取本機的影片，請授予該權限。</string>
     <string name="error_permission_all_file_access">Nova Video Player 需要外部裝置存取權限才能正確管理本機的影片及 nfo 檔案，請授予該權限。</string>
     <string name="allow">允許</string>
@@ -398,7 +398,7 @@
     <string name="protocol_prompt">協定類型</string>
     <string name="remove_from_shortcuts">刪除捷徑</string>
     <string name="shortcut_removed">捷徑 %s 已刪除</string>
-    <string name="server_not_available">伺服器目前無法連線</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">伺服器目前無法連線</string>
     <string name="network_shortcuts">網路捷徑</string>
     <string name="shortcut_list_empty">網路捷徑未建立。\n\n長按您喜愛的網路資料夾並在指令工具列上方選擇「%s」新增捷徑。</string>
     <string name="ftp_shortcut_list_empty">請在瀏覽伺服器時，在指令工具列上方選擇「%s」，新增您喜愛的網路資料夾的捷徑。</string>
@@ -450,8 +450,6 @@
     <string name="preferences_stream_max_iframe_size_summary">最大壓縮內影格大小 (MB)</string>
     <string name="preferences_force_passthrough">強制使用原始音訊傳遞</string>
     <string name="preferences_force_passthrough_summary">假使傳遞模式被啟用，即使影音接受器不支援該音訊解碼也會強制執行，而不檢查影音接受器的能力</string>
-    <string name="preferences_playback_speed">開啟播放速度</string>
-    <string name="preferences_playback_speed_summary">允許改變播放速度 (⚠ 實驗性功能，可能會導致影片的不連續)</string>
     <string name="preferences_disable_downmix_title">關閉立體聲降混</string>
     <string name="preferences_disable_downmix_summary">總是解碼所有聲道，並讓安卓系統依據音訊輸出的性能來降混 (可能會導致失去部分聲道)</string>
     <string name="preferences_enable_downmix_androidtv_title">強制立體聲降混</string>
@@ -674,7 +672,7 @@
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">登入</string>
     <string name="trakt_list_signin">登入 Trakt</string>
-    <string name="trakt_signin_summary_logged">已登入</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">已登入</string>
     <string name="trakt_signin_summary_logged_error">認證錯誤</string>
     <string name="trakt_signin_summary">尚未登入</string>
     <string name="trakt_relog_description">Trakt 出現問題，憑證需要重設，請重新登入。</string>
@@ -684,10 +682,10 @@
     <string name="trakt_live_scrobbling_title">即時同步紀錄</string>
     <string name="trakt_live_scrobbling_summary">在 Trakt 分享已觀看的影片</string>
     <string name="trakt_getfull_summary">僅付費版才提供 Trakt 觀看紀錄同步服務</string>
-    <string name="trakt_sync_collection_title">同步電視劇和電影收藏</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">同步電視劇和電影收藏</string>
     <string name="trakt_sync_trakt_resume_title">同步 Trakt 的續播進度</string>
     <string name="trakt_sync_trakt_resume">如果比本裝置的觀看進度播放更長，就使用 Trakt 的續播進度</string>
-    <string name="trakt_sync_collection_summary">自動將 Nova 媒體庫的所有影片新增至 Trakt 的收藏</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">自動將 Nova 媒體庫的所有影片新增至 Trakt 的收藏</string>
     <string name="trakt_toast_syncing">正在與 Trakt&#8230; 同步</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">所有影片</string>
@@ -779,7 +777,7 @@
     <string name="sleep_timer_title">睡眠定時器</string>
     <string name="sleep_timer_description">停止播放時間：</string>
     <string name="picture_in_picture">畫中畫</string>
-    <string name="cast">投放</string>
+    <string name="cast" tools:ignore="UnusedResources">投放</string>
     <string name="cast_audio_background">Nova Video Player 於後台運行時，聲音將無法運作</string>
     <string name="help_faq">説明 / 常見問題</string>
     <string name="provider_folders">雲端</string>

@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Ricarica l\'elenco dei server</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Scansione iniziale</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Scansione iniziale</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Cerca</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -59,7 +59,7 @@ Copertina (rotolo di copertina)</string>
     <string name="recently_played_videos">Visti di recente</string>
     <string name="video_lists">Playlist</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Memoria esterna</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Memoria esterna</string>
     <string name="internal_storage">Memoria interna</string>
     <string name="network_storage">Rete</string>
     <string name="sd_card_storage">Scheda SD</string>
@@ -80,7 +80,7 @@ Copertina (rotolo di copertina)</string>
     <string name="movies">Film</string>
     <string name="all_movies">Tutti i film</string>
     <string name="all_movies_format">Tutti i film -  %d</string>
-    <string name="all_collections">Tutte le raccolte</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Tutte le raccolte</string>
     <string name="all_collections_format">Tutte le raccolte -  %d</string>
     <string name="not_watched_movies_format">Non visto -  %d</string>
     <string name="not_watched_animes_format">Non visto -  %d</string>
@@ -149,7 +149,7 @@ Copertina (rotolo di copertina)</string>
     <string name="episode_name">Episodio</string>
     <string name="episode_season">Stagione</string>
     <string name="episode_specials">Speciali</string>
-    <string name="episode_identification">Stagione %1$d Episodio %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">Stagione %1$d Episodio %2$d</string>
     <string name="season_identification">Stagione %1$d</string>
     <string name="next_episode">Prossimo episodio</string>
     <string name="list_episodes">Lista degli episodi</string>
@@ -178,11 +178,11 @@ Copertina (rotolo di copertina)</string>
     <string name="scraper_no_files">Nessun file da elaborare</string>
     <string name="scraper_no_new_files">Nessun nuovo file da elaborare</string>
     <string name="scraper_no_new_files_in_folder">Nessun nuovo file da elaborare in questa cartella</string>
-    <string name="scraper_folder_no_files">Comunque, non sono ancora state trovate informazioni per %d video.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">Comunque, non sono ancora state trovate informazioni per %d video.</string>
     <string name="scraper_folder_no_file">Comunque, non sono state ancora trovate informazioni per un video.</string>
     <string name="scraper_folder_try_again">Vuoi provare di nuovo?</string>
     <string name="scraper_notification_title">Ricerca delle informazioni online</string>
-    <string name="scraper_notification_progress">\"%1$d di %2$d file elaborati</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">\"%1$d di %2$d file elaborati</string>
     <string name="scraper_no_episode_found">Nessun episodio trovato</string>
     <string name="scraper_suggest_message">Puoi cercare poster e informazioni online per i tuoi video attraverso il menù \'Cerca informazioni online\'</string>
     <string name="scraper_no_movie_text">Al momento, non hai poster e descrizione per i tuoi film</string>
@@ -198,7 +198,7 @@ Copertina (rotolo di copertina)</string>
     <string name="preference_display_all_files">Mostra tutti i file</string>
     <string name="preference_display_all_files_summary">Visualizza anche i file non video</string>
     <string name="info_processing">Controllo delle proprietà multimediali&#8230;</string>
-    <string name="info_audio">Audio</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Audio</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Sottotitolo</string>
     <string name="info_file">Informazioni del file</string>
@@ -238,11 +238,11 @@ Copertina (rotolo di copertina)</string>
     <string name="player_bookmark_set">Segnalibro impostato su</string>
     <string name="player_pref_subtitle_delay_title">Ritardo</string>
     <string name="player_pref_audio_speed_title">Velocità di riproduzione</string>
-    <string name="floating_player_restore">Ripristina</string>
-    <string name="floating_player_play">Riproduci</string>
-    <string name="floating_player_pause">Pausa</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Ripristina</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Riproduci</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Pausa</string>
     <string name="player_pref_audio_delay_title">Ritardo dell\'audio</string>
-    <string name="now_playing">In riproduzione</string>
+    <string name="now_playing" tools:ignore="UnusedResources">In riproduzione</string>
     <string name="player_window_mode">Modalità a Finestra</string>
     <string name="pref_play_mode_title">Modalità di riproduzione</string>
     <string name="pref_play_mode_entry_single">Singolo</string>
@@ -310,7 +310,7 @@ Copertina (rotolo di copertina)</string>
     <string name="player_plugin_video_msg">Questo file contiene un formato video <xliff:g id="video">%1$s</xliff:g> </string>
     <string name="player_plugin_audio_msg">Questo file contiene un formato audio <xliff:g id="audio">%1$s</xliff:g> </string>
     <string name="player_plugin_video_audio_msg">Questo file contiene un formato video <xliff:g id="video">%1$s</xliff:g> e un formato audio <xliff:g id="audio">%2$s</xliff:g> </string>
-    <string name="player_plugin_purchase">Vai allo Store</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Vai allo Store</string>
     <string name="player_plugin_purchase_google_play_button">Vai su Google Play</string>
     <string name="plugin_update_required_title">Richiesto aggiornamento del codec</string>
     <string name="plugin_update_required_message">Sembra che tu abbia già installato i codec addizionali per Nova Video Player.\n\nQuesta nuova versione di Nova Video Player richiede un aggiornamento di questi codec.\n\nVai su Google Play per aggiornare e reinstallare i codec</string>
@@ -353,7 +353,7 @@ Copertina (rotolo di copertina)</string>
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">“%s” </string>
-    <string name="error_permission">Non possiedi abbastanza permessi</string>
+    <string name="error_permission" tools:ignore="UnusedResources">Non possiedi abbastanza permessi</string>
     <string name="error_permission_storage">Nova Video Player ha bisogno dell\'autorizzazione sull\'archiviazione per leggere i video locali. Concedi questa autorizzazione</string>
     <string name="allow">Concedi</string>
     <string name="exit">Esci</string>
@@ -371,7 +371,7 @@ Copertina (rotolo di copertina)</string>
     <string name="ssh_prompt">Tipo FTP</string>
     <string name="remove_from_shortcuts">Rimuovi il collegamento</string>
     <string name="shortcut_removed">Collegamento %s eliminato</string>
-    <string name="server_not_available">Il server non è attualmente disponibile</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">Il server non è attualmente disponibile</string>
     <string name="network_shortcuts">Collegamenti di rete</string>
     <string name="shortcut_list_empty">Nessuna collegamento di rete creato.\n\nPer creare collegamenti per le tue cartelle remote preferite, effettua una pressione prolungata sulle cartelle interessate e seleziona \"%s\" nella action bar superiore</string>
     <string name="ftp_shortcut_list_empty">Per creare collegamenti per le tue cartelle remote preferite, seleziona \"%s\" nella action bar superiore quando navighi in un server</string>
@@ -410,10 +410,6 @@ Copertina (rotolo di copertina)</string>
     <string name="preferences_force_audio_passthrough_summary">Trasmettere audio compresso su HDMI o S/PDIF. ⚠ Sperimentale può causare A/V fuori sincronizzazione</string>
     <string name="preferences_force_passthrough">Forza audio passthrough</string>
     <string name="preferences_force_passthrough_summary">Se il passthrough è abilitato, forzalo anche se il codec audio non è dichiarato supportato dal ricevitore AV invece di controllare le capacità del ricevitore AV</string>
-    <string name="preferences_playback_speed">Abilita velocità di riproduzione</string>
-    <string name="preferences_playback_speed_summary">Abilita la possibilità di modificare la velocità di riproduzione. ⚠ Sperimentale può causare un video instabile</string>
-    <string name="preferences_audio_speed_audiotrack">Usa AudioTrack per la velocità di riproduzione</string>
-    <string name="preferences_audio_speed_audiotrack_summary">Usa AudioTrack invece del filtro atempo FFmpeg per il controllo della velocità di riproduzione. Sperimentale: potrebbe non funzionare su tutte le configurazioni.</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Stima dinamica ritardo audio/video</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Usa la stima della latenza dinamica per una migliore sincronizzazione audio/video soprattutto con le cuffie bluetooth. Disabilita se si verificano problemi di sincronizzazione.</string>
     <string name="preferences_disable_downmix_title">Disattiva il downmix audio stereo</string>
@@ -627,7 +623,7 @@ Copertina (rotolo di copertina)</string>
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">Accedi</string>
     <string name="trakt_list_signin">Accedi a Trakt</string>
-    <string name="trakt_signin_summary_logged">Registrato</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">Registrato</string>
     <string name="trakt_signin_summary_logged_error">Errore di autentificazione</string>
     <string name="trakt_signin_summary">Non registrato</string>
     <string name="trakt_relog_description">È stato rilevato un problema con Trakt e le credenziali devono essere ripristinate, effettua nuovamente l\'accesso</string>
@@ -637,10 +633,10 @@ Copertina (rotolo di copertina)</string>
     <string name="trakt_live_scrobbling_title">Scrobbler live</string>
     <string name="trakt_live_scrobbling_summary">Condividi su Trakt i video visti</string>
     <string name="trakt_getfull_summary">Trakt scrobbler è disponibile solo sulla versione a pagamento</string>
-    <string name="trakt_sync_collection_title">Sincronizza le collezioni di film e serie TV</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">Sincronizza le collezioni di film e serie TV</string>
     <string name="trakt_sync_trakt_resume_title">Sincronizza il riprendi posizione di Trakt</string>
     <string name="trakt_sync_trakt_resume">Usa il riprendi posizione di Trakt quando è più avanzato di quello locale</string>
-    <string name="trakt_sync_collection_summary">Aggiungi automaticamente tutti i video dalla tua libreria Nova alla tua collezione su Trakt</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">Aggiungi automaticamente tutti i video dalla tua libreria Nova alla tua collezione su Trakt</string>
     <string name="trakt_toast_syncing">Sincronizzazione con Trakt&#8230;</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Tutti i video</string>
@@ -734,7 +730,7 @@ Copertina (rotolo di copertina)</string>
     <string name="sleep_timer_title">Timer per lo spegnimento</string>
     <string name="sleep_timer_description">Interrompi il video dopo: </string>
     <string name="picture_in_picture">Picture in picture</string>
-    <string name="cast">Cast</string>
+    <string name="cast" tools:ignore="UnusedResources">Cast</string>
     <string name="cast_audio_background">Il suono non funzionerà mettendo Nova Video Player in background</string>
     <string name="help_faq">Aiuto/FAQ</string>
     <string name="provider_folders">Cloud</string>

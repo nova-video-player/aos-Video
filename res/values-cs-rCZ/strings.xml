@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Aktualizovat seznam serverů</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Úvodní skenování</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Úvodní skenování</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Hledat</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -58,7 +58,7 @@
     <string name="recently_played_videos">Nedávno přehrávané</string>
     <string name="video_lists">Playlisty</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Externí</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Externí</string>
     <string name="internal_storage">Interní</string>
     <string name="network_storage">Síť</string>
     <string name="sd_card_storage">Karta SD</string>
@@ -81,7 +81,7 @@
     <string name="all_movies">Všechny filmy</string>
     <string name="all_movies_format">Všechny filmy - %d</string>
     <string name="all_animes_format">Animované filmy - %d</string>
-    <string name="all_collections">Všechny kolekce</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Všechny kolekce</string>
     <string name="all_collections_format">Všechny kolekce -  %d</string>
     <string name="not_watched_movies_format">Nezhlédnuté - %d</string>
     <string name="not_watched_animes_format">Nezhlédnuté - %d</string>
@@ -160,7 +160,7 @@
     <string name="episode_name">Epizoda</string>
     <string name="episode_season">Sezóna</string>
     <string name="episode_specials">Speciály</string>
-    <string name="episode_identification">Sezóna %1$d epizoda %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">Sezóna %1$d epizoda %2$d</string>
     <string name="season_identification">Sezóna %1$d</string>
     <string name="next_episode">Další epizoda</string>
     <string name="list_episodes">Seznam epizod</string>
@@ -185,11 +185,11 @@
     <string name="scraper_no_files">Žádné soubory ke zpracování</string>
     <string name="scraper_no_new_files">Žádné nové soubory ke zpracování</string>
     <string name="scraper_no_new_files_in_folder">Žádné nové soubory ke zpracování v této složce</string>
-    <string name="scraper_folder_no_files">Nicméně pro %d videí nebyly v nedávné době nalezeny žádné informace.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">Nicméně pro %d videí nebyly v nedávné době nalezeny žádné informace.</string>
     <string name="scraper_folder_no_file">Nicméně pro 1 video nebyly v nedávné době nalezeny žádné informace.</string>
     <string name="scraper_folder_try_again">Chcete to zkusit znovu?</string>
     <string name="scraper_notification_title">Vyhledávám informace online</string>
-    <string name="scraper_notification_progress">\"Zpracováno %1$d souborů z %2$d</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">\"Zpracováno %1$d souborů z %2$d</string>
     <string name="scraper_no_episode_found">Nebyla nalezena žádná epizoda</string>
     <string name="scraper_suggest_message">Plakáty a informace pro vaše videa můžete hledat online prostřednictvím menu \'Vyhledat informace online\'.</string>
     <string name="scraper_no_movie_text">Zatím nemáte žádné plakáty ani popisy pro vaše filmy</string>
@@ -205,7 +205,7 @@
     <string name="preference_display_all_files">Zobrazit všechny soubory v prohlížeči</string>
     <string name="preference_display_all_files_summary">Zobrazit i ostatní soubory (které neobsahují video)</string>
     <string name="info_processing">Kontrola vlastností médií…</string>
-    <string name="info_audio">Audio</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Audio</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Titulky</string>
     <string name="info_file">Informace o souboru</string>
@@ -241,11 +241,11 @@
     <string name="player_bookmark_set">Záložka nastavena na</string>
     <string name="player_pref_subtitle_delay_title">Zpoždění</string>
     <string name="player_pref_audio_speed_title">Rychlost přehrávání</string>
-    <string name="floating_player_restore">Obnovit</string>
-    <string name="floating_player_play">Přehrát</string>
-    <string name="floating_player_pause">Pozastavit</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Obnovit</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Přehrát</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Pozastavit</string>
     <string name="player_pref_audio_delay_title">Zpoždění zvuku</string>
-    <string name="now_playing">Nyní se přehrává</string>
+    <string name="now_playing" tools:ignore="UnusedResources">Nyní se přehrává</string>
     <string name="player_window_mode">Režim okna</string>
     <string name="pref_play_mode_title">Režim přehrávání</string>
     <string name="pref_play_mode_entry_single">Jednoduchý</string>
@@ -319,7 +319,7 @@
     <string name="player_plugin_video_msg">Tento soubor obsahuje formát videa <xliff:g id="video">%1$s</xliff:g>.</string>
     <string name="player_plugin_audio_msg">Tento soubor obsahuje formát audia <xliff:g id="audio">%1$s</xliff:g>.</string>
     <string name="player_plugin_video_audio_msg">Tento soubor obsahuje formát videa <xliff:g id="video">%1$s</xliff:g> a formát audia <xliff:g id="audio">%2$s</xliff:g>.</string>
-    <string name="player_plugin_purchase">Přejít do obchodu</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Přejít do obchodu</string>
     <string name="player_plugin_purchase_google_play_button">Přejít na Google Play</string>
     <string name="plugin_update_required_title">Je vyžadována aktualizace kodeku</string>
     <string name="plugin_update_required_message">Zdá se, že do aplikace Nova Video Player již máte nainstalovány dodatečné kodeky.\n\nTato nová verze aplikace vyžaduje aktualizaci těchto kodeků.\n\nProsím použijte Google Play pro aktualizaci a opětovnou instalaci kodeků.</string>
@@ -343,7 +343,7 @@
     <string name="dialog_subloader_nonetwork_title">Připojení k internetu není k dispozici</string>
     <string name="dialog_subloader_nonetwork_message">Ke stažení titulků je vyžadováno připojení k internetu</string>
     <string name="dialog_subloader_connecting">Připojování na www.opensubtitles.com…</string>
-    <string name="opensubtitles_quota_download_remaining">Kvóta stahování na OpenSubtitle: %1$d/%2$d zbývá</string>
+    <string name="opensubtitles_quota_download_remaining" tools:ignore="PluralsCandidate">Kvóta stahování na OpenSubtitle: %1$d/%2$d zbývá</string>
     <string name="dialog_subloader_credentials">Přihlašovací údaje k OpenSubtitles</string>
     <string name="dialog_subloader_credentials_empty">Musíte zadat platné uživatelské jméno a heslo!</string>
     <string name="toast_subloader_credentials_empty">Zadejte vaše uživatelské jméno a heslo pro OpenSubtitles v nastavení pro možnost stahování titulků</string>
@@ -366,7 +366,7 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
-    <string name="error_permission">Nedostatečná oprávnění</string>
+    <string name="error_permission" tools:ignore="UnusedResources">Nedostatečná oprávnění</string>
     <string name="error_permission_storage">Nova Video Player vyžaduje oprávnění k úložišti pro možnost načtení lokálních souborů. Prosím potvrďte toto oprávnění.</string>
     <string name="error_permission_all_file_access">Nova Video Player vyžaduje všechna oprávnění k externím úložištím pro možnost správy lokálních video a NFO souborů, prosím udělte toto oprávnění.</string>
     <string name="allow">Povolit</string>
@@ -387,7 +387,7 @@
     <string name="protocol_prompt">Typ protokolu</string>
     <string name="remove_from_shortcuts">Odstranit zástupce</string>
     <string name="shortcut_removed">Zástupce %s odstraněn</string>
-    <string name="server_not_available">Server je momentálně nedostupný</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">Server je momentálně nedostupný</string>
     <string name="network_shortcuts">Zástupci sítě</string>
     <string name="shortcut_list_empty">Nebyly vytvořeny zástupce sítě.\n\nPro vytvoření zástupců pro vaše oblíbené vzdálené složky dlouze stiskněte vybranou cílovou složku a vyberte \"%s\" na panelu akcí v horní části.</string>
     <string name="ftp_shortcut_list_empty">Pro vytvoření zástupců pro vaše oblíbené vzdálené složky vyberte \"%s\" na panelu akcí v horní části při prohlížení obsahu serveru.</string>
@@ -433,8 +433,6 @@
     <string name="preferences_stream_max_iframe_size_summary">Maximální velikost komprimovaného i-snímku v MB</string>
     <string name="preferences_force_passthrough">Vynutit průchod audia</string>
     <string name="preferences_force_passthrough_summary">Pokud je průchod zapnutý, vynutit jej i v případě, že audio kodek není podporován AV receiverem namísto kontroly možností AV receiveru</string>
-    <string name="preferences_playback_speed">Povolit rychlost přehrávání</string>
-    <string name="preferences_playback_speed_summary">Povolit možnost změnit rychlost přehrávání. ⚠ Experimentální může způsobit zasekávání videa</string>
     <string name="preferences_disable_downmix_title">Vypnout stereo down-mix</string>
     <string name="preferences_disable_downmix_summary">Vždy dekódovat všechny kanály a nechat Android provést down-mix v závislosti na schopnostech audio výstupu (může vyústit ve ztrátu hlasových kanálů)</string>
     <string name="preferences_enable_downmix_androidtv_title">Vynutit stereo downmix</string>
@@ -651,7 +649,7 @@
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">Přihlášení</string>
     <string name="trakt_list_signin">Přihlásit do Trakt</string>
-    <string name="trakt_signin_summary_logged">Přihlášen/a</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">Přihlášen/a</string>
     <string name="trakt_signin_summary_logged_error">Chyba ověření</string>
     <string name="trakt_signin_summary">Nepřihlášeno</string>
     <string name="trakt_relog_description">Byl detekován problém s Trakt a je nutné zresetovat přihlašovací údaje; prosím přihlaste se znovu.</string>
@@ -661,10 +659,10 @@
     <string name="trakt_live_scrobbling_title">Živé logování sledování (scrobbler)</string>
     <string name="trakt_live_scrobbling_summary">Sdílení videí zhlédnutých v Trakt</string>
     <string name="trakt_getfull_summary">Logování sledování videí do Trakt je dostupné pouze v placené verzi</string>
-    <string name="trakt_sync_collection_title">Synchronizovat sbírku seriálů a filmů</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">Synchronizovat sbírku seriálů a filmů</string>
     <string name="trakt_sync_trakt_resume_title">Synchronizace pozice obnovení s Trakt</string>
     <string name="trakt_sync_trakt_resume">Použít pozici pro obnovení z Trakt pokud je dále ve videu než místní pozice</string>
-    <string name="trakt_sync_collection_summary">Automaticky přidat všechna videa z vaší knihovny Nova do vaší sbírky na Trakt</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">Automaticky přidat všechna videa z vaší knihovny Nova do vaší sbírky na Trakt</string>
     <string name="trakt_toast_syncing">Synchronizuji s Trakt&#8230;</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Všechna videa</string>
@@ -756,7 +754,7 @@
     <string name="sleep_timer_title">Časovač uspání</string>
     <string name="sleep_timer_description">Zastavit video po: </string>
     <string name="picture_in_picture">Obraz v obraze</string>
-    <string name="cast">Vysílání (castování)</string>
+    <string name="cast" tools:ignore="UnusedResources">Vysílání (castování)</string>
     <string name="cast_audio_background">Zvuk nebude fungovat dokud je Nova Video Player spuštěn na pozadí</string>
     <string name="help_faq">Nápověda / FAQ</string>
     <string name="provider_folders">Cloud</string>

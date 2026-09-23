@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Atualizar lista de servidores</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Verificação inicial</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Verificação inicial</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Buscar</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -62,7 +62,7 @@
     <string name="keep_watching_videos">Continuar assistindo</string>
     <string name="video_lists">Playlists</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Externo</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Externo</string>
     <string name="internal_storage">Interno</string>
     <string name="network_storage">Rede</string>
     <string name="sd_card_storage">Cartão SD</string>
@@ -85,7 +85,7 @@
     <string name="all_movies">Todos os filmes</string>
     <string name="all_movies_format">Todos os filmes  -  %d</string>
     <string name="all_animes_format">Filmes de animação  -  %d</string>
-    <string name="all_collections">Todas as coleções</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Todas as coleções</string>
     <string name="all_collections_format">Todas as coleções  -  %d</string>
     <string name="not_watched_movies_format">Não assistido  -  %d</string>
     <string name="not_watched_animes_format">Não assistido  -  %d</string>
@@ -165,7 +165,7 @@
     <string name="episode_name">Episódio</string>
     <string name="episode_season">Temporada</string>
     <string name="episode_specials">Especiais</string>
-    <string name="episode_identification">Temporada %1$d Episódio %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">Temporada %1$d Episódio %2$d</string>
     <string name="season_identification">Temporada %1$d</string>
     <string name="next_episode">Próximo episódio</string>
     <string name="list_episodes">Listar episódios</string>
@@ -194,11 +194,11 @@
     <string name="scraper_no_files">Nenhum arquivo para processar</string>
     <string name="scraper_no_new_files">Nenhum arquivo novo para processar</string>
     <string name="scraper_no_new_files_in_folder">Nenhum arquivo novo para processar nesta pasta</string>
-    <string name="scraper_folder_no_files">No entanto, ainda há %d vídeos sem informações encontradas anteriormente.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">No entanto, ainda há %d vídeos sem informações encontradas anteriormente.</string>
     <string name="scraper_folder_no_file">No entanto, ainda existe um vídeo ao qual nenhuma informação foi encontrada anteriormente.</string>
     <string name="scraper_folder_try_again">Deseja tentar novamente?</string>
     <string name="scraper_notification_title">Buscando informações on-line</string>
-    <string name="scraper_notification_progress">\"%1$d de %2$d arquivos processados</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">\"%1$d de %2$d arquivos processados</string>
     <string name="scraper_no_episode_found">Nenhum episódio encontrado</string>
     <string name="scraper_suggest_message">Você pode buscar pôsteres e informações online para os seus vídeos usando o menu \'Buscar informações on-line\'.</string>
     <string name="scraper_no_movie_text">No momento, não há pôsteres nem descrições para seus filmes</string>
@@ -214,7 +214,7 @@
     <string name="preference_display_all_files">Exibir todos os arquivos no explorador</string>
     <string name="preference_display_all_files_summary">Exibe também arquivos que não são de vídeo.</string>
     <string name="info_processing">Verificando propriedades de mídia&#8230;</string>
-    <string name="info_audio">Áudio</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Áudio</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Legendas</string>
     <string name="info_file">Informações do arquivo</string>
@@ -258,11 +258,11 @@
     <string name="player_bookmark_set">Marcador definido em</string>
     <string name="player_pref_subtitle_delay_title">Atraso</string>
     <string name="player_pref_audio_speed_title">Velocidade de reprodução</string>
-    <string name="floating_player_restore">Restaurar</string>
-    <string name="floating_player_play">Reproduzir</string>
-    <string name="floating_player_pause">Pausar</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Restaurar</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Reproduzir</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Pausar</string>
     <string name="player_pref_audio_delay_title">Atraso de áudio</string>
-    <string name="now_playing">Reproduzindo agora</string>
+    <string name="now_playing" tools:ignore="UnusedResources">Reproduzindo agora</string>
     <string name="player_window_mode">Modo Janela</string>
     <string name="pref_play_mode_title">Modo de reprodução</string>
     <string name="pref_play_mode_entry_single">Atual</string>
@@ -347,10 +347,10 @@
     <string name="player_plugin_video_msg">Este arquivo contém um formato de vídeo <xliff:g id="video">%1$s</xliff:g>.</string>
     <string name="player_plugin_audio_msg">Este arquivo contém um formato de áudio <xliff:g id="audio">%1$s</xliff:g>.</string>
     <string name="player_plugin_video_audio_msg">Este arquivo contém um formato de vídeo <xliff:g id="video">%1$s</xliff:g> e um formato de áudio <xliff:g id="audio">%2$s</xliff:g>.</string>
-    <string name="player_plugin_purchase">Ir para a Loja</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Ir para a Loja</string>
     <string name="player_plugin_purchase_google_play_button">Acesse a Google Play</string>
     <string name="plugin_update_required_title">Atualização de codec necessária</string>
-    <string name="plugin_update_required_message" tools:ignore="Typos">Parece que você já possui codecs adicionais instalados para o Nova Video Player.\n\nEsta nova versão do Nova Video Player exige uma atualização destes codecs.\n\nPor favor, acesse a Google Play para atualizar e reinstalar os codecs.</string>
+    <string name="plugin_update_required_message">Parece que você já possui codecs adicionais instalados para o Nova Video Player.\n\nEsta nova versão do Nova Video Player exige uma atualização destes codecs.\n\nPor favor, acesse a Google Play para atualizar e reinstalar os codecs.</string>
     <!-- Subtitles wizard -->
     <string name="get_subtitles_on_drive">Selecionar legendas no armazenamento</string>
     <string name="subtitles_wizard_no_files">Nenhum arquivo de legenda encontrado</string>
@@ -371,7 +371,7 @@
     <string name="dialog_subloader_nonetwork_title">Sem conexão com a Internet</string>
     <string name="dialog_subloader_nonetwork_message">É necessária uma conexão com a internet para baixar legendas</string>
     <string name="dialog_subloader_connecting">Conectando ao serviço OpenSubtitles…</string>
-    <string name="opensubtitles_quota_download_remaining">Cota de download do OpenSubtitles: %1$d/%2$d restante(s)</string>
+    <string name="opensubtitles_quota_download_remaining" tools:ignore="PluralsCandidate">Cota de download do OpenSubtitles: %1$d/%2$d restante(s)</string>
     <string name="dialog_subloader_credentials">Credenciais do Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">É necessário informar um nome de usuário e senha válidos!</string>
     <string name="toast_subloader_credentials_empty">Forneça suas credenciais do OpenSubtitles nas configurações para poder baixar mais legendas</string>
@@ -404,9 +404,9 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
-    <string name="error_permission">Sem permissões suficientes</string>
-    <string name="error_permission_storage" tools:ignore="Typos">O Nova Video Player precisa de permissão de armazenamento para acessar vídeos locais. Por favor, conceda esta permissão.</string>
-    <string name="error_permission_all_file_access" tools:ignore="Typos">O Nova Video Player precisa de todas as permissões de gerenciamento de armazenamento externo para gerenciar vídeos locais/arquivos NFO corretamente, por favor, conceda essa permissão.</string>
+    <string name="error_permission" tools:ignore="UnusedResources">Sem permissões suficientes</string>
+    <string name="error_permission_storage">O Nova Video Player precisa de permissão de armazenamento para acessar vídeos locais. Por favor, conceda esta permissão.</string>
+    <string name="error_permission_all_file_access">O Nova Video Player precisa de todas as permissões de gerenciamento de armazenamento externo para gerenciar vídeos locais/arquivos NFO corretamente, por favor, conceda essa permissão.</string>
     <string name="allow">Permitir</string>
     <string name="exit">Sair</string>
     <!-- torrent -->
@@ -425,7 +425,7 @@
     <string name="protocol_prompt">Tipo de protocolo</string>
     <string name="remove_from_shortcuts">Remover o atalho</string>
     <string name="shortcut_removed">Atalho \"%s\" removido</string>
-    <string name="server_not_available">O servidor está indisponível no momento</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">O servidor está indisponível no momento</string>
     <string name="network_shortcuts">Atalhos de rede</string>
     <string name="shortcut_list_empty">Nenhum atalho de rede foi criado.\n\nPara criar atalhos para suas pastas remotas favoritas, mantenha pressionada a pasta desejada e selecione \"%s\" na barra de ações superior.</string>
     <string name="ftp_shortcut_list_empty">Para criar atalhos para suas pastas remotas favoritas, selecione \"%s\" na barra de ações superior ao navegar por um servidor.</string>
@@ -478,10 +478,6 @@
     <string name="preferences_stream_max_iframe_size_summary">Tamanho máximo de i-frame comprimido em MB</string>
     <string name="preferences_force_passthrough">Forçar passagem direta de áudio</string>
     <string name="preferences_force_passthrough_summary">Se a passagem direta estiver ativada, forçá-la mesmo que o codec de áudio não conste como compatível pelo receiver AV, em vez de verificar os recursos do aparelho.</string>
-    <string name="preferences_playback_speed">Ativar velocidade de reprodução</string>
-    <string name="preferences_playback_speed_summary">Ative a possibilidade de alterar a velocidade de reprodução. ⚠️ Experimental: pode causar travamentos no vídeo.</string>
-    <string name="preferences_audio_speed_audiotrack">Usar AudioTrack para velocidade de reprodução</string>
-    <string name="preferences_audio_speed_audiotrack_summary">Use o AudioTrack em vez do filtro \'atempo\' do FFmpeg para controle da velocidade de reprodução. Experimental: pode não funcionar em todas as configurações.</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Estimativa dinâmica de atraso de áudio/vídeo</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Use a estimativa dinâmica de latência para melhor sincronia de áudio/vídeo, especialmente com fones Bluetooth. Desative se houver problemas de sincronização.</string>
     <string name="preferences_enable_spatialization_title">Espacialização da plataforma</string>
@@ -520,6 +516,8 @@
     <string name="summary_list_preference_primary">Selecione idiomas para baixar legendas.</string>
     <string name="favSubLang_title">Idioma de leitura das legendas</string>
     <string name="favSubLang_summary">Escolha seu idioma preferido para a leitura de legendas.</string>
+    <string name="subtitles_show_full_for_local_audio_title">Mostrar legendas para áudio de idioma local</string>
+    <string name="subtitles_show_full_for_local_audio_summary">Desligado por padrão, então apenas a seleção automática de legendas forçadas quando o áudio corresponder ao idioma da legenda; habilite também para selecionar automaticamente legendas completas</string>
     <string name="favAudioLang_title">Idioma de áudio preferido</string>
     <string name="favAudioLang_summary">Escolha seu idioma preferido para a faixa de áudio.</string>
     <string name="prefer_original_audio_track_title">Preferir faixa de áudio original</string>
@@ -618,7 +616,7 @@
     <string name="ask_to_mail_media_DB">Deseja enviar o banco de dados de vídeos para a equipe de desenvolvimento do Nova para ajudar na análise de um erro?\n\nOs arquivos de vídeo (naturalmente) não são enviados, apenas a lista completa de nomes de arquivos.</string>
     <string name="no_email_installed">Nenhum aplicativo de e-mail encontrado</string>
     <string name="zipping_library_before_mailing">Zipping uma cópia da biblioteca antes de enviá-la…</string>
-    <string name="zipped_library_mail_subject" tools:ignore="Typos">Backup do Banco de Dados do Nova Video</string>
+    <string name="zipped_library_mail_subject">Backup do Banco de Dados do Nova Video</string>
     <string name="zipped_library_mail_text">Por favor, descreva o problema encontrado.\n\n</string>
     <string name="sort_mode">Modo de Ordenação</string>
     <string name="sort_by_name_asc">Ordenar por nome (A - Z)</string>
@@ -756,7 +754,7 @@
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">Entrar</string>
     <string name="trakt_list_signin">Entrar no Trakt</string>
-    <string name="trakt_signin_summary_logged">Conectado</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">Conectado</string>
     <string name="trakt_signin_summary_logged_error">Erro de autenticação</string>
     <string name="trakt_signin_summary">Não conectado</string>
     <string name="trakt_relog_description">Um problema com o Trakt foi detectado e as credenciais devem ser redefinidas. Por favor, faça login novamente.</string>
@@ -766,14 +764,14 @@
     <string name="trakt_live_scrobbling_title">Scrobbler em tempo real</string>
     <string name="trakt_live_scrobbling_summary">Compartilhe vídeos que estão sendo assistidos no Trakt.</string>
     <string name="trakt_getfull_summary">O scrobbler do Trakt está disponível apenas na versão paga.</string>
-    <string name="trakt_sync_collection_title">Sincronizar coleções de séries e filmes</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">Sincronizar coleções de séries e filmes</string>
     <string name="trakt_sync_trakt_resume_title">Sincronizar posição de retomada do Trakt</string>
     <string name="trakt_sync_trakt_resume">Use a posição de retomada do Trakt quando ela for mais avançada que a local.</string>
     <string name="trakt_force_push_title">Forçar reenvio para o Trakt</string>
     <string name="trakt_force_push_summary">Envio único do status de assistido e pontos de retomada para o Trakt.</string>
     <string name="trakt_force_pull_title">Forçar reimportação do Trakt</string>
     <string name="trakt_force_pull_summary">Importação única do status de assistido e pontos de retomada do Trakt.</string>
-    <string name="trakt_sync_collection_summary">Adiciona automaticamente todos os vídeos da sua lista do Nova à sua coleção do Trakt.</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">Adiciona automaticamente todos os vídeos da sua lista do Nova à sua coleção do Trakt.</string>
     <string name="trakt_toast_syncing">Sincronizando com o Trakt&#8230;</string>
     <string name="trakt_device_auth_step1">1. No celular ou computador, acesse:</string>
     <string name="trakt_device_auth_step2">2. Insira este código:</string>
@@ -787,9 +785,9 @@
     <string name="connect_trakt">Conectar ao Trakt</string>
     <string name="trakt_sync_status_never">Ainda não sincronizado</string>
     <string name="trakt_sync_status_ok">Última sincronização: %1$s atrás</string>
-    <string name="trakt_sync_status_ok_skipped">Última sincronização: %1$s atrás · %2$d vídeo(s) pendente(s) (duração desconhecida)</string>
-    <string name="trakt_sync_status_ok_meta_skipped">Última sincronização: %1$s atrás · %2$d scrobble(s) ignorado(s) (metadados ausentes)</string>
-    <string name="trakt_sync_status_ok_both_skipped">Última sincronização: %1$s atrás · %2$d pendente(s) (duração desconhecida), %3$d scrobble(s) ignorado(s) (metadados ausentes)</string>
+    <string name="trakt_sync_status_ok_skipped" tools:ignore="PluralsCandidate">Última sincronização: %1$s atrás · %2$d vídeo(s) pendente(s) (duração desconhecida)</string>
+    <string name="trakt_sync_status_ok_meta_skipped" tools:ignore="PluralsCandidate">Última sincronização: %1$s atrás · %2$d scrobble(s) ignorado(s) (metadados ausentes)</string>
+    <string name="trakt_sync_status_ok_both_skipped" tools:ignore="PluralsCandidate">Última sincronização: %1$s atrás · %2$d pendente(s) (duração desconhecida), %3$d scrobble(s) ignorado(s) (metadados ausentes)</string>
     <string name="trakt_sync_status_error_network">Falha na última sincronização: erro de rede</string>
     <string name="trakt_sync_status_error_auth">Erro de autenticação — por favor, entre novamente</string>
     <string name="trakt_sync_status_error_locked">Conta bloqueada — desbloqueie em trakt.tv</string>
@@ -830,7 +828,7 @@
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Interface normal</string>
     <string name="leanback_hint_long_press_on_back">DICA: manter o botão VOLTAR pressionado fecha o explorador de arquivos</string>
-    <string name="leanback_archos_video_webview" tools:ignore="Typos">Nova Video WebView</string>
+    <string name="leanback_archos_video_webview">Nova Video WebView</string>
     <string name="file_access_error">Não foi possível acessar o arquivo</string>
     <string name="always_leanback_on_tv">Sempre iniciar na interface de TV</string>
     <string name="always_leanback_on_tv_summary">Sempre iniciar na interface de TV. Desative para usar a interface clássica.</string>
@@ -862,7 +860,7 @@
     <string name="scheduled_rescan_time">Horário de verificação</string>
     <string name="rescan_when_opening_application">Verificação ao abrir o aplicativo</string>
     <string name="last_rescan_occured">Última verificação:</string>
-    <string name="error_permission_display_over_apps" tools:ignore="Typos">O modo janela requer permissões especiais para ser exibido sobre outros aplicativos. Por favor, conceda esta permissão ao Nova Video Player para alternar para o modo janela.</string>
+    <string name="error_permission_display_over_apps">O modo janela requer permissões especiais para ser exibido sobre outros aplicativos. Por favor, conceda esta permissão ao Nova Video Player para alternar para o modo janela.</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Ver mais</string>
@@ -907,8 +905,8 @@
     <string name="sleep_timer_title">Temporizador</string>
     <string name="sleep_timer_description">Parar o vídeo após: </string>
     <string name="picture_in_picture">Picture-in-picture</string>
-    <string name="cast">Transmitir</string>
-    <string name="cast_audio_background" tools:ignore="Typos">O áudio não funcionará com o Nova Video Player em segundo plano</string>
+    <string name="cast" tools:ignore="UnusedResources">Transmitir</string>
+    <string name="cast_audio_background">O áudio não funcionará com o Nova Video Player em segundo plano</string>
     <string name="help_faq">Ajuda / FAQ</string>
     <string name="provider_folders">Nuvem</string>
     <string name="rate_us">Gosta do aplicativo? Apoie-nos com uma avaliação de 5 estrelas</string>
@@ -935,7 +933,7 @@
     <string name="v5_v6_upgrade_info">AVISO: esta atualização principal do Nova exige uma nova verificação de toda a coleção de vídeos para obter as informações multimídia novamente.
         É altamente recomendável reiniciar a partir de uma instalação limpa para evitar problemas. Por favor, consulte as Perguntas Frequentes (FAQ) para mais detalhes.</string>
     <string name="external_player_service_title">Reprodução em player externo</string>
-    <string name="external_player_service_description" tools:ignore="Typos">O Nova Video Player fornece conteúdo para um player externo</string>
+    <string name="external_player_service_description">O Nova Video Player fornece conteúdo para um player externo</string>
     <string name="stop">Parar</string>
     <string name="s_visual_impaired">deficientes visuais</string>
     <string name="s_audio_description">audiodescrição</string>

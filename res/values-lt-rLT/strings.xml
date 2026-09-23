@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Atnaujinti serverių sąrašą</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Pradinis nuskaitymas</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Pradinis nuskaitymas</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Paieška</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -58,7 +58,7 @@
     <string name="recently_played_videos">Žiūrėti</string>
     <string name="video_lists">Grojaraščiai</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Išorinė</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Išorinė</string>
     <string name="internal_storage">Vidinė</string>
     <string name="network_storage">Tinklas</string>
     <string name="sd_card_storage">SD kortelė</string>
@@ -81,7 +81,7 @@
     <string name="all_movies">Visi filmai</string>
     <string name="all_movies_format">Visi filmai - %d</string>
     <string name="all_animes_format">Animaciniai filmai  -  %d</string>
-    <string name="all_collections">Visos kolekcijos</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Visos kolekcijos</string>
     <string name="all_collections_format">Visos kolekcijos  -  %d</string>
     <string name="not_watched_movies_format">Nežiūrėta - %d</string>
     <string name="not_watched_animes_format">Nežiūrėta - %d</string>
@@ -155,7 +155,7 @@
     <string name="episode_name">Serija</string>
     <string name="episode_season">Sezonas</string>
     <string name="episode_specials">Specialūs leidimai</string>
-    <string name="episode_identification">%1$d Sezonas %2$d Serija</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">%1$d Sezonas %2$d Serija</string>
     <string name="season_identification">%1$d Sezonas</string>
     <string name="next_episode">Kita serija</string>
     <string name="list_episodes">Serijų sąrašas</string>
@@ -186,11 +186,11 @@
     <string name="scraper_no_files">Nėra failų apdorojimui</string>
     <string name="scraper_no_new_files">Nėra naujų failų apdorojimui</string>
     <string name="scraper_no_new_files_in_folder">Šiame aplanke nėra naujų failų apdorojimui</string>
-    <string name="scraper_folder_no_files">Vis dėlto dar yra %d video, kuriems trūksta aprašymo.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">Vis dėlto dar yra %d video, kuriems trūksta aprašymo.</string>
     <string name="scraper_folder_no_file">Vis dėlto dar yra vienas video, kuriam aprašymo.</string>
     <string name="scraper_folder_try_again">Ar norite pabandyti dar kartą?</string>
     <string name="scraper_notification_title">Ieškoma info tinkle</string>
-    <string name="scraper_notification_progress">%1$d iš %2$d failai apdoroti</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">%1$d iš %2$d failai apdoroti</string>
     <string name="scraper_no_episode_found">Serija nerasta</string>
     <string name="scraper_suggest_message">Galite ieškoti video viršelių ir info tinkle paspausdami \'Ieškoti info tinkle\'.</string>
     <string name="scraper_no_movie_text">Jūsų filmai dar neturi viršelių ir aprašymų</string>
@@ -206,7 +206,7 @@
     <string name="preference_display_all_files">Rodyti visus failus naršyklėje</string>
     <string name="preference_display_all_files_summary">Taip pat rodyti ne video failus</string>
     <string name="info_processing">Tikrinamos media savybės…</string>
-    <string name="info_audio">Audio</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Audio</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Subtitrai</string>
     <string name="info_file">Failo info</string>
@@ -253,11 +253,11 @@
     <string name="player_subtitle_track_toast">Subtitrų takelis:</string>
     <string name="player_bookmark_set">Žymė nustatyta ties</string>
     <string name="player_pref_subtitle_delay_title">Delsa</string>
-    <string name="floating_player_restore">Atstatyti</string>
-    <string name="floating_player_play">Leisti</string>
-    <string name="floating_player_pause">Pristabdyti</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Atstatyti</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Leisti</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Pristabdyti</string>
     <string name="player_pref_audio_delay_title">Garso užlaikymas</string>
-    <string name="now_playing">Dabar leidžiama</string>
+    <string name="now_playing" tools:ignore="UnusedResources">Dabar leidžiama</string>
     <string name="player_window_mode">Lango režimas</string>
     <string name="pref_play_mode_title">Leidimo režimas</string>
     <string name="pref_play_mode_entry_single">Vienas</string>
@@ -315,7 +315,7 @@
     <string name="player_plugin_video_msg">Šis failas yra <xliff:g id="video">%1$s</xliff:g> video formato.</string>
     <string name="player_plugin_audio_msg">Šis failas yra <xliff:g id="audio">%1$s</xliff:g> audio formato.</string>
     <string name="player_plugin_video_audio_msg">Šis failas yra <xliff:g id="video">%1$s</xliff:g> video formato ir <xliff:g id="audio">%2$s</xliff:g> audio formato.</string>
-    <string name="player_plugin_purchase">Eiti į parduotuvę</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Eiti į parduotuvę</string>
     <string name="player_plugin_purchase_google_play_button">Eiti į Google Play</string>
     <string name="plugin_update_required_title">Reikia atnaujinti kodekus</string>
     <string name="plugin_update_required_message">Panašu, kad jau turite Nova Video grotuvui reikiamus papildomus kodekus.\n\nŠiai naujai Nova Video grotuvo versijai reikia atnaujintų kodekų.\n\nEikite į Google Play ir atnaujinkite arba įdiekite iš naujo kodekus.</string>
@@ -357,7 +357,7 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
-    <string name="error_permission">Per mažai leidimų</string>
+    <string name="error_permission" tools:ignore="UnusedResources">Per mažai leidimų</string>
     <string name="error_permission_storage">Nova Video grotuvui reikalingas priėjimo prie saugyklos leidimas.</string>
     <string name="allow">Leisti</string>
     <string name="exit">Išeiti</string>
@@ -374,7 +374,7 @@
     <string name="ssh_prompt">FTP tipas</string>
     <string name="remove_from_shortcuts">Pašalinti nuorodą</string>
     <string name="shortcut_removed">Nuoroda %s pašalinta</string>
-    <string name="server_not_available">Šiuo metu serveris nepasiekimas</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">Šiuo metu serveris nepasiekimas</string>
     <string name="network_shortcuts">Tinklo nuorodos</string>
     <string name="shortcut_list_empty">Nėra tinklo nuorodų.\n\nNorėdami sukurti nuorodas į mėgiamus tinklo aplankus, ilgai palaikykite ant norimo aplanko ir pasirinkite \"%s\" viršutinėje veiksmų juostoje.</string>
     <string name="ftp_shortcut_list_empty">Norėdami sukurti nuorodas į mėgiamus tinklo aplankus, pasirinkite \"%s\" viršutinėje veiksmų juostoje kai naršote serverį.</string>
@@ -596,7 +596,7 @@
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">Prisijungti</string>
     <string name="trakt_list_signin">Prisijungti prie Trakt</string>
-    <string name="trakt_signin_summary_logged">Prisijungta</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">Prisijungta</string>
     <string name="trakt_signin_summary_logged_error">Autentifikavimo klaida</string>
     <string name="trakt_signin_summary">Neprisijungta</string>
     <string name="trakt_relog_description">Klaida jungiantis prie Trakt. Prisijunkite dar kartą.</string>
@@ -606,10 +606,10 @@
     <string name="trakt_live_scrobbling_title">Atpažinimas</string>
     <string name="trakt_live_scrobbling_summary">Dalintis peržiūrėtais video Trakt</string>
     <string name="trakt_getfull_summary">Trakt video atpažinimas veikia tik mokamoje versijoje</string>
-    <string name="trakt_sync_collection_title">Sinchronizuoti serialų ir filmų kolekcijas</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">Sinchronizuoti serialų ir filmų kolekcijas</string>
     <string name="trakt_sync_trakt_resume_title">Sinchronizuoti Trakt tęsimo vietas</string>
     <string name="trakt_sync_trakt_resume">Naudoti Trakt tęsimo poziciją kai ji tolimesnė nei lokali</string>
-    <string name="trakt_sync_collection_summary">Automatiškai pridėti visus video iš Nova mediatekos į Trakt kolekciją</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">Automatiškai pridėti visus video iš Nova mediatekos į Trakt kolekciją</string>
     <string name="trakt_toast_syncing">Sinchronizuojama su Trakt&#8230;</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Visi vaizdo įrašai</string>
@@ -699,7 +699,7 @@
     <string name="sleep_timer_title">Miego laikmatis</string>
     <string name="sleep_timer_description">Stabdyti video po: </string>
     <string name="picture_in_picture">Vaizdas vaizde</string>
-    <string name="cast">Transliavimas</string>
+    <string name="cast" tools:ignore="UnusedResources">Transliavimas</string>
     <string name="cast_audio_background">Garso nebus kai Nova Video grotuvas bus fone</string>
     <string name="help_faq">Pagalba / DUK</string>
     <string name="provider_folders">Debesis</string>

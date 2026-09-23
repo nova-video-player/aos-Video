@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Refrescar lista de servidores</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Escaneo inicial</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Escaneo inicial</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Buscar</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -62,7 +62,7 @@
     <string name="keep_watching_videos">Seguir viendo</string>
     <string name="video_lists">Listas de reproducción</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Externo</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Externo</string>
     <string name="internal_storage">Interno</string>
     <string name="network_storage">Red</string>
     <string name="sd_card_storage">Tarjeta SD</string>
@@ -85,7 +85,7 @@
     <string name="all_movies">Todas las películas</string>
     <string name="all_movies_format">Todas las películas -  %d</string>
     <string name="all_animes_format">Películas de animación  -  %d</string>
-    <string name="all_collections">Todas las colecciones</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Todas las colecciones</string>
     <string name="all_collections_format">Todas las colecciones -  %d</string>
     <string name="not_watched_movies_format">No visto  - %d</string>
     <string name="not_watched_animes_format">No visto  -  %d</string>
@@ -165,7 +165,7 @@
     <string name="episode_name">Episodio</string>
     <string name="episode_season">Temporada</string>
     <string name="episode_specials">Especiales</string>
-    <string name="episode_identification">Temporada %1$d Episodio %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">Temporada %1$d Episodio %2$d</string>
     <string name="season_identification">Temporada %1$d</string>
     <string name="next_episode">Próximo episodio</string>
     <string name="list_episodes">Listar episodios</string>
@@ -194,11 +194,11 @@
     <string name="scraper_no_files">No hay archivos para procesar</string>
     <string name="scraper_no_new_files">No hay archivos nuevos para procesar</string>
     <string name="scraper_no_new_files_in_folder">No hay archivos nuevos para procesar en esta carpeta</string>
-    <string name="scraper_folder_no_files">Sin embargo, sigue habiendo %d vídeos para los que no se ha encontrado información.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">Sin embargo, sigue habiendo %d vídeos para los que no se ha encontrado información.</string>
     <string name="scraper_folder_no_file">Sin embargo, sigue habiendo un vídeo para el que no se ha encontrado información.</string>
     <string name="scraper_folder_try_again">¿Quieres intentarlo de nuevo?</string>
     <string name="scraper_notification_title">Buscando información en línea</string>
-    <string name="scraper_notification_progress">\"%1$d de %2$d archivos procesados</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">\"%1$d de %2$d archivos procesados</string>
     <string name="scraper_no_episode_found">No se encontró ningún episodio</string>
     <string name="scraper_suggest_message">Puede buscar carteles e información para sus vídeos mediante el menú \'Buscar información online\'.</string>
     <string name="scraper_no_movie_text">Actualmente no tienes cartel y descripción para tus películas</string>
@@ -214,7 +214,7 @@
     <string name="preference_display_all_files">Mostrar todos los archivos en el explorador</string>
     <string name="preference_display_all_files_summary">Mostrar también archivos que no sean de vídeo</string>
     <string name="info_processing">Comprobando propiedades del medio…</string>
-    <string name="info_audio">Audio</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Audio</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Subtítulo</string>
     <string name="info_file">Información del archivo</string>
@@ -258,11 +258,11 @@
     <string name="player_bookmark_set">Marcador establecido en</string>
     <string name="player_pref_subtitle_delay_title">Retardo</string>
     <string name="player_pref_audio_speed_title">Velocidad de reproducción</string>
-    <string name="floating_player_restore">Restaurar</string>
-    <string name="floating_player_play">Reproducir</string>
-    <string name="floating_player_pause">Pausa</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Restaurar</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Reproducir</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Pausa</string>
     <string name="player_pref_audio_delay_title">Retraso de audio</string>
-    <string name="now_playing">Reproduciendo</string>
+    <string name="now_playing" tools:ignore="UnusedResources">Reproduciendo</string>
     <string name="player_window_mode">Modo ventana</string>
     <string name="pref_play_mode_title">Modo de reproducción</string>
     <string name="pref_play_mode_entry_single">Único</string>
@@ -347,7 +347,7 @@
     <string name="player_plugin_video_msg">Este archivo contiene formato de vídeo <xliff:g id="video">%1$s</xliff:g>.</string>
     <string name="player_plugin_audio_msg">Este archivo contiene formato de audio <xliff:g id="audio">%1$s</xliff:g>.</string>
     <string name="player_plugin_video_audio_msg">Este archivo contiene formato de vídeo <xliff:g id="video">%1$s</xliff:g> y de audio <xliff:g id="audio">%2$s</xliff:g>.</string>
-    <string name="player_plugin_purchase">Ir a la tienda</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Ir a la tienda</string>
     <string name="player_plugin_purchase_google_play_button">Ir a Google Play</string>
     <string name="plugin_update_required_title">Se requiere una actualización de códec</string>
     <string name="plugin_update_required_message">Parece que ya tienes codecs adicionales instalados para Nova Video Player. \n\nEsta nueva versión de Nova Video Player requiere una actualización de estos codecs. \n\nPor favor, ve a Google Play para actualizar e instalar los codecs.</string>
@@ -371,7 +371,7 @@
     <string name="dialog_subloader_nonetwork_title">Sin conexión a Internet</string>
     <string name="dialog_subloader_nonetwork_message">Hace falta una conexión a Internet para descargar subtítulos</string>
     <string name="dialog_subloader_connecting">Conectando a www.opensubtitles.org…</string>
-    <string name="opensubtitles_quota_download_remaining">Cuota de descarga de OpenSubtitles: Quedan %1$d/%2$d</string>
+    <string name="opensubtitles_quota_download_remaining" tools:ignore="PluralsCandidate">Cuota de descarga de OpenSubtitles: Quedan %1$d/%2$d</string>
     <string name="dialog_subloader_credentials">Credenciales de Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">¡Debe introducir un nombre de usuario y contraseña válidos!</string>
     <string name="toast_subloader_credentials_empty">Proporcione sus credenciales de opensubtitles en la configuración para poder descargar subtítulos</string>
@@ -404,7 +404,7 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
-    <string name="error_permission">No hay suficientes permisos</string>
+    <string name="error_permission" tools:ignore="UnusedResources">No hay suficientes permisos</string>
     <string name="error_permission_storage">Nova Video Player necesita permiso de almacenamiento para leer vídeos locales. Por favor, conceda este permiso.</string>
     <string name="error_permission_all_file_access">Nova Video Player necesita todos los permisos de gestión de almacenamiento externo para administrar correctamente los archivos locales de videos/NFO, por favor, conceda este permiso.</string>
     <string name="allow">Permitir</string>
@@ -425,7 +425,7 @@
     <string name="protocol_prompt">Tipo de protocolo</string>
     <string name="remove_from_shortcuts">Eliminar acceso directo</string>
     <string name="shortcut_removed">Se ha eliminado el acceso directo %s</string>
-    <string name="server_not_available">Servidor no disponible actualmente</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">Servidor no disponible actualmente</string>
     <string name="network_shortcuts">Accesos directos de red</string>
     <string name="shortcut_list_empty">No se han creado accesos directos de red.\n\nPara crear accesos directos a sus carpetas remotas favoritas haga un clic largo en las carpetas y seleccione \"%s\" en la barra de acción superior.</string>
     <string name="ftp_shortcut_list_empty">Para crear accesos directos a tus carpetas remotas favoritas, selecciona \"%s\" en la barra de acción superior al navegar por un servidor.</string>
@@ -478,11 +478,6 @@
     <string name="preferences_stream_max_iframe_size_summary">Tamaño máximo comprimido de i-frame en MB</string>
     <string name="preferences_force_passthrough">Forzar pasarela de audio (passthrough)</string>
     <string name="preferences_force_passthrough_summary">Si la pasarela de audio (passthrough) está activa, fuerza su uso incluso si el receptor AV no asegura soportar el códec</string>
-    <string name="preferences_playback_speed">Activar velocidad de reproducción</string>
-    <string name="preferences_playback_speed_summary">Habilita la posibilidad de cambiar la velocidad de reproducción. ⚠ Experimental, puede estropear el vídeo</string>
-    <string name="preferences_audio_speed_audiotrack">Usar AudioTrack para velocidad de reproducción</string>
-    <string name="preferences_audio_speed_audiotrack_summary">Usar AudioTrack en lugar del filtro FFmpeg para controlar la velocidad de reproducción.
-Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Estimación dinámica de retardo de audio/vídeo</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Usa estimaciones dinámicas de latencia para una mejor sincronización de audio/vídeo especialmente con auriculares bluetooth. Desactiva si experimentas problemas de sincronización.</string>
     <string name="preferences_enable_spatialization_title">Espacialización de la plataforma</string>
@@ -504,9 +499,9 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="preferences_tv_refreshrate_switch_disabled">Desactivado</string>
     <string name="preferences_tv_refreshrate_switch_mode_selection">Mostrar modo de selección que coincide con fps de vídeo</string>
     <string name="preferences_tv_refreshrate_switch_match_frame_rate">Función de coincidencia de ratio de fotogramas para Android 12 +</string>
-    <string name="preference_dolby_vision_mode" tools:ignore="Typos">Modo Dolby Vision</string>
-    <string name="preference_force_dolby_vision" tools:ignore="Typos">Forzar Dolby Vision</string>
-    <string name="preference_remove_dolby_vision" tools:ignore="Typos">Desactivar Dolby Vision</string>
+    <string name="preference_dolby_vision_mode">Modo Dolby Vision</string>
+    <string name="preference_force_dolby_vision">Forzar Dolby Vision</string>
+    <string name="preference_remove_dolby_vision">Desactivar Dolby Vision</string>
     <string name="preference_cutout_short_edges">Pantalla completa con recortes de pantalla</string>
     <string name="preference_cutout_short_edges_summary">Permite visualización de vídeo horizontal en pantalla completa con recortes</string>
     <string name="toast_cutout_aspect_ratio_fix">Activar vídeo a pantalla completa con recortes para que la relación de aspecto sea correcta.</string>
@@ -757,7 +752,7 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">Iniciar sesión</string>
     <string name="trakt_list_signin">Iniciar sesión en Trakt</string>
-    <string name="trakt_signin_summary_logged">Sesión iniciada</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">Sesión iniciada</string>
     <string name="trakt_signin_summary_logged_error">Error de autenticación</string>
     <string name="trakt_signin_summary">No has iniciado sesión</string>
     <string name="trakt_relog_description">Se ha detectado un problema con Trakt y se deben restablecer las credenciales. Por favor, inicie sesión de nuevo.</string>
@@ -767,14 +762,14 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="trakt_live_scrobbling_title">Descargar información de películas en tiempo real</string>
     <string name="trakt_live_scrobbling_summary">Compartir vídeos que se están viendo en Trakt</string>
     <string name="trakt_getfull_summary">Trakt scrobbler sólo está disponible en la versión de pago</string>
-    <string name="trakt_sync_collection_title">Sincronizar colecciones de series y películas</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">Sincronizar colecciones de series y películas</string>
     <string name="trakt_sync_trakt_resume_title">Sincronizar posición de reanudación con trakt</string>
     <string name="trakt_sync_trakt_resume">Usar posición de reanudación trakt cuando sea más avanzado que el local</string>
     <string name="trakt_force_push_title">Forzar reexportación a Trakt</string>
     <string name="trakt_force_push_summary">Carga de una sola vez el estado de visionado y los puntos de reanudación a Trakt</string>
     <string name="trakt_force_pull_title">Forzar reimportación desde Trakt</string>
     <string name="trakt_force_pull_summary">Descarga de una sola vez el estado de visionado y los puntos de reanudación desde Trakt</string>
-    <string name="trakt_sync_collection_summary">Añade automáticamente todos los vídeos de tu biblioteca a tu colección en Trakt</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">Añade automáticamente todos los vídeos de tu biblioteca a tu colección en Trakt</string>
     <string name="trakt_toast_syncing">Sincronizando con Trakt&#8230;</string>
     <string name="trakt_device_auth_step1">1. En tu teléfono o computadora, ve a:</string>
     <string name="trakt_device_auth_step2">2. Introduce este código:</string>
@@ -788,9 +783,9 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="connect_trakt">Conectar a Trakt</string>
     <string name="trakt_sync_status_never">Aún no sincronizado</string>
     <string name="trakt_sync_status_ok">Última sincronización: hace %1$s</string>
-    <string name="trakt_sync_status_ok_skipped">Última sincronización: hace %1$s · %2$d video(s) pendientes (duración desconocida)</string>
-    <string name="trakt_sync_status_ok_meta_skipped">Última sincronización: hace %1$s · %2$d registro(s) omitido(s) (faltan metadatos)</string>
-    <string name="trakt_sync_status_ok_both_skipped">Última sincronización: hace %1$s · %2$d pendientes (duración desconocida), %3$d registro(s) omitidos(s) (faltan metadatos)</string>
+    <string name="trakt_sync_status_ok_skipped" tools:ignore="PluralsCandidate">Última sincronización: hace %1$s · %2$d video(s) pendientes (duración desconocida)</string>
+    <string name="trakt_sync_status_ok_meta_skipped" tools:ignore="PluralsCandidate">Última sincronización: hace %1$s · %2$d registro(s) omitido(s) (faltan metadatos)</string>
+    <string name="trakt_sync_status_ok_both_skipped" tools:ignore="PluralsCandidate">Última sincronización: hace %1$s · %2$d pendientes (duración desconocida), %3$d registro(s) omitidos(s) (faltan metadatos)</string>
     <string name="trakt_sync_status_error_network">Última sincronización fallida: error de red</string>
     <string name="trakt_sync_status_error_auth">Error de autenticación — por favor inicia sesión de nuevo</string>
     <string name="trakt_sync_status_error_locked">Cuenta bloqueada — desbloquear en trakt.tv</string>
@@ -908,7 +903,7 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="sleep_timer_title">Temporizador de apagado</string>
     <string name="sleep_timer_description">Detener vídeo después de: </string>
     <string name="picture_in_picture">Imagen en imagen</string>
-    <string name="cast">Reparto</string>
+    <string name="cast" tools:ignore="UnusedResources">Reparto</string>
     <string name="cast_audio_background">El sonido no funcionará mientras Nova Video Player esté en segundo plano</string>
     <string name="help_faq">Ayuda / FAQ</string>
     <string name="provider_folders">Nube</string>

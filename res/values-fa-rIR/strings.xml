@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">تازه کردن لیست سفارشات</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">جستجوي سريع</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">جستجوي سريع</string>
     <!-- Library screen, menu item -->
     <string name="search_title">جستجو</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -59,7 +59,7 @@
     <string name="new_and_unwatched"></string>
     <string name="video_lists">لیست های پخش</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">کارت SD خارجی</string>
+    <string name="external_storage" tools:ignore="UnusedResources">کارت SD خارجی</string>
     <string name="internal_storage">حافظه داخلی</string>
     <string name="network_storage">شبکه</string>
     <string name="sd_card_storage">کارت SD</string>
@@ -82,7 +82,7 @@
     <string name="all_movies">همه فیلم ها</string>
     <string name="all_movies_format">همه فیلم ها - %d</string>
     <string name="all_animes_format">همه انیمیشن ها - %d</string>
-    <string name="all_collections">همه مجموعه ها</string>
+    <string name="all_collections" tools:ignore="UnusedResources">همه مجموعه ها</string>
     <string name="all_collections_format">همه مجموعه ها - %d</string>
     <string name="not_watched_movies_format">تماشا نشده - %d</string>
     <string name="not_watched_animes_format">تماشا نشده - %d</string>
@@ -161,7 +161,7 @@
     <string name="episode_name">قسمت</string>
     <string name="episode_season">فصل</string>
     <string name="episode_specials">ویژه‌ها</string>
-    <string name="episode_identification">فصل %1$d قسمت %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">فصل %1$d قسمت %2$d</string>
     <string name="season_identification">فصل %1$d</string>
     <string name="next_episode">قسمت بعد</string>
     <string name="list_episodes">لیست قسمت‌ها</string>
@@ -190,11 +190,11 @@
     <string name="scraper_no_files">هیچ فایلی برای پردازش وجود ندارد</string>
     <string name="scraper_no_new_files">فایل جدیدی برای پردازش وجود ندارد</string>
     <string name="scraper_no_new_files_in_folder">فایل جدیدی برای پردازش در این پوشه وجود ندارد</string>
-    <string name="scraper_folder_no_files">با این حال هنوز %d ویدیو وجود دارد که قبلاً هیچ اطلاعاتی برای آنها یافت نشد.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">با این حال هنوز %d ویدیو وجود دارد که قبلاً هیچ اطلاعاتی برای آنها یافت نشد.</string>
     <string name="scraper_folder_no_file">با این حال هنوز یک ویدیو وجود دارد که قبلاً هیچ اطلاعاتی برای آن یافت نشد.</string>
     <string name="scraper_folder_try_again">آیا می خواهید دوباره امتحان کنید؟</string>
     <string name="scraper_notification_title">درحال جستجوی اطلاعات آنلاین</string>
-    <string name="scraper_notification_progress">\"%1$d فایل از %2$d فایل پردازش شد</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">\"%1$d فایل از %2$d فایل پردازش شد</string>
     <string name="scraper_no_episode_found">هیچ قسمتی پیدا نشد</string>
     <string name="scraper_suggest_message">می‌توانید پوسترها و اطلاعات ویدیوهای خود را با استفاده از منوی «جستجوی اطلاعات آنلاین» به صورت آنلاین جستجو کنید.</string>
     <string name="scraper_no_movie_text">شما در حال حاضر هیچ پوستر و توضیحی برای فیلم های خود ندارید</string>
@@ -210,7 +210,7 @@
     <string name="preference_display_all_files">نمایش تمامی فایل ها در مرورگر</string>
     <string name="preference_display_all_files_summary">نمایش فایل های غیر ویدئویی</string>
     <string name="info_processing">بررسی ویژگی های رسانه…</string>
-    <string name="info_audio">صدا</string>
+    <string name="info_audio" tools:ignore="UnusedResources">صدا</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">زیرنویس</string>
     <string name="info_file">اطلاعات فایل</string>
@@ -254,11 +254,11 @@
     <string name="player_bookmark_set">نشان کردن بعنوان</string>
     <string name="player_pref_subtitle_delay_title">تاخیر</string>
     <string name="player_pref_audio_speed_title">سرعت پخش</string>
-    <string name="floating_player_restore">بازگردانی</string>
-    <string name="floating_player_play">پخش</string>
-    <string name="floating_player_pause">درنگ</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">بازگردانی</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">پخش</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">درنگ</string>
     <string name="player_pref_audio_delay_title">تاخیر صدا</string>
-    <string name="now_playing">درحال پخش</string>
+    <string name="now_playing" tools:ignore="UnusedResources">درحال پخش</string>
     <string name="player_window_mode">حالت پنجره</string>
     <string name="pref_play_mode_title">حالت پخش</string>
     <string name="pref_play_mode_entry_single">تکی</string>
@@ -335,7 +335,7 @@
     <string name="player_plugin_video_msg">این فایل حاوی یک قالب ویدیویی <xliff:g id="video">%1$s</xliff:g> است.</string>
     <string name="player_plugin_audio_msg">این فایل حاوی یک قالب صوتی <xliff:g id="audio">%1$s</xliff:g> است.</string>
     <string name="player_plugin_video_audio_msg">این فایل دارای یک قالب ویدیویی <xliff:g id="video">%1$s</xliff:g> و یک قالب صوتی <xliff:g id="audio">%2$s</xliff:g> است.</string>
-    <string name="player_plugin_purchase">رفتن به فروشگاه</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">رفتن به فروشگاه</string>
     <string name="player_plugin_purchase_google_play_button">به Google Play بروید</string>
     <string name="plugin_update_required_title">به روز رسانی کدک مورد نیاز است</string>
     <string name="plugin_update_required_message">به نظر می رسد که شما قبلا کدک های اضافی برای Nova Video Player نصب کرده اید.\n\nاین نسخه جدید Nova Video Player نیاز به بروز رسانی این کدک ها دارد.\n\nلطفا برای به روز رسانی و نصب مجدد کدک ها به Google Play بروید.</string>
@@ -359,7 +359,7 @@
     <string name="dialog_subloader_nonetwork_title">بدون اتصال اینترنت</string>
     <string name="dialog_subloader_nonetwork_message">برای دانلود زیرنویس ها نیاز به اتصال به اینترنت است</string>
     <string name="dialog_subloader_connecting">اتصال به سرویس opensubtitle&#8230;</string>
-    <string name="opensubtitles_quota_download_remaining">صف دانلود OpenSubtitles: %1$d/%2$d باقی مانده</string>
+    <string name="opensubtitles_quota_download_remaining" tools:ignore="PluralsCandidate">صف دانلود OpenSubtitles: %1$d/%2$d باقی مانده</string>
     <string name="dialog_subloader_credentials">اعتبارنامه OpenSubtitles</string>
     <string name="dialog_subloader_credentials_empty">شما باید یک نام کاربری و رمز عبور معتبر مشخص کنید!</string>
     <string name="toast_subloader_credentials_empty">اعتبارنامه OpenSubtitles خود را در تنظیمات ارائه دهید تا بتوانید زیرنویس های بیشتری دانلود کنید</string>
@@ -382,7 +382,7 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
-    <string name="error_permission">مجوزها کافی نیست</string>
+    <string name="error_permission" tools:ignore="UnusedResources">مجوزها کافی نیست</string>
     <string name="error_permission_storage">Nova Video Player برای خواندن ویدیوهای محلی به مجوز ذخیره‌سازی نیاز دارد، لطفاً این اجازه را بدهید.</string>
     <string name="error_permission_all_file_access">Nova Video Player برای مدیریت صحیح ویدیوها/فایل‌های NFO به تمام مجوزهای مدیریت حافظه خارجی نیاز دارد، لطفاً این مجوز را اعطا کنید.</string>
     <string name="allow">اجازه دادن</string>
@@ -403,7 +403,7 @@
     <string name="protocol_prompt">نوع پروتکل</string>
     <string name="remove_from_shortcuts">هذف میانبر</string>
     <string name="shortcut_removed">میانبر %s حذف شد</string>
-    <string name="server_not_available">در حال حاضر سرور در دسترس نیست</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">در حال حاضر سرور در دسترس نیست</string>
     <string name="network_shortcuts">میانبرهای شبکه</string>
     <string name="shortcut_list_empty">هیچ میانبر شبکه ای ایجاد نشده است.\n\nبرای ایجاد میانبر برای پوشه های راه دور دلخواه خود، روی پوشه های مورد نظر طولانی کلیک کنید و \"%s\" را در نوار اقدام بالا انتخاب کنید.</string>
     <string name="ftp_shortcut_list_empty">برای ایجاد میانبر برای پوشه های راه دور دلخواه خود، هنگام مرور سرور، \"%s\" را در نوار اقدام بالا انتخاب کنید.</string>
@@ -455,8 +455,6 @@
     <string name="preferences_stream_max_iframe_size_summary">حداکثر اندازه i-frame فشرده در مگابایت</string>
     <string name="preferences_force_passthrough">عبور صدا به صورت اجباری</string>
     <string name="preferences_force_passthrough_summary">اگر passthrough فعال باشد، آن را حتی اگر کدک صوتی توسط گیرنده AV پشتیبانی نشده باشد، اجباری کنید به جای بررسی قابلیت‌های گیرنده AV</string>
-    <string name="preferences_playback_speed">فعالسازی سرعت پخش</string>
-    <string name="preferences_playback_speed_summary">امکان تغییر سرعت پخش را فعال کنید. ⚠ آزمایشی است و ممکن است منجر به ویدیوهای ناپایدار شود</string>
     <string name="preferences_disable_downmix_title">غیرفعال کردن میکس استریو صدا</string>
     <string name="preferences_disable_downmix_summary">همیشه تمام کانال‌ها را رمزگشایی کنید و اجازه دهید اندروید بسته به قابلیت خروجی صوتی، میکس را انجام دهد (این ممکن است منجر به از دست رفتن کانال‌های صوتی شود)</string>
     <string name="preferences_enable_downmix_androidtv_title">اجباری کردن میکس استریو صدا</string>
@@ -592,7 +590,7 @@
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">ورود به سیستم</string>
     <string name="trakt_list_signin">ورود به حساب Trakt</string>
-    <string name="trakt_signin_summary_logged">وارد شده</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">وارد شده</string>
     <string name="trakt_signin_summary_logged_error">خطا در احراز هویت</string>
     <string name="trakt_signin_summary">وارد حساب نشده است</string>
     <string name="trakt_relog_description">مشکلی در Trakt شناسایی شده است و اعتبارنامه باید بازنشانی شود، لطفاً دوباره وارد شوید.</string>

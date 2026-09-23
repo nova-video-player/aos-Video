@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Szerverlista frissítése</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Kezdeti keresés</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Kezdeti keresés</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Keresés</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -62,7 +62,7 @@
     <string name="keep_watching_videos">Folytatás</string>
     <string name="video_lists">Lejátszólisták</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Külső</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Külső</string>
     <string name="internal_storage">Belső</string>
     <string name="network_storage">Hálózat</string>
     <string name="sd_card_storage">SD kártya</string>
@@ -85,7 +85,7 @@
     <string name="all_movies">Összes film</string>
     <string name="all_movies_format">Összes film - %d</string>
     <string name="all_animes_format">Animációs filmek - %d</string>
-    <string name="all_collections">Összes gyűjtemény</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Összes gyűjtemény</string>
     <string name="all_collections_format">Összes gyűjtemény - %d</string>
     <string name="not_watched_movies_format">Nem látott - %d</string>
     <string name="not_watched_animes_format">Nem látott - %d</string>
@@ -164,7 +164,7 @@
     <string name="episode_name">Epizód</string>
     <string name="episode_season">Évad</string>
     <string name="episode_specials">Speciális részek</string>
-    <string name="episode_identification">%1$d. évad %2$d epizód</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">%1$d. évad %2$d epizód</string>
     <string name="season_identification">%1$d. évad</string>
     <string name="next_episode">Következő epizód</string>
     <string name="list_episodes">Epizódok mutatása</string>
@@ -193,11 +193,11 @@
     <string name="scraper_no_files">Nincs feldolgozandó fájl</string>
     <string name="scraper_no_new_files">Nincs új feldolgozandó fájl</string>
     <string name="scraper_no_new_files_in_folder">Nincs új feldolgozandó fájl ebben a mappában</string>
-    <string name="scraper_folder_no_files">Azonban %d olyan videó van, amihez korábban nem találtunk információkat.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">Azonban %d olyan videó van, amihez korábban nem találtunk információkat.</string>
     <string name="scraper_folder_no_file">Azonban egy olyan videó van, amihez korábban nem találtunk információkat.</string>
     <string name="scraper_folder_try_again">Meg szeretné próbálni újra?</string>
     <string name="scraper_notification_title">Infó keresése online</string>
-    <string name="scraper_notification_progress">\"%1$d of %2$d fájl feldolgozva</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">\"%1$d of %2$d fájl feldolgozva</string>
     <string name="scraper_no_episode_found">Nem található epizód</string>
     <string name="scraper_suggest_message">Online kereshet posztereket és információkat a videóihoz, az \"Infó keresése online\" menüpontban.</string>
     <string name="scraper_no_movie_text">Jelenleg nincsenek poszterek és leírások a filmjeihez</string>
@@ -213,7 +213,7 @@
     <string name="preference_display_all_files">Az összes fájl megjelenítése a böngészőben</string>
     <string name="preference_display_all_files_summary">Nem csak videó fájlok mutatása</string>
     <string name="info_processing">Médiatulajdonságok ellenőrzése…</string>
-    <string name="info_audio">Audió</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Audió</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Felirat</string>
     <string name="info_file">Fájlinfó</string>
@@ -257,11 +257,11 @@
     <string name="player_bookmark_set">Könyvjelző beállítva itt</string>
     <string name="player_pref_subtitle_delay_title">Késleltetés</string>
     <string name="player_pref_audio_speed_title">Lejátszási sebesség</string>
-    <string name="floating_player_restore">Visszaállítás</string>
-    <string name="floating_player_play">Lejátszás</string>
-    <string name="floating_player_pause">Szünet</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Visszaállítás</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Lejátszás</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Szünet</string>
     <string name="player_pref_audio_delay_title">Hangkésleltetés</string>
-    <string name="now_playing">Most játszott</string>
+    <string name="now_playing" tools:ignore="UnusedResources">Most játszott</string>
     <string name="player_window_mode">Ablak mód</string>
     <string name="pref_play_mode_title">Lejátszási mód</string>
     <string name="pref_play_mode_entry_single">Videó</string>
@@ -339,7 +339,7 @@
     <string name="player_plugin_video_msg">A fájl egy <xliff:g id="video">%1$s</xliff:g> képformátumot tartalmaz.</string>
     <string name="player_plugin_audio_msg">A fájl egy <xliff:g id="audio">%1$s</xliff:g> hangformátumot tartalmaz.</string>
     <string name="player_plugin_video_audio_msg">A fájl egy <xliff:g id="video">%1$s</xliff:g> képformátumot és egy <xliff:g id="audio">%2$s</xliff:g> hangformátumot tartalmaz.</string>
-    <string name="player_plugin_purchase">Ugrás az Áruházba</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Ugrás az Áruházba</string>
     <string name="player_plugin_purchase_google_play_button">Ugrás a Google Play-re</string>
     <string name="plugin_update_required_title">Kodek frissítése szükséges</string>
     <string name="plugin_update_required_message">Úgy tűnik, hogy a kiegészítő kodekek már telepítve vannak a Nova Video Player-hez.\n\nA Nova Video Player ezen új verziójához frissíteni kell ezeket a codec-eket.\n\nKérjük, nyissa meg a Google Play-t a kodekek frissítéséhez és újratelepítéséhez.</string>
@@ -363,7 +363,7 @@
     <string name="dialog_subloader_nonetwork_title">Nincs internetkapcsolat</string>
     <string name="dialog_subloader_nonetwork_message">Internetkapcsolat szükséges a feliratok letöltéséhez</string>
     <string name="dialog_subloader_connecting">Csatlakozás a www.opensubtitles.com…</string>
-    <string name="opensubtitles_quota_download_remaining">OpenSubtitle letöltési kvóta: %1$d/%2$d maradt</string>
+    <string name="opensubtitles_quota_download_remaining" tools:ignore="PluralsCandidate">OpenSubtitle letöltési kvóta: %1$d/%2$d maradt</string>
     <string name="dialog_subloader_credentials">Opensubtitles belépési adatok</string>
     <string name="dialog_subloader_credentials_empty">Érvényes felhasználónév és jelszó megadása szükséges!</string>
     <string name="toast_subloader_credentials_empty">Adja meg az opensubtitles belépési adatait a beállításokban, feliratok letöltéséhez</string>
@@ -393,7 +393,7 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
-    <string name="error_permission">Nincsenek megfelelő engedélyek</string>
+    <string name="error_permission" tools:ignore="UnusedResources">Nincsenek megfelelő engedélyek</string>
     <string name="error_permission_storage">A Nova Video Player-nek fájl hozzáféréshez van szüksége a helyi videók olvasásához. Kérjük, ezt engedélyezze.</string>
     <string name="error_permission_all_file_access">A Nova Video Player-nek hozzáférésre van szüksége minden fájlhoz ahhoz, hogy kezelni tudja a helyi video/NFO fájlokat. Kéjük, ezt engedélyezze.</string>
     <string name="allow">Engedélyezés</string>
@@ -414,7 +414,7 @@
     <string name="protocol_prompt">Protokoll típus</string>
     <string name="remove_from_shortcuts">Parancsikon eltávolítása</string>
     <string name="shortcut_removed">%s parancsikon eltávolítva</string>
-    <string name="server_not_available">A szerver jelenleg nem elérhető</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">A szerver jelenleg nem elérhető</string>
     <string name="network_shortcuts">Hálózati parancsikonok</string>
     <string name="shortcut_list_empty">Nincs hálózati parancsikon.\n\nParancsikon létrehozásához tartsa lenyomva a célmappa nevét és válassza ki a(z) \"%s\" opciót a fenti sávon.</string>
     <string name="ftp_shortcut_list_empty">Könyvjelző létrehozásához a kedvenc távoli mappáihoz, válassza ki a(z) \"%s\" lehetőséget a fenti sávon böngészés közben.</string>
@@ -467,10 +467,6 @@
     <string name="preferences_stream_max_iframe_size_summary">Az i-frame maximális tömörített mérete MB-ban</string>
     <string name="preferences_force_passthrough">Hangtovábbítás kényszerítése</string>
     <string name="preferences_force_passthrough_summary">Ha a hangtovábbítás be van kapcsolva, ennek kényszerítése akkor is, ha az hangkodek támogatását az AV vevő nem erősítette meg, a készülék képességeinek ellenőrzése nélkül</string>
-    <string name="preferences_playback_speed">Lejátszási sebesség be</string>
-    <string name="preferences_playback_speed_summary">A lejátszási sebesség módosításának engedélyezése. ⚠ Kísérleti! Szaggatott lejátszást okozhat.</string>
-    <string name="preferences_audio_speed_audiotrack">Az AudioTrack használata a lejátszási sebességhez</string>
-    <string name="preferences_audio_speed_audiotrack_summary">Az AudioTrack használata az FFmpeg atempo szűrő helyett a lejátszási sebesség beállításához. Kísérleti: nem minden rendszeren működik.</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Dinamikus audió/videó késleltetés becslése</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Dinamikus késleltetési becslés használata jobb audió/videó szinkronizálásához, főleg bluetooth fejhallgatóknál. Kapcsolja ki, ha szinkronizálási hibákat tapasztal.</string>
     <string name="preferences_disable_downmix_title">Hang sztereólekeverés kikapcsolása</string>
@@ -724,7 +720,7 @@
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">Bejelentkezés</string>
     <string name="trakt_list_signin">Bejelentkezés a Trakt-be</string>
-    <string name="trakt_signin_summary_logged">Bejelentkezve</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">Bejelentkezve</string>
     <string name="trakt_signin_summary_logged_error">Azonosítási hiba</string>
     <string name="trakt_signin_summary">Nincs bejelentkezve</string>
     <string name="trakt_relog_description">Trakt hiba észlelve, a bejelentkezési adatok törlése szükséges. Kérjük, jelentkezzen be újra.</string>
@@ -734,10 +730,10 @@
     <string name="trakt_live_scrobbling_title">Élő meghirdetés</string>
     <string name="trakt_live_scrobbling_summary">Az éppen lejátszott videó megosztása a Trakt-en</string>
     <string name="trakt_getfull_summary">A Trakt meghirdetés csak a fizetett verzióban érhető el</string>
-    <string name="trakt_sync_collection_title">Sorozat- és filmgyűjtemények szinkronizálása</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">Sorozat- és filmgyűjtemények szinkronizálása</string>
     <string name="trakt_sync_trakt_resume_title">Trakt folytatási pozíció szinkronizálása</string>
     <string name="trakt_sync_trakt_resume">Trakt folytatási pozíció használata, amikor az későbbi a helyinél</string>
-    <string name="trakt_sync_collection_summary">A Nova könyvtár összes videójának automatikus hozzáadása a Trakt gyűjteményéhez</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">A Nova könyvtár összes videójának automatikus hozzáadása a Trakt gyűjteményéhez</string>
     <string name="trakt_toast_syncing">Szinkronizálás a Trakt-al&#8230;</string>
     <string name="trakt_device_auth_step1">1. Nyisd meg a számítógépen:</string>
     <string name="trakt_device_auth_step2">2. Írd be ezt a kódot:</string>
@@ -841,7 +837,7 @@
     <string name="sleep_timer_title">Elalvás időzítő</string>
     <string name="sleep_timer_description">Videó leállítása ennyi idő után: </string>
     <string name="picture_in_picture">Kép a képben</string>
-    <string name="cast">Átvitel</string>
+    <string name="cast" tools:ignore="UnusedResources">Átvitel</string>
     <string name="cast_audio_background">A hang nem fog működni, amíg a Nova Videó Lejátszó a háttérben fut</string>
     <string name="help_faq">Segítség / GYIK</string>
     <string name="provider_folders">Felhő</string>

@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">ᱥᱮᱨᱵᱷᱟᱨ ᱛᱟᱞᱠᱟ ᱨᱤᱯᱷᱨᱮᱥ ᱢᱮ</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">ᱮᱛᱚᱦᱚᱵ ᱥᱠᱮᱱ</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">ᱮᱛᱚᱦᱚᱵ ᱥᱠᱮᱱ</string>
     <!-- Library screen, menu item -->
     <string name="search_title">ᱥᱮᱸᱫᱽᱨᱟ</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -62,7 +62,7 @@
     <string name="keep_watching_videos">ᱧᱮᱞ ᱛᱟᱦᱮᱱ ᱢᱮ</string>
     <string name="video_lists">ᱯᱞᱮᱞᱤᱥᱴ</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">ᱵᱟᱦᱤᱨᱤ</string>
+    <string name="external_storage" tools:ignore="UnusedResources">ᱵᱟᱦᱤᱨᱤ</string>
     <string name="internal_storage">ᱵᱷᱤᱛᱨᱤ </string>
     <string name="network_storage">ᱱᱮᱴᱣᱟᱨᱠ</string>
     <string name="sd_card_storage">SD ᱠᱟᱨᱰ</string>
@@ -85,7 +85,7 @@
     <string name="all_movies">ᱥᱟᱱᱟᱢ ᱪᱚᱞᱚᱱᱪᱤᱛᱟᱹᱨ ᱠᱚ</string>
     <string name="all_movies_format">ᱥᱟᱱᱟᱢ ᱪᱚᱞᱚᱱᱪᱤᱛᱟᱹᱨ - %d</string>
     <string name="all_animes_format">ᱮᱱᱤᱢᱮᱥᱚᱱ ᱯᱷᱤᱞᱤᱢ ᱠᱚ - %d</string>
-    <string name="all_collections">ᱥᱟᱱᱟᱢ ᱡᱟᱣᱨᱟ</string>
+    <string name="all_collections" tools:ignore="UnusedResources">ᱥᱟᱱᱟᱢ ᱡᱟᱣᱨᱟ</string>
     <string name="all_collections_format">ᱥᱟᱱᱟᱢ ᱡᱟᱣᱨᱟ - %d</string>
     <string name="not_watched_movies_format">ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ - %d</string>
     <string name="not_watched_animes_format">ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱᱟ - %d</string>
@@ -148,11 +148,11 @@
     <string name="scraper_no_files">ᱯᱨᱚᱥᱮᱥ ᱞᱟᱹᱜᱤᱫ ᱪᱮᱫ ᱨᱮᱫ ᱦᱚᱸ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
     <string name="scraper_no_new_files">ᱯᱨᱚᱥᱮᱥ ᱞᱟᱹᱜᱤᱫ ᱪᱮᱫ ᱦᱚᱸ ᱱᱟᱶᱟ ᱨᱮᱫ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
     <string name="scraper_no_new_files_in_folder">ᱱᱚᱶᱟ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮ ᱯᱨᱚᱥᱮᱥ ᱞᱟᱹᱜᱤᱫ ᱪᱮᱫ ᱦᱚᱸ ᱱᱟᱶᱟ ᱨᱮᱫ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
-    <string name="scraper_folder_no_files">ᱮᱱᱛᱮᱨᱮᱦᱚᱸ ᱱᱤᱛ ᱦᱚᱸ %d ᱵᱷᱤᱰᱤᱭᱳ ᱢᱮᱱᱟᱜᱼᱟ ᱡᱟᱦᱟᱸ ᱞᱟᱹᱜᱤᱫ ᱞᱟᱦᱟ ᱛᱮ ᱪᱮᱫ ᱵᱟᱲᱟᱭ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ ᱾</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">ᱮᱱᱛᱮᱨᱮᱦᱚᱸ ᱱᱤᱛ ᱦᱚᱸ %d ᱵᱷᱤᱰᱤᱭᱳ ᱢᱮᱱᱟᱜᱼᱟ ᱡᱟᱦᱟᱸ ᱞᱟᱹᱜᱤᱫ ᱞᱟᱦᱟ ᱛᱮ ᱪᱮᱫ ᱵᱟᱲᱟᱭ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ ᱾</string>
     <string name="scraper_folder_no_file">ᱮᱱᱛᱮᱨᱮᱦᱚᱸ ᱱᱤᱛ ᱦᱚᱸ ᱢᱤᱫᱴᱟᱝ ᱵᱷᱤᱰᱤᱭᱳ ᱢᱮᱱᱟᱜᱼᱟ ᱡᱟᱦᱟᱸ ᱞᱟᱹᱜᱤᱫ ᱞᱟᱦᱟ ᱛᱮ ᱪᱮᱫ ᱵᱟᱲᱟᱭ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ ᱾</string>
     <string name="scraper_folder_try_again">ᱪᱮᱫ ᱟᱢ ᱫᱚᱦᱲᱟ ᱠᱩᱨᱩᱢᱩᱴᱩ ᱥᱟᱱᱟᱭᱮᱫ ᱢᱮᱭᱟ?</string>
     <string name="scraper_notification_title">ᱚᱱᱞᱟᱭᱤᱱ ᱨᱮ ᱵᱤᱵᱨᱚᱬ ᱥᱮᱸᱫᱽᱨᱟ</string>
-    <string name="scraper_notification_progress">\"%1$d ᱨᱮᱭᱟᱜ %2$d ᱨᱮᱫ ᱠᱚ ᱯᱨᱚᱥᱮᱥ ᱦᱩᱭ ᱟᱠᱟᱱᱟ</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">\"%1$d ᱨᱮᱭᱟᱜ %2$d ᱨᱮᱫ ᱠᱚ ᱯᱨᱚᱥᱮᱥ ᱦᱩᱭ ᱟᱠᱟᱱᱟ</string>
     <string name="scraper_no_episode_found">ᱪᱮᱫ ᱮᱯᱤᱥᱚᱰ ᱦᱚᱸ ᱵᱟᱝ ᱧᱟᱢ ᱞᱮᱱᱟ</string>
     <string name="scraper_suggest_message">ᱟᱢ ᱟᱢᱟᱜ ᱵᱷᱤᱰᱤᱭᱳ ᱞᱟᱹᱜᱤᱫ ᱯᱳᱥᱴᱟᱨ ᱟᱨ ᱵᱟᱯᱟᱰᱟᱭ ᱚᱱᱞᱟᱭᱤᱱ ᱨᱮ ᱥᱮᱸᱫᱽᱨᱟ ᱫᱟᱲᱮᱭᱟᱜᱼᱟᱢ \'ᱚᱱᱞᱟᱭᱤᱱ ᱵᱟᱯᱟᱰᱟᱭ ᱥᱮᱸᱫᱽᱨᱟ\' ᱢᱮᱱᱩ ᱦᱚᱛᱮᱛᱮ ᱾</string>
     <string name="scraper_no_movie_text">ᱟᱢ ᱴᱷᱮᱱ ᱱᱤᱛᱚᱜ ᱟᱢᱟᱜ ᱯᱷᱤᱞᱢ ᱨᱮᱭᱟᱜ ᱯᱳᱥᱴᱟᱨ ᱟᱨ ᱵᱤᱵᱨᱚᱬ ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
@@ -168,7 +168,7 @@
     <string name="preference_display_all_files">ᱵᱽᱨᱟᱣᱩᱡᱟᱨ ᱨᱮ ᱥᱟᱱᱟᱢ ᱨᱮᱫ ᱠᱚ ᱩᱫᱩᱜ ᱢᱮ</string>
     <string name="preference_display_all_files_summary">ᱱᱚᱱ-ᱵᱷᱤᱰᱤᱭᱳ ᱨᱮᱫ ᱠᱚ ᱦᱚᱸ ᱩᱫᱩᱜ ᱢᱮ</string>
     <string name="info_processing">ᱢᱤᱰᱤᱭᱟ ᱜᱩᱱ ᱠᱚ ᱧᱮᱞ ᱵᱤᱰᱟᱹᱣ&#8230;</string>
-    <string name="info_audio">ᱚᱰᱤᱭᱚ</string>
+    <string name="info_audio" tools:ignore="UnusedResources">ᱚᱰᱤᱭᱚ</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">ᱥᱟᱵᱽᱴᱟᱭᱤᱴᱟᱞ</string>
     <string name="info_file">ᱨᱮᱫ ᱵᱤᱵᱨᱚᱬ</string>
@@ -197,9 +197,9 @@
     <string name="player_subtitle_track_toast">ᱥᱟᱹᱵᱽᱴᱟᱭᱴᱟᱹᱞ ᱴᱨᱟᱠᱺ</string>
     <string name="player_bookmark_set">ᱵᱩᱠᱢᱟᱨᱠ ᱥᱮᱴ ᱟᱠᱟᱱᱟ</string>
     <string name="player_pref_subtitle_delay_title">ᱫᱤᱨᱤ</string>
-    <string name="floating_player_restore">ᱨᱤᱥᱴᱳᱨ ᱢᱮ</string>
-    <string name="floating_player_play">ᱪᱟᱹᱞᱩᱭ ᱢᱮ</string>
-    <string name="floating_player_pause">ᱛᱚᱝᱜᱮ</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">ᱨᱤᱥᱴᱳᱨ ᱢᱮ</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">ᱪᱟᱹᱞᱩᱭ ᱢᱮ</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">ᱛᱚᱝᱜᱮ</string>
     <string name="player_pref_audio_delay_title">ᱥᱟᱲᱮ ᱜᱷᱟᱹᱬᱤᱡ</string>
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
@@ -233,7 +233,7 @@
     <string name="player_plugin_video_msg">ᱱᱚᱣᱟ ᱨᱮᱫ ᱨᱮ ᱢᱤᱫ <xliff:g id="ᱵᱷᱤᱰᱤᱭᱳ">%1$s</xliff:g> ᱵᱷᱤᱰᱤᱭᱳ ᱨᱩᱯ ᱢᱮᱱᱟᱜᱼᱟ |</string>
     <string name="player_plugin_audio_msg">ᱱᱚᱣᱟ ᱨᱮᱫ ᱨᱮ ᱢᱤᱫ <xliff:g id="ᱚᱰᱤᱭᱚ">%1$s</xliff:g> ᱚᱰᱤᱭᱚ ᱨᱩᱯ ᱢᱮᱱᱟᱜᱼᱟ |</string>
     <string name="player_plugin_video_audio_msg">ᱱᱚᱣᱟ ᱨᱮᱫ ᱨᱮ ᱢᱤᱫ <xliff:g id="video">%1$s</xliff:g> ᱵᱷᱤᱰᱤᱭᱚ ᱨᱩᱯ ᱟᱨ ᱢᱤᱫ <xliff:g id="audio">%2$s</xliff:g> ᱚᱰᱤᱭᱚ ᱨᱩᱯ ᱢᱮᱱᱟᱜᱼᱟ ᱾</string>
-    <string name="player_plugin_purchase">ᱥᱴᱳᱨ ᱛᱮ ᱥᱮᱱᱚᱜ ᱢᱮ</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">ᱥᱴᱳᱨ ᱛᱮ ᱥᱮᱱᱚᱜ ᱢᱮ</string>
     <string name="player_plugin_purchase_google_play_button">ᱜᱩᱜᱚᱞ ᱯᱞᱮ ᱛᱮ ᱪᱟᱞᱟᱜ ᱢᱮ</string>
     <string name="plugin_update_required_title">ᱠᱚᱰᱮᱠ ᱟᱯᱰᱮᱴ ᱞᱟᱹᱠᱛᱤᱜ ᱠᱟᱱᱟ</string>
     <string name="plugin_update_required_message">ᱱᱚᱶᱟ ᱧᱮᱞᱚᱜ ᱠᱟᱱᱟ ᱡᱮ ᱟᱢ ᱴᱷᱮᱱ Nova Video Player ᱞᱟᱹᱜᱤᱫ ᱵᱟᱹᱲᱛᱤ codecs ᱠᱚ ᱞᱟᱦᱟ ᱠᱷᱚᱱ ᱜᱮ ᱢᱮᱱᱟᱜᱼᱟ ᱾
@@ -264,7 +264,7 @@
     <string name="protocol_prompt">ᱯᱨᱚᱴᱚᱠᱚᱞ ᱞᱮᱠᱟᱱ</string>
     <string name="remove_from_shortcuts">ᱥᱚᱴᱠᱟᱴ ᱚᱪᱚᱜᱽ ᱢᱮ</string>
     <string name="shortcut_removed">ᱥᱚᱴᱠᱟᱴ %s ᱚᱪᱚᱜ ᱟᱠᱟᱱᱟ</string>
-    <string name="server_not_available">ᱥᱮᱨᱵᱷᱟᱨ ᱫᱚ ᱱᱤᱛᱚᱜ ᱵᱟᱝ ᱧᱟᱢᱚᱜ ᱠᱟᱱᱟ</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">ᱥᱮᱨᱵᱷᱟᱨ ᱫᱚ ᱱᱤᱛᱚᱜ ᱵᱟᱝ ᱧᱟᱢᱚᱜ ᱠᱟᱱᱟ</string>
     <string name="network_shortcuts">ᱱᱮᱴᱣᱟᱨᱠ ᱥᱚᱴᱠᱟᱴ ᱠᱚ</string>
     <string name="shortcut_list_empty">ᱱᱮᱴᱣᱟᱨᱠ ᱥᱚᱴᱠᱟᱴ ᱵᱟᱝ ᱵᱮᱱᱟᱣ ᱟᱠᱟᱱᱟ᱾\n\nᱟᱢᱟᱜ ᱠᱩᱥᱤ ᱨᱤᱢᱚᱴ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮ ᱥᱚᱴᱠᱟᱴ ᱵᱮᱱᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱴᱟᱨᱜᱮᱴ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮ ᱞᱟᱹᱴᱩ ᱠᱷᱚᱱ ᱞᱤᱱ ᱢᱮ ᱟᱨ ᱪᱮᱛᱟᱱ ᱠᱟᱹᱢᱤ ᱵᱟᱨ ᱨᱮ \"%s\" ᱵᱟᱪᱷᱟᱣ ᱢᱮ᱾</string>
     <string name="ftp_shortcut_list_empty">ᱟᱢᱟᱜ ᱠᱩᱥᱤ ᱨᱤᱢᱚᱴ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮᱭᱟᱜ ᱥᱚᱴᱠᱟᱴ ᱵᱮᱱᱟᱣ ᱞᱟᱹᱜᱤᱫ, ᱥᱮᱨᱵᱷᱟᱨ ᱵᱽᱨᱟᱣᱩᱡᱽ ᱚᱠᱛᱚ ᱪᱮᱛᱟᱱ ᱠᱟᱹᱢᱤ ᱵᱟᱨ ᱨᱮ \"%s\" ᱵᱟᱪᱷᱟᱣ ᱢᱮ᱾</string>

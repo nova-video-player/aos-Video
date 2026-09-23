@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Обновить список серверов</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Начальный поиск</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Начальный поиск</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Поиск</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -62,7 +62,7 @@
     <string name="keep_watching_videos">Продолжить просмотр</string>
     <string name="video_lists">Плейлисты</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Внешн.</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Внешн.</string>
     <string name="internal_storage">Внутр.</string>
     <string name="network_storage">Сеть</string>
     <string name="sd_card_storage">Карта SD</string>
@@ -85,7 +85,7 @@
     <string name="all_movies">Все фильмы</string>
     <string name="all_movies_format">Фильмы - %d</string>
     <string name="all_animes_format">Мультфильмы - %d</string>
-    <string name="all_collections">Коллекции</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Коллекции</string>
     <string name="all_collections_format">Коллекции - %d</string>
     <string name="not_watched_movies_format">Не просмотрено - %d</string>
     <string name="not_watched_animes_format">Не просмотрено - %d</string>
@@ -164,7 +164,7 @@
     <string name="episode_name">Серия</string>
     <string name="episode_season">Сезон</string>
     <string name="episode_specials">Спецвыпуски</string>
-    <string name="episode_identification">Сезон %1$d Серия %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">Сезон %1$d Серия %2$d</string>
     <string name="season_identification">Сезон %1$d</string>
     <string name="next_episode">Следующая серия</string>
     <string name="list_episodes">Список серий</string>
@@ -195,11 +195,11 @@
     <string name="scraper_no_files">Нет файлов для обработки</string>
     <string name="scraper_no_new_files">Нет новых файлов для обработки</string>
     <string name="scraper_no_new_files_in_folder">Нет новых файлов для обработки в этой папке</string>
-    <string name="scraper_folder_no_files">Однако еще есть %d видео, для которых информация не найдена ранее.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">Однако еще есть %d видео, для которых информация не найдена ранее.</string>
     <string name="scraper_folder_no_file">Однако еще есть одно видео, для которого ранее не было найдено никакой информации.</string>
     <string name="scraper_folder_try_again">Хотите попробовать еще раз?</string>
     <string name="scraper_notification_title">Поиск информации в сети</string>
-    <string name="scraper_notification_progress">\"%1$d of %2$d файлов обработано</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">\"%1$d of %2$d файлов обработано</string>
     <string name="scraper_no_episode_found">Эпизод не найден</string>
     <string name="scraper_suggest_message">Вы можете найти постеры и информацию о Ваших видео в сети при помощи меню \'Поиск информации в сети\'.</string>
     <string name="scraper_no_movie_text">В настоящее время у вас нет постера и описания для ваших фильмов</string>
@@ -215,7 +215,7 @@
     <string name="preference_display_all_files">Показывать все файлы в браузере</string>
     <string name="preference_display_all_files_summary">Показывать не видеофайлы также</string>
     <string name="info_processing">Проверка свойств медиа…</string>
-    <string name="info_audio">Аудио</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Аудио</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Субтитры</string>
     <string name="info_file">Информация о файле</string>
@@ -265,11 +265,11 @@
     <string name="player_bookmark_set">Установка закладки в</string>
     <string name="player_pref_subtitle_delay_title">Задержка</string>
     <string name="player_pref_audio_speed_title">Скорость воспроизведения</string>
-    <string name="floating_player_restore">Восстановить</string>
-    <string name="floating_player_play">Воспроизвести</string>
-    <string name="floating_player_pause">Пауза</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Восстановить</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Воспроизвести</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Пауза</string>
     <string name="player_pref_audio_delay_title">Задержка аудио</string>
-    <string name="now_playing">Сейчас играет</string>
+    <string name="now_playing" tools:ignore="UnusedResources">Сейчас играет</string>
     <string name="player_window_mode">Режим окна</string>
     <string name="pref_play_mode_title">Режим воспроизведения</string>
     <string name="pref_play_mode_entry_single">Один файл</string>
@@ -346,7 +346,7 @@
     <string name="player_plugin_video_msg">Данный файл содержит <xliff:g id="video">%1$s</xliff:g> формат видео.</string>
     <string name="player_plugin_audio_msg">Данный файл содержит <xliff:g id="audio">%1$s</xliff:g> формат аудио.</string>
     <string name="player_plugin_video_audio_msg">Данный файл содержит <xliff:g id="video">%1$s</xliff:g> формат видео и <xliff:g id="audio">%2$s</xliff:g> формат аудио. </string>
-    <string name="player_plugin_purchase">Перейти в магазин</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Перейти в магазин</string>
     <string name="player_plugin_purchase_google_play_button">Перейти в Google Play</string>
     <string name="plugin_update_required_title">Требуется обновление кодека</string>
     <string name="plugin_update_required_message">Похоже, что у вас установлены дополнительные кодеки для Nova Video Player.\n\nНовая версия Nova Video Player требует обновления этих кодеков.\n\nПожалуйста, перейдите в Google Play для обновления и повторной установки кодеков.</string>
@@ -370,7 +370,7 @@
     <string name="dialog_subloader_nonetwork_title">Нет подключения к Интернету</string>
     <string name="dialog_subloader_nonetwork_message">Для загрузки субтитров требуется подключение к Интернету</string>
     <string name="dialog_subloader_connecting">Подключение к www.opensubtitles.com…</string>
-    <string name="opensubtitles_quota_download_remaining">Ограничение на скачивание OpenSubtitles: %1$d/%2$d осталось</string>
+    <string name="opensubtitles_quota_download_remaining" tools:ignore="PluralsCandidate">Ограничение на скачивание OpenSubtitles: %1$d/%2$d осталось</string>
     <string name="dialog_subloader_credentials">Учётные данные Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Вы должны указать правильное имя пользователя и пароль!</string>
     <string name="toast_subloader_credentials_empty">Предоставьте учетные данные Opensubtitles в настройках, чтобы иметь возможность загружать субтитры</string>
@@ -393,7 +393,7 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
-    <string name="error_permission">Недостаточно прав</string>
+    <string name="error_permission" tools:ignore="UnusedResources">Недостаточно прав</string>
     <string name="error_permission_storage">Nova Video Player требуется разрешение на чтение локальных видео, пожалуйста, предоставьте это разрешение.</string>
     <string name="error_permission_all_file_access">Nova Video Player требуется доступ к внешнему хранилищу для корректной работы с локальными видео/NFO файлами. Пожалуйста, предоставьте это разрешение.</string>
     <string name="allow">Разрешить</string>
@@ -414,7 +414,7 @@
     <string name="protocol_prompt">Тип протокола</string>
     <string name="remove_from_shortcuts">Удалить выборку</string>
     <string name="shortcut_removed">Ярлык %s удален</string>
-    <string name="server_not_available">Сервер недоступен</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">Сервер недоступен</string>
     <string name="network_shortcuts">Сетевые ярлыки</string>
     <string name="shortcut_list_empty">Не создано ярлыков сети.\n\nЧтобы создать ярлыки сетевой папки, нажмите на нужную папку и выберите \"%s\" в верхней панели действий.</string>
     <string name="ftp_shortcut_list_empty">Чтобы создать ярлык сетевой папки, выберите \"%s\" в верхней панели действий при просмотре сервера.</string>
@@ -467,10 +467,6 @@
     <string name="preferences_stream_max_iframe_size_summary">Максимальный размер сжатого i-кадра в Мб</string>
     <string name="preferences_force_passthrough">Принудительная сквозная передача звука</string>
     <string name="preferences_force_passthrough_summary">Если включена, переопределяет настройки AV ресивера для текущего аудиокодека</string>
-    <string name="preferences_playback_speed">Включить изменение скорости</string>
-    <string name="preferences_playback_speed_summary">Включить возможность изменения скорости воспроизведения. Экспериментальная настройка, может привести к рывкам</string>
-    <string name="preferences_audio_speed_audiotrack">Использовать AudioTrack для скорости воспроизведения</string>
-    <string name="preferences_audio_speed_audiotrack_summary">Использовать AudioTrack вместо фильтра FFmpeg atempo для управления скоростью воспроизведения. Экспирементально: может не работать на всех конфигурациях</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Динамическая оценка задержки звука/видео</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Использовать динамическую оценку задержки для лучшей синхронизации звука и видео, особенно с гарнитурой Bluetooth. Отключите, если возникают проблемы с синхронизацией.</string>
     <string name="preferences_enable_spatialization_title">Платформенный преобразователь</string>
@@ -508,6 +504,8 @@
     <string name="summary_list_preference_primary">Выберите язык для загружаемых субтитров</string>
     <string name="favSubLang_title">Язык субтитров по-умолчанию</string>
     <string name="favSubLang_summary">Выберите предпочтительный язык субтитров</string>
+    <string name="subtitles_show_full_for_local_audio_title">Показывать субтитры для аудио на локальном языке</string>
+    <string name="subtitles_show_full_for_local_audio_summary">Отключено по умолчанию, поэтому только принудительные субтитры автоматически выбираются, когда аудио соответствует вашему языку субтитров; включите чтобы также авто-выбирать полные субтитры</string>
     <string name="favAudioLang_title">Предпочитаемый язык</string>
     <string name="favAudioLang_summary">Выберите предпочитаемый язык звуковой дорожки</string>
     <string name="ui_language_title">Выберите язык интерфейса</string>
@@ -738,7 +736,7 @@
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">Войти</string>
     <string name="trakt_list_signin">Войти в Trakt</string>
-    <string name="trakt_signin_summary_logged">Вход выполнен</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">Вход выполнен</string>
     <string name="trakt_signin_summary_logged_error">Ошибка аутентификации</string>
     <string name="trakt_signin_summary">Вход не выполнен</string>
     <string name="trakt_relog_description">Обнаружена проблема с Trakt и учетные данные должны быть сброшены. Пожалуйста, войдите снова.</string>
@@ -748,14 +746,14 @@
     <string name="trakt_live_scrobbling_title">Скробблер</string>
     <string name="trakt_live_scrobbling_summary">Поделиться просмотренными видео в Trakt</string>
     <string name="trakt_getfull_summary">Скробблер Trakt доступен только в платной версией</string>
-    <string name="trakt_sync_collection_title">Синхронизировать коллекции сериалов и фильмов</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">Синхронизировать коллекции сериалов и фильмов</string>
     <string name="trakt_sync_trakt_resume_title">Синхронизировать позицию возобновления trakt</string>
     <string name="trakt_sync_trakt_resume">Выбирать позицию возобновления из Trakt, если она дальше, чем локальная</string>
     <string name="trakt_force_push_title">Принудительно перезакачать в Trakt</string>
     <string name="trakt_force_push_summary">Единоразовая загрузка списка просмотренных и точек возобновления на Trakt</string>
     <string name="trakt_force_pull_title">Принудительно переимпорт из Trakt</string>
     <string name="trakt_force_pull_summary">Одноразовый импорт списка просмотренных и места для возобновления в Trakt</string>
-    <string name="trakt_sync_collection_summary">Автоматически добавлять все видео из Вашей библиотеки Nova в вашу коллекцию Trakt</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">Автоматически добавлять все видео из Вашей библиотеки Nova в вашу коллекцию Trakt</string>
     <string name="trakt_toast_syncing">Синхронизация с Trakt&#8230;</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Все видео</string>
@@ -847,7 +845,7 @@
     <string name="sleep_timer_title">Таймер сна</string>
     <string name="sleep_timer_description">Остановить видео через: </string>
     <string name="picture_in_picture">Картинка в картинке</string>
-    <string name="cast">Трансляция</string>
+    <string name="cast" tools:ignore="UnusedResources">Трансляция</string>
     <string name="cast_audio_background">Звук не будет работать, когда Nova Video Player находится в фоновом режиме</string>
     <string name="help_faq">Справка/FAQ</string>
     <string name="provider_folders">Облако</string>

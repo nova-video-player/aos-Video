@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">רענן רשימת שרתים</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">סריקה ראשונית</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">סריקה ראשונית</string>
     <!-- Library screen, menu item -->
     <string name="search_title">חיפוש</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -58,7 +58,7 @@
     <string name="recently_played_videos">הופעלו לאחרונה</string>
     <string name="video_lists">רשימות ניגון</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">חיצוני</string>
+    <string name="external_storage" tools:ignore="UnusedResources">חיצוני</string>
     <string name="internal_storage">פנימי</string>
     <string name="network_storage">רשת</string>
     <string name="sd_card_storage">כרטיס SD</string>
@@ -81,7 +81,7 @@
     <string name="all_movies">כל הסרטים</string>
     <string name="all_movies_format">כל הסרטים - %d</string>
     <string name="all_animes_format">סרטי אנימציה - %d</string>
-    <string name="all_collections">כל האוספים</string>
+    <string name="all_collections" tools:ignore="UnusedResources">כל האוספים</string>
     <string name="all_collections_format">כל האוספים - %d</string>
     <string name="not_watched_movies_format">לא נצפו - %d</string>
     <string name="not_watched_animes_format">לא נצפו - %d</string>
@@ -160,7 +160,7 @@
     <string name="episode_name">פרק</string>
     <string name="episode_season">עונה</string>
     <string name="episode_specials">מיוחדים</string>
-    <string name="episode_identification">עונה %1$d פרק %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">עונה %1$d פרק %2$d</string>
     <string name="season_identification">עונה %1$d</string>
     <string name="next_episode">הפרק הבא</string>
     <string name="list_episodes">רשימת פרקים</string>
@@ -190,11 +190,11 @@
     <string name="scraper_no_files">אין קבצים לעיבוד</string>
     <string name="scraper_no_new_files">אין קבצים חדשים לעיבוד</string>
     <string name="scraper_no_new_files_in_folder">אין קבצים חדשים לעיבוד בתיקייה זו</string>
-    <string name="scraper_folder_no_files">עם זאת, קיימים עדיין %d קבצי וידאו אשר אין להם מידע שנמצא בעבר.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">עם זאת, קיימים עדיין %d קבצי וידאו אשר אין להם מידע שנמצא בעבר.</string>
     <string name="scraper_folder_no_file">עם זאת, קיים עדיין קובץ וידאו אשר אין לו מידע שנמצא בעבר.</string>
     <string name="scraper_folder_try_again">האם ברצונך לנסות שנית?</string>
     <string name="scraper_notification_title">חיפוש מידע באופן מקוון</string>
-    <string name="scraper_notification_progress">\"%1$d מתוך %2$d קבצים עובדו</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">\"%1$d מתוך %2$d קבצים עובדו</string>
     <string name="scraper_no_episode_found">לא נמצא פרק</string>
     <string name="scraper_suggest_message">באפשרותך לחפש פוסטרים ומידע עבור סרטי הוידאו שלך באופן מקוון ע\"י התפריט \'חפש מידע באופן מקוון\'.</string>
     <string name="scraper_no_movie_text">אין לך פוסטרים או תיאורים לסרטים שלך.</string>
@@ -210,7 +210,7 @@
     <string name="preference_display_all_files">הצג כל הקבצים בדפדפן</string>
     <string name="preference_display_all_files_summary">הצג גם קבצים שאינם וידאו</string>
     <string name="info_processing">בודק מאפייני מדיה…</string>
-    <string name="info_audio">אודיו</string>
+    <string name="info_audio" tools:ignore="UnusedResources">אודיו</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">כתוביות</string>
     <string name="info_file">מידע קובץ</string>
@@ -257,11 +257,11 @@
     <string name="player_bookmark_set">הגדרת סימניה ב- </string>
     <string name="player_pref_subtitle_delay_title">רווח</string>
     <string name="player_pref_audio_speed_title">מהירות ניגון</string>
-    <string name="floating_player_restore">שחזר</string>
-    <string name="floating_player_play">נגן</string>
-    <string name="floating_player_pause">השהה</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">שחזר</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">נגן</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">השהה</string>
     <string name="player_pref_audio_delay_title">עיכוב שמע</string>
-    <string name="now_playing">מתנגן כעת</string>
+    <string name="now_playing" tools:ignore="UnusedResources">מתנגן כעת</string>
     <string name="player_window_mode">תצוגת חלון</string>
     <string name="pref_play_mode_title">מצב הפעלה</string>
     <string name="pref_play_mode_entry_single">בודד</string>
@@ -335,7 +335,7 @@
     <string name="player_plugin_video_msg">קובץ זה מכיל תבנית וידאו של <xliff:g id="video">%1$s</xliff:g>.</string>
     <string name="player_plugin_audio_msg">קובץ זה מכיל תבנית שמע של <xliff:g id="audio">%1$s</xliff:g>.</string>
     <string name="player_plugin_video_audio_msg">קובץ זה מכיל תבנית וידאו של <xliff:g id="video">%1$s</xliff:g> ותבנית שמע של <xliff:g id="audio">%2$s</xliff:g>.</string>
-    <string name="player_plugin_purchase">עבור לחנות</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">עבור לחנות</string>
     <string name="player_plugin_purchase_google_play_button">עבור אל Google Play</string>
     <string name="plugin_update_required_title">נדרש עדכון מקודד</string>
     <string name="plugin_update_required_message">נראש שכבר מותקנים לך מקודדים נוספים עובר Nova Video Player.\n\n
@@ -361,7 +361,7 @@
     <string name="dialog_subloader_nonetwork_title">אין חיבור אינטרנט</string>
     <string name="dialog_subloader_nonetwork_message">חיבור אינטרנט נדרש ע\"מ להוריד כתוביות</string>
     <string name="dialog_subloader_connecting">מתחבר אל www.opensubtitles.com…</string>
-    <string name="opensubtitles_quota_download_remaining">מכסת הורדה של OpenSubtitles: נותר %1$d/%2$d</string>
+    <string name="opensubtitles_quota_download_remaining" tools:ignore="PluralsCandidate">מכסת הורדה של OpenSubtitles: נותר %1$d/%2$d</string>
     <string name="dialog_subloader_credentials">פרטי משתמש Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">עליך לציין שם משתמש וסיסמה תקפים!</string>
     <string name="toast_subloader_credentials_empty">הזן את פרטי משתמש ה-opensubtitles שלך בהגדרות, על מנת שתוכל להוריד כתוביות</string>
@@ -384,7 +384,7 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">“%s” </string>
-    <string name="error_permission">אין מספיק הרשאות</string>
+    <string name="error_permission" tools:ignore="UnusedResources">אין מספיק הרשאות</string>
     <string name="error_permission_storage">Nova Video Player צריך את הרשאת האחסון כדי לקרוא קבצי וידאו מקומיים, אנא הענק הרשאה זו.</string>
     <string name="error_permission_all_file_access">Nova Video Player צריך את הרשאת הניהול של כל האחסון החיצוני, כדי לנהל קבצי וידאו/NFO מקומיים בצורה נכונה, אנא הענק הרשאה זו.</string>
     <string name="allow">אפשר</string>
@@ -405,7 +405,7 @@
     <string name="protocol_prompt">סוג פרוטוקול</string>
     <string name="remove_from_shortcuts">הסר קיצור דרך</string>
     <string name="shortcut_removed">קיצור דרך %s הוסר</string>
-    <string name="server_not_available">השרת כעת אינו זמין</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">השרת כעת אינו זמין</string>
     <string name="network_shortcuts">קיצורי דרך רשת</string>
     <string name="shortcut_list_empty">לא נוצרו קיצורי דרך לרשת.\n\nכדי ליצור קיצורי דרך לתיקיות מרוחקות מועדפות, לחץ לחיצה ארוכה על תיקייה ובחר \"%s\" בתפריט הראשי.</string>
     <string name="ftp_shortcut_list_empty">כדי ליצור קיצורי דרך לתיקיות מרוחקות מועדפות, בחר \"%s\" בתפריט הראשי כאשר אתה מדפדף בשרת.</string>
@@ -455,8 +455,6 @@
     <string name="preferences_stream_max_iframe_size_summary">גודל מקסימלי ל i-frame דחוס ב-MB</string>
     <string name="preferences_force_passthrough">כפה העברת אודיו ישירה</string>
     <string name="preferences_force_passthrough_summary">אם העברה ישירה מופעלת, כפה אותה למרות שלא אושרה כנתמכת על ידי הרסיבר, במקום לבדוק את יכולות הרסיבר</string>
-    <string name="preferences_playback_speed">אפשר מהירות ניגון</string>
-    <string name="preferences_playback_speed_summary">אפשר יכולת שינוי מהירות ניגון. ⚠ ניסיוני, עלול לגרום לקפיצות בניגון</string>
     <string name="preferences_disable_downmix_title">השבת שנמוך אודיו לסטריאו</string>
     <string name="preferences_disable_downmix_summary">פענח תמיד את כל הערוצים ותן לאנדרואיד לבצע שנמוך כתלות ביכולות פלט האודיו (יכול לגרום לאיבוד ערוצי קול)</string>
     <string name="preferences_enable_downmix_androidtv_title">כפה שנמוך אודיו לסטריאו</string>
@@ -676,7 +674,7 @@
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">התחבר</string>
     <string name="trakt_list_signin">התחבר ל-Trakt</string>
-    <string name="trakt_signin_summary_logged">מחובר</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">מחובר</string>
     <string name="trakt_signin_summary_logged_error">שגיאת אימות</string>
     <string name="trakt_signin_summary">לא מחובר</string>
     <string name="trakt_relog_description">זוהתה בעיה עם Trakt ויש לאתחל את פרטי המשתמש, אנא התחבר מחדש.</string>
@@ -686,10 +684,10 @@
     <string name="trakt_live_scrobbling_title">מעקב צפייה חי</string>
     <string name="trakt_live_scrobbling_summary">שתף קבצי וידאו נצפים ב-Trakt</string>
     <string name="trakt_getfull_summary">מעקב צפייה של Trakt זמין רק בגרסה בתשלום</string>
-    <string name="trakt_sync_collection_title">סנכרון אוסף הסדרות והסרטים</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">סנכרון אוסף הסדרות והסרטים</string>
     <string name="trakt_sync_trakt_resume_title">סנכרון נקודת המשך</string>
     <string name="trakt_sync_trakt_resume">השתמש בנקודת המשך של Trakt אם היא יותר מתקדמת מהמקומית</string>
-    <string name="trakt_sync_collection_summary">הוסף אוטומטית את כל קבצי הוידאו מספריית Nova שלך לאוסף ה-Trakt שלך</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">הוסף אוטומטית את כל קבצי הוידאו מספריית Nova שלך לאוסף ה-Trakt שלך</string>
     <string name="trakt_toast_syncing">מסתנכרן עם Trakt&#8230;</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">כל הוידאו</string>
@@ -781,7 +779,7 @@
     <string name="sleep_timer_title">טיימר שינה</string>
     <string name="sleep_timer_description">הפסק וידאו אחרי: </string>
     <string name="picture_in_picture">תמונה בתוך תמונה</string>
-    <string name="cast">הקרנה</string>
+    <string name="cast" tools:ignore="UnusedResources">הקרנה</string>
     <string name="cast_audio_background">השמע לא יעבוד כאשר Nova Video Player רץ ברקע</string>
     <string name="help_faq">עזרה / שאלות נפוצות</string>
     <string name="provider_folders">ענן</string>

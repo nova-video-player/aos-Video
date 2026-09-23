@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Ανανέωση λίστας εξυπηρετητών</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Αρχική σάρωση</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Αρχική σάρωση</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Αναζήτηση</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -58,7 +58,7 @@
     <string name="recently_played_videos">Έπαιξαν πρόσφατα</string>
     <string name="video_lists">Λίστες αναπαραγωγής</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Εξωτερικός</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Εξωτερικός</string>
     <string name="internal_storage">Εσωτερικός</string>
     <string name="network_storage">Δίκτυο</string>
     <string name="sd_card_storage">Κάρτα SD</string>
@@ -81,7 +81,7 @@
     <string name="all_movies">Όλες οι ταινίες</string>
     <string name="all_movies_format">Όλες οι ταινίες -  %d</string>
     <string name="all_animes_format">Ταινίες κινουμένων σχεδίων -  %d</string>
-    <string name="all_collections">Όλες οι συλλογές</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Όλες οι συλλογές</string>
     <string name="all_collections_format">Όλες οι συλλογές -  %d</string>
     <string name="not_watched_movies_format">Δεν παρακολουθήθηκε -  %d</string>
     <string name="not_watched_animes_format">Δεν παρακολουθήθηκε -  %d</string>
@@ -160,7 +160,7 @@
     <string name="episode_name">Επεισόδιο</string>
     <string name="episode_season">Σεζόν</string>
     <string name="episode_specials">Σπέσιαλ</string>
-    <string name="episode_identification">Σεζόν %1$d Επεισόδιο %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">Σεζόν %1$d Επεισόδιο %2$d</string>
     <string name="season_identification">%1$dος/-ός κύκλος</string>
     <string name="next_episode">Επόμενο επεισόδιο</string>
     <string name="list_episodes">Λίστα επεισοδίων</string>
@@ -185,11 +185,11 @@
     <string name="scraper_no_files">Δεν υπάρχουν αρχεία προς επεξεργασία</string>
     <string name="scraper_no_new_files">Δεν υπάρχουν νέα αρχεία προς επεξεργασία</string>
     <string name="scraper_no_new_files_in_folder">Δεν υπάρχουν νέα αρχεία προς επεξεργασία σε αυτόν το φάκελο</string>
-    <string name="scraper_folder_no_files">Ωστόσο, υπάρχουν ακόμα %d βίντεο για τα οποία δε βρέθηκαν πληροφορίες στο παρελθόν.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">Ωστόσο, υπάρχουν ακόμα %d βίντεο για τα οποία δε βρέθηκαν πληροφορίες στο παρελθόν.</string>
     <string name="scraper_folder_no_file">Ωστόσο, υπάρχει ακόμα ένα βίντεο για το οποίο δε βρέθηκαν πληροφορίες στο παρελθόν.</string>
     <string name="scraper_folder_try_again">Θα θέλατε να προσπαθήσετε ξανά;</string>
     <string name="scraper_notification_title">Αναζήτηση πληροφοριών στο δίκτυο</string>
-    <string name="scraper_notification_progress">\"%1$d από %2$d αρχεία επεξεργάστηκαν</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">\"%1$d από %2$d αρχεία επεξεργάστηκαν</string>
     <string name="scraper_no_episode_found">Δεν βρέθηκε επεισόδιο</string>
     <string name="scraper_suggest_message">Μπορείτε να αναζητήσετε αφίσες και πληροφορίες στο διαδίκτυο για τα βίντεό σας μέσω του μενού \"Αναζήτηση πληροφοριών στο διαδίκτυο\".</string>
     <string name="scraper_no_movie_text">Προς το παρόν δεν έχετε καμία αφίσα και περιγραφή για τις ταινίες σας</string>
@@ -205,7 +205,7 @@
     <string name="preference_display_all_files">Εμφάνιση όλων των αρχείων στον περιηγητή</string>
     <string name="preference_display_all_files_summary">Εμφάνιση επίσης και αρχείων που δεν είναι βίντεο</string>
     <string name="info_processing">Έλεγχος ιδιοτήτων πολυμέσων…</string>
-    <string name="info_audio">Ήχος</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Ήχος</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Υπότιτλος</string>
     <string name="info_file">Πληροφορίες αρχείου</string>
@@ -234,11 +234,11 @@
     <string name="player_bookmark_set">Ο σελιδοδείκτης ορίστηκε στο</string>
     <string name="player_pref_subtitle_delay_title">Καθυστέρηση</string>
     <string name="player_pref_audio_speed_title">Ταχύτητα αναπαραγωγής</string>
-    <string name="floating_player_restore">Επαναφορά</string>
-    <string name="floating_player_play">Αναπαραγωγή</string>
-    <string name="floating_player_pause">Παύση</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Επαναφορά</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Αναπαραγωγή</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Παύση</string>
     <string name="player_pref_audio_delay_title">Καθυστέρηση ήχου</string>
-    <string name="now_playing">Αναπαραγωγή σε εξέλιξη</string>
+    <string name="now_playing" tools:ignore="UnusedResources">Αναπαραγωγή σε εξέλιξη</string>
     <string name="player_window_mode">Λειτουργία παραθύρου</string>
     <string name="pref_play_mode_title">Λειτουργία αναπαραγωγής</string>
     <string name="pref_play_mode_entry_single">Μονό</string>
@@ -307,7 +307,7 @@
     <string name="player_plugin_video_msg">Αυτό το αρχείο περιέχει μια <xliff:g id="video">%1$s</xliff:g> μορφή βίντεο.</string>
     <string name="player_plugin_audio_msg">Αυτό το αρχείο περιέχει μια <xliff:g id="audio">%1$s</xliff:g> μορφή ήχου.</string>
     <string name="player_plugin_video_audio_msg">Αυτό το αρχείο περιέχει μια <xliff:g id="video">%1$s</xliff:g> μορφή βίντεο και μια <xliff:g id="audio">%2$s</xliff:g> μορφή ήχου.</string>
-    <string name="player_plugin_purchase">Μετάβαση στο Κατάστημα</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Μετάβαση στο Κατάστημα</string>
     <string name="player_plugin_purchase_google_play_button">Μετάβαση στο Google Play</string>
     <string name="plugin_update_required_title">Απαιτείται ενημέρωση Codec</string>
     <string name="plugin_update_required_message">Φαίνεται ότι έχετε ήδη εγκατεστημένους επιπλέον κωδικοποιητές για το Nova Video Player.\n\nΑυτή η νέα έκδοση του Nova Video Player απαιτεί ενημέρωση αυτών των κωδικοποιητών.\n\nΠαρακαλώ πηγαίνετε στο Google Play για να ενημερώσετε και να επανεγκαταστήσετε τους κωδικοποιητές.</string>
@@ -331,7 +331,7 @@
     <string name="dialog_subloader_nonetwork_title">Δεν υπάρχει σύνδεση στο διαδίκτυο</string>
     <string name="dialog_subloader_nonetwork_message">Απαιτείται σύνδεση στο διαδίκτυο για τη λήψη υποτίτλων</string>
     <string name="dialog_subloader_connecting">Σύνδεση στο www.opensubtitles.com…</string>
-    <string name="opensubtitles_quota_download_remaining">Όριο λήψης OpenSubtitles: %1$d/%2$d απομένει</string>
+    <string name="opensubtitles_quota_download_remaining" tools:ignore="PluralsCandidate">Όριο λήψης OpenSubtitles: %1$d/%2$d απομένει</string>
     <string name="dialog_subloader_credentials">Πιστοποιητικά Opensubtitles</string>
     <string name="dialog_subloader_credentials_empty">Πρέπει να εισαγάγετε έγκυρο όνομα χρήστη και κωδικό πρόσβασης!</string>
     <string name="toast_subloader_credentials_empty">Παρέχετε τα διαπιστευτήρια opensubtitles σας στις ρυθμίσεις για να μπορείτε να κατεβάσετε υπότιτλους</string>
@@ -354,7 +354,7 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
-    <string name="error_permission">Δεν υπάρχουν αρκετά δικαιώματα</string>
+    <string name="error_permission" tools:ignore="UnusedResources">Δεν υπάρχουν αρκετά δικαιώματα</string>
     <string name="error_permission_storage">Το Nova Video Player χρειάζεται άδεια προσβασης στον αποθηκευτικό χώρο για να διαβάσει τοπικά βίντεο, παρακαλώ, παραχωρήστε αυτό το δικαίωμα.</string>
     <string name="error_permission_all_file_access">Το Nova Video Player χρειάζεται όλα τα δικαιώματα διαχείρισης εξωτερικού χώρου αποθήκευσης για τη σωστή διαχείριση τοπικών βίντεο/αρχείων NFO, παρακαλώ, παραχωρήστε αυτό το δικαίωμα.</string>
     <string name="allow">Να επιτρέπεται</string>
@@ -374,7 +374,7 @@
     <string name="protocol_prompt">Τύπος πρωτοκόλλου</string>
     <string name="remove_from_shortcuts">Αφαίρεση συντόμευσης</string>
     <string name="shortcut_removed">Η συντόμευση %s αφαιρέθηκε</string>
-    <string name="server_not_available">Ο διακομιστής δεν είναι διαθέσιμος αυτή τη στιγμή.</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">Ο διακομιστής δεν είναι διαθέσιμος αυτή τη στιγμή.</string>
     <string name="network_shortcuts">Συντομεύσεις δικτύου</string>
     <string name="shortcut_list_empty">Δεν δημιουργήθηκαν συντομεύσεις δικτύου.\n\nΓια να δημιουργήσετε συντομεύσεις στους αγαπημένους σας απομακρυσμένους φακέλους κάντε παρατεταμένο κλικ στους φακέλους στόχων και επιλέξτε \"%s\" στην επάνω γραμμή ενεργειών.</string>
     <string name="ftp_shortcut_list_empty">Για να δημιουργήσετε συντομεύσεις στους αγαπημένους σας απομακρυσμένους φακέλους, επιλέξτε \"%s\" στην επάνω γραμμή ενεργειών κατά την περιήγηση σε έναν διακομιστή.</string>
@@ -423,7 +423,6 @@
     <string name="preferences_stream_max_iframe_size_title">Μέγιστο μέγεθος i-frame</string>
     <string name="preferences_stream_max_iframe_size_summary">Μέγιστο μέγεθος συμπιεσμένου i-frame σε MB</string>
     <string name="preferences_force_passthrough">Αναγκαστική διέλευση ήχου</string>
-    <string name="preferences_playback_speed">Ενεργοποίηση αλλαγής ταχύτητας αναπαραγωγής</string>
     <string name="preferences_disable_downmix_title">Απενεργοποίηση μείξης στερεοφωνικού ήχου</string>
     <string name="preferences_enable_downmix_androidtv_title">Εξαναγκασμός μείξης στερεοφωνικού ήχου</string>
     <string name="preferences_allow_3rd_party_player">Να επιτρέπεται η χρήση άλλου προγράμματος αναπαραγωγής βίντεο</string>
@@ -601,10 +600,10 @@
     <string name="trakt_signin_title">Είσοδος</string>
     <string name="trakt_wipe_title">Αποσύνδεση από το Trakt.tv</string>
     <string name="trakt_live_scrobbling_title">Ζωντανό scrobbler</string>
-    <string name="trakt_sync_collection_title">Συγχρονισμός συλλογών Τηλεοπτικών εκπομπών και Ταινιών</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">Συγχρονισμός συλλογών Τηλεοπτικών εκπομπών και Ταινιών</string>
     <string name="trakt_sync_trakt_resume_title">Συγχρονισμός θέσης συνέχισης trakt</string>
     <string name="trakt_sync_trakt_resume">Χρήση της θέσης συνέχισης του trakt όταν είναι πιο προχωρημένο από το τοπικό</string>
-    <string name="trakt_sync_collection_summary">Αυτόματη προσθήκη όλων των βίντεο από τη βιβλιοθήκη Nova στη συλλογή σας Trakt</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">Αυτόματη προσθήκη όλων των βίντεο από τη βιβλιοθήκη Nova στη συλλογή σας Trakt</string>
     <string name="trakt_toast_syncing">Συγχρονισμός με Trakt&#8230;</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Όλα τα βίντεο</string>
@@ -693,7 +692,7 @@
     <string name="sleep_timer_title">Xρονοδιακόπτης ύπνου</string>
     <string name="sleep_timer_description">Διακοπή βίντεο μετά: </string>
     <string name="picture_in_picture">Εικόνα σε Εικόνα</string>
-    <string name="cast">Μετάδοση</string>
+    <string name="cast" tools:ignore="UnusedResources">Μετάδοση</string>
     <string name="cast_audio_background">Ο ήχος δεν θα λειτουργεί όσο το Nova Video Player βρίσκεται στο παρασκήνιο</string>
     <string name="help_faq">Βοήθεια / Συχνές Ερωτήσεις</string>
     <string name="provider_folders">Cloud</string>

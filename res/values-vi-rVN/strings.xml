@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Làm mới danh sách máy chủ</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Quét ban đầu</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Quét ban đầu</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Tìm kiếm</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -58,7 +58,7 @@
     <string name="recently_played_videos">Đã phát gần đây</string>
     <string name="video_lists">Danh sách phát</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Bộ nhớ ngoài</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Bộ nhớ ngoài</string>
     <string name="internal_storage">Bộ nhớ trong</string>
     <string name="network_storage">Mạng</string>
     <string name="sd_card_storage">Thẻ SD</string>
@@ -81,7 +81,7 @@
     <string name="all_movies">Tất cả phim</string>
     <string name="all_movies_format">Tất cả phim  -  %d</string>
     <string name="all_animes_format">Phim hoạt hình -  %d</string>
-    <string name="all_collections">Tất cả bộ sưu tập</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Tất cả bộ sưu tập</string>
     <string name="all_collections_format">Tất cả bộ sưu tập  -  %d</string>
     <string name="not_watched_movies_format">Chưa xem  -  %d</string>
     <string name="not_watched_animes_format">Chưa xem  -  %d</string>
@@ -160,7 +160,7 @@
     <string name="episode_name">Tập</string>
     <string name="episode_season">Mùa</string>
     <string name="episode_specials">Đặc biệt</string>
-    <string name="episode_identification">Mùa %1$d Tập %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">Mùa %1$d Tập %2$d</string>
     <string name="season_identification">Mùa %1$d</string>
     <string name="next_episode">Tập tiếp theo</string>
     <string name="list_episodes">Danh sách tập</string>
@@ -188,11 +188,11 @@
     <string name="scraper_no_files">Không có tệp nào để xử lý</string>
     <string name="scraper_no_new_files">Không có tệp mới nào để xử lý</string>
     <string name="scraper_no_new_files_in_folder">Không có tệp mới nào để xử lý trong thư mục này</string>
-    <string name="scraper_folder_no_files">Tuy nhiên vẫn có %d băng hình mà trước đây không tìm thấy thông tin nào.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">Tuy nhiên vẫn có %d băng hình mà trước đây không tìm thấy thông tin nào.</string>
     <string name="scraper_folder_no_file">Tuy nhiên vẫn còn một băng hình mà trước đây không tìm thấy thông tin nào.</string>
     <string name="scraper_folder_try_again">Bạn có muốn thử lại không?</string>
     <string name="scraper_notification_title">Tìm kiếm thông tin trực tuyến</string>
-    <string name="scraper_notification_progress">\"%1$d trong số %2$d tệp đã được xử lý</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">\"%1$d trong số %2$d tệp đã được xử lý</string>
     <string name="scraper_no_episode_found">Không tìm thấy tập nào</string>
     <string name="scraper_suggest_message">Bạn có thể tìm kiếm áp phích và thông tin trực tuyến cho băng hình của bạn bằng menu \'Tìm kiếm thông tin trực tuyến\'.</string>
     <string name="scraper_no_movie_text">Hiện tại bạn không có áp phích và mô tả cho phim của bạn</string>
@@ -208,7 +208,7 @@
     <string name="preference_display_all_files">Hiện mọi tệp trong trình duyệt</string>
     <string name="preference_display_all_files_summary">Cũng hiện những tệp không phải băng hình</string>
     <string name="info_processing">Đang kiểm tra thuộc tính phương tiện…</string>
-    <string name="info_audio">Âm thanh</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Âm thanh</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Phụ đề</string>
     <string name="info_file">Thông tin tệp</string>
@@ -248,11 +248,11 @@
     <string name="player_bookmark_set">Đã đặt dấu trang tại</string>
     <string name="player_pref_subtitle_delay_title">Độ trễ</string>
     <string name="player_pref_audio_speed_title">Tốc độ phát lại</string>
-    <string name="floating_player_restore">Khôi phục</string>
-    <string name="floating_player_play">Phát</string>
-    <string name="floating_player_pause">Tạm dừng</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Khôi phục</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Phát</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Tạm dừng</string>
     <string name="player_pref_audio_delay_title">Độ trễ âm thanh</string>
-    <string name="now_playing">Hiện đang phát</string>
+    <string name="now_playing" tools:ignore="UnusedResources">Hiện đang phát</string>
     <string name="player_window_mode">Chế độ cửa sổ</string>
     <string name="pref_play_mode_title">Chế độ phát</string>
     <string name="pref_play_mode_entry_single">Đơn</string>
@@ -329,7 +329,7 @@
     <string name="player_plugin_video_msg">Tệp này chứa định dạng băng hình <xliff:g id="video">%1$s</xliff:g>.</string>
     <string name="player_plugin_audio_msg">Tệp này chứa định dạng âm thanh <xliff:g id="audio">%1$s</xliff:g>.</string>
     <string name="player_plugin_video_audio_msg">Tệp này chứa một định dạng băng hình <xliff:g id="video">%1$s</xliff:g> và một định dạng âm thanh <xliff:g id="audio">%2$s</xliff:g>.</string>
-    <string name="player_plugin_purchase">Đi đến cửa hàng</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Đi đến cửa hàng</string>
     <string name="player_plugin_purchase_google_play_button">Đi đến Google Play</string>
     <string name="plugin_update_required_title">Yêu cầu cập nhật codec</string>
     <string name="plugin_update_required_message">Có vẻ như bạn đã cài đặt thêm bộ giải mã cho Trình phát băng hình Nova.\n\nPhiên bản mới này của Trình phát băng hình Nova yêu cầu cập nhật các bộ giải mã này.\n\nHãy vào Google Play để cập nhật và cài đặt lại bộ giải mã.</string>
@@ -353,7 +353,7 @@
     <string name="dialog_subloader_nonetwork_title">Không có internet</string>
     <string name="dialog_subloader_nonetwork_message">Cần có kết nối internet để tải xuống phụ đề</string>
     <string name="dialog_subloader_connecting">Đang kết nối đến www.opensubtitles.com…</string>
-    <string name="opensubtitles_quota_download_remaining">Hạn ngạch tải xuống OpenSubtitles: %1$d/%2$d còn lại</string>
+    <string name="opensubtitles_quota_download_remaining" tools:ignore="PluralsCandidate">Hạn ngạch tải xuống OpenSubtitles: %1$d/%2$d còn lại</string>
     <string name="dialog_subloader_credentials">Thông tin đăng nhập OpenSubtitles</string>
     <string name="dialog_subloader_credentials_empty">Bạn phải chỉ định tên người dùng và mật khẩu hợp lệ!</string>
     <string name="toast_subloader_credentials_empty">Cung cấp thông tin đăng nhập opensubtitles của bạn trong cài đặt để có thể tải xuống thêm phụ đề</string>
@@ -376,7 +376,7 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
-    <string name="error_permission">Không đủ quyền</string>
+    <string name="error_permission" tools:ignore="UnusedResources">Không đủ quyền</string>
     <string name="error_permission_storage">Trình phát băng hình Nova cần có quyền lưu trữ để đọc băng hình cục bộ, vui lòng cấp quyền này.</string>
     <string name="error_permission_all_file_access">Trình phát băng hình Nova cần tất cả quyền quản lý bộ nhớ ngoài để quản lý đúng cách các tệp băng hình/NFO cục bộ, vui lòng cấp quyền này.</string>
     <string name="allow">Cho phép</string>
@@ -397,7 +397,7 @@
     <string name="protocol_prompt">Loại giao thức</string>
     <string name="remove_from_shortcuts">Xóa phím tắt</string>
     <string name="shortcut_removed">Đã loại bỏ lối tắt %s</string>
-    <string name="server_not_available">Máy chủ hiện không khả dụng</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">Máy chủ hiện không khả dụng</string>
     <string name="network_shortcuts">Các lối tắt mạng</string>
     <string name="shortcut_list_empty">Không có lối tắt mạng nào được tạo.\n\nĐể tạo lối tắt đến các thư mục từ xa yêu thích của bạn, nhấn lâu vào các thư mục đích và chọn \"%s\" trong thanh tác vụ trên cùng.</string>
     <string name="ftp_shortcut_list_empty">Để tạo lối tắt đến các thư mục từ xa yêu thích của bạn, hãy chọn \"%s\" trong thanh tác vụ trên cùng khi duyệt máy chủ.</string>
@@ -449,8 +449,6 @@
     <string name="preferences_stream_max_iframe_size_summary">Kích thước khung nội tuyến nén tối đa tính bằng MB</string>
     <string name="preferences_force_passthrough">Buộc truyền tải âm thanh</string>
     <string name="preferences_force_passthrough_summary">Nếu tính năng truyền tải được bật, hãy thực thi nó ngay cả khi codec âm thanh không được xác nhận quyền sở hữu được hỗ trợ bởi bộ thu AV thay vì kiểm tra khả năng của bộ thu AV</string>
-    <string name="preferences_playback_speed">Kích hoạt tốc độ phát lại</string>
-    <string name="preferences_playback_speed_summary">Cho phép khả năng thay đổi tốc độ phát lại. ⚠ Thử nghiệm có thể khiến băng hình bị giật</string>
     <string name="preferences_disable_downmix_title">Tắt kết hợp thành âm thanh nổi</string>
     <string name="preferences_disable_downmix_summary">Luôn giải mã tất cả các kênh và để Android kết hợp tùy thuộc vào khả năng đầu ra âm thanh (có thể dẫn đến mất kênh thoại)</string>
     <string name="preferences_enable_downmix_androidtv_title">Buộc kết hợp thành âm thanh nổi</string>
@@ -673,7 +671,7 @@
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">Đăng nhập</string>
     <string name="trakt_list_signin">Đăng nhập vào Trakt</string>
-    <string name="trakt_signin_summary_logged">Đã đăng nhập</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">Đã đăng nhập</string>
     <string name="trakt_signin_summary_logged_error">Lỗi xác thực</string>
     <string name="trakt_signin_summary">Chưa đăng nhập</string>
     <string name="trakt_relog_description">Phát hiện một sự cố với Trakt và thông tin xác thực phải được đặt lại, vui lòng đăng nhập lại.</string>
@@ -683,10 +681,10 @@
     <string name="trakt_live_scrobbling_title">Scrobbler trực tiếp</string>
     <string name="trakt_live_scrobbling_summary">Chia sẻ các cuốn phim đang được xem trên Trakt</string>
     <string name="trakt_getfull_summary">Trakt scrobbler chỉ có sẵn với phiên bản trả phí</string>
-    <string name="trakt_sync_collection_title">Đồng bộ hóa bộ sưu tập chương trình TV và phim</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">Đồng bộ hóa bộ sưu tập chương trình TV và phim</string>
     <string name="trakt_sync_trakt_resume_title">Đồng bộ hóa vị trí tiếp tục trakt</string>
     <string name="trakt_sync_trakt_resume">Sử dụng vị trí tiếp tục từ trakt khi nâng cao hơn là từ cục bộ</string>
-    <string name="trakt_sync_collection_summary">Tự động thêm tất cả cuộn phim từ thư viện Nova vào bộ sưu tập Trakt của bạn</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">Tự động thêm tất cả cuộn phim từ thư viện Nova vào bộ sưu tập Trakt của bạn</string>
     <string name="trakt_toast_syncing">Đang đồng bộ hóa với Trakt&#8230;</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Tất cả băng hình</string>
@@ -778,7 +776,7 @@
     <string name="sleep_timer_title">Hẹn giờ ngủ</string>
     <string name="sleep_timer_description">Dừng băng hình sau: </string>
     <string name="picture_in_picture">Ảnh trong ảnh</string>
-    <string name="cast">Truyền</string>
+    <string name="cast" tools:ignore="UnusedResources">Truyền</string>
     <string name="cast_audio_background">Âm thanh sẽ không hoạt động khi Trình phát băng hình Nova ở chế độ nền</string>
     <string name="help_faq">Trợ giúp/Hỏi đáp</string>
     <string name="provider_folders">Đám mây</string>

@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Uppdatera serverlistan</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Första skanning</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Första skanning</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Sök</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -58,7 +58,7 @@
     <string name="recently_played_videos">Nyligen spelade</string>
     <string name="video_lists">Spellistor</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Extern</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Extern</string>
     <string name="internal_storage">Intern</string>
     <string name="network_storage">Nätverk</string>
     <string name="sd_card_storage">SD-kort</string>
@@ -81,7 +81,7 @@
     <string name="all_movies">Alla filmer</string>
     <string name="all_movies_format">Alla filmer -  %d</string>
     <string name="all_animes_format">Animationsfilmer -  %d</string>
-    <string name="all_collections">Alla samlingar</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Alla samlingar</string>
     <string name="all_collections_format">Alla samlingar -  %d</string>
     <string name="movies_by_alpha">Filmer alfabetiskt</string>
     <string name="movies_by_genre">Filmer efter genre</string>
@@ -143,7 +143,7 @@
     <string name="episode_name">Avsnitt</string>
     <string name="episode_season">Säsong</string>
     <string name="episode_specials">Specialare</string>
-    <string name="episode_identification">Säsong %1$d Avsnitt %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">Säsong %1$d Avsnitt %2$d</string>
     <string name="season_identification">Säsong %1$d</string>
     <string name="next_episode">Nästa avsnitt</string>
     <string name="list_episodes">Lista avsnitt</string>
@@ -178,11 +178,11 @@
     <string name="player_subtitle_track_toast">Undertext spår:</string>
     <string name="player_bookmark_set">Bokmärke inställt den</string>
     <string name="player_pref_subtitle_delay_title">Fördröjning</string>
-    <string name="floating_player_restore">Återställ</string>
-    <string name="floating_player_play">Spela</string>
-    <string name="floating_player_pause">Pausa</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Återställ</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Spela</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Pausa</string>
     <string name="player_pref_audio_delay_title">Ljudfördröjning</string>
-    <string name="now_playing">Nu spelas</string>
+    <string name="now_playing" tools:ignore="UnusedResources">Nu spelas</string>
     <string name="player_window_mode">Fönsterläge</string>
     <string name="pref_play_mode_title">Uppspelningsläge</string>
     <string name="pref_play_mode_entry_single">Singel</string>
@@ -225,7 +225,7 @@
     <string name="player_plugin_video_msg">Filen innehåller ett <xliff:g id="video">%1$s</xliff:g> videoformat.</string>
     <string name="player_plugin_audio_msg">Den här filen innehåller ett <xliff:g id="audio">%1$s</xliff:g> ljudformat.</string>
     <string name="player_plugin_video_audio_msg">Den här filen innehåller ett <xliff:g id="video">%1$s</xliff:g> videoformat och ett <xliff:g id="audio">%2$s</xliff:g> ljudformat.</string>
-    <string name="player_plugin_purchase">Gå till butiken</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Gå till butiken</string>
     <string name="player_plugin_purchase_google_play_button">Gå till Google Play</string>
     <string name="plugin_update_required_title">Kodekuppdatering krävs</string>
     <string name="plugin_update_required_message">Det verkar som om du redan har ytterligare codecs installerat för Nova Video Player.\n\nDenna nya version av Nova Video Player kräver en uppdatering av dessa codecs.\n\nGå till Google Play för att uppdatera och installera om codecs.</string>

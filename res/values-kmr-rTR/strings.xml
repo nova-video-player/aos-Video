@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Lîsteya serveran nû bike</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Lênihêrandina pêşîn</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Lênihêrandina pêşîn</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Lê bigere</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -58,7 +58,7 @@
     <string name="recently_played_videos">Di van demên dawî de lîstin</string>
     <string name="video_lists">Lîsteya lêdanan</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Derveyî</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Derveyî</string>
     <string name="internal_storage">Hundirî</string>
     <string name="network_storage">Tor</string>
     <string name="sd_card_storage">Karta SD</string>
@@ -81,7 +81,7 @@
     <string name="all_movies">Hemû fîlm</string>
     <string name="all_movies_format">Hemû fîlm - %d</string>
     <string name="all_animes_format">Fîlmên anîmasyonê - %d</string>
-    <string name="all_collections">Hemû berhevok</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Hemû berhevok</string>
     <string name="all_collections_format">Hemû berhevokan - %d</string>
     <string name="not_watched_movies_format">Nehatiye temaşekirin - %d</string>
     <string name="not_watched_animes_format">Nehatiye temaşekirin - %d</string>
@@ -156,7 +156,7 @@
     <string name="episode_name">Xelek</string>
     <string name="episode_season">Demsal</string>
     <!-- To be translated only in case there is a localized IMDB -->
-    <string name="info_audio">Deng</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Deng</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Binnivîs</string>
     <string name="info_file">Agahdariya pelê</string>

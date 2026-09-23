@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Serverlijst opnieuw laden</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Initiële scan</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Initiële scan</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Zoeken</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -58,7 +58,7 @@
     <string name="recently_played_videos">Onlangs afgespeeld</string>
     <string name="video_lists">Afspeellijsten</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Extern</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Extern</string>
     <string name="internal_storage">Intern</string>
     <string name="network_storage">Netwerk</string>
     <string name="sd_card_storage">SD-kaart</string>
@@ -81,7 +81,7 @@
     <string name="all_movies">Alle films</string>
     <string name="all_movies_format">Alle films -  %d</string>
     <string name="all_animes_format">Animatie films -  %d</string>
-    <string name="all_collections">Alle collecties</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Alle collecties</string>
     <string name="all_collections_format">Alle collecties -  %d</string>
     <string name="not_watched_movies_format">Niet bekeken -  %d</string>
     <string name="not_watched_animes_format">Niet bekeken -  %d</string>
@@ -149,7 +149,7 @@
     <string name="episode_name">Aflevering</string>
     <string name="episode_season">Seizoen</string>
     <string name="episode_specials">Specials</string>
-    <string name="episode_identification">Seizoen %1$d aflevering %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">Seizoen %1$d aflevering %2$d</string>
     <string name="season_identification">Seizoen %1$d</string>
     <string name="next_episode">Volgende aflevering</string>
     <string name="list_episodes">Toon afleveringen</string>
@@ -178,11 +178,11 @@
     <string name="scraper_no_files">Geen bestanden om te verwerken</string>
     <string name="scraper_no_new_files">Geen nieuwe bestanden om te verwerken</string>
     <string name="scraper_no_new_files_in_folder">Geen nieuwe bestanden om in deze map te verwerken</string>
-    <string name="scraper_folder_no_files">Er zijn echter nog steeds %d video\'s waarvoor eerder geen info is gevonden.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">Er zijn echter nog steeds %d video\'s waarvoor eerder geen info is gevonden.</string>
     <string name="scraper_folder_no_file">Er is echter nog steeds 1 video waarvoor eerder geen info is gevonden.</string>
     <string name="scraper_folder_try_again">Wilt u het opnieuw proberen?</string>
     <string name="scraper_notification_title">Online informatie zoeken</string>
-    <string name="scraper_notification_progress">%1$d van %2$d bestanden verwerkt</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">%1$d van %2$d bestanden verwerkt</string>
     <string name="scraper_no_episode_found">Er zijn geen afleveringen gevonden</string>
     <string name="scraper_suggest_message">U kunt online naar posters en informatie voor uw video\'s zoeken via het menu \'Online informatie zoeken\'.</string>
     <string name="scraper_no_movie_text">Op het moment zijn er geen posters en informatie beschikbaar voor uw films</string>
@@ -198,7 +198,7 @@
     <string name="preference_display_all_files">Alle bestanden in browser weergeven</string>
     <string name="preference_display_all_files_summary">Toon ook niet-videobestanden</string>
     <string name="info_processing">Media-eigenschappen controleren…</string>
-    <string name="info_audio">Audio</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Audio</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Ondertiteling</string>
     <string name="info_file">Bestandsinformatie</string>
@@ -237,11 +237,11 @@
     <string name="player_subtitle_track_toast">Ondertitelspoor:</string>
     <string name="player_bookmark_set">Bladwijzer ingesteld op</string>
     <string name="player_pref_subtitle_delay_title">Vertraging</string>
-    <string name="floating_player_restore">Herstellen</string>
-    <string name="floating_player_play">Afspelen</string>
-    <string name="floating_player_pause">Pauseren</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Herstellen</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Afspelen</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Pauseren</string>
     <string name="player_pref_audio_delay_title">Audiovertraging</string>
-    <string name="now_playing">Nu aan het afspelen</string>
+    <string name="now_playing" tools:ignore="UnusedResources">Nu aan het afspelen</string>
     <string name="player_window_mode">Venster Mode</string>
     <string name="pref_play_mode_title">Afspeelmodus</string>
     <string name="pref_play_mode_entry_single">Enkelvoudig</string>
@@ -299,7 +299,7 @@
     <string name="player_plugin_video_msg">Dit bestand bevat een <xliff:g id="video">%1$s</xliff:g> videoformaat.</string>
     <string name="player_plugin_audio_msg">Dit bestand bevat een <xliff:g id="audio">%1$s</xliff:g> audio formaat.</string>
     <string name="player_plugin_video_audio_msg">Dit bestand bevat een <xliff:g id="video">%1$s</xliff:g> video formaat en een <xliff:g id="audio">%2$s</xliff:g> audio formaat.</string>
-    <string name="player_plugin_purchase">Ga naar de winkel</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Ga naar de winkel</string>
     <string name="player_plugin_purchase_google_play_button">Ga naar Google Play</string>
     <string name="plugin_update_required_title">Sorry, update is vereist</string>
     <string name="plugin_update_required_message">Het lijkt erop dat u al aanvullende codecs heeft geïnstalleerd voor Nova Video Player.\n\nDeze nieuwe versie van Nova Video Player vereist een update van deze codecs.\n\nGa naar Google Play om de codecs bij te werken en opnieuw te installeren.</string>
@@ -337,7 +337,7 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
-    <string name="error_permission">Niet genoeg machtigingen</string>
+    <string name="error_permission" tools:ignore="UnusedResources">Niet genoeg machtigingen</string>
     <string name="error_permission_storage">Nova Video Player heeft opslagtoestemming nodig om lokale video\'s te lezen, verleen deze toestemming.</string>
     <string name="allow">Toestaan</string>
     <string name="exit">Sluiten</string>
@@ -354,7 +354,7 @@
     <string name="ssh_prompt">FTP-type</string>
     <string name="remove_from_shortcuts">Verwijder de snelkoppeling</string>
     <string name="shortcut_removed">Snelkoppeling %s verwijderd</string>
-    <string name="server_not_available">De server is momenteel niet beschikbaar</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">De server is momenteel niet beschikbaar</string>
     <string name="network_shortcuts">Netwerksnelkoppelingen</string>
     <string name="shortcut_list_empty">Geen netwerksnelkoppelingen aangemaakt.\n\nOm snelkoppelingen aan te maken naar uw favoriete externe mappen, klik lang op de doelmappen en selecteer \"%s\" in de top actiebalk.</string>
     <string name="ftp_shortcut_list_empty">Om snelkoppelingen aan te maken naar uw favoriete externe mappen, selecteer \"%s\" in de top actiebalk bij het bladeren door een server.</string>

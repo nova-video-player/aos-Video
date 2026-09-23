@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Recarregar lista de servidores</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">Análise inicial</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">Análise inicial</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Pesquisar</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -57,7 +57,7 @@
     <string name="recently_played_videos">Reproduzidos recentemente</string>
     <string name="video_lists">Listas de reprodução</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Externo</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Externo</string>
     <string name="internal_storage">Interno</string>
     <string name="network_storage">Rede</string>
     <string name="sd_card_storage">Cartão SD</string>
@@ -80,7 +80,7 @@
     <string name="all_movies">Todos os filmes</string>
     <string name="all_movies_format">Todos os filmes - %d</string>
     <string name="all_animes_format">Filmes de animação - %d</string>
-    <string name="all_collections">Todas as coleções</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Todas as coleções</string>
     <string name="all_collections_format">Todas as coleções - %d</string>
     <string name="not_watched_movies_format">Não visto - %d</string>
     <string name="not_watched_animes_format">Não visto - %d</string>
@@ -127,14 +127,14 @@
     <string name="episode_name">Episódio</string>
     <string name="episode_season">Temporada</string>
     <string name="episode_specials">Especiais</string>
-    <string name="episode_identification">Temporada %1$d, episódio %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">Temporada %1$d, episódio %2$d</string>
     <string name="season_identification">Temporada %1$d</string>
     <string name="next_episode">Episódio seguinte</string>
     <string name="list_episodes">Listar episódios</string>
     <string name="scrap_status_unknown">Desconhecido</string>
-    <string name="scraper_notification_progress">%1$d de %2$d ficheiros processados</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">%1$d de %2$d ficheiros processados</string>
     <!-- To be translated only in case there is a localized IMDB -->
-    <string name="info_audio">Áudio</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Áudio</string>
     <string name="info_audio_vbr">VBR</string>
     <!-- VIDEO COVER ROLL -->
     <plurals name="Nmovies">
@@ -160,11 +160,11 @@
     <string name="player_loading_video">A carregar vídeo\u2026</string>
     <string name="player_audio_track_toast">Faixa de áudio:</string>
     <string name="player_pref_subtitle_delay_title">Atraso</string>
-    <string name="floating_player_restore">Restaurar</string>
-    <string name="floating_player_play">Reproduzir</string>
-    <string name="floating_player_pause">Pausa</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Restaurar</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Reproduzir</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Pausa</string>
     <string name="player_pref_audio_delay_title">Atraso de áudio</string>
-    <string name="now_playing">A reproduzir</string>
+    <string name="now_playing" tools:ignore="UnusedResources">A reproduzir</string>
     <string name="player_window_mode">Modo de janela</string>
     <string name="pref_play_mode_title">Modo de reprodução</string>
     <string name="ui_mode_tv">TV</string>

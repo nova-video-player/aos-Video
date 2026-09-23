@@ -23,7 +23,7 @@
     <!-- Menu item to refresh servers list -->
     <string name="refresh_servers_list">Sunucu listesini yenile</string>
     <!-- Menu item to enable network shares -->
-    <string name="initial_scan">İlk tarama</string>
+    <string name="initial_scan" tools:ignore="UnusedResources">İlk tarama</string>
     <!-- Library screen, menu item -->
     <string name="search_title">Arama</string>
     <!-- Default name of track that doesn't have a name in the metadata -->
@@ -62,7 +62,7 @@
     <string name="keep_watching_videos">İzlemeye devam et</string>
     <string name="video_lists">Oynatma listeleri</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">Harici</string>
+    <string name="external_storage" tools:ignore="UnusedResources">Harici</string>
     <string name="internal_storage">Dahili</string>
     <string name="network_storage">Ağ</string>
     <string name="sd_card_storage">SD kart</string>
@@ -85,7 +85,7 @@
     <string name="all_movies">Tüm filmler</string>
     <string name="all_movies_format">Tüm filmler -  %d</string>
     <string name="all_animes_format">Animasyon filmleri - %d</string>
-    <string name="all_collections">Tüm koleksiyonlar</string>
+    <string name="all_collections" tools:ignore="UnusedResources">Tüm koleksiyonlar</string>
     <string name="all_collections_format">Tüm koleksiyonlar - %d</string>
     <string name="not_watched_movies_format">İzlenmedi  -  %d</string>
     <string name="not_watched_animes_format">İzlenmedi - %d</string>
@@ -164,7 +164,7 @@
     <string name="episode_name">Bölüm</string>
     <string name="episode_season">Sezon</string>
     <string name="episode_specials">Özel Bölümler</string>
-    <string name="episode_identification">Sezon %1$d Bölüm %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">Sezon %1$d Bölüm %2$d</string>
     <string name="season_identification">Sezon %1$d</string>
     <string name="next_episode">Sonraki Bölüm</string>
     <string name="list_episodes">Bölümleri listele</string>
@@ -193,11 +193,11 @@
     <string name="scraper_no_files">İşlenecek dosya yok</string>
     <string name="scraper_no_new_files">İşlenecek yeni dosya yok</string>
     <string name="scraper_no_new_files_in_folder">Bu klasörde işlenecek yeni dosya yok</string>
-    <string name="scraper_folder_no_files">Ancak, hakkında daha önce hiçbir bilgi bulunamayan %d adet video hâlâ var.</string>
+    <string name="scraper_folder_no_files" tools:ignore="PluralsCandidate">Ancak, hakkında daha önce hiçbir bilgi bulunamayan %d adet video hâlâ var.</string>
     <string name="scraper_folder_no_file">Ancak, hakkında daha önce hiçbir bilgi bulunamayan bir video hâlâ var.</string>
     <string name="scraper_folder_try_again">Tekrar denemek ister misiniz?</string>
     <string name="scraper_notification_title">Çevrimiçi bilgi aranıyor</string>
-    <string name="scraper_notification_progress">\"%2$d dosyadan %1$d tanesi işlendi</string>
+    <string name="scraper_notification_progress" tools:ignore="PluralsCandidate">\"%2$d dosyadan %1$d tanesi işlendi</string>
     <string name="scraper_no_episode_found">Hiçbir bölüm bulunamadı</string>
     <string name="scraper_suggest_message">“Çevrimiçi bilgi ara” menüsünü kullanarak videolarınızla ilgili afişleri ve bilgileri çevrimiçi olarak arayabilirsiniz.</string>
     <string name="scraper_no_movie_text">Şu anda filmleriniz için afiş ve açıklama bulunmuyor</string>
@@ -213,7 +213,7 @@
     <string name="preference_display_all_files">Tüm dosyaları tarayıcıda göster</string>
     <string name="preference_display_all_files_summary">Video olmayan dosyaları da görüntüle</string>
     <string name="info_processing">Medya özellikleri kontrol ediliyor…</string>
-    <string name="info_audio">Ses</string>
+    <string name="info_audio" tools:ignore="UnusedResources">Ses</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Alt yazı</string>
     <string name="info_file">Dosya bilgisi</string>
@@ -257,11 +257,11 @@
     <string name="player_bookmark_set">Yerimi ayarlandı</string>
     <string name="player_pref_subtitle_delay_title">Gecikme</string>
     <string name="player_pref_audio_speed_title">Oynatma hızı</string>
-    <string name="floating_player_restore">Geri yükle</string>
-    <string name="floating_player_play">Oynat</string>
-    <string name="floating_player_pause">Duraklat</string>
+    <string name="floating_player_restore" tools:ignore="UnusedResources">Geri yükle</string>
+    <string name="floating_player_play" tools:ignore="UnusedResources">Oynat</string>
+    <string name="floating_player_pause" tools:ignore="UnusedResources">Duraklat</string>
     <string name="player_pref_audio_delay_title">Ses gecikmesi</string>
-    <string name="now_playing">Şimdi oynatılıyor</string>
+    <string name="now_playing" tools:ignore="UnusedResources">Şimdi oynatılıyor</string>
     <string name="player_window_mode">Pencere modu</string>
     <string name="pref_play_mode_title">Oynatma modu</string>
     <string name="pref_play_mode_entry_single">Tek</string>
@@ -338,7 +338,7 @@
     <string name="player_plugin_video_msg">Bu dosya bir <xliff:g id="video">%1$s</xliff:g> video formatı.</string>
     <string name="player_plugin_audio_msg">Bu dosya bir <xliff:g id="audio">%1$s</xliff:g> ses biçimi.</string>
     <string name="player_plugin_video_audio_msg">Bu dosya bir <xliff:g id="video">%1$s</xliff:g> video formatı ve <xliff:g id="audio">%2$s</xliff:g> ses biçimi.</string>
-    <string name="player_plugin_purchase">Mağazaya Git</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Mağazaya Git</string>
     <string name="player_plugin_purchase_google_play_button">Goggle Play\'e git</string>
     <string name="plugin_update_required_title">Kodek güncellemesi gerekli</string>
     <string name="plugin_update_required_message">Nova Video Player için zaten ek kodek bileşenleri yüklü gibi görünüyor. \n\nNova Video Player\'ın bu yeni sürümü için bu kodek bileşenlerinin güncellenmesi gerekiyor. \n\nLütfen kodek bileşenlerini güncellemek ve yeniden yüklemek için Google Play\'e gidin.</string>
@@ -362,7 +362,7 @@
     <string name="dialog_subloader_nonetwork_title">İnternet bağlantısı yok</string>
     <string name="dialog_subloader_nonetwork_message">Altyazıları indirmek için internet bağlantısı gereklidir</string>
     <string name="dialog_subloader_connecting">Opensubtitles hizmetine bağlanılıyor…</string>
-    <string name="opensubtitles_quota_download_remaining">OpenSubtitles indirme kotası: %1$d/%2$d kaldı</string>
+    <string name="opensubtitles_quota_download_remaining" tools:ignore="PluralsCandidate">OpenSubtitles indirme kotası: %1$d/%2$d kaldı</string>
     <string name="dialog_subloader_credentials">Opensubtitles kullanıcı bilgileri</string>
     <string name="dialog_subloader_credentials_empty">Geçerli bir kullanıcı adı ve şifre girmelisiniz!</string>
     <string name="toast_subloader_credentials_empty">Daha fazla altyazı indirebilmek için ayarlardan OpenSubtitles hesap bilgilerinizi girin</string>
@@ -387,7 +387,7 @@
     because the right part of the quote is
     not visible otherwise -->
     <string name="quotation_format">&#x201C;%s&#x201D;&#x2003;</string>
-    <string name="error_permission">Yeterli izin yok</string>
+    <string name="error_permission" tools:ignore="UnusedResources">Yeterli izin yok</string>
     <string name="error_permission_storage">Nova Video Player\'ın yerel videoları okumak için depolama iznine ihtiyacı var; lütfen bu izni verin.</string>
     <string name="error_permission_all_file_access">Nova Video Player\'ın yerel videoları ve NFO dosyalarını düzgün bir şekilde yönetebilmesi için tüm harici depolama yönetimi izinlerine ihtiyacı vardır; lütfen bu izni verin.</string>
     <string name="allow">İzin ver</string>
@@ -408,7 +408,7 @@
     <string name="protocol_prompt">Protokol türü</string>
     <string name="remove_from_shortcuts">Kısayolu kaldır</string>
     <string name="shortcut_removed">%s kısayol kaldırıldı</string>
-    <string name="server_not_available">Sunucu şu anda kullanılamıyor</string>
+    <string name="server_not_available" tools:ignore="UnusedResources">Sunucu şu anda kullanılamıyor</string>
     <string name="network_shortcuts">Ağ kısayolları</string>
     <string name="shortcut_list_empty">Ağ kısayolları oluşturulmadı.\n\nFavori uzak klasörlerinize kısayollar oluşturmak için hedef klasörlere uzun basın ve üstteki eylem çubuğundan “%s” seçeneğini seçin.</string>
     <string name="ftp_shortcut_list_empty">Favori uzak klasörlerinize kısayollar oluşturmak için, bir sunucuya göz atarken üstteki eylem çubuğunda “%s” seçeneğini seçin.</string>
@@ -461,10 +461,6 @@
     <string name="preferences_stream_max_iframe_size_summary">MB cinsinden maksimum sıkıştırılmış i-frame boyutu</string>
     <string name="preferences_force_passthrough">Ses geçişini zorla</string>
     <string name="preferences_force_passthrough_summary">Geçiş etkinleştirilmişse, AV alıcısı yeteneklerini kontrol etmek yerine ses kodeğinin AV alıcısı tarafından desteklenmediği iddia edilse bile bunu uygulayın</string>
-    <string name="preferences_playback_speed">Oynatma hızını etkinleştir</string>
-    <string name="preferences_playback_speed_summary" tools:ignore="Typos">Oynatma hızını değiştirme olanağını etkinleştirin. ⚠ Deneysel, kesik kesik videoyla sonuçlanabilir</string>
-    <string name="preferences_audio_speed_audiotrack">Oynatma hızı için AudioTrack\'i kullan</string>
-    <string name="preferences_audio_speed_audiotrack_summary">Oynatma hızını kontrol etmek için FFmpeg\'in atempo filtresi yerine AudioTrack\'i kullanın. Deneysel: tüm sistemlerde çalışmayabilir.</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Dinamik ses/görüntü gecikme tahmini</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Özellikle Bluetooth kulaklıklarla daha iyi ses/görüntü senkronizasyonu için dinamik gecikme tahmini özelliğini kullanın. Senkronizasyon sorunları yaşıyorsanız bu özelliği devre dışı bırakın.</string>
     <string name="preferences_disable_downmix_title">Ses stereo downmix\'i devre dışı bırak</string>
@@ -730,7 +726,7 @@
     <string name="category_trakt">Trakt</string>
     <string name="trakt_signin">Oturum aç</string>
     <string name="trakt_list_signin">Trakt\'ta oturum açın</string>
-    <string name="trakt_signin_summary_logged">Giriş yapıldı</string>
+    <string name="trakt_signin_summary_logged" tools:ignore="UnusedResources">Giriş yapıldı</string>
     <string name="trakt_signin_summary_logged_error">Doğrulama hatası</string>
     <string name="trakt_signin_summary">Oturum açılmadı</string>
     <string name="trakt_relog_description">Trakt ile ilgili bir sorun algılandı ve kimlik bilgilerinin sıfırlanması gerekiyor, lütfen tekrar giriş yapın.</string>
@@ -740,14 +736,14 @@
     <string name="trakt_live_scrobbling_title">Canlı scrobbler</string>
     <string name="trakt_live_scrobbling_summary">Trakt\'ta izlenen videoları paylaşın</string>
     <string name="trakt_getfull_summary">Trakt scrobbler sadece ücretli versiyonda mevcuttur</string>
-    <string name="trakt_sync_collection_title">TV programını ve film koleksiyonlarını senkronize etme</string>
+    <string name="trakt_sync_collection_title" tools:ignore="UnusedResources">TV programını ve film koleksiyonlarını senkronize etme</string>
     <string name="trakt_sync_trakt_resume_title">Trakt\'ta devam etme noktasını senkronize et</string>
     <string name="trakt_sync_trakt_resume">Yerel devam etme noktası geride kaldığında Trakt noktasını kullan</string>
     <string name="trakt_force_push_title">Trakt\'a yeniden yüklemeyi zorla</string>
     <string name="trakt_force_push_summary">İzleme durumu ve devam etme noktalarının Trakt\'a tek seferlik olarak yükle</string>
     <string name="trakt_force_pull_title">Trakt\'tan yeniden içe aktarmayı zorla</string>
     <string name="trakt_force_pull_summary">İzlendi durumunu ve devam etme noktalarını Trakt\'a tek seferlik olarak aktar</string>
-    <string name="trakt_sync_collection_summary">Nova kütüphanenizdeki tüm videoları Trakt koleksiyonunuza otomatik olarak ekleyin</string>
+    <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">Nova kütüphanenizdeki tüm videoları Trakt koleksiyonunuza otomatik olarak ekleyin</string>
     <string name="trakt_toast_syncing">Trakt ile senkronize ediliyor&#8230;</string>
     <string name="trakt_device_auth_step1">1. Telefonunuzda veya bilgisayarınızda şu adrese gidin:</string>
     <string name="trakt_device_auth_step2">2. Bu kodu girin:</string>
@@ -867,7 +863,7 @@
     <string name="sleep_timer_title">Uyku zamanlayıcısı</string>
     <string name="sleep_timer_description">Videoyu şu tarihten sonra durdur: </string>
     <string name="picture_in_picture">Fotoğraf içinde fotoğraf</string>
-    <string name="cast">Yayın</string>
+    <string name="cast" tools:ignore="UnusedResources">Yayın</string>
     <string name="cast_audio_background">Nova Video Player arka plandayken ses çalışmaz</string>
     <string name="help_faq">Yardım / SSS</string>
     <string name="provider_folders">Bulut</string>

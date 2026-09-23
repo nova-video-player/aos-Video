@@ -46,7 +46,7 @@
     <!-- COVER ROLL -->
     <string name="video_lists">ଚାଳନତାଲିକା</string>
     <!-- The string used in main storage list -->
-    <string name="external_storage">ବହିଃସ୍ଥ</string>
+    <string name="external_storage" tools:ignore="UnusedResources">ବହିଃସ୍ଥ</string>
     <string name="internal_storage">ଅନ୍ତଃସ୍ଥ</string>
     <string name="network_guest">ଅତିଥି</string>
     <string name="root_storage">ଅନ୍ତଃ ଷ୍ଟୋରେଜ୍</string>
@@ -57,7 +57,7 @@
     <string name="movies">ଚଳଚ୍ଚିତ୍ର</string>
     <string name="all_movies">ସବୁ ଚଳଚ୍ଚିତ୍ର</string>
     <string name="all_movies_format">ସବୁ ଚଳଚ୍ଚିତ୍ର  -  %d</string>
-    <string name="all_collections">ସବୁ ସଂଗ୍ରହ</string>
+    <string name="all_collections" tools:ignore="UnusedResources">ସବୁ ସଂଗ୍ରହ</string>
     <string name="all_collections_format">ସବୁ ସଂଗ୍ରହ  -  %d</string>
     <string name="not_watched_movies_format">ଦେଖି ନାହାଁନ୍ତି  -  %d</string>
     <string name="not_watched_animes_format">ଦେଖି ନାହାଁନ୍ତି  -  %d</string>
@@ -89,7 +89,7 @@
     <string name="episode_name">ଅଧ୍ୟାୟ</string>
     <string name="episode_season">ଋତୁ</string>
     <string name="episode_specials">ଵିଶେଷ</string>
-    <string name="episode_identification">ଋତୁ %1$d ଅଧ୍ୟାୟ %2$d</string>
+    <string name="episode_identification" tools:ignore="PluralsCandidate">ଋତୁ %1$d ଅଧ୍ୟାୟ %2$d</string>
     <string name="season_identification">ଋତୁ %1$d</string>
     <string name="how_to_mark_season_watched">ଏକ ଋତୁର ସମସ୍ତ ଅଧ୍ୟାୟ ଦେଖିଛନ୍ତି କି ଦେଖିନାହାନ୍ତି ଚିହ୍ନିତ କରିବାକୁ ହେଲେ ତା\' ଉପରେ କ୍ଲିକ୍ କରନ୍ତୁ</string>
     <string name="how_to_unindex_season">ଏକ ଋତୁର ସମସ୍ତ ଅଧ୍ୟାୟ କାଢ଼ିବାକୁ ହେଲେ ତା\' ଉପରେ କ୍ଲିକ୍ କରନ୍ତୁ</string>
@@ -106,7 +106,7 @@
     <string name="scraper_no_movie_text">ଆପଣଙ୍କ ପାଖରେ ଵର୍ତ୍ତମାନ ଆପଣଙ୍କ ଚଳଚ୍ଚିତ୍ର ପାଇଁ କୌଣସି ପୋଷ୍ଟର୍ ଏଵଂ ଵର୍ଣ୍ଣନା ନାହିଁ</string>
     <string name="scraper_no_tv_show_text">ଆପଣଙ୍କ ପାଖରେ ଵର୍ତ୍ତମାନ ଆପଣଙ୍କ ଟିଵି ଶୋ\' ପାଇଁ କୌଣସି ପୋଷ୍ଟର୍ ଏଵଂ ଵର୍ଣ୍ଣନା ନାହିଁ</string>
     <!-- To be translated only in case there is a localized IMDB -->
-    <string name="info_audio">ଅଡ଼ିଓ</string>
+    <string name="info_audio" tools:ignore="UnusedResources">ଅଡ଼ିଓ</string>
     <string name="info_file">ଫାଇଲ୍ ସୂଚନା</string>
     <!-- VIDEO COVER ROLL -->
     <plurals name="Nseasons">
