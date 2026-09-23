@@ -615,7 +615,7 @@
     <string name="network_nfo_parse_summary">Kodi ‚.nfo‘ Dateien während des (erneuten) Scanning lesen, um Medieninformationen und Poster zu sammeln.</string>
     <string name="ask_to_mail_media_DB">Möchten Sie Ihre Videodatenbank an das Nova-Entwicklungsteam mailen, um ihnen bei der Überprüfung eines Bugs zu helfen?\n\nDie Videodateien werden (natürlich) nicht versendet, aber die vollständige Liste der Dateinamen.</string>
     <string name="no_email_installed">Keine E-Mail-Applikation gefunden</string>
-    <string name="zipping_library_before_mailing">Zippen einer Kopie der Bibliothek vor dem Versenden ...</string>
+    <string name="zipping_library_before_mailing">Zippen einer Kopie der Bibliothek vor dem Versenden &#8230;</string>
     <string name="zipped_library_mail_subject">Nova Video Database-Dump</string>
     <string name="zipped_library_mail_text">Bitte beschreiben Sie das Problem, das bei Ihnen auftritt\n\n</string>
     <string name="sort_mode">Sortiermodus</string>
@@ -888,7 +888,7 @@
     <string name="media_library_export_in_progress">Exportiere Medienbibliothek + Zugangsdaten + Verknüpfungen</string>
     <string name="media_library_import_in_progress">Importiere Medienbibliothek + Zugangsdaten + Verknüpfungen</string>
     <string name="media_library_export_success">Medienbibliothek, Zugangsdaten und Verknüpfungen erfolgreich exportiert in:\n%s</string>
-    <string name="media_library_import_success">Medienbibliothek, Zugangsdaten und Verknüpfungen erfolgreich importiert. App wird neu gestartet...</string>
+    <string name="media_library_import_success">Medienbibliothek, Zugangsdaten und Verknüpfungen erfolgreich importiert. App wird neu gestartet&#8230;</string>
     <string name="media_library_import_error">Fehler beim Importieren der Medienbibliothek</string>
     <string name="media_library_export_error">Fehler beim Exportieren der Medienbibliothek</string>
     <string name="media_library_export_dir_not_found">Exportverzeichnis nicht gefunden</string>

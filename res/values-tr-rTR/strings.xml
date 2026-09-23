@@ -548,7 +548,7 @@
     <string name="pref_format_mode_title">Biçim</string>
     <string name="format_fullscreen">Tam Ekran</string>
     <string name="format_optimized">Optimize edildi</string>
-    <string name="format_original">Orjinal</string>
+    <string name="format_original">Orijinal</string>
     <string name="format_stretched">Gergin</string>
     <string name="format_43">4:3</string>
     <string name="format_169">16:9</string>
@@ -851,7 +851,7 @@
     <string name="media_library_export_in_progress">Medya kütüphanesi + kimlik bilgileri + kısayolları dışa aktarılıyor</string>
     <string name="media_library_import_in_progress">Medya kütüphanesi + kimlik bilgileri + kısayolları içe aktarılıyor</string>
     <string name="media_library_export_success">Medya kütüphanesi, kimlik bilgileri ve kısayollar başarıyla şu konuma aktarıldı:\n%s</string>
-    <string name="media_library_import_success">Medya kütüphanesi, kimlik bilgileri ve kısayollar başarıyla içe aktarıldı. Uygulama yeniden başlatılıyor...</string>
+    <string name="media_library_import_success">Medya kütüphanesi, kimlik bilgileri ve kısayollar başarıyla içe aktarıldı. Uygulama yeniden başlatılıyor&#8230;</string>
     <string name="media_library_import_error">Medya kütüphanesini içe aktarırken hata oluştu</string>
     <string name="media_library_export_error">Medya kütüphanesini dışa aktarırken hata oluştu</string>
     <string name="media_library_export_dir_not_found">Dışa aktarma dizini bulunamadı</string>

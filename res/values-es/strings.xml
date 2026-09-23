@@ -892,7 +892,7 @@ Experimental: puede no funcionar en todas las configuraciones.</string>
     <string name="media_library_export_in_progress">Exportando biblioteca de medios, credenciales y accesos directos</string>
     <string name="media_library_import_in_progress">Importando biblioteca de medios, credenciales y accesos directos</string>
     <string name="media_library_export_success">Biblioteca de medios, credenciales y accesos directos exportados con éxito a:\n%s</string>
-    <string name="media_library_import_success">Biblioteca de medios, credenciales y accesos directos importados con éxito. Reiniciando la aplicación...</string>
+    <string name="media_library_import_success">Biblioteca de medios, credenciales y accesos directos importados con éxito. Reiniciando la aplicación&#8230;</string>
     <string name="media_library_import_error">Error importando biblioteca de medios</string>
     <string name="media_library_export_error">Error al exportar la biblioteca de medios</string>
     <string name="media_library_export_dir_not_found">Directorio de exportación no encontrado</string>

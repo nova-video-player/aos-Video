@@ -135,7 +135,7 @@
     <string name="scrap_series_change">修改影集的資訊</string>
     <string name="scrap_change_confirmation">將所有劇集從\n\t「%1$s」\n改為\n\t「%2$s」？</string>
     <string name="scrap_change_title">修改所有劇集</string>
-    <string name="scrap_change_initializing">正在初始化...</string>
+    <string name="scrap_change_initializing">正在初始化&#8230;</string>
     <string name="scrap_change_finalizing">正在完成…</string>
     <string name="scrap_get_title">正在取得資訊</string>
     <!-- Generic strings for Movies or TV shows -->
@@ -172,7 +172,7 @@
     <plurals name="n_episodes_watched">
         <item quantity="other">已觀看 %d 集</item>
     </plurals>
-    <string name="scrap_processing">正在擷取詮釋資料...</string>
+    <string name="scrap_processing">正在擷取詮釋資料&#8230;</string>
     <string name="scrap_no_network">未連線至網路。</string>
     <string name="scrap_enable_network_first">"請先連線至網路再開啟本應用程式。"</string>
     <string name="scrap_failed">線上資料庫找不到該電影。</string>
@@ -207,7 +207,7 @@
     <string name="rescan_storage_summary">重新掃瞄內部、記憶卡和 USB 儲存裝置</string>
     <string name="preference_display_all_files">在瀏覽器中顯示所有檔案</string>
     <string name="preference_display_all_files_summary">同時顯示非影片檔案</string>
-    <string name="info_processing">正在確認媒體的內容...</string>
+    <string name="info_processing">正在確認媒體的內容&#8230;</string>
     <string name="info_audio">音訊</string>
     <string name="info_audio_vbr">VBR (可變位元率)</string>
     <string name="info_subtitle">字幕</string>
@@ -323,7 +323,7 @@
     <string name="player_err_fileerror">檔案損毀或不完整。</string>
     <string name="player_err_connection_failed">連線失敗。</string>
     <string name="player_err_video_decoder_error">影片解碼錯誤：</string>
-    <string name="player_err_qpel_and_gmc">「1/4 像素」和「GMC」</string>
+    <string name="player_err_qpel_and_gmc">「&#188; 像素」和「GMC」</string>
     <string name="player_err_profile_and_level">「畫質」和「壓縮層級」</string>
     <string name="player_err_interlaced">交错式</string>
     <!-- Player plug-in -->
@@ -349,7 +349,7 @@
     <!-- Subloader -->
     <string name="get_subtitles_online">從網路上取得字幕</string>
     <string name="toast_subloader_service_unreachable">與字幕網站連線發生問題</string>
-    <string name="dialog_subloader_copying">正在複製字幕...</string>
+    <string name="dialog_subloader_copying">正在複製字幕&#8230;</string>
     <string name="dialog_subloader_fails">找不到字幕：</string>
     <string name="dialog_subloader_nonetwork_title">沒有網際網路連線</string>
     <string name="dialog_subloader_nonetwork_message">必須有網路連線才能下載字幕</string>
@@ -360,7 +360,7 @@
     <string name="toast_subloader_credentials_empty">請在設定選項中提供您的 opensubtitles 憑證以下載字幕</string>
     <string name="toast_subloader_login_failed">不正確的 opensubtitles 憑證或伺服器無法連線</string>
     <string name="toast_subloader_quota_exceeded">OpenSubtitles 下載額度已達上限</string>
-    <string name="opensubtitles_quota_reset_time_remaining">額度重設... %s</string>
+    <string name="opensubtitles_quota_reset_time_remaining">額度重設&#8230; %s</string>
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_sample_text">「範例」</string>
     <string name="subtitle_size_text">檔案大小：</string>
@@ -387,7 +387,7 @@
     <string name="error_protocol_not_supported">錯誤：不支援的協定</string>
     <string name="error_loading_torrent">載入種子時出現錯誤</string>
     <string name="error_downloading_not_enough_space">下載種子時出現錯誤：空間不足</string>
-    <string name="loading_torrent">正在載入種子...</string>
+    <string name="loading_torrent">正在載入種子&#8230;</string>
     <string name="error_no_video_file">沒有任何影片檔</string>
     <string name="torrent_file_to_play">選擇要播放的檔案</string>
     <!-- Shortcuts -->
@@ -559,7 +559,7 @@
     <string name="network_nfo_parse_summary">在掃描或重新掃描時，讀取 Kodi 的「.nfo」檔案以獲得媒體資訊和海報</string>
     <string name="ask_to_mail_media_DB">您想要將您的影片資料庫寄給 Nova 開發團隊以協助他們除錯嗎？\n\n雖然影片檔案本身不會傳送，但是完整的檔案清單則會發送給開發團隊。</string>
     <string name="no_email_installed">找不到電子郵件應用程式</string>
-    <string name="zipping_library_before_mailing">正在複製和壓縮媒體資料庫並傳送中...</string>
+    <string name="zipping_library_before_mailing">正在複製和壓縮媒體資料庫並傳送中&#8230;</string>
     <string name="zipped_library_mail_subject">Nova 影片資料庫傾印</string>
     <string name="zipped_library_mail_text">請描述您遇到的問題\n\n</string>
     <string name="sort_mode">排序方式</string>
@@ -792,7 +792,7 @@
     <string name="remove_from_list">從播放清單中移除</string>
     <string name="warning_swdec">警告：硬體解碼已停用！</string>
     <string name="list_title">清單標題</string>
-    <string name="loading">載入中...</string>
+    <string name="loading">載入中&#8230;</string>
     <string name="refreshrate_failed">設定重新整理頻率失敗</string>
     <string name="sponsor">贊助 Nova</string>
     <string name="enable_sponsor_title">開啟 Nova 贊助連結</string>

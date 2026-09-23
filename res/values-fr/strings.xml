@@ -520,6 +520,8 @@
     <string name="summary_list_preference_primary">Sélectionnez les langues pour lesquelles télécharger des sous-titres</string>
     <string name="favSubLang_title">Langue de lecture des sous-titres</string>
     <string name="favSubLang_summary">Choisissez la langue de sous-titres par défaut lors de la lecture de vos vidéos</string>
+    <string name="subtitles_show_full_for_local_audio_title">Afficher les sous-titres pour l\'audio de langue locale</string>
+    <string name="subtitles_show_full_for_local_audio_summary">Désactivé par défaut: seuls les sous-titres forcés sont sélectionnés automatiquement lorsque la piste audio correspond à la langue de vos sous-titres; activez cette option pour sélectionner aussi automatiquement les sous-titres complet</string>
     <string name="favAudioLang_title">Langue audio préférée</string>
     <string name="favAudioLang_summary">Choisissez la langue de votre piste audio préférée</string>
     <string name="prefer_original_audio_track_title">Préférer la piste audio originale</string>
@@ -891,7 +893,7 @@
     <string name="media_library_export_in_progress">Exportation de la médiathèque, des identifiants et des raccourcis</string>
     <string name="media_library_import_in_progress">Importation de la médiathèque, des identifiants et des raccourcis</string>
     <string name="media_library_export_success">Médiathèque, identifiants et raccourcis exportés avec succès vers:\n%s</string>
-    <string name="media_library_import_success">La médiathèque, les identifiants et les raccourcis ont été importés avec succès. Redémarrage de l\'application...</string>
+    <string name="media_library_import_success">La médiathèque, les identifiants et les raccourcis ont été importés avec succès. Redémarrage de l\'application&#8230;</string>
     <string name="media_library_import_error">Erreur lors de l\'importation de la médiathèque</string>
     <string name="media_library_export_error">Erreur lors de l\'exportation de la médiathèque</string>
     <string name="media_library_export_dir_not_found">Répertoire d\'exportation introuvable</string>

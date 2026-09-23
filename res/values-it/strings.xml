@@ -106,7 +106,7 @@ Copertina (rotolo di copertina)</string>
     <string name="non_scraped_videos">Video non analizzati</string>
     <string name="cannot_open_video">Impossibile aprire questo video</string>
     <string name="confirm_delete">Vuoi davvero cancellarlo?</string>
-    <string name="deleting">Attendere...</string>
+    <string name="deleting">Attendere&#8230;</string>
     <string name="directory_deleted">La cartella è stata cancellata</string>
     <string name="resume">Riprendi</string>
     <string name="remote_resume">Riprendi da remoto</string>
@@ -162,14 +162,14 @@ Copertina (rotolo di copertina)</string>
         <item quantity="one">%d episodi visti</item>
         <item quantity="other">%d episodi visti</item>
     </plurals>
-    <string name="scrap_processing">Recupero dei metadati...</string>
+    <string name="scrap_processing">Recupero dei metadati&#8230;</string>
     <string name="scrap_no_network">Non sei connesso ad alcuna una rete</string>
     <string name="scrap_enable_network_first">"Devi prima connetterti a una rete per poter avviare questa applicazione"</string>
     <string name="scrap_failed">Film non trovato nel database online</string>
     <string name="start_auto_scraper_activity">Cerca informazioni online</string>
     <string name="scraper_settigns">Poster &amp; descrizioni</string>
     <string name="scrap_status_initial">In coda</string>
-    <string name="scrap_status_busy">Ricerca...</string>
+    <string name="scrap_status_busy">Ricerca&#8230;</string>
     <string name="scrap_status_success">Aggiornato</string>
     <string name="scrap_status_failed">Informazioni non trovate</string>
     <string name="scrap_status_rejected">Informazioni rimosse</string>
@@ -197,7 +197,7 @@ Copertina (rotolo di copertina)</string>
     <string name="rescan_storage_summary">Scansiona nuovamente la memoria interna, la scheda SD e l\'unità esterna</string>
     <string name="preference_display_all_files">Mostra tutti i file</string>
     <string name="preference_display_all_files_summary">Visualizza anche i file non video</string>
-    <string name="info_processing">Controllo delle proprietà multimediali...</string>
+    <string name="info_processing">Controllo delle proprietà multimediali&#8230;</string>
     <string name="info_audio">Audio</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Sottotitolo</string>
@@ -329,7 +329,7 @@ Copertina (rotolo di copertina)</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Scarica i sottotitoli online</string>
     <string name="toast_subloader_service_unreachable">Interruzione del servizio web per i sottotitoli</string>
-    <string name="dialog_subloader_copying">Copia dei sottotitoli in corso...</string>
+    <string name="dialog_subloader_copying">Copia dei sottotitoli in corso&#8230;</string>
     <string name="dialog_subloader_fails">Sottotitoli non trovati per:</string>
     <string name="dialog_subloader_nonetwork_title">Nessuna connessione a internet</string>
     <string name="dialog_subloader_nonetwork_message">È necessaria una connessione a internet per scaricare i sottotitoli</string>
@@ -362,7 +362,7 @@ Copertina (rotolo di copertina)</string>
     <string name="error_protocol_not_supported">Errore: protocollo non supportato</string>
     <string name="error_loading_torrent">Errore nel caricamento del torrent</string>
     <string name="error_downloading_not_enough_space">Errore nel caricamento del torrent: spazio non sufficiente</string>
-    <string name="loading_torrent">Caricamento del torrent...</string>
+    <string name="loading_torrent">Caricamento del torrent&#8230;</string>
     <string name="error_no_video_file">Nessun file video</string>
     <string name="torrent_file_to_play">Scegli un file da riprodurre</string>
     <!-- Shortcuts -->
@@ -512,7 +512,7 @@ Copertina (rotolo di copertina)</string>
     <string name="network_nfo_parse_summary">Lettura del file Boxee / XBMC \'.nfo\' durante la scansione per acquisire informazioni e poster</string>
     <string name="ask_to_mail_media_DB">Vuoi inviare il tuo database video al team di sviluppo di Nova in modo che possano controllare eventuali bug?\n\n(Ovviamente) non verranno inviati i tuoi file video, bensì solo una lista dei nomi dei file</string>
     <string name="no_email_installed">Nessuna app per email trovata</string>
-    <string name="zipping_library_before_mailing">Compressione di una copia della libreria prima dell\'invio...</string>
+    <string name="zipping_library_before_mailing">Compressione di una copia della libreria prima dell\'invio&#8230;</string>
     <string name="zipped_library_mail_subject">Nova Video Database Dump</string>
     <string name="zipped_library_mail_text">Descrivi il problema che si è verificato\n\n</string>
     <string name="sort_mode">Ordina per</string>

@@ -179,7 +179,7 @@
     <string name="start_auto_scraper_activity">Tìm kiếm thông tin trực tuyến</string>
     <string name="scraper_settigns">Áp phích &amp; thông tin</string>
     <string name="scrap_status_initial">Đang chờ</string>
-    <string name="scrap_status_busy">Đang tìm...</string>
+    <string name="scrap_status_busy">Đang tìm&#8230;</string>
     <string name="scrap_status_success">Đã cập nhật</string>
     <string name="scrap_status_failed">Không tìm thấy thông tin</string>
     <string name="scrap_status_rejected">Đã loại bỏ thông tin</string>

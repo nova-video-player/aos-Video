@@ -184,7 +184,7 @@
     <string name="start_auto_scraper_activity">在线搜索信息</string>
     <string name="scraper_settigns">海报和信息</string>
     <string name="scrap_status_initial">已加入队列</string>
-    <string name="scrap_status_busy">正在搜索...</string>
+    <string name="scrap_status_busy">正在搜索&#8230;</string>
     <string name="scrap_status_success">已更新</string>
     <string name="scrap_status_failed">找不到信息</string>
     <string name="scrap_status_rejected">信息已删除</string>

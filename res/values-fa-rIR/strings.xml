@@ -136,7 +136,7 @@
     <string name="scrap_series_change">تغییر جزئیات سریال</string>
     <string name="scrap_change_confirmation">تغییر همه قسمت ها از \t%1$s\n تا \n\t%2$s ؟</string>
     <string name="scrap_change_title">در حال تغییر همه قسمت ها</string>
-    <string name="scrap_change_initializing">آماده سازی...</string>
+    <string name="scrap_change_initializing">آماده سازی&#8230;</string>
     <string name="scrap_change_finalizing">در حال نهایی شدن…</string>
     <string name="scrap_get_title">در حال دریافت اطلاعات</string>
     <!-- Generic strings for Movies or TV shows -->
@@ -358,7 +358,7 @@
     <string name="dialog_subloader_fails">زیرنویسی پیدا نشد برای:</string>
     <string name="dialog_subloader_nonetwork_title">بدون اتصال اینترنت</string>
     <string name="dialog_subloader_nonetwork_message">برای دانلود زیرنویس ها نیاز به اتصال به اینترنت است</string>
-    <string name="dialog_subloader_connecting">اتصال به سرویس opensubtitle...</string>
+    <string name="dialog_subloader_connecting">اتصال به سرویس opensubtitle&#8230;</string>
     <string name="opensubtitles_quota_download_remaining">صف دانلود OpenSubtitles: %1$d/%2$d باقی مانده</string>
     <string name="dialog_subloader_credentials">اعتبارنامه OpenSubtitles</string>
     <string name="dialog_subloader_credentials_empty">شما باید یک نام کاربری و رمز عبور معتبر مشخص کنید!</string>

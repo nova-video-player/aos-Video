@@ -126,7 +126,7 @@
     <string name="scrap_series_change">Wijzig informatie series</string>
     <string name="scrap_change_confirmation">Wijzig alle afleveringen van\n\t\"%1$s\"\nnaar\n\t\"%2$s\"?</string>
     <string name="scrap_change_title">Alle afleveringen aanpassen</string>
-    <string name="scrap_change_initializing">Initialiseren...</string>
+    <string name="scrap_change_initializing">Initialiseren&#8230;</string>
     <string name="scrap_change_finalizing">Afronden…</string>
     <string name="scrap_get_title">Informatie ophalen</string>
     <!-- Generic strings for Movies or TV shows -->

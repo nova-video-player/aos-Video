@@ -209,11 +209,11 @@
     <!-- To be translated only in case there is a localized IMDB -->
     <string name="storage">Armazenamento</string>
     <string name="rescan_storage">Verificar armazenamento</string>
-    <string name="rescanning">Verificando novamente dispositivos de armazenamento...</string>
+    <string name="rescanning">Verificando novamente dispositivos de armazenamento&#8230;</string>
     <string name="rescan_storage_summary">Verifique novamente os dispositivos de armazenamento interno, cartão SD e USB.</string>
     <string name="preference_display_all_files">Exibir todos os arquivos no explorador</string>
     <string name="preference_display_all_files_summary">Exibe também arquivos que não são de vídeo.</string>
-    <string name="info_processing">Verificando propriedades de mídia...</string>
+    <string name="info_processing">Verificando propriedades de mídia&#8230;</string>
     <string name="info_audio">Áudio</string>
     <string name="info_audio_vbr">VBR</string>
     <string name="info_subtitle">Legendas</string>
@@ -777,7 +777,7 @@
     <string name="trakt_toast_syncing">Sincronizando com o Trakt&#8230;</string>
     <string name="trakt_device_auth_step1">1. No celular ou computador, acesse:</string>
     <string name="trakt_device_auth_step2">2. Insira este código:</string>
-    <string name="trakt_device_auth_waiting">Aguardando autorização...</string>
+    <string name="trakt_device_auth_waiting">Aguardando autorização&#8230;</string>
     <string name="trakt_device_auth_success">Conectado com sucesso!</string>
     <string name="trakt_device_auth_error">Falha na autenticação. Por favor, tente novamente.</string>
     <string name="trakt_device_auth_invalid_code">Falha ao obter um código de dispositivo válido do Trakt. Por favor, tente novamente.</string>
@@ -850,7 +850,7 @@
     <string name="rescan_error_wifi">Erro: o Wi-Fi estava desligado durante a verificação</string>
     <string name="rescan_error_wifi_click_for_more_info">clique para mais informações</string>
     <string name="rescan_error_server">Erro: não foi possível conectar ao servidor</string>
-    <string name="scan_running">Verificando...</string>
+    <string name="scan_running">Verificando&#8230;</string>
     <string name="scheduled_rescan">Verificação agendada</string>
     <string name="scheduled_rescan_period">Intervalo de verificação</string>
     <string name="scheduled_rescan_period_no">Nenhuma</string>
@@ -891,7 +891,7 @@
     <string name="media_library_export_in_progress">Exportando biblioteca de mídia, credenciais e atalhos</string>
     <string name="media_library_import_in_progress">Importando biblioteca de mídia, credenciais e atalhos</string>
     <string name="media_library_export_success">Biblioteca de mídia, credenciais e atalhos exportados com sucesso para:\n%s</string>
-    <string name="media_library_import_success">Biblioteca de mídia, credenciais e atalhos importados com sucesso. Reiniciando o aplicativo...</string>
+    <string name="media_library_import_success">Biblioteca de mídia, credenciais e atalhos importados com sucesso. Reiniciando o aplicativo&#8230;</string>
     <string name="media_library_import_error">Erro ao importar biblioteca de mídia</string>
     <string name="media_library_export_error">Erro ao exportar biblioteca de mídia</string>
     <string name="media_library_export_dir_not_found">Diretório de exportação não encontrado</string>

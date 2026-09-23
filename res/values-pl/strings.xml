@@ -493,7 +493,7 @@
     <string name="preferences_enable_dynamic_audio_delay_title">Dynamiczne szacowanie opóźnienia audio/wideo</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Użyj dynamicznego szacowania opóźnienia dla lepszej synchronizacji audio/wideo (dla połączenia BT). Wyłącz, jeśli występują problemy z synchronizacją</string>
     <string name="preferences_enable_spatialization_title">Przestrzenność</string>
-    <string name="preferences_enable_spatialization_summary">Użyj spatializera do renderowania wielokanałowego dźwięku zamiast wymuszanego stereo (wymaga kompatybilnego urządzenia i wyjścia audio). Można przełączyć również w menu odtwarzania dźwięku.</string>
+    <string name="preferences_enable_spatialization_summary">Użyj spatializera do renderowania wielokanałowego dźwięku zamiast wymuszanego stereo (wymaga kompatybilnego sprzętu). Można przełączyć również w menu odtwarzania dźwięku.</string>
     <string name="preferences_disable_downmix_title">Wyłącz wymuszanie dźwięku stereo</string>
     <string name="preferences_disable_downmix_summary">Zawsze dekoduj wszystkie kanały i niech Android decyduje o sposobie miksowania (możliwa utrata kanałów dialogowych)</string>
     <string name="preferences_enable_downmix_androidtv_title">Wymuś dźwięk stereo</string>
@@ -899,7 +899,7 @@
     <string name="media_library_export_in_progress">Eksportuj bibliotekę multimediów, dane uwierzytelniające i skróty</string>
     <string name="media_library_import_in_progress">Importuj bibliotekę multimediów, dane uwierzytelniające i skróty</string>
     <string name="media_library_export_success">Biblioteka multimediów, dane uwierzytelniające i skróty wyeksportowane pomyślnie do:\n%s</string>
-    <string name="media_library_import_success">Biblioteka multimediów, dane uwierzytelniające, i skróty zaimportowane pomyślnie. Trwa ponowne uruchamianie aplikacji...</string>
+    <string name="media_library_import_success">Biblioteka multimediów, dane uwierzytelniające, i skróty zaimportowane pomyślnie. Trwa ponowne uruchamianie aplikacji&#8230;</string>
     <string name="media_library_import_error">Błąd podczas importowania biblioteki multimediów</string>
     <string name="media_library_export_error">Błąd podczas eksportowania biblioteki multimediów</string>
     <string name="media_library_export_dir_not_found">Nie znaleziono katalogu eksportu</string>
