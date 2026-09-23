@@ -573,6 +573,8 @@
     <string name="summary_list_preference_primary">Select your languages for downloading subtitles</string>
     <string name="favSubLang_title">Subtitles reading language</string>
     <string name="favSubLang_summary">Choose your favorite language for reading subtitles</string>
+    <string name="subtitles_show_full_for_local_audio_title">Show subtitles for local-language audio</string>
+    <string name="subtitles_show_full_for_local_audio_summary">Off by default, so only forced subtitles auto-select when audio matches your subtitle language; enable to also auto-select full subtitles</string>
     <string name="favAudioLang_title">Audio preferred language</string>
     <string name="favAudioLang_summary">Choose your favorite audio track language</string>
     <string name="prefer_original_audio_track_title">Prefer original audio track</string>

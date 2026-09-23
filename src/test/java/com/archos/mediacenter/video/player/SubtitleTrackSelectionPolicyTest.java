@@ -95,6 +95,32 @@ public class SubtitleTrackSelectionPolicyTest {
     }
 
     @Test
+    public void testSpecTable_Row2_ShowFullSubsForLocalAudioEnabled_SelectsFullTrack() throws Exception {
+        // Same fixture as Row 2, but with "Show subtitles for local-language audio" enabled:
+        // the native-speaker suppression is skipped, falling through to the normal favSubLang scan.
+        VideoMetadata vMetadata = createMetadata(
+                new AudioFixture("English", "eng", 1, true),
+                new SubFixture("English Full", "eng", "", 0, false, 0)
+        );
+        VideoDbInfo videoInfo = new VideoDbInfo();
+        videoInfo.audioTrack = 0;
+        videoInfo.subtitleTrack = -1;
+        videoInfo.subtitleLanguage = null;
+        Locale.setDefault(Locale.forLanguageTag("en"));
+        Mockito.when(mMockPlayer.getVideoMetadata()).thenReturn(vMetadata);
+        setPrivateField(mService, "mVideoInfo", videoInfo);
+        setPrivateField(mService, "mSubsFavoriteLanguage", "en");
+        setPrivateField(mService, "mHideSubtitles", false);
+        setPrivateField(mService, "mShowFullSubsForLocalAudio", true);
+        setPrivateField(mService, "firstTimeSubCalled", true);
+        setPrivateField(mService, "mIsPreparingSubs", false);
+
+        mService.onSubtitleMetadataUpdated(vMetadata, -1);
+
+        assertEquals("Enabling the preference must select the full track instead of none", 0, videoInfo.subtitleTrack);
+    }
+
+    @Test
     public void testSpecTable_Row3_FrenchNative_FullAndForced_SelectsForcedOnly() throws Exception {
         // Active audio: French | System locale: French | favSubLang: French | Hide: off
         // Available: French full (0); French forced (1) -> Expected: French forced (1)

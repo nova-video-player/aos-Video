@@ -190,6 +190,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_AUDIO_INTERFACE_CHOICE = "audio_interface_choice";
     public static final String KEY_AUDIO_DECODER_CHOICE = "audio_decoder_choice";
     public static final String KEY_SUBTITLES_HIDE = "subtitles_hide_default";
+    public static final String KEY_SUBTITLES_SHOW_FULL_FOR_LOCAL_AUDIO = "subtitles_show_full_for_local_audio";
     public static final String KEY_SUBTITLES_FAV_LANG = "favSubLang";
     public static final String KEY_AUDIO_TRACK_FAV_LANG = "favAudioLang";
     public static final String KEY_PREFER_ORIGINAL_AUDIO_TRACK = "prefer_original_audio_track";
@@ -263,6 +264,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private PreferenceCategory mAdvancedPreferences = null;
     private PreferenceCategory mScraperCategory = null;
     private ListPreference mSubtitlesFavLangPreferences = null;
+    private CheckBoxPreference mSubtitlesShowFullForLocalAudioPreference = null;
     private ListPreference mUiLang = null;
     private MultiSelectListPreference mSubtitlesDownloadLanguagePreferences = null;
     private ListPreference mTMDbScraperLanguagePreferences = null;
@@ -1111,6 +1113,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             boolean doHide = ((Boolean) newValue);
             mSubtitlesFavLangPreferences.setEnabled(!doHide);
             mSubtitlesFavLangPreferences.setSelectable(!doHide);
+            // has no effect while subtitles are hidden by default: the hide policy is evaluated first
+            mSubtitlesShowFullForLocalAudioPreference.setEnabled(!doHide);
+            mSubtitlesShowFullForLocalAudioPreference.setSelectable(!doHide);
             return true;
         });
         boolean doHide = mSharedPreferences.getBoolean(KEY_SUBTITLES_HIDE, false);
@@ -1118,6 +1123,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mSubtitlesFavLangPreferences = (ListPreference) findPreference(KEY_SUBTITLES_FAV_LANG);
         mSubtitlesFavLangPreferences.setEnabled(!doHide);
         mSubtitlesFavLangPreferences.setSelectable(!doHide);
+
+        mSubtitlesShowFullForLocalAudioPreference = (CheckBoxPreference) findPreference(KEY_SUBTITLES_SHOW_FULL_FOR_LOCAL_AUDIO);
+        mSubtitlesShowFullForLocalAudioPreference.setEnabled(!doHide);
+        mSubtitlesShowFullForLocalAudioPreference.setSelectable(!doHide);
 
         buildLanguageList(OPENSUBTITLES_LANGUAGES, OpensubtitlesLanguageListEntries, OpensubtitlesLanguageListEntryValues);
         OpensubtitlesSystemLanguageIndex = findLanguageIndex(OpensubtitlesLanguageListEntryValues, getPreferenceManager().getSharedPreferences().getString(KEY_SUBTITLES_FAV_LANG, Locale.getDefault().getLanguage()));
