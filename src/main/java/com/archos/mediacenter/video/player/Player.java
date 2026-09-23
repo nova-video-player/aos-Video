@@ -53,6 +53,7 @@ import com.archos.mediacenter.video.utils.CodecDiscovery;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.IMediaPlayer;
+import com.archos.medialib.LibAvos;
 import com.archos.medialib.MediaFactory;
 import com.archos.medialib.MediaMetadata;
 import com.archos.medialib.Subtitle;
@@ -87,6 +88,7 @@ public class Player implements IPlayerControl,
                                IMediaPlayer.OnRelativePositionUpdateListener,
                                IMediaPlayer.OnSeekCompleteListener,
                                IMediaPlayer.OnVideoSizeChangedListener,
+                               IMediaPlayer.OnVideoFpsListener,
                                IMediaPlayer.OnSubtitleListener,
                                SurfaceHolder.Callback,
                                TextureView.SurfaceTextureListener{
@@ -434,6 +436,18 @@ public class Player implements IPlayerControl,
         if (log.isDebugEnabled()) log.debug("stopPlayback");
         mHandler.removeCallbacks(mPreparedAsync);
         stayAwake(false);
+        // Free-run present mode hygiene: the native side reads the flag at
+        // each stream's first frame, so a stale-true global cannot corrupt a
+        // LATER stream opened after the pref changed - but resetting it here
+        // (the canonical stop path) keeps the global exactly as long as the
+        // playback that requested it.
+        // Guarded like every other LibAvos call site: when the avos native
+        // libs failed to load, MediaFactory silently falls back to
+        // AndroidMediaPlayer, and this canonical stop path (surfaceDestroyed,
+        // onSurfaceTextureDestroyed, onError, controller swap) would throw
+        // UnsatisfiedLinkError on the UI thread without the guard.
+        if (LibAvos.isAvailable())
+            LibAvos.setPresentFreeRun(false);
         if (mEffectRenderer != null) {
             mEffectRenderer.pause();
         }
@@ -529,6 +543,7 @@ public class Player implements IPlayerControl,
                 mMediaPlayer.setOnRelativePositionUpdateListener(this);
                 mMediaPlayer.setOnSeekCompleteListener(this);
                 mMediaPlayer.setOnVideoSizeChangedListener(this);
+        mMediaPlayer.setOnVideoFpsListener(this);
                 mMediaPlayer.setOnSubtitleListener(this);
                 mDuration = -1;
                 if (mExtraMap != null)
@@ -1041,7 +1056,21 @@ public class Player implements IPlayerControl,
             setHdrCapabilities();
 
             int refreshRateSwitchMode = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString("enable_tv_refreshrate_switch_mode","0"));
-            boolean refreshRateSwitchEnabled = (refreshRateSwitchMode!= 0);
+            boolean refreshRateSwitchEnabled = (refreshRateSwitchMode != 0 && refreshRateSwitchMode != 4);
+
+            /* Mode 4 "No sync (try if you experience lags)": free-running
+             * presents - the native dovi sink swaps at a uniform content-fps
+             * grid, no vsync/display-mode interaction at all. For panels that
+             * override every refresh-rate hint (Samsung HRR) and judder under
+             * paced/scheduled presents. The native side reads the flag once
+             * at sink open, so it must be set before playback starts.
+             * Guarded: onPrepared also runs for the AndroidMediaPlayer
+             * fallback path when the avos libs failed to load - an unguarded
+             * call would crash mid-prepare. */
+            if (LibAvos.isAvailable())
+                LibAvos.setPresentFreeRun(refreshRateSwitchMode == 4);
+            if (refreshRateSwitchMode == 4 && log.isDebugEnabled())
+                log.debug("CONFIG refresh-rate sync mode 4: no-sync free-run presents");
 
             CustomApplication.setSupportedRefreshRates(getSupportedRefreshRates());
 
@@ -1175,6 +1204,78 @@ public class Player implements IPlayerControl,
         mSurfaceController.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
         if (mEffectRenderer != null)
                 mEffectRenderer.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
+    }
+
+    /** Display refresh-rate matching: called with milli-fps (fps*1000, 0=unknown).
+     *  Requests the display mode whose refresh rate is closest to the video
+     *  frame rate (e.g. 24Hz panel mode for 23.976/24fps films) so presents
+     *  land on their natural cadence instead of fighting a 60/120Hz flip. */
+    /** Frame rate from the demuxer (fps*1000, 0 = unknown). Drives display
+     *  refresh-rate matching ("closest refresh" preference): requests the
+     *  panel mode with the exact video frame rate when available, else the
+     *  closest integer multiple (24fps -> 24Hz exact, or 48Hz; never 120Hz
+     *  when 24/48 exist). Also fills in mCurrentFps when metadata had no
+     *  fps (SMB/intent files without a scraper-populated VideoTrack). */
+    public void onVideoFps(IMediaPlayer mp, int milliFps) {
+        if (log.isDebugEnabled()) log.debug("CONFIG onVideoFps: {} milli-fps", milliFps);
+        // native sends fps*1000 (e.g. 23976 for 23.976fps, 24000 for 24fps)
+        if (milliFps <= 0)
+            return;
+        mCurrentFps = milliFps / 1000.0f;
+        int refreshRateSwitchMode = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString("enable_tv_refreshrate_switch_mode","0"));
+        if (refreshRateSwitchMode == 4)
+            return; /* no-sync free-run: never touch the display mode */
+        if (refreshRateSwitchMode == 3)
+            applyClosestRefreshMode(mCurrentFps);
+    }
+
+    /**
+     * "Closest refresh" matching (preference value 3): pick the display mode
+     *  whose refresh rate is EXACTLY the video fps when one exists, else the
+     *  closest INTEGER MULTIPLE of the fps (smallest multiple wins, i.e. the
+     *  lowest refresh that can show the video without judder). Same physical
+     *  resolution as the current mode only.
+     */
+    private void applyClosestRefreshMode(float wantedFps) {
+        if (mWindow == null || Build.VERSION.SDK_INT < 23)
+            return;
+        Display d = mWindow.getDecorView().getDisplay();
+        Display.Mode[] supportedModes = d.getSupportedModes();
+        Display.Mode currentMode = d.getMode();
+        int bestModeId = 0;
+        float bestScore = Float.MAX_VALUE;
+        // scoring: exact match scores 0; an integer multiple scores the
+        // multiple (2x -> 2, 3x -> 3...); anything else scores 1000 + |diff|
+        for (Display.Mode mode : supportedModes) {
+            if (mode.getPhysicalWidth() != currentMode.getPhysicalWidth()
+                    || mode.getPhysicalHeight() != currentMode.getPhysicalHeight())
+                continue;
+            float rr = Math.round(mode.getRefreshRate() * 100.0f) / 100.0f;
+            float diff = Math.abs(rr - wantedFps);
+            float score;
+            if (diff < 0.05f) {
+                score = 0f; // exact
+            } else if (rr > wantedFps) {
+                float k = Math.round(rr / wantedFps);
+                if (Math.abs(rr - k * wantedFps) < 0.6f * Math.max(1f, k))
+                    score = k; // integer multiple: lower = closer to native cadence
+                else
+                    score = 1000f + diff;
+            } else {
+                score = 1000f + diff; // slower than content: never
+            }
+            if (score < bestScore) {
+                bestScore = score;
+                bestModeId = mode.getModeId();
+            }
+        }
+        if (log.isDebugEnabled()) log.debug("CONFIG closest-refresh: fps={} best score={} modeId={}", wantedFps, bestScore, bestModeId);
+        if (bestModeId != 0 && bestModeId != currentMode.getModeId()) {
+            LayoutParams lp = mWindow.getAttributes();
+            lp.preferredDisplayModeId = bestModeId;
+            mWindow.setAttributes(lp);
+            if (log.isInfoEnabled()) log.info("CONFIG closest-refresh: switched display to mode {}", bestModeId);
+        }
     }
 
     public void onSeekComplete(IMediaPlayer mp) {
