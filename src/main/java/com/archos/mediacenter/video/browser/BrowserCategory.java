@@ -372,7 +372,7 @@ abstract public class BrowserCategory extends ListFragment {
                 if (!PrivateMode.isActive() && PrivateMode.canShowDialog(getActivity())) {
                     PrivateMode.showDialog(getActivity());
                 }
-                PrivateMode.toggle();
+                PrivateMode.toggle(getActivity());
                 setSelection(mSelectedItemId); //restore selection
                 ((MainActivity) getActivity()).setBackground();
                 updateExternalStorage();

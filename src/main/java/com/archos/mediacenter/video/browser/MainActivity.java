@@ -755,7 +755,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 if (!PrivateMode.isActive() && PrivateMode.canShowDialog(this)) {
                     PrivateMode.showDialog(this);
                 }
-                PrivateMode.toggle();
+                PrivateMode.toggle(this);
                 setBackground();
                 //setHomeButton();
                 break;

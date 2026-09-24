@@ -767,6 +767,8 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
 
         // init application context to make it available to all static methods
         mContext = getApplicationContext();
+        // restore persisted private mode state so it survives process restarts for all UIs
+        PrivateMode.init(mContext);
         // must be done after context is available
         log = LoggerFactory.getLogger(CustomApplication.class);
         configureFullLoggingAsync();

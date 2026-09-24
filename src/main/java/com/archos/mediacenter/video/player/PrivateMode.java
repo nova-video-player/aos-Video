@@ -32,18 +32,27 @@ public class PrivateMode {
     private static String DONT_SHOW_PRIVATE_MODE_DIALOG = "dont_show_private_mode_dialog";
     private static boolean DONT_SHOW_PRIVATE_MODE_DIALOG_DEFAULT = false;
 
+    private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
+
     private static boolean mActivated = false;
 
-    public static void setActive(boolean activate) {
+    public static void init(Context context) {
+        mActivated = PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(PREF_PRIVATE_MODE, false);
+    }
+
+    public static void setActive(Context context, boolean activate) {
         mActivated = activate;
+        PreferenceManager.getDefaultSharedPreferences(context).edit()
+                .putBoolean(PREF_PRIVATE_MODE, mActivated).apply();
     }
 
     public static boolean isActive() {
         return mActivated;
     }
 
-    public static void toggle() {
-        mActivated = !mActivated;
+    public static void toggle(Context context) {
+        setActive(context, !mActivated);
     }
 
     public static boolean canShowDialog(Context context) {

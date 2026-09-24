@@ -156,8 +156,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
     // this causes VideoLoader that has only a poolsize of one to not process any other loaders
     public final static boolean FEATURE_WATCH_UP_NEXT = false;
 
-    private static final String PREF_PRIVATE_MODE = "PREF_PRIVATE_MODE";
-
     final static int LOADER_ID_LAST_ADDED = 42;
     final static int LOADER_ID_LAST_PLAYED = 43;
     final static int LOADER_ID_ALL_TV_SHOWS = 44;
@@ -315,11 +313,6 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
         mShowAnimesRow = mPrefs.getBoolean(VideoPreferencesCommon.KEY_SHOW_ALL_ANIMES_ROW, VideoPreferencesCommon.SHOW_ALL_ANIMES_ROW_DEFAULT);
         mAnimesSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_ANIMES_SORT_ORDER, AnimesLoader.DEFAULT_SORT);
         mTvShowSortOrder = mPrefs.getString(VideoPreferencesCommon.KEY_TV_SHOW_SORT_ORDER, TvshowSortOrderEntries.DEFAULT_SORT);
-
-        if (mPrefs.getBoolean(PREF_PRIVATE_MODE, false) !=  PrivateMode.isActive()) {
-            PrivateMode.toggle();
-            findAndUpdatePrivateModeIcon();
-        }
 
         updateBackground();
 
@@ -1887,8 +1880,7 @@ public class MainFragment extends BrowseSupportFragment implements LoaderManager
                     case PRIVATE_MODE:
                         if (!PrivateMode.isActive() && PrivateMode.canShowDialog(vActivity))
                             PrivateMode.showDialog(vActivity);
-                        PrivateMode.toggle();
-                        mPrefs.edit().putBoolean(PREF_PRIVATE_MODE, PrivateMode.isActive()).apply();
+                        PrivateMode.toggle(vActivity);
                         updatePrivateMode(icon);
                         updateBackground();
                         break;
