@@ -25,6 +25,6 @@ public class TrailerServiceIconFactory {
         if ("YouTube".equalsIgnoreCase(service)) {
             return R.drawable.youtube;
         }
-        return -1;
+        return R.drawable.youtube;
     }
 }
