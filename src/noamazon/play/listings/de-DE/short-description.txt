@@ -1,1 +1,1 @@
-Video-Player für lokale/Netzwerk-Inhalte mit Untertitel- und Metadaten-Download
+Videoplayer für lokale/Netzwerkinhalte mit Untertitel/Metadaten-Download-Support

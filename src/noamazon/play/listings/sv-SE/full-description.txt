@@ -1,0 +1,44 @@
+Nova is an opeN sOurce Video plAyer designed for tablets, phones and AndroidTV devices.available at https://github.com/nova-video-player/aos-AVP
+
+Universal spelare:  
+- Play videos from your computer, server (FTP, SFTP, WebDAV), NAS (SMB, UPnP)
+- Spela upp videor från extern USB-lagring 
+- Videor från alla källor integrerade i en enhetlig multimediainsamling
+- Automatisk online-hämtning av film- och programbeskrivningar med affischer och bakgrunder
+- Integrerad hämtning av undertexter
+
+Bästa spelaren:
+- Hårdvaruaccelererad videoavkodning för de flesta enheter och videoformat
+- Stöd för flera ljudspår och undertexter
+- Filformat som stöds: MKV, MP4, AVI, WMV, FLV, mfl.
+- Undertextstyper som stöds: SRT, SUB, ASS, SMI, mfl.
+
+TV-vänlig:
+- Dedikerat “leanback” användargränssnitt för Android TV
+- AC3/DTS passthrough (HDMI or S/PDIF) on supported hardware: Nexus Player, NVidia SHIELD TV, Rockchip and AmLogic based TV-boxes
+- 3D-stöd med uppspelning sida vid sida och överst till botten för 3D-TV-apparater
+- Audio Boost-läge för att öka volymen
+- Nattläge för att dynamiskt justera volymnivån
+
+Bläddra på det sätt du vill:
+- Omedelbar åtkomst till nyligen tillagda och nyligen spelade videor
+- Bläddra bland filmer efter namn, genre, år, varaktighet, betyg
+- Bläddra bland TV-program efter säsong
+- Mappbläddring stöds
+
+Och mer: 
+- Återuppta nätverksvideon på flera enheter
+- NFO-metadatabehandling för beskrivningar och affischer
+- Schemalagd omskanning av ditt nätverksinnehåll (endast Leanback UI)
+- Privat läge: tillfälligt inaktivera uppspelningshistorik
+- Justera undertextsynkroniseringen manuellt
+- Justera ljud-/videosynkronisering manuellt
+- Track what your collection and what you have watched via Trakt
+
+Om du har problem eller frågor om appen, vänligen besök vår support på Reddit: https://www.reddit.com/r/NovaVideoPlayer
+
+Om du upplever problem med hårdvaruavkodning kan du tvinga programvaruavkodning i programinställningarna.
+
+Du får gärna bidra till översättningen av applikationen på https://crowdin.com/project/nova-videoplayer
+
+NOVA står för Ope[n] S[o]urce [V]ideo Pl[a]yer.

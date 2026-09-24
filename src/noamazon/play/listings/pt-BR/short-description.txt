@@ -1,0 +1,1 @@
+Player de vídeo local/rede com suporte a download de legendas e metadados

@@ -1,44 +1,44 @@
 Nova is een opeN sOurce videospeler ontworpen voor tablets, telefoons en AndroidTV apparaten beschikbaar op https://github.com/nova-video-player/aos-AVP
 
-Universele speler:
+Universele speler:  
 - Speelt video's vanaf uw computer, server (FTP, SFTP, WebDAV), NAS (SMB, UPnP)
-- Play video's van externe USB opslag
+- Play video's van externe USB opslag 
 - Video's uit alle bronnen geïntegreerd in een uniforme multimedia collectie
 - Automatische online ophalen van film en TV-show beschrijvingen met posters en achtergronden
 - Geïntegreerde ondertiteling download
 
 Beste speler:
 - Hardware versnelde videodecodering voor de meeste apparaten en video formaten
-- Multi-Pro-audio tracks en mutli-subtitles steun
+- Multi-audio tracks en mutli-ondertiteling ondersteuning
 - Ondersteunde bestandsindelingen: MKV, MP4, AVI, WMV, FLV, enz.
 - Ondersteunde ondertitel bestandstypen: SRT, SUB, KONT, SMI, etc.
 
 TV vriendelijk:
-- Dedicated "leanback" user interface voor Android TV
+- Toegewijde "leanback" gebruikersinterface voor Android TV
 - AC3/DTS passthrough (HDMI of S/PDIF) op ondersteunde hardware: Nexus Player NVidia SHIELD televisie Rockchip en AmLogic gebaseerd TV-vakken
 - 3D ondersteuning met side-by-side en top-bottom formaten afspelen voor 3D TV's
 - Audio Boost-modus om het volumeniveau
-- Nachtmodus dynamisch kunt het volume regelen
+- Nachtmodus om dynamisch het volume te regelen
 
 Bladeren zoals u dat wilt:
 - Instant toegang tot onlangs toegevoegd en onlangs gespeelde video's
-- Browse films met naam, genre, jaar, duur, rating
-- Browse TV toont door seizoenen
-- Folder browsing ondersteund
+- Blader door films op naam, genre, jaar, duur, rating
+- Bekijk TV-series volgens seizoenen
+- Map browsen ondersteund
 
-En nog meer:
-- Multi-device netwerk video hervatten
-- NFO metagegevens verwerking voor beschrijvingen en posters
-- gepland opnieuw scannen van de netwerkinhoud van uw (Leanback UI alleen)
-- Privé modus: tijdelijk uitschakelen afspelen geschiedenis opnemen
-- Manually ondertitels aanpassen synchronisatie
-- Manually synchronisatie van de audio/video
+En nog meer: 
+- Video-hervatting voor meerdere apparaten
+- NFO metadata verwerking voor beschrijvingen en posters
+- gepland opnieuw scannen van de netwerkinhoud (Leanback UI alleen)
+- Privé modus: tijdelijk uitschakelen afspeelgeschiedenis vastleggen
+- Synchronisatie ondertitels handmatig aanpassen
+- Synchronisatie audio/video handmatig aanpassen
 - Track wat uw verzameling en aanpassen wat u hebt bekeken via Trakt
 
-In het geval dat u een probleem of een verzoek om over dit app, kijk op onze Reddit steungroep op dit adres: https://www.reddit.com/r/NovaVideoPlayer
+In het geval dat u een probleem of een verzoek heeft over deze app, kijk op onze Reddit steungroep op dit adres: https://www.reddit.com/r/NovaVideoPlayer
 
-Als u een probleem ondervindt met video hardware decoding u kunt forceren dat software-decodering in de Toepassingsvoorkeuren.
+Als u problemen ondervindt met video-hardware-decodering kunt u softwaredecodering forceren in de instellingen van de applicatie.
 
 U bent welkom om bij te dragen tot de vertaling van de toepassing bij https://crowdin.com/project/nova-video-player
 
-NOVA staat voor opeN Bron videospeler.
+NOVA staat voor opeN sOurce Video plAyer.

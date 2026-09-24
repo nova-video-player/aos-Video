@@ -1,0 +1,44 @@
+Nova là một trìNh phát VideO mÃ nguồn mở được thiết kế cho máy tính bảng, điện thoại và thiết bị AndroidTV. Có sẵn tại https://github.com/nova-video-player/aos-AVP
+
+Trình phát phổ quát:  
+- Phát băng hình từ máy tính, máy chủ của bạn (FTP, SFTP, WebDAV), NAS (SMB, UPnP)
+- Phát video từ bộ nhớ USB bên ngoài 
+- Video từ tất cả các nguồn được tích hợp trong một bộ sưu tập đa phương tiện thống nhất
+- Tự động truy xuất trực tuyến các mô tả phim và chương trình truyền hình với áp phích và phông nền
+- Tích hợp tải xuống phụ đề
+
+Trình phát tốt nhất:
+- Giải mã video tăng tốc phần cứng cho hầu hết các thiết bị và định dạng video
+- Hỗ trợ nhiều luồng âm thanh và nhiều phụ đề
+- Hỗ trợ nhiều định dạng tệp: MKV, MP4, AVI, WMV, FLV, v. v.
+- Hỗ trợ nhiều loại tệp phụ đề: SRT, SUB, ASS, SMI, v. v.
+
+Thân thiện với TV:
+- Giao diện người dùng “Leanback” dành riêng cho Android TV
+- AC3/DTS passthrough (HDMI or S/PDIF) on supported hardware: Nexus Player, NVidia SHIELD TV, Rockchip and AmLogic based TV-boxes
+- Hỗ trợ 3D với định dạng phát side-by-side và top-bottom cho TV 3D
+- Chế độ Audio Boost để tăng mức âm lượng
+- Chế độ ban đêm để tự động điều chỉnh mức âm lượng
+
+Duyệt theo cách bạn muốn:
+- Truy cập tức thì vào các video đã thêm và phát gần đây
+- Duyệt phim theo tên, thể loại, năm, thời lượng, xếp hạng
+- Duyệt các chương trình TV theo mùa
+- Hỗ trợ duyệt thư mục
+
+Và thậm chí nhiều hơn nữa: 
+- Tiếp tục video mạng đa thiết bị
+- Xử lý siêu dữ liệu NFO cho các mô tả và áp phích
+- Đặt lịch quét lại nội dung mạng của bạn (chỉ giao diện Leanback)
+- Chế độ riêng tư: tạm thời tắt ghi lịch sử phát
+- Điều chỉnh thủ công đồng bộ hóa phụ đề
+- Điều chỉnh thủ công đồng bộ hóa âm thanh/video
+- Theo dõi bộ sưu tập của bạn và những gì bạn đã xem qua Trakt
+
+Trong trường hợp bạn gặp sự cố hoặc yêu cầu về ứng dụng này, vui lòng kiểm tra cộng đồng hỗ trợ Reddit của chúng tôi tại địa chỉ này: https://www.reddit.com/r/NovaVideoPlayer
+
+Nếu bạn gặp bất kỳ sự cố nào với giải mã phần cứng video, bạn có thể dùng giải mã phần mềm trong tùy chọn ứng dụng.
+
+Bạn có thể đóng góp vào bản dịch của ứng dụng tại https://crowdin.com/project/nova-video-player
+
+NOVA là tên viết tắt của opeN sOurce Video plAyer.

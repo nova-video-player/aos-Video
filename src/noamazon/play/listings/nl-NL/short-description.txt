@@ -1,1 +1,1 @@
-Videospeler lokale/netwerkinhoud met ondersteuning voor ondertiteling/metadata
+Lokaal/netwerk videospeler, download ondersteuning voor ondertiteling/metadata

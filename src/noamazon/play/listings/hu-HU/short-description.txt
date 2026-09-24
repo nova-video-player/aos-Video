@@ -1,0 +1,1 @@
+Videó lejátszó helyi/hálózati tartalomhoz, feliratok/metaadatok letöltésével

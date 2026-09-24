@@ -1,0 +1,44 @@
+Nova is an opeN sOurce Video plAyer designed for tablets, phones and AndroidTV devices.available at https://github.com/nova-video-player/aos-AVP
+
+Lîstikvanê gerdûnî:  
+- Play videos from your computer, server (FTP, SFTP, WebDAV), NAS (SMB, UPnP)
+- Ji depokirina USB ya derveyî vîdeoyan lêde 
+- Vîdyoyên ji hemî çavkaniyan di berhevoka multimedia ya yekbuyî de hatine entegre kirin
+- Vegerîna otomatîkî ya fîlimê û pêşandana TVyê bi poster û paşvekêşan
+- Daxistina jêrnivîsa entegre
+
+Lîstikvanê herî baş:
+- Dekodekirina vîdyoyê ya lezkirî ji bo piraniya cîhaz û formatên vîdyoyê
+- Piştgiriya şopên pir-deng û pir-binnivîs
+- Formatên pelên tên piştgirîkirin: MKV, MP4, AVI, WMV, FLV û hwd.
+- Cureyên pelên jêrnivîsa piştgirîkirî: SRT, SUB, ASS, SMI hwd.
+
+Hevala TV:
+- Navrûya bikarhênerê "pişta xwe bidin paş" a taybet ji bo Android TV
+- AC3/DTS passthrough (HDMI or S/PDIF) on supported hardware: Nexus Player, NVidia SHIELD TV, Rockchip and AmLogic based TV-boxes
+- Piştgiriya 3D bi formatên li tenişta hev û ji jor-jêr ve ji bo TVyên 3D
+- Moda Xurtkirina Deng ji bo bilindkirina asta deng
+- Moda şevê ku bi dînamîkî asta qebareyê verast bike
+
+Li awayê ku tu dixwazî bigerî:
+- Gihîştina yekser a vîdeoyên ku di demên dawî de lê hatine zêdekirin û vê dawiyê hatine lêdan
+- Li gorî nav, cins, sal, dem, dengdan, fîlman binihêre
+- Li gorî demsalan li TV pêşandan geriyan
+- Gerîna peldankan piştgirî kirin
+
+Û hîn bêtir: 
+- Ji nû ve dest pê kirina vîdeoya torê ya pir-cîhazê
+- Ji bo danasîn û posteran vebijandina metameta NFO
+- Nûvekirina bernameya naveroka torgiloka we (tenê Leanback UI)
+- Moda taybet: Tomara dîroka lêdanê bi demkî neçalak dike
+- Hevdemîkirina binnivîsê bi destî sererast bikin
+- Hevdengiya deng/vîdyoyê bi destî sererast bike
+- Track what your collection and what you have watched via Trakt
+
+Di doza ku di derbarê vê sepanê de pirsgirêkek an daxwazek we heye, ji kerema xwe li vê navnîşanê civaka piştgiriya Redditê me kontrol bikin: https://www.reddit.com/r/NovaVideoPlayer
+
+Heke di dekodkirina qalibê vîdyoyê de pirsgirêk heye, tu dikarî di vebijarkên sepanê de dekodkirina nermalavê bi zorê bikî.
+
+Hûn dikarin li wergerandina sepanê beşdarî bibin https://crowdin.com/project/nova-video-player
+
+NOVA ji bo lêkera vîdeoya çavkaniya vekirî radiweste.

@@ -1,44 +1,44 @@
 Nova to opeN sOurcowy Video odtwArzacz zaprojektowany dla tabletów, telefonów i urządzeń AndroidTV dostępna pod adresem https://github.com/nova-video-player/aos-AVP
 
-Uniwersalny odtwarzacz:
+Uniwersalny odtwarzacz:  
 - Odtwarza filmy z komputera, serwera (FTP, SFTP, WebDAV), NAS (SMB, UPnP)
-- Odtwarza filmy z zewnętrznej pamięci USB
-- Filmy ze wszystkich źródeł zintegrowane w jednolitej bibliotece multimediów
-- Automatyczne pobieranie filmów online i programów telewizyjnych z plakatami i zwiastunami
-- Zintegrowane pobieranie napisów
+- Odtwarza filmy z zewnętrznej pamięci USB 
+- Prezentuje filmy ze wszystkich źródeł w jednolitej bibliotece multimediów
+- Automatycznie pobiera z sieci opisy filmów i seriali, z plakatami oraz tapetami
+- Wyszukuje napisy
 
 Najlepszy odtwarzacz:
-- Sprzętowe akcelerowanie dekodowania wideo dla większości urządzeń i formatów wideo
-- Obsługa wielu ścieżek audio i obsługa wielu napisów
-- Obsługiwane formaty plików: MKV, MP4, AVI, WMV, FLV itp.
-- Obsługiwane typy plików napisów: SRT, SUB, ASS, SMI itp.
+- Dekodowanie z akceleracją sprzętową na większości urządzeń i dla większości formatów wideo
+- Obsługa wielu ścieżek dźwięku i napisów
+- Obsługa formatów plików: MKV, MP4, AVI, WMV, FLV, itp.
+- Obsługa plików z napisami typu: SRT, SUB, ASS, SMI itp.
 
-Przyjazny dla telewizora:
-- Dedicated “leanback” user interface for Android TV
+Działa na telewizorach:
+- Interfejs użytkownika zgodny z "leanback for Android TV"
 - Przekazywanie AC3 / DTS (HDMI lub S / PDIF) na obsługiwanym sprzęcie: Nexus Player, NVidia SHIELD TV, Rockchip i AmLogic TV-box < 0>- Obsługa 3D z odtwarzaniem formatów side-by-side i top-bottom dla telewizo
-- 3D support with side-by-side and top-bottom formats playback for 3D TVs
-- Tryb Audio Boost w celu zwiększenia poziomu głośności
-- Tryb nocny w celu dynamicznego dostosowania poziomu głośności
+- Zgodność z poziomymi i pionowymi formatami transmisji dla telewizorów 3D
+- Tryb wzmocnienia poziomu dźwięku
+- Tryb nocny dynamicznego dostosowania głośności
 
-Przeglądaj tak, jak chcesz:
-- Natychmiastowy dostęp do ostatnio dodanych i ostatnio odtwarzanych filmów
-- Przeglądaj filmy według nazwy, gatunku, roku, czasu trwania, oceny
-- Przeglądaj programy telewizyjne według sezonów
-- Wsparcie dla przeglądania folderów
+Przeglądaj jak chcesz:
+- Szybki dostęp do ostatnio dodanych i odtwarzanych filmów
+- Przeglądanie według nazwy, gatunku, roku, czasu trwania, oceny
+- Przeglądanie seriali według sezonów
+- Możliwość przeglądania folderów
 
-A nawet więcej:
-- Odtwarzanie wideo z wielu urządzeń w sieci
-- Przetwarzanie metadanych NFO odczyt opisów i plakatów
-- Zaplanowane ponowne skanowanie zawartości sieciowej (tylko Leanback UI)
-- Tryb prywatny: tymczasowe wyłączenie historii odtwarzania
+I jeszcze więcej: 
+- Wznawianie odtwarzania z wielu urządzeń w sieci
+- Przetwarzanie metadanych NFO z opisami i plakatami
+- Planowanie skanowania treści sieciowych (tylko w telewizorach)
+- Tymczasowe wyłączenie historii odtwarzania w trybie prywatnym
 - Ręczna regulacja synchronizacji napisów
-- Ręczna regulacja synchronizacji audio / wideo
-- Synchronizacja obejrzanych tytułów z Trakt
+- Ręczna regulacja synchronizacji audio/wideo
+- Organizuj kolekcję wideo i śledź historię obejrzanych tytułów w usłudze Trakt
 
-Jeśli masz problem z aplikacją lub prośbę, sprawdź naszą grupę wsparcia Reddit pod tym adresem: https://www.reddit.com/r/NovaVideoPlayer
+W przypadku problemów lub zapytań dotyczących tej aplikacji odwiedź stronę grupy wsparcia na Reddit pod adresem: https://www.reddit.com/r/NovaVideoPlayer
 
 Jeśli wystąpią problemy z dekodowaniem sprzętowym wideo, możesz wymusić dekodowanie programowe w preferencjach aplikacji.
 
 Zapraszamy do udziału w tłumaczeniu aplikacji na https://crowdin.com/project/nova-video-player
 
-NOVA oznacza opeN sOurce Video plAyer.
+NOVA jest akronimem od opeN sOurce Video plAyer.

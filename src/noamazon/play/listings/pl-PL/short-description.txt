@@ -1,1 +1,1 @@
-Odtwarzacz wideo treści lokalnych/sieciowych z obsługą napisów/metadanych
+Odtwarzacz filmów lokalnych/sieciowych z obsługą pobierania napisów/metadanych

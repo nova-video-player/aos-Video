@@ -1,0 +1,1 @@
+Reprodutor de vídeos locais ou em rede com suporte a legendas e meta-dados

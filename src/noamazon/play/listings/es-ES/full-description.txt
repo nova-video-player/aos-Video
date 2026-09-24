@@ -1,10 +1,10 @@
 Nova es un reproductor de vídeo de código abierto diseñado para tabletas, teléfonos y dispositivos AndroidTV, disponible en https://github.com/nova-video-player/aos-AVP
 
-Reproductor Universal:
+Reproductor universal:  
 - Reproduce vídeos desde su ordenador, servidor (FTP, SFTP, WebDAV), NAS (SMB, UPnP)
-- Reproduce vídeos desde un almacenamiento USB externo
-- Integra todas las fuentes de vídeos en una colección multimedia unificada
-- Obtiene automáticacemente las descripciones, carteles y fondos online de películas y programas de televisión
+- Reproduce vídeos desde un almacenamiento USB externo 
+- Integra todas las fuentes de vídeo en una colección multimedia unificada
+- Obtiene automáticamente las descripciones, carteles y fondos online de películas y series
 - Descarga subtítulos
 
 Mejor reproductor:
@@ -13,32 +13,32 @@ Mejor reproductor:
 - Formatos de archivo soportados: MKV, MP4, AVI, WMV, FLV, etc.
 - Estándares de subtítulos soportados: SRT, SUB, ASS, SMI, etc.
 
-TV friendly:
-- Interfaz de usuario "leanback" específica para las TV Android
+Interfaz para TV amigable:
+- Interfaz de usuario específica para Android TV
 - Transferencia de AC3/DTS (HDMI o S/PDIF) al hardware soportado: Nexus Player, NVidia SHIELD TV, Rockchip y cajas de TV basadas en AmLogic
-- Soporta la reproducción 3D en los formatos lado a lado y de arriba a abajo en TVs 3D
-- Modo Audio Boost para aumentar el nivel de volumen
+- Compatible con reproducción 3D en formato lado a lado y arriba a abajo en TVs 3D
+- Modo potenciación de audio para aumentar el nivel de volumen
 - Modo Nocturno para ajustar dinámicamente el nivel de volumen
 
-Navegación amigable:
-- Acceso instantáneo a los videos recientemente añadidos y reproducidos
-- Navegar por las películas por nombre, género, año, duración, clasificación
-- Navegar por los programas de TV por temporadas
-- Exploración de carpetas
+Explore su biblioteca como quiera:
+- Acceso instantáneo a los videos recién añadidos y vistos
+- Explorar las películas por nombre, género, año, duración, valoración
+- Explorar las series por temporadas
+- Compatible con exploración por carpetas
 
-Y aún más:
+Y aún más: 
 - Reanudación de vídeo en red multidispositivo
 - Procesamiento de metadatos NFO para descripciones y carteles
-- Reanálisis programado del contenido de su red (sólo en la interfaz de usuario Leanback)
+- Reexploración programada del contenido de su red (sólo interfaz Android TV)
 - Modo privado: deshabilita temporalmente la grabación del historial de reproducción
-- Ajustar manualmente la sincronización de los subtítulos
-- Ajustar manualmente la sincronización del audio/vídeo
+- Ajuste manualmente la sincronización de los subtítulos
+- Ajuste manualmente la sincronización del audio/vídeo
 - Hacer un seguimiento de su colección y de lo que ha visto a través de Trakt
 
-En caso de que surja algún problema o tenga una petición sobre esta aplicación, por favor, consulte nuestro grupo de soporte de Reddit en esta dirección: https://www.reddit.com/r/NovaVideoPlayer
+En caso de que tenga un problema o sugerencia sobre esta aplicación, consulte nuestra comunidad de soporte de Reddit en esta dirección: https://www.reddit.com/r/NovaVideoPlayer
 
-Si tiene algún problema con la decodificación del hardware de vídeo puede forzar la decodificación del software en las preferencias de la aplicación.
+Si experimenta algún problema con la descodificación por hardware de vídeo, puede forzar la descodificación por software en las preferencias de la aplicación.
 
-Es bienvenido a contribuir a la traducción de la aplicación en https://crowdin.com/project/nova-video-player
+Le invitamos a contribuir a la traducción de la aplicación en https://crowdin.com/project/nova-video-player
 
 NOVA significa opeN sOurce Video plAyer.

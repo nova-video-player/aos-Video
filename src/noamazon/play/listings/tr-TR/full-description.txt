@@ -1,44 +1,44 @@
 Nova, https://github.com/nova-video-player/aos-AVP adresinde bulunan tabletler, telefonlar ve AndroidTV cihazları için tasarlanmış bir Video Player'dir.
 
-Evrensel oynatıcı:
+Evrensel oynatıcı:  
 Bilgisayarınızdan, sunucunuzdan (FTP, SFTP, WebDAV), NAS'dan (SMB, UPnP) video oynatın
-- Harici USB depolama biriminden video oynatma
-- Tüm kaynaklardan gelen videolar birleştirilmiş bir multimedya koleksiyonuna entegre edilmiştir
-- Film ve TV şovu açıklamalarının posterler ve arka planlarla otomatik olarak çevrimiçi alınması
-- Entegre altyazı indir
+- Harici USB bellekten videoları oynat 
+- Tüm kaynaklardan gelen videoların tek bir multimedya koleksiyonunda birleştir
+- Film ve dizi açıklamalarının, afişleri ve arka plan resimleriyle birlikte otomatik olarak çevrimiçi olarak alınması
+- Yerleşik altyazı indirme özelliği
 
-Best oynatıcı:
+En iyi oynatıcı:
 - Çoğu cihaz ve video formatı için donanım hızlandırmalı video kod çözme
 - Çoklu ses parçaları ve çoklu altyazı desteği
 - Desteklenen dosya formatları: MKV, MP4, AVI, WMV, FLV, vb.
 - Desteklenen altyazı dosya türleri: SRT, SUB, ASS, SMI, vb.
 
-TV dostu:
-- Android TV için özel “geri yaslanma” kullanıcı arayüzü
+Televizyona uyumlu:
+- Android TV için özel “leanback” kullanıcı arayüzü
 - Desteklenen donanımda AC3 / DTS geçişi (HDMI veya S / PDIF): Nexus Oynatıcı, NVidia SHIELD TV, Rockchip ve AmLogic tabanlı TV kutuları
-- 3D TV'ler için yan yana ve üstten alta formatlı oynatma özellikli 3D desteği
-- Ses seviyesini artırmak için Ses Yükseltme modu
-- Ses seviyesini dinamik olarak ayarlamak için Gece Modu
+- 3D televizyonlar için yan yana ve üst-alt formatlarında oynatma özelliğine sahip 3D desteği
+- Ses seviyesini artırmak için Ses Güçlendirme modu
+- Ses seviyesini dinamik olarak ayarlayan Gece Modu
 
-İstediğiniz şekilde göz atın:
-- Son eklenen ve son oynatılan videolara anında erişim
-- Filmlere ad, tür, yıl, süre, derecelendirme göre göz atın
-- Sezonlara göre TV şovlarına göz atın
-- Klasöre göz atma desteklenir
+İstediğiniz gibi görüntüleyin:
+- Son eklenen ve son izlenen videolara anında erişim
+- Filmleri isme, türe, yıla, süreye ve derecelendirmeye göre tarayın
+- Dizileri sezonlara göre görüntüleyin
+- Klasör taraması desteklenmektedir
 
-Ve daha fazlası:
-- Çok cihazlı ağ video özgeçmişi
-- Açıklamalar ve posterler için NFO meta veri işleme
-- Ağ içeriğinizin zamanlanmış yeniden taranması (yalnızca Leanback UI)
-- Özel mod: oynatma geçmişi kaydını geçici olarak devre dışı bırakma
-- Altyazı senkronizasyonunu manuel olarak ayarlama
-- Ses/video senkronizasyonunu manuel olarak ayarlayın
+Ve hatta daha da fazlası: 
+- Çoklu cihaz ağ video özeti
+- Açıklamalar ve afişler için NFO meta veri işlemesi
+- Ağ içeriğinizin planlanmış yeniden taranması (Yalnızca Leanback kullanıcı arayüzü için)
+- Özel mod: oynatma geçmişinin kaydedilmesini geçici olarak devre dışı bırakır
+- Altyazı senkronizasyonunu manuel olarak ayarla
+- Ses ve görüntü senkronizasyonunu manuel olarak ayarla
 - Track your video collection and what you have watched via Trakt
 
 Bu uygulamayla ilgili bir sorununuz veya isteğiniz varsa, lütfen şu adresteki Reddit destek topluluğumuzu kontrol edin: https://www.reddit.com/r/NovaVideoPlayer
 
-Video donanım kod çözme ile ilgili herhangi bir sorun yaşarsanız, uygulama tercihlerinde yazılım kod çözmeyi zorlayabilirsiniz.
+Video donanım kod çözmeyle ilgili herhangi bir sorun yaşarsanız, uygulama ayarlarından yazılım kod çözmeyi zorlayabilirsiniz.
 
-Https://crowdin.com/project/nova-video-player adresinden uygulamanın çevirisine katkıda bulunabilirsiniz
+https://crowdin.com/project/nova-video-player adresinden uygulamanın çevirisine katkıda bulunabilirsiniz.
 
-NOVA, OPOCE Video PlAyer'i temsil ediyor.
+NOVA, “opeN sOurce Video plAyer” yani açık kaynaklı video oynatıcı anlamına gelir.

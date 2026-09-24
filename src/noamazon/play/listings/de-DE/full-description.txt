@@ -1,44 +1,44 @@
 Nova ist ein opeN sOurce Video plAyer für Tablets, Telefone und AndroidTV-Geräte, verfügbar unter https://github.com/nova-video-player/aos-AVP
 
-Universal-Abspieler:
+Universeller Player:  
 - Videos von Ihrem Computer, Server (FTP, SFTP, WebDAV), NAS (SMB, UPnP) abspielen
-- Videos von einem externen USB-Speicher abspielen
-- Videos aus allen Quellen in eine einheitlichen Multimedia-Sammlung integrieren
-- Automatischer Online-Abruf von Meta-Daten wie Beschreibungen von Filmen und Fernsehsendungen mit Postern und Hintergründen
+- Wiedergabe von Videos von einem externen USB-Speicher 
+- Videos aus allen Quellen integriert in einer einheitlichen Multimedia-Sammlung
+Automatischer Online-Abruf von Film- und TV-Sendungsbeschreibungen mit Postern und Hintergrundkulissen
 - Integrierter Untertitel-Download
 
-Bester Abspieler:
-- Hardwarebeschleunigte Videodekodierung für die meisten Geräte und Videoformate
-- Multi-Audio-Tracks und Unterstützung für Multi-Untertitel
-- Unterstützte Dateiformate: MKV, MP4, AVI, WMV, FLV usw.
-- Unterstützte Untertitel-Dateitypen: SRT, SUB, ASS, SMI usw.
+Bester Player:
+- Hardwarebeschleunigte Videodecodierung für die meisten Geräte und Videoformate
+- Unterstützung von Multi-Audiospuren und Multi-Untertiteln
+- Unterstützte Dateiformate: MKV, MP4, AVI, WMV, FLV etc.
+- Unterstützte Untertitel-Dateitypen: SRT, SUB, ASS, SMI etc.
 
 TV freundlich:
-- Spezielle "Leanback" -Benutzeroberfläche für Android TV
+- Dedizierte "Leanback"-Benutzeroberfläche für Android TV
 - AC3 / DTS-Passthrough (HDMI oder S / PDIF) auf unterstützter Hardware: Nexus Player, NVidia SHIELD TV, Rockchip und AmLogic-basierte TV-Boxen
-- 3D-Unterstützung mit Side-by-Side- und Top-Bottom-Formaten für 3D-Fernseher
-- Audio Boost-Modus zum Erhöhen der Lautstärke
+- 3D-Unterstützung mit Side-by-Side- und Top-Bottom-Format-Wiedergabe für 3D-TVs
+- Audio-Boost-Modus zur Erhöhung der Lautstärke
 - Nachtmodus zur dynamischen Anpassung der Lautstärke
 
 Browsen Sie, wie Sie möchten:
-- Sofortiger Zugriff auf kürzlich hinzugefügte und zuletzt wiedergegebene Videos
+- Sofortiger Zugriff auf kürzlich hinzugefügte und kürzlich abgespielte Videos
 - Durchsuchen Sie Filme nach Name, Genre, Jahr, Dauer, Bewertung
-- Durchsuchen Sie Fernsehsendungen nach Jahreszeiten
-- Durchsuchen von Ordnern wird unterstützt
+- Durchsuchen Sie TV-Sendungen nach Staffeln
+- Ordner-Browsing unterstützt
 
-Und sogar mehr:
-- Netzwerk-Video-Resume für mehrere Geräte
+Und noch mehr: 
+- Wiederaufnahme von Netzwerk-Video mit mehreren Geräten
 - NFO-Metadatenverarbeitung für Beschreibungen und Poster
-- Geplanter Rescan Ihres Netzwerkinhalts (nur Leanback-Benutzeroberfläche)
-- Privatmodus: Deaktiviert die Wiedergabe des Verlaufs vorübergehend
+- Geplanter Rescan Ihres Netzwerkinhalts (nur Leanback-UI)
+- Privater Modus: Temporäre Deaktivierung der Aufzeichnung der Wiedergabehistorie
 - Manuelles Anpassen der Untertitelsynchronisation
-- Stellen Sie die Audio- / Video-Synchronisierung manuell ein
+- Manuelles Anpassen der Audio-/Videosynchronisation
 - Track your video collection and what you have watched via Trakt
 
-Falls Sie ein Problem oder eine Frage zu dieser App haben, besuchen Sie bitte unsere Reddit Support-Gruppe unter der folgenden Adresse: https://www.reddit.com/r/NovaVideoPlayer
+Falls Sie ein Problem oder eine Anfrage zu dieser App haben, besuchen Sie bitte unsere Reddit-Support-Community unter dieser Adresse: https://www.reddit.com/r/NovaVideoPlayer
 
-Wenn bei der Video-Dekodierung Hardware-Probleme auftreten, können Sie die Software-Dekodierung in den Anwendungseinstellungen erzwingen.
+Wenn Sie irgendein Problem mit der Hardware-Decodierung von Videos bemerken, können Sie die Software-Decodierung in den Einstellungen erzwingen.
 
-Sie können gerne zur Übersetzung der Anwendung unter https://crowdin.com/project/nova-video-player beitragen
+Sie sind herzlich eingeladen, an der Übersetzung der Applikation mitzuwirken unter: https://crowdin.com/project/nova-video-player
 
 NOVA steht für opeN sOurce Video plAyer.

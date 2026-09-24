@@ -1,0 +1,1 @@
+Prehrávač videí (aj zo sieťových úložísk) s podporou sťahovania titulkov/metadát

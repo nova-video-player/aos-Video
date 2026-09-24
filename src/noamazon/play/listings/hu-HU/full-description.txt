@@ -1,0 +1,44 @@
+A Nova egy nyílt-forrású videólejátszó, mely tabletek, mobiltelefonok és AndroidTV készülékekre lett tervezve. Elérhető itt: https://github.com/nova-video-player/aos-AVP
+
+Univerzális lejátszó:  
+- Videók lejátszása számítógépről, szerverről (FTP, SFTP, WebDAV), NAS-ról (SMB, UPnP)
+- Videók lejátszása külső USB meghajtóról 
+- Az összes videót egy egységes multimédia gyűjteménybe való integrálása
+- Filmek és sorozatok leírásának automatikus lekérése internetről, poszterekkel és háttérképekkel
+- Beépített felirat letöltés
+
+Legjobb lejátszó:
+- Hardvergyorsítós videó dekódolás a legtöbb készülék és videó formátum esetén
+- Többsávos audio és többnyelvű felirat támogatása
+- Támogatott fájlformátumok: MKV, MP4, AVI, WMV, FLV, stb.
+- Támogatott felirat fájlformátumok: SRT, SUB, ASS, SMI, stb.
+
+TV barát:
+- Dedikált "leanback" felhasználói felület Android TV-n
+- AC3/DTS passthrough (HDMI or S/PDIF) on supported hardware: Nexus Player, NVidia SHIELD TV, Rockchip and AmLogic based TV-boxes
+- 3D támogatás side-by-side és top-bottom formátumlejátszással 3D TV-ken
+- Audio Erősítés mód magasabb hangerőhöz
+- Éjszakai Mód a hangerő dinamikus állításához
+
+Böngésszen úgy, ahogy szeretne:
+- Azonnali hozzáférés az utoljára hozzáadott és utoljára lejátszott videókhoz
+- Filmek böngészése cím, műfaj, év, időtartam, értékelés szerint
+- Sorozatok böngészése évadok szerint
+- Mappaszintű böngészés támogatása
+
+És még ennél is több: 
+- Videó folytatása több-eszközös hálózaton
+- Leírások és poszterek feldolgozása NFO métaadatokból
+- Hálózati tartalom időzített letapogatása (csak Leanback felületen)
+- Privát mód: lejátszási előzmények megjegyzésének ideiglenes kikapcsolása
+- Feliratok szinkronizálásának kézi beállítása
+- Audio/Video szinkronizálásának kézi beállítása
+- A gyűjteményei és a megtekintett videók követése a Trakt segítségével
+
+Amennyiben problémája vagy kérdése merül fel az applikációval kapcsolatosan, kérjük keresse fel a Reddit támogatóközösségünket: https://www.reddit.com/r/NovaVideoPlayer
+
+Amennyiben hardveres dekódolási hibát észlel, úgy az applikáció beállításaiban kényszerítheti a szoftveres dekódolást.
+
+Közreműködésedet szívesen fogadjuk az alkalmazás fordításában a https://crowdin.com/project/nova-video-player címen
+
+NOVA egy mozaikszó: Nova sOurce Video plAyer.

@@ -1,0 +1,44 @@
+O NOVA é um Player de Vídeo de código aberto projetado para tablets, celulares e dispositivos Android TV.
+
+Player universal:  
+- Reproduz vídeos de computador, servidor (FTP, SFTP, WebDAV) ou NAS (SMB, UPnP)
+- Reproduz vídeos de um dispositivo USB externo 
+- Vídeos de todas as fontes integrados em uma coleção multimídia unificada
+- Busca automática online de descrições de filmes/séries com pôsteres e planos de fundo
+- Download integrado de legendas
+
+Melhor player:
+- Decodificação de vídeo com aceleração por hardware para a maioria dos dispositivos e formatos
+- Suporte a múltiplas faixas de áudio e legendas
+- Formatos de arquivo compatíveis: MKV, MP4, AVI, WMV, FLV, etc.
+- Formatos de legenda compatíveis: SRT, SUB, ASS, SMI, etc.
+
+Adaptado para TV:
+- Interface dedicada estilo “leanback” para Android TV
+- Passthrough AC3/DTS (HDMI ou S/PDIF) em hardware suportado: Nexus Player, NVidia SHIELD TV, e caixas Android TV baseadas em chips Rockchip ou AmLogic
+Suporte a 3D com reprodução nos formatos side-by-side e top-bottom para TVs 3D
+- Modo Audio Boost: para aumentar o nível do volume
+- Modo Noturno: para ajustar dinamicamente o nível do volume
+
+Explore como preferir:
+- Acesso instantâneo a vídeos adicionados e reproduzidos recentemente
+- Explore filmes por nome, gênero, ano, duração e avaliação
+- Explore séries por temporadas
+- Compatível com navegação por pastas
+
+E muito mais: 
+- Retomada da reprodução de vídeos em rede entre múltiplos dispositivos
+- Processamento de metadados NFO para descrições e pôsteres
+- Verificação agendada de conteúdos da rede (apenas Interface Leanback)
+- Modo privado: desativa temporariamente o registro do histórico de reprodução
+- Ajuste manual da sincronização de legendas
+- Ajuste manual da sincronização de áudio e vídeo
+- Sincronização da coleção e status de assistidos com o Trakt
+
+Caso você tenha algum problema ou solicitação sobre este aplicativo, visite nossa comunidade de suporte no Reddit neste endereço: https://www.reddit.com/r/NovaVideoPlayer
+
+Se você enfrentar problemas com a decodificação de hardware de vídeo, você pode forçar a decodificação por software nas configurações do aplicativo.
+
+Sinta-se à vontade para contribuir com a tradução do aplicativo em: https://crowdin.com/project/nova-video-player
+
+NOVA significa opeN sOurce Video plAyer (Player de Vídeo de Código Aberto).
