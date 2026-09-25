@@ -248,7 +248,7 @@ matching the general-purpose proxy default. Production playback uses up to 1 MiB
 the primary jcifs stream; this benchmark uses its explicit size for every backend so
 comparisons remain controlled. The HTTP client buffer stays at 256 KiB and the proxy's
 socket-write buffer stays at 8 KiB. This override does not change the app's settings.
-See [buffer.md](buffer.md) for the complete playback and buffering architecture.
+See [buffer.md](../buffer.md) for the complete playback and buffering architecture.
 
 From the `Video` directory, compare 80 KiB and 1 MiB with the same dependency and CSV:
 
