@@ -69,6 +69,7 @@ import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.utils.CodecDiscovery;
+import com.archos.mediacenter.video.utils.SpatializationSettings;
 import com.archos.mediacenter.video.utils.LocaleConfigParser;
 import com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper;
 import com.archos.mediacenter.video.utils.TrustingOkHttp3Downloader;
@@ -205,17 +206,10 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         LibAvos.setMediaCodecAudioCapabilities(getMediaCodecAudioCapabilitiesFlag());
         int spatial = getSpatializerCapabilities();
         LibAvos.setSpatializerCapabilities(spatial);
-        boolean spatialEnabled = Build.VERSION.SDK_INT >= 32 && mode == 0
-                && prefs.getBoolean("player_spatialization_enabled", false)
-                && (spatial & CodecDiscovery.SPATIALIZER_CAP_SUPPORTED) != 0
-                && (spatial & CodecDiscovery.SPATIALIZER_CAP_AVAILABLE) != 0
-                && (spatial & (CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_5_1
-                    | CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_7_1)) != 0;
+        boolean spatialEnabled = mode == 0
+                && SpatializationSettings.effectiveMode(prefs) == SpatializationSettings.SYSTEM;
         LibAvos.setSpatializerEnabled(spatialEnabled);
-        boolean downmix = mode == 0 && !spatialEnabled && (ArchosFeatures.isAndroidTV(context)
-                ? prefs.getBoolean("enable_downmix_androidtv", false)
-                : !(Build.VERSION.SDK_INT >= 24 && prefs.getBoolean("disable_downmix", false)));
-        LibAvos.setDownmix(downmix ? 1 : 0);
+        SpatializationSettings.applyDownmix(context, prefs);
     }
 
     private static boolean isIecEncapsulationCapable = false;

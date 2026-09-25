@@ -94,6 +94,12 @@ public final class SpatializationSettings {
                         if (preparing) apply(app, prefs, refresh, true);
                         return;
                     }
+                    // Passthrough or another preference may have changed while
+                    // the profile was being extracted. Never publish stale DSP policy.
+                    if (mode != effectiveMode(prefs)) {
+                        apply(app, prefs, refresh, preparing);
+                        return;
+                    }
                     if (path == null) {
                         applyNative(app, prefs, OFF, null, refresh, preparing);
                         Toast.makeText(app, R.string.spatialization_profile_error, Toast.LENGTH_LONG).show();
