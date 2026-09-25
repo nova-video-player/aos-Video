@@ -209,11 +209,13 @@ An opt-in, real-network diagnostic host test that benchmarks download throughput
 
 ### Why it's opt-in
 
-The test is guarded by an `assumeTrue(...)` check in `@Before` keyed off a system property; if the property isn't set (or doesn't point to a real file), the test is reported as **SKIPPED**, not failed. This follows the same pattern already used by `RealDatabasePruningTest` in `MediaLib` (`-Dnova.test.mediaDbPath`).
+The test is skipped only when `nova.test.speedtestCsv` is absent. If explicitly
+configured, a missing, empty or malformed CSV fails. A failed transfer or integrity
+check fails the test rather than merely printing an error row.
 
 ### CSV input format
 
-One `url,user,password` row per line (comma-separated). Blank lines and lines starting with `#` are ignored. The scheme of each URL selects the implementation under test:
+One `url,user,password[,expectedBytes[,sha256]]` row per line (simple comma-separated fields; embedded commas are unsupported). Blank lines and lines starting with `#` are ignored. The scheme of each URL selects the implementation under test:
 
 ```text
 smb://host/share/path/file      -> jcifs-ng
@@ -238,7 +240,13 @@ cd Video
     -Dnova.test.speedtestCsv=/absolute/path/to/servers.csv
 ```
 
-Output includes the upstream and HTTP client buffer sizes, followed by a results table with bytes transferred, elapsed seconds, and MiB/s (bytes / 1024² / seconds) per row; failed rows show the exception instead.
+Output identifies each CSV row by index and scheme, with bytes, elapsed seconds,
+MiB/s, actual backend and cleanup counters. It does not print URLs or credentials
+in result summaries; backend logs may still contain sensitive information.
+The full-transfer byte count must match `expectedBytes`, or Content-Length if no independent
+length is supplied. Prefix sampling still checks file-length metadata and the requested
+sample count; a CSV full-file hash requires a full transfer. Supply a 64-character SHA-256 to check content as well as length.
+A stream without Content-Length requires an explicit expected size.
 
 ### Comparing upstream buffer sizes (host only)
 
@@ -374,3 +382,79 @@ main app manifest/config is untouched.
 - **JUnit XML Results**: `FileCoreLibrary/build/outputs/androidTest-results/connected/debug/`
   (only populated when run via `connectedDebugAndroidTest`; `am instrument` directly does not
   write these)
+
+
+## Buffer policy, lifecycle and native descriptor checks
+
+The host and Android transfer entrypoints share the same diagnostic implementation.
+Use `-Dnova.test.NAME=VALUE` on the host and `-e NAME VALUE` with instrumentation:
+
+| NAME | Default | Scope |
+| --- | --- | --- |
+| `speedtestUpstreamBufferBytes` | 81920 | Proxy refill, 1 byte–4 MiB; compare 65536, 81920, 131072, 262144, 524288, 1048576 |
+| `speedtestSftpDepth` | 0 (existing 16) | JSch queue / SSHJ read-ahead argument; 1–64; conservative requests remain shallow |
+| `speedtestRequestBytes` | 0 (no cap) | Cap caller reads up to 1 MiB; affects SSHJ request sizing, not JSch packet/window or SMBJ prefetch sizes |
+| `speedtestSmbjAccess` | RANDOM | RANDOM, SEQUENTIAL or UNSPECIFIED; per-handle access hint |
+| `speedtestSampleBytes` | 0 (whole file) | Read a prefix using a normal playback GET, then cancel; up to 256 MiB; reported as `kind=prefix` with a prefix SHA-256 |
+| `speedtestRepeats` | 1 | Full transfers per row, up to 100 |
+| `speedtestStressIterations` | 0 | Up to 1000 seek/stop/list/reconnect iterations after each full transfer |
+
+Stress mode expects an unchanged, nonempty file and a listable parent directory.
+It verifies range status/length/payload against direct reads, runs directory listing
+concurrently, closes an active response, requires cleanup within 35 seconds and
+retires SSH connections between iterations. Reconnect tests establish a new
+connection on the next iteration. They do not simulate a stalled real server;
+controlled stalled-backend tests run separately in `StreamOverHttpCancellationTest`.
+Library timeouts can exceed the diagnostic cleanup deadline and cause a deliberate
+failure. Server resource counts and network bytes need server or packet tracing;
+stream counters alone cannot prove that a server processed asynchronous CLOSE.
+
+```bash
+# From Video: controlled host regressions, no real servers.
+./gradlew :FileCoreLibrary:testDebugUnitTest \
+    --tests '*ReadOptionsTest' --tests '*TransferDiagnosticTest' \
+    --tests '*StreamOverHttp*Test' --tests '*SFTPSessionLifecycleTest' \
+    --tests '*SshjStreamLifecycleTest'
+
+# Opt-in server lifecycle exercise; retain your private CSV path.
+./gradlew :FileCoreLibrary:testDebugUnitTest --tests '*SpeedTestTransferTest' \
+    -Dnova.test.speedtestCsv=/absolute/path/to/servers.csv \
+    -Dnova.test.speedtestUpstreamBufferBytes=1048576 \
+    -Dnova.test.speedtestSftpDepth=16 \
+    -Dnova.test.speedtestStressIterations=20
+
+# Build device tests (requires native libraries in the usual libs locations).
+./gradlew :FileCoreLibrary:assembleDebugAndroidTest :MediaLib:assembleDebugAndroidTest
+```
+
+Install the resulting test APKs using `adb install -r`. Then run the FileCore
+controlled range/cancellation checks without a CSV:
+
+```bash
+adb shell am instrument -w -r \
+    -e class com.archos.filecorelibrary.StreamOverHttpCancellationTest,com.archos.filecorelibrary.StreamOverHttpReadPolicyTest \
+    com.archos.filecorelibrary.test/androidx.test.runner.AndroidJUnitRunner
+
+adb shell am instrument -w -r \
+    -e class com.archos.medialib.BufferDescriptorDeviceTest \
+    com.archos.medialib.test/androidx.test.runner.AndroidJUnitRunner
+```
+
+MediaLib checks real asset offsets/bounds/closure and a pipe provider's sequential
+HTTP fallback. Its native test is skipped unless `avosFixturePath` is supplied.
+Provide a small, seekable, fast-start MP4 (under 16 MiB) inside the test app's private
+files directory, and add `-e avosFixturePath /data/user/0/com.archos.medialib.test/files/fixture.mp4`.
+The test embeds it between guard regions and exercises AVOS prepare/seek after
+Java closes the descriptor, ordinary local-file input, and pipe preparation.
+The APK must contain working AVOS libraries; native load failure fails the test.
+For physical USB/SD or an actual provider, also pass `-e avosStorageUri content://...`
+with read permission already granted to the test APK. Merely passing a URI does not
+grant access. Native seek success is not a decoded-frame or high-bitrate playback
+benchmark; validate those separately on target devices.
+
+
+The diagnostic registers temporary credentials at the server root so metadata and
+parent-directory requests use the same account as the file transfer. Proxy requests
+use the actual encoded filename, avoiding unintended subtitle discovery. Credentials
+are not persisted by the runner. Full and sampled transfers report SHA-256, allowing
+comparison across protocols when CSV rows point to the same unchanged file.

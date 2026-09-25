@@ -27,7 +27,8 @@ as the historical baseline for the stable/lint comparisons below:
 | `MediaLib` | `v6.4-lint`, `8a405189` | Player/retriever wrappers and proxy lifecycle |
 | `native/avos` | `v6.4-lint`, `fbecfc34` | Native input, demuxing, queues, decoding |
 
-The main description includes the subsequent lint fixes in section 12. Stable
+The main description includes the subsequent lint fixes in sections 12 and 13.
+Section 13 records the additional committed implementation after these revisions. Stable
 differences were checked against `FileCoreLibrary` `178c6b25`, `MediaLib` `8ec36666`, and
 `native/avos` `2cf21c48`; they are called out below. Do not interpret the lint
 native queue protections as a description of the stable native implementation.
@@ -60,7 +61,7 @@ and detailed audit. jcifs default/sidecar refills are 64 KiB, cancellation avoid
 interrupting jcifs, and JSch uses its dependency defaults of 32 KiB packets and a
 2 MiB channel window; the current app does not configure 64 KiB / 4 MiB. External
 video launches on lint explicitly select playback buffering, as described below.
-Section 11 preserves the pre-fix findings; section 12 records completed changes.
+Section 11 preserves the pre-fix findings; sections 12 and 13 record completed changes.
 
 ## 2. End-to-end paths
 
@@ -303,10 +304,12 @@ inferred from jcifs's nova9 behavior. The default operation timeout is 60 second
 it is a separate control from buffer capacity.
 
 [`SmbjFileEditor`](../FileCoreLibrary/src/com/archos/filecorelibrary/smbj/SmbjFileEditor.java)
-opens a read-only handle, creates the stream, and uses logical `skip(from)` for
-ranges. Closing the observable stream also closes the remote handle with
-`closeNoWait()` when the share remains connected. The library stream's next-read
-future means some work may already be in flight at close or after a short range.
+opens a read-only handle. Legacy callers and full playback use the library stream
+and logical `skip(from)`. Metadata and finite ranges ending before EOF now use
+explicit-offset `File.read()` calls, capped at 64 KiB and the remaining response
+length, avoiding the library stream's automatic next-read prefetch. An owning
+wrapper closes the stream and remote handle with `closeNoWait()` when connected.
+Full playback still has library read-ahead in flight at cancellation.
 
 Sources: [tagged FileInputStream](https://github.com/nova-video-player/smbj/blob/v0.15.0-nova2/src/main/java/com/hierynomus/smbj/share/FileInputStream.java),
 [SmbConfig](https://github.com/nova-video-player/smbj/blob/v0.15.0-nova2/src/main/java/com/hierynomus/smbj/SmbConfig.java),
@@ -316,8 +319,9 @@ Sources: [tagged FileInputStream](https://github.com/nova-video-player/smbj/blob
 
 [`SFTPSession`](../FileCoreLibrary/src/com/archos/filecorelibrary/sftp/SFTPSession.java)
 caches SSH sessions and opens a separate SFTP channel for a stream. The checked
-code calls neither `setBulkRequests()` nor the fork's packet/window setters.
-The presence of those APIs in the dependency does not mean the app uses them.
+code now calls `setBulkRequests()`: metadata and bounded subranges use one request;
+legacy/full-playback reads retain 16. Diagnostics may override the latter.
+The app still does not call the fork's packet/window setters.
 
 In the selected JSch tag, `ChannelSftp` defaults to a **32 KiB local maximum SSH
 packet**, a **2 MiB local channel window**, and a **16-request SFTP queue**. For
@@ -340,8 +344,10 @@ Source: [published ChannelSftp](https://github.com/nova-video-player/jsch-mwiede
 ### SFTP through SSHJ
 
 [`SshjFileEditor`](../FileCoreLibrary/src/com/archos/filecorelibrary/sshj/SshjFileEditor.java)
-explicitly constructs `ReadAheadRemoteFileInputStream(16)` or `(16, from)`.
-This is pipelined SFTP, not jcifs-style synchronous demand reading.
+uses `ReadAheadRemoteFileInputStream(16, from)` for legacy/full-playback reads.
+Metadata and bounded subranges use `RemoteFileInputStream(from)` with a strict
+remaining-byte wrapper, so those reads are synchronous and have no read-ahead.
+The following pipeline sizes describe the full-playback path.
 
 In SSHJ 0.40.0, each new request is sized approximately as
 `min(max(1024, callerLength), learnedMaximumReadLength)`. Short server replies can
@@ -351,8 +357,8 @@ caller read, that is potentially 1.328 MiB of requested data; it is not a promis
 that all that memory is allocated immediately or that the server returns 80 KiB.
 
 The three-argument constructor can bound read-ahead, but Nova uses the overloads
-without a finite range limit. A short HTTP response can therefore cause backend
-read-ahead beyond the response boundary. In the audited baseline, the observable
+without a finite range limit for full playback. Short bounded HTTP subranges now
+select the synchronous path instead of that constructor. In the audited baseline, the observable
 ownership wrappers were commented out. SSHJ's read-ahead stream inherits the
 no-op `InputStream.close()`; its output-stream close only flushes writes. Remote
 handles could therefore accumulate. The implementation follow-up wraps both
@@ -898,8 +904,8 @@ of these changes.
   its singleton and retires idle sessions while preserving actively used ones.
   SSHJ invalidates the cached SFTP client whenever its SSH transport is replaced
   or disconnected, closes failed connection/authentication attempts, and uses
-  the same cache monitor for acquisition and teardown. Moving connection work
-  to per-server locks remains a separate concurrency optimization.
+  the same cache monitor for acquisition and teardown. Section 13 replaces the
+  shared monitor with per-endpoint coordination.
 * **Provider/local ownership:** content offset reads use an owning asset stream,
   retain start offsets and declared lengths, bound reads/skips to the asset slice,
   and close on setup failure. Illegal seeks retain the proxy's sequential
@@ -934,6 +940,167 @@ Validation completed:
 * The standalone `test/stream_buffer_limits.c` boundary test passed with
   `-fsanitize=undefined`; changed XML and diff whitespace checks passed.
 
-No new live SMB/SFTP/VPN throughput benchmark was run. Bounded backend prefetch,
-per-server lock restructuring, SMBJ access-hint changes, jcifs pipelining and
-protocol-window tuning remain measurement-driven proposals from section 11.
+No new live SMB/SFTP/VPN throughput benchmark was run for this first implementation.
+The next section records the subsequent backend-policy and diagnostics work.
+Jcifs pipelining and protocol-window tuning remain measurement-driven proposals.
+
+
+## 13. Complementary implementation on v6.4-lint
+
+Committed as focused changes:
+
+| Repository | Commit | Change |
+| --- | --- | --- |
+| FileCoreLibrary | `f95cb17` | Logical SMBJ file length |
+| FileCoreLibrary | `54dc129` | Serialized WebDAV response cleanup |
+| FileCoreLibrary | `2c01a4b` | Per-server SSH connection coordination |
+| FileCoreLibrary | `dbb79d7` | Bounded metadata/backend reads |
+| FileCoreLibrary | `cd4f6ea` | Cancellation-safe remote cleanup |
+| FileCoreLibrary | `8986e2d` | HTTP purpose/range propagation |
+| FileCoreLibrary | `fac5160` | Transfer integrity, tuning and lifecycle diagnostics |
+| MediaLib | `4d8ae796` | Metadata policy for NFO/artwork |
+| MediaLib | `d3825c78` | Android descriptor/native input tests |
+
+### Backend policy and connection coordination
+
+`FileEditor` now has optional `ReadOptions` overloads carrying purpose, response
+length and whether a request ends before EOF. Existing overloads remain available.
+`StreamOverHttp` supplies this policy after resolving the range; full playback and
+open-ended tail reads retain throughput defaults. Generic proxy users, sidecars,
+NFO parsing and artwork decoding request metadata behavior. Legacy callers that
+do not supply a policy retain the default backend pipeline.
+
+| Backend | Metadata / bounded subrange | Full playback |
+| --- | --- | --- |
+| jcifs-ng nova10 | Remaining-byte bound before backend read | Existing adaptive-credit reads and 1 MiB proxy refill |
+| SMBJ | Demand `File.read`, at most 64 KiB and remaining bytes, no automatic next read | Existing negotiated library buffer and next-read prefetch |
+| JSch | Queue depth 1, bounded bytes returned to caller | Queue depth 16 |
+| SSHJ | Synchronous `RemoteFileInputStream`, bounded read size | Read-ahead depth argument 16 (library may queue 17 requests) |
+| Other editors | Generic read/skip bound, existing sequential/provider behavior | Existing backend behavior |
+
+A Java byte bound is not always a wire bound. JSch still sends its library-sized
+READ packets and may have residual data in flight, even at queue depth 1. The
+request cap used by diagnostics changes caller read lengths; it does not change
+JSch packets/windows or SMBJ's prefetched library request size. WebDAV/HTTP may
+also buffer data internally. The policy does not introduce new protocol Range
+headers for those editors. Pipe-backed content retains the sequential fallback.
+
+Both SSH implementations coordinate connection creation and retirement by
+normalized host and effective port (default 22). Network work no longer holds a
+pool-wide monitor. JSch separately protects each session's channel usage, retaining
+active retired sessions until their last release. SSHJ acquires/retires both caches
+under the same endpoint lock. Different accounts on one endpoint still serialize
+setup; established reads are not serialized by these locks. Endpoint monitors live
+for the pool's lifetime to prevent a second monitor appearing during retirement.
+This does not impose a new connection timeout or make a stalled backend operation
+instantly cancellable.
+
+### Diagnostics and test coverage
+
+Host and Android speed tests now share one runner. An explicitly configured
+missing/empty/malformed CSV fails. Every row must return HTTP 200 and the expected
+byte count: a CSV length is preferred, otherwise Content-Length is required.
+Optional CSV SHA-256 verifies the entire payload. Any failed transfer, integrity
+check or cleanup deadline fails the test after reporting all rows. Connections
+and proxies close on failures as well as success. Row summaries omit URLs and
+credentials; underlying backend logs must still be treated as sensitive.
+
+Opt-in controls cover refill size, SFTP depth, caller request cap, SMBJ random /
+sequential / unspecified hints, repeats, and lifecycle stress. They are per-open
+settings and leave production defaults unchanged. Stress mode alternates head/tail
+ranges, compares proxy data with a bounded direct read, runs a directory listing
+concurrently, stops a live response, waits for cleanup and retires SSH connections
+before the next iteration. It is intended for static files on controlled servers.
+
+Counters identify the actual editor and report InputStream calls, requested /
+returned bytes, socket-delivered bytes, bytes returned after cancellation, stream
+opens/closes, close failures and maximum cancellation-to-cleanup time. They count
+API activity, not protocol packets or server-side handles. A successful SMBJ
+`closeNoWait()` is not confirmation that the server has processed CLOSE. Cleanup
+barriers include asynchronous close tasks and fail after 35 seconds in diagnostics;
+this can deliberately fail earlier than a backend's longer configured timeout.
+
+Automated coverage includes bounded reads/skips, short reads, proxy range-purpose
+propagation, counters, local transfer integrity, SSHJ demand reads, JSch queue
+selection, independent-server progress during stalled reconnect/close, and shared
+host/Android stalled-backend cancellation tests. Android descriptor tests use real
+regular-file slices and pipes; an opt-in native test prepares/seeks a supplied MP4
+after the Java descriptor closes, checks local-file input and pipe relay preparation,
+and accepts an additional granted storage URI for USB/SD/provider coverage.
+
+See [TEST.md](doc/TEST.md#buffer-policy-lifecycle-and-native-descriptor-checks) for
+controls and commands. Android APK construction does not establish device playback
+correctness. No device is currently connected, so ART execution, physical USB/SD,
+real cloud providers, one-credit SMB hardware, constrained-memory playback and
+LAN/VPN tuning measurements remain release validation work. No new larger buffer,
+SSH packet/window, jcifs pipeline or production SMBJ access hint is selected by
+this implementation. Advanced numeric settings remain unchanged.
+
+
+Validation of this follow-up: **86 FileCoreLibrary JVM tests passed**, with the two
+real-server diagnostics skipped because no CSV was supplied; **7 targeted MediaLib
+JVM tests passed** (descriptor selection and buffer settings). Both FileCoreLibrary
+and MediaLib Android test APKs were built successfully, including native libraries
+from the current tree. No ART or native device test was executed. The local transfer
+self-test verifies that a correct byte count passes and a mismatched expected count
+fails; it is not a remote throughput measurement.
+
+
+### Real-server follow-up
+
+The first live run exposed and fixed three additional defects:
+
+* SMBJ's single-file metadata used allocation size instead of logical EOF. For the
+  test fixture it advertised 736,112,640 bytes instead of 736,111,567, causing tail
+  ranges to end early. `SmbjFile2` now uses `getEndOfFile()`, matching directory metadata.
+* Proxy cancellation could interrupt the worker while it was issuing protocol CLOSE,
+  or leave its interrupt flag set when cleanup started. Cleanup now clears/restores
+  that flag, and cancellation's interrupt decision is coordinated with entry into
+  worker-owned close. Remote handle cleanup still remains off the caller thread.
+* WebDAV exposed OkHttp's response stream directly, allowing read/close races with
+  Okio's timeout state (`Unbalanced enter/exit`). The editor now cancels the request
+  through thread-safe `Call.cancel()` before serializing response-stream cleanup
+  with reads. This also unblocks a pending read without racing the stream adapter.
+
+The diagnostic itself now scopes credentials to the server and uses the actual
+encoded filename for proxy requests. A bounded sample mode permits normal playback
+GET/prefetch testing without first downloading an entire movie; sample hashes are
+explicitly distinguished from full-file hashes. The successful initial live pass
+covered all five backends (SSHJ, JSch, WebDAV HTTPS, SMBJ and jcifs-ng), matching 8 MiB
+prefix hashes, and five head/tail/replace/stop/list/reconnect cycles per backend.
+All tracked streams closed with zero close failures; maximum observed cancellation
+cleanup in that pass was 45 ms. These counters do not inspect server-side handles.
+
+
+Full-file validation then downloaded **736,111,567 bytes (702.011 MiB)** through
+all five backends with an explicit expected length. All five full SHA-256 values
+matched:
+`d2198330171219d9942c7cbe244bb6c7c6beb633f8419e103fbf05f81646f0b4`.
+The separate jcifs 1 MiB run also asserted this reference hash in the runner.
+
+| Backend | Proxy refill | Full transfer seconds | MiB/s |
+| --- | ---: | ---: | ---: |
+| SSHJ | 80 KiB | 9.548 | 73.523 |
+| JSch SFTP | 80 KiB | 11.164 | 62.882 |
+| WebDAV HTTPS | 80 KiB | 8.132 | 86.330 |
+| SMBJ | 80 KiB | 17.377 | 40.398 |
+| jcifs-ng nova10 | 80 KiB | 61.045 | 11.500 |
+| jcifs-ng nova10 | 1 MiB (production playback refill) | 14.462 | 48.543 |
+
+These are single sequential host/Robolectric observations on the current network
+path, including setup/hash/cleanup time, not controlled Android throughput rankings.
+Cache state and run order were not randomized. The 1 MiB jcifs run performed ten
+more seek/replace/stop/list cycles, with zero close failures and a maximum observed
+cleanup of 25 ms. Its cancelled reads sometimes returned one outstanding 1 MiB
+refill before stopping, consistent with cooperative cancellation; this is not an
+unbounded read-ahead queue. Across the successful sample and production-refill
+runs, 35 stress cycles completed. No server-side handle count was measured.
+
+The complete FileCoreLibrary regression run passed **90 tests**, including the
+five-protocol live test, and skipped one unrelated opt-in WebDAV PROPFIND diagnostic.
+New regressions cover logical SMBJ file size, cancellation during remote CLOSE,
+interrupt-state cleanup and thread-safe request cancellation before stream close.
+Both Android test APKs rebuilt successfully. Android execution and AVOS playback
+on real devices remain separate validation requirements. Private test CSV copies
+were kept outside the repository and removed after the runs; the user's original
+CSV was left unchanged.
