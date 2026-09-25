@@ -94,9 +94,7 @@ public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
     @Override
     public void setOnClickListener(OnClickListener ocl) {
         this.ocl = ocl;
-        if (!isDisabled) {
-            findViewById(R.id.info_text).setOnClickListener(ocl);
-        }
+        findViewById(R.id.info_text).setOnClickListener(isDisabled ? null : ocl);
     }
 
     @Override
@@ -169,7 +167,7 @@ public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
         if (log.isDebugEnabled()) log.debug("onKeyUp keyCode:{}", keyCode);
         //click mapping
         if(TVUtils.isOKKey(keyCode) &&ocl!=null) {
-            this.ocl.onClick(this);
+            if (!isDisabled) this.ocl.onClick(this);
             return true;
         }
         return false;
@@ -266,6 +264,11 @@ public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
         setFocusable(!disabled);
         setEnabled(!disabled);
         setFocusableInTouchMode(!disabled);
+        View infoText = findViewById(R.id.info_text);
+        if (infoText != null) {
+            infoText.setEnabled(!disabled);
+            infoText.setOnClickListener(disabled ? null : ocl);
+        }
         if (disabled) {
             setAlpha(0.5f); // Visually indicate the item is disabled
         } else {

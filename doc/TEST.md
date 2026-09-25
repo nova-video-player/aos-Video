@@ -45,6 +45,18 @@ Run a specific test method:
 
 ## Existing Tests
 
+### TV audio menu disabled controls (`TVMenuItemTest`)
+
+```bash
+./gradlew --offline testNoamazonDebugUnitTest \
+  --tests 'com.archos.mediacenter.video.player.tvmenu.TVMenuItemTest'
+```
+
+Checks that a disabled item cannot invoke its listener through the remote OK
+key or its child text view, whether disabled before or after listener attachment,
+and that re-enabling restores both paths. This covers the spatialization control
+used in the audio tile when passthrough is selected.
+
 ### 1. Audio Track Selection Policy (`AudioTrackSelectionPolicyTest`)
 
 **Class**: `com.archos.mediacenter.video.player.AudioTrackSelectionPolicyTest`

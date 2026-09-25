@@ -554,10 +554,15 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     }
 
     private void showSpatializationDialog() {
+        if (!isSpatializationToggleAvailable()) return;
         new AlertDialog.Builder(this)
                 .setTitle(R.string.spatialization_title)
                 .setSingleChoiceItems(R.array.spatialization_entries, SpatializationSettings.getMode(mPreferences),
                         (dialog, which) -> {
+                            if (!isSpatializationToggleAvailable()) {
+                                dialog.dismiss();
+                                return;
+                            }
                             mPreferences.edit().putString(SpatializationSettings.KEY_MODE, Integer.toString(which)).apply();
                             applySpatializationPreferenceToAvos();
                             invalidateOptionsMenu();
