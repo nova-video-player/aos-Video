@@ -887,8 +887,8 @@ Recommended validation order:
 ## 12. Implemented fixes and validation
 
 Implemented in FileCoreLibrary `b777fe7`, MediaLib `c364ed6d` and native/avos
-`96d5f4f`, all on **v6.4-lint**. The preference descriptions and consolidated
-documentation are applied to **Video v6.4-lint** as well. No library dependency
+`96d5f4f`, all on **v6.4-lint**. The consolidated documentation is applied to
+**Video v6.4-lint** as well. No library dependency
 versions or network buffer defaults were changed by these fixes. Stable behavior
 described elsewhere refers to the historical refs in section 1, not a backport
 of these changes.
@@ -922,9 +922,9 @@ of these changes.
 * **Advanced settings:** numeric controls remain available. Java and native
   validation account for integer representability, legacy-ring overlap and CBE
   backing allocation. Native byte conversion and legacy prebuffer arithmetic
-  use wide intermediates. English summaries explain MiB, scope, when settings
-  apply and zero behavior; translated summaries need the normal translation
-  workflow. Validation prevents arithmetic overflow, not allocation failure on
+  use wide intermediates. The original English preference summaries are retained
+  to avoid translation churn; this document explains MiB, scope, activation timing
+  and zero behavior. Validation prevents arithmetic overflow, not allocation failure on
   a memory-constrained device.
 
 Validation completed:
