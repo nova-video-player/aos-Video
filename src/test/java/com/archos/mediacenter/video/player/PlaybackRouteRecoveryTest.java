@@ -33,9 +33,11 @@ import org.robolectric.annotation.Config;
 import org.robolectric.annotation.LooperMode;
 
 import java.lang.reflect.Field;
+import java.time.Duration;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(application = Application.class, manifest = Config.NONE, sdk = 30)
@@ -78,10 +80,40 @@ public class PlaybackRouteRecoveryTest {
     }
 
     @Test
+    public void exitCancelsPendingWorkAndRejectsRecoveryWithoutReleasingSurface() throws Exception {
+        set("mOpenGeneration", 7);
+        handler.postDelayed(prepared, 100);
+        handler.postDelayed(refresh, 100);
+
+        player.beginPlaybackExit();
+        player.beginPlaybackExit();
+        player.onAudioOutputChanged();
+        player.onAudioBecomingNoisy();
+        player.onPrepared(media);
+        player.start(PlayerController.STATE_NORMAL);
+        player.openVideo();
+        player.setVideoURI(Uri.parse("file:///late-source.mkv"), null);
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(1));
+
+        assertEquals(8, get("mOpenGeneration"));
+        assertEquals(5, get("mTargetState"));
+        assertSame(media, get("mMediaPlayer"));
+        verifyNoInteractions(media, prepared, refresh);
+        application.verifyNoInteractions();
+    }
+
+    @Test
     public void unchangedCapabilitiesDoNotReopenActivePlayer() {
         player.onAudioOutputChanged();
         verifyNoInteractions(media);
         verify(player, never()).openVideo();
+    }
+
+    @Test
+    public void noisyEventStillPausesAnActiveSession() throws Exception {
+        player.onAudioBecomingNoisy();
+        verify(media).pause();
+        assertEquals(6, get("mTargetState")); // PAUSED
     }
 
     @Test

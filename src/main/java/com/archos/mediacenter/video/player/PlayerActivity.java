@@ -1166,6 +1166,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     @SuppressWarnings("deprecation") // requestVisibleBehind: deprecated API 26, no replacement for Android TV
     @Override
     protected void onPause() {
+        // Also cover framework-driven finishing paths which bypass our finish() override.
+        if (isFinishing() && !mLaunchFloatingPlayer && mPlayer != null) mPlayer.beginPlaybackExit();
         super.onPause();
         if (log.isDebugEnabled()) log.debug("onPause");
 
@@ -4235,6 +4237,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     @Override
     public void finish() {
+        // Home/PiP do not finish this activity. A floating-player handoff keeps its session.
+        if (!mLaunchFloatingPlayer && mPlayer != null) mPlayer.beginPlaybackExit();
         // Send result before finishing if we haven't already
         if (mIsExternalPlayer && !mResultSent) {
             if (log.isDebugEnabled()) log.debug("finish() called - sending result before finish");

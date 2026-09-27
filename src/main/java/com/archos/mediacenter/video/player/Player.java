@@ -141,6 +141,7 @@ public class Player implements IPlayerControl,
     private boolean mRestoringSession;
     private boolean mMetadataReady;
     private boolean mHasAudio;
+    private boolean mPlaybackEnding;
     private SurfaceTexture mDisplayTexture;
     private int mFocusEpoch;
     private AudioManager.OnAudioFocusChangeListener mFocusListener;
@@ -187,7 +188,7 @@ public class Player implements IPlayerControl,
     private Handler     mHandler = new Handler(Looper.getMainLooper());
     private Runnable mPreparedAsync = new Runnable() {
         public void run() {
-
+            if (mPlaybackEnding) return;
             if (mCurrentState == STATE_REFRESH_PREPARED) {
                 mCurrentState = STATE_SURFACE_PREPARED;
                 if (mRestoringSession) {
@@ -205,6 +206,7 @@ public class Player implements IPlayerControl,
 
     private Runnable mRefreshRateCheckerAsync = new Runnable() {
         public void run() {
+            if (mPlaybackEnding) return;
             if (log.isDebugEnabled()) log.debug("mRefreshRateCheckerAsync");
             if (mCurrentState == STATE_PREPARED) {
                 if (mWaitForNewRate && mWindow != null) {
@@ -427,6 +429,7 @@ public class Player implements IPlayerControl,
     }
 
     public void setVideoURI(Uri uri, Map<String, String> extraMap) {
+        if (mPlaybackEnding) return; // a delayed service/source callback must not revive this player
         stopPlayback();
         reset();
         mMetadataReady = false;
@@ -466,6 +469,15 @@ public class Player implements IPlayerControl,
         }
         mFocusListener = null;
         mFocusGranted = false;
+    }
+
+    /** Mark a deliberate frontend exit without releasing a surface still owned by Android. */
+    public void beginPlaybackExit() {
+        if (mPlaybackEnding) return;
+        mPlaybackEnding = true;
+        ++mOpenGeneration; // reject source setup already in flight
+        mHandler.removeCallbacks(mPreparedAsync);
+        mHandler.removeCallbacks(mRefreshRateCheckerAsync);
     }
 
     private void closeCurrentPlayer() {
@@ -510,7 +522,7 @@ public class Player implements IPlayerControl,
     }
 
     private final AudioManager.OnAudioFocusChangeListener afChangeListener = focusChange -> {
-        if (!mHasAudio || mUri == null) return;
+        if (mPlaybackEnding || !mHasAudio || mUri == null) return;
         if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
             mFocusGranted = true;
             mFocusSuspended = false;
@@ -537,12 +549,12 @@ public class Player implements IPlayerControl,
     }
 
     public void onAudioBecomingNoisy() {
-        if ((!mMetadataReady || mHasAudio) && mTargetState == STATE_PLAYING)
+        if (!mPlaybackEnding && (!mMetadataReady || mHasAudio) && mTargetState == STATE_PLAYING)
             pause(PlayerController.STATE_NORMAL);
     }
 
     public void openVideo() {
-        if (mUri == null || (mSurfaceHolder == null && mVideoTexture == null)) {
+        if (mPlaybackEnding || mUri == null || (mSurfaceHolder == null && mVideoTexture == null)) {
             // not ready for playback just yet, will try again later
             return;
         }
@@ -794,6 +806,7 @@ public class Player implements IPlayerControl,
     }
 
     public void start(int state) {
+        if (mPlaybackEnding) return;
         mTargetState = STATE_PLAYING;
         if (state == PlayerController.STATE_NORMAL) {
             mFocusSuspended = false;
@@ -1057,6 +1070,7 @@ public class Player implements IPlayerControl,
     }
 
     public void onAudioOutputChanged() {
+        if (mPlaybackEnding) return;
         String signature = CustomApplication.getAudioOutputSignature();
         if (signature.equals(mAudioOutputSignature)) return;
         if (mMediaPlayer == null || !mMetadataReady) return; // prepare applies the newest snapshot
@@ -1121,7 +1135,7 @@ public class Player implements IPlayerControl,
 
     /* IMediaPlayer.Listener */
     public void onPrepared(IMediaPlayer mp) {
-        if (mp != mMediaPlayer) return;
+        if (mPlaybackEnding || mp != mMediaPlayer) return;
         mCurrentState = STATE_PREPARED;
         if (mSurfaceController != null)
             mSurfaceController.setMediaPlayer(mMediaPlayer);
