@@ -39,6 +39,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -73,6 +74,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.ArrayAdapter;
 import android.widget.Checkable;
 import android.widget.CompoundButton;
@@ -1318,8 +1320,25 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         Point point = new Point();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // In API 30+ use currentWindowMetrics bounds minus insets for the usable area
-            Rect bounds = getWindowManager().getCurrentWindowMetrics().getBounds();
-            point.set(bounds.width(), bounds.height());
+            WindowMetrics windowMetrics = getWindowManager().getCurrentWindowMetrics();
+            Rect bounds = windowMetrics.getBounds();
+            WindowInsets rootInsets = getWindow().getDecorView().getRootWindowInsets();
+            // getBounds() reports the window size including all system bar areas whereas the app content is
+            // laid out below the freeform caption bar. Only the caption bar (desktop windowing) is subtracted
+            // here to keep the legacy usable area on phones; navigation bars and cutout are already handled as
+            // margins by MiscUtils.adjustViewLayoutForInsets() and must not be subtracted twice, otherwise the
+            // OSD controls and subtitles are laid out past the window edge and get clipped at the bottom
+            // cf. issue #1541. Status bar is intentionally not subtracted: the content is drawn edge-to-edge
+            // behind it (setDecorFitsSystemWindows(false)) and adjustViewLayoutForInsets shifts the views.
+            // The caption bar is a local inset of the task flagged FORCE_CONSUMING: WindowMetrics.getWindowInsets()
+            // reports it as empty, so query the decor view root insets. It is empty when no caption bar can be
+            // shown (fullscreen/split-screen/phone) so it is safe to always subtract it.
+            Insets captionInsets = Insets.NONE;
+            if (isInMultiWindowMode && rootInsets != null) {
+                captionInsets = rootInsets.getInsets(WindowInsets.Type.captionBar());
+            }
+            point.set(bounds.width() - captionInsets.left - captionInsets.right,
+                    bounds.height() - captionInsets.top - captionInsets.bottom);
         } else {
             getWindowManager().getDefaultDisplay().getSize(point);
         }
@@ -1348,7 +1367,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mPlayerController.setFullscreenWithCutoutButtonIcon(mFullScreenWithCutout);
 
         // hack to fix fullscreen height on chromeos pixelbook (and more?) since it reports 2400x1440 instead of 2400x1600 but ok in multiWindow
-        if(isChromeOS(mContext)&&(layoutWidth == displayWidth)&&(layoutHeight != displayHeight)) {
+        // restricted to fullscreen: in freeform windowing the height difference can come from the caption bar
+        // already subtracted above (cf. issue #1541), which this hack would otherwise cancel
+        if(isChromeOS(mContext)&&!isInMultiWindowMode&&(layoutWidth == displayWidth)&&(layoutHeight != displayHeight)) {
             log.warn("CONFIG updateSizes: hack correcting on chromeOS layoutHeight from {} to {}", layoutHeight, displayHeight);
             layoutHeight = displayHeight;
         }

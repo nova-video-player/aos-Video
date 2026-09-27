@@ -501,10 +501,17 @@ public class MiscUtils {
                     navigationBarInsets.left, navigationBarInsets.top, navigationBarInsets.right, navigationBarInsets.bottom,
                     statusBarInsets.left, statusBarInsets.top, statusBarInsets.right, statusBarInsets.bottom,
                     mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom, radius);
-            systemBarLeft = systemBarsInsets.left;
-            systemBarTop = systemBarsInsets.top;
-            systemBarRight = systemBarsInsets.right;
-            systemBarBottom = systemBarsInsets.bottom;
+            // exclude the caption bar from the system bar insets: in desktop/freeform windowing systemBars()
+            // includes the caption bar which the layout dimensions already exclude (cf. issue #1541), so adding
+            // it here would shift the controller down by the caption height a second time and clip it at the
+            // bottom. Keeping status/navigation and any other system bar inset preserves the previous top-edge
+            // protection.
+            Insets systemBarsNoCaptionInsets = insets.getInsets(
+                    WindowInsets.Type.systemBars() & ~WindowInsets.Type.captionBar());
+            systemBarLeft = systemBarsNoCaptionInsets.left;
+            systemBarTop = systemBarsNoCaptionInsets.top;
+            systemBarRight = systemBarsNoCaptionInsets.right;
+            systemBarBottom = systemBarsNoCaptionInsets.bottom;
         } else {
             WindowInsetsCompat insetsCompat = WindowInsetsCompat.toWindowInsetsCompat(insets);
             androidx.core.graphics.Insets systemBarsInsets = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars());
