@@ -475,6 +475,7 @@ public class Player implements IPlayerControl,
         IMediaPlayer old = mMediaPlayer;
         mMediaPlayer = null; // callbacks from this instance are now obsolete
         mCurrentState = STATE_IDLE;
+        mMetadataReady = false;
         mIsBusy = false;
         mUpdateMetadata = false;
         if (mSurfaceController != null) mSurfaceController.setMediaPlayer(null);

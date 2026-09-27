@@ -141,6 +141,8 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     private static AudioDeviceCallback mAudioDeviceCallback;
     private static int selectedAudioDeviceId;
     private static boolean audioRouteResolved;
+    private static final long AUDIO_ROUTE_SETTLE_MS = 500;
+    private String pendingAudioOutputSignature;
     private final android.os.Handler audioRouteHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private final Runnable notifyAudioRoute = () -> {
         com.archos.mediacenter.video.player.Player player = com.archos.mediacenter.video.player.Player.sPlayer;
@@ -148,8 +150,12 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     };
 
     private void publishAudioRouteChange() {
+        String signature = getAudioOutputSignature();
+        // Repeated observations of the same configuration must not keep postponing recovery.
+        if (signature.equals(pendingAudioOutputSignature)) return;
+        pendingAudioOutputSignature = signature;
         audioRouteHandler.removeCallbacks(notifyAudioRoute);
-        audioRouteHandler.postDelayed(notifyAudioRoute, 100);
+        audioRouteHandler.postDelayed(notifyAudioRoute, AUDIO_ROUTE_SETTLE_MS);
     }
 
     private AudioDeviceInfo selectedMediaDevice(AudioDeviceInfo[] connected, String reason) {
@@ -182,7 +188,10 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     public static String getAudioOutputSignature() {
-        return selectedAudioDeviceId + ":" + getNativeAudioCodecsFlag() + ":" + maxAudioChannelCount
+        // AudioTrack follows routing itself. HDMI reconnects can replace its device ID or
+        // temporarily leave it unresolved without changing the native output configuration.
+        // Rebuild only for capability/backend changes, including forced-passthrough eligibility.
+        return isPassthroughSupported() + ":" + getNativeAudioCodecsFlag() + ":" + maxAudioChannelCount
                 + ":" + Arrays.toString(hdmiChannelMasks) + ":" + isIecEncapsulationCapable
                 + ":" + isDirectPcmMultichannelCapable + ":" + getSpatializerCapabilities();
     }
@@ -468,8 +477,8 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         publishAudioRouteChange();
 
         if (log != null) {
-            log.info("refreshAudioOutputCapabilities({}): hasHdmi={} (type={}) hasSpdif={} maxAudioChannelCount={} hdmiCaps={} spdifCaps={}",
-                    reason, hasHdmi, bestHdmiType, hasSpdif, maxAudioChannelCount, getSupportedAudioCodecs(hdmiAudioEncodingFlag), getSupportedAudioCodecs(spdifAudioEncodingFlag));
+            log.info("refreshAudioOutputCapabilities({}): deviceId={} resolved={} hasHdmi={} (type={}) hasSpdif={} maxAudioChannelCount={} hdmiCaps={} spdifCaps={}",
+                    reason, selectedAudioDeviceId, audioRouteResolved, hasHdmi, bestHdmiType, hasSpdif, maxAudioChannelCount, getSupportedAudioCodecs(hdmiAudioEncodingFlag), getSupportedAudioCodecs(spdifAudioEncodingFlag));
         }
     }
 
