@@ -24,6 +24,21 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
     private int mLast2DWidth = 1920;
     private int mLast2DHeight = 1080;
 
+    // Last video box reported by SurfaceController (canvas pixels, relative to the canvas's own
+    // top-left). Cached here because the native engine deliberately INVALIDATES its own copy
+    // on every surface attach/detach (a box measured against a surface that's gone can't be
+    // trusted for the next one -- see sub_engine_attach_surface()), while nothing on the Java
+    // side re-runs SurfaceController.updateSurface() just because a TextureView was recreated
+    // or the 3D->2D switch re-attached the surface. Without this cache the native box would sit
+    // at its "video fills canvas" fallback after those events until the next unrelated layout
+    // change. If the new surface really does have different geometry, SurfaceController
+    // recomputes and overwrites this through onVideoBoxChanged() as usual.
+    // mBoxLock also serializes the native call itself, so a replay racing a fresh
+    // setVideoBox() can't deliver the older box last.
+    private final Object mBoxLock = new Object();
+    private boolean mHasVideoBox = false;
+    private int mBoxX, mBoxY, mBoxW, mBoxH;
+
     // Cached target for the "redraw right now" path used by style setters while paused in
     // 3D mode (see redraw3DIfNeeded() below). Kept in sync every time draw3DSubtitles() runs
     // -- either from the video-frame-driven path (VideoEffectRenderer.onFrameAvailable) or
@@ -109,6 +124,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
         // Only attach hardware EGL if we are NOT in 3D mode
         if (mNativeEngineHandle != 0 && !is3DMode()) {
             nativeSurfaceCreated(mNativeEngineHandle, mCurrentSurface);
+            resendVideoBox(); // attach just invalidated the native box -- restore it
             nativeSurfaceChanged(mNativeEngineHandle, width, height);
         }
     }
@@ -131,6 +147,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
         if (mNativeEngineHandle == 0 || is3DMode()) return;
         if (mCurrentSurface == null || !mCurrentSurface.isValid()) return;
         if (mLast2DWidth <= 0 || mLast2DHeight <= 0) return;
+        resendVideoBox(); // re-push the whole known geometry, not just the size
         nativeSurfaceChanged(mNativeEngineHandle, mLast2DWidth, mLast2DHeight);
     }
 
@@ -142,9 +159,25 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
      * canvas's own top-left.
      */
     public void setVideoBox(int x, int y, int w, int h) {
-        if (mNativeEngineHandle != 0) {
-            nativeSetVideoBox(mNativeEngineHandle, x, y, w, h);
-            redraw3DIfNeeded();
+        synchronized (mBoxLock) {
+            mBoxX = x; mBoxY = y; mBoxW = w; mBoxH = h;
+            mHasVideoBox = true;
+            if (mNativeEngineHandle != 0) nativeSetVideoBox(mNativeEngineHandle, x, y, w, h);
+        }
+        // Outside mBoxLock: redraw3DIfNeeded() can take m3DDrawLock, and the two must never nest.
+        if (mNativeEngineHandle != 0) redraw3DIfNeeded();
+    }
+
+    /**
+     * Replays the last known video box to the native engine. Call right after anything that
+     * attaches a surface (nativeSurfaceCreated) -- attach zeroes the native box, and nothing
+     * else would restore it. No-op if SurfaceController hasn't reported a box yet (native is
+     * already at its zero fallback in that case).
+     */
+    private void resendVideoBox() {
+        synchronized (mBoxLock) {
+            if (!mHasVideoBox || mNativeEngineHandle == 0) return;
+            nativeSetVideoBox(mNativeEngineHandle, mBoxX, mBoxY, mBoxW, mBoxH);
         }
     }
 
@@ -198,9 +231,16 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
             if (isNow3D && !was3D) {
                 // Shut down 2D hardware EGL
                 nativeSurfaceDestroyed(mNativeEngineHandle);
+                // detach zeroed AND dirtied the native box; the 3D path still needs the real
+                // one (it comes from the 2D layout), so replay it before the next poll_frame()
+                // -- the two coalesce into one apply and the backend never sees the zeros.
+                resendVideoBox();
             } else if (!isNow3D && was3D) {
                 // Restore 2D hardware EGL and 2D dimensions
-                if (mCurrentSurface != null) nativeSurfaceCreated(mNativeEngineHandle, mCurrentSurface);
+                if (mCurrentSurface != null) {
+                    nativeSurfaceCreated(mNativeEngineHandle, mCurrentSurface);
+                    resendVideoBox(); // attach just invalidated the native box -- restore it
+                }
                 nativeSurfaceChanged(mNativeEngineHandle, mLast2DWidth, mLast2DHeight);
             }
         }
