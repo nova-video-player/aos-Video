@@ -160,6 +160,18 @@ public class SurfaceController {
     private VideoBoxListener mVideoBoxListener;
     public void setVideoBoxListener(VideoBoxListener listener) {
         mVideoBoxListener = listener;
+        // Mirror setTextureCallback()/setSubtitleTextureCallback() above: if updateSurface()
+        // has already run at least once, replay the box it last computed immediately instead
+        // of leaving this listener to find out only on the NEXT geometry event -- which may be
+        // a long time from now (nothing else about the layout has to change) or, on the native
+        // side, may leave the engine's video_box_* sitting at its zeroed/invalidated fallback
+        // (see sub_engine_attach_surface()'s doc comment in sub_engine.c) for that entire
+        // window. mSurfaceWidth is 0 until updateSurface() sets it at the same point it fires
+        // onVideoBoxChanged() below, so it's a reliable "is there anything real to replay yet"
+        // check.
+        if (listener != null && mSurfaceWidth > 0) {
+            listener.onVideoBoxChanged(0, getVideoBoxTop(), mSurfaceWidth, mSurfaceHeight);
+        }
     }
 
     public SurfaceController(View rootView) {
