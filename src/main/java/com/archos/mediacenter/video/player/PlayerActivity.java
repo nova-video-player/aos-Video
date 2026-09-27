@@ -1177,6 +1177,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mPlayer.getSubtitleEngine().resyncSurfaceSize();
         }
 
+        // Re-apply subtitle layout mode (category + use-margins) on resume: the use-margins
+        // preference (KEY_SUBTITLE_USE_MARGINS) is otherwise only re-read on a subtitle track
+        // event (onTrackSelected()/onSubtitleMetadataUpdated()) -- if the user backgrounds the
+        // player, changes it in Settings, and returns without switching tracks, the running
+        // SurfaceController never learns about it until the next unrelated track change.
+        // Safe to call unconditionally, same as resyncSurfaceSize() above.
+        updateSubtitleLayoutMode();
+
         if(!mWasInPictureInPicture){
             mPermissionChecker.checkAndRequestPermission(this);
             if (!isFinishing() && !isDestroyed()) {

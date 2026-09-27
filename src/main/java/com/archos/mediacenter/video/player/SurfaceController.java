@@ -439,6 +439,12 @@ public class SurfaceController {
             dcw =  dw - cutoutLeft - cutoutRight;
             dch =  dh - cutoutTop - cutoutBottom;
         }
+        // Cutout-adjusted MAX available height, before any format-specific shrink/stretch
+        // below -- i.e. what dch would still be if this format produced no vertical bars at
+        // all. Compared against dch's FINAL value further down to recompute willStretchY for
+        // real (see that comment for why -- item #9). Needs the same HDMI remap dch/dh get
+        // below so the later comparison stays in one consistent coordinate space.
+        int dchMax = dch;
 
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: v=({},{})", vw, vh);
 
@@ -557,6 +563,16 @@ public class SurfaceController {
             if (mHdmiWidth > 0 && mHdmiHeight > 0 && mLcdWidth > 0 && mLcdHeight > 0) {
                 dcw = mapDimension(hdmiLayoutWidth, mHdmiWidth, mLcdWidth);
                 dch = mapDimension(hdmiLayoutHeight, mHdmiHeight, mLcdHeight);
+                // dh feeds the mVideoBoxTop calculation below via (dh - dch)/2 -- that formula
+                // only makes sense when dh and dch share the same coordinate space. dch was
+                // just remapped into LOCAL (mLcdWidth/mLcdHeight) space because mView/
+                // mSubtitleView are laid out on the mirrored phone display, not the external
+                // one; dh needs the identical remap on the same axis, or (dh - dch) silently
+                // mixes HDMI-space pixels with LCD-space pixels and produces a garbage vertical
+                // box offset whenever the two displays' resolutions differ. dchMax gets the
+                // same treatment so the willStretchY recompute below stays in this same space.
+                dh = mapDimension(dh, mHdmiHeight, mLcdHeight);
+                dchMax = mapDimension(dchMax, mHdmiHeight, mLcdHeight);
                 if (log.isDebugEnabled()) {
                     log.debug("CONFIG updateSurface: HDMI layout map external=({},{}) viewport=({},{}) -> local=({},{}) viewport=({},{})",
                             hdmiLayoutWidth, hdmiLayoutHeight, mHdmiWidth, mHdmiHeight,
@@ -564,6 +580,21 @@ public class SurfaceController {
                 }
             }
         }
+
+        // Recompute willStretchY now that dch has reached its FINAL value (post format-switch,
+        // post TB/SBS effect doubling, post crop rounding, post HDMI remap) -- see item #9. The
+        // pre-switch value set above (still needed, unchanged, by the STRETCH_XY case itself --
+        // it wants the naive aspect-vs-screen prediction regardless of which format ends up
+        // selected) predicts whether bars WOULD exist under a naive aspect-preserving fit; it
+        // does NOT reflect what the selected format actually produced -- FULL_SCREEN keeps no
+        // bars at all, STRETCH_XY's own true branch removes vertical bars by growing width
+        // instead, AUTO partially crops rather than leaving a hard bar. extendVertically
+        // (below) needs the real answer: a format that never has bars still gets its subtitle
+        // canvas needlessly extended into MATCH_PARENT otherwise, and on a device with a
+        // display cutout the (dh - dch) difference that extension is built from would be pure
+        // cutout margin, not real bar height, double-counting the cutout offset against
+        // mMarginTop.
+        willStretchY = dch < dchMax;
 
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: setLayoutParams({},{})", dcw, dch);
 
