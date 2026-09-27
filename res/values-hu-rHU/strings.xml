@@ -501,6 +501,7 @@
     <string name="summary_list_preference_primary">Válassza ki a letöltendő feliratok nyelveit</string>
     <string name="favSubLang_title">Feliratok nyelve</string>
     <string name="favSubLang_summary">Válassza ki a megjelenítendő feliratok nyelvét</string>
+    <string name="subtitles_show_full_for_local_audio_title">Feliratok megjelenítése helyi nyelvű hangsávhoz</string>
     <string name="favAudioLang_title">Alapértelmezett hangsáv</string>
     <string name="favAudioLang_summary">Válassza ki az előnyben részesített hangsávot</string>
     <string name="ui_language_title">Felhasználói felület nyelvének kiválasztása</string>

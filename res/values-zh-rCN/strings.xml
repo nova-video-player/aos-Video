@@ -474,6 +474,12 @@
     <string name="preferences_stream_max_iframe_size_summary">最大压缩的 i-frame 大小，单位MB</string>
     <string name="preferences_force_passthrough">强制音频直通</string>
     <string name="preferences_force_passthrough_summary">如果启用了直通，即使 AV 接收器不支持音频编解码器，也强制执行它，而不检查 AV 接收器功能</string>
+    <string name="preferences_audio_speed_mode_title">音频速度</string>
+    <string name="preferences_audio_speed_mode_summary">选择用于更改播放速度的音频速度滤镜。⚠ 实验性功能，可能会出现视频卡顿或音频失真</string>
+    <string name="audio_speed_mode_disabled">关闭</string>
+    <string name="audio_speed_mode_audiotrack">系统原生（AudioTrack）</string>
+    <string name="audio_speed_mode_atempo">平衡模式（FFmpeg atempo）</string>
+    <string name="audio_speed_mode_sonic">声音 &amp; 语音(Sonic)</string>
     <string name="preferences_enable_dynamic_audio_delay_title">动态音频/视频延迟估算</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">使用动态延迟估算可获得更佳的音频/视频同步效果，尤其是在使用蓝牙耳机时。如果遇到同步问题，请禁用此功能。</string>
     <string name="preferences_enable_spatialization_title">平台空间音频</string>
@@ -512,6 +518,8 @@
     <string name="summary_list_preference_primary">选择下载字幕的语言</string>
     <string name="favSubLang_title">字幕阅读语言</string>
     <string name="favSubLang_summary">选择您最喜欢的字幕阅读语言</string>
+    <string name="subtitles_show_full_for_local_audio_title">显示本地语言音频的字幕</string>
+    <string name="subtitles_show_full_for_local_audio_summary">默认关闭，因此仅强制字幕会在音频与字幕语言匹配时自动选中；开启后完整字幕也可自动选中</string>
     <string name="favAudioLang_title">音频首选语言</string>
     <string name="favAudioLang_summary">选择您喜欢的音轨语言</string>
     <string name="prefer_original_audio_track_title">优先使用原声音轨</string>
@@ -939,4 +947,9 @@
     <string name="s_commentary">评论</string>
     <string name="s_lyrics">歌词</string>
     <string name="s_karaoke">卡拉OK</string>
+    <string name="ui_choice_title">您似乎正在电视上使用Nova视频播放器。\n如果情况确实如此，我们建议使用我们的新电视用户界面</string>
+    <string name="ui_choice_tv">电视界面</string>
+    <string name="ui_choice_tablet">平板界面</string>
+    <string name="ui_choice_help">您可以稍后在应用程序设置中更改您的选择</string>
+    <string name="workgroup">工作组</string>
 </resources>

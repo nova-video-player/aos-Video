@@ -486,6 +486,12 @@
     <string name="preferences_stream_max_iframe_size_summary">Maximálna komprimovaná veľkosť i-snímku v MB</string>
     <string name="preferences_force_passthrough">Vynútiť priechod zvuku</string>
     <string name="preferences_force_passthrough_summary">Ak je povolená funkcia passthrough, vynútiť ju aj v prípade, že AV prijímač neuvádza podporu daného zvukového kodeku, namiesto toho, aby ste overovali možnosti AV prijímača</string>
+    <string name="preferences_audio_speed_mode_title">Rýchlosť zvuku</string>
+    <string name="preferences_audio_speed_mode_summary">Vyberte filter rýchlosti zvuku, ktorý sa používa na zmenu rýchlosti prehrávania. ⚠ Experimentálna funkcia, môže spôsobiť trhané prehrávanie videa alebo skreslenie zvuku</string>
+    <string name="audio_speed_mode_disabled">Vypnúť</string>
+    <string name="audio_speed_mode_audiotrack">Systémové natívne (AudioTrack)</string>
+    <string name="audio_speed_mode_atempo">Vyvážený (FFmpeg v reálnom čase)</string>
+    <string name="audio_speed_mode_sonic">Hlas a reč (Sonic)</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Dynamický odhad oneskorenia zvuku a videa</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Použiť dynamický odhad latencie na dosiahnutie lepšej synchronizácie zvuku a videa, najmä pri používaní Bluetooth slúchadiel. V prípade problémov so synchronizáciou túto funkciu deaktivujte.</string>
     <string name="preferences_enable_spatialization_title">Priestorová platforma</string>
@@ -524,6 +530,8 @@
     <string name="summary_list_preference_primary">Vybrať si jazyky, v ktorých si chcete stiahnuť titulky</string>
     <string name="favSubLang_title">Jazyk zobrazovaných titulkov</string>
     <string name="favSubLang_summary">Výber obľúbeného jazyka na zobrazenie titulkov</string>
+    <string name="subtitles_show_full_for_local_audio_title">Zobraziť titulky pre zvuk v lokálnom jazyku</string>
+    <string name="subtitles_show_full_for_local_audio_summary">Táto funkcia je štandardne vypnutá, takže sa automaticky vyberajú len vynútené titulky, ak zvuk zodpovedá jazyku titulkov; jej zapnutím sa automaticky vyberajú aj úplné titulky</string>
     <string name="favAudioLang_title">Preferovaný jazyk zvuku</string>
     <string name="favAudioLang_summary">Vyberte si obľúbený jazyk zvukovej stopy</string>
     <string name="prefer_original_audio_track_title">Uprednostniť pôvodnú zvukovú stopu</string>
@@ -951,4 +959,9 @@
     <string name="s_commentary">komentár</string>
     <string name="s_lyrics">text piesne</string>
     <string name="s_karaoke">karaoke</string>
+    <string name="ui_choice_title">Vyzerá to, že používate prehrávač Nova Video Player na televízore.\nAk je to skutočne tak, odporúčame vám používať naše nové používateľské rozhranie pre televízory</string>
+    <string name="ui_choice_tv">Televízne rozhranie</string>
+    <string name="ui_choice_tablet">Tabletové rozhranie</string>
+    <string name="ui_choice_help">Svoj výber môžete neskôr zmeniť v nastaveniach aplikácie</string>
+    <string name="workgroup">Workgroup</string>
 </resources>

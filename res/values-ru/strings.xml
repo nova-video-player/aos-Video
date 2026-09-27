@@ -467,6 +467,12 @@
     <string name="preferences_stream_max_iframe_size_summary">Максимальный размер сжатого i-кадра в Мб</string>
     <string name="preferences_force_passthrough">Принудительная сквозная передача звука</string>
     <string name="preferences_force_passthrough_summary">Если включена, переопределяет настройки AV ресивера для текущего аудиокодека</string>
+    <string name="preferences_audio_speed_mode_title">Скорость аудио</string>
+    <string name="preferences_audio_speed_mode_summary">Выбор фильтра скорости звука, используемого для изменения скорости воспроизведения. ⚠️ Экспериментально, может привести к разрывам и искажениям в видео и аудио</string>
+    <string name="audio_speed_mode_disabled">Отключено</string>
+    <string name="audio_speed_mode_audiotrack">Родной системы (AudioTrack)</string>
+    <string name="audio_speed_mode_atempo">Сбалансированный (Fmpeg atempo)</string>
+    <string name="audio_speed_mode_sonic">Голос и речь (Sonic)</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Динамическая оценка задержки звука/видео</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Использовать динамическую оценку задержки для лучшей синхронизации звука и видео, особенно с гарнитурой Bluetooth. Отключите, если возникают проблемы с синхронизацией.</string>
     <string name="preferences_enable_spatialization_title">Платформенный преобразователь</string>
@@ -865,4 +871,9 @@
     <string name="enable_sponsor_summary">Перейти по ссылке для пожертвований: важна любая помощь проекту.</string>
     <string name="upgrade_info">Информация об обновлении</string>
     <string name="v5_v6_upgrade_info">ВНИМАНИЕ: Это обновление Nova потребует пересканировать всю библиотеку мультимедиа. Чтобы избежать проблем, настоятельно рекомендуется полностью переустановить программу. Пожалуйста, ознакомьтесь с FAQ для подробностей.</string>
+    <string name="ui_choice_title">Кажется, вы используете Nova Video Player на телевизоре.\nЕсли это так, мы рекомендуем использовать наш новый ТВ-интерфейс</string>
+    <string name="ui_choice_tv">ТВ-интерфейс</string>
+    <string name="ui_choice_tablet">Планшетный интерфейс</string>
+    <string name="ui_choice_help">Вы можете изменить свой выбор в настройках приложения позже</string>
+    <string name="workgroup">Рабочая группа</string>
 </resources>
