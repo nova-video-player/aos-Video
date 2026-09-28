@@ -16,22 +16,23 @@ package com.archos.mediacenter.video.player;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.MiscUtils;
-import com.archos.mediacenter.video.utils.SubtitleFontsFolderSync;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import androidx.preference.PreferenceManager;
 import android.content.SharedPreferences;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.view.DisplayCutoutCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +44,9 @@ public class SubtitleManager {
     private Context             mContext;
     private ViewGroup           mPlayerView;
     private View                mRootView;
-    private WindowManager       mWindow;
-    private Resources           mRes;
+    private View                mGlSubtitleView;      // native subtitle canvas, resolved lazily
+    private final View.OnLayoutChangeListener mCanvasLayoutListener =
+            (v, l, t, r, b, ol, ot, or_, ob) -> { if (t != ot || b != ob) applyNativeVerticalOffset(); };
     private View                mSubtitleLayout = null;
     private SubtitleSpacerView  mSubtitleSpacer = null;
     private LayoutParams        mSubtitleSpacerParams = null;
@@ -52,11 +54,9 @@ public class SubtitleManager {
     private int                 mScreenWidth;
     private int                 mScreenHeight;
     private int                 mSubtitleVPos = 10;
-    private int                 mSubtitleVPosPixel;
     private int                 mSubtitleEvadedVPos;
     private boolean mGLEngineActive = false;
     private boolean mIsSubtitleGfx = false;
-    private boolean isFirstTime = true;
 
     /**
      * Marks whether the active subtitle track is a bitmap format (VobSub .idx/.sub, PGS).
@@ -70,19 +70,18 @@ public class SubtitleManager {
     public void setSubtitleIsGfx(boolean isGfx) {
         if (mIsSubtitleGfx == isGfx) return;
         mIsSubtitleGfx = isGfx;
-        if (! isFirstTime) adjustView();
+        adjustView();
+        // The flag flips after PlayerActivity has already called setVerticalPosition(), so
+        // re-apply here or a text<->bitmap switch leaves the native offset stale.
     }
 
     private boolean mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
-    private int mGestureAreaHeight;
 
     Surface                     mUiSurface;
-    private boolean mForbidWindow ;
     private static boolean mFullScreenWithCutout = true;
 
     private int mColor;
     private int mBgOpacity;
-    private int mUiMode;
 
     private int mBgMode = BG_MODE_FLOATING;
     private int mOverrideMode = OVERRIDE_CUSTOM;
@@ -94,16 +93,6 @@ public class SubtitleManager {
     private int mBackgroundColor;
     private float mOutlineWidth;
     private float mShadowWidth;
-    private String mFontFamily;
-    private String mFontsFolderPath;
-    private String mDefaultFontName;
-
-    /** SharedPreferences keys for the custom fonts folder feature (MX Player / mpv-android
-     * style). Deliberately the SAME keys VideoPreferencesCommon's Settings screen writes to
-     * (KEY_SUBTITLE_FONTS_FOLDER / KEY_SUBTITLE_DEFAULT_FONT) -- these used to be separate
-     * "subtitle_fonts_folder_path" / "subtitle_default_font_name" constants private to this
-     * class, which meant applySavedFontSettings() below always read back null/null (nothing
-     * ever wrote to those keys) regardless of what the user had actually picked in Settings. */
 
     public static final int BG_MODE_FLOATING    = 0;
     public static final int BG_MODE_BOXED_LINE  = 1;
@@ -242,8 +231,6 @@ public class SubtitleManager {
         }
     }
 
-    public String getFontFamily() { return mFontFamily; }
-
     /**
      * Sets the active font family. In Custom/Force override mode (and always for plain-text
      * SRT/VTT), this name is force-applied to every subtitle style -- see sync_styles() in
@@ -252,13 +239,10 @@ public class SubtitleManager {
      * has already registered the file and can resolve the name.
      */
     public void setFontFamily(String familyName) {
-        mFontFamily = familyName;
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
             Player.sPlayer.getSubtitleEngine().setFontFamily(familyName);
         }
     }
-
-    public String getFontsFolderPath() { return mFontsFolderPath; }
 
     /**
      * Sets a custom fonts folder (MX Player / mpv-android style "third fonts folder"):
@@ -270,7 +254,6 @@ public class SubtitleManager {
      * Pass null to disable and fall back to fontconfig-only resolution.
      */
     public void setFontsFolder(String dirPath) {
-        mFontsFolderPath = dirPath;
         PreferenceManager.getDefaultSharedPreferences(mContext).edit()
                 .putString(VideoPreferencesCommon.KEY_SUBTITLE_FONTS_FOLDER, dirPath)
                 .apply();
@@ -278,14 +261,6 @@ public class SubtitleManager {
             Player.sPlayer.getSubtitleEngine().setFontsFolder(dirPath);
         }
     }
-
-    /** Restores the fonts folder path last saved via {@link #setFontsFolder(String)}, or null if never set. */
-    public String loadSavedFontsFolder() {
-        return PreferenceManager.getDefaultSharedPreferences(mContext).getString(
-                VideoPreferencesCommon.KEY_SUBTITLE_FONTS_FOLDER, null);
-    }
-
-    public String getDefaultFontName() { return mDefaultFontName; }
 
     /**
      * Sets the fallback family name libass uses when nothing else names a font -- this is
@@ -295,7 +270,6 @@ public class SubtitleManager {
      * the generic "sans-serif" fontconfig alias.
      */
     public void setDefaultFontName(String familyName) {
-        mDefaultFontName = familyName;
         PreferenceManager.getDefaultSharedPreferences(mContext).edit()
                 .putString(VideoPreferencesCommon.KEY_SUBTITLE_DEFAULT_FONT, familyName)
                 .apply();
@@ -304,45 +278,7 @@ public class SubtitleManager {
         }
     }
 
-    /** Restores the default font name last saved via {@link #setDefaultFontName(String)}, or null if never set. */
-    public String loadSavedDefaultFontName() {
-        return PreferenceManager.getDefaultSharedPreferences(mContext).getString(
-                VideoPreferencesCommon.KEY_SUBTITLE_DEFAULT_FONT, null);
-    }
-
-    /**
-     * Re-applies the persisted custom-fonts-folder settings (fonts folder + default font
-     * name) to whatever SubtitleEngine is currently active. Call this once right after a new
-     * SubtitleEngine is created/attached (wherever Player/AvosPlayer does `new SubtitleEngine()`
-     * today) -- a freshly created native engine has fonts_dir/default_font_name unset, and
-     * these settings are only pushed to the engine reactively by setFontsFolder()/
-     * setDefaultFontName() above, so a fresh engine needs an explicit initial push of
-     * whatever the user saved in a previous session.
-     *
-     * The fonts folder path is resolved via SubtitleFontsFolderSync.getFontsStorePath()
-     * rather than loadSavedFontsFolder()'s raw pref read, so a fresh engine gets a
-     * verified-current path even if the on-disk store went stale/missing since the last
-     * Settings visit. That call is synchronous disk-only I/O, so it's made directly here
-     * rather than dispatched to a background thread.
-     */
-    public void applySavedFontSettings() {
-        if (Player.sPlayer == null || Player.sPlayer.getSubtitleEngine() == null) return;
-        String savedDefaultFont = loadSavedDefaultFontName();
-        mDefaultFontName = savedDefaultFont;
-        if (savedDefaultFont != null) {
-            Player.sPlayer.getSubtitleEngine().setDefaultFontName(savedDefaultFont);
-        }
-
-        String savedFolder = SubtitleFontsFolderSync.getFontsStorePath(mContext);
-        mFontsFolderPath = savedFolder;
-        if (savedFolder != null) {
-            Player.sPlayer.getSubtitleEngine().setFontsFolder(savedFolder);
-        }
-    }
-
     public void setUIMode(int uiMode) {
-        mUiMode = uiMode;
-
         // Determine whether the native GL engine is now the active subtitle renderer.
         // In SBS or TB mode, SubtitleEngine's EGL thread owns gl_subtitle_view exclusively.
         // In 2D mode, the Java canvas path (SubtitleTextView.lockCanvas) is active instead.
@@ -360,9 +296,6 @@ public class SubtitleManager {
     public SubtitleManager(Context context, ViewGroup playerView, WindowManager window, boolean forbidWindow) {
         mContext = context;
         mPlayerView = playerView;
-        mWindow = window;
-        mRes = context.getResources();
-        mForbidWindow = forbidWindow;
         mSubtitlePosHintDrawable = ContextCompat.getDrawable(context, com.archos.mediacenter.video.R.drawable.subtitle_baseline);
     }
 
@@ -385,7 +318,7 @@ public class SubtitleManager {
     public void updateSubtitleLayout() {
         if (log.isDebugEnabled()) log.debug("updateSubtitleLayout");
         // surface change redisplay sub to adjust surface size
-        if (! isFirstTime) adjustView();
+        adjustView();
     }
 
     public void setGLEngineActive(boolean active) {
@@ -452,44 +385,47 @@ public class SubtitleManager {
         mSubtitleSpacerParams.height = mSubtitleEvadedVPos;
         setUIExternalSurface(mUiSurface);
 
-        if (mSubtitleLayout != null) {
-            mRootView = mSubtitleLayout.getRootView();
-            // note OnApplyWindowInsetsListener does not update when navigation bar fades away, OnGlobalLayoutListener or addOnPreDrawListener are constantly triggering -> only setOnSystemUiVisibilityChangeListener works
-            // however setOnSystemUiVisibilityChangeListener is unreliable on Android 6.0 thus use addOnLayoutChangeListener
-            // in reality we need to do combination of setOnApplyWindowInsetsListener to get insets but not updated when UI mode changes and thus combine with setOnSystemUiVisibilityChangeListener
+        mRootView = mSubtitleLayout.getRootView();
+        // note OnApplyWindowInsetsListener does not update when navigation bar fades away, OnGlobalLayoutListener or addOnPreDrawListener are constantly triggering -> only setOnSystemUiVisibilityChangeListener works
+        // however setOnSystemUiVisibilityChangeListener is unreliable on Android 6.0 thus use addOnLayoutChangeListener
+        // in reality we need to do combination of setOnApplyWindowInsetsListener to get insets but not updated when UI mode changes and thus combine with setOnSystemUiVisibilityChangeListener
 
-            // insets observer is needed for rotation
-            mSubtitleLayout.setOnApplyWindowInsetsListener((v, insets) -> {
-                if (log.isDebugEnabled()) log.debug("attachWindow, onApplyWindowInsetsListener, mIsSubtitleGfx={}", mIsSubtitleGfx);
-                if (! isFirstTime) adjustView();
-                return insets;
-            });
+        // insets observer is needed for rotation
+        mSubtitleLayout.setOnApplyWindowInsetsListener((v, insets) -> {
+            if (log.isDebugEnabled()) log.debug("attachWindow, onApplyWindowInsetsListener, mIsSubtitleGfx={}", mIsSubtitleGfx);
+            adjustView();
+            return insets;
+        });
 
-            // ui visibility listener is needed for UI mode changes
-            // No WindowInsetsControllerCompat equivalent for transient bar visibility tracking;
-            // setOnSystemUiVisibilityChangeListener remains the only reliable option here.
+        // ui visibility listener is needed for UI mode changes
+        // No WindowInsetsControllerCompat equivalent for transient bar visibility tracking;
+        // setOnSystemUiVisibilityChangeListener remains the only reliable option here.
+        //noinspection deprecation
+        mRootView.setOnSystemUiVisibilityChangeListener(visibility -> {
             //noinspection deprecation
-            mRootView.setOnSystemUiVisibilityChangeListener(visibility -> {
-                //noinspection deprecation
-                mNavigationBarShowing = (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0;
-                //noinspection deprecation
-                mSystemBarShowing = (visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0;
-                mActionBarShowing = PlayerController.isActionBarShowing();
-                mIsNavBarOnBottom = MiscUtils.isNavigationBarOnBottom(mRootView, mContext);
-                mIsGestureAreaShowing = MiscUtils.isGestureAreaDisplayed(mContext);
-                mGestureAreaHeight = MiscUtils.getGestureAreaHeight(mContext);
-                if (log.isDebugEnabled()) log.debug("attachWindow, setOnSystemUiVisibilityChangeListener: mNavigationBarShowing={}, mSystemBarShowing={}, mActionBarShowing={}, mControlBarShowing={}, mIsNavBarOnBottom={}, mIsGestureAreaShowing={}",
-                        mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, PlayerController.isControlBarShowing(), mIsNavBarOnBottom, mIsGestureAreaShowing);
-                // extra parameters injected for subtitles handling that need to be shifted up above controlBar of playerController if the mSubtitleEvadedVPos is not shifting them already above
-                if (! isFirstTime) adjustView();
-            });
+            mNavigationBarShowing = (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0;
+            //noinspection deprecation
+            mSystemBarShowing = (visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0;
+            mActionBarShowing = PlayerController.isActionBarShowing();
+            mIsNavBarOnBottom = MiscUtils.isNavigationBarOnBottom(mRootView, mContext);
+            mIsGestureAreaShowing = MiscUtils.isGestureAreaDisplayed(mContext);
+            if (log.isDebugEnabled()) log.debug("attachWindow, setOnSystemUiVisibilityChangeListener: mNavigationBarShowing={}, mSystemBarShowing={}, mActionBarShowing={}, mControlBarShowing={}, mIsNavBarOnBottom={}, mIsGestureAreaShowing={}",
+                    mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, PlayerController.isControlBarShowing(), mIsNavBarOnBottom, mIsGestureAreaShowing);
+            adjustView();
+        });
 
-        }
 
         mPlayerView.addView(mSubtitleLayout, mScreenWidth, mScreenHeight);
     }
 
     private void adjustView() {
+        // Callers (setScreenSize(), the control-bar callback, ...) can fire before start()
+        // has attached the layout, or after stop() detached it. There is nothing to pad then,
+        // but the native renderer still needs the offset, so keep that part unconditional.
+        if (mSubtitleLayout == null || mRootView == null) {
+            applyNativeVerticalOffset();
+            return;
+        }
         // strategy is videoView avoids cutout if not in fullscreen
         // adjust subtitle text height (bottom/top) to avoid system bars and playerController bar only if text subtitle but not left/right
         boolean avoidCutout = ! mFullScreenWithCutout;
@@ -503,10 +439,14 @@ public class SubtitleManager {
                 (! mIsSubtitleGfx && PlayerController.isControlBarShowing() ? PlayerController.getControlBarCurrentHeight() : 0), (mIsSubtitleGfx ? 0 :mSubtitleEvadedVPos),
                 false, ! mIsSubtitleGfx, false, ! mIsSubtitleGfx,
                 avoidCutout, avoidCutout, avoidCutout, avoidCutout, ! mIsSubtitleGfx, mIsSubtitleGfx && ! isFloatingPlayer);
+        // The inset pass above still positions mSubtitleLayout (and with it the position-hint
+        // spacer), but text subtitles are drawn natively (libass on gl_subtitle_view), so it no
+        // longer moves them. The obstruction is computed separately and fed to the renderer.
+        applyNativeVerticalOffset();
     }
 
     public void onControlBarVisibilityChanged() {
-        if (! isFirstTime) adjustView();
+        adjustView();
     }
 
     private void detachWindow() {
@@ -574,16 +514,102 @@ public class SubtitleManager {
         else
             mSubtitleVPos = pos;
 
-        mSubtitleVPosPixel = (mScreenHeight * pos / 765) + 1;
-        setVerticalPositionInternal(mSubtitleVPosPixel);
+        setVerticalPositionInternal((mScreenHeight * pos / 765) + 1);
+    }
+
+    /**
+     * The native subtitle canvas (gl_subtitle_view). This, not the activity root, is the
+     * surface libass measures MarginV from, and SurfaceController sizes it differently per
+     * mode: tethered to the video box (its bottom sits above the letterbox bar) or extended
+     * over the whole parent when subtitles may use the bars. Measuring against the view itself
+     * is therefore right in every mode and follows any future change to that sizing.
+     */
+    private View getSubtitleCanvas() {
+        if (mGlSubtitleView == null && mPlayerView != null) {
+            mGlSubtitleView = mPlayerView.findViewById(R.id.gl_subtitle_view);
+            // The canvas moves/resizes without SubtitleManager being told (aspect-ratio or
+            // use-margins change in SurfaceController.updateSurface()), and that changes how
+            // much of the controls overlap it, so re-evaluate whenever it is laid out.
+            if (mGlSubtitleView != null) mGlSubtitleView.addOnLayoutChangeListener(mCanvasLayoutListener);
+        }
+        return mGlSubtitleView;
+    }
+
+    /**
+     * Pixels the system bottom area (navigation bar / gesture area / bottom cutout) overlaps the
+     * bottom of the given canvas. Mirrors the inputs MiscUtils.adjustViewLayoutForInsets() used
+     * for text subtitles before rendering moved native, so users get the familiar behaviour.
+     */
+    private int computeSystemBottomOverlap(View canvas) {
+        int inset = 0;
+        WindowInsets insets = mPlayerView.getRootWindowInsets();
+        if (insets == null) return 0;
+        WindowInsetsCompat compat = WindowInsetsCompat.toWindowInsetsCompat(insets, mPlayerView);
+        if (! mFullScreenWithCutout) {
+            DisplayCutoutCompat cutout = compat.getDisplayCutout();
+            if (cutout != null) inset = cutout.getSafeInsetBottom();
+        }
+        boolean gestureArea = mIsGestureAreaShowing && PlayerController.isControlBarShowing();
+        boolean navBar = mIsNavBarOnBottom && mNavigationBarShowing;
+        if (gestureArea || navBar) {
+            int systemBarBottom = compat.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
+            int effective = gestureArea
+                    ? Math.max(systemBarBottom, MiscUtils.getGestureAreaHeight(mContext))
+                    : Math.max(systemBarBottom, MiscUtils.getNavigationBarHeight(mContext));
+            inset = Math.max(inset, effective);
+        }
+        if (inset <= 0) return 0;
+        int[] rootLoc = new int[2];
+        int[] canvasLoc = new int[2];
+        mPlayerView.getLocationOnScreen(rootLoc);
+        canvas.getLocationOnScreen(canvasLoc);
+        int rootBottom = rootLoc[1] + mPlayerView.getHeight();
+        int canvasBottom = canvasLoc[1] + canvas.getHeight();
+        return Math.max(canvasBottom - (rootBottom - inset), 0);
+    }
+
+    /**
+     * Pixels above the canvas bottom that ordinary text subtitles must stay clear of: the
+     * playback controls (seek bar included) or the system bottom area, whichever reaches
+     * higher. 0 for bitmap subtitles (PGS/VobSub), which keep their own positioning.
+     *
+     * The control bar is measured from its real on-screen position rather than from
+     * PlayerController.getControlBarCurrentHeight(), which reports 0 unless the navigation bar
+     * or gesture area is showing (so it is 0 on TV) and is read before the bar is laid out on
+     * the first show.
+     */
+    private int computeBottomObstruction() {
+        if (mIsSubtitleGfx || mPlayerView == null) return 0;
+        View canvas = getSubtitleCanvas();
+        if (canvas == null || ! canvas.isLaidOut() || canvas.getHeight() <= 0) return 0;
+        return Math.max(PlayerController.getControlBarClearanceAbove(canvas),
+                        computeSystemBottomOverlap(canvas));
+    }
+
+    /**
+     * Pushes the effective bottom offset to the native renderer: the user's saved position, or
+     * the obstruction if that reaches higher (the same max() the legacy layout applied, so text
+     * that already sits above the controls does not move). Font size is untouched.
+     *
+     * The obstruction is transient. It is never stored in mSubtitleEvadedVPos / mSubtitleVPos
+     * and never written to SharedPreferences, so the saved position is unchanged and text
+     * returns to it when the controls hide.
+     *
+     * Deliberately unconditional: an unchanged value is a no-op natively (the style serial only
+     * bumps when the margin actually changes, see sub_style_set_margin_bottom()), so this can
+     * be called from every layout/visibility/inset path for the cost of one JNI call. The
+     * setter also wakes the render thread, so it takes effect while playback is paused.
+     */
+    private void applyNativeVerticalOffset() {
+        if (Player.sPlayer == null || Player.sPlayer.getSubtitleEngine() == null) return;
+        int offset = Math.max(mSubtitleEvadedVPos, computeBottomObstruction());
+        Player.sPlayer.getSubtitleEngine().setVerticalOffset(offset);
     }
 
     private void setVerticalPositionInternal (int pos) {
         if (mIsSubtitleGfx) mSubtitleEvadedVPos = 0;
         else mSubtitleEvadedVPos = pos;
-        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
-            Player.sPlayer.getSubtitleEngine().setVerticalOffset(mSubtitleEvadedVPos);
-        }
+        applyNativeVerticalOffset();
 
         if (mSubtitleSpacer != null && mSubtitleSpacerParams != null) {
             mSubtitleSpacerParams.height = mSubtitleEvadedVPos;
