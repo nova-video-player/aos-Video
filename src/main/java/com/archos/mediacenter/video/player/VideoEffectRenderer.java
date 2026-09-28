@@ -30,8 +30,10 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
     
     private static final Boolean mTrue = Boolean.TRUE;
 
-    private int mViewWidth;
-    private int mViewHeight;
+    // Written from the UI thread (setTexture/setSurfaceSize), read from the video-frame
+    // callback thread (onFrameAvailable) -- volatile so a resize is seen promptly.
+    private volatile int mViewWidth;
+    private volatile int mViewHeight;
     private float[] mTransformMatrix;
     private float[] mHeadTransform;
     private SurfaceTexture mVideoSurfaceTexture;
@@ -82,6 +84,32 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
         mViewWidth = width;
         mViewHeight = height;
         if (mEffect != null) mEffect.setViewPort(mViewWidth, mViewHeight);
+
+        // The subtitle overlay must track the view too. Its buffer size was only ever set
+        // once, in initGLComponents(), so after any later view resize (aspect-ratio change,
+        // next video, HDMI, ...) SubtitleEngine kept drawing a new-size bitmap -- positioned
+        // for the new canvas -- into a buffer still allocated at the OLD size: clipped when
+        // the view grew, top-left-only when it shrank, and then stretched over the whole view
+        // by the composite either way. synchronized: mUISurfaceTexture is created/released
+        // under this same monitor in initGLComponents()/deinitGLComponents(), and this can
+        // arrive from the UI thread at any point in that lifecycle (before init it's null and
+        // initGLComponents() will read the size we just stored).
+        synchronized (this) {
+            if (mUISurfaceTexture != null) {
+                try {
+                    mUISurfaceTexture.setDefaultBufferSize(width, height);
+                } catch (RuntimeException e) {
+                    Log.w(TAG, "setSurfaceSize: overlay buffer resize failed", e);
+                }
+            }
+            // Keep SubtitleEngine's cached redraw target in step too: a style change while
+            // paused redraws from mLast3DWidth/Height, which would otherwise stay at the old
+            // size until the next real video frame.
+            if (mUISurface != null && Player.sPlayer != null
+                    && Player.sPlayer.getSubtitleEngine() != null) {
+                Player.sPlayer.getSubtitleEngine().primeThreeDSurface(mUISurface, width, height);
+            }
+        }
     }
     
     public void setEffectMode(int mode) {

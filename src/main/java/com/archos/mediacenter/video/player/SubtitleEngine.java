@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.view.Surface;
 import android.view.TextureView;
@@ -162,10 +163,41 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
         synchronized (mBoxLock) {
             mBoxX = x; mBoxY = y; mBoxW = w; mBoxH = h;
             mHasVideoBox = true;
-            if (mNativeEngineHandle != 0) nativeSetVideoBox(mNativeEngineHandle, x, y, w, h);
+            sendVideoBoxLocked();
         }
         // Outside mBoxLock: redraw3DIfNeeded() can take m3DDrawLock, and the two must never nest.
         if (mNativeEngineHandle != 0) redraw3DIfNeeded();
+    }
+
+    /**
+     * Forwards the cached box to native. Caller holds mBoxLock. This is the ONE place the box
+     * is translated between coordinate spaces, so setVideoBox() and resendVideoBox() can't
+     * disagree.
+     *
+     * SurfaceController reports the box relative to the 2D subtitle canvas (mSubtitleView),
+     * which -- when use-margins extends it into the letterbox bars -- is taller than the
+     * video's own view, so the box's y is (dh - dch)/2 + mMarginTop. In 3D there is no such
+     * canvas: the native canvas is the effect overlay bitmap, sized to VideoEffectRenderer's
+     * view, which IS the video's own view (dcw x dch, never bar-extended, and sized by
+     * SurfaceController to the per-eye aspect). The video therefore fills that canvas
+     * exactly, and passing the 2D y through pushes the box below the canvas: GFX (PGS/VobSub)
+     * bitmaps get shifted down by the bar height and clipped, and libass only avoids the same
+     * fate through its "box doesn't fit -> fill canvas" fallback.
+     *
+     * So in 3D we send an all-zero box, native's existing "video fills canvas" contract,
+     * which sub_engine_poll_frame() resolves against the canvas size current at apply time.
+     * That is deliberately NOT (0, 0, mBoxW, mBoxH): the box arrives synchronously from
+     * updateSurface() while the canvas follows the overlay bitmap, which is only resized on
+     * the next video frame after the view changes (never, while paused), so a numeric box
+     * would disagree with the canvas for that whole gap. Zero tracks the canvas by definition.
+     */
+    private void sendVideoBoxLocked() {
+        if (!mHasVideoBox || mNativeEngineHandle == 0) return;
+        if (is3DMode()) {
+            nativeSetVideoBox(mNativeEngineHandle, 0, 0, 0, 0);
+        } else {
+            nativeSetVideoBox(mNativeEngineHandle, mBoxX, mBoxY, mBoxW, mBoxH);
+        }
     }
 
     /**
@@ -176,8 +208,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
      */
     private void resendVideoBox() {
         synchronized (mBoxLock) {
-            if (!mHasVideoBox || mNativeEngineHandle == 0) return;
-            nativeSetVideoBox(mNativeEngineHandle, mBoxX, mBoxY, mBoxW, mBoxH);
+            sendVideoBoxLocked();
         }
     }
 
@@ -231,16 +262,19 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
             if (isNow3D && !was3D) {
                 // Shut down 2D hardware EGL
                 nativeSurfaceDestroyed(mNativeEngineHandle);
-                // detach zeroed AND dirtied the native box; the 3D path still needs the real
-                // one (it comes from the 2D layout), so replay it before the next poll_frame()
-                // -- the two coalesce into one apply and the backend never sees the zeros.
+                // detach zeroed AND dirtied the native box; the 3D path still needs one, so
+                // replay it (translated to the 3D overlay's origin by sendVideoBoxLocked())
+                // before the next poll_frame() -- the two coalesce into one apply.
                 resendVideoBox();
             } else if (!isNow3D && was3D) {
                 // Restore 2D hardware EGL and 2D dimensions
                 if (mCurrentSurface != null) {
                     nativeSurfaceCreated(mNativeEngineHandle, mCurrentSurface);
-                    resendVideoBox(); // attach just invalidated the native box -- restore it
                 }
+                // Unconditional (not just when a surface exists): the box's coordinate space
+                // just changed back from the 3D overlay's to the 2D canvas's, and a cached
+                // 2D box was sent as 3D-origin while 3D was active.
+                resendVideoBox();
                 nativeSurfaceChanged(mNativeEngineHandle, mLast2DWidth, mLast2DHeight);
             }
         }
@@ -351,7 +385,18 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
 
                     if (hasSubs) {
                         // Draw the full 1920x1080 image ONCE. The 3D Shader duplicates it!
-                        c.drawBitmap(mSoftBitmap, 0, 0, null);
+                        int cw = c.getWidth(), ch = c.getHeight();
+                        if (cw == mSoftBitmap.getWidth() && ch == mSoftBitmap.getHeight()) {
+                            c.drawBitmap(mSoftBitmap, 0, 0, null);
+                        } else {
+                            // The overlay buffer hasn't caught up with the view size yet (a
+                            // resize applies to the next dequeued buffer, so one frame can
+                            // still be the old size). Drawing 1:1 would clip or leave the
+                            // bitmap in a corner, and the composite stretches the whole buffer
+                            // over the view anyway -- so scale the bitmap to the buffer and
+                            // the on-screen result keeps the right proportions.
+                            c.drawBitmap(mSoftBitmap, null, new Rect(0, 0, cw, ch), null);
+                        }
                     }
                     uiSurface.unlockCanvasAndPost(c);
                     // Record what we just posted so the next passive-path call can skip
