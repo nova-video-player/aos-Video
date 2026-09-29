@@ -23,7 +23,6 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -163,21 +162,8 @@ public class TimerDelayTVPicker extends TimerPickerAbstract implements TVSlaveVi
             return true;
         }
 
-        // else, we send it to parent
-        ViewParent p;
-        View v = this;
-        while ((p = v.getParent()) != null) {
-            if (p instanceof TVCardView) {
-                return ((TVCardView) p).onKeyDown(keyCode, event);
-            } else if (p instanceof TVCardDialog) {
-                return ((TVCardDialog) p).onKeyDown(keyCode, event);
-            } else if (p instanceof View) {
-                v = (View) p;
-            } else {
-                break;
-            }
-        }
-        return false;
+        // else, we send it to the enclosing card
+        return TVUtils.dispatchToCardParent(this, keyCode, event);
     }
 
     @Override

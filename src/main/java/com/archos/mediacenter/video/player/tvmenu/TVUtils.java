@@ -18,10 +18,34 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewParent;
 
 import com.archos.environment.ArchosFeatures;
 
 public class TVUtils {
+    /**
+     * Propagate an unhandled key event to the enclosing TVCardView/TVCardDialog.
+     * TV menu items and pickers use this so that keys they do not handle bubble up
+     * to the card overlay that contains them.
+     *
+     * @return true if the enclosing card handled the event
+     */
+    public static boolean dispatchToCardParent(View view, int keyCode, KeyEvent event) {
+        ViewParent parent;
+        View v = view;
+        while ((parent = v.getParent()) != null) {
+            if (parent instanceof TVCardView)
+                return ((TVCardView) parent).onKeyDown(keyCode, event);
+            else if (parent instanceof TVCardDialog)
+                return ((TVCardDialog) parent).onKeyDown(keyCode, event);
+            else if (parent instanceof View)
+                v = (View) parent;
+            else
+                break;
+        }
+        return false;
+    }
     public static boolean isOKKey(int keyCode){
         if((keyCode==KeyEvent.KEYCODE_ENTER
                 ||keyCode==KeyEvent.KEYCODE_BUTTON_R2

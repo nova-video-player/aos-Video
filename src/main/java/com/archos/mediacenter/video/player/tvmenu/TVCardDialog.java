@@ -162,6 +162,12 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
             handleBackPressed();
             return true;
         }
+        else if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // Do not consume BACK here. On devices without predictive back support
+            // (API < 33, e.g. Amazon Fire TV) the key must fall through to the activity
+            // so it reaches the OnBackPressedDispatcher, which dismisses this dialog once.
+            return false;
+        }
         
         //handle focus on dialog
        

@@ -23,7 +23,6 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -218,26 +217,9 @@ public class AudioDelayTVPicker extends AudioDelayPickerAbstract implements TVSl
             return true;
         }
 
-        // else, we send it to parent
-        if (log.isDebugEnabled()) log.debug("onKeyDown: send to parent for keycode {}", keyCode);
-        ViewParent p;
-        View v = this;
-        while ((p = v.getParent()) != null) {
-            if (p instanceof TVCardView) {
-                if (log.isDebugEnabled()) log.debug("onKeyDown: send to TVCardView");
-                return ((TVCardView) p).onKeyDown(keyCode, event);
-            } else if (p instanceof TVCardDialog) {
-                if (log.isDebugEnabled()) log.debug("onKeyDown: send to TVCardDialog");
-                return ((TVCardDialog) p).onKeyDown(keyCode, event);
-            } else if (p instanceof View) {
-                if (log.isDebugEnabled()) log.debug("onKeyDown: send to parent view");
-                v = (View) p;
-            } else {
-                if (log.isDebugEnabled()) log.debug("onKeyDown: break");
-                break;
-            }
-        }
-        return false;
+        // else, we send it to the enclosing card
+        if (log.isDebugEnabled()) log.debug("onKeyDown: send to card parent for keycode {}", keyCode);
+        return TVUtils.dispatchToCardParent(this, keyCode, event);
     }
 
     @Override

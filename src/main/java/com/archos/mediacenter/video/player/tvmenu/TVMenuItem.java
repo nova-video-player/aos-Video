@@ -181,25 +181,8 @@ public class TVMenuItem extends LinearLayout implements Checkable, TVSlaveView{
         if(TVUtils.isOKKey(keyCode) &&ocl!=null) {
             return true;
         }
-        if (this.getParent() != null && this.getParent() instanceof TVMenu) {
-            ViewParent p;
-            View v = this;
-            while((p=v.getParent())!=null){
-                if(p instanceof TVCardView) {
-                    if (log.isDebugEnabled()) log.debug("onKeyDown keyCode:{} in TVCardView, propagate", keyCode);
-                    return ((TVCardView) p).onKeyDown(keyCode, event);
-                } else if(p instanceof TVCardDialog) {
-                    if (log.isDebugEnabled()) log.debug("onKeyDown keyCode:{} in TVCardDialog, propagate", keyCode);
-                    return ((TVCardDialog) p).onKeyDown(keyCode, event);
-                } else if(p instanceof View) {
-                    if (log.isDebugEnabled()) log.debug("onKeyDown keyCode:{} in View, propagate", keyCode);
-                    v = (View) p;
-                } else {
-                    if (log.isDebugEnabled()) log.debug("onKeyDown keyCode:{} in unknown parent, break", keyCode);
-                    break;
-                }
-            }
-               
+        if (this.getParent() instanceof TVMenu) {
+            return TVUtils.dispatchToCardParent(this, keyCode, event);
         }
         if (log.isDebugEnabled()) log.debug("onKeyDown keyCode:{} not handled", keyCode);
         return false;

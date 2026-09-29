@@ -23,12 +23,9 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.LinearLayout;
 
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.player.tvmenu.TVCardDialog;
-import com.archos.mediacenter.video.player.tvmenu.TVCardView;
 import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 
 import java.util.ArrayList;
@@ -86,20 +83,8 @@ public class SubtitleColorPicker extends LinearLayout  {
             mColorPickListener.onColorPicked(mColor);
             return true;
         }
-        //else, we send it to parent
-        ViewParent p;
-        View v = this;
-        while((p=v.getParent())!=null){
-            if(p instanceof TVCardView)
-                return ((TVCardView)p).onKeyDown(keyCode, keyEvent);
-            else if(p instanceof TVCardDialog)
-                return ((TVCardDialog)p).onKeyDown(keyCode, keyEvent);
-            else if(p instanceof View)
-                v=(View)p;
-            else
-                break;
-        }
-        return false;
+        //else, we send it to the enclosing card
+        return TVUtils.dispatchToCardParent(this, keyCode, keyEvent);
     }
     public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
         return true;
