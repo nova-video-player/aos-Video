@@ -6,10 +6,15 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Surface;
 import android.view.TextureView;
+import androidx.annotation.Keep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SubtitleEngine implements TextureView.SurfaceTextureListener, SurfaceController.VideoBoxListener {
 
@@ -69,15 +74,43 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
     // elsewhere (e.g. redraw3DIfNeeded()'s is3DMode() check) still see a fresh value.
     private volatile boolean mReleased = false;
 
-    // Generation of the subtitle content last successfully posted to the Canvas by
-    // draw3DSubtitlesInternal(). Compared against nativeGetSubtitleGeneration() at the top
-    // of the per-video-frame (forceSync=false) path so a run of onFrameAvailable() calls
-    // where the subtitle content hasn't actually changed can skip the clear+blend
-    // (nativeFillBitmap) and the lockCanvas/drawBitmap/unlockCanvasAndPost work entirely,
-    // instead of repeating all of it 30-60x/sec regardless of whether anything on screen
-    // is different. -1 is not a valid generation (see sub_render_gl.c), so it always forces
-    // the first draw through. Only ever read/written from within m3DDrawLock.
+    // What is currently on the 3D overlay Surface, as a PAIR: (which Surface, which subtitle
+    // generation). Both are updated together, only after a successful unlockCanvasAndPost(),
+    // and the generation is the one nativeFillBitmap() reported for the exact pixels it copied
+    // -- never a separate read taken afterwards. -1 is not a valid generation, so it always
+    // forces the next pull to produce a real answer. Only ever touched inside m3DDrawLock.
     private long mLastPostedGeneration = -1;
+    private Surface mLastPostedSurface = null;
+
+    // --- native -> Java "subtitle content changed" push (3D path, while paused) ---
+    // The 3D overlay is only PULLED on video frames and style changes. While paused, a change that
+    // originates natively -- a subtitle track switch/close, or a new track's first cue arriving --
+    // would never be pulled and the overlay would go stale. The native render thread announces
+    // those (see sub_render_change_cb in sub_render_gl.h; it never announces while playing) by
+    // calling onNativeSubtitleContentChanged() below, which coalesces them into ONE pending
+    // main-thread pull. The pull itself is the ordinary passive one: it asks native what is on
+    // screen and answers UNCHANGED / CLEAR / FRAME by generation, so a spurious or duplicate
+    // announce costs one cheap call and can never draw anything stale.
+    private final Handler mPullHandler = new Handler(Looper.getMainLooper());
+    private final AtomicBoolean mPullQueued = new AtomicBoolean(false);
+    private final Runnable mPullRunnable = new Runnable() {
+        @Override public void run() {
+            // Clear BEFORE pulling: an announce that lands during the pull queues a new one, and
+            // the pull reads native's newest state anyway -- worst case one redundant UNCHANGED.
+            mPullQueued.set(false);
+            pull3DSubtitles();
+        }
+    };
+
+    // Reused out-param for nativeFillBitmap()'s generation (element 0). Only used inside
+    // m3DDrawLock, so sharing one array is safe and avoids allocating per video frame.
+    private final long[] mFillGeneration = new long[1];
+
+    // nativeFillBitmap() results. MUST match SUB_FILL_RESULT in sub_engine.h.
+    private static final int FILL_ERROR     = -1; // nothing decided -- record nothing, retry next time
+    private static final int FILL_UNCHANGED = 0;  // what was last posted is still right -- do nothing
+    private static final int FILL_CLEAR     = 1;  // nothing to show -- clear the Surface (bitmap untouched)
+    private static final int FILL_FRAME     = 2;  // mSoftBitmap holds the frame -- draw it
 
     public SubtitleEngine() {
         // Initialize the native C engine and store its memory pointer
@@ -102,6 +135,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
     public void release() {
         synchronized (m3DDrawLock) {
             mReleased = true;
+            mPullHandler.removeCallbacks(mPullRunnable);
             if (mNativeEngineHandle != 0) {
                 nativeDestroy(mNativeEngineHandle);
                 mNativeEngineHandle = 0;
@@ -320,6 +354,32 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
      * loop is normally driven entirely by real video frames. wakeDrawLoop() is the other
      * half: it unblocks that consumer for one pass. See its doc comment for the full story.
      */
+    /**
+     * Called by the native render thread (via JNI; see jni_sub_engine.c) when subtitle content
+     * changed while the player is paused in 3D mode. Runs on that native thread, so it must be
+     * quick and MUST NOT take m3DDrawLock: release() holds that lock while nativeDestroy() joins
+     * this very thread, so blocking on it here would deadlock. It only flips a flag and posts.
+     *
+     * @Keep: looked up by name from native code with no Java reference to it, so the shrinker
+     * would otherwise strip or rename it. (If it ever is, native logs a warning and the push is
+     * simply disabled -- the 3D path falls back to pulling on video frames and style changes.)
+     */
+    @Keep
+    private void onNativeSubtitleContentChanged() {
+        if (mReleased) return;
+        if (mPullQueued.compareAndSet(false, true)) {
+            mPullHandler.post(mPullRunnable);
+        }
+    }
+
+    // Main-thread side of the push: an ordinary passive pull against the last registered 3D
+    // Surface -- exactly what onFrameAvailable() does per video frame, minus the video frame.
+    private void pull3DSubtitles() {
+        Surface surface = mLast3DSurface;
+        if (!is3DMode() || surface == null) return;
+        draw3DSubtitlesInternal(surface, mLast3DWidth, mLast3DHeight, /*forceSync=*/false);
+    }
+
     private void redraw3DIfNeeded() {
         if (!is3DMode() || mLast3DSurface == null) return;
         draw3DSubtitlesInternal(mLast3DSurface, mLast3DWidth, mLast3DHeight, /*forceSync=*/true);
@@ -346,44 +406,49 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
             if (mReleased) return;
 
             // Give Libass the FULL physical screen size. No 3D halving!
-            boolean surfaceChanged = false;
             if (mSoftBitmap == null || mSoftBitmap.getWidth() != viewWidth || mSoftBitmap.getHeight() != viewHeight) {
                 if (mSoftBitmap != null) mSoftBitmap.recycle();
                 mSoftBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
                 nativeSurfaceChanged(mNativeEngineHandle, viewWidth, viewHeight);
-                surfaceChanged = true; // new bitmap is blank -- must redraw regardless of generation
+                // The new bitmap is blank, so nothing valid has been posted from it yet.
+                // Invalidating here (rather than passing a one-shot flag to this call) also
+                // covers the case where the pull or the post below fails: the next call still
+                // knows it owes a real draw instead of trusting a generation that no longer
+                // describes the bitmap.
+                mLastPostedGeneration = -1;
             }
 
-            // Cheap pre-check: skip the clear+blend (nativeFillBitmap) and the Canvas
-            // lock/draw/post entirely when the subtitle content hasn't changed since the
-            // last frame we actually posted. Only safe for the passive per-video-frame path
-            // (forceSync=false) -- forceSync=true is the style-change path, where the pixels
-            // legitimately differ (new font/color/size/etc.) even though the underlying cue
-            // and its frame_generation haven't changed, so that path must always redraw.
-            // Also skipped right after a bitmap resize (surfaceChanged), since the new
-            // bitmap starts blank and needs a real draw no matter what the generation says.
-            if (!forceSync && !surfaceChanged) {
-                long gen = nativeGetSubtitleGeneration(mNativeEngineHandle);
-                if (gen == mLastPostedGeneration) {
-                    return; // nothing changed on screen since the last post -- nothing to do
-                }
+            // A different Surface holds none of our content, whatever generation we last
+            // posted to the previous one.
+            if (uiSurface != mLastPostedSurface) {
+                mLastPostedGeneration = -1;
             }
 
-            // forceSync=true (style-change redraw path only) forces a fresh render and
-            // blocks briefly for the render thread to actually apply it first -- closes the
-            // race where force_wake() from the setter hasn't been picked up by the render
-            // thread yet. forceSync=false (the per-video-frame path) stays a cheap passive
-            // read, since the render thread is already ticking on its own in that case.
-            boolean hasSubs = forceSync
-                    ? nativeSyncFillBitmap(mNativeEngineHandle, mSoftBitmap)
-                    : nativeFillBitmap(mNativeEngineHandle, mSoftBitmap);
+            // One native call decides everything, atomically with the pixel copy: whether the
+            // frame we last posted is still current (UNCHANGED), whether nothing should be
+            // showing (CLEAR), or a new frame (FRAME) -- and which generation that answer is.
+            //
+            // forceSync=true is the style-change path: it forces a fresh render and blocks
+            // briefly for the render thread to apply it (closes the race where the setter's
+            // wake hasn't been picked up yet), and never answers UNCHANGED because the pixels
+            // legitimately differ (new font/color/size) even if the frame's identity doesn't.
+            // forceSync=false is the per-video-frame path: no waiting, UNCHANGED is the norm.
+            int result = nativeFillBitmap(mNativeEngineHandle, mSoftBitmap,
+                                          mLastPostedGeneration, forceSync, mFillGeneration);
+            if (result == FILL_UNCHANGED) return;
+            if (result != FILL_CLEAR && result != FILL_FRAME) {
+                // FILL_ERROR (or an unknown code): no decision was made, so record nothing --
+                // in particular do NOT paint an empty overlay, which would look like "clear".
+                log.warn("nativeFillBitmap failed ({}); keeping previous overlay", result);
+                return;
+            }
 
             try {
                 Canvas c = uiSurface.lockCanvas(null);
                 if (c != null) {
                     c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
-                    if (hasSubs) {
+                    if (result == FILL_FRAME) {
                         // Draw the full 1920x1080 image ONCE. The 3D Shader duplicates it!
                         int cw = c.getWidth(), ch = c.getHeight();
                         if (cw == mSoftBitmap.getWidth() && ch == mSoftBitmap.getHeight()) {
@@ -399,9 +464,10 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
                         }
                     }
                     uiSurface.unlockCanvasAndPost(c);
-                    // Record what we just posted so the next passive-path call can skip
-                    // redundant work if nothing has changed by then.
-                    mLastPostedGeneration = nativeGetSubtitleGeneration(mNativeEngineHandle);
+                    // Record the generation native reported for the pixels we just copied --
+                    // not a fresh read, which could already describe a newer frame.
+                    mLastPostedGeneration = mFillGeneration[0];
+                    mLastPostedSurface = uiSurface;
                 }
             } catch (Exception e) {
                 log.error("Failed to draw 3D subtitles to Canvas", e);
@@ -465,15 +531,13 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
     private native void nativeSurfaceDestroyed(long handle);
 
 
-    // 3D Bridge Hook
-    private native boolean nativeFillBitmap(long handle, Bitmap bitmap);
-    // Same pull as nativeFillBitmap, but forces a fresh render and blocks (bounded) until
-    // the render thread has applied it -- used only by redraw3DIfNeeded()'s style-change
-    // path. See jni_sub_engine.c for why this is a separate entry point from the plain one.
-    private native boolean nativeSyncFillBitmap(long handle, Bitmap bitmap);
-    // Cheap change-detection pre-check for the passive per-video-frame draw path -- see
-    // mLastPostedGeneration's doc comment.
-    private native long nativeGetSubtitleGeneration(long handle);
+    // 3D Bridge Hook -- the single pull for the CPU-blend path. Returns FILL_* and reports,
+    // in outGeneration[0], the generation of exactly what that result describes. lastGeneration
+    // is what the caller last posted (-1 = nothing valid). sync=true is the forced,
+    // wait-for-render variant used only by redraw3DIfNeeded()'s style-change path. See
+    // jni_sub_engine.c for the full contract.
+    private native int nativeFillBitmap(long handle, Bitmap bitmap, long lastGeneration,
+                                        boolean sync, long[] outGeneration);
     private native void nativeSetUIMode(long handle, int mode);
 
     /* ── Typography & Master Control ── */
