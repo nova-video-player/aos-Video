@@ -84,7 +84,9 @@ public class VideosByListLoader extends CursorLoader implements CompatAndSDKCurs
                 " AND l."+VideoStore.List.Columns.SYNC_STATUS+" != "+VideoStore.List.SyncStatus.STATUS_DELETED+
                 " AND vl."+VideoStore.List.Columns.SYNC_STATUS+" != "+VideoStore.List.SyncStatus.STATUS_DELETED+
                 " AND "+ LoaderUtils.HIDE_USER_HIDDEN_FILTER+")"+
-                " GROUP BY name\n";
+                // GROUP BY must be qualified: an unqualified "name" resolves to video.name (file name), not to the
+                // "name" alias above, which used to produce one row per distinct video file per list
+                " GROUP BY l."+VideoStore.List.Columns.ID+"\n";
         return cmd;
     }
 
