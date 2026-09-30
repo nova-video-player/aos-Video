@@ -477,9 +477,9 @@
     <string name="preferences_audio_speed_mode_title">音频速度</string>
     <string name="preferences_audio_speed_mode_summary">选择用于更改播放速度的音频速度滤镜。⚠ 实验性功能，可能会出现视频卡顿或音频失真</string>
     <string name="audio_speed_mode_disabled">关闭</string>
-    <string name="audio_speed_mode_audiotrack">系统原生（AudioTrack）</string>
-    <string name="audio_speed_mode_atempo">平衡模式（FFmpeg atempo）</string>
-    <string name="audio_speed_mode_sonic">声音 &amp; 语音(Sonic)</string>
+    <string name="audio_speed_mode_audiotrack">系统原生 (AudioTrack)</string>
+    <string name="audio_speed_mode_atempo">平衡模式 (FFmpeg atempo)</string>
+    <string name="audio_speed_mode_sonic">声音 &amp; 语音 (Sonic)</string>
     <string name="preferences_enable_dynamic_audio_delay_title">动态音频/视频延迟估算</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">使用动态延迟估算可获得更佳的音频/视频同步效果，尤其是在使用蓝牙耳机时。如果遇到同步问题，请禁用此功能。</string>
     <string name="preferences_enable_spatialization_title">平台空间音频</string>

@@ -478,8 +478,16 @@
     <string name="preferences_stream_max_iframe_size_summary">Maximale komprimierte i-frame-Größe in MB</string>
     <string name="preferences_force_passthrough">Audio-Passthrough erzwingen</string>
     <string name="preferences_force_passthrough_summary">Wenn Passthrough aktiviert ist, wird es auch dann erzwungen, wenn der AV-Receiver angeblich keinen Audiocodec unterstützt, anstatt die Fähigkeiten des AV-Receivers zu prüfen</string>
+    <string name="preferences_audio_speed_mode_title">Audiogeschwindigkeit</string>
+    <string name="preferences_audio_speed_mode_summary">Wählen Sie den Audio-Geschwindigkeitsfilter zur Änderung der Wiedergabegeschwindigkeit aus. ⚠ Experimentell, kann zu ruckelndem Video oder Audioverzerrungen führen</string>
+    <string name="audio_speed_mode_disabled">Aus</string>
+    <string name="audio_speed_mode_audiotrack">System-nativ (AudioTrack)</string>
+    <string name="audio_speed_mode_atempo">Ausgewogen (FFmpeg atempo)</string>
+    <string name="audio_speed_mode_sonic">Stimme &amp; Sprache (Sonic)</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Dynamische Schätzung der Audio-/Video-Verzögerung</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Verwende dynamische Latenzschätzungen für eine bessere Audio-/Video-Synchronisation speziell mit Bluetooth-Kopfhörern. Deaktivieren bei Synchronisationsproblemen.</string>
+    <string name="preferences_enable_spatialization_title">Räumliche Ausgestaltung der Plattform</string>
+    <string name="preferences_enable_spatialization_summary">Verwenden Sie den Spatializer der Plattform, um Mehrkanal-Audio wiederzugeben, anstatt es auf Stereo herunterzumischen (erfordert ein kompatibles Gerät und eine entsprechende Audioausgabe). Diese Einstellung lässt sich auch über das Audio-Menü des Players umschalten.</string>
     <string name="preferences_disable_downmix_title">Audio Stereo-Downmix deaktivieren</string>
     <string name="preferences_disable_downmix_summary">Immer alle Kanäle decodieren und Android den Downmix abhängig von der Audio-Ausgabefähigkeit durchführen lassen (kann zu verlorenen Sprachkanälen führen)</string>
     <string name="preferences_enable_downmix_androidtv_title">Audio-Stereo-Downmix erzwingen</string>
@@ -514,6 +522,8 @@
     <string name="summary_list_preference_primary">Wählen Sie Ihre Sprachen für das Herunterladen von Untertiteln aus</string>
     <string name="favSubLang_title">Lesesprache für Untertitel</string>
     <string name="favSubLang_summary">Wählen Sie Ihre bevorzugte Sprache zum Lesen von Untertiteln</string>
+    <string name="subtitles_show_full_for_local_audio_title">Untertitel für lokale Sprachaudio anzeigen</string>
+    <string name="subtitles_show_full_for_local_audio_summary">Standardmäßig deaktiviert, sodass nur erzwungene Untertitel automatisch ausgewählt werden, wenn die Audiosprache der Untertitelsprache entspricht; aktivieren Sie diese Option, um auch vollständige Untertitel automatisch auszuwählen</string>
     <string name="favAudioLang_title">Bevorzugte Audio-Sprache</string>
     <string name="favAudioLang_summary">Wählen Sie Ihre bevorzugte Audiospur-Sprache</string>
     <string name="prefer_original_audio_track_title">Originaltonspur bevorzugen</string>
@@ -788,6 +798,7 @@
     <string name="trakt_sync_status_error_auth">Authentifizierungsfehler - bitte melden Sie sich erneut an</string>
     <string name="trakt_sync_status_error_locked">Konto gesperrt – auf trakt.tv entsperren</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
+    <string name="trakt_signin_summary_logged_sync">Angemeldet · %1$s</string>
     <string name="show_all">Alle Videos</string>
     <string name="hide_seen">Nicht angeschaut</string>
     <string name="search_results">Suchergebnisse</string>
@@ -932,10 +943,17 @@
     <string name="stop">Stopp</string>
     <string name="s_visual_impaired">sehbehindert</string>
     <string name="s_audio_description">Audiodeskription</string>
+    <string name="s_descriptions">Beschreibungen</string>
+    <string name="s_forced">Erzwungen</string>
     <string name="s_original">Original</string>
     <string name="s_translated">übersetzt</string>
     <string name="s_dubbed">synchronisiert</string>
     <string name="s_commentary">Kommentar</string>
     <string name="s_lyrics">Text</string>
     <string name="s_karaoke">Karaoke</string>
+    <string name="ui_choice_title">Es scheint, als würden Sie Nova Video Player auf einem Fernseher verwenden. Falls dies tatsächlich der Fall ist, empfehlen wir die Verwendung unserer neuen TV-Benutzeroberfläche</string>
+    <string name="ui_choice_tv">TV-Benutzeroberfläche</string>
+    <string name="ui_choice_tablet">Tablet-Benutzeroberfläche</string>
+    <string name="ui_choice_help">Sie können Ihre Auswahl später in den Anwendungseinstellungen ändern</string>
+    <string name="workgroup">Arbeitsgruppe</string>
 </resources>

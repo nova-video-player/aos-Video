@@ -265,7 +265,7 @@
     <string name="player_subtitle_track_toast">Napisy:</string>
     <string name="player_bookmark_set">Zakładka na</string>
     <string name="player_pref_subtitle_delay_title">Opóźnienie</string>
-    <string name="player_pref_audio_speed_title">Szybkość odtwarzania</string>
+    <string name="player_pref_audio_speed_title">Prędkość odtwarzania</string>
     <string name="floating_player_restore" tools:ignore="UnusedResources">Przywróć</string>
     <string name="floating_player_play" tools:ignore="UnusedResources">Odtwórz</string>
     <string name="floating_player_pause" tools:ignore="UnusedResources">Wstrzymaj</string>
@@ -278,7 +278,7 @@
     <string name="pref_play_mode_entry_repeat_folder">Powtórz folder</string>
     <string name="pref_play_mode_entry_repeat_single">Potwórz pojedynczy</string>
     <string name="pref_play_mode_entry_binge">Odcinek po odcinku</string>
-    <string name="pref_introdb_autoskip_title">Pomiń wstęp/zakończenie</string>
+    <string name="pref_introdb_autoskip_title">Pomiń in/out</string>
     <string name="introdb_autoskip">Autopomijanie</string>
     <string name="introdb_segment_intro">Wstęp</string>
     <string name="introdb_segment_recap">Podsumowanie</string>
@@ -486,7 +486,7 @@
     <string name="preferences_stream_max_iframe_size_summary">Maksymalny rozmiar kompresji i-frame w MB</string>
     <string name="preferences_force_passthrough">Wymuś przekazywanie dźwięku</string>
     <string name="preferences_force_passthrough_summary">Jeśli włączona jest funkcja przekazywania dźwięku, wymuś ją, nawet jeśli kodek audio nie jest obsługiwany przez odbiornik AV</string>
-    <string name="preferences_audio_speed_mode_title">Szybkość dźwięku</string>
+    <string name="preferences_audio_speed_mode_title">Prędkość dźwięku</string>
     <string name="preferences_audio_speed_mode_summary">Wybierz filtr używany do zmiany prędkości odtwarzania. ⚠️ Eksperymentalne, może powodować zniekształcenie obrazu lub dźwięku</string>
     <string name="audio_speed_mode_disabled">Wyłączony</string>
     <string name="audio_speed_mode_audiotrack">Natywny (AudioTrack)</string>
@@ -690,8 +690,8 @@
     <string name="preferences_sort_ignore_articles_summary">Podczas sortowania alfabetycznego zignoruj ​​przedimki, takie jak „The”, „A”, „Le”, „Das”</string>
     <string name="preferences_display_resume_box_summary">Wyświetl lub ukryj przycisk wznawiający najnowsze wideo na ekranie głównym</string>
     <string name="preferences_display_resume_box">Wyświetl pole wznowienia</string>
-    <string name="reset_brightness_on_start">Zapamiętaj jasność wideo.</string>
-    <string name="reset_brightness_on_start_summary">Zapamiętaj ostatnio używane ustawienie jasności podczas otwierania aplikacji. Wyłącz, aby użyć jasności systemowej.</string>
+    <string name="reset_brightness_on_start">Zapamiętaj jasność wideo</string>
+    <string name="reset_brightness_on_start_summary">Zapamiętaj ostatnio używane ustawienie jasności podczas otwierania aplikacji. Wyłącz, aby użyć jasności systemowej</string>
     <string name="hide_controls_on_pause">Ukryj elementy sterujące podczas pauzy</string>
     <string name="hide_controls_on_pause_summary">Ukryj elementy sterujące odtwarzacza po 5 sekundach, gdy wideo jest wstrzymane</string>
     <string name="preferences_leanback_user_interface">Interfejs użytkownika</string>

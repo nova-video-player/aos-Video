@@ -478,6 +478,12 @@
     <string name="preferences_stream_max_iframe_size_summary">Tamanho máximo de i-frame comprimido em MB</string>
     <string name="preferences_force_passthrough">Forçar passagem direta de áudio</string>
     <string name="preferences_force_passthrough_summary">Se a passagem direta estiver ativada, forçá-la mesmo que o codec de áudio não conste como compatível pelo receiver AV, em vez de verificar os recursos do aparelho.</string>
+    <string name="preferences_audio_speed_mode_title">Velocidade de áudio</string>
+    <string name="preferences_audio_speed_mode_summary">Selecione o filtro de velocidade de áudio usado para alterar a velocidade de reprodução. ⚠ Experimental, pode resultar em vídeo travando ou distorção de áudio.</string>
+    <string name="audio_speed_mode_disabled">Desativado</string>
+    <string name="audio_speed_mode_audiotrack">Nativo do sistema (AudioTrack)</string>
+    <string name="audio_speed_mode_atempo">Equilibrado (FFmpeg atempo)</string>
+    <string name="audio_speed_mode_sonic">Voz e fala (Sonic)</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Estimativa dinâmica de atraso de áudio/vídeo</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Use a estimativa dinâmica de latência para melhor sincronia de áudio/vídeo, especialmente com fones Bluetooth. Desative se houver problemas de sincronização.</string>
     <string name="preferences_enable_spatialization_title">Espacialização da plataforma</string>
@@ -526,7 +532,7 @@
     <string name="UiLang_title">Idioma da interface</string>
     <string name="UiLang_summary">Defina o idioma da interface do Nova. Escolha \"Sistema\" para usar o padrão do sistema.</string>
     <string name="ui_mode_title">Modo de interface</string>
-    <string name="ui_mode_summary">Escolha entre interface de TV e Tablet/Celular.</string>
+    <string name="ui_mode_summary">Escolha entre a interface para TV e a interface para Tablet/Celular</string>
     <string name="theme_selection_title">Tema de cores</string>
     <string name="theme_selection_summary">Selecione sua cor preferida.</string>
     <string name="theme_blue">Azul</string>
@@ -680,7 +686,7 @@
     <string name="reset_brightness_on_start_summary">Lembra o último ajuste de brilho usado ao abrir o aplicativo. Desative para usar o brilho do sistema.</string>
     <string name="hide_controls_on_pause">Ocultar controles ao pausar</string>
     <string name="hide_controls_on_pause_summary">Oculte controles do player após 5 segundos com o vídeo pausado.</string>
-    <string name="preferences_leanback_user_interface">Interface de TV</string>
+    <string name="preferences_leanback_user_interface">Interface para TV</string>
     <string name="preferences_separate_animation_from_movies_summary">Marque para separar vídeos de animação de filmes e séries, adicionando uma lista de animações.</string>
     <string name="preferences_separate_animation_from_movies">Separar animações de filmes e séries</string>
     <string name="preferences_show_watching_up_next_row_summary">Marque para mostrar uma lista com os vídeos que você está assistindo no momento e os próximos.</string>
@@ -830,8 +836,8 @@
     <string name="leanback_hint_long_press_on_back">DICA: manter o botão VOLTAR pressionado fecha o explorador de arquivos</string>
     <string name="leanback_archos_video_webview">Nova Video WebView</string>
     <string name="file_access_error">Não foi possível acessar o arquivo</string>
-    <string name="always_leanback_on_tv">Sempre iniciar na interface de TV</string>
-    <string name="always_leanback_on_tv_summary">Sempre iniciar na interface de TV. Desative para usar a interface clássica.</string>
+    <string name="always_leanback_on_tv">Sempre iniciar na interface para TV</string>
+    <string name="always_leanback_on_tv_summary">Sempre iniciar o aplicativo na interface para TV. Desative se quiser iniciar na interface clássica na TV.</string>
     <string name="interface_size">Tamanho da interface</string>
     <string name="interface_size_summary">Alterar caso a interface esteja pequena ou grande demais</string>
     <string name="interface_size_very_small">Muito pequeno (mdpi)</string>
@@ -945,4 +951,9 @@
     <string name="s_commentary">comentários</string>
     <string name="s_lyrics">letras</string>
     <string name="s_karaoke">karaokê</string>
+    <string name="ui_choice_title">Parece que você está usando o Nova Video Player em uma TV.\nSe esse for o caso, recomendamos usar nossa nova interface para TV</string>
+    <string name="ui_choice_tv">Interface para TV</string>
+    <string name="ui_choice_tablet">Interface para tablet</string>
+    <string name="ui_choice_help">Você pode alterar sua escolha mais tarde nas configurações do aplicativo</string>
+    <string name="workgroup">Grupo de trabalho</string>
 </resources>
