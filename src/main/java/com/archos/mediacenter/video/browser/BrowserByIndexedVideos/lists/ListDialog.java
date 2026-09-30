@@ -116,9 +116,10 @@ public class ListDialog extends DialogFragment {
                     listDialog.show(getParentFragmentManager(), "");
                 }
                 else{
-                    int idColumn = mAdapter.getCursor().getColumnIndex(VideoStore.List.Columns.ID);
-                    if (idColumn < 0) return;
-                    int id = mAdapter.getCursor().getInt(idColumn);
+                    // use the clicked position: the cursor is left on whatever row was bound last, which is not
+                    // necessarily the clicked one
+                    long id = mAdapter.getItemId(i);
+                    if (id <= 0) return;
                     BaseTags metadata = mVideo.getFullScraperTags(getActivity());
                     boolean isEpisode = metadata instanceof EpisodeTags;
                     VideoStore.VideoList.VideoItem videoItem  =
