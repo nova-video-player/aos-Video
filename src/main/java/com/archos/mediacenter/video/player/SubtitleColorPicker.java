@@ -26,6 +26,9 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -266,7 +269,7 @@ public class SubtitleColorPicker extends LinearLayout  {
             if (hasFocus) {
                 // D-pad focus (unlike a touch tap) doesn't summon the IME on its own.
                 InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) imm.showSoftInput(mHexInput, InputMethodManager.SHOW_IMPLICIT);
+                if (imm != null) imm.showSoftInput(mHexInput, 0); // SHOW_IMPLICIT is deprecated (API 33); 0 = no flags
             }
         });
         // Listener to escape the EditText on TV
@@ -294,23 +297,13 @@ public class SubtitleColorPicker extends LinearLayout  {
                         // reaching TVCardDialog: Back can't close the dialog (so nothing
                         // gets saved — that only happens in TVCardDialog's own onKeyDown
                         // via exitDialog()), and Up has nowhere to go, stranding focus
-                        // here. Delegate exactly like onKeyDown()'s own fallback below.
+                        // here. Delegate exactly like onKeyDown()'s own fallback below
+                        // (TVUtils.dispatchToCardParent).
                         // Deliberately scoped to just these two — routing *every*
                         // unhandled key here also caught Backspace/Delete, which
                         // TVCardDialog has no case for and silently swallowed via its own
                         // unconditional `return true` fallback, breaking editing entirely.
-                        ViewParent p;
-                        View view = v;
-                        while ((p = view.getParent()) != null) {
-                            if (p instanceof TVCardView)
-                                return ((TVCardView) p).onKeyDown(keyCode, event);
-                            else if (p instanceof TVCardDialog)
-                                return ((TVCardDialog) p).onKeyDown(keyCode, event);
-                            else if (p instanceof View)
-                                view = (View) p;
-                            else
-                                break;
-                        }
+                        return TVUtils.dispatchToCardParent(v, keyCode, event);
                     }
                 }
                 // Everything else — Backspace/Delete, Left/Right cursor movement, typed
