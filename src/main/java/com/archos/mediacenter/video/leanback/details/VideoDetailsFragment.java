@@ -80,6 +80,7 @@ import com.archos.environment.ArchosUtils;
 import com.archos.environment.NetworkState;
 import com.archos.filecorelibrary.FileUtils;
 import com.archos.filecorelibrary.FileUtilsQ;
+import com.archos.filecorelibrary.NetworkInitialization;
 import com.archos.mediacenter.filecoreextension.UriUtils;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
@@ -1684,6 +1685,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         } else {
                             if (log.isDebugEnabled()) log.debug("VideoInfoTask: no HTTP headers in activity intent");
                         }
+                        NetworkInitialization.awaitReadyForSmb(video.getFileUri(), context);
+                        if (isCancelled || Thread.currentThread().isInterrupted()) return;
                         VideoMetadata videoMetaData = VideoInfoCommonClass.retrieveMetadata(video, context, headers);
                         // Cancellation may have happened during SMB I/O. Discard its result
                         // before writing metadata back to the database or the fragment cache.
@@ -1705,7 +1708,9 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                             || !Objects.equals(startingPath, mVideo.getFilePath())) return;
                     if (finalResult != null) mVideoMetadateCache.put(startingPath, finalResult);
                     // Update the video object with the computed metadata
-                    mVideo.setMetadata(finalResult);
+                    // An initialization failure is retryable: show the existing file error,
+                    // but do not cache or persist empty metadata as a successful result.
+                    mVideo.setMetadata(finalResult != null ? finalResult : new VideoMetadata());
 
                     // Integrated subtitle list is in the metadata
                     updateSubtitleRowWhenReady();
@@ -1934,6 +1939,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                     if (isCancelled || Thread.currentThread().isInterrupted()) return;
                     if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground starting for: {}", video.getFileUri());
                     if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground file name: {}", FileUtils.getName(video.getFileUri()));
+                    NetworkInitialization.awaitReadyForSmb(fileUri, mActivity.getApplicationContext());
+                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
                     SubtitleManager lister = new SubtitleManager(getActivity(), null);
                     if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground calling listLocalAndRemotesSubtitles");
                     List<SubtitleManager.SubtitleFile> list = lister.listLocalAndRemotesSubtitles(video.getFileUri(), true);
