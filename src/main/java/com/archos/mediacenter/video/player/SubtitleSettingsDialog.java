@@ -658,6 +658,7 @@ public class SubtitleSettingsDialog extends AlertDialog implements
                 .putInt(PlayerActivity.KEY_SUBTITLE_BACKGROUND_COLOR, mSubtitleManager.getBackgroundColor())
                 .putFloat(PlayerActivity.KEY_SUBTITLE_OUTLINE_WIDTH, mOutlineWidth)
                 .putFloat(PlayerActivity.KEY_SUBTITLE_SHADOW_WIDTH, mSubtitleManager.getShadowWidth())
+                .putFloat(PlayerActivity.KEY_SUBTITLE_FONT_SCALE, mSubtitleManager.getFontScale())
                 .apply();
         mSubtitleManager.fadeSubtitlePositionHint(false);
         super.onDetachedFromWindow();
