@@ -47,6 +47,7 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
 import com.archos.filecorelibrary.FileUtils;
+import com.archos.filecorelibrary.NetworkInitialization;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.CodecDiscovery;
@@ -136,7 +137,7 @@ public class Player implements IPlayerControl,
     private int         mSurfaceWidth;
     private int         mSurfaceHeight;
     private IMediaPlayer mMediaPlayer;
-    private int mOpenGeneration;
+    private volatile int mOpenGeneration;
     private boolean mSessionPrepared;
     private boolean mRestoringSession;
     private boolean mMetadataReady;
@@ -607,6 +608,9 @@ public class Player implements IPlayerControl,
         CustomApplication.applyAudioOutputToNative(mContext);
         new Thread(() -> {
             try {
+                NetworkInitialization.awaitReadyForSmb(uri, mContext);
+                // Back/Stop or opening another video invalidates this request, not shared startup.
+                if (generation != mOpenGeneration) return;
                 if (headers != null) player.setDataSource(mContext, uri, headers);
                 else player.setDataSource(mContext, uri);
                 mHandler.post(() -> {
