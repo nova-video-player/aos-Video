@@ -822,18 +822,19 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         });
 
         mSubtitleVPosDefault = getResources().getInteger(R.integer.player_pref_subtitle_vpos_default);
-        mSubtitleColorDefault = Color.parseColor(getResources().getString(R.string.subtitle_color_default));
-        mSubtitleBgOpacityDefault = 128;
-        mSubtitleFontSizePtDefault = 55;
-        mSubtitleFontScaleDefault = 1.0f;
-        mSubtitleOverrideModeDefault = SubtitleManager.OVERRIDE_CUSTOM;
-        mSubtitleBoldDefault = false;
-        mSubtitleOutlineColorDefault = 0xFF000000;
-        mSubtitleShadowColorDefault = 0xAA000000;
-        mSubtitleBackgroundColorDefault = 0xFF000000;
-        mSubtitleOutlineWidthDefault = 2.0f;
-        mSubtitleShadowWidthDefault = 2.0f;
-        mSubtitleBgModeDefault = SubtitleManager.BG_MODE_FLOATING;
+        mSubtitleColorDefault = ContextCompat.getColor(this, R.color.subtitle_default_text_color);
+        mSubtitleBgOpacityDefault = getResources().getInteger(R.integer.subtitle_default_bg_opacity);
+        mSubtitleFontSizePtDefault = getResources().getInteger(R.integer.player_pref_subtitle_size_default);
+        mSubtitleFontScaleDefault = getResources().getInteger(R.integer.subtitle_default_font_scale_percent) / 100f;
+        mSubtitleOverrideModeDefault = SubtitleManager.OVERRIDE_CUSTOM;   // enum constant, not a resource
+        mSubtitleBoldDefault = getResources().getBoolean(R.bool.subtitle_default_bold);
+        mSubtitleOutlineColorDefault = ContextCompat.getColor(this, R.color.subtitle_default_outline_color);
+        mSubtitleShadowColorDefault = ContextCompat.getColor(this, R.color.subtitle_default_shadow_color);
+        mSubtitleBackgroundColorDefault = ContextCompat.getColor(this, R.color.subtitle_default_background_color);
+        mSubtitleOutlineWidthDefault = getResources().getInteger(R.integer.subtitle_default_outline_width);
+        mSubtitleShadowWidthDefault = getResources().getInteger(R.integer.subtitle_default_shadow_width);
+        mSubtitleBgModeDefault = SubtitleManager.BG_MODE_FLOATING;        // enum constant, not a resource
+
         mSurfaceController = new SurfaceController(mRootView);
         mSurfaceController.mFullScreenWithCutout = mFullScreenWithCutout;
         mSurfaceController.mCutBothSidesX = cutBothSidesX;
