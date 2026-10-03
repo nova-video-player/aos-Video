@@ -1379,44 +1379,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     }
 
     private void updateSubtitleLayoutMode() {
-        // Three genuine categories, not two:
-        //   PLAIN_TEXT (SRT/VTT)   -- no author-intended PlayRes; free to use the full container
-        //   ASS  (embedded/external ASS/SSA) -- has its own authored PlayResX/PlayResY tethered
-        //                                       to the video frame; never uses margins
-        //   GFX  (VobSub .idx/.sub, PGS)      -- bitmap subs with baked-in position/size relative
-        //                                       to the video frame; same margin rule as plain text
-        //                                       when the user opts in, but never stretched/rescaled
-        // Previously this only checked for "ass"/"ssa" in the format label and defaulted
-        // everything else -- including gfx tracks -- to plain-text handling. track.isGfx already
-        // exists (see isCurrentSubtrackGfx()) and is now checked explicitly instead of relying on
-        // format-label string matching, which never distinguished gfx from plain text at all.
-        int category = SurfaceController.SUBTITLE_CATEGORY_PLAIN_TEXT;
-        if (mPlayer != null && mPlayer.getVideoMetadata() != null && mVideoInfo != null && mVideoInfo.subtitleTrack >= 0) {
-            // Make sure we aren't selecting the "None" track
-            if (mVideoInfo.subtitleTrack < mVideoInfo.nbSubtitles) {
-                VideoMetadata.SubtitleTrack track = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
-                if (track != null) {
-                    if (track.isGfx) {
-                        category = SurfaceController.SUBTITLE_CATEGORY_GFX;
-                    } else {
-                        String fmt = com.archos.mediacenter.video.utils.VideoUtils.getSubtitleFormatLabel(this, track.format);
-                        if (fmt != null) {
-                            fmt = fmt.toLowerCase();
-                            if (fmt.contains("ass") || fmt.contains("ssa")) {
-                                category = SurfaceController.SUBTITLE_CATEGORY_ASS;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // The track kind is decided in native and interpreted in exactly one place,
+        // SubtitleManager (see its KIND_* docs). This method only forwards the answer.
+        syncSubtitleKind();
+        int category = mSubtitleManager != null
+                ? mSubtitleManager.getLayoutCategory()
+                : SurfaceController.SUBTITLE_CATEGORY_PLAIN_TEXT;
         boolean useMargins = PreferenceManager.getDefaultSharedPreferences(this)
                 .getBoolean(KEY_SUBTITLE_USE_MARGINS, true);
         if (mSurfaceController != null) {
             mSurfaceController.setSubtitleLayoutMode(category, useMargins);
-        }
-        if (mSubtitleManager != null) {
-            mSubtitleManager.setSubtitleIsGfx(category == SurfaceController.SUBTITLE_CATEGORY_GFX);
         }
     }
 
@@ -2480,8 +2452,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                 });
 
-                if (log.isDebugEnabled()) log.debug("refreshSubtitleTVMenu: isCurrentSubtrackGfx={}", isCurrentSubtrackGfx());
-                disableSubtitleSettingsMenuItem(isCurrentSubtrackGfx() || isCurrentSubtrackNone());
+                if (log.isDebugEnabled()) log.debug("refreshSubtitleTVMenu: isCurrentSubtrackStyleBlocked={}", isCurrentSubtrackStyleBlocked());
+                disableSubtitleSettingsMenuItem(isCurrentSubtrackStyleBlocked() || isCurrentSubtrackNone());
             }
             mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.get_subtitles_online).toString(), false, false).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -4289,13 +4261,41 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
     }
 
-    public boolean isCurrentSubtrackGfx() {
+    /** The selected subtitle track, or null for "None"/unselected/out of range. */
+    private SubtitleTrack currentSubtitleTrack() {
         if (mPlayer == null || mPlayer.getVideoMetadata() == null || mVideoInfo == null ||
-                mVideoInfo.subtitleTrack == -1 || mVideoInfo.subtitleTrack >= mVideoInfo.nbSubtitles) {
-            return false;
+                mVideoInfo.subtitleTrack < 0 || mVideoInfo.subtitleTrack >= mVideoInfo.nbSubtitles) {
+            return null;
         }
-        VideoMetadata.SubtitleTrack sub = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
-        return sub != null && sub.isGfx;
+        return mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
+    }
+
+    /**
+     * Pushes the selected track to SubtitleManager, which applies it (layout category, bitmap
+     * margins, native offset). Only the places that APPLY state call this (layout mode, vertical
+     * position); queries read the track directly through currentKind() and never mutate anything.
+     */
+    private void syncSubtitleKind() {
+        if (mSubtitleManager != null) {
+            mSubtitleManager.setActiveTrack(currentSubtitleTrack());
+        }
+    }
+
+    /**
+     * Kind of the selected track, read straight from the track metadata. Pure: it touches no
+     * manager state, so it is safe in any query and can never be one step stale.
+     */
+    private int currentKind() {
+        return SubtitleManager.kindOf(currentSubtitleTrack());
+    }
+
+    public boolean isCurrentSubtrackGfx() {
+        return SubtitleManager.isGraphic(currentKind());
+    }
+
+    /** Active track exists but the user's text-style settings cannot affect it (bitmap/unsupported). */
+    public boolean isCurrentSubtrackStyleBlocked() {
+        return SubtitleManager.isUserStyleBlocked(currentKind());
     }
 
     public boolean isCurrentSubtrackNone() {
@@ -4311,17 +4311,15 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     }
 
     private void setSubtitleVpos(int vpos, String caller) {
+        // Sync first: this runs on track selection before updateSubtitleLayoutMode(), and the
+        // manager must already know the new track's kind when it applies the position.
+        syncSubtitleKind();
         if (mVideoInfo == null || mVideoInfo.subtitleTrack == -1 || mVideoInfo.subtitleTrack >= mVideoInfo.nbSubtitles) return;
-        VideoMetadata.SubtitleTrack subtitleTrack = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
-        if (subtitleTrack != null && subtitleTrack.isGfx) {
-            if (log.isDebugEnabled()) log.debug("{}: set vpos to 0, mVideoInfo={}", caller, ((mVideoInfo == null) ? "null" : "noNull" + ", subtitleTrack=" + ((mVideoInfo == null) ? "null" : mVideoInfo.subtitleTrack)));
-            mSubtitleManager.setVerticalPosition(0);
-            disableSubtitleSettingsMenuItem(true);
-        } else {
-            if (log.isDebugEnabled()) log.debug("{}: set vpos to {}, subtitleTrack={}", caller, vpos, mVideoInfo.subtitleTrack);
-            mSubtitleManager.setVerticalPosition(vpos);
-            disableSubtitleSettingsMenuItem(false);
-        }
+        if (log.isDebugEnabled()) log.debug("{}: set vpos to {}, subtitleTrack={}, kind={}", caller, vpos, mVideoInfo.subtitleTrack, mSubtitleManager.getSubtitleKind());
+        // Always hand over the user's value: for bitmap tracks the manager applies offset 0 by
+        // itself and keeps the saved value intact (the old code passed 0 and lost it).
+        mSubtitleManager.setVerticalPosition(vpos);
+        disableSubtitleSettingsMenuItem(mSubtitleManager.isUserStyleBlocked());
     }
 
     private void disableSubtitleDelayTVMenuItem(boolean disable) {
@@ -4397,7 +4395,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (mVideoInfo.subtitleTrack >= 0) {
                     String trackName = mSubtitleInfoController.getTrackNameAt(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)).toString();
                     disableSubtitleDelayTVMenuItem(position == 0);
-                    disableSubtitleSettingsMenuItem(position == 0 || isCurrentSubtrackGfx());
+                    disableSubtitleSettingsMenuItem(position == 0 || isCurrentSubtrackStyleBlocked());
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: position={}, mSubtitleInfoController.getTrackNameAt({}) mVideoInfo.subtitleTrack={}", position, trackName, mVideoInfo.subtitleTrack);
                 } else {
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: position={}, None mVideoInfo.subtitleTrack={}", position, mVideoInfo.subtitleTrack);

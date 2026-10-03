@@ -118,9 +118,9 @@ public class SurfaceController {
 
     // --- Subtitle surface sizing ---
     // Three genuine categories (see PlayerActivity.updateSubtitleLayoutMode() for how the
-    // active track maps to one of these). Kept for SubtitleManager.setSubtitleIsGfx() and for
-    // the native engine's backend selection -- mSubtitleView's sizing itself no longer branches
-    // on category (see mUseSubMargins below).
+    // active track maps to one of these: SubtitleManager.getLayoutCategory() derives it from the
+    // native-provided track kind). mSubtitleView's sizing itself no longer branches on category
+    // (see mUseSubMargins below).
     public static final int SUBTITLE_CATEGORY_PLAIN_TEXT = 0; // SRT/VTT
     public static final int SUBTITLE_CATEGORY_ASS         = 1; // embedded/external ASS/SSA
     public static final int SUBTITLE_CATEGORY_GFX         = 2; // VobSub .idx/.sub, PGS
@@ -305,8 +305,8 @@ public class SurfaceController {
      *     (never left/right), regardless of category (plain text, ASS, or GFX alike).
      *   - useMargins=false : tethered exactly to the video's own on-screen box, same as the
      *     video view itself.
-     * category is still recorded (SubtitleManager.setSubtitleIsGfx() and the native engine's
-     * backend selection depend on it) even though it no longer affects sizing here.
+     * category is still recorded (it comes from SubtitleManager.getLayoutCategory()) even
+     * though it no longer affects sizing here.
      * Triggers an immediate relayout if either value actually changed and a video is already
      * laid out.
      */
@@ -621,9 +621,8 @@ public class SurfaceController {
 
         // mSubtitleView's sizing depends only on the use-margins preference now -- it applies
         // uniformly to every subtitle category (plain text, ASS/SSA, and GFX alike). The
-        // category enum is still tracked (SubtitleManager.setSubtitleIsGfx() and the native
-        // engine still need to know which backend/format is active), but it no longer gates
-        // whether margins are used.
+        // category enum is still tracked (see SubtitleManager.getLayoutCategory()), but it no
+        // longer gates whether margins are used.
         //
         //   mUseSubMargins=false: tethered exactly like mView (dcw x dch, same margins) --
         //   clipped to the video's own box, no black-bar usage.
