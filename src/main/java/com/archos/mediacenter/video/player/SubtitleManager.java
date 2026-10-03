@@ -44,6 +44,7 @@ public class SubtitleManager {
     private static final Logger log = LoggerFactory.getLogger(SubtitleManager.class);
 
     private Context             mContext;
+    private final Defaults      mDefaults;
     private ViewGroup           mPlayerView;
     private View                mRootView;
     private View                mGlSubtitleView;      // native subtitle canvas, resolved lazily
@@ -155,6 +156,89 @@ public class SubtitleManager {
             case KIND_GRAPHIC: return SurfaceController.SUBTITLE_CATEGORY_GFX;
             default:           return SurfaceController.SUBTITLE_CATEGORY_PLAIN_TEXT;
         }
+    }
+
+    // ---- Persisted style preferences ---------------------------------------------------
+    // The one list of preference keys for the user's subtitle style. The strings are what is
+    // stored on users' devices: never change them. PlayerActivity.KEY_SUBTITLE_* alias these.
+    public static final String KEY_VPOS             = "pref_play_subtitle_vpos_key";
+    public static final String KEY_COLOR            = "pref_play_subtitle_color_key";
+    public static final String KEY_BG_OPACITY       = "subtitle_bg_opacity";
+    public static final String KEY_BG_MODE          = "pref_play_subtitle_bg_mode_key";
+    public static final String KEY_OVERRIDE_MODE    = "pref_play_subtitle_override_mode_key";
+    public static final String KEY_BOLD             = "pref_play_subtitle_bold_key";
+    public static final String KEY_OUTLINE_COLOR    = "pref_play_subtitle_outline_color_key";
+    public static final String KEY_SHADOW_COLOR     = "pref_play_subtitle_shadow_color_key";
+    public static final String KEY_BACKGROUND_COLOR = "pref_play_subtitle_background_color_key";
+    public static final String KEY_OUTLINE_WIDTH    = "pref_play_subtitle_outline_width_key";
+    public static final String KEY_SHADOW_WIDTH     = "pref_play_subtitle_shadow_width_key";
+    public static final String KEY_FONT_SIZE_PT     = "pref_play_subtitle_font_size_pt_key";
+    public static final String KEY_FONT_SCALE       = "pref_play_subtitle_font_scale_key";
+
+    /**
+     * Every preference that makes up the user's style. To reset to the defaults, remove these
+     * from the preferences and call restoreStyle() (then apply the vertical position the same
+     * way startup does): every key is gone, so everything falls back to its default.
+     */
+    public static final java.util.List<String> STYLE_KEYS = java.util.Collections.unmodifiableList(
+            java.util.Arrays.asList(KEY_VPOS, KEY_COLOR, KEY_BG_OPACITY, KEY_BG_MODE, KEY_OVERRIDE_MODE,
+                    KEY_BOLD, KEY_OUTLINE_COLOR, KEY_SHADOW_COLOR, KEY_BACKGROUND_COLOR,
+                    KEY_OUTLINE_WIDTH, KEY_SHADOW_WIDTH, KEY_FONT_SIZE_PT, KEY_FONT_SCALE));
+
+    /**
+     * The style a user gets until they change something. Values come from res/values/config.xml
+     * (libass sizes text relative to the screen, so one value serves every device). This is the
+     * only place they are read; the two modes are code constants so they cannot drift from the
+     * OVERRIDE_* / BG_MODE_* values the native engine understands.
+     */
+    public static final class Defaults {
+        public final int vpos, color, bgOpacity, fontSizePt, overrideMode, bgMode;
+        public final int outlineColor, shadowColor, backgroundColor;
+        public final float fontScale, outlineWidth, shadowWidth;
+        public final boolean bold;
+
+        public Defaults(Context context) {
+            final android.content.res.Resources res = context.getResources();
+            vpos = res.getInteger(R.integer.player_pref_subtitle_vpos_default);
+            color = ContextCompat.getColor(context, R.color.subtitle_default_text_color);
+            bgOpacity = res.getInteger(R.integer.subtitle_default_bg_opacity);
+            fontSizePt = res.getInteger(R.integer.player_pref_subtitle_size_default);
+            fontScale = res.getInteger(R.integer.subtitle_default_font_scale_percent) / 100f;
+            bold = res.getBoolean(R.bool.subtitle_default_bold);
+            outlineColor = ContextCompat.getColor(context, R.color.subtitle_default_outline_color);
+            shadowColor = ContextCompat.getColor(context, R.color.subtitle_default_shadow_color);
+            backgroundColor = ContextCompat.getColor(context, R.color.subtitle_default_background_color);
+            outlineWidth = res.getInteger(R.integer.subtitle_default_outline_width);
+            shadowWidth = res.getInteger(R.integer.subtitle_default_shadow_width);
+            overrideMode = OVERRIDE_CUSTOM;
+            bgMode = BG_MODE_FLOATING;
+        }
+    }
+
+    public Defaults getDefaults() { return mDefaults; }
+
+    /**
+     * Applies the saved style, falling back to the default for anything never saved. This is
+     * also how a reset works: remove STYLE_KEYS from the preferences first.
+     * Does not touch the vertical position: callers apply it themselves because it is track-kind
+     * aware (and scaled in multi-window); read it with KEY_VPOS and getDefaults().vpos.
+     * The order is the one the engine has always been fed.
+     */
+    public void restoreStyle(SharedPreferences prefs) {
+        final Defaults d = mDefaults;
+        setColor(prefs.getInt(KEY_COLOR, d.color));
+        setOverrideMode(prefs.getInt(KEY_OVERRIDE_MODE, d.overrideMode));
+        setBgMode(prefs.getInt(KEY_BG_MODE, d.bgMode));
+        setFontSizePt(prefs.getInt(KEY_FONT_SIZE_PT, d.fontSizePt));
+        setFontScale(prefs.getFloat(KEY_FONT_SCALE, d.fontScale));
+        setBold(prefs.getBoolean(KEY_BOLD, d.bold));
+        setOutlineColor(prefs.getInt(KEY_OUTLINE_COLOR, d.outlineColor));
+        setShadowColor(prefs.getInt(KEY_SHADOW_COLOR, d.shadowColor));
+        setBackgroundColor(prefs.getInt(KEY_BACKGROUND_COLOR, d.backgroundColor));
+        // after the background colour: setBackgroundColor() re-sends the opacity
+        setBackgroundOpacity(prefs.getInt(KEY_BG_OPACITY, d.bgOpacity));
+        setOutlineWidth(prefs.getFloat(KEY_OUTLINE_WIDTH, d.outlineWidth));
+        setShadowWidth(prefs.getFloat(KEY_SHADOW_WIDTH, d.shadowWidth));
     }
 
     private boolean mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
@@ -377,6 +461,7 @@ public class SubtitleManager {
 
     public SubtitleManager(Context context, ViewGroup playerView, WindowManager window, boolean forbidWindow) {
         mContext = context;
+        mDefaults = new Defaults(context);
         mPlayerView = playerView;
         mSubtitlePosHintDrawable = ContextCompat.getDrawable(context, com.archos.mediacenter.video.R.drawable.subtitle_baseline);
     }
