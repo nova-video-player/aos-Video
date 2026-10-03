@@ -166,8 +166,7 @@ public class VideoMetadata implements Serializable {
             name = getMetadataString(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_NAME);
             path = getMetadataString(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_PATH);
             isExternal = (path != null) && (!path.isEmpty()); // it is "" for internal subs
-            if (isExternal) isGfx = false;
-            else isGfx = getMetadataBool(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_IS_GFX);
+            kind = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_KIND);
             format = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_FORMAT);
             language = getMetadataString(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_LANGUAGE);
             disposition = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_DISPOSITION);
@@ -179,8 +178,7 @@ public class VideoMetadata implements Serializable {
             name = getMetadataRetrieverString(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_NAME);
             path = getMetadataRetrieverString(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_PATH);
             isExternal = (path != null) && (!path.isEmpty());
-            if (isExternal) isGfx = false;
-            else isGfx = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_IS_GFX) == 1;
+            kind = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_KIND);
             format = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_FORMAT);
             language = getMetadataRetrieverString(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_LANGUAGE);
             disposition = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_DISPOSITION);
@@ -189,7 +187,11 @@ public class VideoMetadata implements Serializable {
         public final String name;
         public final String path;
         public final boolean isExternal;
-        public final boolean isGfx;
+        /**
+         * Raw SUB_KIND exactly as native sent it (0 if absent). Deliberately not interpreted
+         * here: SubtitleManager.kindFromNative() is the one place that gives it meaning.
+         */
+        public final int kind;
         public final int format;
         public final String language;
         public final int disposition;

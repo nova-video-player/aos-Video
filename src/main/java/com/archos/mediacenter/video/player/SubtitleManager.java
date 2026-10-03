@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.player;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.utils.MiscUtils;
+import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 
 import android.content.Context;
@@ -30,6 +31,7 @@ import android.view.ViewGroup.LayoutParams;
 import androidx.preference.PreferenceManager;
 import android.content.SharedPreferences;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.DisplayCutoutCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -56,23 +58,103 @@ public class SubtitleManager {
     private int                 mSubtitleVPos = 10;
     private int                 mSubtitleEvadedVPos;
     private boolean mGLEngineActive = false;
-    private boolean mIsSubtitleGfx = false;
+    // ------------------------------------------------------------------------------------
+    // Subtitle kind: the ONE place Java gives meaning to a track's kind.
+    //
+    // Native decides (sub_kind_from_format() in sub_engine.c, derived from the same table that
+    // picks the renderer) and sends the value in the SUBTITLE_TRACK_KIND metadata field.
+    // Everything else -- layout category, vertical-position handling, control-bar avoidance,
+    // whether the settings menu applies -- is answered from here. Nothing outside this class
+    // may infer a kind from a format label, a file extension or a gfx flag.
+    // The KIND_* values must match SUB_KIND in sub_kind.h.
+    // ------------------------------------------------------------------------------------
+    public static final int KIND_NONE        = 0; // no track selected
+    public static final int KIND_SSA         = 1; // ASS/SSA: authored styles, PlayRes tied to the video frame
+    public static final int KIND_PLAIN_TEXT  = 2; // SRT/VTT/...: free-form text
+    public static final int KIND_GRAPHIC     = 3; // PGS / DVD / VobSub: baked-in position and size
+    public static final int KIND_UNSUPPORTED = 4; // recognised, but nothing renders it
+
+    private int mKind = KIND_NONE;
+
+    /** Fail safe: a value native did not send, or one from a newer native, is UNSUPPORTED. */
+    public static int kindFromNative(int nativeKind) {
+        return (nativeKind >= KIND_SSA && nativeKind <= KIND_UNSUPPORTED) ? nativeKind : KIND_UNSUPPORTED;
+    }
+
+    /** Tells the manager which track is active; null means no track (the "None" entry). */
+    public void setActiveTrack(@Nullable VideoMetadata.SubtitleTrack track) {
+        setSubtitleKind(kindOf(track));
+    }
+
+    public void setSubtitleKind(int kind) {
+        if (mKind == kind) return;
+        boolean wasGraphic = isGraphic();
+        mKind = kind;
+        if (log.isDebugEnabled()) log.debug("setSubtitleKind: {}", kind);
+        if (wasGraphic != isGraphic()) {
+            // Margins, insets and control-bar avoidance differ between bitmap and text tracks.
+            adjustView();
+        }
+    }
+
+    public int getSubtitleKind() { return mKind; }
+
+    // ---- Kind rules -------------------------------------------------------------------
+    // Static and pure: a function of the kind value only. Any caller can answer them straight
+    // from a track, kindOf(track), without touching manager state or causing a layout pass.
+    // The instance methods further down answer the same questions for the ACTIVE track.
+
+    /** Kind of a track as native reported it; NONE for null (the "None" entry). */
+    public static int kindOf(@Nullable VideoMetadata.SubtitleTrack track) {
+        return track == null ? KIND_NONE : kindFromNative(track.kind);
+    }
+
+    /** Bitmap track (PGS, VobSub, DVD): own position/size, never margin-shifted or restyled. */
+    public static boolean isGraphic(int kind) { return kind == KIND_GRAPHIC; }
+
+    public static boolean isPlainText(int kind) { return kind == KIND_PLAIN_TEXT; }
+
+    public static boolean isStyled(int kind) { return kind == KIND_SSA; }
+
+    /** The user's text-style settings (size, colour, position, ...) can affect this kind. */
+    public static boolean supportsUserStyle(int kind) { return kind == KIND_SSA || kind == KIND_PLAIN_TEXT; }
 
     /**
-     * Marks whether the active subtitle track is a bitmap format (VobSub .idx/.sub, PGS).
-     * Previously mIsSubtitleGfx was declared and read in five places below (vertical
-     * position, control-bar avoidance, insets adjustment) but never actually assigned --
-     * always false -- so none of that GFX-specific handling ever activated even when a
-     * bitmap track was genuinely playing. Call this from the same place that classifies
-     * the active track's category (see PlayerActivity.updateSubtitleLayoutMode() and
-     * FloatingPlayerService.onSubtitleMetadataUpdated()).
+     * A track is active but the text-style settings cannot affect it (bitmap or unsupported).
+     * False for NONE: that case is the caller's "None" handling, not a lock.
      */
-    public void setSubtitleIsGfx(boolean isGfx) {
-        if (mIsSubtitleGfx == isGfx) return;
-        mIsSubtitleGfx = isGfx;
-        adjustView();
-        // The flag flips after PlayerActivity has already called setVerticalPosition(), so
-        // re-apply here or a text<->bitmap switch leaves the native offset stale.
+    public static boolean isUserStyleBlocked(int kind) { return kind == KIND_GRAPHIC || kind == KIND_UNSUPPORTED; }
+
+    /** Only styled subtitles have a style-mode choice (file's style / custom / scale only). */
+    public static boolean canChooseOverrideMode(int kind) { return kind == KIND_SSA; }
+
+    /**
+     * The override mode actually in force. Native forces Custom for plain text whatever is
+     * stored (sync_styles(): force_all = is_plain_text || mode == CUSTOM), so the stored mode
+     * (the user's choice for styled files) must be left alone and only filtered here.
+     */
+    public static int effectiveOverrideMode(int kind, int storedMode) {
+        return kind == KIND_PLAIN_TEXT ? OVERRIDE_CUSTOM : storedMode;
+    }
+
+    // Same answers for the active track.
+    public boolean isGraphic() { return isGraphic(mKind); }
+    public boolean isPlainText() { return isPlainText(mKind); }
+    public boolean isStyled() { return isStyled(mKind); }
+    public boolean supportsUserStyle() { return supportsUserStyle(mKind); }
+    public boolean isUserStyleBlocked() { return isUserStyleBlocked(mKind); }
+    public boolean canChooseOverrideMode() { return canChooseOverrideMode(mKind); }
+
+    /** getOverrideMode() filtered through the active kind: what the engine really applies. */
+    public int getEffectiveOverrideMode() { return effectiveOverrideMode(mKind, mOverrideMode); }
+
+    /** SurfaceController.SUBTITLE_CATEGORY_* for the active track. */
+    public int getLayoutCategory() {
+        switch (mKind) {
+            case KIND_SSA:  return SurfaceController.SUBTITLE_CATEGORY_ASS;
+            case KIND_GRAPHIC: return SurfaceController.SUBTITLE_CATEGORY_GFX;
+            default:           return SurfaceController.SUBTITLE_CATEGORY_PLAIN_TEXT;
+        }
     }
 
     private boolean mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
@@ -300,7 +382,7 @@ public class SubtitleManager {
     }
 
     public void setScreenSize(int displayWidth, int displayHeight) {
-        if (log.isDebugEnabled()) log.debug("setScreenSize: {}x{} mIsSubtitleGfx={}, mSubtitleLayout={}", displayWidth, displayHeight, mIsSubtitleGfx, (mSubtitleLayout == null ? "null" : "not null"));
+        if (log.isDebugEnabled()) log.debug("setScreenSize: {}x{} isGraphic()={}, mSubtitleLayout={}", displayWidth, displayHeight, isGraphic(), (mSubtitleLayout == null ? "null" : "not null"));
         mScreenWidth = displayWidth;
         mScreenHeight = displayHeight;
         if (mSubtitleLayout != null) {
@@ -392,7 +474,7 @@ public class SubtitleManager {
 
         // insets observer is needed for rotation
         mSubtitleLayout.setOnApplyWindowInsetsListener((v, insets) -> {
-            if (log.isDebugEnabled()) log.debug("attachWindow, onApplyWindowInsetsListener, mIsSubtitleGfx={}", mIsSubtitleGfx);
+            if (log.isDebugEnabled()) log.debug("attachWindow, onApplyWindowInsetsListener, isGraphic()={}", isGraphic());
             adjustView();
             return insets;
         });
@@ -432,13 +514,13 @@ public class SubtitleManager {
         boolean isFloatingPlayer = Player.sPlayer != null && Player.sPlayer.isFloatingPlayer();
         // Player.sPlayer.getSurfaceControllerWidth(), Player.sPlayer.getSurfaceControllerHeight() is for the videoView but virtualScreen is larger
         // do not apply globalShift if in floating player mode
-        if (log.isDebugEnabled()) log.debug("adjustView: mIsSubtitleGfx={}", mIsSubtitleGfx);
+        if (log.isDebugEnabled()) log.debug("adjustView: isGraphic()={}", isGraphic());
         mActionBarShowing = PlayerController.isActionBarShowing();
         MiscUtils.adjustViewLayoutForInsets(mContext, mRootView, mSubtitleLayout, "mSubtitleLayout",
                 mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, PlayerController.isControlBarShowing(), mIsNavBarOnBottom, mIsGestureAreaShowing,
-                (! mIsSubtitleGfx && PlayerController.isControlBarShowing() ? PlayerController.getControlBarCurrentHeight() : 0), (mIsSubtitleGfx ? 0 :mSubtitleEvadedVPos),
-                false, ! mIsSubtitleGfx, false, ! mIsSubtitleGfx,
-                avoidCutout, avoidCutout, avoidCutout, avoidCutout, ! mIsSubtitleGfx, mIsSubtitleGfx && ! isFloatingPlayer);
+                (! isGraphic() && PlayerController.isControlBarShowing() ? PlayerController.getControlBarCurrentHeight() : 0), (isGraphic() ? 0 :mSubtitleEvadedVPos),
+                false, ! isGraphic(), false, ! isGraphic(),
+                avoidCutout, avoidCutout, avoidCutout, avoidCutout, ! isGraphic(), isGraphic() && ! isFloatingPlayer);
         // The inset pass above still positions mSubtitleLayout (and with it the position-hint
         // spacer), but text subtitles are drawn natively (libass on gl_subtitle_view), so it no
         // longer moves them. The obstruction is computed separately and fed to the renderer.
@@ -509,12 +591,14 @@ public class SubtitleManager {
      * @param pos 0..255.
      */
     public void setVerticalPosition(int pos) {
-        if (mIsSubtitleGfx)
-            mSubtitleVPos = 0;
-        else
-            mSubtitleVPos = pos;
+        mSubtitleVPos = pos; // the user's value; this is what gets persisted
+        mSubtitleEvadedVPos = (mScreenHeight * pos / 765) + 1;
+        applyNativeVerticalOffset();
 
-        setVerticalPositionInternal((mScreenHeight * pos / 765) + 1);
+        if (mSubtitleSpacer != null && mSubtitleSpacerParams != null) {
+            mSubtitleSpacerParams.height = mSubtitleEvadedVPos;
+            mSubtitleSpacer.setLayoutParams(mSubtitleSpacerParams);
+        }
     }
 
     /**
@@ -579,7 +663,7 @@ public class SubtitleManager {
      * the first show.
      */
     private int computeBottomObstruction() {
-        if (mIsSubtitleGfx || mPlayerView == null) return 0;
+        if (isGraphic() || mPlayerView == null) return 0;
         View canvas = getSubtitleCanvas();
         if (canvas == null || ! canvas.isLaidOut() || canvas.getHeight() <= 0) return 0;
         return Math.max(PlayerController.getControlBarClearanceAbove(canvas),
@@ -606,14 +690,4 @@ public class SubtitleManager {
         Player.sPlayer.getSubtitleEngine().setVerticalOffset(offset);
     }
 
-    private void setVerticalPositionInternal (int pos) {
-        if (mIsSubtitleGfx) mSubtitleEvadedVPos = 0;
-        else mSubtitleEvadedVPos = pos;
-        applyNativeVerticalOffset();
-
-        if (mSubtitleSpacer != null && mSubtitleSpacerParams != null) {
-            mSubtitleSpacerParams.height = mSubtitleEvadedVPos;
-            mSubtitleSpacer.setLayoutParams(mSubtitleSpacerParams);
-        }
-    }
 }
