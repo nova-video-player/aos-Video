@@ -224,6 +224,9 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     private static boolean      mControlBarShowing, mSystemBarShowing, mSystemBarGone, mActionBarShowing, mVolumeBarShowing, mNavigationBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
     private static int          mGestureAreaHeight, mControlBarHeight;
+    // Static handle to the live control bar view, so SubtitleManager can resolve its parent
+    // for getControlBarClearanceAbove(). Cleared in detachWindow() to avoid leaking the view.
+    private static View          sControlBarView;
 
     private boolean             mVolumeBarEnabled = false;
 
@@ -573,6 +576,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             this.mPlayPauseTouchZone = playPauseTouchZone;
             this.mCentralPlayIcon = centralPlayIcon;
             this.mControlBar=mControlBar;
+            sControlBarView = mControlBar;
             this.mPauseButton=mPauseButton;
             this.mFormatButton=mFormatButton ;
             this.mFullscreenWithCutoutButton = fullscreenWithCutoutButton;
@@ -779,6 +783,48 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         return mControlBarHeight;
     }
 
+    /**
+     * Pixels the on-screen control bar reaches above the bottom edge of the given reference
+     * view, or 0 if the bar is not currently shown.
+     *
+     * Unlike getControlBarCurrentHeight() (0 unless the nav bar / gesture area happens to be
+     * showing, so unreliable on TV) this needs no live measurement of the bar itself and so
+     * has no dependency on a layout pass having completed for its current VISIBLE/GONE state:
+     *   - height: control_bar's android:layout_height is the fixed dimen
+     *     player2014_bar_width (45dip default; 40/53/70dip on the notouch/tablet buckets --
+     *     see the res/values (default), res/values-sw600dp, res/values-sw500dp-land-notouch and res/values-sw600dp-land-notouch dimens.xml files). Resources.getDimensionPixelSize() resolves the
+     *     bucket-correct value for the current config directly, with no view involved.
+     *   - position: control_bar has android:layout_alignParentBottom="true" in every
+     *     player_controller_inside.xml variant, so its bottom is always exactly its parent's
+     *     bottom. The parent (playerControllers) is the fill_parent controller root, already
+     *     laid out before the bar's own visibility is ever toggled, so this reads correctly
+     *     on the very first show of a session -- nothing to wait for.
+     * This sidesteps the bar's own geometry entirely, so there is no stale-vs-fresh layout
+     * race to gate on.
+     *
+     * Tracks only the main pane's bar (sControlBarView is set from the isMainView branch of
+     * initControllerView()). splitView/mControlBar2 is private to PlayerController -- confirmed
+     * via a repo-wide search to have no reference in PlayerActivity, SubtitleManager or
+     * anywhere else, in both this branch and the pre-libass legacy branch -- so there is no
+     * second SubtitleManager/SubtitleEngine instance that could ever ask for clearance against
+     * the secondary pane's bar. If a future change wires subtitles into split-view, this will
+     * need its own reference per pane.
+     */
+    public static int getControlBarClearanceAbove(View reference) {
+        if (!mControlBarShowing || reference == null || sControlBarView == null) return 0;
+        View barParent = (View) sControlBarView.getParent();
+        if (barParent == null || !barParent.isLaidOut() || !reference.isLaidOut()) return 0;
+        int barHeight = reference.getContext().getResources()
+                .getDimensionPixelSize(com.archos.mediacenter.video.R.dimen.player2014_bar_width);
+        int[] parentLoc = new int[2];
+        int[] refLoc = new int[2];
+        barParent.getLocationOnScreen(parentLoc);
+        reference.getLocationOnScreen(refLoc);
+        int barTop = parentLoc[1] + barParent.getHeight() - barHeight;
+        int refBottom = refLoc[1] + reference.getHeight();
+        return Math.max(refBottom - barTop, 0);
+    }
+
     public static boolean isControlBarShowing() {
         return mControlBarShowing;
     }
@@ -808,6 +854,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mControllerView = null;
         mControllerViewLeft=null;
         mControllerViewRight=null;
+        sControlBarView = null;
     }
 
     public void setMediaPlayer(IPlayerControl player) {
