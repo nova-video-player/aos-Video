@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -86,20 +85,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     private boolean contains;
     private SurfaceController mSurfaceController;
     private SubtitleManager mSubtitleManager;
-    private int mSubtitleVPosDefault;
-
-    // New libass default variables
-    private int mSubtitleBgOpacityDefault;
-    private int mSubtitleFontSizePtDefault;
-    private float mSubtitleFontScaleDefault;
-    private int mSubtitleOverrideModeDefault;
-    private boolean mSubtitleBoldDefault;
-    private int mSubtitleOutlineColorDefault;
-    private int mSubtitleShadowColorDefault;
-    private int mSubtitleBackgroundColorDefault;
-    private float mSubtitleOutlineWidthDefault;
-    private float mSubtitleShadowWidthDefault;
-    private int mSubtitleBgModeDefault;
+    private SubtitleManager.Defaults mSubtitleDefaults;
 
     private WindowManager.LayoutParams mParamsF;
     private View mProgressView;
@@ -128,7 +114,6 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     private BroadcastReceiver mReceiver;
     private int mLastWidth;
     private int mLastHeight;
-    private int mSubtitleColorDefault;
     private int mSize = -1;
     private int mVPos;
     private ImageView mDiscreteButton;
@@ -140,20 +125,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
         super.onCreate();
         sFloatingPlayerService = this;
         mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-
-        mSubtitleVPosDefault = getResources().getInteger(R.integer.player_pref_subtitle_vpos_default);
-        mSubtitleColorDefault = ContextCompat.getColor(this, R.color.subtitle_default_text_color);
-        mSubtitleBgOpacityDefault = getResources().getInteger(R.integer.subtitle_default_bg_opacity);
-        mSubtitleFontSizePtDefault = getResources().getInteger(R.integer.player_pref_subtitle_size_default);
-        mSubtitleFontScaleDefault = getResources().getInteger(R.integer.subtitle_default_font_scale_percent) / 100f;
-        mSubtitleOverrideModeDefault = SubtitleManager.OVERRIDE_CUSTOM;   // enum constant, not a resource
-        mSubtitleBoldDefault = getResources().getBoolean(R.bool.subtitle_default_bold);
-        mSubtitleOutlineColorDefault = ContextCompat.getColor(this, R.color.subtitle_default_outline_color);
-        mSubtitleShadowColorDefault = ContextCompat.getColor(this, R.color.subtitle_default_shadow_color);
-        mSubtitleBackgroundColorDefault = ContextCompat.getColor(this, R.color.subtitle_default_background_color);
-        mSubtitleOutlineWidthDefault = getResources().getInteger(R.integer.subtitle_default_outline_width);
-        mSubtitleShadowWidthDefault = getResources().getInteger(R.integer.subtitle_default_shadow_width);
-        mSubtitleBgModeDefault = SubtitleManager.BG_MODE_FLOATING;        // enum constant, not a resource
+        mSubtitleDefaults = new SubtitleManager.Defaults(this);
 
         bindService(new Intent(this, PlayerService.class), mPlayerServiceConnection, BIND_AUTO_CREATE);
         mWindowManager = (WindowManager)getSystemService(WINDOW_SERVICE);
@@ -748,20 +720,8 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
             mSubtitleManager.start();
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            mVPos = preferences.getInt(PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleVPosDefault);
-            int color = preferences.getInt(PlayerActivity.KEY_SUBTITLE_COLOR, mSubtitleColorDefault);
-            mSubtitleManager.setColor(color);
-            mSubtitleManager.setOverrideMode(preferences.getInt(PlayerActivity.KEY_SUBTITLE_OVERRIDE_MODE, mSubtitleOverrideModeDefault));
-            mSubtitleManager.setBgMode(preferences.getInt(PlayerActivity.KEY_SUBTITLE_BG_MODE, mSubtitleBgModeDefault));
-            mSubtitleManager.setFontSizePt(preferences.getInt(PlayerActivity.KEY_SUBTITLE_FONT_SIZE_PT, mSubtitleFontSizePtDefault));
-            mSubtitleManager.setFontScale(preferences.getFloat(PlayerActivity.KEY_SUBTITLE_FONT_SCALE, mSubtitleFontScaleDefault));
-            mSubtitleManager.setBold(preferences.getBoolean(PlayerActivity.KEY_SUBTITLE_BOLD, mSubtitleBoldDefault));
-            mSubtitleManager.setOutlineColor(preferences.getInt(PlayerActivity.KEY_SUBTITLE_OUTLINE_COLOR, mSubtitleOutlineColorDefault));
-            mSubtitleManager.setShadowColor(preferences.getInt(PlayerActivity.KEY_SUBTITLE_SHADOW_COLOR, mSubtitleShadowColorDefault));
-            mSubtitleManager.setBackgroundColor(preferences.getInt(PlayerActivity.KEY_SUBTITLE_BACKGROUND_COLOR, mSubtitleBackgroundColorDefault));
-            mSubtitleManager.setBackgroundOpacity(preferences.getInt(PlayerActivity.KEY_SUBTITLE_BG_OPACITY, mSubtitleBgOpacityDefault));
-            mSubtitleManager.setOutlineWidth(preferences.getFloat(PlayerActivity.KEY_SUBTITLE_OUTLINE_WIDTH, mSubtitleOutlineWidthDefault));
-            mSubtitleManager.setShadowWidth(preferences.getFloat(PlayerActivity.KEY_SUBTITLE_SHADOW_WIDTH, mSubtitleShadowWidthDefault));
+            mVPos = preferences.getInt(PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleDefaults.vpos);
+            mSubtitleManager.restoreStyle(preferences);
 
         }
     }
