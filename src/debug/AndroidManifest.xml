@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV features and the Leanback launcher are inherited from the main manifest. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingLeanbackLauncher,ImpliedTouchscreenHardware,MissingLeanbackSupport">
+    <application>
+        <!-- DUMP is granted to adb shell; ordinary apps cannot configure tests. -->
+        <receiver
+            android:name="com.archos.mediacenter.video.debug.SpeedTestReceiver"
+            android:exported="true"
+            android:permission="android.permission.DUMP" />
+    </application>
+</manifest>
