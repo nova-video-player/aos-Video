@@ -20,6 +20,7 @@ import android.util.Log;
 
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
+import com.archos.mediascraper.GenreUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -117,8 +118,8 @@ ORDER BY uName ASC
         // collections and movies not in collections that are not animes
         if (sb.length()>0) { sb.append(" AND "); }
         sb.append("(m_id IS NOT NULL OR s_id IS NOT NULL)" +
-                " AND (m_genres LIKE '%" + getContext().getString(com.archos.medialib.R.string.movie_genre_animation) + "%'" +
-                " OR s_genres LIKE '%" + getContext().getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%')" +
+                " AND (" + GenreUtils.getAnimeSelection(getContext(), false, true) +
+                " OR " + GenreUtils.getAnimeSelection(getContext(), true, true) + ")" +
                 " AND (s_po_large_file IS NOT NULL OR m_po_large_file IS NOT NULL)"
         );
         if (!mShowWatched) {

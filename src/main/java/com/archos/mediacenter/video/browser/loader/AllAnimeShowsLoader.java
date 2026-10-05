@@ -19,6 +19,7 @@ import android.provider.BaseColumns;
 
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
+import com.archos.mediascraper.GenreUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -99,7 +100,7 @@ public class AllAnimeShowsLoader extends VideoLoader {
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
         }
         sb.append(" AND ");
-        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + getContext().getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%')");
+        sb.append(GenreUtils.getAnimeSelection(getContext(), true, true));
         sb.append(") GROUP BY (");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID);
         return sb.toString();

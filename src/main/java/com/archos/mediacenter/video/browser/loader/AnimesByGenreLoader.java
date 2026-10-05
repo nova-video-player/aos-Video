@@ -16,6 +16,8 @@ package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
 
+import com.archos.mediascraper.GenreUtils;
+
 public class AnimesByGenreLoader extends AnimesByLoader {
 
     private static final String DEFAULT_SORT = COLUMN_SUBSET_NAME+" COLLATE LOCALIZED";
@@ -49,7 +51,7 @@ public class AnimesByGenreLoader extends AnimesByLoader {
                 "             ON ( m_id = movie_belongs )\n" +
                 "           JOIN genre\n" +
                 "             ON ( genre._id = genre_belongs )\n" +
-                "     WHERE m_id IS NOT NULL" + getCommonSelection()+" AND genre.name_genre IS NOT 'Animation' \n"+
+                "     WHERE m_id IS NOT NULL" + getCommonSelection()+" AND " + GenreUtils.getGenreNameExclusion(context, GenreUtils.ANIMATION_GENRE_ID, false, "genre.name_genre") + " \n"+
                 ")\n" +
                 " GROUP BY _id\n" +
                 " ORDER BY "+mSortOrder;

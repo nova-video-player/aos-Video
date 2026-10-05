@@ -19,6 +19,7 @@ import android.provider.BaseColumns;
 
 import com.archos.mediacenter.video.player.PlayerActivity;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
+import com.archos.mediascraper.GenreUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -80,8 +81,8 @@ public class AllAnimesLoader extends VideoLoader {
         sb.append(super.getSelection()); // get common selection from the parent
 
         if (sb.length()>0) { sb.append(" AND "); }
-        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + getContext().getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%' OR " +
-                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%" + getContext().getString(com.archos.medialib.R.string.movie_genre_animation) + "%' )");
+        sb.append("( ").append(GenreUtils.getAnimeSelection(getContext(), true, true))
+                .append(" OR ").append(GenreUtils.getAnimeSelection(getContext(), false, true)).append(" )");
         if (!mShowWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);

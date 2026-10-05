@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediascraper.GenreUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class AllFilmsIconBuilder {
                         VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL AND " +
                         VideoStore.Video.VideoColumns.SCRAPER_M_IMDB_ID + " IS NOT NULL AND " +  
                         VideoStore.Video.VideoColumns.SCRAPER_COVER + " IS NOT NULL AND " +
-                        VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%" + mContext.getString(com.archos.medialib.R.string.movie_genre_animation) + "%'";
+                        GenreUtils.getAnimeSelection(mContext, false, false);
         mWidth  = context.getResources ().getDimensionPixelSize(R.dimen.all_movies_icon_width);
         mHeight  = context.getResources ().getDimensionPixelSize(R.dimen.all_movies_icon_height);
     }

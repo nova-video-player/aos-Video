@@ -20,6 +20,7 @@ import android.database.Cursor;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import com.archos.mediascraper.GenreUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -61,8 +62,7 @@ public abstract class FilmsByLoader extends CursorLoader implements CompatAndSDK
             sb.append(" AND "+LoaderUtils.HIDE_WATCHED_FILTER);
         }
 
-        sb.append(" AND ( " + VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " IS NULL OR " +
-                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%" + getContext().getString(com.archos.medialib.R.string.movie_genre_animation) + "%' )");
+        sb.append(" AND ").append(GenreUtils.getAnimeSelection(getContext(), false, false));
 
         return sb.toString();
     }

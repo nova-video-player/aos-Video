@@ -1824,7 +1824,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         final String plot = finalTags.getPlot();
                         String genres = null;
                         if (finalTags instanceof VideoTags) {
-                            genres = ((VideoTags) finalTags).getGenresFormatted();
+                            genres = ((VideoTags) finalTags).getGenresFormatted(getActivity());
                         }
                         // Keep it simple: we do not display the row if plot==null && genres!=null (very unlikely and not a big deal)
                         if (plot != null && !plot.isEmpty()) {

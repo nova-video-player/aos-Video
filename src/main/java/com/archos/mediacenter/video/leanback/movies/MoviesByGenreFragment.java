@@ -24,6 +24,7 @@ import android.view.View;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediascraper.GenreUtils;
 import com.archos.mediacenter.video.browser.loader.FilmsByGenreLoader;
 import com.archos.mediacenter.video.browser.loader.MoviesByGenreLoader;
 import com.archos.mediacenter.video.leanback.VideosByFragment;
@@ -86,6 +87,11 @@ public class MoviesByGenreFragment extends VideosByFragment {
     @Override
     protected boolean shouldDeferRowLoadersDuringBackgroundWork() {
         return true;
+    }
+
+    @Override
+    protected String getSubsetDisplayName(String subsetName) {
+        return GenreUtils.getGenreDisplayName(getActivity(), subsetName, false);
     }
 
 }

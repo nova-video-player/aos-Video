@@ -19,6 +19,7 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediascraper.GenreUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -112,7 +113,7 @@ ORDER BY name ASC
 
         // collections and movies not in collections that are not animes
         if (sb.length()>0) { sb.append(" AND "); }
-        sb.append("m_id IS NOT NULL AND ( m_genres NOT NULL AND m_genres NOT LIKE '%Animation%' )" +
+        sb.append("m_id IS NOT NULL AND " + GenreUtils.getAnimeSelection(getContext(), false, false) +
                         " AND ((m_coll_po_large_file IS NOT NULL) OR (m_coll_id IS NULL))"
                 );
         if (!mShowWatched) {

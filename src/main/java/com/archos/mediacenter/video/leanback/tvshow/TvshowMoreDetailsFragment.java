@@ -321,7 +321,7 @@ public class TvshowMoreDetailsFragment extends DetailsFragmentWithLessTopOffset 
 
                     // Plot and cast
                     if (tags.getPlot()!=null) {
-                        mPlotAndGenresRow = new PlotAndGenresRow(getString(R.string.scrap_plot), tags.getPlot(), tags.getGenresFormatted());
+                        mPlotAndGenresRow = new PlotAndGenresRow(getString(R.string.scrap_plot), tags.getPlot(), tags.getGenresFormatted(getActivity()));
                     } else {
                         mPlotAndGenresRow = null;
                     }

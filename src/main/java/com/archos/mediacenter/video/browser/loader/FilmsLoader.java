@@ -16,6 +16,7 @@ package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
 
+import com.archos.mediascraper.GenreUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -80,8 +81,7 @@ public class FilmsLoader extends VideoLoader {
         sb.append(" AND ");
         sb.append(VideoStore.Video.VideoColumns.SCRAPER_MOVIE_ID + " IS NOT NULL");
         sb.append(" AND ");
-        sb.append("( " + VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " IS NULL OR " +
-                VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " NOT LIKE '%" + getContext().getString(com.archos.medialib.R.string.movie_genre_animation) + "%' )");
+        sb.append(GenreUtils.getAnimeSelection(getContext(), false, false));
         if (!mShowWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);

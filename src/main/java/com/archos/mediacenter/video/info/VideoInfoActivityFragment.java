@@ -1973,7 +1973,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                         String genres = null;
                         if (finalTags instanceof VideoTags) {
                             mIsVideoMovie = null;
-                            genres = ((VideoTags) finalTags).getGenresFormatted();
+                            genres = ((VideoTags) finalTags).getGenresFormatted(getActivity());
                         }
                         setTextOrHideContainer(mPlotTextView, plot, mPlotTextView);
                         setTextOrHideContainer(mGenreTextView, genres, mGenreTextView);

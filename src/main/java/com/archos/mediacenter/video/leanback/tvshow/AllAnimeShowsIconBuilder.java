@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediascraper.GenreUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class AllAnimeShowsIconBuilder {
         SELECTION = VideoStore.Video.VideoColumns.ARCHOS_HIDDEN_BY_USER + "=0 AND " +
                 VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID + " IS NOT NULL AND " +
                 VideoStore.Video.VideoColumns.SCRAPER_S_COVER + " IS NOT NULL AND " +
-                "( " + VideoStore.Video.VideoColumns.SCRAPER_S_GENRES + " LIKE '%" + mContext.getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%')" +
+                GenreUtils.getAnimeSelection(mContext, true, true) +
                 ") GROUP BY (" + VideoStore.Video.VideoColumns.SCRAPER_SHOW_ID;
     }
 

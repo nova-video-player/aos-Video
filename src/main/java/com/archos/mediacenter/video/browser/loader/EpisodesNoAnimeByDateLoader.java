@@ -16,7 +16,7 @@ package com.archos.mediacenter.video.browser.loader;
 
 import android.content.Context;
 
-import com.archos.mediacenter.video.R;
+import com.archos.mediascraper.GenreUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
 public class EpisodesNoAnimeByDateLoader extends MoviesByLoader {
@@ -67,7 +67,7 @@ public class EpisodesNoAnimeByDateLoader extends MoviesByLoader {
                 "  SELECT e_id, e_po_large_file, e_aired FROM video\n" +
                 "  WHERE e_id IS NOT NULL \n" +
                 "    AND e_aired > 0" + getCommonSelection() + "\n" +
-                "    AND ( s_genres NOT NULL OR s_genres NOT LIKE '%" + getContext().getString(com.archos.medialib.R.string.tvshow_genre_animation) + "%' ) \n" +
+                "    AND " + GenreUtils.getAnimeSelection(getContext(), true, false) + " \n" +
                 ") \n" +
                 "GROUP BY name\n" +
                 "ORDER BY "+mSortOrder;

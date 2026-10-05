@@ -119,6 +119,14 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
         return false;
     }
 
+    /**
+     * Translates a category (subset) name before it is shown as a row header. The default keeps
+     * it unchanged; genre fragments override this to render the genre in the current app locale.
+     */
+    protected String getSubsetDisplayName(String subsetName) {
+        return subsetName;
+    }
+
     public VideosByFragment() {
         this(MoviesLoader.DEFAULT_SORT);
     }
@@ -402,7 +410,7 @@ public abstract class VideosByFragment extends BrowseSupportFragment implements 
             // Build the row
             CursorObjectAdapter subsetAdapter = new CursorObjectAdapter(mVideoPresenter);
             subsetAdapter.setMapper(mVideoMapper);
-            rows.add(new ListRow(subsetId, new HeaderItem(subsetName), subsetAdapter));
+            rows.add(new ListRow(subsetId, new HeaderItem(getSubsetDisplayName(subsetName)), subsetAdapter));
             mAdaptersMap.append(subsetId, subsetAdapter);
 
             if (loadSubsetRows) {

@@ -23,6 +23,7 @@ import android.view.View;
 import android.util.SparseArray;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediascraper.GenreUtils;
 import com.archos.mediacenter.video.browser.loader.TvshowsByGenreLoader;
 import com.archos.mediacenter.video.browser.loader.TvshowsNoAnimeByGenreLoader;
 import com.archos.mediaprovider.video.VideoStore;
@@ -90,6 +91,11 @@ public class TvshowsByGenreFragment extends TvshowsByFragment {
     @Override
     protected boolean shouldDeferRowLoadersDuringBackgroundWork() {
         return true;
+    }
+
+    @Override
+    protected String getSubsetDisplayName(String subsetName) {
+        return GenreUtils.getGenreDisplayName(getActivity(), subsetName, true);
     }
 
 }

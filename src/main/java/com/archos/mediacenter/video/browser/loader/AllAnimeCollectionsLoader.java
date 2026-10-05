@@ -20,6 +20,7 @@ import android.util.Log;
 
 import com.archos.mediacenter.video.collections.CollectionsSortOrderEntries;
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediascraper.GenreUtils;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.VideoStore;
 
@@ -91,7 +92,7 @@ public class AllAnimeCollectionsLoader extends VideoLoader {
         if (sb.length()>0) { sb.append(" AND "); }
         sb.append( VideoStore.Video.VideoColumns.SCRAPER_C_ID + " > '0' AND " + VideoStore.Video.VideoColumns.SCRAPER_C_POSTER_LARGE_FILE + " IS NOT NULL");
         sb.append(" AND ");
-        sb.append(VideoStore.Video.VideoColumns.SCRAPER_M_GENRES + " LIKE '%" + getContext().getString(com.archos.medialib.R.string.movie_genre_animation) + "%'");
+        sb.append(GenreUtils.getAnimeSelection(getContext(), false, true));
         if (!mCollectionWatched) {
             sb.append(" AND ");
             sb.append(LoaderUtils.HIDE_WATCHED_FILTER);
