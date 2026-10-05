@@ -396,7 +396,7 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.17'
     testImplementation 'androidx.test:core:1.7.0'
     testImplementation 'org.slf4j:slf4j-api:2.0.20'
-    testImplementation 'ch.qos.logback:logback-classic:1.6.4'
+    testImplementation 'ch.qos.logback:logback-classic:1.6.5'
 }
 
 configurations { // try to exclude device specific libraries interfering
