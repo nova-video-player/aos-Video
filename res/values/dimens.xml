@@ -105,10 +105,6 @@
     <dimen name="item_horizontal_offset">0dp</dimen>
     <dimen name="list_expanded_padding">10dip</dimen>
     <dimen name="scraper_selection_spinbar_size">40dip</dimen>
-    <dimen name="subtitles_settings_dialog_margin_large">4dip</dimen>
-    <dimen name="subtitles_settings_dialog_margin_outerframe">10dip</dimen>
-    <dimen name="subtitles_settings_dialog_margin_small">2dip</dimen>
-    <dimen name="subtitles_settings_dialog_sample_min_height">100dip</dimen>
     <dimen name="track_menu_layout_width">48dip</dimen>
     <dimen name="track_menu_minWidth">196dip</dimen>
     <dimen name="track_menu_padding">16dip</dimen>
@@ -133,4 +129,36 @@
     <dimen name="video_resume_slider_length_list">55dp</dimen>
     <dimen name="video_show_details_item_height">180dip</dimen>
 
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- Phone -->
+    <dimen name="subtitle_panel_row_min_height">56dp</dimen>
+    <dimen name="subtitle_panel_text_size">16sp</dimen>
+    <dimen name="subtitle_panel_caption_size">13sp</dimen>
+    <dimen name="subtitle_panel_row_padding_h">16dp</dimen>
+    <dimen name="subtitle_panel_control_size">48dp</dimen>
+    <dimen name="subtitle_panel_pill_min_height">44dp</dimen>
+    <dimen name="subtitle_panel_swatch_size">48dp</dimen>
+    <dimen name="subtitle_panel_header_height">56dp</dimen>
+    <dimen name="subtitle_panel_preview_height">88dp</dimen>
+
+    <!-- TV: text size is the TV menu's own (tv_menu_font_size), swatches the existing colour box size -->
+    <dimen name="subtitle_panel_row_min_height_tv">52dp</dimen>
+    <dimen name="subtitle_panel_caption_size_tv">15sp</dimen>
+    <dimen name="subtitle_panel_row_padding_h_tv">20dp</dimen>
+    <dimen name="subtitle_panel_control_size_tv">40dp</dimen>
+    <dimen name="subtitle_panel_pill_min_height_tv">40dp</dimen>
+    <dimen name="subtitle_panel_header_height_tv">52dp</dimen>
+    <dimen name="subtitle_panel_preview_height_tv">124dp</dimen>
+
+    <!-- Shape -->
+    <dimen name="subtitle_panel_row_corner">8dp</dimen>
+    <dimen name="subtitle_panel_pill_corner">12dp</dimen>
+    <dimen name="subtitle_panel_segment_corner">10dp</dimen>
+    <dimen name="subtitle_panel_preview_corner">10dp</dimen>
+    <dimen name="subtitle_panel_chip_size">28dp</dimen>
+
+    <!-- Docking, read by the hosts: share of the screen the panel takes -->
+    <item name="subtitle_panel_max_height_fraction" format="float" type="dimen">0.64</item>
+    <item name="subtitle_panel_width_fraction" format="float" type="dimen">0.46</item>
+    <item name="subtitle_panel_width_fraction_tv" format="float" type="dimen">0.42</item>
 </resources>

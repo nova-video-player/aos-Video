@@ -433,34 +433,6 @@
 
     <!-- Subtitle Settings Dialog -->
     <string name="subtitle_sample_text">\"sample\"</string>
-    <string name="subtitle_size_text">Size:</string>
-    <string name="subtitle_style_text">Style:</string>
-    <string name="subtitle_vert_text">Vertical Position:</string>
-    <string name="subtitle_outline">Outline subtitles</string>
-    <string name="subtitle_background_text">Subtitle Background:</string>
-    <string name="subtitle_bg_opacity_text">Background Opacity:</string>
-
-    <!-- Subtitle Settings Dialog — libass styling system additions -->
-    <string name="subtitle_override_mode_text">Style Source:</string>
-    <string name="subtitle_override_embedded">Embedded</string>
-    <string name="subtitle_override_custom">Custom</string>
-    <string name="subtitle_override_scale_only">Scale Only</string>
-    <string name="subtitle_override_embedded_hint">Using the subtitle file\'s own styling. Custom style options below are inactive.</string>
-
-    <string name="subtitle_bold_text">Bold</string>
-    <string name="subtitle_text_color_text">Text color:</string>
-    <string name="subtitle_scale_text">Scale:</string>
-
-    <string name="subtitle_bg_mode_floating">No Background</string>
-    <string name="subtitle_bg_mode_boxed_line">Line Background</string>
-    <string name="subtitle_bg_mode_boxed_block">Block Background</string>
-
-    <string name="subtitle_outline_width_text">Outline Width:</string>
-    <string name="subtitle_outline_color_text">Outline Color:</string>
-    <string name="subtitle_shadow_width_text">Shadow Width:</string>
-    <string name="subtitle_shadow_color_text">Shadow Color:</string>
-    <string name="subtitle_padding_text">Padding:</string>
-    <string name="subtitle_background_color_text">Background Color:</string>
 
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Speed Adjustment</string>
@@ -1086,4 +1058,87 @@
     <string name="ui_choice_help">You can change your choice in the application settings later</string>
     <string name="workgroup">Workgroup</string>
 
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- Titles -->
+    <string name="subtitle_panel_title">Subtitle settings</string>
+    <string name="subtitle_panel_advanced">Advanced appearance</string>
+
+    <!-- Style mode (pills) and what each one means -->
+    <string name="subtitle_panel_style">Subtitle style</string>
+    <string name="subtitle_panel_mode_file">File\'s style</string>
+    <string name="subtitle_panel_mode_custom">Custom</string>
+    <string name="subtitle_panel_mode_scale">Scale only</string>
+    <string name="subtitle_panel_caption_file">Uses the subtitle file\'s own style. Nothing to adjust.</string>
+    <string name="subtitle_panel_caption_custom">Your font, colors and position replace the file\'s.</string>
+    <string name="subtitle_panel_caption_scale">Keeps the file\'s style and only scales its text size.</string>
+
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <string name="subtitle_panel_note_plain_text">Plain-text subtitles always use your style.</string>
+    <string name="subtitle_panel_note_graphic">Settings aren\'t available for image subtitles.</string>
+    <string name="subtitle_panel_note_unsupported">This subtitle format can\'t be styled.</string>
+    <string name="subtitle_panel_note_none">No subtitle selected.</string>
+
+    <!-- Basic rows -->
+    <string name="subtitle_panel_font_size">Font size</string>
+    <string name="subtitle_panel_bold">Bold</string>
+    <string name="subtitle_panel_background">Background</string>
+    <string name="subtitle_panel_bg_off">Off</string>
+    <string name="subtitle_panel_bg_line">Line</string>
+    <string name="subtitle_panel_bg_box">Box</string>
+    <string name="subtitle_panel_vertical_position">Vertical position</string>
+    <string name="subtitle_panel_scale">Scale</string>
+    <string name="subtitle_panel_reset">Reset appearance</string>
+    <string name="subtitle_panel_reset_confirm_touch">Tap again to reset</string>
+    <string name="subtitle_panel_reset_confirm_tv">Press OK again to reset</string>
+
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <string name="subtitle_panel_section_text">Text</string>
+    <string name="subtitle_panel_section_background">Background</string>
+    <string name="subtitle_panel_section_position">Position</string>
+    <string name="subtitle_panel_text_color">Text color</string>
+    <string name="subtitle_panel_outline_width">Outline width</string>
+    <string name="subtitle_panel_outline_color">Outline color</string>
+    <string name="subtitle_panel_shadow_width">Shadow width</string>
+    <string name="subtitle_panel_shadow_color">Shadow color</string>
+    <string name="subtitle_panel_background_color">Background color</string>
+    <string name="subtitle_panel_background_opacity">Background opacity</string>
+    <string name="subtitle_panel_padding">Padding</string>
+
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <string name="subtitle_panel_preview_own_style">The file\'s own style is used</string>
+
+    <!-- Color screen -->
+    <string name="subtitle_panel_hex">Hex</string>
+    <string name="subtitle_panel_red">Red</string>
+    <string name="subtitle_panel_green">Green</string>
+    <string name="subtitle_panel_blue">Blue</string>
+    <!-- Same order as color_picker_subtitle in arrays.xml: keep both in sync -->
+    <string-array name="subtitle_panel_color_names">
+        <item>White</item>
+        <item>Very light gray</item>
+        <item>Light gray</item>
+        <item>Gray</item>
+        <item>Medium gray</item>
+        <item>Dark gray</item>
+        <item>Very dark gray</item>
+        <item>Purple</item>
+        <item>Light purple</item>
+        <item>Light blue</item>
+        <item>Blue</item>
+        <item>Lime</item>
+        <item>Green</item>
+        <item>Yellow</item>
+        <item>Orange</item>
+        <item>Red</item>
+    </string-array>
+
+    <!-- Value formats -->
+    <string name="subtitle_panel_value_pt">%1$d pt</string>
+    <string name="subtitle_panel_value_percent">%1$d%%</string>
+
+    <!-- Accessibility -->
+    <string name="subtitle_panel_back">Back</string>
+    <string name="subtitle_panel_close">Close</string>
+    <string name="subtitle_panel_decrease">Decrease</string>
+    <string name="subtitle_panel_increase">Increase</string>
 </resources>

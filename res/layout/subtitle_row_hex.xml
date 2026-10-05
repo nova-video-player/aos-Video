@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hex entry, touch only: the host leaves it out on TV, where typing is painful and the field would pop the
+     keyboard up whenever focus passes over it. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="6dp"
+    android:layout_marginEnd="6dp"
+    android:gravity="center_vertical"
+    android:minHeight="?attr/subtitleRowMinHeight"
+    android:orientation="horizontal"
+    android:paddingStart="?attr/subtitleRowPaddingH"
+    android:paddingEnd="?attr/subtitleRowPaddingH">
+
+    <TextView
+        style="@style/SubtitlePanel.Label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:labelFor="@+id/sp_edit"
+        android:text="@string/subtitle_panel_hex" />
+
+    <EditText
+        android:id="@+id/sp_edit"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/colorAccent"
+        android:digits="#0123456789abcdefABCDEF"
+        android:gravity="center"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="textNoSuggestions|textCapCharacters"
+        android:maxLength="7"
+        android:minHeight="?attr/subtitleControlSize"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:textColor="@color/subtitle_panel_text_primary"
+        android:textSize="?attr/subtitleLabelTextSize" />
+</LinearLayout>

@@ -89,11 +89,6 @@
     <dimen name="track_menu_padding">16dip</dimen>
     <dimen name="track_menu_layout_width">48dip</dimen>
 
-    <dimen name="subtitles_settings_dialog_margin_small">5dip</dimen>
-    <dimen name="subtitles_settings_dialog_margin_large">10dip</dimen>
-    <dimen name="subtitles_settings_dialog_margin_outerframe">20dip</dimen>
-    <dimen name="subtitles_settings_dialog_sample_min_height">100dip</dimen>
-
     <!-- ============ SCRAPER ============ -->
     <dimen name="scraper_selection_spinbar_size">40dip</dimen>  <!-- standard spinbar size is 48 dip -->
 

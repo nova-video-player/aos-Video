@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Landscape and TV: docked to the right edge, so the left corners are rounded -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/subtitle_panel_background" />
+    <corners android:topLeftRadius="@dimen/video_info_cardview_corner"
+        android:bottomLeftRadius="@dimen/video_info_cardview_corner" />
+</shape>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Label, then - value +. The - and + are touch targets only; on TV the row is the focus stop and Left/Right
+     change the value. The control group is forced LTR so - is always left and + right. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/SubtitlePanel.Row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="6dp"
+    android:layout_marginEnd="6dp"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/sp_label"
+        style="@style/SubtitlePanel.Label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layoutDirection="ltr"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/sp_minus"
+            style="@style/SubtitlePanel.StepperButton"
+            android:contentDescription="@string/subtitle_panel_decrease"
+            android:rotation="180"
+            app:srcCompat="@drawable/ic_subtitle_chevron" />
+
+        <TextView
+            android:id="@+id/sp_value"
+            style="@style/SubtitlePanel.Value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/sp_plus"
+            style="@style/SubtitlePanel.StepperButton"
+            android:contentDescription="@string/subtitle_panel_increase"
+            app:srcCompat="@drawable/ic_subtitle_chevron" />
+    </LinearLayout>
+</LinearLayout>

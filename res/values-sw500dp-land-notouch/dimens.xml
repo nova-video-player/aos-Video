@@ -93,11 +93,6 @@
 <dimen name="track_menu_padding">12dip</dimen>
 <dimen name="track_menu_layout_width">36dip</dimen>
 
-<dimen name="subtitles_settings_dialog_margin_small">3dip</dimen>
-<dimen name="subtitles_settings_dialog_margin_large">7dip</dimen>
-<dimen name="subtitles_settings_dialog_margin_outerframe">15dip</dimen>
-<dimen name="subtitles_settings_dialog_sample_min_height">75dip</dimen>
-
     <!-- ============ SCRAPER ============ -->
 <dimen name="scraper_selection_spinbar_size">30dip</dimen>
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A row that opens another level (Advanced appearance). One TextView with a trailing chevron
+(compound drawable) instead of a LinearLayout + TextView + ImageView. SubtitlePanel.Row gives the
+row look; the text size and colour of SubtitlePanel.Label are repeated here because a view takes
+only one style. -->
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sp_label"
+    style="@style/SubtitlePanel.Row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="6dp"
+    android:layout_marginEnd="6dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical|start"
+    android:textColor="@color/subtitle_panel_text_primary"
+    android:textSize="?attr/subtitleLabelTextSize"
+    android:drawablePadding="8dp"
+    app:drawableEndCompat="@drawable/ic_subtitle_chevron" />
