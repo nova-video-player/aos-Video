@@ -185,7 +185,8 @@ public class BrowserByVideoSelection extends CursorBrowserByVideo {
 			sortOrder = "name COLLATE LOCALIZED";
 			break;
 		case MENU_ITEM_YEAR:
-			sortOrder = VideoColumns.SCRAPER_M_YEAR;
+			sortOrder = VideoColumns.SCRAPER_M_YEAR + (isDesc ? " DESC, " : " ASC, ") + VideoColumns.SCRAPER_M_RELEASE_DATE + (isDesc ? " DESC" : " ASC");
+			parseOrderAfterType = false;
 			break;
 		case MENU_ITEM_DURATION:
 		    sortOrder = SortOrder.DURATION.get(isDesc);
