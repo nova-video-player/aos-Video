@@ -68,14 +68,14 @@ public class SubtitleManagerKindTest {
 
     @Test
     public void predicatesPerKind() {
-        check(SubtitleManager.KIND_NONE,        false, false, false);
-        check(SubtitleManager.KIND_SSA,      false, true,  false);
-        check(SubtitleManager.KIND_PLAIN_TEXT,  false, true,  false);
-        check(SubtitleManager.KIND_GRAPHIC,     true,  false, true);
-        check(SubtitleManager.KIND_UNSUPPORTED, false, false, true);
+        check(SubtitleManager.KIND_NONE,        false, false);
+        check(SubtitleManager.KIND_SSA,      false, true);
+        check(SubtitleManager.KIND_PLAIN_TEXT,  false, true);
+        check(SubtitleManager.KIND_GRAPHIC,     true,  false);
+        check(SubtitleManager.KIND_UNSUPPORTED, false, false);
     }
 
-    private void check(int kind, boolean graphic, boolean styleOk, boolean blocked) {
+    private void check(int kind, boolean graphic, boolean styleOk) {
         // move to a different kind first so setSubtitleKind() really transitions
         mManager.setSubtitleKind(kind == SubtitleManager.KIND_SSA
                 ? SubtitleManager.KIND_PLAIN_TEXT : SubtitleManager.KIND_SSA);
@@ -83,7 +83,6 @@ public class SubtitleManagerKindTest {
         assertEquals("kind " + kind, kind, mManager.getSubtitleKind());
         assertEquals("isGraphic, kind " + kind, graphic, mManager.isGraphic());
         assertEquals("supportsUserStyle, kind " + kind, styleOk, mManager.supportsUserStyle());
-        assertEquals("isUserStyleBlocked, kind " + kind, blocked, mManager.isUserStyleBlocked());
     }
 
     @Test
@@ -128,7 +127,6 @@ public class SubtitleManagerKindTest {
             assertEquals(SubtitleManager.isPlainText(kind), mManager.isPlainText());
             assertEquals(SubtitleManager.isStyled(kind), mManager.isStyled());
             assertEquals(SubtitleManager.supportsUserStyle(kind), mManager.supportsUserStyle());
-            assertEquals(SubtitleManager.isUserStyleBlocked(kind), mManager.isUserStyleBlocked());
             assertEquals(SubtitleManager.canChooseOverrideMode(kind), mManager.canChooseOverrideMode());
         }
     }
@@ -170,7 +168,7 @@ public class SubtitleManagerKindTest {
         mManager.setSubtitleKind(SubtitleManager.KIND_GRAPHIC);
         mManager.setActiveTrack(null);
         assertEquals(SubtitleManager.KIND_NONE, mManager.getSubtitleKind());
-        assertFalse(mManager.isUserStyleBlocked());
+        assertFalse(mManager.supportsUserStyle()); // the panel shows its "no subtitle" note
     }
 
     @Test

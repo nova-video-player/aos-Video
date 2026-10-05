@@ -120,12 +120,6 @@ public class SubtitleManager {
     /** The user's text-style settings (size, colour, position, ...) can affect this kind. */
     public static boolean supportsUserStyle(int kind) { return kind == KIND_SSA || kind == KIND_PLAIN_TEXT; }
 
-    /**
-     * A track is active but the text-style settings cannot affect it (bitmap or unsupported).
-     * False for NONE: that case is the caller's "None" handling, not a lock.
-     */
-    public static boolean isUserStyleBlocked(int kind) { return kind == KIND_GRAPHIC || kind == KIND_UNSUPPORTED; }
-
     /** Only styled subtitles have a style-mode choice (file's style / custom / scale only). */
     public static boolean canChooseOverrideMode(int kind) { return kind == KIND_SSA; }
 
@@ -143,7 +137,6 @@ public class SubtitleManager {
     public boolean isPlainText() { return isPlainText(mKind); }
     public boolean isStyled() { return isStyled(mKind); }
     public boolean supportsUserStyle() { return supportsUserStyle(mKind); }
-    public boolean isUserStyleBlocked() { return isUserStyleBlocked(mKind); }
     public boolean canChooseOverrideMode() { return canChooseOverrideMode(mKind); }
 
     /** getOverrideMode() filtered through the active kind: what the engine really applies. */
