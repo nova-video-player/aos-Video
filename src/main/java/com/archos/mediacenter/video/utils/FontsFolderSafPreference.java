@@ -17,6 +17,7 @@ package com.archos.mediacenter.video.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.preference.Preference;
@@ -78,7 +79,9 @@ public class FontsFolderSafPreference extends Preference {
                 VideoPreferencesCommon.KEY_SUBTITLE_FONTS_FOLDER_URI, null);
         if (savedUriString != null) {
             try {
-                intent.putExtra(android.provider.DocumentsContract.EXTRA_INITIAL_URI, Uri.parse(savedUriString));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    intent.putExtra(android.provider.DocumentsContract.EXTRA_INITIAL_URI, Uri.parse(savedUriString));
+                }
             } catch (Exception ignored) {
                 // Malformed/stale saved URI -- not worth failing the whole picker launch over.
             }
