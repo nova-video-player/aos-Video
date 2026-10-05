@@ -446,7 +446,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private boolean mCling = false;
 
     private TVMenu mSubtitleTVMenu;
-    private TVMenuItem mSubtitleSettingsMenuItem;
     private TVMenuItem mSubtitleDelayMenuItem;
     private TVCardView mSubtitleTVCardView;
     private TVCardView mAudioTracksTVCardView;
@@ -2420,16 +2419,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (log.isDebugEnabled()) log.debug("refreshSubtitleTVMenu: isCurrentSubtrackNone={}", isCurrentSubtrackNone());
                 disableSubtitleDelayTVMenuItem(isCurrentSubtrackNone());
 
-                mSubtitleSettingsMenuItem = mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.menu_player_settings).toString(), false, false);
-                mSubtitleSettingsMenuItem.setOnClickListener(new View.OnClickListener() {
+                // Never disabled: the panel explains when settings cannot apply (no track, image or unsupported format).
+                mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.menu_player_settings).toString(), false, false).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         createTVSubtitleSettingsDialog();
                     }
                 });
-
-                if (log.isDebugEnabled()) log.debug("refreshSubtitleTVMenu: isCurrentSubtrackStyleBlocked={}", isCurrentSubtrackStyleBlocked());
-                disableSubtitleSettingsMenuItem(isCurrentSubtrackStyleBlocked() || isCurrentSubtrackNone());
             }
             mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.get_subtitles_online).toString(), false, false).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -4204,7 +4200,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (mSubtitleInfoController.getTrack() == 0) { // 0 is nonePosition
                     if (log.isDebugEnabled()) log.debug("switchSubtitleTrack: disableSubtitleDelayTVMenuItem(true) because nonePosition");
                     disableSubtitleDelayTVMenuItem(true);
-                    disableSubtitleSettingsMenuItem(true);
                 }
                 refreshSubtitleTVMenu();
                 CharSequence subTrackName = mSubtitleInfoController.getTrackNameAt(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles));
@@ -4249,29 +4244,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     /**
      * Pushes the selected track to SubtitleManager, which applies it (layout category, bitmap
      * margins, native offset). Only the places that APPLY state call this (layout mode, vertical
-     * position); queries read the track directly through currentKind() and never mutate anything.
+     * position).
      */
     private void syncSubtitleKind() {
         if (mSubtitleManager != null) {
             mSubtitleManager.setActiveTrack(currentSubtitleTrack());
         }
-    }
-
-    /**
-     * Kind of the selected track, read straight from the track metadata. Pure: it touches no
-     * manager state, so it is safe in any query and can never be one step stale.
-     */
-    private int currentKind() {
-        return SubtitleManager.kindOf(currentSubtitleTrack());
-    }
-
-    public boolean isCurrentSubtrackGfx() {
-        return SubtitleManager.isGraphic(currentKind());
-    }
-
-    /** Active track exists but the user's text-style settings cannot affect it (bitmap/unsupported). */
-    public boolean isCurrentSubtrackStyleBlocked() {
-        return SubtitleManager.isUserStyleBlocked(currentKind());
     }
 
     public boolean isCurrentSubtrackNone() {
@@ -4295,7 +4273,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         // Always hand over the user's value: for bitmap tracks the manager applies offset 0 by
         // itself and keeps the saved value intact (the old code passed 0 and lost it).
         mSubtitleManager.setVerticalPosition(vpos);
-        disableSubtitleSettingsMenuItem(mSubtitleManager.isUserStyleBlocked());
     }
 
     private void disableSubtitleDelayTVMenuItem(boolean disable) {
@@ -4303,14 +4280,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mSubtitleInfoController.enableSettings(SUBTITLE_MENU_DELAY, !disable, disable);
         if (mSubtitleDelayMenuItem != null) {
             mSubtitleDelayMenuItem.setDisabled(disable);
-        }
-    }
-
-    private void disableSubtitleSettingsMenuItem(boolean disable) {
-        if (log.isDebugEnabled()) log.debug("disableSubtitleSettingsMenuItem: {}", disable);
-        mSubtitleInfoController.enableSettings(SUBTITLE_MENU_SETTINGS, !disable, disable);
-        if (mSubtitleSettingsMenuItem != null) {
-            mSubtitleSettingsMenuItem.setDisabled(disable);
         }
     }
 
@@ -4371,7 +4340,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (mVideoInfo.subtitleTrack >= 0) {
                     String trackName = mSubtitleInfoController.getTrackNameAt(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)).toString();
                     disableSubtitleDelayTVMenuItem(position == 0);
-                    disableSubtitleSettingsMenuItem(position == 0 || isCurrentSubtrackStyleBlocked());
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: position={}, mSubtitleInfoController.getTrackNameAt({}) mVideoInfo.subtitleTrack={}", position, trackName, mVideoInfo.subtitleTrack);
                 } else {
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: position={}, None mVideoInfo.subtitleTrack={}", position, mVideoInfo.subtitleTrack);
@@ -4847,7 +4815,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (mSubtitleInfoController.getTrack() == nonePosition) {
                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: disableSubtitleDelayTVMenuItem(true) because nonePosition");
                     disableSubtitleDelayTVMenuItem(true);
-                    disableSubtitleSettingsMenuItem(true);
                 }
             }
             updateSubtitleLayoutMode();
