@@ -218,6 +218,14 @@ public class SubtitleManager {
     public Defaults getDefaults() { return mDefaults; }
 
     /**
+     * Short side, in pixels, of the surface the subtitles are laid out on. The settings preview
+     * scales its text from it the way the renderer does (pt x short side / 720).
+     */
+    public int getScreenShortSide() {
+        return Math.min(mScreenWidth, mScreenHeight);
+    }
+
+    /**
      * Applies the saved style, falling back to the default for anything never saved. This is
      * also how a reset works: remove STYLE_KEYS from the preferences first.
      * Does not touch the vertical position: callers apply it themselves because it is track-kind

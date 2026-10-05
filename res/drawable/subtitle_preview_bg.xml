@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient android:angle="315"
+        android:startColor="@color/subtitle_panel_preview_bg_start"
+        android:endColor="@color/subtitle_panel_preview_bg_end" />
+    <corners android:radius="@dimen/subtitle_panel_preview_corner" />
+</shape>

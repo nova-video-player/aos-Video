@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The chosen segment is setSelected(true): filled with the player's accent colour -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <inset android:insetLeft="3dp" android:insetTop="3dp" android:insetRight="3dp" android:insetBottom="3dp">
+            <shape android:shape="rectangle">
+                <solid android:color="?attr/colorAccent" />
+                <corners android:radius="@dimen/subtitle_panel_segment_corner" />
+            </shape>
+        </inset>
+    </item>
+    <item android:state_pressed="true">
+        <inset android:insetLeft="3dp" android:insetTop="3dp" android:insetRight="3dp" android:insetBottom="3dp">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/video_info_next_prev_button_pressed" />
+                <corners android:radius="@dimen/subtitle_panel_segment_corner" />
+            </shape>
+        </inset>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+</selector>
