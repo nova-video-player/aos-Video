@@ -410,8 +410,8 @@ dependencies {
     implementation 'androidx.tvprovider:tvprovider:1.1.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:5.5.0'
     implementation 'com.github.tony19:logback-android:3.0.0'
-    implementation 'io.sentry:sentry-android:8.58.0'
-    implementation 'io.sentry:sentry:8.58.0'
+    implementation 'io.sentry:sentry-android:8.59.0'
+    implementation 'io.sentry:sentry:8.59.0'
 
     // Play-distributed flavors only (see playUpdaterEnabled): in-app updates.
     if (playUpdaterEnabled) {
