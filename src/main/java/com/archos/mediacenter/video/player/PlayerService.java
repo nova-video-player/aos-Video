@@ -37,6 +37,7 @@ import android.os.Bundle;
 import android.media.MediaMetadata;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
+import android.view.KeyEvent;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -743,11 +744,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (log.isDebugEnabled()) log.debug("onStart: mVideoInfo != null, call mPlayerFrontend.onVideoDb");
             mPlayerFrontend.onVideoDb(mVideoInfo, null);
         }
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             setNowPlayingCard();
         }
         mPlayerState = PlayerState.PREPARING;
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             updateNowPlayingState();
         }
     }
@@ -1255,7 +1256,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             mPlayerState = PlayerState.STOPPED;
             TorrentObserverService.staticExitProcess();
             TorrentObserverService.killProcess();
-            if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+            if (!PrivateMode.isActive()) {
                 stopNowPlayingCard();
             }
         }
@@ -1538,7 +1539,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         mIndexHelper.writeVideoInfo(mVideoInfo, true);
                     }
 
-                    if (ArchosFeatures.isAndroidTV(PlayerService.this) && !PrivateMode.isActive())
+                    if (!PrivateMode.isActive())
                         updateNowPlayingMetadata();
                     // check if it has been scraped
                 }
@@ -1559,7 +1560,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                 }
                 else
                     mScraperTag = result.tag; // save it, it will be retrieved when index has worked
-                if (ArchosFeatures.isAndroidTV(PlayerService.this) && !PrivateMode.isActive())
+                if (!PrivateMode.isActive())
                 updateNowPlayingMetadata();
             }*/
         }
@@ -1602,7 +1603,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         }
         mUri = mVideoInfo.uri;
         mIntent.setData(mUri);
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             updateNowPlayingMetadata();
         }
         if(mCallOnDataUriOKWhenVideoInfoIsSet)
@@ -1879,7 +1880,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public void onPrepared() {
         if (log.isDebugEnabled()) log.debug("onPrepared()");
         mPlayerState = PlayerState.PREPARED;
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null) {
@@ -1896,7 +1897,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (log.isDebugEnabled()) log.debug("onCompletion");
         mPlayerState = PlayerState.STOPPED;
 
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         mPlaybackSession.completed = true;
@@ -1936,7 +1937,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     public boolean onError(int errorCode, int errorQualCode, String msg) {
         if (log.isDebugEnabled()) log.debug("onError");
         mPlayerState = PlayerState.STOPPED;
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null) {
@@ -1977,7 +1978,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         } else {
             if (log.isDebugEnabled()) log.debug("onPlay: !PlayerController.STATE_NORMAL -> not startTrakt()!");
         }
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null) {
@@ -1999,7 +2000,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (log.isDebugEnabled()) log.debug("onPause: other/seek state thus not doing pauseTrakt()!");
         }
         saveVideoStateIfReady();
-        if (ArchosFeatures.isAndroidTV(this) && !PrivateMode.isActive()) {
+        if (!PrivateMode.isActive()) {
             updateNowPlayingState();
         }
         if(mPlayerFrontend!=null){
@@ -2606,7 +2607,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     /**
-     * displays now playing card on android TV
+     * creates the media session that backs the now playing card and routes
+     * external media buttons (bluetooth headsets, remotes) to the player
      */
     private void setNowPlayingCard() {
         /**
@@ -2639,6 +2641,12 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                         Player.sPlayer.pause(PlayerController.STATE_OTHER);
                         updateNowPlayingState();
                     }
+                }
+
+                @Override
+                public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
+                    if (handleMediaButton(mediaButtonIntent)) return true;
+                    return super.onMediaButtonEvent(mediaButtonIntent);
                 }
             };
             mSession.setCallback(mediaSessionCallback);
@@ -2718,6 +2726,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
      * Update title and pic on now playing card
      */
     private void updateNowPlayingMetadata() {
+        if (mSession == null || mVideoInfo == null) return;
         MediaMetadata.Builder metadataBuilder = new MediaMetadata.Builder();
         String title = mVideoInfo.scraperTitle!=null?mVideoInfo.scraperTitle:mVideoInfo.title!=null?mVideoInfo.title:FileUtils.getFileNameWithoutExtension(mUri);
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE,
@@ -2882,6 +2891,29 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     public static void startPlayer() {
         if (Player.sPlayer != null && Player.sPlayer.isPaused()) Player.sPlayer.start(PlayerController.STATE_NORMAL);
+    }
+
+    private boolean handleMediaButton(Intent mediaButtonIntent) {
+        if (mediaButtonIntent == null || !Intent.ACTION_MEDIA_BUTTON.equals(mediaButtonIntent.getAction()))
+            return false;
+        KeyEvent event = IntentCompat.getParcelableExtra(mediaButtonIntent, Intent.EXTRA_KEY_EVENT, KeyEvent.class);
+        if (event == null || event.getAction() != KeyEvent.ACTION_DOWN)
+            return false;
+        if (log.isDebugEnabled()) log.debug("handleMediaButton: keyCode {}", event.getKeyCode());
+        switch (event.getKeyCode()) {
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+            case KeyEvent.KEYCODE_HEADSETHOOK:
+                playPausePlayer();
+                return true;
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+                startPlayer();
+                return true;
+            case KeyEvent.KEYCODE_MEDIA_PAUSE:
+                pausePlayer();
+                return true;
+            default:
+                return false;
+        }
     }
 
     // Pause when wired headset is disconnected
