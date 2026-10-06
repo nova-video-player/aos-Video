@@ -27,6 +27,11 @@ if (shouldApplyPlayPlugin) {
     apply plugin: 'com.github.triplet.play'
 }
 
+// Google Play in-app updates (proprietary Play Core) is compiled only into the
+// Play-distributed flavors, and never for F-Droid (-Puniversal) or GitHub
+// (-Psponsor) builds, which get the no-op stub in src/playupdater-stub.
+def playUpdaterEnabled = !project.hasProperty("universal") && !project.hasProperty("sponsor")
+
 import io.sentry.android.gradle.extensions.InstrumentationFeature
 
 if (hasProperty('bugReport')) {
@@ -148,6 +153,17 @@ android {
         test {
             java.srcDirs = ['src/test/java']
             resources.srcDirs = ['src/test/resources']
+        }
+        // Play In-App Updates implementation; the stub keeps the shared callers in
+        // main compiling for builds that must not ship proprietary Play Core.
+        noamazon {
+            java.srcDirs += playUpdaterEnabled ? 'src/playupdater/java' : 'src/playupdater-stub/java'
+        }
+        manageexternalstorage {
+            java.srcDirs += playUpdaterEnabled ? 'src/playupdater/java' : 'src/playupdater-stub/java'
+        }
+        amazon {
+            java.srcDirs += 'src/playupdater-stub/java'
         }
     }
     defaultConfig {
@@ -331,6 +347,12 @@ android {
 
 androidComponents {
     onVariants(selector().all()) { variant ->
+        // Sponsor builds (GitHub/F-Droid) only: merge an extra manifest that declares
+        // REQUEST_INSTALL_PACKAGES for the in-app GitHub release updater. Keeping it out
+        // of the default (Google Play) variant avoids the Play install-packages policy.
+        if (project.hasProperty("sponsor")) {
+            variant.sources.manifests?.addStaticManifestFile("src/sponsor/AndroidManifest.xml")
+        }
         variant.outputs.forEach { output ->
             String currentName = output.outputFileName.get()
             String newName = currentName
@@ -390,6 +412,12 @@ dependencies {
     implementation 'com.github.tony19:logback-android:3.0.0'
     implementation 'io.sentry:sentry-android:8.58.0'
     implementation 'io.sentry:sentry:8.58.0'
+
+    // Play-distributed flavors only (see playUpdaterEnabled): in-app updates.
+    if (playUpdaterEnabled) {
+        noamazonImplementation 'com.google.android.play:app-update:2.1.0'
+        manageexternalstorageImplementation 'com.google.android.play:app-update:2.1.0'
+    }
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.24.0'

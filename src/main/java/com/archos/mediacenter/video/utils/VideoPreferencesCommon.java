@@ -15,6 +15,7 @@ package com.archos.mediacenter.video.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +24,7 @@ import android.media.MediaScannerConnection;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -37,6 +39,11 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.util.TypedValue;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -78,6 +85,11 @@ import com.archos.mediacenter.video.leanback.tvshow.TvshowsSortOrderEntry;
 import com.archos.mediacenter.video.tvshow.AnimeShowSortOrderEntries;
 import com.archos.mediacenter.video.tvshow.TvshowSortOrderEntries;
 import com.archos.mediacenter.video.utils.credentialsmanager.CredentialsManagerPreferenceActivity;
+import com.archos.mediacenter.video.utils.updater.GitHubRelease;
+import com.archos.mediacenter.video.utils.updater.PlayUpdateManager;
+import com.archos.mediacenter.video.utils.updater.ReleaseAsset;
+import com.archos.mediacenter.video.utils.updater.UpdateChecker;
+import com.archos.mediacenter.video.utils.updater.UpdateManager;
 import com.archos.medialib.MediaFactory;
 import com.archos.mediaprovider.video.VideoProvider;
 import com.archos.mediascraper.AllCollectionScrapeService;
@@ -273,6 +285,12 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private ListPreference mTMDbScraperLanguagePreferences = null;
     private ListPreference mAudioTrackFavoriteLanguage = null;
     private CheckBoxPreference mEnableSponsor = null;
+    private Preference mVersionPreference = null;
+    private GitHubRelease mPendingRelease = null;
+    private ReleaseAsset mPendingAsset = null;
+    private File mPendingApk = null;
+    private PlayUpdateManager mPlayUpdateManager = null;
+    private boolean mPlayUpdateAvailable = false;
     private CheckBoxPreference mWatchingUpNext = null;
     private PreferenceCategory mAboutPreferences = null;
     private CheckBoxPreference mAdultScrape = null;
@@ -331,6 +349,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     private final ActivityResultLauncher<Intent> mFolderPickerLauncher;
     private final ActivityResultLauncher<Intent> mTraktAuthLauncher;
+    private final ActivityResultLauncher<Intent> mInstallPermissionLauncher;
+    private final ActivityResultLauncher<IntentSenderRequest> mPlayUpdateLauncher;
 
     public VideoPreferencesCommon(PreferenceFragmentCompat preferencesFragment) {
         mPreferencesFragment = preferencesFragment;
@@ -340,6 +360,12 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mTraktAuthLauncher = preferencesFragment.registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 this::onTraktAuthResult);
+        mInstallPermissionLauncher = preferencesFragment.registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::onInstallPermissionResult);
+        mPlayUpdateLauncher = preferencesFragment.registerForActivityResult(
+                new ActivityResultContracts.StartIntentSenderForResult(),
+                this::onPlayUpdateResult);
     }
 
     private void onFolderPickerResult(ActivityResult result) {
@@ -361,6 +387,302 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private void onTraktAuthResult(ActivityResult result) {
         if (mTraktSigninPreference != null)
             mTraktSigninPreference.onAuthCompleted(result.getResultCode() == Activity.RESULT_OK);
+    }
+
+    private void onInstallPermissionResult(ActivityResult result) {
+        if (mPendingApk == null) return;
+        if (UpdateManager.getInstance().canInstallPackages(mPreferencesFragment.requireContext())) {
+            promptInstall();
+        } else {
+            Toast.makeText(getContext(), R.string.updater_permission_required, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * The GitHub updater is available only in sponsor release builds installed
+     * outside Google Play (its ABI-matched download mirrors the GitHub release build).
+     */
+    private boolean isGithubUpdaterAvailable() {
+        Context context = getContext();
+        return context != null
+                && BuildConfig.ENABLE_SPONSOR
+                && !BuildConfig.DEBUG
+                && !ArchosUtils.isInstalledfromPlayStore(context);
+    }
+
+    /**
+     * The Play updater is the symmetric counterpart for the non-sponsor build when it
+     * was installed by Google Play. Sponsor builds deliberately do not cross-check Play.
+     */
+    private boolean isPlayUpdaterAvailable() {
+        Context context = getContext();
+        return context != null
+                && !BuildConfig.ENABLE_SPONSOR
+                && ArchosUtils.isInstalledfromPlayStore(context);
+    }
+
+    private void onVersionPreferenceClicked() {
+        if (mPendingRelease != null && mPendingAsset != null) {
+            showUpdateAvailableDialog(mPendingRelease, mPendingAsset);
+        } else {
+            onCheckUpdatesClicked();
+        }
+    }
+
+    /** Silent check fired whenever the settings screen opens (sponsor builds only). */
+    private void startSilentUpdateCheck() {
+        UpdateManager.getInstance().checkForUpdate(new UpdateManager.CheckCallback() {
+            @Override
+            public void onSuccess(GitHubRelease release) {
+                if (!UpdateChecker.isNewer(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, release)) return;
+                ReleaseAsset asset = UpdateManager.getInstance().chooseAsset(release);
+                if (asset == null) return;
+                mPendingRelease = release;
+                mPendingAsset = asset;
+                highlightVersionUpdate(release);
+            }
+
+            @Override
+            public void onError(String message) {
+                // silent: keep the plain version tile
+            }
+        });
+    }
+
+    private void highlightVersionUpdate(GitHubRelease release) {
+        if (mVersionPreference == null) return;
+        Context context = getContext();
+        if (context == null) return;
+        String name = release.versionName;
+        long code = release.versionCode;
+        CharSequence title;
+        if (name != null && !name.isEmpty() && code > 0) {
+            title = mPreferencesFragment.getString(R.string.updater_tile_update_named, name, code);
+        } else if (code > 0) {
+            title = mPreferencesFragment.getString(R.string.updater_tile_update_code, code);
+        } else {
+            String current = "v" + UpdateChecker.baseVersion(BuildConfig.VERSION_NAME);
+            title = mPreferencesFragment.getString(R.string.updater_tile_update, current, "v" + name);
+        }
+        mVersionPreference.setTitle(title);
+        mVersionPreference.setSummary(accentedSummary(R.string.updater_tile_update_summary));
+        mVersionPreference.setIcon(R.drawable.ic_menu_refresh);
+        mVersionPreference.setSelectable(true);
+    }
+
+    private PlayUpdateManager playUpdateManager() {
+        if (mPlayUpdateManager == null) {
+            Context context = getContext();
+            if (context != null) mPlayUpdateManager = new PlayUpdateManager(context);
+        }
+        return mPlayUpdateManager;
+    }
+
+    /** Silent Play update check, symmetric with {@link #startSilentUpdateCheck()}. */
+    private void startSilentPlayUpdateCheck() {
+        PlayUpdateManager manager = playUpdateManager();
+        if (manager == null) return;
+        manager.checkForUpdate(new PlayUpdateManager.CheckCallback() {
+            @Override
+            public void onUpdateAvailable(long availableVersionCode) {
+                mPlayUpdateAvailable = true;
+                highlightPlayUpdate(availableVersionCode);
+            }
+
+            @Override
+            public void onUpToDate() {
+                // keep the plain version tile
+            }
+
+            @Override
+            public void onError(String message) {
+                // silent
+            }
+        });
+    }
+
+    private void highlightPlayUpdate(long availableVersionCode) {
+        if (mVersionPreference == null) return;
+        if (getContext() == null) return;
+        mVersionPreference.setTitle(mPreferencesFragment.getString(R.string.updater_tile_update_code, availableVersionCode));
+        mVersionPreference.setSummary(accentedSummary(R.string.updater_tile_update_summary));
+        mVersionPreference.setIcon(R.drawable.ic_menu_refresh);
+        mVersionPreference.setSelectable(true);
+    }
+
+    private void onPlayVersionPreferenceClicked() {
+        Context context = getContext();
+        if (context == null) return;
+        PlayUpdateManager manager = playUpdateManager();
+        if (mPlayUpdateAvailable && manager != null
+                && manager.startImmediateUpdate(mPlayUpdateLauncher)) {
+            return;
+        }
+        PlayUpdateManager.openPlayStore(context);
+    }
+
+    private void onPlayUpdateResult(ActivityResult result) {
+        // The Play UI handles success and user cancellation; only a failed flow falls
+        // back to the store listing.
+        if (result.getResultCode() == PlayUpdateManager.RESULT_IN_APP_UPDATE_FAILED) {
+            Context context = getContext();
+            if (context != null) PlayUpdateManager.openPlayStore(context);
+        }
+    }
+
+    private CharSequence accentedSummary(int resId) {
+        SpannableString summary = new SpannableString(mPreferencesFragment.getString(resId));
+        Context context = getContext();
+        if (context != null && summary.length() > 0) {
+            TypedValue typedValue = new TypedValue();
+            if (context.getTheme().resolveAttribute(android.R.attr.colorAccent, typedValue, true)
+                    && typedValue.type >= TypedValue.TYPE_FIRST_COLOR_INT
+                    && typedValue.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+                summary.setSpan(new ForegroundColorSpan(typedValue.data), 0, summary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return summary;
+    }
+
+    private void onCheckUpdatesClicked() {
+        final Context context = getContext();
+        if (context == null) return;
+        final AlertDialog checkingDialog = new AlertDialog.Builder(context)
+                .setTitle(R.string.updater_check_title)
+                .setMessage(R.string.updater_checking)
+                .setCancelable(false)
+                .create();
+        checkingDialog.show();
+        UpdateManager.getInstance().checkForUpdate(new UpdateManager.CheckCallback() {
+            @Override
+            public void onSuccess(GitHubRelease release) {
+                checkingDialog.dismiss();
+                if (!UpdateChecker.isNewer(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, release)) {
+                    showSimpleDialog(R.string.updater_up_to_date_title, mPreferencesFragment.getString(R.string.updater_up_to_date, release.versionName));
+                    return;
+                }
+                ReleaseAsset asset = UpdateManager.getInstance().chooseAsset(release);
+                if (asset == null) {
+                    showSimpleDialog(R.string.updater_error_title, getString(R.string.updater_no_asset));
+                    return;
+                }
+                showUpdateAvailableDialog(release, asset);
+            }
+
+            @Override
+            public void onError(String message) {
+                checkingDialog.dismiss();
+                showSimpleDialog(R.string.updater_error_title, getString(R.string.updater_error) + " " + message);
+            }
+        });
+    }
+
+    private void showUpdateAvailableDialog(final GitHubRelease release, final ReleaseAsset asset) {
+        Context context = getContext();
+        if (context == null) return;
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.updater_available_title)
+                .setMessage(mPreferencesFragment.getString(R.string.updater_available_message, release.versionName, asset.abi))
+                .setPositiveButton(R.string.updater_download, (dialog, which) -> startDownload(release, asset))
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void startDownload(final GitHubRelease release, final ReleaseAsset asset) {
+        Context context = getContext();
+        if (context == null) return;
+        final ProgressBar progress = new ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal);
+        progress.setMax(100);
+        final AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle(R.string.updater_downloading)
+                .setView(progress)
+                .setCancelable(false)
+                .setNegativeButton(android.R.string.cancel, (d, which) -> UpdateManager.getInstance().cancelDownload())
+                .create();
+        dialog.show();
+        UpdateManager.getInstance().downloadUpdate(context, release, asset, new UpdateManager.DownloadCallback() {
+            @Override
+            public void onProgress(int percent) {
+                progress.setProgress(percent);
+            }
+
+            @Override
+            public void onSuccess(GitHubRelease result, ReleaseAsset resultAsset, File apk) {
+                dialog.dismiss();
+                mPendingRelease = result;
+                mPendingAsset = resultAsset;
+                mPendingApk = apk;
+                maybeInstallPendingApk();
+            }
+
+            @Override
+            public void onError(String message) {
+                dialog.dismiss();
+                showSimpleDialog(R.string.updater_error_title, getString(R.string.updater_download_failed) + " " + message);
+            }
+        });
+    }
+
+    private void maybeInstallPendingApk() {
+        if (mPendingApk == null) return;
+        Context context = getContext();
+        if (context == null) return;
+        if (UpdateManager.getInstance().canInstallPackages(context)) {
+            promptInstall();
+        } else {
+            requestInstallPermission();
+        }
+    }
+
+    private void requestInstallPermission() {
+        Context context = getContext();
+        if (context == null) return;
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.updater_permission_title)
+                .setMessage(R.string.updater_permission_message)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> launchUnknownSourcesSettings())
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void launchUnknownSourcesSettings() {
+        Context context = getContext();
+        if (context == null) return;
+        try {
+            mInstallPermissionLauncher.launch(UpdateManager.getInstance().buildUnknownSourcesIntent(context));
+        } catch (ActivityNotFoundException e) {
+            try {
+                mInstallPermissionLauncher.launch(UpdateManager.getInstance().buildUnknownSourcesFallbackIntent());
+            } catch (ActivityNotFoundException e2) {
+                Toast.makeText(context, R.string.updater_permission_unavailable, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void promptInstall() {
+        Context context = getContext();
+        if (context == null || mPendingApk == null) return;
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.updater_install_title)
+                .setMessage(R.string.updater_install_message)
+                .setPositiveButton(R.string.updater_install, (dialog, which) ->
+                        UpdateManager.getInstance().installUpdate(context, mPendingApk, (success, message) -> {
+                            if (!success) {
+                                Toast.makeText(getContext(), getString(R.string.updater_install_failed) + " " + message, Toast.LENGTH_LONG).show();
+                            }
+                        }))
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void showSimpleDialog(int titleRes, String message) {
+        Context context = getContext();
+        if (context == null) return;
+        new AlertDialog.Builder(context)
+                .setTitle(titleRes)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
     }
 
     private Activity getActivity() {
@@ -823,8 +1145,23 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             if (mAnimesSortOrderPreference != null) leanbackCategory.removePreference(mAnimesSortOrderPreference);
         }
         mAboutPreferences = (PreferenceCategory) findPreference(KEY_ABOUT_PREFERENCES);
-        Preference novaVersion = (Preference) findPreference("preferences_version");
-        novaVersion.setTitle(mSharedPreferences.getString("nova_version", "@string/APP_INFO"));
+        mVersionPreference = (Preference) findPreference("preferences_version");
+        mVersionPreference.setTitle(mSharedPreferences.getString("nova_version", "@string/APP_INFO"));
+        if (isGithubUpdaterAvailable()) {
+            mVersionPreference.setSelectable(true);
+            mVersionPreference.setOnPreferenceClickListener(preference -> {
+                onVersionPreferenceClicked();
+                return true;
+            });
+            startSilentUpdateCheck();
+        } else if (isPlayUpdaterAvailable()) {
+            mVersionPreference.setSelectable(true);
+            mVersionPreference.setOnPreferenceClickListener(preference -> {
+                onPlayVersionPreferenceClicked();
+                return true;
+            });
+            startSilentPlayUpdateCheck();
+        }
 
         mSmb2 = (CheckBoxPreference) findPreference(KEY_SMB2);
         mSmbResolver = (CheckBoxPreference) findPreference(KEY_SMB_RESOLV);

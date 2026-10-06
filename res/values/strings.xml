@@ -1027,6 +1027,32 @@
     <string name="enable_sponsor_title">Enable Nova sponsor link</string>
     <string name="enable_sponsor_summary">Enable sponsor link for donations: every contribution helps.</string>
 
+    <string name="updater_check_title">Check for updates</string>
+    <string name="updater_checking">Checking for the latest release\u2026</string>
+    <string name="updater_tile_update">Update Nova %1$s \u2192 %2$s</string>
+    <string name="updater_tile_update_named">Update Nova v%1$s (build %2$d)</string>
+    <string name="updater_tile_update_code">Update Nova (build %1$d)</string>
+    <string name="updater_tile_update_summary">A newer version is available. Tap to update.</string>
+    <string name="updater_up_to_date_title">Up to date</string>
+    <string name="updater_up_to_date">Nova %1$s is the latest version.</string>
+    <string name="updater_available_title">Update available</string>
+    <string name="updater_available_message">Nova %1$s is available (%2$s). Download and install it now?</string>
+    <string name="updater_download">Download</string>
+    <string name="updater_downloading">Downloading update\u2026</string>
+    <string name="updater_download_failed">Download failed:</string>
+    <string name="updater_permission_title">Allow app installation</string>
+    <string name="updater_permission_message">Android needs your permission to install apps from Nova. Open the settings, allow Nova to install unknown apps, then return here.</string>
+    <string name="updater_permission_required">Permission to install apps is required.</string>
+    <string name="updater_permission_unavailable">Installation settings are not available on this device.</string>
+    <string name="updater_install_title">Install update</string>
+    <string name="updater_install_message">Nova will close while the update is installed. Continue?</string>
+    <string name="updater_install">Install</string>
+    <string name="updater_install_success">Update installed.</string>
+    <string name="updater_install_failed">Installation failed:</string>
+    <string name="updater_error_title">Update check failed</string>
+    <string name="updater_error">Could not check for updates:</string>
+    <string name="updater_no_asset">No compatible APK was found in the latest release.</string>
+
     <string name="hdr_capability">HDR screen capabilities:</string>
     <string name="hdmi_audio_capabilities">HDMI receiver audio capabilities:</string>
     <string name="spdif_audio_capabilities">S/PDIF audio capabilities:</string>

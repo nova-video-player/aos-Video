@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Sponsor (GitHub / F-Droid) builds only.
+
+    This manifest is merged only when Nova is built with -Psponsor. It declares the
+    permission needed to install an APK downloaded from the latest GitHub release.
+    It is intentionally absent from the default Google Play build so that Play does
+    not require the install-packages policy declaration.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingLeanbackLauncher,ImpliedTouchscreenHardware,MissingLeanbackSupport">
+
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <application>
+        <receiver
+            android:name="com.archos.mediacenter.video.utils.updater.UpdateInstallReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.archos.mediacenter.video.UPDATE_INSTALL_STATUS" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
