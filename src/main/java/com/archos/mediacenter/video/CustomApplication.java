@@ -158,18 +158,23 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     private AudioDeviceInfo selectedMediaDevice(AudioDeviceInfo[] connected, String reason) {
         AudioDeviceInfo routed = LibAvos.getRoutedAudioDevice();
         // Policy prediction handles a device change before the old track has rerouted.
-        // The track callback is authoritative for what an active AudioTrack actually uses.
+        // A TV's speaker endpoint can represent a shared speaker/ARC output.
         if (!"trackRoute".equals(reason) && Build.VERSION.SDK_INT >= 33) {
             try {
                 java.util.List<AudioDeviceInfo> selected = mAudioManager.getAudioDevicesForAttributes(
                         new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
                                 .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE).build());
-                if (selected.size() == 1) return selected.get(0);
+                if (selected.size() == 1 && !isSharedTvSpeakerRoute(selected.get(0), connected))
+                    return selected.get(0);
             } catch (RuntimeException ignored) { }
         }
         if (routed != null) {
-            for (AudioDeviceInfo device : connected)
-                if (device.getId() == routed.getId()) return device;
+            for (AudioDeviceInfo device : connected) {
+                if (device.getId() == routed.getId()) {
+                    if (!isSharedTvSpeakerRoute(device, connected)) return device;
+                    break;
+                }
+            }
         }
         // Older APIs provide no pre-play route query. Until the track reports its
         // actual route, do not assume connected HDMI wins over private listening.
@@ -182,6 +187,23 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                     || type == AudioDeviceInfo.TYPE_BLE_SPEAKER))) return device;
         }
         return null;
+    }
+
+    private boolean isSharedTvSpeakerRoute(AudioDeviceInfo selected, AudioDeviceInfo[] connected) {
+        if (selected.getType() != AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
+                || !ArchosFeatures.isAndroidTV(this)) return false;
+        // Some TV policies route media to speaker + ARC but getRoutedDevice()
+        // exposes only the speaker. Do not erase advertised ARC codecs and
+        // reopen a successfully created compressed track as PCM in that case.
+        // Keep this limited to TVs with an ARC/eARC endpoint advertising codecs;
+        // explicit headphones/Bluetooth and ordinary HDMI routes stay exclusive.
+        for (AudioDeviceInfo device : connected) {
+            int type = device.getType();
+            if ((type == AudioDeviceInfo.TYPE_HDMI_ARC
+                    || (Build.VERSION.SDK_INT >= 31 && type == AudioDeviceInfo.TYPE_HDMI_EARC))
+                    && hasCompressedAudioEncoding(device.getEncodings())) return true;
+        }
+        return false;
     }
 
     public static String getAudioOutputSignature() {

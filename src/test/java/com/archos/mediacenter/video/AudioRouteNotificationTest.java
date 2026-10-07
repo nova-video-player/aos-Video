@@ -15,9 +15,13 @@
 package com.archos.mediacenter.video;
 
 import android.app.Application;
+import android.media.AudioDeviceInfo;
+import android.media.AudioFormat;
 import android.os.Looper;
 
+import com.archos.environment.ArchosFeatures;
 import com.archos.mediacenter.video.player.Player;
+import com.archos.medialib.LibAvos;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,10 +38,63 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.robolectric.Shadows.shadowOf;
 
+/**
+ * Covers shared TV speaker/ARC capability selection, exclusive private routes,
+ * and debounced playback notifications when output capabilities change.
+ */
 @RunWith(RobolectricTestRunner.class)
 @Config(application = Application.class, manifest = Config.NONE, sdk = 30)
 @LooperMode(LooperMode.Mode.PAUSED)
 public class AudioRouteNotificationTest {
+    private static AudioDeviceInfo device(int id, int type, int... encodings) {
+        AudioDeviceInfo device = mock(AudioDeviceInfo.class);
+        when(device.getId()).thenReturn(id);
+        when(device.getType()).thenReturn(type);
+        when(device.getEncodings()).thenReturn(encodings);
+        return device;
+    }
+
+    @Test
+    @Config(sdk = 28)
+    public void tvSpeakerCallbackRetainsArcInventoryButPrivateRoutesStayExclusive() throws Exception {
+        CustomApplication app = new CustomApplication();
+        Method select = CustomApplication.class.getDeclaredMethod("selectedMediaDevice",
+                AudioDeviceInfo[].class, String.class);
+        select.setAccessible(true);
+        AudioDeviceInfo speaker = device(2, AudioDeviceInfo.TYPE_BUILTIN_SPEAKER);
+        AudioDeviceInfo arc = device(257, AudioDeviceInfo.TYPE_HDMI_ARC,
+                AudioFormat.ENCODING_AC3, AudioFormat.ENCODING_E_AC3);
+        try (MockedStatic<LibAvos> nativeApi = mockStatic(LibAvos.class);
+             MockedStatic<ArchosFeatures> features = mockStatic(ArchosFeatures.class)) {
+            features.when(() -> ArchosFeatures.isAndroidTV(app)).thenReturn(true);
+            nativeApi.when(LibAvos::getRoutedAudioDevice).thenReturn(speaker);
+            // null keeps the existing connected-output capability scan. This
+            // must match pre-play selection to avoid reopening Mode 2 as PCM.
+            AudioDeviceInfo[] connected = {speaker, arc};
+            assertNull(select.invoke(app, connected, "trackRoute"));
+            assertNull(select.invoke(app, connected, "devicesAdded"));
+            for (int type : new int[] {AudioDeviceInfo.TYPE_BLUETOOTH_A2DP,
+                    AudioDeviceInfo.TYPE_BLUETOOTH_SCO, AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
+                    AudioDeviceInfo.TYPE_WIRED_HEADSET, AudioDeviceInfo.TYPE_USB_HEADSET}) {
+                AudioDeviceInfo headphones = device(3, type);
+                connected = new AudioDeviceInfo[] {speaker, arc, headphones};
+                // Also prefer private listening while the speaker report is ambiguous.
+                assertSame(headphones, select.invoke(app, connected, "trackRoute"));
+                nativeApi.when(LibAvos::getRoutedAudioDevice).thenReturn(headphones);
+                assertSame(headphones, select.invoke(app, connected, "trackRoute"));
+                nativeApi.when(LibAvos::getRoutedAudioDevice).thenReturn(speaker);
+            }
+            // ARC unplug/restricted capabilities and phone speakers remain definitive.
+            assertSame(speaker, select.invoke(app, new AudioDeviceInfo[] {speaker}, "trackRoute"));
+            AudioDeviceInfo pcmArc = device(257, AudioDeviceInfo.TYPE_HDMI_ARC, AudioFormat.ENCODING_PCM_16BIT);
+            assertSame(speaker, select.invoke(app, new AudioDeviceInfo[] {speaker, pcmArc}, "trackRoute"));
+            AudioDeviceInfo hdmi = device(257, AudioDeviceInfo.TYPE_HDMI, AudioFormat.ENCODING_E_AC3);
+            assertSame(speaker, select.invoke(app, new AudioDeviceInfo[] {speaker, hdmi}, "trackRoute"));
+            features.when(() -> ArchosFeatures.isAndroidTV(app)).thenReturn(false);
+            assertSame(speaker, select.invoke(app, new AudioDeviceInfo[] {speaker, arc}, "trackRoute"));
+        }
+    }
+
     @Test
     public void reconnectDeviceIdsDoNotChangeOutputConfiguration() throws Exception {
         Field deviceId = CustomApplication.class.getDeclaredField("selectedAudioDeviceId");
