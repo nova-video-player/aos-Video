@@ -271,7 +271,7 @@
     <string name="floating_player_pause" tools:ignore="UnusedResources">Pauza</string>
     <string name="player_pref_audio_delay_title">Oneskorenie zvuku</string>
     <string name="now_playing" tools:ignore="UnusedResources">Práve prehráva</string>
-    <string name="player_window_mode">Režim okna</string>
+    <string name="player_window_mode">Režim v okne</string>
     <string name="pref_play_mode_title">Režim prehrávania</string>
     <string name="pref_play_mode_entry_single">Jednotlivo</string>
     <string name="pref_play_mode_entry_folder">Priečinok</string>
@@ -874,7 +874,7 @@
     <string name="scheduled_rescan_time">Čas opakovaného skenovania</string>
     <string name="rescan_when_opening_application">Opätovné skenovanie pri otvorení aplikácie</string>
     <string name="last_rescan_occured">Posledné opätovné skenovanie sa uskutočnilo:</string>
-    <string name="error_permission_display_over_apps">Režim okna vyžaduje špeciálne oprávnenia, aby sa mohol zobrazovať pred ostatnými aplikáciami. Udelte prosím aplikácii Nova Video Player toto oprávnenie, aby mohla prejsť do režimu okna.</string>
+    <string name="error_permission_display_over_apps">Režim okna vyžaduje špeciálne oprávnenia, aby sa mohol zobrazovať nad ostatnými aplikáciami. Prosím, udelte aplikácii Nova Video Player toto oprávnenie, aby sa mohla prepnúť do režimu okna.</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Zobraziť viac</string>
