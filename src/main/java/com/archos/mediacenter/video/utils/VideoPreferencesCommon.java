@@ -678,11 +678,12 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private void showSimpleDialog(int titleRes, String message) {
         Context context = getContext();
         if (context == null) return;
-        new AlertDialog.Builder(context)
+        AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle(titleRes)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).requestFocus();
     }
 
     private Activity getActivity() {
