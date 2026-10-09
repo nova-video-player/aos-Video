@@ -13,7 +13,7 @@ buildscript {
 
 plugins {
     id "com.github.triplet.play" version "4.1.1" apply false
-    id "io.sentry.android.gradle" version "6.19.0" apply false
+    id "io.sentry.android.gradle" version "6.23.0" apply false
     //id "app.brant.amazonappstorepublisher" version "0.1.0"
 }
 
@@ -410,8 +410,8 @@ dependencies {
     implementation 'androidx.tvprovider:tvprovider:1.1.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:5.5.0'
     implementation 'com.github.tony19:logback-android:3.0.0'
-    implementation 'io.sentry:sentry-android:8.58.0'
-    implementation 'io.sentry:sentry:8.58.0'
+    implementation 'io.sentry:sentry-android:8.60.0'
+    implementation 'io.sentry:sentry:8.59.0'
 
     // Play-distributed flavors only (see playUpdaterEnabled): in-app updates.
     if (playUpdaterEnabled) {
@@ -424,7 +424,7 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.17'
     testImplementation 'androidx.test:core:1.7.0'
     testImplementation 'org.slf4j:slf4j-api:2.0.20'
-    testImplementation 'ch.qos.logback:logback-classic:1.6.4'
+    testImplementation 'ch.qos.logback:logback-classic:1.6.5'
 }
 
 configurations { // try to exclude device specific libraries interfering
