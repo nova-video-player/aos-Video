@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One color tile. Fill color is set in code on the background's @id/swatch_fill layer; the check shows when
+     the tile is the current color (also setSelected(true) for the ring). Tiles are plain focusable views, so the
+     D-pad moves between them with Android's own focus search: no hand-tracked index. -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/SubtitlePanel.Swatch"
+    android:layout_margin="4dp">
+
+    <ImageView
+        android:id="@+id/sp_check"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center"
+        android:importantForAccessibility="no"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_subtitle_check" />
+</FrameLayout>

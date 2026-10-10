@@ -34,4 +34,17 @@
         <!-- @hide Offset when scrolling to a selection. -->
         <attr name="selectionScrollOffset" format="dimension" />
     </declare-styleable>
+
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- Sizes of the subtitle settings panel. Set by ThemeOverlay.SubtitlePanel.Phone / .Tv (styles.xml);
+         the row and control styles read them, so one set of layouts serves phone and TV. -->
+    <attr name="subtitleRowMinHeight" format="dimension" />
+    <attr name="subtitleLabelTextSize" format="dimension" />
+    <attr name="subtitleCaptionTextSize" format="dimension" />
+    <attr name="subtitleRowPaddingH" format="dimension" />
+    <attr name="subtitleControlSize" format="dimension" />
+    <attr name="subtitlePillMinHeight" format="dimension" />
+    <attr name="subtitleSwatchSize" format="dimension" />
+    <attr name="subtitleHeaderHeight" format="dimension" />
+    <attr name="subtitlePreviewHeight" format="dimension" />
 </resources>

@@ -288,4 +288,134 @@
     <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
     </style>
+
+    <!-- ===== Subtitle settings panel ===== -->
+    <style name="SubtitlePanel" parent="" />
+    <!-- Applied by the host with ContextThemeWrapper on top of the player's own theme (ArchosThemeBlueOverlay),
+         so accent colour, fonts and AppCompat widgets stay the player's. These only set sizes. -->
+    <style name="ThemeOverlay.SubtitlePanel.Phone" parent="">
+        <item name="subtitleRowMinHeight">@dimen/subtitle_panel_row_min_height</item>
+        <item name="subtitleLabelTextSize">@dimen/subtitle_panel_text_size</item>
+        <item name="subtitleCaptionTextSize">@dimen/subtitle_panel_caption_size</item>
+        <item name="subtitleRowPaddingH">@dimen/subtitle_panel_row_padding_h</item>
+        <item name="subtitleControlSize">@dimen/subtitle_panel_control_size</item>
+        <item name="subtitlePillMinHeight">@dimen/subtitle_panel_pill_min_height</item>
+        <item name="subtitleSwatchSize">@dimen/subtitle_panel_swatch_size</item>
+        <item name="subtitleHeaderHeight">@dimen/subtitle_panel_header_height</item>
+        <item name="subtitlePreviewHeight">@dimen/subtitle_panel_preview_height</item>
+    </style>
+
+    <style name="ThemeOverlay.SubtitlePanel.Tv" parent="">
+        <item name="subtitleRowMinHeight">@dimen/subtitle_panel_row_min_height_tv</item>
+        <item name="subtitleLabelTextSize">@dimen/tv_menu_font_size</item>
+        <item name="subtitleCaptionTextSize">@dimen/subtitle_panel_caption_size_tv</item>
+        <item name="subtitleRowPaddingH">@dimen/subtitle_panel_row_padding_h_tv</item>
+        <item name="subtitleControlSize">@dimen/subtitle_panel_control_size_tv</item>
+        <item name="subtitlePillMinHeight">@dimen/subtitle_panel_pill_min_height_tv</item>
+        <item name="subtitleSwatchSize">@dimen/subtitle_color_picker_box_size</item>
+        <item name="subtitleHeaderHeight">@dimen/subtitle_panel_header_height_tv</item>
+        <item name="subtitlePreviewHeight">@dimen/subtitle_panel_preview_height_tv</item>
+    </style>
+
+    <!-- A settings row: a focus stop on TV, a touch target on phone -->
+    <style name="SubtitlePanel.Row">
+        <item name="android:minHeight">?attr/subtitleRowMinHeight</item>
+        <item name="android:paddingLeft">?attr/subtitleRowPaddingH</item>
+        <item name="android:paddingRight">?attr/subtitleRowPaddingH</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/subtitle_row_bg</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="SubtitlePanel.Label">
+        <item name="android:textSize">?attr/subtitleLabelTextSize</item>
+        <item name="android:textColor">@color/subtitle_panel_text_primary</item>
+    </style>
+
+    <style name="SubtitlePanel.Value" parent="SubtitlePanel.Label">
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minWidth">64dp</item>
+    </style>
+
+    <style name="SubtitlePanel.Caption">
+        <item name="android:textSize">?attr/subtitleCaptionTextSize</item>
+        <item name="android:textColor">@color/subtitle_panel_text_secondary</item>
+        <item name="android:paddingLeft">?attr/subtitleRowPaddingH</item>
+        <item name="android:paddingRight">?attr/subtitleRowPaddingH</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+
+    <style name="SubtitlePanel.Section">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="android:paddingLeft">?attr/subtitleRowPaddingH</item>
+        <item name="android:paddingRight">?attr/subtitleRowPaddingH</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+
+    <!-- - and + of a stepper. Not a focus stop: on TV the row is, and Left/Right change the value -->
+    <style name="SubtitlePanel.StepperButton">
+        <item name="android:layout_width">?attr/subtitleControlSize</item>
+        <item name="android:layout_height">?attr/subtitleControlSize</item>
+        <item name="android:background">@drawable/button_selector_holo_dark</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">false</item>
+    </style>
+
+    <style name="SubtitlePanel.PillGroup">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@drawable/subtitle_pill_bg</item>
+    </style>
+
+    <style name="SubtitlePanel.PillSegment">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:minHeight">?attr/subtitlePillMinHeight</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">6dp</item>
+        <item name="android:textSize">?attr/subtitleLabelTextSize</item>
+        <item name="android:textColor">@color/subtitle_pill_text</item>
+        <item name="android:background">@drawable/subtitle_pill_segment</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="SubtitlePanel.Header">
+        <item name="android:minHeight">?attr/subtitleHeaderHeight</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="SubtitlePanel.HeaderTitle" parent="SubtitlePanel.Label">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SubtitlePanel.Preview">
+        <item name="android:layout_height">?attr/subtitlePreviewHeight</item>
+        <item name="android:background">@drawable/subtitle_preview_bg</item>
+    </style>
+
+    <!-- Colour tile on the colour screen -->
+    <style name="SubtitlePanel.Swatch">
+        <item name="android:layout_width">?attr/subtitleSwatchSize</item>
+        <item name="android:layout_height">?attr/subtitleSwatchSize</item>
+        <item name="android:background">@drawable/subtitle_swatch</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <!-- Colour chip inside a colour row -->
+    <style name="SubtitlePanel.Chip">
+        <item name="android:layout_width">@dimen/subtitle_panel_chip_size</item>
+        <item name="android:layout_height">@dimen/subtitle_panel_chip_size</item>
+        <item name="android:background">@drawable/subtitle_swatch</item>
+    </style>
 </resources>

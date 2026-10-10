@@ -508,7 +508,8 @@ public class SubtitleTrackSelectionPolicyTest {
             setFinalField(track, "name", s.name);
             setFinalField(track, "path", s.path);
             setFinalField(track, "isExternal", (s.path != null && !s.path.isEmpty()));
-            setFinalField(track, "isGfx", s.isGfx);
+            // isGfx is no longer a field: native sends a kind (SUB_KIND).
+            setFinalField(track, "kind", s.isGfx ? SubtitleManager.KIND_GRAPHIC : SubtitleManager.KIND_PLAIN_TEXT);
             setFinalField(track, "format", s.format);
             setFinalField(track, "language", s.lang);
             setFinalField(track, "disposition", s.disposition);

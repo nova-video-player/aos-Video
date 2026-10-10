@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="number" type="id"/>
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- keyed tag on a color tile: its RGB -->
+    <item name="sp_tile_rgb" type="id" />
 </resources>

@@ -15,81 +15,27 @@
 package com.archos.mediacenter.video.player;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Surface;
 import android.view.View;
-import android.widget.TextView;
 
+/**
+ * Position-hint indicator for the subtitle vertical-offset control.
+ *
+ * SubtitleManager briefly shows this view (alpha-animated in, then out) while the user
+ * drags the vertical-offset slider, so they can see where the bottom margin will land
+ * before releasing. It plays no role in actual subtitle rendering — that is owned
+ * entirely by libass's MarginV, applied natively via SubtitleEngine.setVerticalOffset().
+ *
+ * This used to also carry a second rendering path: drawing its background Drawable onto
+ * a separate Surface (mExternalSurface) for the old dual-surface Java-canvas subtitle
+ * renderer. That path's only assignment site was already commented out (SubtitleManager
+ * never actually had a live external surface to give it), making every branch built
+ * around it permanently unreachable — it has been removed rather than kept as dead code.
+ * A plain View with a background Drawable, shown/hidden via alpha, is all this needs now.
+ */
 public class SubtitleSpacerView extends View {
-    private String TAG = "SubtitleSpacerView";
-   
-    private Surface mExternalSurface = null;
-    private Drawable mBackground = null;
-    private final Rect mClipBounds = new Rect();
-    private final int[] mLocationOnScreen = new int[2];
-   
+
     public SubtitleSpacerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-    
-    @Override
-    public void setVisibility(int visibility) {
-        super.setVisibility(visibility);
-        if (mExternalSurface != null)  {
-            try {
-                Canvas c = mExternalSurface.lockCanvas(null);
-                c.save();
-                c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                c.restore();
-                mExternalSurface.unlockCanvasAndPost(c);
-            } catch (Exception e) {
-            }
-        }
-    }
-    
-    public void setRenderingSurface(Surface s) {
-        //mExternalSurface = s;
-        setBackground(mBackground);
-    }
-    
-    @Override
-    public void setBackground(Drawable background) {
-        mBackground=background;
-        if (mExternalSurface == null)
-            super.setBackground(mBackground);
-        else
-            super.setBackground(null);
-    }
-    
-    @Override
-    protected void onDraw(Canvas canvas) {
-        Canvas c = canvas;
-        if (mExternalSurface != null) {
-            try {
-                canvas.getClipBounds(mClipBounds);
-                getLocationOnScreen(mLocationOnScreen);
-                mClipBounds.offsetTo(mLocationOnScreen[0], mLocationOnScreen[1]);
-//                 Log.d(TAG, "Spacer "+mClipBounds.toString());
-                c = mExternalSurface.lockCanvas(null);
-                c.save();
-                c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                c.clipRect(mClipBounds);
-                c.translate(mLocationOnScreen[0], mLocationOnScreen[1]);
-                if (mBackground != null)
-                    mBackground.draw(c);
-            } catch (Exception e) {
-            }
-        }
-        super.onDraw(c);
-        if (c != canvas) {
-            c.restore();
-            mExternalSurface.unlockCanvasAndPost(c);
-        }
     }
 }

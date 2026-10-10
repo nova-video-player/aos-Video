@@ -21,4 +21,18 @@
 
     <!-- Overlay progress indicators -->
     <color name="scanner_progress_text">#888888</color>
+
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- The panel always sits on the video, so its surface is dark and its text white whatever the theme is.
+    Accent, focus and pressed colours are NOT defined here: they come from the player (?attr/colorAccent,
+    @color/video_info_next_prev_button_focused / _pressed), which is what keeps the panel matching it. -->
+    <!-- background_material_dark (#303030) at alpha 128: what SubtitleSettingsDialog's window uses today -->
+    <color name="subtitle_panel_background">#80303030</color>
+    <color name="subtitle_panel_text_primary">#FFFFFFFF</color>
+    <color name="subtitle_panel_text_secondary">#B3FFFFFF</color>
+    <color name="subtitle_panel_on_accent">#FF000000</color>
+    <color name="subtitle_panel_control_bg">#26FFFFFF</color>
+    <color name="subtitle_panel_swatch_border">#66FFFFFF</color>
+    <color name="subtitle_panel_preview_bg_start">#FF2B4A6B</color>
+    <color name="subtitle_panel_preview_bg_end">#FF10202F</color>
 </resources>

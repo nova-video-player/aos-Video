@@ -30,8 +30,10 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
     
     private static final Boolean mTrue = Boolean.TRUE;
 
-    private int mViewWidth;
-    private int mViewHeight;
+    // Written from the UI thread (setTexture/setSurfaceSize), read from the video-frame
+    // callback thread (onFrameAvailable) -- volatile so a resize is seen promptly.
+    private volatile int mViewWidth;
+    private volatile int mViewHeight;
     private float[] mTransformMatrix;
     private float[] mHeadTransform;
     private SurfaceTexture mVideoSurfaceTexture;
@@ -82,6 +84,32 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
         mViewWidth = width;
         mViewHeight = height;
         if (mEffect != null) mEffect.setViewPort(mViewWidth, mViewHeight);
+
+        // The subtitle overlay must track the view too. Its buffer size was only ever set
+        // once, in initGLComponents(), so after any later view resize (aspect-ratio change,
+        // next video, HDMI, ...) SubtitleEngine kept drawing a new-size bitmap -- positioned
+        // for the new canvas -- into a buffer still allocated at the OLD size: clipped when
+        // the view grew, top-left-only when it shrank, and then stretched over the whole view
+        // by the composite either way. synchronized: mUISurfaceTexture is created/released
+        // under this same monitor in initGLComponents()/deinitGLComponents(), and this can
+        // arrive from the UI thread at any point in that lifecycle (before init it's null and
+        // initGLComponents() will read the size we just stored).
+        synchronized (this) {
+            if (mUISurfaceTexture != null) {
+                try {
+                    mUISurfaceTexture.setDefaultBufferSize(width, height);
+                } catch (RuntimeException e) {
+                    Log.w(TAG, "setSurfaceSize: overlay buffer resize failed", e);
+                }
+            }
+            // Keep SubtitleEngine's cached redraw target in step too: a style change while
+            // paused redraws from mLast3DWidth/Height, which would otherwise stay at the old
+            // size until the next real video frame.
+            if (mUISurface != null && Player.sPlayer != null
+                    && Player.sPlayer.getSubtitleEngine() != null) {
+                Player.sPlayer.getSubtitleEngine().primeThreeDSurface(mUISurface, width, height);
+            }
+        }
     }
     
     public void setEffectMode(int mode) {
@@ -165,6 +193,14 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
             c.drawColor(0x0);
             mUISurface.unlockCanvasAndPost(c);
         } catch (Exception e) { }
+
+        // Register this Surface/size with SubtitleEngine right away, before the first real
+        // video frame necessarily arrives. Without this, a style change made while a video
+        // is opened already paused would have no cached redraw target until onFrameAvailable
+        // fires at least once -- see SubtitleEngine.primeThreeDSurface()'s doc comment.
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().primeThreeDSurface(mUISurface, mViewWidth, mViewHeight);
+        }
         }
     }
 
@@ -197,11 +233,55 @@ public class VideoEffectRenderer extends TextureSurfaceRenderer implements Surfa
         return mUISurface;
     }
 
+    /**
+     * Wakes the GL draw loop for one pass without a real video frame having arrived.
+     *
+     * Queuing a fresh buffer into mUISurfaceTexture (what SubtitleEngine.draw3DSubtitles()
+     * does via lockCanvas()/unlockCanvasAndPost()) is only HALF the pipeline. Nothing
+     * actually CONSUMES that buffer -- mUISurfaceTexture.updateTexImage() + mEffect.draw()
+     * (the GL composite) + the eventual eglSwapBuffers() that puts it on screen -- unless
+     * draw() below runs, and draw() is gated entirely behind mSourceFrameAvailable.take(),
+     * which normally only the video decoder's onFrameAvailable() feeds. While the video is
+     * paused, that callback never fires, so a style change's freshly-queued subtitle buffer
+     * just sits in the queue, unseen, no matter how promptly the native/Java side produced
+     * it -- this is what SubtitleEngine.redraw3DIfNeeded() alone could not fix.
+     *
+     * Call this AFTER the fresh subtitle buffer has already been queued (SubtitleEngine
+     * does so before calling here). This method doesn't draw anything itself, it only
+     * unblocks the consumer side, mirroring exactly what onFrameAvailable() does for a real
+     * video frame. Re-latching the same (frozen) video frame via
+     * mVideoSurfaceTexture.updateTexImage() when nothing new has arrived is safe -- it just
+     * re-presents whatever's already there.
+     *
+     * Uses offer() rather than put(): mSourceFrameAvailable is a one-element wake latch, not
+     * a work queue, so a wake that's already pending makes any further wake redundant -- the
+     * draw loop is going to run and pick up the latest queued buffer regardless. put() would
+     * block this (UI) thread until draw() drains the queue, which can stall a style-setter
+     * call for no benefit; offer() drops the duplicate instead and returns immediately. This
+     * is also what makes it safe to call wakeDrawLoop() while the renderer is stopping/paused
+     * and nothing is draining the queue -- offer() simply returns false rather than hanging.
+     */
+    public void wakeDrawLoop() {
+        mSourceFrameAvailable.offer(mTrue);
+    }
+
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture)
     {
         // A queued notification already asks the renderer for the newest frame.
         // Never block the main thread while the renderer is paused or stopping.
         mSourceFrameAvailable.offer(mTrue);
+        try {
+            // Check if 3D mode is active and trigger the synchronous readback draw
+            if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+                SubtitleEngine eng = Player.sPlayer.getSubtitleEngine();
+                if (eng.is3DMode()) {
+                    eng.draw3DSubtitles(mUISurface, mViewWidth, mViewHeight);
+                }
+            }
+            mSourceFrameAvailable.put(mTrue);
+        } catch (Exception e) {
+            Log.e(TAG, "FrameAvailable missed", e);
+        }
     }
 }

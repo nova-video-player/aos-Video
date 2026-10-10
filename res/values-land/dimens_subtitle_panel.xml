@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Phone landscape is only about 320dp tall: header and preview give up some height for rows -->
+<resources>
+    <dimen name="subtitle_panel_header_height">44dp</dimen>
+    <dimen name="subtitle_panel_preview_height">70dp</dimen>
+</resources>

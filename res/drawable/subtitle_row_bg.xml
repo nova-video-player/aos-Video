@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Same focus / pressed colors the TV menu and the old dialog use. Focus only shows with a D-pad or keyboard. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:drawable="@drawable/subtitle_row_focus" />
+    <item android:state_activated="true" android:drawable="@drawable/subtitle_row_focus" />
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/video_info_next_prev_button_pressed" />
+            <corners android:radius="@dimen/subtitle_panel_row_corner" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+</selector>

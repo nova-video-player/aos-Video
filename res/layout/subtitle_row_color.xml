@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Label, color chip, hex value, chevron. The whole row opens the color screen. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/SubtitlePanel.Row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="6dp"
+    android:layout_marginEnd="6dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/sp_label"
+        style="@style/SubtitlePanel.Label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <View
+        android:id="@+id/sp_chip"
+        style="@style/SubtitlePanel.Chip"
+        android:importantForAccessibility="no" />
+
+    <TextView
+        android:id="@+id/sp_value"
+        style="@style/SubtitlePanel.Value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/subtitle_panel_text_secondary"
+        android:textStyle="normal" />
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:importantForAccessibility="no"
+        app:srcCompat="@drawable/ic_subtitle_chevron" />
+</LinearLayout>

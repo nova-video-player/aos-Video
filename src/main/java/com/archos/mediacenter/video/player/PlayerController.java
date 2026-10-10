@@ -224,6 +224,10 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     private static boolean      mControlBarShowing, mSystemBarShowing, mSystemBarGone, mActionBarShowing, mVolumeBarShowing, mNavigationBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
     private static int          mGestureAreaHeight, mControlBarHeight;
+    // Static handle to the live control bar view, so SubtitleManager can resolve its parent
+    // for getControlBarClearanceAbove(). Cleared in detachWindow() to avoid leaking the view.
+    @SuppressLint("StaticFieldLeak")
+    private static View          sControlBarView;
 
     private boolean             mVolumeBarEnabled = false;
 
@@ -257,6 +261,24 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private boolean             manualVisibilityChange;
     private FrameLayout         playerControllersContainer;
     private TVCardDialog tvCardDialog = null;
+
+    /**
+     * A TV overlay that is not a TVCardDialog (the subtitle settings panel). It sits in the TV
+     * menu container like a card, but handles Back itself, one level at a time, and gets a
+     * copy in the right-hand controller view when there is one (side-by-side 3D).
+     */
+    public interface MenuOverlay {
+        /** Back was pressed: true if the overlay consumed it (went up a level), false if it is at its root and should go. */
+        boolean handleBack();
+
+        /** The copy for the right-hand 3D view, or null. Only called when that view exists. */
+        View createMirror();
+
+        /** The controller removed the overlay's views: release what it held (focus, card row, ...). */
+        void onRemoved();
+    }
+    private MenuOverlay mMenuOverlay;
+    private View mMenuOverlayView, mMenuOverlayMirror;
     private boolean             isTVMode = false;
     private long                mLastTouchEventTime = -1;
     private View mPlayPauseTouchZone;
@@ -409,6 +431,44 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     ((FrameLayout)container2).addView(dialog.createSlaveView());
                 }
             }
+        }
+    }
+
+    /** Shows {@code v} in the TV menu container (and its mirror in the right view, if any) until removeMenuOverlay(). */
+    public void addMenuOverlay(View v, FrameLayout.LayoutParams lp, MenuOverlay overlay) {
+        removeMenuOverlay();
+        mMenuOverlay = overlay;
+        mMenuOverlayView = v;
+        final View container1 = mControllerViewLeft.findViewById(R.id.tv_menu_container);
+        if (container1 instanceof FrameLayout) {
+            ((FrameLayout) container1).addView(v, lp);
+        }
+        if (mControllerViewRight != null) {
+            final View container2 = mControllerViewRight.findViewById(R.id.tv_menu_container);
+            if (container2 instanceof FrameLayout) {
+                final View mirror = overlay.createMirror();
+                if (mirror != null) {
+                    mMenuOverlayMirror = mirror;
+                    ((FrameLayout) container2).addView(mirror, new FrameLayout.LayoutParams(lp));
+                }
+            }
+        }
+    }
+
+    public void removeMenuOverlay() {
+        final MenuOverlay overlay = mMenuOverlay;
+        if (overlay == null) return;
+        mMenuOverlay = null;
+        removeFromParent(mMenuOverlayView);
+        removeFromParent(mMenuOverlayMirror);
+        mMenuOverlayView = null;
+        mMenuOverlayMirror = null;
+        overlay.onRemoved();
+    }
+
+    private static void removeFromParent(View v) {
+        if (v != null && v.getParent() instanceof ViewGroup) {
+            ((ViewGroup) v.getParent()).removeView(v);
         }
     }
 
@@ -573,6 +633,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             this.mPlayPauseTouchZone = playPauseTouchZone;
             this.mCentralPlayIcon = centralPlayIcon;
             this.mControlBar=mControlBar;
+            sControlBarView = mControlBar;
             this.mPauseButton=mPauseButton;
             this.mFormatButton=mFormatButton ;
             this.mFullscreenWithCutoutButton = fullscreenWithCutoutButton;
@@ -779,6 +840,48 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         return mControlBarHeight;
     }
 
+    /**
+     * Pixels the on-screen control bar reaches above the bottom edge of the given reference
+     * view, or 0 if the bar is not currently shown.
+     *
+     * Unlike getControlBarCurrentHeight() (0 unless the nav bar / gesture area happens to be
+     * showing, so unreliable on TV) this needs no live measurement of the bar itself and so
+     * has no dependency on a layout pass having completed for its current VISIBLE/GONE state:
+     *   - height: control_bar's android:layout_height is the fixed dimen
+     *     player2014_bar_width (45dip default; 40/53/70dip on the notouch/tablet buckets --
+     *     see the res/values (default), res/values-sw600dp, res/values-sw500dp-land-notouch and res/values-sw600dp-land-notouch dimens.xml files). Resources.getDimensionPixelSize() resolves the
+     *     bucket-correct value for the current config directly, with no view involved.
+     *   - position: control_bar has android:layout_alignParentBottom="true" in every
+     *     player_controller_inside.xml variant, so its bottom is always exactly its parent's
+     *     bottom. The parent (playerControllers) is the fill_parent controller root, already
+     *     laid out before the bar's own visibility is ever toggled, so this reads correctly
+     *     on the very first show of a session -- nothing to wait for.
+     * This sidesteps the bar's own geometry entirely, so there is no stale-vs-fresh layout
+     * race to gate on.
+     *
+     * Tracks only the main pane's bar (sControlBarView is set from the isMainView branch of
+     * initControllerView()). splitView/mControlBar2 is private to PlayerController -- confirmed
+     * via a repo-wide search to have no reference in PlayerActivity, SubtitleManager or
+     * anywhere else, in both this branch and the pre-libass legacy branch -- so there is no
+     * second SubtitleManager/SubtitleEngine instance that could ever ask for clearance against
+     * the secondary pane's bar. If a future change wires subtitles into split-view, this will
+     * need its own reference per pane.
+     */
+    public static int getControlBarClearanceAbove(View reference) {
+        if (!mControlBarShowing || reference == null || sControlBarView == null) return 0;
+        View barParent = (View) sControlBarView.getParent();
+        if (barParent == null || !barParent.isLaidOut() || !reference.isLaidOut()) return 0;
+        int barHeight = reference.getContext().getResources()
+                .getDimensionPixelSize(com.archos.mediacenter.video.R.dimen.player2014_bar_width);
+        int[] parentLoc = new int[2];
+        int[] refLoc = new int[2];
+        barParent.getLocationOnScreen(parentLoc);
+        reference.getLocationOnScreen(refLoc);
+        int barTop = parentLoc[1] + barParent.getHeight() - barHeight;
+        int refBottom = refLoc[1] + reference.getHeight();
+        return Math.max(refBottom - barTop, 0);
+    }
+
     public static boolean isControlBarShowing() {
         return mControlBarShowing;
     }
@@ -808,6 +911,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mControllerView = null;
         mControllerViewLeft=null;
         mControllerViewRight=null;
+        sControlBarView = null;
     }
 
     public void setMediaPlayer(IPlayerControl player) {
@@ -2786,6 +2890,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
         else{
             //destroy dialogs
+            removeMenuOverlay();
             dismissTVCardDialog();
         }
         isTVMenuDisplayed=show;
@@ -2805,6 +2910,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         log.info("Back navigation: TV menu displayed={}, card dialog active={}",
                 isTVMenuDisplayed,
                 tvCardDialog != null && tvCardDialog.getVisibility() == View.VISIBLE);
+        if (mMenuOverlay != null) {
+            // one level up inside the overlay; at its root it closes
+            if (!mMenuOverlay.handleBack()) removeMenuOverlay();
+            return true;
+        }
         if (dismissTVCardDialog())
             return true;
         if (isTVMenuDisplayed) {
