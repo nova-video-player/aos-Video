@@ -557,7 +557,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
     private native void nativeSetBackgroundOpacity(long handle, float opacity);
 
     /* ── Positioning & Overrides ── */
-    private native void nativeSetVerticalOffset(long handle, float fraction);
+    private native void nativeSetVerticalOffset(long handle, float pixels);
     private native void nativeSetOverrideMode(long handle, int mode);
 
     /* ── Custom Fonts Folder (third-party fonts dir, MX Player / mpv-android style) ── */
