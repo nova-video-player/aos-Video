@@ -892,6 +892,21 @@ public class Player implements IPlayerControl,
     }
     
     public void seekTo(int msec) {
+  
+    int duration = getDuration();
+      
+    if (duration > 0) {
+      
+        // Clamp to a safe margin before EOF so the demuxer does not stall at EOF
+      
+        if (msec >= duration) {
+            msec = Math.max(0, duration - 2000);
+        }
+    }
+    if (msec < 0) {
+        msec = 0;
+    }
+      
         mStopPosition = msec;
         if (log.isDebugEnabled()) log.debug("seekTo: {} ms", msec);
         if (isInPlaybackState()) {
