@@ -96,6 +96,35 @@ public class AudioRouteNotificationTest {
     }
 
     @Test
+    @Config(sdk = 28)
+    public void tvSpeakerCallbackRetainsSpdifInventoryButPhonesStayExclusive() throws Exception {
+        CustomApplication app = new CustomApplication();
+        Method select = CustomApplication.class.getDeclaredMethod("selectedMediaDevice",
+                AudioDeviceInfo[].class, String.class);
+        select.setAccessible(true);
+        AudioDeviceInfo speaker = device(2, AudioDeviceInfo.TYPE_BUILTIN_SPEAKER);
+        // BRAVIA-style TV exposing optical SPDIF as AUX_LINE with no advertised encodings.
+        AudioDeviceInfo auxSpdif = device(6, AudioDeviceInfo.TYPE_AUX_LINE);
+        AudioDeviceInfo lineDigital = device(7, AudioDeviceInfo.TYPE_LINE_DIGITAL);
+        try (MockedStatic<LibAvos> nativeApi = mockStatic(LibAvos.class);
+             MockedStatic<ArchosFeatures> features = mockStatic(ArchosFeatures.class)) {
+            features.when(() -> ArchosFeatures.isAndroidTV(app)).thenReturn(true);
+            nativeApi.when(LibAvos::getRoutedAudioDevice).thenReturn(speaker);
+            // null keeps the connected-output capability scan so SPDIF capabilities
+            // survive the speaker becoming the reported track route.
+            assertNull(select.invoke(app, new AudioDeviceInfo[] {speaker, auxSpdif}, "trackRoute"));
+            assertNull(select.invoke(app, new AudioDeviceInfo[] {speaker, auxSpdif}, "devicesAdded"));
+            assertNull(select.invoke(app, new AudioDeviceInfo[] {speaker, lineDigital}, "trackRoute"));
+            // Without a digital endpoint the speaker route stays definitive.
+            assertSame(speaker, select.invoke(app, new AudioDeviceInfo[] {speaker}, "trackRoute"));
+            // Phones never treat their own speaker as a shared SPDIF route.
+            features.when(() -> ArchosFeatures.isAndroidTV(app)).thenReturn(false);
+            assertSame(speaker, select.invoke(app, new AudioDeviceInfo[] {speaker, auxSpdif}, "trackRoute"));
+            assertSame(speaker, select.invoke(app, new AudioDeviceInfo[] {speaker, lineDigital}, "trackRoute"));
+        }
+    }
+
+    @Test
     public void reconnectDeviceIdsDoNotChangeOutputConfiguration() throws Exception {
         Field deviceId = CustomApplication.class.getDeclaredField("selectedAudioDeviceId");
         deviceId.setAccessible(true);

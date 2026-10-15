@@ -192,16 +192,21 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     private boolean isSharedTvSpeakerRoute(AudioDeviceInfo selected, AudioDeviceInfo[] connected) {
         if (selected.getType() != AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
                 || !ArchosFeatures.isAndroidTV(this)) return false;
-        // Some TV policies route media to speaker + ARC but getRoutedDevice()
-        // exposes only the speaker. Do not erase advertised ARC codecs and
+        // Some TV policies route media to speaker + HDMI/SPDIF but getRoutedDevice()
+        // exposes only the speaker. Do not erase advertised ARC/SPDIF codecs and
         // reopen a successfully created compressed track as PCM in that case.
-        // Keep this limited to TVs with an ARC/eARC endpoint advertising codecs;
-        // explicit headphones/Bluetooth and ordinary HDMI routes stay exclusive.
+        // Keep explicit headphones/Bluetooth and ordinary HDMI routes exclusive.
         for (AudioDeviceInfo device : connected) {
             int type = device.getType();
-            if ((type == AudioDeviceInfo.TYPE_HDMI_ARC
-                    || (Build.VERSION.SDK_INT >= 31 && type == AudioDeviceInfo.TYPE_HDMI_EARC))
-                    && hasCompressedAudioEncoding(device.getEncodings())) return true;
+            if (type == AudioDeviceInfo.TYPE_HDMI_ARC
+                    || (Build.VERSION.SDK_INT >= 31 && type == AudioDeviceInfo.TYPE_HDMI_EARC)) {
+                if (hasCompressedAudioEncoding(device.getEncodings())) return true;
+            } else if (isSpdifAudioDeviceType(type, device.getEncodings(), true)) {
+                // Optical/coaxial SPDIF (some TVs report it as AUX_LINE) is a
+                // passthrough endpoint too, and often advertises no encodings at
+                // all, so it must still preserve connected-output discovery.
+                return true;
+            }
         }
         return false;
     }
