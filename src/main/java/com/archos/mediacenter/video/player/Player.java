@@ -205,6 +205,20 @@ public class Player implements IPlayerControl,
         }
     };
 
+    private Runnable mSeekTimeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mIsBusy) {
+                if (log.isDebugEnabled()) log.debug("Seek watchdog: timeout reached, resetting mIsBusy");
+                mIsBusy = false;
+                if (mPlayerListener != null) {
+                    mPlayerListener.onSeekComplete();
+                    mPlayerListener.onAllSeekComplete();
+                }
+            }
+        }
+    };
+
     private Runnable mRefreshRateCheckerAsync = new Runnable() {
         public void run() {
             if (mPlaybackEnding) return;
@@ -479,12 +493,14 @@ public class Player implements IPlayerControl,
         ++mOpenGeneration; // reject source setup already in flight
         mHandler.removeCallbacks(mPreparedAsync);
         mHandler.removeCallbacks(mRefreshRateCheckerAsync);
+        mHandler.removeCallbacks(mSeekTimeoutRunnable);
     }
 
     private void closeCurrentPlayer() {
         ++mOpenGeneration;
         mHandler.removeCallbacks(mPreparedAsync);
         mHandler.removeCallbacks(mRefreshRateCheckerAsync);
+        mHandler.removeCallbacks(mSeekTimeoutRunnable);
         IMediaPlayer old = mMediaPlayer;
         mMediaPlayer = null; // callbacks from this instance are now obsolete
         mCurrentState = STATE_IDLE;
@@ -892,6 +908,40 @@ public class Player implements IPlayerControl,
     }
     
     public void seekTo(int msec) {
+        int duration = getDuration();
+        int endMargin = duration > 10000 ? 3000 : (duration > 4000 ? 1000 : 0);
+        if (duration > 0 && msec >= (duration - endMargin)) {
+            if (log.isDebugEnabled()) log.debug("seekTo: target {} ms reaches/exceeds end of video (duration {} ms), completing playback", msec, duration);
+            mStopPosition = duration;
+            mIsBusy = false;
+            mHandler.removeCallbacks(mSeekTimeoutRunnable);
+            if (isInPlaybackState()) {
+                if (mPlayerListener != null) {
+                    mPlayerListener.onSeekStart(duration);
+                    mPlayerListener.onSeekComplete();
+                    mPlayerListener.onAllSeekComplete();
+                }
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isInPlaybackState()) {
+                            try {
+                                mMediaPlayer.pause();
+                            } catch (Exception ignored) {}
+                            onCompletion(mMediaPlayer);
+                        }
+                    }
+                });
+            } else {
+                mResumeCtx.setSeek(-1);
+            }
+            return;
+        }
+
+        if (msec < 0) {
+            msec = 0;
+        }
+
         mStopPosition = msec;
         if (log.isDebugEnabled()) log.debug("seekTo: {} ms", msec);
         if (isInPlaybackState()) {
@@ -900,6 +950,8 @@ public class Player implements IPlayerControl,
             }
             mMediaPlayer.seekTo(msec);
             mIsBusy = true;
+            mHandler.removeCallbacks(mSeekTimeoutRunnable);
+            mHandler.postDelayed(mSeekTimeoutRunnable, 3000);
         } else {
             mResumeCtx.setSeek(msec);
         }
@@ -1306,6 +1358,7 @@ public class Player implements IPlayerControl,
 
     public void onSeekComplete(IMediaPlayer mp) {
         if (mp != mMediaPlayer) return;
+        mHandler.removeCallbacks(mSeekTimeoutRunnable);
         if (log.isDebugEnabled()) log.debug("onSeekComplete");
         if (mPlayerListener != null) {
             mPlayerListener.onSeekComplete();
@@ -1314,6 +1367,7 @@ public class Player implements IPlayerControl,
 
     public void onAllSeekComplete(IMediaPlayer mp) {
         if (mp != mMediaPlayer) return;
+        mHandler.removeCallbacks(mSeekTimeoutRunnable);
         mIsBusy = false;
         if (mUpdateMetadata) {
             if (log.isDebugEnabled()) log.debug("onAllSeekComplete: mUpdateMetadata = true -> handleMetadata");
