@@ -15,6 +15,7 @@ package com.archos.mediacenter.video.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -275,6 +276,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mEnableSponsor = null;
     private CheckBoxPreference mWatchingUpNext = null;
     private PreferenceCategory mAboutPreferences = null;
+    private Preference mVersionPreference = null;
     private CheckBoxPreference mAdultScrape = null;
     private EditTextPreference mStreamBufferSize = null;
     private EditTextPreference mStreamMaxIFrameSize = null;
@@ -823,8 +825,13 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             if (mAnimesSortOrderPreference != null) leanbackCategory.removePreference(mAnimesSortOrderPreference);
         }
         mAboutPreferences = (PreferenceCategory) findPreference(KEY_ABOUT_PREFERENCES);
-        Preference novaVersion = (Preference) findPreference("preferences_version");
-        novaVersion.setTitle(mSharedPreferences.getString("nova_version", "@string/APP_INFO"));
+        mVersionPreference = (Preference) findPreference("preferences_version");
+        mVersionPreference.setTitle(mSharedPreferences.getString("nova_version", "@string/APP_INFO"));
+        mVersionPreference.setSelectable(true);
+        mVersionPreference.setOnPreferenceClickListener(preference -> {
+            openStoreListing();
+            return true;
+        });
 
         mSmb2 = (CheckBoxPreference) findPreference(KEY_SMB2);
         mSmbResolver = (CheckBoxPreference) findPreference(KEY_SMB_RESOLV);
@@ -1897,6 +1904,26 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             boolean passthroughEnabled = CustomApplication.isPassthroughSupported()
                     && !"0".equals(sharedPreferences.getString("force_audio_passthrough_multiple", "0"));
             updateAudioSpeedState(passthroughEnabled);
+        }
+    }
+
+    /*
+        tapping the version row opens the store listing for this app.
+     */
+
+    private void openStoreListing() {
+        Context context = getContext();
+        if (context == null) return;
+        boolean googlePlay = MiscUtils.isGooglePlayServicesAvailable(context);
+        try {
+            context.startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse((googlePlay ? "market://details?id=" : "amzn://apps/android?p=") + context.getPackageName())));
+        } catch (ActivityNotFoundException e1) {
+            try {
+                context.startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse((googlePlay ? "http://play.google.com/store/apps/details?id=" : "http://www.amazon.com/gp/mas/dl/android?p=") + context.getPackageName())));
+            } catch (ActivityNotFoundException e2) {
+            }
         }
     }
 
