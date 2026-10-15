@@ -337,8 +337,9 @@ android {
 
 
     dependenciesInfo {
-        if (project.hasProperty("universal")) {
+        if (project.hasProperty("universal") || project.hasProperty("sponsor")) {
             // universal if for fdroid now with specific version(Name|Code) and oneapk for amazon
+            // sponsor for GitHub release
             includeInApk = false
             includeInBundle = false
         }
