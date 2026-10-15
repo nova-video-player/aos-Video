@@ -1359,7 +1359,13 @@ public class Player implements IPlayerControl,
     public void onSeekComplete(IMediaPlayer mp) {
         if (mp != mMediaPlayer) return;
         mHandler.removeCallbacks(mSeekTimeoutRunnable);
+        mIsBusy = false;
         if (log.isDebugEnabled()) log.debug("onSeekComplete");
+        if (mTargetState == STATE_PLAYING && !mMediaPlayer.isPlaying()) {
+            try {
+                mMediaPlayer.start();
+            } catch (Exception ignored) {}
+        }
         if (mPlayerListener != null) {
             mPlayerListener.onSeekComplete();
         }
@@ -1369,6 +1375,11 @@ public class Player implements IPlayerControl,
         if (mp != mMediaPlayer) return;
         mHandler.removeCallbacks(mSeekTimeoutRunnable);
         mIsBusy = false;
+        if (mTargetState == STATE_PLAYING && !mMediaPlayer.isPlaying()) {
+            try {
+                mMediaPlayer.start();
+            } catch (Exception ignored) {}
+        }
         if (mUpdateMetadata) {
             if (log.isDebugEnabled()) log.debug("onAllSeekComplete: mUpdateMetadata = true -> handleMetadata");
             handleMetadata(mp);

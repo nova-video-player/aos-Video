@@ -75,7 +75,10 @@ import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -440,6 +443,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private TVMenuItem mIntroSummaryMenuItem;
     private View mIntroSummarySeparator;
     private TextView mPhonePlayModeIntroFooter;
+    private ViewGroup mSkipButtonContainer;
+    private Button mSkipButton;
+    private IntroSegments.Type mCurrentSkipType;
+    private long mCurrentSkipTargetMs;
     private boolean isTVMode;
     private TorrentObserverService mTorrent;
     private int mTorrentFilePosition = -1;
@@ -690,7 +697,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             public void handleOnBackPressed() {
                 log.info("Back navigation: OnBackPressedDispatcher callback, dialogId={}",
                         mShowingDialogId);
-                if (mPlayerController != null && mPlayerController.handleBackPressed()) {
+                if (mSkipButtonContainer != null && mSkipButtonContainer.getVisibility() == View.VISIBLE) {
+                    hideSkipPrompt();
+                } else if (mPlayerController != null && mPlayerController.handleBackPressed()) {
                     // The player controller dismisses a nested TV card before the main TV menu.
                 } else {
                     setEnabled(false);
@@ -823,6 +832,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mResumeFromLast = false;
 
         mPlayer = new Player(mContext, getWindow(), mSurfaceController, false);
+        initSkipButton();
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1){ //detect any kind of rotation, even from 270 to 90°
             mDisplayListener = new DisplayManager.DisplayListener() {
@@ -1242,6 +1252,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             addNetworkListener();
 
         stopDialog();
+
+        hideSkipPrompt();
 
         mPlayerController.hide();
 
@@ -2260,6 +2272,79 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mPhonePlayModeIntroFooter.setVisibility(View.VISIBLE);
         } else {
             mPhonePlayModeIntroFooter.setVisibility(View.GONE);
+        }
+    }
+
+    private void initSkipButton() {
+        LayoutInflater inflater = getLayoutInflater();
+        mSkipButtonContainer = (ViewGroup) inflater.inflate(R.layout.skip_button_layout, (ViewGroup) mRootView, false);
+        mSkipButton = (Button) mSkipButtonContainer.findViewById(R.id.skip_button);
+        ((ViewGroup) mRootView).addView(mSkipButtonContainer);
+        mSkipButtonContainer.bringToFront();
+
+        mSkipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                executeSkipPrompt();
+            }
+        });
+    }
+
+    private void updateSkipButtonText(IntroSegments.Type type) {
+        if (mSkipButton == null) return;
+        String name;
+        if (type == IntroSegments.Type.RECAP) {
+            name = getString(R.string.introdb_segment_recap);
+        } else if (type == IntroSegments.Type.OUTRO || type == IntroSegments.Type.CREDITS) {
+            name = getString(R.string.introdb_segment_outro);
+        } else if (type == IntroSegments.Type.PREVIEW) {
+            name = getString(R.string.introdb_segment_preview);
+        } else {
+            name = getString(R.string.introdb_segment_intro);
+        }
+        mSkipButton.setText(getString(R.string.skip_intro_button_format_notimer, name));
+    }
+
+    private void executeSkipPrompt() {
+        hideSkipPrompt();
+        if (PlayerService.sPlayerService != null) {
+            PlayerService.sPlayerService.executeSkip(mCurrentSkipType, mCurrentSkipTargetMs);
+        }
+    }
+
+    private void showSkipPrompt(final IntroSegments.Type type, final long targetMs) {
+        if (isFinishing() || isDestroyed() || mStopped) return;
+        if (mSkipButtonContainer == null || mSkipButton == null) return;
+
+        mCurrentSkipType = type;
+        mCurrentSkipTargetMs = targetMs;
+        updateSkipButtonText(type);
+
+        mSkipButtonContainer.bringToFront();
+        if (mSkipButtonContainer.getVisibility() != View.VISIBLE) {
+            mSkipButtonContainer.setVisibility(View.VISIBLE);
+            Animation fadeIn = new AlphaAnimation(0f, 1f);
+            fadeIn.setDuration(250);
+            mSkipButtonContainer.startAnimation(fadeIn);
+        }
+        mSkipButton.requestFocus();
+    }
+
+    private void hideSkipPrompt() {
+        if (mSkipButtonContainer != null && mSkipButtonContainer.getVisibility() == View.VISIBLE) {
+            Animation fadeOut = new AlphaAnimation(1f, 0f);
+            fadeOut.setDuration(250);
+            fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mSkipButtonContainer.setVisibility(View.GONE);
+                }
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+            mSkipButtonContainer.startAnimation(fadeOut);
         }
     }
 
@@ -4350,6 +4435,22 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         public void onIntroDbReady() {
             refreshPlayModeIntroSummary();
             refreshPhonePlayModeIntroSummary();
+        }
+        public void onShowSkipPrompt(final IntroSegments.Type type, final long targetMs) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showSkipPrompt(type, targetMs);
+                }
+            });
+        }
+        public void onHideSkipPrompt() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    hideSkipPrompt();
+                }
+            });
         }
         public void onPause(int state) {
 
