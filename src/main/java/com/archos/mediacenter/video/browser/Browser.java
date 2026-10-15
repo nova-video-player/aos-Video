@@ -355,6 +355,14 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (mViewMode == VideoUtils.VIEW_MODE_GRID || mViewMode == VideoUtils.VIEW_MODE_GRID_SHORT) {
+            setViewMode(mViewMode);
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
         if (mArchosGridView != null) {
@@ -665,17 +673,42 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
                 mArchosGridView = (AbsListView) mRootView.findViewById(R.id.archos_grid_view);
                 mRootView.findViewById(R.id.archos_list_view).setVisibility(View.GONE);
                 mArchosGridView.setVisibility(View.VISIBLE);
-                if(mArchosGridView instanceof GridView)
-                    ((GridView)mArchosGridView).setNumColumns(GridView.AUTO_FIT);
                 verticalSpacing = res.getDimensionPixelSize(R.dimen.content_grid_vertical_spacing_between_items);
-                // setHorizontalSpacing() doesn't allow to have well-centered column. Having larger
-                // columns and making sure the items are centered in it makes it.
-                if(mArchosGridView instanceof GridView&&mode==VideoUtils.VIEW_MODE_GRID)
-                    ((GridView)mArchosGridView).setColumnWidth(res.getDimensionPixelSize(R.dimen.video_grid_column_width) +
-                            res.getDimensionPixelSize(R.dimen.content_grid_horizontal_minimal_spacing_between_items));
-                else if(mArchosGridView instanceof GridView&&mode==VideoUtils.VIEW_MODE_GRID_SHORT)
-                    ((GridView)mArchosGridView).setColumnWidth(res.getDimensionPixelSize(R.dimen.video_info_grid_column_width));
-                stretchMode = GridView.STRETCH_SPACING_UNIFORM;
+
+                if (mArchosGridView instanceof GridView) {
+                    GridView gridView = (GridView) mArchosGridView;
+                    Context context = getActivity() != null ? getActivity() : mContext;
+                    boolean isTV = TVUtils.isTV(context);
+                    boolean isTablet = (res.getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE
+                            || res.getConfiguration().smallestScreenWidthDp >= 600;
+                    boolean isPortrait = res.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+                    boolean isMobile = !isTV && !isTablet;
+
+                    int horizontalSpacing = res.getDimensionPixelSize(R.dimen.content_grid_horizontal_minimal_spacing_between_items);
+                    gridView.setHorizontalSpacing(horizontalSpacing);
+
+                    if (isMobile && isPortrait) {
+                        // Responsive 3-poster layout for mobile devices in portrait mode regardless of screen zoom level
+                        gridView.setNumColumns(3);
+                        stretchMode = GridView.STRETCH_COLUMN_WIDTH;
+                    } else if (isMobile) {
+                        // Mobile landscape: responsive auto-fit with column stretching
+                        gridView.setNumColumns(GridView.AUTO_FIT);
+                        gridView.setColumnWidth(res.getDimensionPixelSize(R.dimen.video_grid_column_width));
+                        stretchMode = GridView.STRETCH_COLUMN_WIDTH;
+                    } else {
+                        // Tablet or TV
+                        if (mode == VideoUtils.VIEW_MODE_GRID) {
+                            gridView.setColumnWidth(res.getDimensionPixelSize(R.dimen.video_grid_column_width) + horizontalSpacing);
+                        } else {
+                            gridView.setColumnWidth(res.getDimensionPixelSize(R.dimen.video_info_grid_column_width));
+                        }
+                        gridView.setNumColumns(GridView.AUTO_FIT);
+                        stretchMode = GridView.STRETCH_SPACING_UNIFORM;
+                    }
+                } else {
+                    stretchMode = GridView.STRETCH_SPACING_UNIFORM;
+                }
                 break;
         }
 
