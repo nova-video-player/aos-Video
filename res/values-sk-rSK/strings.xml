@@ -271,7 +271,7 @@
     <string name="floating_player_pause" tools:ignore="UnusedResources">Pauza</string>
     <string name="player_pref_audio_delay_title">Oneskorenie zvuku</string>
     <string name="now_playing" tools:ignore="UnusedResources">Práve prehráva</string>
-    <string name="player_window_mode">Režim v okne</string>
+    <string name="player_window_mode">Režim okna</string>
     <string name="pref_play_mode_title">Režim prehrávania</string>
     <string name="pref_play_mode_entry_single">Jednotlivo</string>
     <string name="pref_play_mode_entry_folder">Priečinok</string>
@@ -874,7 +874,7 @@
     <string name="scheduled_rescan_time">Čas opakovaného skenovania</string>
     <string name="rescan_when_opening_application">Opätovné skenovanie pri otvorení aplikácie</string>
     <string name="last_rescan_occured">Posledné opätovné skenovanie sa uskutočnilo:</string>
-    <string name="error_permission_display_over_apps">Režim okna vyžaduje špeciálne oprávnenia, aby sa mohol zobrazovať nad ostatnými aplikáciami. Prosím, udelte aplikácii Nova Video Player toto oprávnenie, aby sa mohla prepnúť do režimu okna.</string>
+    <string name="error_permission_display_over_apps">Režim okna vyžaduje špeciálne oprávnenia, aby sa mohol zobrazovať pred ostatnými aplikáciami. Udelte prosím aplikácii Nova Video Player toto oprávnenie, aby mohla prejsť do režimu okna.</string>
     <string name="drawer_open">draweropen</string>
     <string name="drawer_close">drawer_close</string>
     <string name="view_more">Zobraziť viac</string>
@@ -938,31 +938,6 @@
     <string name="sponsor">Podporiť aplikáciu Nova</string>
     <string name="enable_sponsor_title">Zapnúť sponzorský odkaz Nova</string>
     <string name="enable_sponsor_summary">Zapnúť sponzorský odkaz na darovanie: každý príspevok pomáha.</string>
-    <string name="updater_check_title">Skontrolovať, či sú k dispozícii aktualizácie</string>
-    <string name="updater_checking">Kontroluje sa najnovšia verzia\u2026</string>
-    <string name="updater_tile_update">Aktualizácia Nova %1$s\u2192 %2$s</string>
-    <string name="updater_tile_update_named">Aktualizácia Nova v%1$s (verzia %2$d)</string>
-    <string name="updater_tile_update_code">Aktualizácia Nova (verzia %1$d)</string>
-    <string name="updater_tile_update_summary">K dispozícii je novšia verzia. Ťuknutím ju aktualizujte.</string>
-    <string name="updater_up_to_date_title">Aktuálna</string>
-    <string name="updater_up_to_date">Nova %1$s je posledná verzia.</string>
-    <string name="updater_available_title">K dispozícii je aktualizácia</string>
-    <string name="updater_available_message">Nova %1$s je k dispozícii (%2$s). Chcete si ju stiahnuť a nainštalovať hneď teraz?</string>
-    <string name="updater_download">Stiahnuť</string>
-    <string name="updater_downloading">Sťahovanie aktualizácie\u2026</string>
-    <string name="updater_download_failed">Stiahnutie sa nepodarilo:</string>
-    <string name="updater_permission_title">Povoliť inštaláciu aplikácie</string>
-    <string name="updater_permission_message">Systém Android potrebuje vaše povolenie na inštaláciu aplikácií z aplikácie Nova. Otvorte nastavenia, povoľte aplikácii Nova inštaláciu neznámych aplikácií a potom sa vráťte.</string>
-    <string name="updater_permission_required">Je potrebné povolenie na inštaláciu aplikácií.</string>
-    <string name="updater_permission_unavailable">Na tomto zariadení nie sú k dispozícii nastavenia inštalácie.</string>
-    <string name="updater_install_title">Nainštalovať aktualizáciu</string>
-    <string name="updater_install_message">Aplikácia Nova sa počas inštalácie aktualizácie zatvorí. Chcete pokračovať?</string>
-    <string name="updater_install">Inštalovať</string>
-    <string name="updater_install_success">Aktualizácia bola nainštalovaná.</string>
-    <string name="updater_install_failed">Inštalácia sa nepodarila:</string>
-    <string name="updater_error_title">Kontrola aktualizácií zlyhala</string>
-    <string name="updater_error">Nepodarilo sa skontrolovať dostupnosť aktualizácií:</string>
-    <string name="updater_no_asset">V najnovšej verzii sa nenašiel žiadny kompatibilný súbor APK.</string>
     <string name="hdr_capability">Funkcie obrazovky HDR:</string>
     <string name="hdmi_audio_capabilities">Funkcie zvuku HDMI:</string>
     <string name="spdif_audio_capabilities">Funkcie zvuku S/PDIF:</string>
