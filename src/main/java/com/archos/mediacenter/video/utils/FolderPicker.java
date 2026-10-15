@@ -159,7 +159,6 @@ public class FolderPicker extends FragmentActivity {
         public static final String FRAGMENT_TAG = "FolderPickerDialogFragment";
 
         private ListingEngine mListingEngine = null;
-        private LayoutInflater mLayoutInflater = null;
 
         private class Item {
             public Object mHolder;
@@ -231,10 +230,6 @@ public class FolderPicker extends FragmentActivity {
                     mSelectedFolder = DEFAULT_STARTING_POINT;
                 }
             }
-
-            if (mLayoutInflater == null) {
-                mLayoutInflater = getLayoutInflater();
-            }
         }
 
         @Override
@@ -276,7 +271,7 @@ public class FolderPicker extends FragmentActivity {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Let's inflate the custom view first
-            View customView = mLayoutInflater.inflate(R.layout.folder_picker_dialog, null);
+            View customView = requireActivity().getLayoutInflater().inflate(R.layout.folder_picker_dialog, null);
             mListView = (ListView)customView.findViewById(R.id.listview);
             mListView.setOnItemClickListener(this);
             mListView.setEmptyView(customView.findViewById(R.id.emptyview));
@@ -511,7 +506,7 @@ public class FolderPicker extends FragmentActivity {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v;
                 if (convertView == null) {
-                    v = mLayoutInflater.inflate(R.layout.folder_picker_item, null);
+                    v = LayoutInflater.from(getContext()).inflate(R.layout.folder_picker_item, null);
                 } else {
                     v = convertView;
                 }
