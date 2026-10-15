@@ -115,6 +115,10 @@ public class AudioRouteNotificationTest {
             assertNull(select.invoke(app, new AudioDeviceInfo[] {speaker, auxSpdif}, "trackRoute"));
             assertNull(select.invoke(app, new AudioDeviceInfo[] {speaker, auxSpdif}, "devicesAdded"));
             assertNull(select.invoke(app, new AudioDeviceInfo[] {speaker, lineDigital}, "trackRoute"));
+            // Private listening still wins over the ambiguous shared speaker/SPDIF route.
+            AudioDeviceInfo headphones = device(3, AudioDeviceInfo.TYPE_BLUETOOTH_A2DP);
+            assertSame(headphones, select.invoke(app,
+                    new AudioDeviceInfo[] {speaker, auxSpdif, headphones}, "trackRoute"));
             // Without a digital endpoint the speaker route stays definitive.
             assertSame(speaker, select.invoke(app, new AudioDeviceInfo[] {speaker}, "trackRoute"));
             // Phones never treat their own speaker as a shared SPDIF route.
