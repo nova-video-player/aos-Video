@@ -390,7 +390,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:5.5.0'
     implementation 'com.github.tony19:logback-android:3.0.0'
     implementation 'io.sentry:sentry-android:8.60.0'
-    implementation 'io.sentry:sentry:8.59.0'
+    implementation 'io.sentry:sentry:8.60.0'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.24.0'
