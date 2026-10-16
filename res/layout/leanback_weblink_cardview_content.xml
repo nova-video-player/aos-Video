@@ -18,8 +18,8 @@
     android:layout_width="@dimen/details_weblink_width"
     android:layout_height="@dimen/details_weblink_height">
 
-    <com.archos.mediacenter.video.utils.NovaWebView
-        android:id="@+id/webview"
+    <WebView
+        android:id="@+id/weblink_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

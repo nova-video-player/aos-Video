@@ -157,7 +157,7 @@ public class WebPageLinkPresenter extends Presenter {
                     Context c = mParent.getContext();
                     View content = LayoutInflater.from(c).inflate(R.layout.leanback_weblink_cardview_content, mParent, false);
                     mProgress = content.findViewById(R.id.progress);
-                    mWebView = (WebView) content.findViewById(R.id.webview);
+                    mWebView = (WebView) content.findViewById(R.id.weblink_webview);
                     initWebView();
                     mParent.removeView(mPlaceholder);
                     mParent.addView(content);
