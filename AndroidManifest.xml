@@ -193,12 +193,14 @@
                 android:resource="@xml/searchable_video" />
         </activity>
 
-        <!-- Provides search suggestions for video search. Exported for system search integration. -->
+        <!-- Provides search suggestions for the system search box. Export is
+             protected by GLOBAL_SEARCH so only the system search components can
+             query the suggestion cursor. -->
         <provider
             android:name="com.archos.mediacenter.video.browser.SearchProviderVideo"
             android:authorities="browser.SearchProviderVideocommunity"
             android:exported="true"
-            tools:ignore="ExportedContentProvider" />
+            android:readPermission="android.permission.GLOBAL_SEARCH" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
