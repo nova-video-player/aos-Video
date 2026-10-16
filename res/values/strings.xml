@@ -1026,6 +1026,7 @@
     <string name="sponsor">Sponsor Nova</string>
     <string name="enable_sponsor_title">Enable Nova sponsor link</string>
     <string name="enable_sponsor_summary">Enable sponsor link for donations: every contribution helps.</string>
+    <string name="version_open_store_summary">Select to open the store</string>
 
     <string name="hdr_capability">HDR screen capabilities:</string>
     <string name="hdmi_audio_capabilities">HDMI receiver audio capabilities:</string>

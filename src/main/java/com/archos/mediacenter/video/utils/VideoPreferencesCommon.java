@@ -827,6 +827,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mAboutPreferences = (PreferenceCategory) findPreference(KEY_ABOUT_PREFERENCES);
         mVersionPreference = (Preference) findPreference("preferences_version");
         mVersionPreference.setTitle(mSharedPreferences.getString("nova_version", "@string/APP_INFO"));
+        mVersionPreference.setSummary(R.string.version_open_store_summary);
         mVersionPreference.setSelectable(true);
         mVersionPreference.setOnPreferenceClickListener(preference -> {
             openStoreListing();
