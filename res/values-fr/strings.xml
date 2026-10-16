@@ -930,6 +930,7 @@
     <string name="sponsor">Sponsoriser Nova</string>
     <string name="enable_sponsor_title">Activer le lien de sponsor Nova</string>
     <string name="enable_sponsor_summary">Activer le lien pour effectuer des dons: chaque contribution compte.</string>
+    <string name="version_open_store_summary">Sélectionnez pour ouvrir le magasin</string>
     <string name="hdr_capability">Capacités HDR de l\'écran :</string>
     <string name="hdmi_audio_capabilities">Capacités audio du récepteur HDMI :</string>
     <string name="spdif_audio_capabilities">Capacités audio S/PDIF:</string>

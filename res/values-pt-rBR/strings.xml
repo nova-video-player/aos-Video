@@ -532,7 +532,7 @@
     <string name="UiLang_title">Idioma da interface</string>
     <string name="UiLang_summary">Defina o idioma da interface do Nova. Escolha \"Sistema\" para usar o padrão do sistema.</string>
     <string name="ui_mode_title">Modo de interface</string>
-    <string name="ui_mode_summary">Escolha entre a interface para TV e a interface para Tablet/Celular</string>
+    <string name="ui_mode_summary">Escolha entre a interface para TV e a interface para Tablet/Celular.</string>
     <string name="theme_selection_title">Tema de cores</string>
     <string name="theme_selection_summary">Selecione sua cor preferida.</string>
     <string name="theme_blue">Azul</string>

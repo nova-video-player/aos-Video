@@ -89,7 +89,7 @@
     <string name="all_collections_format">Wszystkie kolekcje -  %d</string>
     <string name="not_watched_movies_format">Nieobejrzane - %d</string>
     <string name="not_watched_animes_format">Nieobejrzane - %d</string>
-    <string name="movies_by_alpha">Filmy wg nazwy</string>
+    <string name="movies_by_alpha">Filmy wg tytułu</string>
     <string name="movies_by_genre">Filmy wg gatunku</string>
     <string name="movies_by_rating">Filmy wg oceny</string>
     <string name="movie_collections">Kolekcje</string>
@@ -100,7 +100,7 @@
     <string name="all_animes">Wszystkie filmy animowane</string>
     <string name="all_animes_row">Wszystkie animacje</string>
     <string name="all_animeshows">Wszystkie seriale animowane</string>
-    <string name="animes_by_alpha">Filmy animowane wg nazwy</string>
+    <string name="animes_by_alpha">Filmy animowane wg tytułu</string>
     <string name="animes_by_genre">Filmy animowane wg gatunku</string>
     <string name="animes_by_rating">Filmy animowane wg oceny</string>
     <string name="animes_by_year">Filmy animowane wg roku premiery</string>
@@ -109,10 +109,10 @@
     <string name="all_animeshows_format">Seriale animowane  -  %d</string>
     <string name="not_watched_animeshows_format">Nieobejrzane - %d</string>
     <string name="all_seasons">Wszystkie sezony</string>
-    <string name="tvshows_by_alpha">Seriale wg nazwy</string>
+    <string name="tvshows_by_alpha">Seriale wg tytułu</string>
     <string name="tvshows_by_genre">Seriale wg gatunku</string>
     <string name="tvshows_by_rating">Seriale wg oceny</string>
-    <string name="animation_shows_by_alpha">Filmy animowane wg nazwy</string>
+    <string name="animation_shows_by_alpha">Filmy animowane wg tytułu</string>
     <string name="episodes_by_date">Odcinki wg daty emisji</string>
     <string name="date_view_week">Tydzień</string>
     <string name="date_view_month">Miesiąc</string>
@@ -368,7 +368,7 @@
     <string name="subtitles_wizard_delete">Usuń ten plik</string>
     <string name="subtitles_wizard_empty_list">Nie znaleziono pliku</string>
     <string name="subtitles_wizard_add_files">Możesz skopiować więcej plików napisów do tego folderu, aby powiązać je z tym filmem.</string>
-    <string name="subtitles_wizard_help">Wybierz dowolny z dostępnych plików napisów, aby powiązać je z filmem %s. Nazwa pliku zostanie zmieniona zgodnie z filmem.</string>
+    <string name="subtitles_wizard_help">Wybierz dowolny plik napisów, aby powiązać go z filmem %s. Nazwa pliku zostanie zmieniona zgodnie z filmem.</string>
     <string name="subtitles_wizard_empty_list_help">Nie znaleziono plików napisów. Musisz skopiować co najmniej jeden plik napisów do tego folderu, aby powiązać go z filmem %s.</string>
     <string name="subtitles_wizard_cache">Pamięć podręczna</string>
     <!-- Subloader -->
@@ -633,8 +633,8 @@
     <string name="zipped_library_mail_subject">Zrzut Nova Video Database</string>
     <string name="zipped_library_mail_text">Proszę opisać problem, którego doświadczasz\n\n</string>
     <string name="sort_mode">Porządek sortowania</string>
-    <string name="sort_by_name_asc">Sortuj wg nazwy (A - Z)</string>
-    <string name="sort_by_name_desc">Sortuj wg nazwy (Z - A)</string>
+    <string name="sort_by_name_asc">Sortuj wg tytułu (A - Z)</string>
+    <string name="sort_by_name_desc">Sortuj wg tytułu (Z - A)</string>
     <string name="sort_by_release_date_desc">Sortuj wg daty premiery (najpierw nowsze)</string>
     <string name="sort_by_year_asc">Sortuj wg daty premiery (najpierw starsze)</string>
     <string name="sort_by_year_desc">Sortuj wg daty premiery (najpierw nowsze)</string>
