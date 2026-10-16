@@ -95,9 +95,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dip"
             android:layout_toEndOf="@+id/duration"
-            app:drawableLeftCompat="@drawable/little_star"
+            android:drawableStart="@drawable/little_star"
             android:drawablePadding="4dip"
-            android:text="7,3" />
+            android:text="7,3"
+            tools:ignore="UseCompatTextViewDrawableXml" />
 
         <LinearLayout
             android:id="@+id/content_rating_container"
