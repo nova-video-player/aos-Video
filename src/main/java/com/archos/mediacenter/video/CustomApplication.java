@@ -1108,15 +1108,11 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     private void registerHdmiAudioPlugReceiver() {
+        if (isHDMIPlugReceiverRegistered) return;
         final IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_HDMI_AUDIO_PLUG);
         if (log.isDebugEnabled()) log.debug("registerHdmiAudioPlugReceiver: registerReceiver for ACTION_HDMI_AUDIO_PLUG");
         registerReceiver(mHdmiAudioPlugReceiver, intentFilter);
         isHDMIPlugReceiverRegistered = true;
-    }
-
-    private void unRegisterHdmiAudioPlugReceiver() {
-        if (isHDMIPlugReceiverRegistered) unregisterReceiver(mHdmiAudioPlugReceiver);
-        isHDMIPlugReceiverRegistered = false;
     }
 
     private void registerAudioDeviceCallback() {
