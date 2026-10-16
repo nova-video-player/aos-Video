@@ -1177,6 +1177,11 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                         updateDirectPcmMultichannelCapability();
                         publishAudioRouteChange();
                     }
+                    // Fall back to the broadcast-reported channel count when the device scan
+                    // did not advertise a usable HDMI channel count.
+                    if (isPlugged && maxAudioChannelCount == 0) {
+                        maxAudioChannelCount = intent.getIntExtra(AudioManager.EXTRA_MAX_CHANNEL_COUNT, 2);
+                    }
                 }
 
                 if (log.isDebugEnabled()) log.debug("mHdmiAudioPlugReceiver: received ACTION_HDMI_AUDIO_PLUG, isPlugged={}, hasHdmi={}, maxAudioChannelCount={}, hdmiAudioEncodingFlag={}, iecCapable={}", isPlugged, hasHdmi, maxAudioChannelCount, hdmiAudioEncodingFlag, isIecEncapsulationCapable);
