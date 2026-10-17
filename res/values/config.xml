@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="player_pref_subtitle_size_default">12</integer> <!-- an integer instead of a dimension because we don't want it to be density-scaled -->
-    <integer name="player_pref_subtitle_vpos_default">0</integer> <!-- an integer instead of a dimension because we don't want it to be density-scaled -->
+    <!-- Subtitle defaults. libass sizes text relative to the screen (about pt x short side / 720),
+    so one value works on every device and no per-size-qualifier overrides are needed. -->
+
+    <!-- libass point size -->
+    <integer name="player_pref_subtitle_size_default">55</integer>
+    <!-- 0-255; applied as screen height * pos / 765 pixels -->
+    <integer name="player_pref_subtitle_vpos_default">0</integer>
+    <!-- font scale in percent (Scale only mode), 100 = unscaled -->
+    <integer name="subtitle_default_font_scale_percent">100</integer>
+    <!-- background opacity, 0-255 -->
+    <integer name="subtitle_default_bg_opacity">128</integer>
+    <!-- outline / shadow widths -->
+    <integer name="subtitle_default_outline_width">2</integer>
+    <integer name="subtitle_default_shadow_width">2</integer>
+    <bool name="subtitle_default_bold">false</bool>
+
+    <!-- colors are #AARRGGBB -->
+    <color name="subtitle_default_text_color">#FFFFFFFF</color>
+    <color name="subtitle_default_outline_color">#FF000000</color>
+    <color name="subtitle_default_shadow_color">#AA000000</color>
+    <color name="subtitle_default_background_color">#FF000000</color>
 </resources>

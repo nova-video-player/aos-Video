@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The whole panel: header, pinned preview, scrolling rows. The three levels (basic, advanced, color)
+     are just different row lists filled into @id/sp_rows. No weights: the ScrollView wraps its content and
+     is capped by the space the host gives the panel, so the panel is only as tall as its rows need.
+     Both views are created by SubtitleSettingsPanel / SubtitlePreviewView (next slice). -->
+<com.archos.mediacenter.video.player.SubtitleSettingsPanel
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sp_panel"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/subtitle_panel_bg"
+    android:focusable="false"
+    android:orientation="vertical"
+    android:paddingBottom="8dp">
+
+    <!-- The back/close button is a separate focusable, clickable view (not a decoration on the
+         title), so a compound drawable would be wrong here -->
+    <LinearLayout
+        style="@style/SubtitlePanel.Header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="4dp"
+        android:paddingEnd="16dp"
+        tools:ignore="UseCompoundDrawables">
+
+        <!-- Close on the basic level, back on the others (the host swaps icon and description) -->
+        <ImageView
+            android:id="@+id/sp_back"
+            style="@style/SubtitlePanel.StepperButton"
+            android:contentDescription="@string/subtitle_panel_back"
+            android:rotation="180"
+            app:srcCompat="@drawable/ic_subtitle_chevron" />
+
+        <TextView
+            android:id="@+id/sp_title"
+            style="@style/SubtitlePanel.HeaderTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/subtitle_panel_title" />
+    </LinearLayout>
+
+    <com.archos.mediacenter.video.player.SubtitlePreviewView
+        android:id="@+id/sp_preview"
+        style="@style/SubtitlePanel.Preview"
+        android:layout_width="match_parent"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="4dp"
+        android:focusable="false" />
+
+    <!-- TVScrollView so the 3D mirror can follow the scroll position, as it does for the cards -->
+    <com.archos.mediacenter.video.player.tvmenu.TVScrollView
+        android:id="@+id/sp_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="false"
+        android:focusable="false"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/sp_rows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </com.archos.mediacenter.video.player.tvmenu.TVScrollView>
+</com.archos.mediacenter.video.player.SubtitleSettingsPanel>

@@ -247,7 +247,9 @@ public class TrackSelectionTest {
         setFinalField(track, "name", name);
         setFinalField(track, "path", path);
         setFinalField(track, "isExternal", (path != null && !path.isEmpty()));
-        setFinalField(track, "isGfx", isGfx);
+        // isGfx is no longer a field: native sends a kind (SUB_KIND). Keep the CSV column as-is
+        // and map it onto the kind the fixture represents.
+        setFinalField(track, "kind", isGfx ? SubtitleManager.KIND_GRAPHIC : SubtitleManager.KIND_PLAIN_TEXT);
         setFinalField(track, "format", format);
         setFinalField(track, "language", lang);
         setFinalField(track, "disposition", disposition);

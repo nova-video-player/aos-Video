@@ -18,324 +18,156 @@ package com.archos.mediacenter.video.player;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
+import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AppCompatDialog;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.preference.PreferenceManager;
 
 import com.archos.mediacenter.video.R;
-import com.archos.mediacenter.video.info.VideoInfoCommonClass;
 
-public class SubtitleSettingsDialog extends AlertDialog implements
-        SeekBar.OnSeekBarChangeListener, View.OnTouchListener, SubtitleColorPicker.ColorPickListener {
+/**
+ * The phone's subtitle settings: a window around SubtitleSettingsPanel, nothing more. All the
+ * rows, rules and saving live in the panel and in SubtitleManager.
+ *
+ * Docking: portrait, the panel hangs from the top of the screen (as the old dialog did) and is
+ * only as tall as its rows need, up to a share of the screen; landscape, it is docked to the
+ * right edge, full height. The window has no dim and a transparent background: the panel draws
+ * its own translucent surface, so the video and the live subtitle stay visible around it.
+ */
+public class SubtitleSettingsDialog extends AppCompatDialog implements SubtitleSettingsPanel.Host {
 
-    private SeekBar mSizeSeekBar;
-    private SeekBar mVertSeekBar;
-    private TextView mSampleText;
-    private CheckBox mSubOutlineCheckBox;
-    private SubtitleManager mSubtitleManager;
-    private SharedPreferences mSharedPreferences;
-    private int mSize = 50;
-    private int mVPos = 10;
-    private boolean mOutline = false;
-    private boolean touching=false;
-    private View mRightSizeButton;
-    private View mLeftSizeButton;
-    private View mLeftVerticalButton;
-    private View mRightVerticalButton;
-    private static int REPEAT_TOUCH_ACTION = 0;
-    private Handler mHandler = new Handler(Looper.getMainLooper()){
-        public void handleMessage(Message msg) {
-            if(mTouchedView != null){
-                onAction(mTouchedView);
-                sendEmptyMessageDelayed(REPEAT_TOUCH_ACTION, 200);
-            }
-        }
-
-
-    };
-    private View mTouchedView;
-    private int mColor;
-    private CheckBox mSubBackgroundCheckBox;
-    private SeekBar mBgOpacitySeekBar;
-    private boolean mBackground;
-    private int mBgOpacity;
+    private final SubtitleManager mSubtitleManager;
+    private SubtitleSettingsPanel mPanel;
+    private DockLayout mDock;
 
     public SubtitleSettingsDialog(Context context, SubtitleManager subtitleManager) {
         super(context);
-        init(context, subtitleManager);
+        mSubtitleManager = subtitleManager;
     }
 
-    @SuppressLint("InflateParams") // Custom content view for AlertDialog.setView() has no parent container at inflation
-    private void init(Context context, final SubtitleManager stm) {
-        mSubtitleManager = stm;
-        mSize = stm.getSize();
-        mColor = stm.getColor();
-        mOutline = stm.getOutlineState();
-        setIcon(R.drawable.ic_menu_settings);
+    @Override
+    @SuppressLint("InflateParams")
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        getWindow().setGravity(Gravity.TOP);
-        getWindow().setBackgroundDrawable(new ColorDrawable(VideoInfoCommonClass.getAlphaColor(ContextCompat.getColor(context, R.color.background_material_dark),128)));
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        // Sizes come from an overlay on the player's own theme, so accent and fonts stay the player's.
+        final Context themed = new ContextThemeWrapper(getContext(), R.style.ThemeOverlay_SubtitlePanel_Phone);
+        mPanel = (SubtitleSettingsPanel) LayoutInflater.from(themed).inflate(R.layout.subtitle_settings_panel, null);
+        mPanel.attach(mSubtitleManager, PreferenceManager.getDefaultSharedPreferences(getContext()), this);
 
-        final LayoutInflater inflater =
-                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mDock = new DockLayout(themed);
+        mDock.addView(mPanel, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        setContentView(mDock);
 
-        final LinearLayout view = (LinearLayout) inflater.inflate(R.layout.subtitle_settings_dialog, null);
-
-        ((SubtitleColorPicker)view.findViewById(R.id.color_layout)).setColorPickListener(this);
-
-        setView(view);
-        mLeftSizeButton = view.findViewById(R.id.left_a);
-        mLeftSizeButton.setOnTouchListener(this);
-        mRightSizeButton = view.findViewById(R.id.right_a);
-        mRightSizeButton.setOnTouchListener(this);
-
-        mRightVerticalButton = view.findViewById(R.id.right_icon);
-        mRightVerticalButton.setOnTouchListener(this);
-        mLeftVerticalButton = view.findViewById(R.id.left_icon);
-        mLeftVerticalButton.setOnTouchListener(this);
-
-        mSampleText = (TextView) view.findViewById(R.id.subtitle_sample_text);
-        mSampleText.setTextSize(mSize);
-        mSampleText.setTextColor(mColor);
-        mSizeSeekBar = (SeekBar) view.findViewById(R.id.subtitle_size_seekbar);
-        mSizeSeekBar.setOnSeekBarChangeListener(this);
-
-        mVertSeekBar = (SeekBar) view.findViewById(R.id.subtitle_vert_seekbar);
-        // 0.255 Range is what SubtitleManager.setVerticalPosition() expects
-        mVertSeekBar.setMax(255);
-        mVertSeekBar.setOnSeekBarChangeListener(this);
-
-        mSubOutlineCheckBox = view.findViewById(R.id.subOutline);
-        mSubOutlineCheckBox.setChecked(mOutline);
-        mSubOutlineCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mOutline = mSubOutlineCheckBox.isChecked();
-                mSubtitleManager.setOutlineState(mOutline);
-            }
-        });
-
-        mSubBackgroundCheckBox = view.findViewById(R.id.subBackground);
-        mBackground = mSubtitleManager.getBackgroundState();
-        mSubBackgroundCheckBox.setChecked(mBackground);
-        mBgOpacity = mSubtitleManager.getBackgroundOpacity();
-        mSubBackgroundCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBackground = mSubBackgroundCheckBox.isChecked();
-                mSubtitleManager.setBackgroundState(mBackground); 
-            }
-        });
-
-        mBgOpacitySeekBar = (SeekBar) view.findViewById(R.id.subtitle_bg_opacity_seekbar);
-        mBgOpacitySeekBar.setMax(255);
-        mBgOpacitySeekBar.setOnSeekBarChangeListener(this);
-
+        final Window window = getWindow();
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         setCancelable(true);
         setCanceledOnTouchOutside(true);
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    }
-
-    public void onProgressChanged(SeekBar seekBar, int progress,
-            boolean fromTouch) {
-        if (seekBar == mSizeSeekBar) {
-            mSize = progress;
-            if (mSampleText != null) {
-                mSampleText.setTextSize(SubtitleManager.calcTextSize(progress));
-            }
-            if (mSubtitleManager != null) {
-                mSubtitleManager.setSize(progress);
-            }
-        } else if (seekBar == mVertSeekBar) {
-            mVPos = progress;
-            if (mSubtitleManager != null) {
-                if(!touching){
-                    mSubtitleManager.fadeSubtitlePositionHint(true);
-                    seekBar.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // TODO Auto-generated method stub
-                            mSubtitleManager.fadeSubtitlePositionHint(false);
-                        }
-                    }, 200);
+        applyDock();
+        // Register the new back press dispatcher callback
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mPanel == null || !mPanel.handleBack()) {
+                    // Disable this callback to allow the default dialog back/dismiss behavior
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    // Re-enable in case the dialog remains alive
+                    setEnabled(true);
                 }
-                mSubtitleManager.setVerticalPosition(progress);
             }
-        } else if (seekBar == mBgOpacitySeekBar) {
-            mBgOpacity = progress;
-            if (mSubtitleManager != null) {
-                mSubtitleManager.setBackgroundOpacity(progress);
-            }
+        });
+    }
+
+    /** Portrait: hung from the top. Landscape: docked right, full height. */
+    @SuppressLint("RtlHardcoded")
+    private void applyDock() {
+        final Window window = getWindow();
+        if (window == null || mPanel == null) return;
+        final DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+        final boolean landscape = getContext().getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE;
+        final FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mPanel.getLayoutParams();
+        if (landscape) {
+            final float width = SubtitleSettingsPanel.fractionRes(getContext().getResources(), R.dimen.subtitle_panel_width_fraction);
+            window.setLayout((int) (dm.widthPixels * width), ViewGroup.LayoutParams.MATCH_PARENT);
+            window.setGravity(Gravity.RIGHT | Gravity.TOP); // RIGHT, not END: the panel's rounded corners are on its left
+            lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            mPanel.setMaxHeight(0);
         } else {
-            // wtf
+            final float height = SubtitleSettingsPanel.fractionRes(getContext().getResources(), R.dimen.subtitle_panel_max_height_fraction);
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.TOP);
+            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mPanel.setMaxHeight((int) (dm.heightPixels * height));
         }
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-        touching=true;
-        if (seekBar == mVertSeekBar) {
-            mSubtitleManager.fadeSubtitlePositionHint(true);
-        }
-    }
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        touching=false;
-        if (seekBar == mVertSeekBar) {
-            mSubtitleManager.fadeSubtitlePositionHint(false);
-        }
-    }
-
-    @Override
-    public void onDetachedFromWindow() {
-        Log.d("Player", "onDetachedFromWindow");
-        if (getWindow() != null) {
-            WindowCompat.getInsetsController(getWindow(), mSampleText)
-                    .show(WindowInsetsCompat.Type.statusBars());
-        }
-        mSharedPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_SIZE, mSize).apply();
-        mSharedPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_VPOS, mVPos).apply();
-        mSharedPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mOutline).apply();
-        mSubtitleManager.fadeSubtitlePositionHint(false);
-        mSharedPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_BACKGROUND, mBackground).apply();
-        mSharedPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_BG_OPACITY, mBgOpacity).apply();
-        super.onDetachedFromWindow();
+        mPanel.setLayoutParams(lp);
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (getWindow() != null) {
-            WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), mSampleText);
+        if (getWindow() != null && mPanel != null) { // as before: no status bar over the video while adjusting
+            final WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), mPanel);
             controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
             controller.hide(WindowInsetsCompat.Type.statusBars());
         }
-
-        // Set the initial position of the sliders and checkbox
-        mSizeSeekBar.setProgress(mSubtitleManager.getSize());
-        mVertSeekBar.setProgress(mSubtitleManager.getVerticalPosition());
-        mSubOutlineCheckBox.setChecked(mSubtitleManager.getOutlineState());
-        mSubtitleManager.setShowSubtitlePositionHint(true);
-
-        // Force the initial focus on the size slider
-        mSizeSeekBar.requestFocus();
-        mSubBackgroundCheckBox.setChecked(mSubtitleManager.getBackgroundState());
-        mBgOpacitySeekBar.setProgress(mSubtitleManager.getBackgroundOpacity());
-    }
-
-    public void onAction(View view) {
-        if(view == mLeftSizeButton){
-            if(mSize -1 >= 0) {
-                mSize--;
-                if (mSampleText != null) {
-                    mSampleText.setTextSize(SubtitleManager.calcTextSize(mSize));
-                }
-                if (mSubtitleManager != null) {
-                    mSubtitleManager.setSize(mSize);
-                }
-                mSizeSeekBar.setProgress(mSize);
-            }
-        }
-        else if (view == mRightSizeButton){
-            if(mSize +1 <= mSizeSeekBar.getMax()) {
-                mSize++;
-                if (mSampleText != null) {
-                    mSampleText.setTextSize(SubtitleManager.calcTextSize(mSize));
-                }
-                if (mSubtitleManager != null) {
-                    mSubtitleManager.setSize(mSize);
-                }
-                mSizeSeekBar.setProgress(mSize);
-            }
-        }
-        else if (view == mLeftVerticalButton){
-            if(mVPos -3 >=0) {
-                mVPos=mVPos-3;
-                if (mSubtitleManager != null) {
-                    if (!touching) {
-                        mSubtitleManager.fadeSubtitlePositionHint(true);
-                        mVertSeekBar.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // TODO Auto-generated method stub
-                                mSubtitleManager.fadeSubtitlePositionHint(false);
-                            }
-                        }, 200);
-                    }
-                    mSubtitleManager.setVerticalPosition(mVPos);
-                    mVertSeekBar.setProgress(mVPos);
-                }
-            }
-        }
-        else if (view == mRightVerticalButton){
-            if(mVPos +3 <=mVertSeekBar.getMax()) {
-                mVPos=mVPos+3;
-                if (mSubtitleManager != null) {
-                    if (!touching) {
-                        mSubtitleManager.fadeSubtitlePositionHint(true);
-                        mVertSeekBar.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // TODO Auto-generated method stub
-                                mSubtitleManager.fadeSubtitlePositionHint(false);
-                            }
-                        }, 200);
-                    }
-                    mSubtitleManager.setVerticalPosition(mVPos);
-                    mVertSeekBar.setProgress(mVPos);
-                }
-            }
-        }
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
-                view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.video_info_next_prev_button_pressed));
-                mHandler.removeMessages(REPEAT_TOUCH_ACTION);
-                mTouchedView = view;
-                onAction(mTouchedView);
-                mHandler.sendEmptyMessageDelayed(REPEAT_TOUCH_ACTION,200);
-                break;
-
-            case MotionEvent.ACTION_UP:
-                view.performClick();
-                view.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
-                mHandler.removeMessages(REPEAT_TOUCH_ACTION);
-                mTouchedView = null;
-            break;
+    public void onDetachedFromWindow() {
+        if (getWindow() != null && mPanel != null) {
+            WindowCompat.getInsetsController(getWindow(), mPanel).show(WindowInsetsCompat.Type.statusBars());
         }
+        super.onDetachedFromWindow();
+    }
 
-        return true;
+    // ---- SubtitleSettingsPanel.Host -----------------------------------------------------------
+
+    @Override
+    public void onCloseRequested() {
+        dismiss();
     }
 
     @Override
-    public void onColorPicked(int color) {
-        mColor = color;
-        mSubtitleManager.setColor(mColor);
-        mSampleText.setTextColor(mColor);
+    public int getVideoShortSide() {
+        return mSubtitleManager.getScreenShortSide();
+    }
+
+    @Override
+    public boolean isTv() {
+        return false;
+    }
+
+    /** Rotation does not recreate the player (it handles the change itself), so the dock is re-applied here. */
+    private final class DockLayout extends FrameLayout {
+        DockLayout(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onConfigurationChanged(Configuration newConfig) {
+            super.onConfigurationChanged(newConfig);
+            applyDock();
+        }
     }
 }
