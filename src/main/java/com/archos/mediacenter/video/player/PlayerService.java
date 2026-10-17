@@ -1088,6 +1088,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         // Called on the main thread once intro/outro segments have been fetched, so the
         // UI (e.g. the Play mode tile summary) can refresh if it is already displayed.
         void onIntroDbReady();
+
+        void onShowSkipPrompt(IntroSegments.Type type, long targetMs);
+        void onHideSkipPrompt();
     }
 
     /**
@@ -1470,11 +1473,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     // Recap has no separate toggle: it is skipped automatically when this toggle is on AND we
     // are genuinely binge-watching (PLAYMODE_BINGE on an auto-advanced episode), see autoSkipIfNeeded.
     public static final String KEY_INTRODB_ENABLED = "introdb_enabled";
-    public static final boolean DEFAULT_INTRODB_ENABLED = false;
+    public static final boolean DEFAULT_INTRODB_ENABLED = true;
     // how often the auto-skip task checks the playback position against the fetched segments
     private static final long AUTO_SKIP_INTERVAL = 1000;
-    // Safety buffer (ms) subtracted from segment end so skipping lands slightly before intro ends
-    private static final int AUTO_SKIP_BUFFER_MS = 2000;
+    // Safety buffer (ms) subtracted from segment end (0ms so skip lands at segment end)
+    private static final int AUTO_SKIP_BUFFER_MS = 0;
     // If a skip target lands within this margin of the media end, treat it as end-of-video
     // (seeking right to EOF fails and breaks playback) and complete naturally instead.
     private static final int AUTO_SKIP_END_MARGIN_MS = 5000;
@@ -1487,6 +1490,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     private Runnable mAutoSkipTask;
     // end (ms) of the last segment we auto-skipped, so we don't fight a user who seeks back into it
     private long mLastAutoSkippedEndMs = -1;
+    // end (ms) of the last segment we prompted to skip
+    private long mLastPromptedEndMs = -1;
+    private boolean mIsSkipPromptShowing = false;
     // true when the current episode was reached by auto-advancing from the previous one (binge),
     // not by the user manually starting it. Recap auto-skip only fires when this is set.
     private boolean mArrivedViaBingeTransition = false;
@@ -1721,6 +1727,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mIntroDbFetchedUri = uri;
         mIntroSegments = null; // drop any stale data from the previous video
         mLastAutoSkippedEndMs = -1;
+        mLastPromptedEndMs = -1;
+        mIsSkipPromptShowing = false;
 
         final IntroDbQueryParams query = buildIntroDbQuery();
         if (query == null) return;
@@ -1789,9 +1797,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     /**
-     * Auto-skip check, run periodically while playing. If the current position falls inside an
-     * intro or recap segment, seek to the end of that segment. Credits/outro/preview are
-     * intentionally left out of the proof of concept (skipping them could jump to end of media).
+     * Periodic check during playback. If the current position falls inside an
+     * intro, recap, outro, or credits segment, prompts the user with a Netflix-style
+     * skip button via PlayerFrontend.
      */
     private void autoSkipIfNeeded() {
         IntroSegments segments = mIntroSegments;
@@ -1806,37 +1814,61 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     position, playing, mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED));
         if (mPlayer == null || Player.sPlayer == null || !mPlayer.isPlaying()) return;
         boolean introEnabled = mPreferences.getBoolean(KEY_INTRODB_ENABLED, DEFAULT_INTRODB_ENABLED);
-        if (!introEnabled) return;
-        // Recap has no separate toggle: it is additionally skipped only while actually
-        // binge-watching, i.e. in binge mode on an episode we auto-advanced into (so the very
-        // first episode of the binge keeps its recap).
-        boolean recapEnabled = mPlayMode == PLAYMODE_BINGE && mArrivedViaBingeTransition;
+        if (!introEnabled) {
+            if (mIsSkipPromptShowing) {
+                mIsSkipPromptShowing = false;
+                if (mPlayerFrontend != null) mPlayerFrontend.onHideSkipPrompt();
+            }
+            return;
+        }
         if (position < 0) return;
         int duration = Player.sPlayer.getDuration();
-        IntroSegments.Skip skip = segments.findSkip(position, duration, introEnabled, recapEnabled);
-        if (skip == null) return;
-        long targetMs = Math.max(0, skip.endMs - AUTO_SKIP_BUFFER_MS);
-        if (targetMs <= position) return;
-        // don't re-skip the same segment if the user deliberately seeks back into it
-        if (skip.endMs == mLastAutoSkippedEndMs) return;
-        mLastAutoSkippedEndMs = skip.endMs;
-        // When the skip target reaches the end of the media (e.g. an outro that runs to the
-        // file end), seeking there fails ("stream_seek time err") and breaks playback. End the
-        // video naturally instead, which advances to the next episode (binge) or stops cleanly.
+        IntroSegments.Skip skip = segments.findSkip(position, duration, true, true);
+        if (skip != null) {
+            long targetMs = Math.max(0, skip.endMs - AUTO_SKIP_BUFFER_MS);
+            if (targetMs > position) {
+                if (skip.endMs != mLastPromptedEndMs) {
+                    mLastPromptedEndMs = skip.endMs;
+                    mIsSkipPromptShowing = true;
+                    if (log.isDebugEnabled()) log.debug("autoSkipIfNeeded: showing skip prompt for {} to {}", skip.type, targetMs);
+                    if (mPlayerFrontend != null) {
+                        mPlayerFrontend.onShowSkipPrompt(skip.type, targetMs);
+                    }
+                }
+                return;
+            }
+        }
+
+        // Outside of any segment
+        if (mIsSkipPromptShowing) {
+            mIsSkipPromptShowing = false;
+            if (mPlayerFrontend != null) {
+                mPlayerFrontend.onHideSkipPrompt();
+            }
+        }
+        // When outside the segment, reset so seeking back in will prompt again
+        mLastPromptedEndMs = -1;
+    }
+
+    public void executeSkip(final IntroSegments.Type type, final long targetMs) {
+        mIsSkipPromptShowing = false;
+        if (mPlayer == null || Player.sPlayer == null) return;
+        int duration = Player.sPlayer.getDuration();
+        mLastAutoSkippedEndMs = targetMs;
         if (duration > 0 && targetMs >= duration - AUTO_SKIP_END_MARGIN_MS) {
-            if (log.isDebugEnabled()) log.debug("autoSkipIfNeeded: skipping {} from {} reaches end ({}), completing", skip.type, position, duration);
-            showAutoSkipToast(skip.type);
+            if (log.isDebugEnabled()) log.debug("executeSkip: skipping {} to end ({}), completing", type, duration);
+            showAutoSkipToast(type);
             onCompletion();
             return;
         }
-        if (log.isDebugEnabled()) log.debug("autoSkipIfNeeded: skipping {} from {} to {} (segment end {})", skip.type, position, targetMs, skip.endMs);
+        if (log.isDebugEnabled()) log.debug("executeSkip: skipping {} to {}", type, targetMs);
         Player.sPlayer.seekTo((int) targetMs);
-        showAutoSkipToast(skip.type);
+        showAutoSkipToast(type);
     }
 
-    // User-facing feedback when an auto-skip fires (the user opted in via the Play mode toggle).
+    // User-facing feedback when an intro/outro skip fires.
     private void showAutoSkipToast(final IntroSegments.Type type) {
-        final String message = getString(R.string.introdb_autoskip) + ": " + introLabels(getApplicationContext()).get(type);
+        final String message = getString(R.string.introdb_skipped) + ": " + introLabels(getApplicationContext()).get(type);
         mHandler.post(() -> Toast.makeText(getUiContext(), message, Toast.LENGTH_SHORT).show());
     }
 
@@ -1948,6 +1980,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     @Override
     public void onSeekStart(int pos) {
+        mLastPromptedEndMs = -1;
         if(mPlayerFrontend!=null) {
             mPlayerFrontend.onSeekStart(pos);
         }
@@ -1958,6 +1991,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if(mPlayerFrontend!=null) {
             mPlayerFrontend.onSeekComplete();
         }
+        autoSkipIfNeeded();
     }
 
     @Override

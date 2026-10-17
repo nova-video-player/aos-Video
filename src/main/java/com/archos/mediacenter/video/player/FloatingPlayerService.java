@@ -16,6 +16,8 @@ package com.archos.mediacenter.video.player;
 
 import android.annotation.SuppressLint;
 
+import com.archos.mediacenter.utils.introdb.IntroSegments;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -667,6 +669,14 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     @Override
     public void onIntroDbReady() {
         // no TV menu in floating mode
+    }
+
+    @Override
+    public void onShowSkipPrompt(IntroSegments.Type type, long targetMs) {
+    }
+
+    @Override
+    public void onHideSkipPrompt() {
     }
 
     @Override
