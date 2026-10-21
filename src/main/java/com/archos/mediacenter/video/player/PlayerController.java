@@ -226,6 +226,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private static int          mGestureAreaHeight, mControlBarHeight;
     // Static handle to the live control bar view, so SubtitleManager can resolve its parent
     // for getControlBarClearanceAbove(). Cleared in detachWindow() to avoid leaking the view.
+    @SuppressLint("StaticFieldLeak")
     private static View          sControlBarView;
 
     private boolean             mVolumeBarEnabled = false;
@@ -260,6 +261,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private boolean             manualVisibilityChange;
     private FrameLayout         playerControllersContainer;
     private TVCardDialog tvCardDialog = null;
+
     private boolean             isTVMode = false;
     private long                mLastTouchEventTime = -1;
     private View mPlayPauseTouchZone;
@@ -2833,18 +2835,30 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
         else{
             //destroy dialogs
-            dismissTVCardDialog();
+            dismissTVCardDialog(true);
         }
         isTVMenuDisplayed=show;
     }
 
     private boolean dismissTVCardDialog() {
+        return dismissTVCardDialog(false);
+    }
+
+    /**
+     * @param force close the card whatever its levels (the TV menu is going away); otherwise Back
+     *              first lets a card with several levels go up one, and the card stays active.
+     */
+    private boolean dismissTVCardDialog(boolean force) {
         if (tvCardDialog == null || tvCardDialog.getVisibility() != View.VISIBLE)
             return false;
         log.info("Back navigation: active TV card dialog found");
         TVCardDialog dialog = tvCardDialog;
         tvCardDialog = null;
-        dialog.handleBackPressed();
+        if (force) {
+            dialog.handleBackPressed();
+        } else if (dialog.handleBack()) {
+            tvCardDialog = dialog;
+        }
         return true;
     }
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Colour tile / chip. The fill is layer R.id.swatch_fill: mutate() the background, find the layer and
+     setColor() it. The ring shows focused (accent), selected (white) or a thin default border so black
+     and white stay visible on a dark panel. Focused is listed first on purpose: a selector takes the first
+     matching item, and the selected tile is where focus starts, so it has to show the focus ring. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/swatch_fill"
+        android:top="4dp" android:left="4dp" android:right="4dp" android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFFFF" />
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+    <item>
+        <selector>
+            <item android:state_focused="true">
+                <shape android:shape="rectangle">
+                    <stroke android:width="3dp" android:color="?attr/colorAccent" />
+                    <corners android:radius="9dp" />
+                </shape>
+            </item>
+            <item android:state_selected="true">
+                <shape android:shape="rectangle">
+                    <stroke android:width="3dp" android:color="#FFFFFFFF" />
+                    <corners android:radius="9dp" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <stroke android:width="1.5dp" android:color="@color/subtitle_panel_swatch_border" />
+                    <corners android:radius="9dp" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+</layer-list>

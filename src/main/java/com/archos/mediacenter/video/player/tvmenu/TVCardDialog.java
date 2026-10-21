@@ -53,10 +53,17 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
     int defStyle;
     private boolean isSlaveView;
     private OnDialogResultListener onResult;
+    private OnBackListener onBackListener;
     
     
     public interface OnDialogResultListener{
         public void onResult(int code);
+    }
+
+    /** Lets a card with several levels (a page inside the card) take Back before the card closes. */
+    public interface OnBackListener {
+        /** @return true if Back was used to go up one level inside the card: the card stays open */
+        boolean onBack();
     }
     
    
@@ -142,6 +149,21 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
         }
     }
 
+    public void setOnBackListener(OnBackListener onBackListener) {
+        this.onBackListener = onBackListener;
+    }
+
+    /**
+     * Back, B and Escape: first the card's own levels (OnBackListener), then the card closes.
+     * @return true if Back stayed inside the card, false if the card was dismissed
+     */
+    public boolean handleBack() {
+        if (onBackListener != null && onBackListener.onBack())
+            return true;
+        handleBackPressed();
+        return false;
+    }
+
     public void handleBackPressed() {
         log.info("Back navigation: dismissing TV card dialog");
         if (onResult != null)
@@ -159,7 +181,7 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
             return true;
         }
         else if (keyCode == KeyEvent.KEYCODE_ESCAPE || keyCode == KeyEvent.KEYCODE_BUTTON_B) {
-            handleBackPressed();
+            handleBack();
             return true;
         }
         else if (keyCode == KeyEvent.KEYCODE_BACK) {
