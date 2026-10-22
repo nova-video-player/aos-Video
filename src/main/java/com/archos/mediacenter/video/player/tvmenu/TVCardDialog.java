@@ -194,7 +194,21 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
         //handle focus on dialog
        
         else if (keyCode == KeyEvent.KEYCODE_DPAD_UP||keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-                
+
+            // A menu inside the card moves focus by its own item order, not by screen geometry. The
+            // geometric search looks at the whole window: on a long, scrolled card the best match for
+            // Down can be a view outside the card (or a row past the screen edge is outranked by one),
+            // which is dropped below, so the last rows were never reached from a stepper or a pill.
+            // At the first / last item the key is consumed: focus stays in the card.
+            if (findFocus() != null) {
+                for (View other : others) {
+                    if (other instanceof TVMenu && other.hasFocus()) {
+                        ((TVMenu) other).onKeyDown(keyCode, event);
+                        return true;
+                    }
+                }
+            }
+
             View v = findFocus().focusSearch(keyCode == KeyEvent.KEYCODE_DPAD_UP?FOCUS_UP:FOCUS_DOWN);
             if(v instanceof TVMenuSeparator)
             	v=v.focusSearch(keyCode == KeyEvent.KEYCODE_DPAD_UP?FOCUS_UP:FOCUS_DOWN);
