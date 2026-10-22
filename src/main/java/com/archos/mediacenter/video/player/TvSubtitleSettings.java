@@ -103,6 +103,10 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
         params.gravity = Gravity.CENTER_HORIZONTAL;
         mCard.setLayoutParams(params);
 
+        // The sample is pinned under the title, outside the scrolling rows: it stays put while they scroll
+        mPreview = new PreviewItem(mContext, mManager);
+        mCard.setHeaderView(mPreview);
+
         mMenu = mController.getTVMenuAdapter().createTVMenu();
         mCard.addOtherView(mMenu);
         populate(null, null);
@@ -154,8 +158,6 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
         mMenu.clean();
         mCard.setText(mContext.getString(mModel.getTitleRes(page)));
 
-        mPreview = new PreviewItem(mContext, mManager);
-        mMenu.addTVMenuItem(mPreview);
         for (Row row : mModel.rows(page)) addRow(row);
 
         if (focusId == null) {

@@ -54,6 +54,7 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
     private boolean isSlaveView;
     private OnDialogResultListener onResult;
     private OnBackListener onBackListener;
+    private View header;   // pinned under the title, outside the scrolling content
     
     
     public interface OnDialogResultListener{
@@ -123,6 +124,11 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
                     this.slaveView.addOtherView(((TVSlaveView)v).getSlaveView());
                     
                 }
+            }
+            if (header instanceof TVSlaveView) {
+                if (((TVSlaveView) header).getSlaveView() == null)
+                    ((TVSlaveView) header).createSlaveView();
+                this.slaveView.setHeaderView(((TVSlaveView) header).getSlaveView());
             }
             ((TVScrollView)findViewById(R.id.contentScrollView)).setOnScrollListener(new TVOnScrollListener() {
                 @Override
@@ -249,6 +255,20 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
 
     }
 
+    /**
+     * Pins a view under the title, outside the scrolling content: it stays where it is while the rows
+     * scroll (like the title does). If it is a TVSlaveView the 3D copy of the card gets its copy too.
+     */
+    public void setHeaderView(View view) {
+        header = view;
+        ((LinearLayout) findViewById(R.id.inside)).addView(view, 1); // after the title, before the scroll view
+        if (!isSlaveView && slaveView != null && view instanceof TVSlaveView) {
+            if (((TVSlaveView) view).getSlaveView() == null)
+                ((TVSlaveView) view).createSlaveView();
+            slaveView.setHeaderView(((TVSlaveView) view).getSlaveView());
+        }
+    }
+
     public void setText(String txt) {
         this.text=txt;
         ((TextView) findViewById(R.id.info_text)).setText(txt);
@@ -353,6 +373,8 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
                 ((TVSlaveView)v).removeSlaveView();
             }
         }
+        if (header instanceof TVSlaveView)
+            ((TVSlaveView) header).removeSlaveView();
         Log.d("cardview","removing");
         slaveView=null;
     }
