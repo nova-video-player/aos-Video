@@ -117,6 +117,11 @@ public class TVCardDialog extends FrameLayout implements TVSlaveView  {
             this.slaveView.setText(text);
             this.slaveView.setSlaveMasterStatus(true);
             this.slaveView.setFocusable(false);
+            // the copy is as wide as the card it mirrors (a card may be wider than the layout's own width)
+            android.view.ViewGroup.LayoutParams own = getLayoutParams();
+            android.view.ViewGroup.LayoutParams copy = this.slaveView.getLayoutParams();
+            if (own != null && copy != null && own.width > 0)
+                copy.width = own.width;
             for(View v:others){
                 if(v instanceof TVSlaveView){
                     if(((TVSlaveView)v).getSlaveView()==null)

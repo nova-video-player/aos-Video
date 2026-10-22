@@ -17,14 +17,25 @@ package com.archos.mediacenter.video.player;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.player.SubtitleSettingsModel.ColorTarget;
@@ -36,11 +47,13 @@ import com.archos.mediacenter.video.player.tvmenu.TVMenu;
 import com.archos.mediacenter.video.player.tvmenu.TVMenuItem;
 import com.archos.mediacenter.video.player.tvmenu.TVPillItem;
 import com.archos.mediacenter.video.player.tvmenu.TVSlaveView;
+import com.archos.mediacenter.video.player.tvmenu.TVUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,6 +77,12 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
 
     /** The vertical position runs 0..255: the remote moves it by 10, as it always did. */
     private static final int SLIDER_TV_STEP = 1;
+
+    /** The card is a bit wider than the stock one, so the pills ("File's style", "Scale only") and the values fit. */
+    private static final float CARD_WIDTH_FACTOR = 1.3f;
+
+    /** ...but never more than this share of the screen width. */
+    private static final float CARD_MAX_SCREEN_SHARE = 0.9f;
 
     private final Context mContext;
     private final PlayerController mController;
@@ -101,7 +120,8 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
         mCard = (TVCardDialog) main.findViewById(R.id.card_view);
         final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mCard.getLayoutParams();
         params.gravity = Gravity.CENTER_HORIZONTAL;
-        mCard.setLayoutParams(params);
+        params.width = wideCardWidth(params.width);
+        mCard.setLayoutParams(params); // set before the card is added: the 3D copy takes this width too
 
         // The sample is pinned under the title, outside the scrolling rows: it stays put while they scroll
         mPreview = new PreviewItem(mContext, mManager);
@@ -136,6 +156,14 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
         if (first != null) first.requestFocus();
     }
 
+    /** The stock width of the card, a bit wider (an explicit width only: match / wrap are left alone). */
+    private int wideCardWidth(int stock) {
+        if (stock <= 0) return stock;
+        final int screen = mContext.getResources().getDisplayMetrics().widthPixels;
+        final int wide = Math.min(Math.round(stock * CARD_WIDTH_FACTOR), Math.round(screen * CARD_MAX_SCREEN_SHARE));
+        return Math.max(stock, wide);
+    }
+
     // ---- pages --------------------------------------------------------------------------------
 
     private void openColorPage(Row row) {
@@ -159,6 +187,10 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
         mCard.setText(mContext.getString(mModel.getTitleRes(page)));
 
         for (Row row : mModel.rows(page)) addRow(row);
+
+        // a rebuild (style mode, background, Advanced, Reset) can change what the sample shows, e.g. the
+        // "file's own style" caption: redraw it here, onSettingChanged() returns early for these rows
+        mPreview.refresh();
 
         if (focusId == null) {
             final View scroll = mCard.findViewById(R.id.contentScrollView);
@@ -217,7 +249,7 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
                 break;
             case SECTION:
                 mMenu.createAndAddSeparator();
-                mMenu.createAndAddTVMenuItem(mContext.getString(row.labelRes), false);
+                mMenu.addTVMenuItem(new SectionItem(mContext, mContext.getString(row.labelRes), labelLook()));
                 break;
             case PILLS:
                 addPills(row);
@@ -329,29 +361,23 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
         });
     }
 
-    /** A row that opens the color page; the color in force is shown as a chip and its hex value. */
+    /** A row that opens the color page: the name on the left, the color's chip and hex value on the right. */
     private void addColor(final Row row) {
-        final TVMenuItem item = mMenu.createAndAddTVMenuItem(colorLabel(row), false, false);
+        final ColorItem item = new ColorItem(mContext, mContext.getString(row.labelRes), row.color.get(), labelLook());
         item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openColorPage(row);
             }
         });
+        mMenu.addTVMenuItem(item);
         mRowViews.put(row.id, item);
         mSyncs.add(new Runnable() {
             @Override
             public void run() {
-                item.setText(colorLabel(row));
+                item.setColor(row.color.get());
             }
         });
-    }
-
-    private String colorLabel(Row row) { // TVMenuItem text is HTML: the chip is a colored block
-        final int rgb = row.color.get() & 0xFFFFFF;
-        final String hex = String.format("#%06X", rgb);
-        return TextUtils.htmlEncode(mContext.getString(row.labelRes))
-                + "&nbsp;&nbsp;<big><font color=\"" + hex + "\">\u25A0</font></big>&nbsp;" + hex;
     }
 
     private void addAction() {
@@ -469,6 +495,173 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
         @Override public View getSlaveView() { return mSlave; }
         @Override public View createSlaveView() { setSlaveView(new NoteItem(getContext(), this)); return mSlave; }
         @Override public void setSlaveView(View v) { if (v instanceof NoteItem) mSlave = (NoteItem) v; }
+        @Override public void removeSlaveView() { mSlave = null; }
+    }
+
+    /**
+     * A section header (Text, Background...) built from the TV menu's own values: 3/4 of a menu row's
+     * text size (tv_menu_font_size), and the padding of a menu row (menu_item_layout), so it lines up
+     * with their labels. What sets it apart is the theme's accent color, upper case and the smaller size.
+     * Not focusable; the 3D copy mirrors it.
+     */
+    private static final class SectionItem extends AppCompatTextView implements TVSlaveView {
+        private SectionItem mSlave;
+
+        SectionItem(Context context, CharSequence text, TVMenuItem like) {
+            super(context);
+            final TextView label = like.findViewById(R.id.info_text);
+            setText(text.toString().toUpperCase(Locale.getDefault()));
+            setFocusable(false);
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, label.getTextSize() * 0.75f);
+            setTextColor(accentColor(context, label.getCurrentTextColor()));
+            setPadding(like.getPaddingLeft() + label.getPaddingLeft(), like.getPaddingTop() + label.getPaddingTop(),
+                    like.getPaddingRight() + label.getPaddingRight(), like.getPaddingBottom() + label.getPaddingBottom());
+        }
+
+        private SectionItem(Context context, SectionItem from) {
+            super(context);
+            setText(from.getText());
+            setFocusable(false);
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, from.getTextSize());
+            setTypeface(from.getTypeface());
+            setTextColor(from.getCurrentTextColor());
+            setPadding(from.getPaddingLeft(), from.getPaddingTop(), from.getPaddingRight(), from.getPaddingBottom());
+        }
+
+        /** The theme's accent color; the label's own color, dimmed, if the theme has none. */
+        private static int accentColor(Context context, int fallback) {
+            final TypedValue tv = new TypedValue();
+            if (context.getTheme().resolveAttribute(androidx.appcompat.R.attr.colorAccent, tv, true)
+                    || context.getTheme().resolveAttribute(android.R.attr.colorAccent, tv, true)) {
+                if (tv.type >= TypedValue.TYPE_FIRST_COLOR_INT && tv.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+                    return tv.data;
+                }
+            }
+            return (fallback & 0x00FFFFFF) | 0xB3000000;
+        }
+
+        @Override public void updateSlaveView() { }
+        @Override public View getSlaveView() { return mSlave; }
+        @Override public View createSlaveView() { setSlaveView(new SectionItem(getContext(), this)); return mSlave; }
+        @Override public void setSlaveView(View v) { if (v instanceof SectionItem) mSlave = (SectionItem) v; }
+        @Override public void removeSlaveView() { mSlave = null; }
+    }
+
+    /**
+     * A focusable menu row for a color: the name left-aligned, the color's chip and hex value
+     * right-aligned. Looks like the menu's labels (size, color, padding); the focused row is
+     * highlighted, and the 3D copy mirrors the row and its highlight.
+     */
+    private static final class ColorItem extends LinearLayout implements TVSlaveView {
+        private final TextView mLabel;
+        private final TextView mValue;
+        private int mArgb;
+        private ColorItem mSlave;
+
+        ColorItem(Context context, CharSequence label, int argb, TVMenuItem like) {
+            super(context);
+            final TextView ref = like.findViewById(R.id.info_text);
+            mLabel = new TextView(context);
+            mValue = new TextView(context);
+            build(label, ref.getTextSize(), ref.getTextColors(),
+                    like.getPaddingLeft() + ref.getPaddingLeft(), like.getPaddingTop() + ref.getPaddingTop(),
+                    like.getPaddingRight() + ref.getPaddingRight(), like.getPaddingBottom() + ref.getPaddingBottom());
+            setMinimumHeight(like.getMinimumHeight()); // the menu rows' 32dp
+            setColor(argb);
+        }
+
+        private ColorItem(Context context, ColorItem from) {
+            super(context);
+            mLabel = new TextView(context);
+            mValue = new TextView(context);
+            build(from.mLabel.getText(), from.mLabel.getTextSize(), from.mLabel.getTextColors(),
+                    from.getPaddingLeft(), from.getPaddingTop(), from.getPaddingRight(), from.getPaddingBottom());
+            setMinimumHeight(from.getMinimumHeight());
+            setColor(from.mArgb);
+        }
+
+        private void build(CharSequence label, float textSizePx, android.content.res.ColorStateList colors,
+                           int left, int top, int right, int bottom) {
+            setOrientation(HORIZONTAL);
+            setGravity(Gravity.CENTER_VERTICAL);
+            setFocusable(true);
+            setClickable(true);
+            setPadding(left, top, right, bottom);
+
+            final int highlight = ContextCompat.getColor(getContext(), R.color.video_info_next_prev_button_focused);
+            final StateListDrawable bg = new StateListDrawable();
+            bg.addState(new int[]{android.R.attr.state_focused}, new ColorDrawable(highlight));
+            bg.addState(new int[]{android.R.attr.state_selected}, new ColorDrawable(highlight)); // the 3D copy
+            bg.addState(new int[]{}, new ColorDrawable(Color.TRANSPARENT));
+            setBackground(bg);
+
+            mLabel.setText(label);
+            mLabel.setSingleLine(true);
+            mLabel.setEllipsize(TextUtils.TruncateAt.END);
+            mLabel.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+            mLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
+            mLabel.setTextColor(colors);
+            mLabel.setFocusable(false);
+            mLabel.setDuplicateParentStateEnabled(true); // follows the row's focus state
+            addView(mLabel, new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f));
+
+            mValue.setSingleLine(true);
+            mValue.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
+            mValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
+            mValue.setTextColor(colors);
+            mValue.setFocusable(false);
+            mValue.setDuplicateParentStateEnabled(true);
+            final LayoutParams valueParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            valueParams.setMarginStart(Math.round(16 * getResources().getDisplayMetrics().density));
+            addView(mValue, valueParams);
+        }
+
+        /** The chip (a colored block) and the hex value of the color in force (alpha is not shown). */
+        void setColor(int argb) {
+            mArgb = argb;
+            final int rgb = argb & 0xFFFFFF;
+            final SpannableString value = new SpannableString("\u25A0 " + String.format(Locale.US, "#%06X", rgb));
+            value.setSpan(new ForegroundColorSpan(0xFF000000 | rgb), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            value.setSpan(new RelativeSizeSpan(1.25f), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mValue.setText(value);
+            if (mSlave != null) mSlave.setColor(argb);
+        }
+
+        @Override
+        public boolean onKeyDown(int keyCode, KeyEvent event) {
+            if (TVUtils.isOKKey(keyCode)) {
+                if (event.getRepeatCount() == 0) performClick();
+                return true;
+            }
+            // else, we send it to the enclosing card (focus moves to the next row, Back, ...)
+            return TVUtils.dispatchToCardParent(this, keyCode, event);
+        }
+
+        @Override
+        public boolean onKeyUp(int keyCode, KeyEvent event) {
+            return TVUtils.isOKKey(keyCode);
+        }
+
+        @Override
+        protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
+            super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+            if (mSlave != null) mSlave.setSelected(gainFocus);
+        }
+
+        @Override public void updateSlaveView() { }
+        @Override public View getSlaveView() { return mSlave; }
+        @Override public View createSlaveView() { setSlaveView(new ColorItem(getContext(), this)); return mSlave; }
+
+        @Override
+        public void setSlaveView(View v) {
+            if (v instanceof ColorItem) {
+                mSlave = (ColorItem) v;
+                mSlave.setFocusable(false);
+                mSlave.setClickable(false);
+                mSlave.setSelected(isFocused());
+            }
+        }
+
         @Override public void removeSlaveView() { mSlave = null; }
     }
 }
