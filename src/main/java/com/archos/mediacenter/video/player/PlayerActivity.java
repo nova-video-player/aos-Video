@@ -4536,22 +4536,19 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             if (errorCode == IMediaPlayer.MEDIA_ERROR_VE_FILE_ERROR
                     && !mPlayer.isLocalVideo()
                     && !mNetworkFailed) {
-                if (NetworkState.isNetworkConnected(mContext) && mVideoInfo != null) {
+                PlayerService service = PlayerService.sPlayerService;
+                if (NetworkState.isNetworkConnected(mContext) && mVideoInfo != null
+                        && service != null) {
                     /* If we get a corrupted file error, if the file is from the network,
                      * and if we are still connected, try to reopen the video one time.
                      */
-                    int retryPosition = PlayerService.sPlayerService != null
-                            ? PlayerService.sPlayerService.prepareRetryFromCurrentPosition()
-                            : getBookmarkPosition();
-                    if (PlayerService.sPlayerService == null) {
-                        mVideoInfo.resume = retryPosition;
-                        mVideoInfo.duration = mPlayer.getDuration();
-                    }
+                    int retryPosition = service.prepareRetryFromCurrentPosition();
                     if (retryPosition != 0) {
                         mNetworkFailed = true;
                         stop();
                         mResumeFromLast = true;
                         start();
+                        service.retryPlayback();
                         return true;
                     }
                 }

@@ -1179,6 +1179,16 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         return position;
     }
 
+    /** Reopen the failed source using the live position selected before the frontend stopped. */
+    public void retryPlayback() {
+        if (log.isDebugEnabled()) log.debug("retryPlayback: position={}", mPlaybackSession.selectedStartPositionMs);
+        firstTimeAudioCalled = true;
+        firstTimeSubCalled = true;
+        mPlayOnResume = true;
+        mPlayerState = PlayerState.PREPARING;
+        onStreamingUriOK();
+    }
+
     public void persistVideoInfoFromFrontend(VideoDbInfo videoInfo) {
         if (videoInfo == null || mIndexHelper == null) return;
         if (Objects.equals(mPlaybackSession.uri, videoInfo.uri)) {
@@ -2015,6 +2025,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (pos <= 0) {
             mLastAutoSkippedEndMs = -1;
         }
+        // Error teardown clears the player's source before onError reaches us.
+        // Keep the requested target as the fallback if that seek fails.
+        mPlaybackSession.lastKnownPositionMs = Math.max(pos, 0);
         if(mPlayerFrontend!=null) {
             mPlayerFrontend.onSeekStart(pos);
         }
