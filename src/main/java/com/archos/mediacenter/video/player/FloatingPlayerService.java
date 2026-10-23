@@ -16,6 +16,8 @@ package com.archos.mediacenter.video.player;
 
 import android.annotation.SuppressLint;
 
+import com.archos.mediacenter.utils.introdb.IntroSegments;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -49,6 +51,9 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -123,6 +128,11 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     private ImageView mNormalButton;
     private WindowManager.LayoutParams mNormalButtonLayoutParams;
     private Intent mStartIntent;
+    private ViewGroup mSkipButtonContainer;
+    private Button mSkipButton;
+    private IntroSegments.Type mCurrentSkipType;
+    private long mCurrentSkipTargetMs;
+    private boolean mIsSkipPromptShowing = false;
 
     public void onCreate() {
         super.onCreate();
@@ -181,6 +191,9 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     }
     public void onDestroy(){
         super.onDestroy();
+        hideSkipPrompt();
+        mSkipButtonContainer = null;
+        mSkipButton = null;
         sFloatingPlayerService = null;
         mFloatingPlayerRootView = null;
         unbindService(mPlayerServiceConnection);
@@ -316,6 +329,7 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
             mFloatingPlayerRootView.findViewById(R.id.surface_view).setAlpha((float) 0.5);
             mWindowManager.addView(mFloatingPlayerRootView, mParamsF);
             contains = true;
+            initSkipButton();
             try {
 
                 mFloatingPlayerRootView.setOnTouchListener(new View.OnTouchListener() {
@@ -567,7 +581,14 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     }
     public void removeFloatingView(boolean isStartingPlayerActivity) {
         if(contains) {
-
+            hideSkipPrompt();
+            if (mSkipButtonContainer != null && mFloatingPlayerRootView != null) {
+                try {
+                    ((ViewGroup) mFloatingPlayerRootView).removeView(mSkipButtonContainer);
+                } catch (Exception ignored) {}
+                mSkipButtonContainer = null;
+                mSkipButton = null;
+            }
             if (PlayerService.sPlayerService != null)
                 PlayerService.sPlayerService.removePlayerFrontend(this,isStartingPlayerActivity);
             try {
@@ -667,6 +688,109 @@ public class FloatingPlayerService extends Service implements PlayerService.Play
     @Override
     public void onIntroDbReady() {
         // no TV menu in floating mode
+    }
+
+    @Override
+    public void onShowSkipPrompt(final IntroSegments.Type type, final long targetMs) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                showSkipPrompt(type, targetMs);
+            }
+        });
+    }
+
+    @Override
+    public void onHideSkipPrompt() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                hideSkipPrompt();
+            }
+        });
+    }
+
+    private void initSkipButton() {
+        if (mFloatingPlayerRootView == null) return;
+        LayoutInflater inflater = LayoutInflater.from(this);
+        mSkipButtonContainer = (ViewGroup) inflater.inflate(R.layout.floating_skip_button_layout, (ViewGroup) mFloatingPlayerRootView, false);
+        mSkipButton = (Button) mSkipButtonContainer.findViewById(R.id.floating_skip_button);
+        ((ViewGroup) mFloatingPlayerRootView).addView(mSkipButtonContainer);
+        mSkipButtonContainer.bringToFront();
+
+        mSkipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                executeSkipPrompt();
+            }
+        });
+    }
+
+    private void updateSkipButtonText(IntroSegments.Type type) {
+        if (mSkipButton == null) return;
+        String name;
+        if (type == IntroSegments.Type.RECAP) {
+            name = getString(R.string.introdb_segment_recap);
+        } else if (type == IntroSegments.Type.OUTRO || type == IntroSegments.Type.CREDITS) {
+            name = getString(R.string.introdb_segment_credits);
+        } else if (type == IntroSegments.Type.PREVIEW) {
+            name = getString(R.string.introdb_segment_preview);
+        } else {
+            name = getString(R.string.introdb_segment_intro);
+        }
+        mSkipButton.setText(getString(R.string.skip_intro_button_format_notimer, name));
+    }
+
+    private void executeSkipPrompt() {
+        if (mCurrentSkipTargetMs < 0) return;
+        long targetMs = mCurrentSkipTargetMs;
+        IntroSegments.Type type = mCurrentSkipType;
+        hideSkipPrompt();
+        if (PlayerService.sPlayerService != null) {
+            PlayerService.sPlayerService.executeSkip(type, targetMs);
+        }
+    }
+
+    private void showSkipPrompt(final IntroSegments.Type type, final long targetMs) {
+        if (mFloatingPlayerRootView == null || mSkipButtonContainer == null || mSkipButton == null) return;
+
+        mCurrentSkipType = type;
+        mCurrentSkipTargetMs = targetMs;
+        updateSkipButtonText(type);
+
+        mIsSkipPromptShowing = true;
+        mSkipButtonContainer.clearAnimation();
+        mSkipButtonContainer.bringToFront();
+        if (mSkipButtonContainer.getVisibility() != View.VISIBLE) {
+            mSkipButtonContainer.setVisibility(View.VISIBLE);
+            Animation fadeIn = new AlphaAnimation(0f, 1f);
+            fadeIn.setDuration(250);
+            mSkipButtonContainer.startAnimation(fadeIn);
+        } else {
+            mSkipButtonContainer.setAlpha(1f);
+        }
+    }
+
+    private void hideSkipPrompt() {
+        mIsSkipPromptShowing = false;
+        mCurrentSkipTargetMs = -1;
+        if (mSkipButtonContainer != null && mSkipButtonContainer.getVisibility() == View.VISIBLE) {
+            Animation fadeOut = new AlphaAnimation(1f, 0f);
+            fadeOut.setDuration(250);
+            fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    if (!mIsSkipPromptShowing && mSkipButtonContainer != null) {
+                        mSkipButtonContainer.setVisibility(View.GONE);
+                    }
+                }
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+            mSkipButtonContainer.startAnimation(fadeOut);
+        }
     }
 
     @Override
