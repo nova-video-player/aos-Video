@@ -1,187 +1,101 @@
-# Intro/Outro Auto-Skip — Player Skipping Strategy (Video)
+# Intro/Outro Skip Prompt — Player Strategy (Video)
 
 ## Overview
 
-The Video module consumes the fused, provider-agnostic `IntroSegments` model
-produced by MediaLib and, when the user opts in, **auto-skips** intro / credits
-/ outro / preview segments during playback by seeking past them. Recap is
-handled specially: it is only skipped while genuinely **binge-watching**.
+The Video module consumes the fused, provider-agnostic `IntroSegments` model produced by MediaLib. When enabled, Nova displays an interactive, **Netflix-style "Skip <Type>" button** during intro, outro, credits, preview, or binge-watched recap segments. 
 
-This document covers the **playback / skipping** half. The **provider query and
-fusion** half is documented in `MediaLib/doc/IN-OUTRO.md`.
+Pressing the button (or pressing OK/Center on Android TV D-pad) seeks directly to the end of the segment. The feature is supported in **Fullscreen**, **Floating Window Player**, and **Picture-in-Picture (PiP)** mode.
 
-## User-facing controls
+This document describes the player skipping architecture in the `Video` module. Querying and metadata fusion from providers is documented in `MediaLib/doc/IN-OUTRO.md`.
 
-A **single** toggle, **off by default**, exposed in the in-player **Play mode**
-UI (TV tile and phone/tablet dialog), persisted in shared prefs:
+---
 
-| Preference key | Default | Label | Effect |
-|----------------|---------|-------|--------|
-| `introdb_enabled` (`KEY_INTRODB_ENABLED`) | false | "Skip intro/outro" | enables auto-skip of intro/credits/outro/preview, and of recap while binge-watching |
+## User-Facing Controls
 
-There is **no separate recap toggle**: recap skipping is derived from this one
-toggle plus the binge conditions below, so the user has a single control to
-understand. The Play mode UI also renders the fetched segment timings (via
-`IntroSegments.toSummaryString`) so the user can see what was found.
+A single toggle, **off by default**, exposed in the in-player **Play mode** UI (TV tile and phone/tablet dialog), persisted in shared preferences:
 
-## Specification
+| Preference Key | Default | Label | Effect |
+|---|---|---|---|
+| `introdb_enabled` (`KEY_INTRODB_ENABLED`) | `false` (OFF) | "Skip intro/outro" | Enables the interactive Skip button for detected Intro, Outro, Credits, and Preview segments, plus Recap while binge-watching. |
 
-### What gets skipped, and when
+There is no separate recap toggle; recap skipping is derived from this toggle combined with the binge-watching condition. The Play mode UI also displays fetched segment timestamps (via `IntroSegments.toSummaryString`) so users can inspect detected chapter marks.
 
-- **Standard skip**: when `introdb_enabled` is on, applies to `INTRO`,
-  `CREDITS`, `OUTRO`, `PREVIEW`, in that priority order.
-- **Recap skip**: applies to `RECAP` **only** and only when **all** of the
-  following hold:
-  1. `introdb_enabled` is on (the same single toggle), **and**
-  2. play mode is `PLAYMODE_BINGE`, **and**
-  3. the current episode was reached by **auto-advancing** from the previous
-     one (`mArrivedViaBingeTransition`), not by the user manually opening it.
+---
 
-  Rationale: the first episode you deliberately start keeps its recap (you may
-  want it); only subsequent episodes auto-played in a binge skip the recap, i.e.
-  when you are actually watching several episodes back-to-back.
+## Specification & Behavior
 
-`RECAP` is deliberately excluded from the standard skip set — recaps are often
-wanted, so they are never skipped outside the binge condition above.
+### 1. Eligible Segments
+When `introdb_enabled` is active, skip prompts are supported for:
+- **Standard Segments**: `INTRO`, `OUTRO`, `CREDITS`, `PREVIEW`.
+- **Recap (`RECAP`)**: Prompted **only** during binge-watching, i.e.:
+  1. Play mode is set to **Binge watching** (`PLAYMODE_BINGE`), and
+  2. The current episode was reached by **auto-advancing** from the previous episode (`mArrivedViaBingeTransition`).
+  
+  *Rationale (same as main repo):* When manually starting an episode, viewers often want the recap. During binge-watching of back-to-back episodes, the recap prompt appears so viewers can skip it.
 
-### Eligibility for a single segment
+### 2. Segment Detection & Overlap Merging
+- Every second (`AUTO_SKIP_INTERVAL` = 1000 ms), the player checks if the current playback position falls within an eligible segment.
+- If overlapping segments exist (e.g. `OUTRO` overlapping with `CREDITS`), they are automatically merged into a single contiguous segment ending at the latest timestamp.
 
-A segment is a skip candidate only if:
+### 3. Seek Target (`AUTO_SKIP_BUFFER_MS = 0`)
+- Pressing the skip button seeks directly to the segment end (`targetMs = skip.endMs`).
+- The buffer is set to `0 ms` to jump cleanly to the exact start of the post-segment scene without cutting off dialogue or scene transitions.
 
-- its type is in the currently-eligible set (per the two flags above), **and**
-- it has a concrete end (`endMs != null`) or media duration is known (`durationMs > 0`, where a null end represents running to the end of media), **and**
-- `end > currentPosition` (the segment is still ahead), **and**
-- it **contains** the current position.
+### 4. End-of-Media Guard (`AUTO_SKIP_END_MARGIN_MS = 5000`)
+- If the skip target lands within 5 seconds of the total video duration, seeking to the very end can trigger player errors (`stream_seek time err`).
+- The player intercepts this and triggers clean video completion (`onCompletion()`), naturally advancing to the next episode in binge mode or finishing cleanly.
 
-### Overlap merge
+### 5. Prompt Lifecycle & Seek Guards
+- **Prompt Appearance**: When playback enters an eligible segment, the button fades in with the appropriate label (`"Skip Intro"`, `"Skip Recap"`, `"Skip Preview"`, or `"Skip Credits"`).
+- **Auto-Dismissal**: When playback exits the segment naturally, the button fades out and is hidden.
+- **Seeking**:
+  - Seeking out of a segment immediately hides the prompt.
+  - Seeking back into an unskipped segment displays the prompt again.
+  - After a skip action, `mLastAutoSkippedEndMs` prevents duplicate actions on the same boundary.
 
-Skippable segments can overlap (e.g. an `OUTRO` 42'32''→47'32'' and a `CREDITS`
-42'31''→44'45''). To avoid multiple small jumps, once a containing segment is
-found its end is **extended** across any other eligible segment that starts at
-or before the running end and ends later, chaining until no further extension is
-possible. The result is a **single seek to the furthest merged end**.
+### 6. User Feedback
+- When a skip is executed, a brief toast message appears: `"Skipped: <Type>"` (e.g., `"Skipped: Intro"`).
 
-### Safety buffer
+---
 
-To prevent jarring cuts or missing dialogue right at the transition back into the
-media, a safety buffer of `AUTO_SKIP_BUFFER_MS` (2000 ms) is subtracted from the
-target end timestamp (`Math.max(0, skip.endMs - AUTO_SKIP_BUFFER_MS)`). If the
-buffered target is already at or before the current playback position, skipping is
-bypassed.
+## Multi-Platform & UI Support
 
-### End-of-media guard
+### Fullscreen Player (`PlayerActivity`)
+- Clean semi-transparent pill button in the lower-right corner.
+- Smooth alpha fade-in (250 ms) and fade-out (250 ms) transitions.
+- Guarded state flag (`mIsSkipPromptShowing`) to prevent race conditions during rapid segment transitions.
 
-If the (merged) skip target lands within `AUTO_SKIP_END_MARGIN_MS` (5000 ms) of
-the media duration, seeking right to EOF fails ("stream_seek time err") and
-breaks playback. In that case the player **completes the video naturally**
-(`onCompletion()`) instead of seeking, which cleanly advances to the next
-episode (binge/folder) or stops.
+### Android TV & Leanback D-Pad Focus Lifecycle
+- **Automatic Focus**: The button requests focus when shown, provided the window has focus and player controls (control bar, TV menu, or dialogs) are not currently displayed. If the control bar is visible, focus remains with the user and transitions to the button when the bar hides.
+- **D-Pad Directional Navigation**:
+  - `DPAD_LEFT` / `DPAD_RIGHT`: Dedicated to backward/forward seeking (scrubbing); never trapped or stolen for focus navigation.
+  - `DPAD_UP`: Passes navigation to open the TV player controls menu.
+  - `DPAD_DOWN`: Moves focus to player controls and displays the control bar.
+  - `DPAD_CENTER` / `OK`: Activates the button to skip the segment.
+  - `BACK`: Dismisses and hides the skip prompt without skipping.
+- **Focus Restoration**: When the skip button disappears, focus is cleanly restored to `mPlayerControllerPlaceholder` so TV navigation is never lost.
 
-### Anti-fight guard
+### Floating Window Player (`FloatingPlayerService`)
+- Interactive skip button overlay inside the floating player window (`floating_skip_button_layout.xml`).
+- Direct single-tap skip execution while watching in desktop / overlay mode.
 
-After a skip, the merged end is remembered (`mLastAutoSkippedEndMs`). If the
-user deliberately seeks **back** into the same segment, it is not re-skipped
-(the same end won't trigger twice in a row).
+### Native Picture-in-Picture (PiP)
+- Automatically adapts the on-screen skip button overlay when entering Picture-in-Picture mode (`adjustSkipButtonForPiP`).
+- Scales the button into a compact layout with reduced padding, margins, and typography so it remains accessible and unobtrusive directly inside the PiP window.
 
-### User feedback
+---
 
-On each skip a short toast is shown: `Auto-skip: <type>` (type label
-translatable). A separate **TRACE-only** debug toast can surface the full fetched
-segment summary when tracing is enabled.
+## Implementation Architecture
 
-## Implementation
+### `PlayerService`
+- Fetches metadata via `IntroDbManager` on playback start if `introdb_enabled` is true.
+- Tracks binge-transition lifecycle (`mArrivedViaBingeTransition = true` upon auto-advancing in `onCompletion`, `false` on manual start in `onStart`).
+- Runs periodic tick task (`mAutoSkipTask`, 1000 ms) calling `autoSkipIfNeeded()`.
+- Emits events via `PlayerFrontend`:
+  - `onShowSkipPrompt(IntroSegments.Type type, long targetMs)`
+  - `onHideSkipPrompt()`
+- Executes seek and end-of-media handling in `executeSkip(type, targetMs)`.
 
-### Lifecycle / wiring (`PlayerService`)
-
-| Stage | What happens |
-|-------|--------------|
-| `onCreate` | `IntroDbManager.init(appContext)`; build the self-rescheduling `mAutoSkipTask` runnable. |
-| `onStart` | Reset `mArrivedViaBingeTransition = false`; load `mPlayMode`. |
-| prepared / video-db ready | `fetchIntroDbIfNeeded()`; (re)start the periodic tick. |
-| tick (every `AUTO_SKIP_INTERVAL` = 1000 ms) | `autoSkipIfNeeded()`. |
-| `onCompletion` (auto-advance to next episode) | after `onStart(mIntent)`, set `mArrivedViaBingeTransition = true`. |
-| stop / destroy | `removeCallbacks(mAutoSkipTask)`. |
-
-### Fetch (`fetchIntroDbIfNeeded`)
-
-- Skips entirely if the toggle is off (no network unless the feature is enabled).
-- Requires scraped metadata; builds an `IntroDbQueryParams` from the scraper
-  ids (`buildIntroDbQuery`); fetches once per video URI on a background
-  `IntroDbFetch` thread; caches the fused `IntroSegments` in `mIntroSegments`.
-- Guards against duplicate/stale fetches via `mIntroDbFetchedUri`; a result is
-  dropped if the video changed while the request was in flight.
-- On success, posts `onIntroDbReady()` to the frontend so the Play mode UI can
-  refresh its displayed timings.
-
-### Tick decision (`autoSkipIfNeeded`)
-
-```
-if (!playing) return;
-introEnabled = pref(KEY_INTRODB_ENABLED);
-if (!introEnabled) return;
-// recap rides on the same toggle, gated by the binge conditions
-recapEnabled = mPlayMode == PLAYMODE_BINGE && mArrivedViaBingeTransition;
-
-duration = player.getDuration();
-skip = segments.findSkip(position, duration, introEnabled, recapEnabled);   // MediaLib
-if (skip == null) return;
-targetMs = max(0, skip.endMs - AUTO_SKIP_BUFFER_MS);
-if (targetMs <= position) return;
-if (skip.endMs == mLastAutoSkippedEndMs) return;   // anti-fight
-mLastAutoSkippedEndMs = skip.endMs;
-
-if (duration > 0 && targetMs >= duration - AUTO_SKIP_END_MARGIN_MS) {
-    showAutoSkipToast(skip.type);
-    onCompletion();        // end-of-media guard: complete instead of seek
-    return;
-}
-seekTo(targetMs);
-showAutoSkipToast(skip.type);
-```
-
-### Skip lookup (`IntroSegments.findSkip` — MediaLib)
-
-The eligible-type selection and overlap merge live in the model:
-
-```
-findSkip(positionMs, durationMs, includeStandard, includeRecap)
-  types = eligibleTypes(includeStandard, includeRecap)
-          // standard:        INTRO, CREDITS, OUTRO, PREVIEW
-          // recap:           RECAP
-          // both:            INTRO, RECAP, CREDITS, OUTRO, PREVIEW
-  for type in priority order:
-     for segment of that type containing position:
-        end = segment.endMs != null ? segment.endMs : (durationMs > 0 ? durationMs : null)
-        if (end == null || end <= positionMs) continue
-        return Skip(type, mergedEnd(end, durationMs, types))   // overlap merge
-  return null
-```
-
-`mergedEnd` grows the end across overlapping eligible segments (any source/type
-in the eligible set) until stable, yielding one jump target.
-
-### Binge-transition flag (`mArrivedViaBingeTransition`)
-
-- Set to **false** on every `onStart` (a manual start of any video).
-- Set to **true** in `onCompletion` immediately after auto-advancing into the
-  next episode (`onStart(mIntent)` with the next URI).
-- Read in `autoSkipIfNeeded` as one of the recap-skip conditions (alongside the
-  enabled toggle and `PLAYMODE_BINGE`).
-
-This is what distinguishes "I deliberately opened episode 3" (keep recap) from
-"episode 3 started because episode 2 finished while I was binging" (skip recap).
-
-### Play mode UI (`PlayerActivity`)
-
-- **TV**: the Play mode tile (`createPlayerTVMenu`) lists the play modes, then a
-  separator, then the single "Skip intro/outro" switch; the fetched segment
-  summary is appended as a non-focusable item at the bottom
-  (`refreshPlayModeIntroSummary`, refreshed on menu open and on `onIntroDbReady`).
-- **Phone/tablet**: the Play mode dialog (`MENU_PLAYMODE_ID`) is a custom
-  `LinearLayout` inside a `ScrollView` (`adb.setView`): a `RadioButton` per play
-  mode, the single "Skip intro/outro" `Switch`, then the segment-timings summary
-  at the bottom.
-
-The toggle only writes its preference; the actual skipping (including the
-binge-gated recap) is entirely driven by `autoSkipIfNeeded` reading that pref
-and the play-mode/transition state on the next tick.
+### `PlayerActivity` & `FloatingPlayerService`
+- Implement `onShowSkipPrompt` and `onHideSkipPrompt`.
+- Bind UI buttons, set string resource `skip_intro_button_format_notimer` (`"Skip %1$s"`), and trigger `PlayerService.executeSkip()`.
