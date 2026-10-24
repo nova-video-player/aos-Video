@@ -115,7 +115,11 @@ public class SubtitleColorPicker extends LinearLayout implements TVSlaveView {
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
-        return true;
+        // Back is acted on at key up (it reaches the activity's back dispatcher, which closes the color
+        // page): consuming it here swallowed it. Escape / B are let through the same way.
+        return keyCode != KeyEvent.KEYCODE_BACK
+                && keyCode != KeyEvent.KEYCODE_ESCAPE
+                && keyCode != KeyEvent.KEYCODE_BUTTON_B;
     }
 
     @Override
