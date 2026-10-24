@@ -134,6 +134,7 @@ public class SubtitleSettingsDialog extends AlertDialog
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
+        mModel.open();
         if (getWindow() != null) { // no status bar over the video while adjusting
             final WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), mPreview);
             controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);

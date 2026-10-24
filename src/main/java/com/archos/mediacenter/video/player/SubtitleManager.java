@@ -772,7 +772,11 @@ public class SubtitleManager {
      */
     private void applyNativeVerticalOffset() {
         if (Player.sPlayer == null || Player.sPlayer.getSubtitleEngine() == null) return;
-        int offset = Math.max(mSubtitleEvadedVPos, computeBottomObstruction());
+        int obstruction = computeBottomObstruction();
+        int offset = Math.max(mSubtitleEvadedVPos, obstruction);
+        if (log.isDebugEnabled())
+            log.debug("applyNativeVerticalOffset: evaded={} obstruction={} -> {}",
+                    mSubtitleEvadedVPos, obstruction, offset);
         Player.sPlayer.getSubtitleEngine().setVerticalOffset(offset);
     }
 

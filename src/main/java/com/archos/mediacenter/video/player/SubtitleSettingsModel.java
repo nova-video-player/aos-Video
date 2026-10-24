@@ -226,6 +226,15 @@ public class SubtitleSettingsModel {
         mManager.fadeSubtitlePositionHint(dragging);
     }
 
+    /**
+     * Call when the settings are shown. The blue position line is the background of the manager's
+     * spacer view, and it only has one once this is on; fading it in and out (the vertical position
+     * rows do it) shows it. The old dialogs switched it on when they opened.
+     */
+    public void open() {
+        mManager.setShowSubtitlePositionHint(true);
+    }
+
     /** Call when the settings are closed. */
     public void release() {
         mHandler.removeCallbacks(mDisarmReset);

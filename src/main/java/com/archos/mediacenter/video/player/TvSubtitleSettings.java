@@ -150,6 +150,7 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
             }
         });
 
+        mModel.open();
         mController.getTVMenuAdapter().setDiscrete(true);
         mController.addToMenuContainer(main);
         final View first = firstFocusable();
@@ -364,13 +365,14 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
     /** A row that opens the color page: the name on the left, the color's chip and hex value on the right. */
     private void addColor(final Row row) {
         final ColorItem item = new ColorItem(mContext, mContext.getString(row.labelRes), row.color.get(), labelLook());
+        // add first: TVMenu.addTVMenuItem() sets the menu's own click listener (null here) on every item
+        mMenu.addTVMenuItem(item);
         item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openColorPage(row);
             }
         });
-        mMenu.addTVMenuItem(item);
         mRowViews.put(row.id, item);
         mSyncs.add(new Runnable() {
             @Override
