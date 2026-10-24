@@ -305,17 +305,6 @@
         <item name="subtitlePreviewHeight">@dimen/subtitle_panel_preview_height</item>
     </style>
 
-    <style name="ThemeOverlay.SubtitlePanel.Tv" parent="">
-        <item name="subtitleRowMinHeight">@dimen/subtitle_panel_row_min_height_tv</item>
-        <item name="subtitleLabelTextSize">@dimen/tv_menu_font_size</item>
-        <item name="subtitleCaptionTextSize">@dimen/subtitle_panel_caption_size_tv</item>
-        <item name="subtitleRowPaddingH">@dimen/subtitle_panel_row_padding_h_tv</item>
-        <item name="subtitleControlSize">@dimen/subtitle_panel_control_size_tv</item>
-        <item name="subtitlePillMinHeight">@dimen/subtitle_panel_pill_min_height_tv</item>
-        <item name="subtitleSwatchSize">@dimen/subtitle_color_picker_box_size</item>
-        <item name="subtitleHeaderHeight">@dimen/subtitle_panel_header_height_tv</item>
-        <item name="subtitlePreviewHeight">@dimen/subtitle_panel_preview_height_tv</item>
-    </style>
     <!-- A settings row: a focus stop on TV, a touch target on phone -->
     <style name="SubtitlePanel.Row">
         <item name="android:minHeight">?attr/subtitleRowMinHeight</item>

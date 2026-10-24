@@ -13,6 +13,7 @@
     <string name="action_resume">com.archos.mediacenter.video.action_resume</string>
     <string name="action_recently_added">com.archos.mediacenter.video.action_recently_added</string>
     <string name="action_recently_played">com.archos.mediacenter.video.action_recently_played</string>
+    <string name="back_to_title">\u2039  %1$s</string>
 
     <string name="save_delay_setting_pref_key">save_setting_pref_key</string>
     <string name="save_audio_speed_setting_pref_key">save_audio_speed_setting_pref_key</string>

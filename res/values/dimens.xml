@@ -105,7 +105,6 @@
     <dimen name="item_horizontal_offset">0dp</dimen>
     <dimen name="list_expanded_padding">10dip</dimen>
     <dimen name="scraper_selection_spinbar_size">40dip</dimen>
-    <dimen name="subtitles_settings_dialog_margin_large">4dip</dimen>
     <dimen name="subtitles_settings_dialog_margin_outerframe">10dip</dimen>
     <dimen name="subtitles_settings_dialog_margin_small">2dip</dimen>
     <dimen name="subtitles_settings_dialog_sample_min_height">100dip</dimen>
@@ -144,15 +143,6 @@
     <dimen name="subtitle_panel_swatch_size">48dp</dimen>
     <dimen name="subtitle_panel_header_height">56dp</dimen>
     <dimen name="subtitle_panel_preview_height">88dp</dimen>
-
-    <!-- TV: text size is the TV menu's own (tv_menu_font_size), swatches the existing colour box size -->
-    <dimen name="subtitle_panel_row_min_height_tv">52dp</dimen>
-    <dimen name="subtitle_panel_caption_size_tv">15sp</dimen>
-    <dimen name="subtitle_panel_row_padding_h_tv">20dp</dimen>
-    <dimen name="subtitle_panel_control_size_tv">40dp</dimen>
-    <dimen name="subtitle_panel_pill_min_height_tv">40dp</dimen>
-    <dimen name="subtitle_panel_header_height_tv">52dp</dimen>
-    <dimen name="subtitle_panel_preview_height_tv">124dp</dimen>
 
     <!-- Shape -->
     <dimen name="subtitle_panel_row_corner">8dp</dimen>

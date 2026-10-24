@@ -87,7 +87,7 @@ public class SubtitleSettingsDialog extends AlertDialog
         mPreview.bind(mSubtitleManager, mSubtitleManager::getScreenShortSide);
         mScroll = view.findViewById(R.id.sp_scroll);
         mBack = view.findViewById(R.id.sp_back);
-        mBack.setText("\u2039  " + context.getString(mModel.getTitleRes(null)));
+        mBack.setText(context.getString(R.string.back_to_title, context.getString(mModel.getTitleRes(null))));
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
