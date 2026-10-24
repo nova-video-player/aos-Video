@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Explanation under a row, or the reason settings are unavailable. Not focusable. -->
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sp_note"
+    style="@style/SubtitlePanel.Caption"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="false" />
