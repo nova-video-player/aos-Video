@@ -374,7 +374,8 @@ dependencies {
     implementation 'androidx.fragment:fragment:1.9.1'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.palette:palette:1.1.0'
+    // palette version 1.1.0 requires minSdkVersion 24, so we use 1.0.0 for minSdkVersion 23
+    implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.8.0'
     // Uses the installed browser for OAuth without embedding a browser engine.
     implementation 'androidx.browser:browser:1.10.0'
