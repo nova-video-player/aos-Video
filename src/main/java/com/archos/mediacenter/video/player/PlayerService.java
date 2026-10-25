@@ -1915,7 +1915,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
 
     // User-facing feedback when an intro/outro skip fires.
     private void showAutoSkipToast(final IntroSegments.Type type) {
-        final String message = getString(R.string.introdb_skipped) + ": " + introLabels(getApplicationContext()).get(type);
+        final String message = getString(R.string.introdb_skipped_format, introLabels(getApplicationContext()).get(type));
         mHandler.post(() -> Toast.makeText(getUiContext(), message, Toast.LENGTH_SHORT).show());
     }
 

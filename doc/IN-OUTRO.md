@@ -98,4 +98,4 @@ When `introdb_enabled` is active, skip prompts are supported for:
 
 ### `PlayerActivity` & `FloatingPlayerService`
 - Implement `onShowSkipPrompt` and `onHideSkipPrompt`.
-- Bind UI buttons, set string resource `skip_intro_button_format_notimer` (`"Skip %1$s"`), and trigger `PlayerService.executeSkip()`.
+- Bind UI buttons, select the translatable label from the per-type resources (`skip_intro_button`, `skip_recap_button`, `skip_credits_button`, `skip_preview_button`), and trigger `PlayerService.executeSkip()`.
