@@ -2404,17 +2404,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     private void updateSkipButtonText(IntroSegments.Type type) {
         if (mSkipButton == null) return;
-        String name;
+        int textRes;
         if (type == IntroSegments.Type.RECAP) {
-            name = getString(R.string.introdb_segment_recap);
+            textRes = R.string.skip_recap_button;
         } else if (type == IntroSegments.Type.OUTRO || type == IntroSegments.Type.CREDITS) {
-            name = getString(R.string.introdb_segment_credits);
+            textRes = R.string.skip_credits_button;
         } else if (type == IntroSegments.Type.PREVIEW) {
-            name = getString(R.string.introdb_segment_preview);
+            textRes = R.string.skip_preview_button;
         } else {
-            name = getString(R.string.introdb_segment_intro);
+            textRes = R.string.skip_intro_button;
         }
-        mSkipButton.setText(getString(R.string.skip_intro_button_format_notimer, name));
+        mSkipButton.setText(textRes);
     }
 
     private void executeSkipPrompt() {
