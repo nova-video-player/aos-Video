@@ -34,6 +34,10 @@ import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.WrapperListAdapter;
 
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import com.archos.mediacenter.video.player.tvmenu.TVUtils;
+
 import java.util.ArrayList;
 
 /**
@@ -74,6 +78,18 @@ public class HeaderGridView extends GridView {
     }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        Context context = getContext();
+        Resources res = getResources();
+        boolean isTV = TVUtils.isTV(context);
+        boolean isTablet = (res.getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE
+                || res.getConfiguration().smallestScreenWidthDp >= 600;
+        boolean isPortrait = res.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        if (!isTV && !isTablet && isPortrait) {
+            if (getNumColumns() != 3) {
+                setNumColumns(3);
+                setStretchMode(STRETCH_COLUMN_WIDTH);
+            }
+        }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         ListAdapter adapter = getAdapter();
         if (adapter != null && adapter instanceof HeaderViewGridAdapter) {
