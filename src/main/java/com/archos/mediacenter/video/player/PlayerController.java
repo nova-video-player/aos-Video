@@ -598,8 +598,15 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                     boolean grew = h > sControlBarMaxHeight;
                     if (grew) sControlBarMaxHeight = h;
                     boolean translated = h > 0 && h == oh && t != ot;
-                    if ((grew || translated) && mOnControlBarVisibilityListener != null)
-                        mOnControlBarVisibilityListener.onControlBarVisibilityChanged(mControlBarShowing);
+                    if (grew || translated) {
+                        // View.layout() sets isLaidOut() only AFTER it has called the layout-change
+                        // listeners, so notifying here would make getControlBarClearanceAbove()
+                        // see an un-laid-out bar and return 0. Defer until layout has completed.
+                        bar.post(() -> {
+                            if (bar == sControlBarView && mOnControlBarVisibilityListener != null)
+                                mOnControlBarVisibilityListener.onControlBarVisibilityChanged(mControlBarShowing);
+                        });
+                    }
                 });
             }
             this.mPauseButton=mPauseButton;
