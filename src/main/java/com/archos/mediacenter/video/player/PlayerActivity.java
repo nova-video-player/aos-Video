@@ -448,6 +448,18 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private IntroSegments.Type mCurrentSkipType;
     private long mCurrentSkipTargetMs;
     private boolean mIsSkipPromptShowing = false;
+    private SkipProgressDrawable mSkipProgress;
+    private long mSkipProgressStartMs = -1;
+    private long mSkipProgressTargetMs = -1;
+    private static final long SKIP_PROGRESS_TICK_MS = 200;
+    private final Runnable mSkipProgressTicker = new Runnable() {
+        @Override
+        public void run() {
+            if (!mIsSkipPromptShowing || mSkipProgress == null || mSkipButton == null) return;
+            updateSkipProgress();
+            mSkipButton.postDelayed(this, SKIP_PROGRESS_TICK_MS);
+        }
+    };
     private boolean isTVMode;
     private TorrentObserverService mTorrent;
     private int mTorrentFilePosition = -1;
@@ -2310,6 +2322,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         LayoutInflater inflater = getLayoutInflater();
         mSkipButtonContainer = (ViewGroup) inflater.inflate(R.layout.skip_button_layout, (ViewGroup) mRootView, false);
         mSkipButton = (Button) mSkipButtonContainer.findViewById(R.id.skip_button);
+        mSkipProgress = new SkipProgressDrawable(this);
+        mSkipButton.setForeground(mSkipProgress);
         ((ViewGroup) mRootView).addView(mSkipButtonContainer);
         mSkipButtonContainer.bringToFront();
 
@@ -2404,17 +2418,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
     private void updateSkipButtonText(IntroSegments.Type type) {
         if (mSkipButton == null) return;
-        String name;
+        int textRes;
         if (type == IntroSegments.Type.RECAP) {
-            name = getString(R.string.introdb_segment_recap);
+            textRes = R.string.skip_recap_button;
         } else if (type == IntroSegments.Type.OUTRO || type == IntroSegments.Type.CREDITS) {
-            name = getString(R.string.introdb_segment_credits);
+            textRes = R.string.skip_credits_button;
         } else if (type == IntroSegments.Type.PREVIEW) {
-            name = getString(R.string.introdb_segment_preview);
+            textRes = R.string.skip_preview_button;
         } else {
-            name = getString(R.string.introdb_segment_intro);
+            textRes = R.string.skip_intro_button;
         }
-        mSkipButton.setText(getString(R.string.skip_intro_button_format_notimer, name));
+        mSkipButton.setText(textRes);
     }
 
     private void executeSkipPrompt() {
@@ -2441,15 +2455,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         if (isPiP) {
             mSkipButton.setTextSize(10);
             int padH = (int) (8 * density);
-            int padV = (int) (4 * density);
-            mSkipButton.setPadding(padH, padV, padH, padV);
+            int padTop = (int) (4 * density);
+            int padBottom = (int) (14 * density);
+            mSkipButton.setPadding(padH, padTop, padH, padBottom);
             mSkipButton.setMinHeight((int) (28 * density));
             mSkipButton.setMinWidth((int) (60 * density));
         } else {
             mSkipButton.setTextSize(15);
             int padH = (int) (20 * density);
-            int padV = (int) (10 * density);
-            mSkipButton.setPadding(padH, padV, padH, padV);
+            int padTop = (int) (10 * density);
+            int padBottom = (int) (14 * density);
+            mSkipButton.setPadding(padH, padTop, padH, padBottom);
             mSkipButton.setMinHeight((int) (44 * density));
             mSkipButton.setMinWidth((int) (140 * density));
         }
@@ -2467,6 +2483,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         updateSkipButtonText(type);
 
         mIsSkipPromptShowing = true;
+        startSkipProgress(targetMs);
         mSkipButtonContainer.clearAnimation();
         mSkipButtonContainer.bringToFront();
         if (mSkipButtonContainer.getVisibility() != View.VISIBLE) {
@@ -2483,9 +2500,37 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
     }
 
+    private void startSkipProgress(long targetMs) {
+        if (mSkipProgress == null || mSkipButton == null) return;
+        if (mSkipProgressTargetMs != targetMs) {
+            mSkipProgressTargetMs = targetMs;
+            mSkipProgressStartMs = (Player.sPlayer != null) ? Player.sPlayer.getCurrentPosition() : targetMs;
+        }
+        mSkipButton.removeCallbacks(mSkipProgressTicker);
+        updateSkipProgress();
+        mSkipButton.postDelayed(mSkipProgressTicker, SKIP_PROGRESS_TICK_MS);
+    }
+
+    private void updateSkipProgress() {
+        if (mSkipProgress == null) return;
+        final long span = mSkipProgressTargetMs - mSkipProgressStartMs;
+        if (span <= 0 || Player.sPlayer == null) {
+            mSkipProgress.setLevel(0);
+            return;
+        }
+        final long position = Player.sPlayer.getCurrentPosition();
+        float fraction = (position - mSkipProgressStartMs) / (float) span;
+        if (fraction < 0f) fraction = 0f;
+        else if (fraction > 1f) fraction = 1f;
+        mSkipProgress.setLevel(Math.round(fraction * 10000f));
+    }
+
     private void hideSkipPrompt() {
         mIsSkipPromptShowing = false;
         mCurrentSkipTargetMs = -1;
+        if (mSkipButton != null) mSkipButton.removeCallbacks(mSkipProgressTicker);
+        mSkipProgressStartMs = -1;
+        mSkipProgressTargetMs = -1;
         if (mSkipButtonContainer != null && mSkipButtonContainer.getVisibility() == View.VISIBLE) {
             boolean buttonHadFocus = mSkipButton != null && (mSkipButton.hasFocus() || mSkipButton.isFocused());
             if (buttonHadFocus && isTVMode && mPlayerControllerPlaceholder != null) {

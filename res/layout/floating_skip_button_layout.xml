@@ -21,7 +21,7 @@
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:paddingTop="3dp"
-        android:paddingBottom="3dp"
+        android:paddingBottom="14dp"
         android:background="@drawable/skip_button_selector"
         android:textColor="@color/skip_button_text_selector"
         android:textSize="11sp"
