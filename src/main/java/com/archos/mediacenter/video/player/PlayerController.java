@@ -228,6 +228,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     // for getControlBarClearanceAbove(). Cleared in detachWindow() to avoid leaking the view.
     @SuppressLint("StaticFieldLeak")
     private static View          sControlBarView;
+    // Tallest height control_bar reached since it was last shown. The bar's height jitters while
+    // visible (seek spinner toggling, end-time text with/without the clock glyph), and subtitles
+    // must not follow that jitter, so clearance is computed from this sticky value instead.
+    // Reset when the bar hides and on detach.
+    private static int           sControlBarMaxHeight = 0;
 
     private boolean             mVolumeBarEnabled = false;
 
@@ -579,6 +584,24 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             this.mCentralPlayIcon = centralPlayIcon;
             this.mControlBar=mControlBar;
             sControlBarView = mControlBar;
+            if (mControlBar != null) {
+                // control_bar is GONE until first shown, so its geometry is stale when
+                // OnControlBarVisibilityListener fires on the first show. Re-notify once it
+                // has really been laid out so subtitles clear the whole bar.
+                // Deliberately NOT on every size change: the bar's height jitters during
+                // playback and notifying each time makes the subtitles bounce. Notify only when
+                //  - the bar reaches a new maximum height (first layout, or it genuinely grew), or
+                //  - it was merely translated (same height, e.g. nav bar hid/showed).
+                mControlBar.addOnLayoutChangeListener((bar, l, t, r, b, ol, ot, or_, ob) -> {
+                    int h = b - t;
+                    int oh = ob - ot;
+                    boolean grew = h > sControlBarMaxHeight;
+                    if (grew) sControlBarMaxHeight = h;
+                    boolean translated = h > 0 && h == oh && t != ot;
+                    if ((grew || translated) && mOnControlBarVisibilityListener != null)
+                        mOnControlBarVisibilityListener.onControlBarVisibilityChanged(mControlBarShowing);
+                });
+            }
             this.mPauseButton=mPauseButton;
             this.mFormatButton=mFormatButton ;
             this.mFullscreenWithCutoutButton = fullscreenWithCutoutButton;
@@ -787,42 +810,41 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     /**
      * Pixels the on-screen control bar reaches above the bottom edge of the given reference
-     * view, or 0 if the bar is not currently shown.
+     * view, or 0 if the bar is not currently shown (or not laid out yet).
      *
      * Unlike getControlBarCurrentHeight() (0 unless the nav bar / gesture area happens to be
-     * showing, so unreliable on TV) this needs no live measurement of the bar itself and so
-     * has no dependency on a layout pass having completed for its current VISIBLE/GONE state:
-     *   - height: control_bar's android:layout_height is the fixed dimen
-     *     player2014_bar_width (45dip default; 40/53/70dip on the notouch/tablet buckets --
-     *     see the res/values (default), res/values-sw600dp, res/values-sw500dp-land-notouch and res/values-sw600dp-land-notouch dimens.xml files). Resources.getDimensionPixelSize() resolves the
-     *     bucket-correct value for the current config directly, with no view involved.
-     *   - position: control_bar has android:layout_alignParentBottom="true" in every
-     *     player_controller_inside.xml variant, so its bottom is always exactly its parent's
-     *     bottom. The parent (playerControllers) is the fill_parent controller root, already
-     *     laid out before the bar's own visibility is ever toggled, so this reads correctly
-     *     on the very first show of a session -- nothing to wait for.
-     * This sidesteps the bar's own geometry entirely, so there is no stale-vs-fresh layout
-     * race to gate on.
+     * showing, so unreliable on TV) this measures control_bar's real on-screen top edge, so it
+     * is correct for every layout variant. The bar's height is NOT a fixed dimen:
+     *   - land / sw500dp-notouch / sw600dp: a single row, sized by player2014_bar_width.
+     *   - default (portrait phone): a vertical LinearLayout (wrap_content) holding the seek
+     *     bar + time row AND the button row, well over 100dp tall, and never using
+     *     player2014_bar_width at all.
+     * control_bar's top is the top of everything in it (seek bar, times, buttons), so the
+     * distance from there to the reference view's bottom is the clearance text subtitles need.
+     *
+     * The bar is GONE until first shown, so its position is only valid after its first layout.
+     * This returns 0 until then; initControllerView() registers a layout listener that
+     * re-notifies OnControlBarVisibilityListener once the bar has actually been laid out, so
+     * SubtitleManager recomputes with fresh geometry.
      *
      * Tracks only the main pane's bar (sControlBarView is set from the isMainView branch of
-     * initControllerView()). splitView/mControlBar2 is private to PlayerController -- confirmed
-     * via a repo-wide search to have no reference in PlayerActivity, SubtitleManager or
-     * anywhere else, in both this branch and the pre-libass legacy branch -- so there is no
-     * second SubtitleManager/SubtitleEngine instance that could ever ask for clearance against
-     * the secondary pane's bar. If a future change wires subtitles into split-view, this will
-     * need its own reference per pane.
+     * initControllerView()). splitView/mControlBar2 is private to PlayerController, so there
+     * is no second SubtitleManager/SubtitleEngine instance that could ask for clearance
+     * against the secondary pane's bar. If a future change wires subtitles into split-view,
+     * this will need its own reference per pane.
      */
     public static int getControlBarClearanceAbove(View reference) {
         if (!mControlBarShowing || reference == null || sControlBarView == null) return 0;
-        View barParent = (View) sControlBarView.getParent();
-        if (barParent == null || !barParent.isLaidOut() || !reference.isLaidOut()) return 0;
-        int barHeight = reference.getContext().getResources()
-                .getDimensionPixelSize(com.archos.mediacenter.video.R.dimen.player2014_bar_width);
-        int[] parentLoc = new int[2];
+        if (sControlBarView.getVisibility() != View.VISIBLE
+                || !sControlBarView.isLaidOut() || !reference.isLaidOut()) return 0;
+        int[] barLoc = new int[2];
         int[] refLoc = new int[2];
-        barParent.getLocationOnScreen(parentLoc);
+        sControlBarView.getLocationOnScreen(barLoc);
         reference.getLocationOnScreen(refLoc);
-        int barTop = parentLoc[1] + barParent.getHeight() - barHeight;
+        // The bar is bottom-anchored, so derive its top from its bottom and the sticky maximum
+        // height. This ignores transient height jitter, which would otherwise move the subtitles.
+        int barBottom = barLoc[1] + sControlBarView.getHeight();
+        int barTop = barBottom - Math.max(sControlBarView.getHeight(), sControlBarMaxHeight);
         int refBottom = refLoc[1] + reference.getHeight();
         return Math.max(refBottom - barTop, 0);
     }
@@ -857,6 +879,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mControllerViewLeft=null;
         mControllerViewRight=null;
         sControlBarView = null;
+        sControlBarMaxHeight = 0;
     }
 
     public void setMediaPlayer(IPlayerControl player) {
@@ -951,6 +974,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 || mControlBar.getVisibility() != (show ? View.VISIBLE : View.GONE))) {
             if (log.isDebugEnabled()) log.debug("showControlBar {}", String.valueOf(show));
             mControlBarShowing = show;
+            if (!show) sControlBarMaxHeight = 0;
             adjustView();
             setVisibility(mControlBar, show, true);
             if(mPlayPauseTouchZone!=null){
