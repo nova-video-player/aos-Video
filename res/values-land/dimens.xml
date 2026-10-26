@@ -18,6 +18,9 @@
 
     <dimen name="info_activity_horizontal_margin">64dp</dimen>
 
-
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- Phone landscape is only about 320dp tall: header and preview give up some height for rows -->
+    <dimen name="subtitle_panel_header_height">44dp</dimen>
+    <dimen name="subtitle_panel_preview_height">70dp</dimen>
 
 </resources>

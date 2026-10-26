@@ -1,35 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+  subtitle_layout.xml
+
+  This container is still load-bearing: SubtitleManager attaches it to the player view
+  tree purely for its window-inset / rotation / system-UI-visibility tracking (see
+  attachWindow()/adjustView() in SubtitleManager.java, which read mRootView and
+  mSubtitleLayout regardless of subtitle content). It no longer contains any actual
+  subtitle rendering views — SubtitleGfxView and Subtitle3DTextView were removed once
+  the native libass/GL SubtitleEngine took over all rendering (2D direct GL draw or the
+  3D hybrid CPU-blit bridge), and nothing in the codebase references either type anymore.
+
+  The one child that remains, subtitle_spacer, is now purely a position-hint indicator:
+  a translucent bar shown briefly while the user drags the vertical-offset control, so
+  they can see where the bottom margin will land before releasing. It plays no role in
+  actual subtitle rendering (that's owned entirely by libass's MarginV, applied natively).
+-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/subtitle_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-
-    <!-- Subtitles -->
-    <com.archos.mediacenter.video.player.SubtitleGfxView android:id="@+id/subtitle_gfx_view"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:clickable="false"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/subtitle_spacer"
-        android:visibility="gone" />
-
-    <com.archos.mediacenter.video.player.Subtitle3DTextView android:id="@+id/subtitle_txt_view"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:clickable="false"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/subtitle_spacer"
-        android:padding="4dip"
-        android:fontFamily="sans-serif-medium"
-        android:textSize="14sp"
-        android:textColor="#ffffffff"
-        android:gravity="center"
-        android:visibility="gone" />
 
     <com.archos.mediacenter.video.player.SubtitleSpacerView android:id="@+id/subtitle_spacer"
         android:layout_width="match_parent"

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Focused row: the TV menu's own focus color plus a thin accent ring so it is clear on every screen.
+     Also used for "activated", which is how the 3D copy of the panel shows which row the real one has focused. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/video_info_next_prev_button_focused" />
+            <corners android:radius="@dimen/subtitle_panel_row_corner" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <stroke android:width="2dp" android:color="?attr/colorAccent" />
+            <corners android:radius="@dimen/subtitle_panel_row_corner" />
+        </shape>
+    </item>
+</layer-list>

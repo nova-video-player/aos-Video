@@ -224,6 +224,15 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     private static boolean      mControlBarShowing, mSystemBarShowing, mSystemBarGone, mActionBarShowing, mVolumeBarShowing, mNavigationBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
     private static int          mGestureAreaHeight, mControlBarHeight;
+    // Static handle to the live control bar view, so SubtitleManager can resolve its parent
+    // for getControlBarClearanceAbove(). Cleared in detachWindow() to avoid leaking the view.
+    @SuppressLint("StaticFieldLeak")
+    private static View          sControlBarView;
+    // Tallest height control_bar reached since it was last shown. The bar's height jitters while
+    // visible (seek spinner toggling, end-time text with/without the clock glyph), and subtitles
+    // must not follow that jitter, so clearance is computed from this sticky value instead.
+    // Reset when the bar hides and on detach.
+    private static int           sControlBarMaxHeight = 0;
 
     private boolean             mVolumeBarEnabled = false;
 
@@ -257,6 +266,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     private boolean             manualVisibilityChange;
     private FrameLayout         playerControllersContainer;
     private TVCardDialog tvCardDialog = null;
+
     private boolean             isTVMode = false;
     private long                mLastTouchEventTime = -1;
     private View mPlayPauseTouchZone;
@@ -573,6 +583,32 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             this.mPlayPauseTouchZone = playPauseTouchZone;
             this.mCentralPlayIcon = centralPlayIcon;
             this.mControlBar=mControlBar;
+            sControlBarView = mControlBar;
+            if (mControlBar != null) {
+                // control_bar is GONE until first shown, so its geometry is stale when
+                // OnControlBarVisibilityListener fires on the first show. Re-notify once it
+                // has really been laid out so subtitles clear the whole bar.
+                // Deliberately NOT on every size change: the bar's height jitters during
+                // playback and notifying each time makes the subtitles bounce. Notify only when
+                //  - the bar reaches a new maximum height (first layout, or it genuinely grew), or
+                //  - it was merely translated (same height, e.g. nav bar hid/showed).
+                mControlBar.addOnLayoutChangeListener((bar, l, t, r, b, ol, ot, or_, ob) -> {
+                    int h = b - t;
+                    int oh = ob - ot;
+                    boolean grew = h > sControlBarMaxHeight;
+                    if (grew) sControlBarMaxHeight = h;
+                    boolean translated = h > 0 && h == oh && t != ot;
+                    if (grew || translated) {
+                        // View.layout() sets isLaidOut() only AFTER it has called the layout-change
+                        // listeners, so notifying here would make getControlBarClearanceAbove()
+                        // see an un-laid-out bar and return 0. Defer until layout has completed.
+                        bar.post(() -> {
+                            if (bar == sControlBarView && mOnControlBarVisibilityListener != null)
+                                mOnControlBarVisibilityListener.onControlBarVisibilityChanged(mControlBarShowing);
+                        });
+                    }
+                });
+            }
             this.mPauseButton=mPauseButton;
             this.mFormatButton=mFormatButton ;
             this.mFullscreenWithCutoutButton = fullscreenWithCutoutButton;
@@ -779,6 +815,47 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         return mControlBarHeight;
     }
 
+    /**
+     * Pixels the on-screen control bar reaches above the bottom edge of the given reference
+     * view, or 0 if the bar is not currently shown (or not laid out yet).
+     *
+     * Unlike getControlBarCurrentHeight() (0 unless the nav bar / gesture area happens to be
+     * showing, so unreliable on TV) this measures control_bar's real on-screen top edge, so it
+     * is correct for every layout variant. The bar's height is NOT a fixed dimen:
+     *   - land / sw500dp-notouch / sw600dp: a single row, sized by player2014_bar_width.
+     *   - default (portrait phone): a vertical LinearLayout (wrap_content) holding the seek
+     *     bar + time row AND the button row, well over 100dp tall, and never using
+     *     player2014_bar_width at all.
+     * control_bar's top is the top of everything in it (seek bar, times, buttons), so the
+     * distance from there to the reference view's bottom is the clearance text subtitles need.
+     *
+     * The bar is GONE until first shown, so its position is only valid after its first layout.
+     * This returns 0 until then; initControllerView() registers a layout listener that
+     * re-notifies OnControlBarVisibilityListener once the bar has actually been laid out, so
+     * SubtitleManager recomputes with fresh geometry.
+     *
+     * Tracks only the main pane's bar (sControlBarView is set from the isMainView branch of
+     * initControllerView()). splitView/mControlBar2 is private to PlayerController, so there
+     * is no second SubtitleManager/SubtitleEngine instance that could ask for clearance
+     * against the secondary pane's bar. If a future change wires subtitles into split-view,
+     * this will need its own reference per pane.
+     */
+    public static int getControlBarClearanceAbove(View reference) {
+        if (!mControlBarShowing || reference == null || sControlBarView == null) return 0;
+        if (sControlBarView.getVisibility() != View.VISIBLE
+                || !sControlBarView.isLaidOut() || !reference.isLaidOut()) return 0;
+        int[] barLoc = new int[2];
+        int[] refLoc = new int[2];
+        sControlBarView.getLocationOnScreen(barLoc);
+        reference.getLocationOnScreen(refLoc);
+        // The bar is bottom-anchored, so derive its top from its bottom and the sticky maximum
+        // height. This ignores transient height jitter, which would otherwise move the subtitles.
+        int barBottom = barLoc[1] + sControlBarView.getHeight();
+        int barTop = barBottom - Math.max(sControlBarView.getHeight(), sControlBarMaxHeight);
+        int refBottom = refLoc[1] + reference.getHeight();
+        return Math.max(refBottom - barTop, 0);
+    }
+
     public static boolean isControlBarShowing() {
         return mControlBarShowing;
     }
@@ -808,6 +885,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         mControllerView = null;
         mControllerViewLeft=null;
         mControllerViewRight=null;
+        sControlBarView = null;
+        sControlBarMaxHeight = 0;
     }
 
     public void setMediaPlayer(IPlayerControl player) {
@@ -902,6 +981,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 || mControlBar.getVisibility() != (show ? View.VISIBLE : View.GONE))) {
             if (log.isDebugEnabled()) log.debug("showControlBar {}", String.valueOf(show));
             mControlBarShowing = show;
+            if (!show) sControlBarMaxHeight = 0;
             adjustView();
             setVisibility(mControlBar, show, true);
             if(mPlayPauseTouchZone!=null){
@@ -2786,18 +2866,30 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         }
         else{
             //destroy dialogs
-            dismissTVCardDialog();
+            dismissTVCardDialog(true);
         }
         isTVMenuDisplayed=show;
     }
 
     private boolean dismissTVCardDialog() {
+        return dismissTVCardDialog(false);
+    }
+
+    /**
+     * @param force close the card whatever its levels (the TV menu is going away); otherwise Back
+     *              first lets a card with several levels go up one, and the card stays active.
+     */
+    private boolean dismissTVCardDialog(boolean force) {
         if (tvCardDialog == null || tvCardDialog.getVisibility() != View.VISIBLE)
             return false;
         log.info("Back navigation: active TV card dialog found");
         TVCardDialog dialog = tvCardDialog;
         tvCardDialog = null;
-        dialog.handleBackPressed();
+        if (force) {
+            dialog.handleBackPressed();
+        } else if (dialog.handleBack()) {
+            tvCardDialog = dialog;
+        }
         return true;
     }
 

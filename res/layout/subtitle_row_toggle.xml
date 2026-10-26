@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Same pattern as the TV menu's switch row: the SwitchCompat carries the label, so a tap anywhere on it toggles
+     and TalkBack reads "<label>, switch". The row stays the focus stop. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/SubtitlePanel.Row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="6dp"
+    android:layout_marginEnd="6dp"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/sp_toggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:focusable="false"
+        android:gravity="center_vertical"
+        android:minHeight="?attr/subtitleRowMinHeight"
+        android:switchMinWidth="0dp"
+        android:textColor="@color/subtitle_panel_text_primary"
+        android:textSize="?attr/subtitleLabelTextSize" />
+</LinearLayout>

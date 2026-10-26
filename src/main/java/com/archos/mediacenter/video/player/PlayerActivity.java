@@ -147,7 +147,6 @@ import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.mediacenter.video.utils.VideoUtils;
 import com.archos.medialib.IMediaPlayer;
 import com.archos.medialib.LibAvos;
-import com.archos.medialib.Subtitle;
 import com.archos.mediaprovider.video.VideoStore;
 import com.archos.mediascraper.ScrapeDetailResult;
 
@@ -209,12 +208,29 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private static final int DIALOG_AUDIO_SPEED = 10;
 
     // accessed from SubtitleSettingsDialog
-    public static final String KEY_SUBTITLE_BACKGROUND = "subtitle_background";
-    public static final String KEY_SUBTITLE_BG_OPACITY = "subtitle_bg_opacity";
-    /* package */ public static final String KEY_SUBTITLE_SIZE = "pref_play_subtitle_size_key";
-    /* package */ public static final String KEY_SUBTITLE_VPOS = "pref_play_subtitle_vpos_key";
-    public static final String KEY_SUBTITLE_OUTLINE = "pref_play_subtitle_outline_key";
-    public static final String KEY_SUBTITLE_COLOR = "pref_play_subtitle_color_key";
+    public static final String KEY_SUBTITLE_BG_OPACITY = SubtitleManager.KEY_BG_OPACITY;
+    /* package */ public static final String KEY_SUBTITLE_VPOS = SubtitleManager.KEY_VPOS;
+    public static final String KEY_SUBTITLE_COLOR = SubtitleManager.KEY_COLOR;
+
+    // --- NEW: libass styling system additions ---
+    // KEY_SUBTITLE_BG_MODE uses -1 as a sentinel default meaning "not yet migrated";
+    // see restorePreferences()/savePreferences() for the one-time migration from the
+    // legacy KEY_SUBTITLE_OUTLINE / KEY_SUBTITLE_BACKGROUND booleans.
+    public static final String KEY_SUBTITLE_BG_MODE = SubtitleManager.KEY_BG_MODE;
+    public static final String KEY_SUBTITLE_OVERRIDE_MODE = SubtitleManager.KEY_OVERRIDE_MODE;
+    public static final String KEY_SUBTITLE_BOLD = SubtitleManager.KEY_BOLD;
+    public static final String KEY_SUBTITLE_OUTLINE_COLOR = SubtitleManager.KEY_OUTLINE_COLOR;
+    public static final String KEY_SUBTITLE_SHADOW_COLOR = SubtitleManager.KEY_SHADOW_COLOR;
+    public static final String KEY_SUBTITLE_BACKGROUND_COLOR = SubtitleManager.KEY_BACKGROUND_COLOR;
+    public static final String KEY_SUBTITLE_OUTLINE_WIDTH = SubtitleManager.KEY_OUTLINE_WIDTH;
+    public static final String KEY_SUBTITLE_SHADOW_WIDTH = SubtitleManager.KEY_SHADOW_WIDTH;
+    public static final String KEY_SUBTITLE_FONT_SIZE_PT = SubtitleManager.KEY_FONT_SIZE_PT;
+    public static final String KEY_SUBTITLE_FONT_SCALE = SubtitleManager.KEY_FONT_SCALE;
+    // When true, plain-text (SRT/VTT) and bitmap (VobSub/PGS) subtitles are allowed to render
+    // into top/bottom letterbox bars (mpv's sub-use-margins equivalent). Left/right bars are
+    // never used, regardless of this setting -- see SurfaceController.updateSurface().
+    public static final String KEY_SUBTITLE_USE_MARGINS = "subtitle_use_margins";
+
     private static final String KEY_PLAYER_FORMAT = "player_pref_format_key";
     private static final String KEY_PLAYER_AUTO_FORMAT = "player_pref_auto_format_key";
     private static final String KEY_PLAYER_PROJECTOR_MODE = "player_projector_mode_key";
@@ -418,10 +434,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     // Specific player settings used for demo mode
     private boolean mForceExitOnTouch;
 
-    private int mSubtitleSizeDefault;
-    private int mSubtitleVPosDefault;
-    private int mSubtitleColorDefault;
-    private boolean mSubtitleOutlineDefault;
+    private SubtitleManager.Defaults mSubtitleDefaults;
     private boolean mAudioSubtitleNeedUpdate = false;
     private int mNewSubtitleTrack = -1;
     private int mNewAudioTrack = -1;
@@ -432,7 +445,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private boolean mCling = false;
 
     private TVMenu mSubtitleTVMenu;
-    private TVMenuItem mSubtitleSettingsMenuItem;
     private TVMenuItem mSubtitleDelayMenuItem;
     private TVCardView mSubtitleTVCardView;
     private TVCardView mAudioTracksTVCardView;
@@ -746,7 +758,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         WindowManager.LayoutParams attributes = getWindow().getAttributes();
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        
+
         // cutout mode: display below cutout
         boolean cutBothSidesX = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -822,10 +834,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
         });
 
-        mSubtitleSizeDefault = getResources().getInteger(R.integer.player_pref_subtitle_size_default);
-        mSubtitleVPosDefault = getResources().getInteger(R.integer.player_pref_subtitle_vpos_default);
-        mSubtitleColorDefault = Color.parseColor(getResources().getString(R.string.subtitle_color_default));
-        mSubtitleOutlineDefault = false;
+        mSubtitleDefaults = new SubtitleManager.Defaults(this);
+
         mSurfaceController = new SurfaceController(mRootView);
         mSurfaceController.mFullScreenWithCutout = mFullScreenWithCutout;
         mSurfaceController.mCutBothSidesX = cutBothSidesX;
@@ -1002,10 +1012,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         setLockRotation(mLockRotation);
         mSurfaceController.setVideoFormat(Integer.parseInt(mPreferences.getString(KEY_PLAYER_FORMAT, "-1")),
                 Integer.parseInt(mPreferences.getString(KEY_PLAYER_AUTO_FORMAT, "-1")));
-        
+
         //Set up projector mode if we need it, otherwise dont even call.
         if (mPreferences.getBoolean(KEY_PLAYER_PROJECTOR_MODE, false)) mSurfaceController.setProjectorMode(true);
-        
+
         if (log.isDebugEnabled()) log.debug("onStart: Setting audio transformer");
         if (LibAvos.isAvailable()) {
             VideoPreferencesCommon.resetPassthroughPref(mPreferences); // note this resets the audio_speed if in passthrough to 1.0f in prefs
@@ -1164,6 +1174,24 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             registerReceiver(mClockReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         }
         PlayerBrightnessManager.getInstance().restoreBrightness(this);
+
+        // Safety net for the rare case where Android genuinely killed the process while
+        // backgrounded (memory pressure) and a fresh Player/SubtitleEngine had to be created:
+        // gl_subtitle_view's SurfaceTexture is window-scoped and may not redeliver
+        // onSurfaceTextureAvailable/SizeChanged on every resume, so proactively re-push the
+        // known surface size. No-op-safe to call unconditionally.
+        if (mPlayer != null && mPlayer.getSubtitleEngine() != null) {
+            mPlayer.getSubtitleEngine().resyncSurfaceSize();
+        }
+
+        // Re-apply subtitle layout mode (category + use-margins) on resume: the use-margins
+        // preference (KEY_SUBTITLE_USE_MARGINS) is otherwise only re-read on a subtitle track
+        // event (onTrackSelected()/onSubtitleMetadataUpdated()) -- if the user backgrounds the
+        // player, changes it in Settings, and returns without switching tracks, the running
+        // SurfaceController never learns about it until the next unrelated track change.
+        // Safe to call unconditionally, same as resyncSurfaceSize() above.
+        updateSubtitleLayoutMode();
+
         if(!mWasInPictureInPicture){
             mPermissionChecker.checkAndRequestPermission(this);
             if (!isFinishing() && !isDestroyed()) {
@@ -1283,11 +1311,28 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mPlayerController.hide();
 
         stop();
-        if(PlayerService.sPlayerService !=null)
-            PlayerService.sPlayerService.removePlayerFrontend(mPlayerListener, mLaunchFloatingPlayer);
 
-        if(FloatingPlayerService.sFloatingPlayerService!=null&&!mLaunchFloatingPlayer)
-            FloatingPlayerService.sFloatingPlayerService.stopSelf();
+        // Only tear down the shared PlayerService binding when we're actually leaving this
+        // playback session for good (finishing, or handing off to the floating player, which
+        // has its own dedicated handoff path via mLaunchFloatingPlayer/prepareForSurfaceSwitch).
+        // A plain minimize (home button) also reaches onStop(), but mResumeFromLast=true below
+        // already assumes we're coming right back to the SAME Player/SubtitleEngine instance --
+        // unbindService() here let Android destroy PlayerService while backgrounded (nothing
+        // else was bound to it), so PlayerService.onCreate() -> setPlayer() would race
+        // PlayerActivity.postOnPlayerServiceBind() -> "Player.sPlayer = mPlayer" on resume and
+        // often win, silently allocating a throwaway Player (and thus a throwaway
+        // SubtitleEngine/native sub_engine with no known surface size) instead of reusing the
+        // real one. Keeping the binding alive across a plain minimize avoids that race entirely.
+        boolean isLeavingForGood = isFinishing() || mLaunchFloatingPlayer;
+        if (isLeavingForGood) {
+            if(PlayerService.sPlayerService !=null)
+                PlayerService.sPlayerService.removePlayerFrontend(mPlayerListener, mLaunchFloatingPlayer);
+
+            if(FloatingPlayerService.sFloatingPlayerService!=null&&!mLaunchFloatingPlayer)
+                FloatingPlayerService.sFloatingPlayerService.stopSelf();
+        } else {
+            if (log.isDebugEnabled()) log.debug("onStop: plain background transition, keeping PlayerService binding and Player.sPlayer alive for resume");
+        }
         mLaunchFloatingPlayer = false;
         mResumeFromLast = true;
 
@@ -1295,7 +1340,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         editor.putInt("lastintent", getIntent().hashCode());
         editor.apply();
         unregisterReceiver(mReceiver);
-        unbindService(mPlayerServiceConnection);
+        if (isLeavingForGood) {
+            unbindService(mPlayerServiceConnection);
+        }
         removeNetworkListener();
     }
 
@@ -1337,6 +1384,20 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mPlayer = null;
         }
         super.onDestroy();
+    }
+
+    private void updateSubtitleLayoutMode() {
+        // The track kind is decided in native and interpreted in exactly one place,
+        // SubtitleManager (see its KIND_* docs). This method only forwards the answer.
+        syncSubtitleKind();
+        int category = mSubtitleManager != null
+                ? mSubtitleManager.getLayoutCategory()
+                : SurfaceController.SUBTITLE_CATEGORY_PLAIN_TEXT;
+        boolean useMargins = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean(KEY_SUBTITLE_USE_MARGINS, true);
+        if (mSurfaceController != null) {
+            mSurfaceController.setSubtitleLayoutMode(category, useMargins);
+        }
     }
 
     @SuppressWarnings("deprecation") // getRealSize/getSize: API 30+ uses getCurrentWindowMetrics
@@ -1391,14 +1452,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
 
         //Find the screen density.
         DisplayMetrics metrics = getResources().getDisplayMetrics();
-        
+
         //Set the Floating Player Size, 45% of the smallest side, or 2 inches on Tablet etc.
         int smallestSide = (isPortrait ? displayWidth : displayHeight);
         int smallestSideLayout = (isPortrait ? layoutWidth : layoutHeight);
         mPlayerController.floatingPlayerSize =  (int) ( smallestSide / metrics.densityDpi < 3 ?
                 (int) (smallestSideLayout * 0.45):
                 metrics.densityDpi * 2);
-                
+
         //Update the Strecth X /Y Icon
         mPlayerController.setStretchXYIcon();
 
@@ -1452,15 +1513,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             mAudioInfoController.resetPopup();
             mSubtitleInfoController.resetPopup();
         }
-        int size = mPreferences.getInt(KEY_SUBTITLE_SIZE, mSubtitleSizeDefault);
-        int vpos = mPreferences.getInt(KEY_SUBTITLE_VPOS, mSubtitleVPosDefault);
-        if(isInPictureInPictureMode||isInMultiWindowMode) { //proportional size
-            size = (int) ((layoutWidth / (float)(displayHeight<displayWidth?displayWidth:displayHeight)) * size);
+        int vpos = mPreferences.getInt(KEY_SUBTITLE_VPOS, mSubtitleDefaults.vpos);
+        if(isInPictureInPictureMode||isInMultiWindowMode) {
             // note that in multiwindow mode chromeos returns correct height but not in full screen thus it works here
             vpos = (int) ((layoutHeight / (float)(displayHeight<displayWidth?displayHeight:displayWidth)) * vpos);
         }
-        if (log.isDebugEnabled()) log.debug("CONFIG updateSizes: mSubtitleManager.setSize({}), vpos={}", size, vpos);
-        mSubtitleManager.setSize(size);
+        if (log.isDebugEnabled()) log.debug("CONFIG updateSizes: vpos={}", vpos);
         setSubtitleVpos(vpos, "updateSizes");
     }
 
@@ -1619,7 +1677,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     return true;
                 }
                 if(mPlayerController!=null){
-                    return mPlayerController.onKey(keyCode, event); 
+                    return mPlayerController.onKey(keyCode, event);
                 }
                 break;
             case KeyEvent.KEYCODE_DPAD_DOWN:
@@ -1799,154 +1857,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             }
         });
         ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).addOtherView(tvmenu);
-        ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {     
+        ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {
             @Override
             public void onResult(int code) {
                 mPlayerController.getTVMenuAdapter().setDiscrete(false);
-            }
-        });
-        mPlayerController.getTVMenuAdapter().setDiscrete(true);
-        mPlayerController.addToMenuContainer(dialogMainView);
-        tvPicker.requestFocus();
-    }
-
-    @SuppressLint("InflateParams")
-    private void createTVSubtitleSettingsDialog() {
-        float density = getResources().getDisplayMetrics().density;
-        float pickerWidth= (float)100 * density;
-
-        View dialogMainView =   LayoutInflater.from(mContext)
-                .inflate(R.layout.card_dialog_layout, null);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) dialogMainView.findViewById(R.id.card_view).getLayoutParams();
-        params.gravity = Gravity.CENTER_HORIZONTAL;
-        ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).setText((String) getText(R.string.menu_player_settings));
-
-        mPlayerController.getTVMenuAdapter().setDiscrete(true);
-        final TVMenu tvmenu = mPlayerController.getTVMenuAdapter().createTVMenu();
-
-        tvmenu.createAndAddTVMenuItem(getText(R.string.subtitle_style_text).toString(), false);
-        final SubtitleDelayTVPicker tvPicker = (SubtitleDelayTVPicker)LayoutInflater.from(mContext)
-                .inflate(R.layout.subtitle_delay_tv_picker, null);
-        tvPicker.setStep(1);
-        tvPicker.setMin(10 * 100);
-        tvPicker.setMax(100 * 100);
-        // tvPicker.setHourFormat(true);
-        tvmenu.addTVMenuItem(tvPicker);
-        tvPicker.setTextViewWidth((int) pickerWidth);
-        mSubtitleManager.setShowSubtitlePositionHint(true);
-        tvPicker.setText(getTVSizeText(mSubtitleManager.getSize()));
-        tvPicker.setTextSize(mSubtitleManager.getSize());
-        tvPicker.setUpdateText(false);
-        tvPicker.setTextColor(mSubtitleManager.getColor());
-        tvPicker.init(mSubtitleManager.getSize() * 100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
-            @Override
-            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
-                if (r != null)
-                    tvPicker.removeCallbacks(r);
-                mSubtitleManager.setSize(delay / 100);
-                tvPicker.setText(getTVSizeText(delay / 100));
-                tvPicker.setTextSize(mSubtitleManager.getSize());
-            }
-        });
-
-        final SubtitleColorPicker colorPicker = new SubtitleColorPicker(this);
-
-        colorPicker.setColorPickListener(new SubtitleColorPicker.ColorPickListener() {
-            @Override
-            public void onColorPicked(int color) {
-                tvPicker.setTextColor(color);
-                mSubtitleManager.setColor(color);
-
-            }
-        });
-        tvmenu.addTVMenuItem(colorPicker);
-
-        tvmenu.createAndAddTVMenuItem(getText(R.string.subtitle_vert_text).toString(), false);
-
-        // adding tv picker
-        final SubtitleDelayTVPicker tvPicker2 = (SubtitleDelayTVPicker)LayoutInflater.from(mContext)
-                .inflate(R.layout.subtitle_delay_tv_picker, null);
-
-        tvPicker2.setStep(10);
-        tvPicker2.setMin(0);
-        tvPicker2.setMax(255*100);
-        // tvPicker.setHourFormat(true);
-        tvmenu.addTVMenuItem(tvPicker2);
-        tvPicker2.setTextViewWidth((int) pickerWidth);
-        mSubtitleManager.setShowSubtitlePositionHint(true);
-        tvPicker2.init(mSubtitleManager.getVerticalPosition()*100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
-            @Override
-            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
-                if (r != null)
-                    tvPicker2.removeCallbacks(r);
-                mSubtitleManager.fadeSubtitlePositionHint(true);
-                setSubtitleVpos(delay/100, "onDelayChanged");
-                r = new Runnable() {
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        mSubtitleManager.fadeSubtitlePositionHint(false);
-                    }
-                };
-                tvPicker2.postDelayed(r, 200);
-            }
-        });
-
-        tvmenu.createAndAddSeparator();
-        final TVMenuItem tvm = tvmenu.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.subtitle_outline), mSubtitleManager.getOutlineState());
-        tvm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean outline = mSubtitleManager.getOutlineState();
-                tvm.setChecked(! outline);
-                mSubtitleManager.setOutlineState(! outline);
-            }
-        });
-
-        final TVMenuItem tvmBg = tvmenu.createAndAddTVSwitchableMenuItem(getResources().getString(R.string.subtitle_background_text), mSubtitleManager.getBackgroundState()); // Make sure to add string resource or use literal "Subtitle Background"
-        tvmBg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean bg = mSubtitleManager.getBackgroundState();
-                tvmBg.setChecked(!bg);
-                mSubtitleManager.setBackgroundState(!bg);
-            }
-        });
-
-        tvmenu.createAndAddTVMenuItem(getResources().getString(R.string.subtitle_bg_opacity_text), false);
-
-        final SubtitleDelayTVPicker tvPickerOpacity = (SubtitleDelayTVPicker) LayoutInflater.from(mContext)
-                .inflate(R.layout.subtitle_delay_tv_picker, null);
-        tvPickerOpacity.setStep(1); 
-        tvPickerOpacity.setMin(0);
-        tvPickerOpacity.setMax(255 * 100); 
-        tvmenu.addTVMenuItem(tvPickerOpacity);
-        tvPickerOpacity.setTextViewWidth((int) pickerWidth);
-        tvPickerOpacity.setUpdateText(false);
-        tvPickerOpacity.setText(String.valueOf(mSubtitleManager.getBackgroundOpacity()));
-        tvPickerOpacity.init(mSubtitleManager.getBackgroundOpacity() * 100, new SubtitleDelayPickerAbstract.OnDelayChangedListener() {
-            @Override
-            public void onDelayChanged(SubtitleDelayPickerAbstract view, int delay) {
-                int opacity = delay / 100;
-                if (opacity < 0) opacity = 0;
-                if (opacity > 255) opacity = 255;
-                mSubtitleManager.setBackgroundOpacity(opacity);
-                tvPickerOpacity.setText(String.valueOf(opacity));
-            }
-        });
-
-        ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).addOtherView(tvmenu);
-        ((TVCardDialog)dialogMainView.findViewById(R.id.card_view)).setOnDialogResultListener(new TVCardDialog.OnDialogResultListener() {     
-            @Override
-            public void onResult(int code) {
-                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_SIZE, mSubtitleManager.getSize()).apply();
-                mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_VPOS, mSubtitleManager.getVerticalPosition()).apply();
-                mPreferences.edit().putInt( PlayerActivity.KEY_SUBTITLE_COLOR, mSubtitleManager.getColor()).apply();
-                mPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_OUTLINE, mSubtitleManager.getOutlineState()).apply();
-                mPreferences.edit().putBoolean(PlayerActivity.KEY_SUBTITLE_BACKGROUND, mSubtitleManager.getBackgroundState()).apply();
-                mPreferences.edit().putInt(PlayerActivity.KEY_SUBTITLE_BG_OPACITY, mSubtitleManager.getBackgroundOpacity()).apply();
-                mPlayerController.getTVMenuAdapter().setDiscrete(false);
-                mSubtitleManager.fadeSubtitlePositionHint(false);
             }
         });
         mPlayerController.getTVMenuAdapter().setDiscrete(true);
@@ -2106,7 +2020,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             return "ABC";
         else if (size<50)
             return "AB";
-        else 
+        else
             return "A";
     }
 
@@ -2135,16 +2049,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (log.isDebugEnabled()) log.debug("refreshSubtitleTVMenu: isCurrentSubtrackNone={}", isCurrentSubtrackNone());
                 disableSubtitleDelayTVMenuItem(isCurrentSubtrackNone());
 
-                mSubtitleSettingsMenuItem = mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.menu_player_settings).toString(), false, false);
-                mSubtitleSettingsMenuItem.setOnClickListener(new View.OnClickListener() {
+                // Never disabled: the panel explains when settings cannot apply (no track, image or unsupported format).
+                mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.menu_player_settings).toString(), false, false).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        createTVSubtitleSettingsDialog();
+                        TvSubtitleSettings.show(mContext, mPlayerController, mSubtitleManager, mPreferences);
                     }
                 });
-
-                if (log.isDebugEnabled()) log.debug("refreshSubtitleTVMenu: isCurrentSubtrackGfx={}", isCurrentSubtrackGfx());
-                disableSubtitleSettingsMenuItem(isCurrentSubtrackGfx() || isCurrentSubtrackNone());
             }
             mSubtitleTVMenu.createAndAddTVMenuItem(getText(R.string.get_subtitles_online).toString(), false, false).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -2652,7 +2563,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }, 20);
                 }
             });
-		
+
             final TVMenu tm = tma.createTVMenu();
 
             tcv.addOtherView(tm);
@@ -3242,7 +3153,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (!isPluggedOnTv()) {
                     menuId = R.array.pref_s3d_mode_entries_dive;
                 }
-                final CharSequence[] t = mContext.getResources().getTextArray(menuId);          
+                final CharSequence[] t = mContext.getResources().getTextArray(menuId);
                 final ArrayList<RadioButton>rbs = new  ArrayList<RadioButton>();
                 final int menuId2= menuId;
                 adb.setAdapter(new ArrayAdapter<View>(mContext, R.layout.menu_item_layout){
@@ -3282,7 +3193,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 , new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                     }
-                });              
+                });
                 ad = adb.create();
                 ad.show();
 
@@ -4014,7 +3925,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mVideoInfo.subtitleDelay = delay;
         mVideoInfo.subtitleRatio = ratio;
         if (delayChanged || ratioChanged) {
-            mSubtitleManager.clear();
             mPlayer.setSubtitleDelay(mVideoInfo.subtitleDelay);
             mPlayer.setSubtitleRatio(mVideoInfo.subtitleRatio);
             // Save the subtitle delay and ratio to the database for persistence across resume
@@ -4168,12 +4078,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     newSubtitleTrack, newSubtitlePosition, playerPosition);
             if (mPlayer.setSubtitleTrack(playerPosition)) {
                 mVideoInfo.subtitleTrack = newSubtitleTrack;
-                mSubtitleManager.clear();
                 mSubtitleInfoController.setTrack(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)); // +1 since none track is at position 0, for UI only
                 if (mSubtitleInfoController.getTrack() == 0) { // 0 is nonePosition
                     if (log.isDebugEnabled()) log.debug("switchSubtitleTrack: disableSubtitleDelayTVMenuItem(true) because nonePosition");
                     disableSubtitleDelayTVMenuItem(true);
-                    disableSubtitleSettingsMenuItem(true);
                 }
                 refreshSubtitleTVMenu();
                 CharSequence subTrackName = mSubtitleInfoController.getTrackNameAt(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles));
@@ -4206,13 +4114,24 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
     }
 
-    public boolean isCurrentSubtrackGfx() {
+    /** The selected subtitle track, or null for "None"/unselected/out of range. */
+    private SubtitleTrack currentSubtitleTrack() {
         if (mPlayer == null || mPlayer.getVideoMetadata() == null || mVideoInfo == null ||
-                mVideoInfo.subtitleTrack == -1 || mVideoInfo.subtitleTrack >= mVideoInfo.nbSubtitles) {
-            return false;
+                mVideoInfo.subtitleTrack < 0 || mVideoInfo.subtitleTrack >= mVideoInfo.nbSubtitles) {
+            return null;
         }
-        VideoMetadata.SubtitleTrack sub = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
-        return sub != null && sub.isGfx;
+        return mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
+    }
+
+    /**
+     * Pushes the selected track to SubtitleManager, which applies it (layout category, bitmap
+     * margins, native offset). Only the places that APPLY state call this (layout mode, vertical
+     * position).
+     */
+    private void syncSubtitleKind() {
+        if (mSubtitleManager != null) {
+            mSubtitleManager.setActiveTrack(currentSubtitleTrack());
+        }
     }
 
     public boolean isCurrentSubtrackNone() {
@@ -4224,21 +4143,18 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     }
 
     private void setSubtitleVpos(String caller) {
-        setSubtitleVpos(PreferenceManager.getDefaultSharedPreferences(PlayerActivity.this).getInt(KEY_SUBTITLE_VPOS, mSubtitleVPosDefault), caller);
+        setSubtitleVpos(PreferenceManager.getDefaultSharedPreferences(PlayerActivity.this).getInt(KEY_SUBTITLE_VPOS, mSubtitleDefaults.vpos), caller);
     }
 
     private void setSubtitleVpos(int vpos, String caller) {
+        // Sync first: this runs on track selection before updateSubtitleLayoutMode(), and the
+        // manager must already know the new track's kind when it applies the position.
+        syncSubtitleKind();
         if (mVideoInfo == null || mVideoInfo.subtitleTrack == -1 || mVideoInfo.subtitleTrack >= mVideoInfo.nbSubtitles) return;
-        VideoMetadata.SubtitleTrack subtitleTrack = mPlayer.getVideoMetadata().getSubtitleTrack(mVideoInfo.subtitleTrack);
-        if (subtitleTrack != null && subtitleTrack.isGfx) {
-            if (log.isDebugEnabled()) log.debug("{}: set vpos to 0, mVideoInfo={}", caller, ((mVideoInfo == null) ? "null" : "noNull" + ", subtitleTrack=" + ((mVideoInfo == null) ? "null" : mVideoInfo.subtitleTrack)));
-            mSubtitleManager.setVerticalPosition(0);
-            disableSubtitleSettingsMenuItem(true);
-        } else {
-            if (log.isDebugEnabled()) log.debug("{}: set vpos to {}, subtitleTrack={}", caller, vpos, mVideoInfo.subtitleTrack);
-            mSubtitleManager.setVerticalPosition(vpos);
-            disableSubtitleSettingsMenuItem(false);
-        }
+        if (log.isDebugEnabled()) log.debug("{}: set vpos to {}, subtitleTrack={}, kind={}", caller, vpos, mVideoInfo.subtitleTrack, mSubtitleManager.getSubtitleKind());
+        // Always hand over the user's value: for bitmap tracks the manager applies offset 0 by
+        // itself and keeps the saved value intact (the old code passed 0 and lost it).
+        mSubtitleManager.setVerticalPosition(vpos);
     }
 
     private void disableSubtitleDelayTVMenuItem(boolean disable) {
@@ -4246,14 +4162,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         mSubtitleInfoController.enableSettings(SUBTITLE_MENU_DELAY, !disable, disable);
         if (mSubtitleDelayMenuItem != null) {
             mSubtitleDelayMenuItem.setDisabled(disable);
-        }
-    }
-
-    private void disableSubtitleSettingsMenuItem(boolean disable) {
-        if (log.isDebugEnabled()) log.debug("disableSubtitleSettingsMenuItem: {}", disable);
-        mSubtitleInfoController.enableSettings(SUBTITLE_MENU_SETTINGS, !disable, disable);
-        if (mSubtitleSettingsMenuItem != null) {
-            mSubtitleSettingsMenuItem.setDisabled(disable);
         }
     }
 
@@ -4285,7 +4193,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (log.isDebugEnabled()) log.debug("onTrackSelected: position={}, old mVideoInfo.subtitleTrack={}", position, mVideoInfo.subtitleTrack);
                 ret = mPlayer.setSubtitleTrack(positionToPlayerSubtitleTrack(position, mVideoInfo.nbSubtitles));
                 if (ret) {
-                    mSubtitleManager.clear();
                     mVideoInfo.subtitleTrack = positionToSubtitleTrack(position, mVideoInfo.nbSubtitles);
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: -> mVideoInfo.subtitleTrack={}", mVideoInfo.subtitleTrack);
                     // Extract and save the subtitle language for track validation on re-enumeration
@@ -4308,13 +4215,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     // Save the subtitle track selection to the database for persistence across resume
                     persistVideoInfo();
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: saved subtitleTrack {} to database", mVideoInfo.subtitleTrack);
+                    updateSubtitleLayoutMode();
                 } else {
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: player failed to get to subtitletrack {}", positionToSubtitleTrack(position, mVideoInfo.nbSubtitles));
                 }
                 if (mVideoInfo.subtitleTrack >= 0) {
                     String trackName = mSubtitleInfoController.getTrackNameAt(subtitleTrackToPosition(mVideoInfo.subtitleTrack, mVideoInfo.nbSubtitles)).toString();
                     disableSubtitleDelayTVMenuItem(position == 0);
-                    disableSubtitleSettingsMenuItem(position == 0 || isCurrentSubtrackGfx());
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: position={}, mSubtitleInfoController.getTrackNameAt({}) mVideoInfo.subtitleTrack={}", position, trackName, mVideoInfo.subtitleTrack);
                 } else {
                     if (log.isDebugEnabled()) log.debug("onTrackSelected: position={}, None mVideoInfo.subtitleTrack={}", position, mVideoInfo.subtitleTrack);
@@ -4616,8 +4523,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
 
         public void onSeekStart(int pos) {
-            if (mSubtitleManager != null)
-                mSubtitleManager.onSeekStart(pos);
+        //no-op
         }
 
         public void onSeekComplete() {
@@ -4631,8 +4537,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         }
 
         public void onPlay(int state) {
-            if (mSubtitleManager != null)
-                mSubtitleManager.onPlay();
             sendVideoStateChanged();
             //mPlayerController.hide();
 
@@ -4672,9 +4576,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             });
         }
         public void onPause(int state) {
-
-            if (mSubtitleManager != null)
-                mSubtitleManager.onPause();
             sendVideoStateChanged();
 
             // Preserve explicit and permanent-focus pauses through Activity recreation.
@@ -4798,18 +4699,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 mSubtitleManager.start();
 
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(PlayerActivity.this);
-                int size = preferences.getInt(KEY_SUBTITLE_SIZE, mSubtitleSizeDefault);
-                int vpos = preferences.getInt(KEY_SUBTITLE_VPOS, mSubtitleVPosDefault);
-                int color = preferences.getInt(KEY_SUBTITLE_COLOR, mSubtitleColorDefault);
-                boolean outline = preferences.getBoolean(KEY_SUBTITLE_OUTLINE, mSubtitleOutlineDefault);
-                mSubtitleManager.setSize(size);
-                mSubtitleManager.setColor(color);
-                setSubtitleVpos(vpos, "onSubtitleMetadataUpdated");
-                mSubtitleManager.setOutlineState(outline);
-                boolean background = preferences.getBoolean(KEY_SUBTITLE_BACKGROUND, false);
-                int bgOpacity = preferences.getInt(KEY_SUBTITLE_BG_OPACITY, 128);
-                mSubtitleManager.setBackgroundState(background);
-                mSubtitleManager.setBackgroundOpacity(bgOpacity);
+                mSubtitleManager.restoreStyle(preferences);
+                setSubtitleVpos(preferences.getInt(KEY_SUBTITLE_VPOS, mSubtitleDefaults.vpos), "onSubtitleMetadataUpdated");
+
                 // mVideoInfo.subtitleTrack is the track number with the none track 0<=mVideoInfo.subtitleTrack<=nbTrack, nbTrack for none track
                 // but mSubtitleInfoController is the track number with the none track (i.e. nbTrack + 1) at position 0
                 // at this point mVideoInfo.subtitleTrack is the track number to be used
@@ -4818,10 +4710,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 if (mSubtitleInfoController.getTrack() == nonePosition) {
                     if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: disableSubtitleDelayTVMenuItem(true) because nonePosition");
                     disableSubtitleDelayTVMenuItem(true);
-                    disableSubtitleSettingsMenuItem(true);
                 }
             }
-
+            updateSubtitleLayoutMode();
             refreshSubtitleTVMenu();
 
             if (mPlayerController.isTVMenuDisplayed()) {
@@ -4841,11 +4732,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             if (!mPlayer.isInPlaybackState()) {
                 mBufferView.setText(" "+percent+"%");
             }
-        }
-
-        public void onSubtitle(Subtitle subtitle) {
-            if (mSubtitleManager != null)
-                mSubtitleManager.addSubtitle(subtitle);
         }
 
         @Override
