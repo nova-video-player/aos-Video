@@ -319,7 +319,6 @@
     <string name="skip_recap_button">Skip Recap</string>
     <string name="skip_credits_button">Skip Credits</string>
     <string name="skip_preview_button">Skip Preview</string>
-    <string name="introdb_skipped_format">Skipped: %1$s</string>
     <string name="pref_audio_parameters_title">Sound</string>
     <string name="pref_audio_filt_title">Audio Boost</string>
     <string name="pref_audio_filt_night_mode">Night Mode</string>

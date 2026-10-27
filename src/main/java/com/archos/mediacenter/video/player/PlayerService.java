@@ -1904,19 +1904,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mLastAutoSkippedEndMs = mLastPromptedEndMs > 0 ? mLastPromptedEndMs : targetMs;
         if (duration > 0 && targetMs >= duration - AUTO_SKIP_END_MARGIN_MS) {
             if (log.isDebugEnabled()) log.debug("executeSkip: skipping {} to end ({}), completing", type, duration);
-            showAutoSkipToast(type);
             onCompletion();
             return;
         }
         if (log.isDebugEnabled()) log.debug("executeSkip: skipping {} to {}", type, targetMs);
         Player.sPlayer.seekTo((int) targetMs);
-        showAutoSkipToast(type);
-    }
-
-    // User-facing feedback when an intro/outro skip fires.
-    private void showAutoSkipToast(final IntroSegments.Type type) {
-        final String message = getString(R.string.introdb_skipped_format, introLabels(getApplicationContext()).get(type));
-        mHandler.post(() -> Toast.makeText(getUiContext(), message, Toast.LENGTH_SHORT).show());
     }
 
     // Translatable display labels for each segment type, resolved from string resources.
