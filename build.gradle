@@ -388,17 +388,17 @@ dependencies {
     implementation 'androidx.leanback:leanback:1.2.0'
     implementation 'androidx.leanback:leanback-preference:1.2.0'
     implementation 'androidx.tvprovider:tvprovider:1.1.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:5.5.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.5.1'
     implementation 'com.github.tony19:logback-android:3.0.0'
-    implementation 'io.sentry:sentry-android:8.61.0'
-    implementation 'io.sentry:sentry:8.61.0'
+    implementation 'io.sentry:sentry-android:8.61.1'
+    implementation 'io.sentry:sentry:8.61.1'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.24.0'
     testImplementation 'org.robolectric:robolectric:4.17'
     testImplementation 'androidx.test:core:1.7.0'
     testImplementation 'org.slf4j:slf4j-api:2.0.20'
-    testImplementation 'ch.qos.logback:logback-classic:1.6.5'
+    testImplementation 'ch.qos.logback:logback-classic:1.6.6'
 }
 
 configurations { // try to exclude device specific libraries interfering
