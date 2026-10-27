@@ -340,14 +340,14 @@ public class SubtitleSettingsModel {
         rows.add(section("sec_text", R.string.subtitle_panel_section_text));
         rows.add(color("text_c", mTextColor));
         if (bg == SubtitleManager.BG_MODE_BOXED_LINE) {
-            rows.add(section("sec_background", R.string.subtitle_panel_section_background));
+            rows.add(section("sec_background", R.string.subtitle_panel_background));
             rows.add(color("bg_c", mBackgroundColor));
             rows.add(stepper("opacity", R.string.subtitle_panel_background_opacity, mOpacity, percent));
             rows.add(stepper("outline_w", R.string.subtitle_panel_padding, mOutlineW, plain));
         } else if (bg == SubtitleManager.BG_MODE_BOXED_BLOCK) {
             rows.add(stepper("outline_w", R.string.subtitle_panel_outline_width, mOutlineW, plain));
             rows.add(color("outline_c", mOutlineColor));
-            rows.add(section("sec_background", R.string.subtitle_panel_section_background));
+            rows.add(section("sec_background", R.string.subtitle_panel_background));
             rows.add(color("bg_c", mBackgroundColor));
             rows.add(stepper("opacity", R.string.subtitle_panel_background_opacity, mOpacity, percent));
             rows.add(stepper("shadow_w", R.string.subtitle_panel_padding, mShadowW, plain));

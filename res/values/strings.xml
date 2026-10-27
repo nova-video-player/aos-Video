@@ -1069,7 +1069,7 @@
     <string name="subtitle_panel_advanced">Advanced appearance</string>
 
     <!-- Style mode (pills) and what each one means -->
-    <string name="subtitle_panel_style">Subtitle style</string>
+    <string name="subtitle_panel_style">Style</string>
     <string name="subtitle_panel_mode_file">File\'s style</string>
     <string name="subtitle_panel_mode_custom">Custom</string>
     <string name="subtitle_panel_mode_scale">Scale only</string>
@@ -1084,7 +1084,7 @@
     <string name="subtitle_panel_note_none">No subtitle selected.</string>
 
     <!-- Basic rows -->
-    <string name="subtitle_panel_font_size">Font size</string>
+    <string name="subtitle_panel_font_size">Size</string>
     <string name="subtitle_panel_bold">Bold</string>
     <string name="subtitle_panel_background">Background</string>
     <string name="subtitle_panel_bg_off">Off</string>
@@ -1098,7 +1098,6 @@
 
     <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
     <string name="subtitle_panel_section_text">Text</string>
-    <string name="subtitle_panel_section_background">Background</string>
     <string name="subtitle_panel_text_color">Text color</string>
     <string name="subtitle_panel_outline_width">Outline width</string>
     <string name="subtitle_panel_outline_color">Outline color</string>
@@ -1117,8 +1116,8 @@
     <string name="subtitle_panel_blue">Blue</string>
 
     <!-- Value formats -->
-    <string name="subtitle_panel_value_pt">%1$d pt</string>
-    <string name="subtitle_panel_value_percent">%1$d%%</string>
+    <string name="subtitle_panel_value_pt" translatable="false">%1$d pt</string>
+    <string name="subtitle_panel_value_percent" translatable="false">%1$d%%</string>
 
     <!-- Accessibility -->
     <string name="subtitle_panel_decrease">Decrease</string>
