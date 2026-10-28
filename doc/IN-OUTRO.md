@@ -48,6 +48,7 @@ When `introdb_enabled` is active, skip prompts are supported for:
 ### 5. Prompt Lifecycle & Seek Guards
 - **Prompt Appearance**: When playback enters an eligible segment, the button fades in with the appropriate label (`"Skip Intro"`, `"Skip Recap"`, `"Skip Preview"`, or `"Skip Credits"`).
 - **Auto-Dismissal**: When playback exits the segment naturally, the button fades out and is hidden.
+- **Invalid markers**: A segment that spans the whole media (`0 -> end`) is dropped during MediaLib parsing, so malformed credits cannot show the prompt for the entire episode (issue #2008).
 - **Countdown**: An accent line just inside the lower edge of the pill fills from left to right between prompt appearance and the segment end. It follows the playback position, so it stays in sync when the playback speed is not 1.0x and freezes while paused; seeking updates it. It is inset from the pill's rounded corners and sits inside its contour so it never draws outside the pill.
 - **Seeking**:
   - Seeking out of a segment immediately hides the prompt.
@@ -55,7 +56,7 @@ When `introdb_enabled` is active, skip prompts are supported for:
   - After a skip action, `mLastAutoSkippedEndMs` prevents duplicate actions on the same boundary.
 
 ### 6. User Feedback
-- When a skip is executed, a brief toast message appears: `"Skipped: <Type>"` (e.g., `"Skipped: Intro"`).
+- The button disappearing and the seek are the confirmation; the redundant skip toast was removed.
 
 ---
 
