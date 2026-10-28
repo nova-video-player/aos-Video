@@ -93,6 +93,7 @@
     <string name="pref_play_mode_entry_folder">Papka</string>
     <string name="pref_play_mode_entry_repeat_folder">Papkanı qaytalaw</string>
     <string name="pref_play_mode_entry_repeat_single">Bir fayldı qaytalaw</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Dawıs</string>
     <string name="pref_audio_filt_night_mode">Túngi rejim</string>
     <string name="ui_mode_tv">TV</string>
@@ -113,7 +114,6 @@
     <string name="subtitles_wizard_delete">Bul fayldı óshiriw</string>
     <string name="subtitles_wizard_empty_list">Fayl tabılmadı</string>
     <!-- Subloader -->
-    <!-- Subtitle Settings Dialog -->
     <!-- Subtitle Delay Dialog -->
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
@@ -173,4 +173,14 @@
     <string name="add_to_list">Dizimge qosıw</string>
     <string name="remove_from_list">Dizimnen alıp taslaw</string>
     <string name="loading">Júklenbekte…</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

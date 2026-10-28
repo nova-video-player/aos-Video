@@ -264,6 +264,7 @@
     <string name="pref_play_mode_entry_folder">Aplankas</string>
     <string name="pref_play_mode_entry_repeat_folder">Kartoti aplanką</string>
     <string name="pref_play_mode_entry_repeat_single">Kartoti vieną</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Garsas</string>
     <string name="pref_audio_filt_title">Audio stiprinimas</string>
     <string name="pref_audio_filt_night_mode">Nakties režimas</string>
@@ -343,12 +344,6 @@
     <string name="dialog_subloader_credentials_empty">Turite nurodyti tinkamą naudotojo vardą ir slaptažodį!</string>
     <string name="toast_subloader_credentials_empty">Norėdami atsiųsti titrus, nustatymuose įveskite savo opensubtitles paskyrą</string>
     <string name="toast_subloader_login_failed">Neteisingi opensubtitles prisijungimo duomenys arba paslauga nepasiekiama</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"pavyzdys\"</string>
-    <string name="subtitle_size_text">Dydis:</string>
-    <string name="subtitle_style_text">Stilius:</string>
-    <string name="subtitle_vert_text">Vertikali padėtis:</string>
-    <string name="subtitle_outline">Subtitrai tinkle</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Greičio nustatymas</string>
     <string name="subtitle_delay_radio_none">nėra</string>
@@ -717,4 +712,15 @@
     <string name="sponsor">Nova rėmėjas</string>
     <string name="enable_sponsor_title">Įjungti Nova rėmėjo nuorodą</string>
     <string name="enable_sponsor_summary">Įjungti rėmėjo nuorodą: kiekvienas įnašas padeda.</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"pavyzdys\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

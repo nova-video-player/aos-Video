@@ -266,6 +266,7 @@
     <string name="pref_play_mode_entry_repeat_folder">تکرار پوشه</string>
     <string name="pref_play_mode_entry_repeat_single">تکرار یکی</string>
     <string name="pref_play_mode_entry_binge">در حال شروع تماشا</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">صدا</string>
     <string name="pref_audio_filt_title">تقویت صدا</string>
     <string name="pref_audio_filt_night_mode">حالت شب</string>
@@ -366,12 +367,6 @@
     <string name="toast_subloader_login_failed">اعتبار نامه OpenSubtitles نادرست است و یا سرویس در دسترس نیست</string>
     <string name="toast_subloader_quota_exceeded">صف دانلود OpenSubtitles از حد گذشت</string>
     <string name="opensubtitles_quota_reset_time_remaining">صف بازنشانی می‌شود در %s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"نمونه\"</string>
-    <string name="subtitle_size_text">اندازه:</string>
-    <string name="subtitle_style_text">سبک:</string>
-    <string name="subtitle_vert_text">موقعیت عمودی:</string>
-    <string name="subtitle_outline">طرح کلی زیرنویس</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">تنظیم سرعت</string>
     <string name="subtitle_delay_radio_none">هیچ</string>
@@ -606,4 +601,15 @@
     <string name="system">سامانه</string>
     <string name="add_to_list">افزودن به فهرست</string>
     <string name="loading">در دریافت…</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"نمونه\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

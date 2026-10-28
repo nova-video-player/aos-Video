@@ -277,6 +277,7 @@
     <string name="pref_play_mode_entry_repeat_folder">Повтор теки</string>
     <string name="pref_play_mode_entry_repeat_single">Повтор одного файлу</string>
     <string name="pref_play_mode_entry_binge">Безперервний перегляд</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Звук</string>
     <string name="pref_audio_filt_title">Підсилення звуку</string>
     <string name="pref_audio_filt_night_mode">Нічний режим</string>
@@ -377,12 +378,6 @@
     <string name="toast_subloader_login_failed">Неправильні облікові дані OpenSubtitles або послуга не доступна</string>
     <string name="toast_subloader_quota_exceeded">Перевищено квоту на завантаження OpenSubtitles</string>
     <string name="opensubtitles_quota_reset_time_remaining">Квота буде скинута через %s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"зразок\"</string>
-    <string name="subtitle_size_text">Розмір:</string>
-    <string name="subtitle_style_text">Стиль:</string>
-    <string name="subtitle_vert_text">Вертикальна позиція:</string>
-    <string name="subtitle_outline">Обведення субтитрів</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Коригування швидкості</string>
     <string name="subtitle_delay_radio_none">немає</string>
@@ -894,4 +889,15 @@
     <string name="external_player_service_title">Відтворення у зовнішньому плеєрі</string>
     <string name="external_player_service_description">Nova Video Player надає вміст для зовнішнього плеєра</string>
     <string name="stop">Зупинити</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"зразок\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

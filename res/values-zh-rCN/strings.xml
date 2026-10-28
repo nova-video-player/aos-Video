@@ -274,6 +274,7 @@
     <string name="introdb_segment_credits">演职员表</string>
     <string name="introdb_segment_preview">预告</string>
     <string name="introdb_segment_end">结束</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">声音</string>
     <string name="pref_audio_filt_title">音频增强</string>
     <string name="pref_audio_filt_night_mode">夜间模式</string>
@@ -382,14 +383,6 @@
     <string name="opensubtitles_summary_service_unavailable">服务不可用</string>
     <string name="opensubtitles_summary_quota_exhausted">配额已用尽</string>
     <string name="opensubtitles_summary_status">%1$s · %2$s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">“示例”</string>
-    <string name="subtitle_size_text">大小：</string>
-    <string name="subtitle_style_text">样式：</string>
-    <string name="subtitle_vert_text">垂直位置：</string>
-    <string name="subtitle_outline">字幕轮廓</string>
-    <string name="subtitle_background_text">字幕背景</string>
-    <string name="subtitle_bg_opacity_text">背景不透明度</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">速度调整</string>
     <string name="subtitle_delay_radio_none">无</string>
@@ -926,6 +919,7 @@
     <string name="sponsor">赞助 Nova</string>
     <string name="enable_sponsor_title">启用 Nova 赞助链接</string>
     <string name="enable_sponsor_summary">启用捐赠赞助链接：每个捐赠都有帮助。</string>
+    <string name="version_open_store_summary">选择以打开商店</string>
     <string name="hdr_capability">HDR 屏幕功能：</string>
     <string name="hdmi_audio_capabilities">HDMI 接收器音频功能：</string>
     <string name="spdif_audio_capabilities">S/PDIF 音频功能：</string>
@@ -952,4 +946,15 @@
     <string name="ui_choice_tablet">平板界面</string>
     <string name="ui_choice_help">您可以稍后在应用程序设置中更改您的选择</string>
     <string name="workgroup">工作组</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">“示例”</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

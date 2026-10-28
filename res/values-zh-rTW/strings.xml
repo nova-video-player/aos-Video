@@ -261,6 +261,7 @@
     <string name="pref_play_mode_entry_repeat_folder">資料夾循環模式</string>
     <string name="pref_play_mode_entry_repeat_single">單檔循環模式</string>
     <string name="pref_play_mode_entry_binge">追劇模式</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">音效</string>
     <string name="pref_audio_filt_title">音訊增強</string>
     <string name="pref_audio_filt_night_mode">夜間模式</string>
@@ -361,12 +362,6 @@
     <string name="toast_subloader_login_failed">不正確的 opensubtitles 憑證或伺服器無法連線</string>
     <string name="toast_subloader_quota_exceeded">OpenSubtitles 下載額度已達上限</string>
     <string name="opensubtitles_quota_reset_time_remaining">額度重設&#8230; %s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">「範例」</string>
-    <string name="subtitle_size_text">檔案大小：</string>
-    <string name="subtitle_style_text">樣式：</string>
-    <string name="subtitle_vert_text">垂直位置：</string>
-    <string name="subtitle_outline">字幕邊框厚度</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">字幕延遲調整</string>
     <string name="subtitle_delay_radio_none">無</string>
@@ -798,4 +793,15 @@
     <string name="upgrade_info">升級資訊</string>
     <string name="v5_v6_upgrade_info">警告：本版本 Nova 有重大更新，需要重新掃描所有影片的收藏以重新獲得多媒體資訊。
         強烈建議重新安裝後重起以避免發生問題，詳細資訊請參閱「説明 / 常見問題」。</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">「範例」</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

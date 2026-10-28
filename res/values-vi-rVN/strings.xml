@@ -260,6 +260,7 @@
     <string name="pref_play_mode_entry_repeat_folder">Lặp lại thư mục</string>
     <string name="pref_play_mode_entry_repeat_single">Lặp lại một bài</string>
     <string name="pref_play_mode_entry_binge">Xem say sưa</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Âm thanh</string>
     <string name="pref_audio_filt_title">Tăng cường âm thanh</string>
     <string name="pref_audio_filt_night_mode">Chế độ đêm</string>
@@ -360,12 +361,6 @@
     <string name="toast_subloader_login_failed">Thông tin đăng nhập opensubtitles không chính xác hoặc dịch vụ không có sẵn</string>
     <string name="toast_subloader_quota_exceeded">Đã vượt quá hạn ngạch tải xuống OpenSubtitles</string>
     <string name="opensubtitles_quota_reset_time_remaining">Đặt lại hạn ngạch sau %s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"mẫu\"</string>
-    <string name="subtitle_size_text">Kích thước:</string>
-    <string name="subtitle_style_text">Kiểu:</string>
-    <string name="subtitle_vert_text">Vị trí dọc:</string>
-    <string name="subtitle_outline">Phân cảnh phụ đề</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Điều chỉnh tốc độ</string>
     <string name="subtitle_delay_radio_none">không</string>
@@ -797,4 +792,15 @@
     <string name="upgrade_info">Nâng cấp thông tin</string>
     <string name="v5_v6_upgrade_info">CẢNH BÁO: bản cập nhật lớn này của Nova yêu cầu quét lại tất cả bộ sưu tập băng hình để thu thập lại thông tin đa phương tiện.
         Khuyên bạn nên khởi động lại từ một cài đặt sạch để tránh các vấn đề. Vui lòng kiểm tra FAQ để biết chi tiết.</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"mẫu\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

@@ -119,6 +119,7 @@
     <string name="date_view_year">Yıl</string>
     <string name="all_movies_and_tv_shows">Filmler ve diziler</string>
     <string name="non_scraped_videos">Tarama yapılamamış videolar</string>
+    <string name="non_scraped_videos_format">Tarama yapılamamış videolar -  %d</string>
     <string name="cannot_open_video">Bu video açılamıyor</string>
     <string name="confirm_delete">Gerçekten silmek istiyor musunuz?</string>
     <string name="deleting">Lütfen silerken bekleyin…</string>
@@ -269,6 +270,15 @@
     <string name="pref_play_mode_entry_repeat_folder">Klasörü tekrarla</string>
     <string name="pref_play_mode_entry_repeat_single">Parçayı tekrarla</string>
     <string name="pref_play_mode_entry_binge">Art arda izleme</string>
+    <string name="pref_introdb_autoskip_title">Giriş/kapanışı atla</string>
+    <string name="introdb_autoskip">Otomatik atlama</string>
+    <string name="introdb_segment_intro">Giriş</string>
+    <string name="introdb_segment_recap">Özet</string>
+    <string name="introdb_segment_outro">Kapanış</string>
+    <string name="introdb_segment_credits">Emeği Geçenler</string>
+    <string name="introdb_segment_preview">Önizleme</string>
+    <string name="introdb_segment_end">son</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Ses</string>
     <string name="pref_audio_filt_title">Ses Güçlendirme</string>
     <string name="pref_audio_filt_night_mode">Gece Modu</string>
@@ -369,14 +379,14 @@
     <string name="toast_subloader_login_failed">Opensubtitles kimlik bilgileri yanlış veya hizmet kullanılamıyor</string>
     <string name="toast_subloader_quota_exceeded">OpenSubtitles indirme kotası aşıldı</string>
     <string name="opensubtitles_quota_reset_time_remaining">Kota %s içinde sıfırlanıyor</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"örnekleme\"</string>
-    <string name="subtitle_size_text">Boyut:</string>
-    <string name="subtitle_style_text">Stil:</string>
-    <string name="subtitle_vert_text">Dikey Pozisyon:</string>
-    <string name="subtitle_outline">Altyazı Konturu</string>
-    <string name="subtitle_background_text">Altyazı arka planı</string>
-    <string name="subtitle_bg_opacity_text">Arkaplan saydamlığı</string>
+    <string name="opensubtitles_summary_anonymous">İsimsiz</string>
+    <string name="opensubtitles_summary_user_account">Kullanıcı hesabı</string>
+    <string name="opensubtitles_summary_not_checked">Henüz kontrol edilmedi</string>
+    <string name="opensubtitles_summary_credentials_verified">Kimlik bilgileri doğrulandı</string>
+    <string name="opensubtitles_summary_login_failed">Oturum açma başarısız</string>
+    <string name="opensubtitles_summary_service_unavailable">Hizmet kullanılamıyor</string>
+    <string name="opensubtitles_summary_quota_exhausted">Kota doldu</string>
+    <string name="opensubtitles_summary_status">%1$s · %2$s</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Hız Ayarı</string>
     <string name="subtitle_delay_radio_none">boş</string>
@@ -461,8 +471,16 @@
     <string name="preferences_stream_max_iframe_size_summary">MB cinsinden maksimum sıkıştırılmış i-frame boyutu</string>
     <string name="preferences_force_passthrough">Ses geçişini zorla</string>
     <string name="preferences_force_passthrough_summary">Geçiş etkinleştirilmişse, AV alıcısı yeteneklerini kontrol etmek yerine ses kodeğinin AV alıcısı tarafından desteklenmediği iddia edilse bile bunu uygulayın</string>
+    <string name="preferences_audio_speed_mode_title">Ses hızı</string>
+    <string name="preferences_audio_speed_mode_summary">Oynatma hızını değiştirmek için kullanılacak ses hızı filtresini seçin. ⚠ Deneysel bir özelliktir; videoda takılmalara veya ses bozulmalarına neden olabilir</string>
+    <string name="audio_speed_mode_disabled">Kapalı</string>
+    <string name="audio_speed_mode_audiotrack">Sistem içi (AudioTrack)</string>
+    <string name="audio_speed_mode_atempo">Dengeli (FFmpeg atempo)</string>
+    <string name="audio_speed_mode_sonic">Ses &amp; konuşma (Sonic)</string>
     <string name="preferences_enable_dynamic_audio_delay_title">Dinamik ses/görüntü gecikme tahmini</string>
     <string name="preferences_enable_dynamic_audio_delay_summary">Özellikle Bluetooth kulaklıklarla daha iyi ses/görüntü senkronizasyonu için dinamik gecikme tahmini özelliğini kullanın. Senkronizasyon sorunları yaşıyorsanız bu özelliği devre dışı bırakın.</string>
+    <string name="preferences_enable_spatialization_title">Platformda mekânsallaştırma</string>
+    <string name="preferences_enable_spatialization_summary">Stereoya indirgeme yapmak yerine, platformun mekanlaştırıcısını kullanarak çok kanallı ses çıkışı elde edebilirsiniz (uyumlu bir cihaz ve ses çıkışı gereklidir). Bu özellik, oynatıcının ses menüsünden de etkinleştirilebilir veya devre dışı bırakılabilir.</string>
     <string name="preferences_disable_downmix_title">Ses stereo downmix\'i devre dışı bırak</string>
     <string name="preferences_disable_downmix_summary">Her zaman tüm kanalları çözmek ve ses çıkışı yeteneğine bağlı olarak Android downmix izin (ses kanalları kaybetme neden olabilir)</string>
     <string name="preferences_enable_downmix_androidtv_title">Strereo sesi düşürmeye zorla</string>
@@ -490,14 +508,19 @@
     <string name="preference_enable_cutout_both_sidesx_summary">Ekranı her iki taraftan eşit şekilde kes, böylece ekran simetrik olacak.</string>
     <string name="category_languages">Altyazı</string>
     <string name="subtitles_hide_default">Varsayılan olarak altyazıları gizle</string>
+    <string name="subtitles_hide_default_summary">Varsayılan olarak normal altyazıları gizle; eşleşen zorunlu altyazılar yine de gösterilebilir</string>
     <string name="subtitles_credentials_title">Altyazı kimlik bilgilerini aç</string>
     <string name="subtitles_credentials_summary">Altyazıları indirebilmek için açık altyazı kimlik bilgilerinizi sağlayın</string>
     <string name="preferences_languages">Altyazı indirme dilleri</string>
     <string name="summary_list_preference_primary">Altyazıları indirmek için dillerinizi seçin</string>
     <string name="favSubLang_title">Altyazı okuma dili</string>
     <string name="favSubLang_summary">Altyazı okumak için favori dilinizi seçin</string>
+    <string name="subtitles_show_full_for_local_audio_title">Yerel dildeki ses için altyazıları göster</string>
+    <string name="subtitles_show_full_for_local_audio_summary">Varsayılan olarak kapalıdır; bu nedenle, ses ve altyazı dili eşleştiğinde yalnızca zorunlu altyazılar otomatik olarak seçilir; tam altyazıları da otomatik olarak seçmek için bu özelliği etkinleştirin</string>
     <string name="favAudioLang_title">Ses tercih edilen dil</string>
     <string name="favAudioLang_summary">Favori ses parçası dilinizi seçin</string>
+    <string name="prefer_original_audio_track_title">Orijinal ses parçasını tercih et</string>
+    <string name="prefer_original_audio_track_summary">Mümkünse, filmin veya dizinin orijinal diline karşılık gelen ses parçasını kullanın</string>
     <string name="ui_language_title">Kullanıcı arayüzü dilini seçin</string>
     <string name="UiLang_title">Kullanıcı arayüzü dili</string>
     <string name="UiLang_summary">Nova kullanıcı arayüzü dilini ayarlayın, sistem varsayılanını kullanmak için sistemi seçin</string>
@@ -632,6 +655,8 @@
     <string name="audio_decoder_choice_title">Ses kod çözücüsünü seç</string>
     <string name="audio_decoder_choice_summary">Ses kod çözme işlemi için FFmpeg mi yoksa MediaCodec mi tercih edileceğini belirler.</string>
     <string name="audio_decoder_auto">Otomatik</string>
+    <string name="audio_decoder_prefer_ffmpeg">FFmpeg\'i tercih et (varsayılan)</string>
+    <string name="audio_decoder_prefer_mediacodec">MediaCodec\'i tercih et (deneysel)</string>
     <string name="audio_interface_opensles">OpenSL ES\'yi Zorla</string>
     <string name="audio_interface_audiotrack">Ses İzini Zorla</string>
     <string name="audio_interface_any">Varsayılan mantık</string>
@@ -646,6 +671,8 @@
     <string name="status_disabled">etkin değil</string>
     <string name="status_multichannel">çok kanallı</string>
     <string name="preferences_user_interface">Kullanıcı Arayüzü</string>
+    <string name="preferences_sort_ignore_articles_title">Sıralama yaparken başlık ön eklerini göz ardı et</string>
+    <string name="preferences_sort_ignore_articles_summary">Başlıkları alfabetik olarak sıralarken “The”, “A”, “Le”, “Das” gibi başlık ön eklerini göz ardı edin</string>
     <string name="preferences_display_resume_box_summary">Ana ekranda son videoyu oynatmaya devam eden düğmeyi göster veya gizle</string>
     <string name="preferences_display_resume_box">Devam et kutusunu göster</string>
     <string name="reset_brightness_on_start">Videonun parlaklığını unutma.</string>
@@ -753,8 +780,18 @@
     <string name="trakt_device_auth_invalid_code">Trakt\'tan geçerli bir cihaz kodu alınamadı. Lütfen tekrar deneyin.</string>
     <string name="trakt_device_auth_timeout">Kodun geçerlilik süresi doldu. Lütfen tekrar deneyin.</string>
     <string name="trakt_account_locked">Trakt hesabınız kilitlendi. Kilidi trakt.tv\'den açın veya daha sonra tekrar deneyin.</string>
+    <string name="trakt_social_signin_unsupported">Burada Google/Facebook/Apple ile oturum açma özelliği desteklenmemektedir. Lütfen bunun yerine Trakt kullanıcı adınız ve şifrenizle oturum açın.</string>
     <string name="connect_trakt">Trakt\'a bağlan</string>
+    <string name="trakt_sync_status_never">Henüz senkronize edilmedi</string>
+    <string name="trakt_sync_status_ok">Son senkronizasyon: %1$s</string>
+    <string name="trakt_sync_status_ok_skipped" tools:ignore="PluralsCandidate">Son senkronizasyon: %1$s · %2$d video beklemede (süre bilinmiyor)</string>
+    <string name="trakt_sync_status_ok_meta_skipped" tools:ignore="PluralsCandidate">Son senkronizasyon: %1$s · %2$d tarama atlandı (eksik meta veri)</string>
+    <string name="trakt_sync_status_ok_both_skipped" tools:ignore="PluralsCandidate">Son senkronizasyon: %1$s · %2$d beklemede (süre bilinmiyor) · %3$d tarama atlandı (eksik meta veri)</string>
+    <string name="trakt_sync_status_error_network">Son senkronizasyon başarısız: ağ hatası</string>
+    <string name="trakt_sync_status_error_auth">Kimlik doğrulama hatası — lütfen tekrar oturum açın</string>
+    <string name="trakt_sync_status_error_locked">Hesap kilitlendi — trakt.tv\'de kilidi açın</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
+    <string name="trakt_signin_summary_logged_sync">Oturum açıldı · %1$s</string>
     <string name="show_all">Tüm videolar</string>
     <string name="hide_seen">İzlenmedi</string>
     <string name="search_results">Arama sonuçları</string>
@@ -835,6 +872,10 @@
     <string name="rescrap_all_title">Tümünü yeniden kopyala</string>
     <string name="rescrap_all_movies_title">Tüm filmleri yeniden tara</string>
     <string name="rescrap_all_collections_title">Tüm koleksiyonları yeniden tara</string>
+    <string name="recreate_sort_titles_title">Sıralama başlıklarını yeniden oluştur</string>
+    <string name="recreate_sort_titles_summary">Filmler, TV dizileri ve koleksiyonlar için sıralama başlıklarını yeniden hesapla</string>
+    <string name="recreate_sort_titles_in_progress">Sıralama başlıklarının yeniden oluşturulması devam ediyor</string>
+    <string name="recreate_sort_titles_done">Başlıkların sıralaması yeniden oluşturuldu</string>
     <string name="nfo_export_manual_title">Zaten kazınmış videoları dışa aktar</string>
     <string name="nfo_export_manual_summary">Zaten kopyalanan her videonun .nfo dosyalarını dışa aktar</string>
     <string name="db_export_manual_title">Medya veritabanını dışa aktarma</string>
@@ -882,6 +923,7 @@
     <string name="sponsor">Nova\'ya Sponsor Ol</string>
     <string name="enable_sponsor_title">Nova sponsor bağlantısını etkinleştir</string>
     <string name="enable_sponsor_summary">Bağışlar için sponsor bağlantısını etkinleştirin: Her katkı önemlidir.</string>
+    <string name="version_open_store_summary">Mağazayı açmak için seçin</string>
     <string name="hdr_capability">HDR ekran özellikleri:</string>
     <string name="hdmi_audio_capabilities">HDMI alıcısının ses özellikleri:</string>
     <string name="spdif_audio_capabilities">S/PDIF ses özellikleri:</string>
@@ -893,4 +935,30 @@
     <string name="external_player_service_title">Harici oynatıcıda oynatma</string>
     <string name="external_player_service_description">Nova Video Player, harici bir oynatıcıya içerik sağlar</string>
     <string name="stop">Dur</string>
+    <string name="s_visual_impaired">görme engelli</string>
+    <string name="s_audio_description">sesli açıklama</string>
+    <string name="s_descriptions">açıklamalar</string>
+    <string name="s_forced">zorunlu</string>
+    <string name="s_original">orijinal</string>
+    <string name="s_translated">çevirilmiş</string>
+    <string name="s_dubbed">dubjalı</string>
+    <string name="s_commentary">anlatım</string>
+    <string name="s_lyrics">şarkı sözleri</string>
+    <string name="s_karaoke">karaoke</string>
+    <string name="ui_choice_title">Görünüşe göre Nova Video Player’ı bir televizyonda kullanıyorsunuz.\nEğer gerçekten öyleyse, yeni TV kullanıcı arayüzümüzü kullanmanızı öneririz</string>
+    <string name="ui_choice_tv">TV arayüzü</string>
+    <string name="ui_choice_tablet">Tablet arayüzü</string>
+    <string name="ui_choice_help">Seçiminizi daha sonra uygulama ayarlarından değiştirebilirsiniz</string>
+    <string name="workgroup">Çalışma grubu</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"örnekleme\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

@@ -72,6 +72,7 @@
     <string name="pref_play_mode_entry_folder">폴더내의 파일만 1회 재생</string>
     <string name="pref_play_mode_entry_repeat_folder">폴더반복</string>
     <string name="pref_play_mode_entry_repeat_single">파일반복</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">사운드</string>
     <string name="menu_info">정보</string>
     <string name="menu_bookmark">북마크 설정</string>
@@ -111,7 +112,6 @@
     <string name="subtitles_wizard_add_files">이 비디오를 연결하기 위해이 폴더에 더 많은 자막 파일을 복사할 수 있습니다.</string>
     <string name="subtitles_wizard_help">%s 비디오로 연결할 자막파일을 하나 선택하십시오. 선택된 파일의 파일명은 동영상의 파일명과 동일하게 변경됩니다.</string>
     <!-- Subloader -->
-    <!-- Subtitle Settings Dialog -->
     <!-- Subtitle Delay Dialog -->
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
@@ -127,4 +127,14 @@
     <!-- Brightness -->
     <!--  Nfo File parsing -->
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

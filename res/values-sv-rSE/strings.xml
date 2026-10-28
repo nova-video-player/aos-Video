@@ -190,6 +190,7 @@
     <string name="pref_play_mode_entry_repeat_folder">Upprepa mapp</string>
     <string name="pref_play_mode_entry_repeat_single">Upprepa singel</string>
     <string name="pref_play_mode_entry_binge">Binge-tittar</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Ljud</string>
     <string name="pref_audio_filt_title">Ljud Boost</string>
     <string name="pref_audio_filt_night_mode">Nattläge</string>
@@ -245,7 +246,6 @@
     <string name="get_subtitles_online">Hämta undertexter online</string>
     <string name="toast_subloader_service_unreachable">undertext-server-avbrott</string>
     <string name="dialog_subloader_copying">Kopierar undertexter…</string>
-    <!-- Subtitle Settings Dialog -->
     <!-- Subtitle Delay Dialog -->
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
@@ -294,4 +294,14 @@
     <!-- Brightness -->
     <!--  Nfo File parsing -->
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

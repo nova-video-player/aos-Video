@@ -270,6 +270,7 @@
     <string name="pref_play_mode_entry_repeat_single">Videó ismétlése</string>
     <string name="pref_play_mode_entry_binge">Folyamatos nézés</string>
     <string name="introdb_segment_preview">Előnézet</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Hang</string>
     <string name="pref_audio_filt_title">Hangkiemelés</string>
     <string name="pref_audio_filt_night_mode">Éjszakai mód</string>
@@ -375,14 +376,6 @@
     <string name="opensubtitles_summary_service_unavailable">A szolgáltatás nem elérhető</string>
     <string name="opensubtitles_summary_quota_exhausted">A kvóta kimerült</string>
     <string name="opensubtitles_summary_status">%1$s · %2$s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"minta\"</string>
-    <string name="subtitle_size_text">Méret:</string>
-    <string name="subtitle_style_text">Stílus:</string>
-    <string name="subtitle_vert_text">Függőleges elhelyezkedés:</string>
-    <string name="subtitle_outline">Feliratok körvonalazása</string>
-    <string name="subtitle_background_text">Felirat háttere</string>
-    <string name="subtitle_bg_opacity_text">Háttér áttetszősége</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Sebesség igazítása</string>
     <string name="subtitle_delay_radio_none">nincs</string>
@@ -871,4 +864,15 @@
     <string name="s_translated">lefordított</string>
     <string name="s_dubbed">szinkronizált</string>
     <string name="s_lyrics">dalszöveg</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"minta\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

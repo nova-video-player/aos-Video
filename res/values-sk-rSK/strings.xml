@@ -286,6 +286,7 @@
     <string name="introdb_segment_credits">Zoznam účinkujúcich</string>
     <string name="introdb_segment_preview">Náhľad</string>
     <string name="introdb_segment_end">Koniec</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Zvuk</string>
     <string name="pref_audio_filt_title">Zosilnenie zvuku</string>
     <string name="pref_audio_filt_night_mode">Nočný režim</string>
@@ -394,14 +395,6 @@
     <string name="opensubtitles_summary_service_unavailable">Služba nie je k dispozícii</string>
     <string name="opensubtitles_summary_quota_exhausted">Kvóta je vyčerpaná</string>
     <string name="opensubtitles_summary_status">%1$s · %2$s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"príklad\"</string>
-    <string name="subtitle_size_text">Veľkosť:</string>
-    <string name="subtitle_style_text">Štýl:</string>
-    <string name="subtitle_vert_text">Vertikálna poloha:</string>
-    <string name="subtitle_outline">Obrys titulkov</string>
-    <string name="subtitle_background_text">Pozadie titulkov</string>
-    <string name="subtitle_bg_opacity_text">Priehľadnosť pozadia</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Úprava rýchlosti</string>
     <string name="subtitle_delay_radio_none">žiadne</string>
@@ -938,6 +931,7 @@
     <string name="sponsor">Podporiť aplikáciu Nova</string>
     <string name="enable_sponsor_title">Zapnúť sponzorský odkaz Nova</string>
     <string name="enable_sponsor_summary">Zapnúť sponzorský odkaz na darovanie: každý príspevok pomáha.</string>
+    <string name="version_open_store_summary">Výberom otvoríte obchod</string>
     <string name="hdr_capability">Funkcie obrazovky HDR:</string>
     <string name="hdmi_audio_capabilities">Funkcie zvuku HDMI:</string>
     <string name="spdif_audio_capabilities">Funkcie zvuku S/PDIF:</string>
@@ -964,4 +958,15 @@
     <string name="ui_choice_tablet">Tabletové rozhranie</string>
     <string name="ui_choice_help">Svoj výber môžete neskôr zmeniť v nastaveniach aplikácie</string>
     <string name="workgroup">Workgroup</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"príklad\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

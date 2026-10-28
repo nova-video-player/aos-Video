@@ -167,6 +167,7 @@
     <string name="now_playing" tools:ignore="UnusedResources">A reproduzir</string>
     <string name="player_window_mode">Modo de janela</string>
     <string name="pref_play_mode_title">Modo de reprodução</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="ui_mode_tv">TV</string>
     <string name="ui_mode_normal">Tablet/Telefone</string>
     <string name="pref_s3d_mode_title">Modo 3D</string>
@@ -189,9 +190,6 @@
     <string name="subtitles_wizard_cache">Cache</string>
     <!-- Subloader -->
     <string name="get_subtitles_online">Obter legendas online</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_size_text">Tamanho:</string>
-    <string name="subtitle_style_text">Estilo:</string>
     <!-- Subtitle Delay Dialog -->
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
@@ -210,4 +208,14 @@
     <!-- Brightness -->
     <!--  Nfo File parsing -->
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

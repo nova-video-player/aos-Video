@@ -277,6 +277,7 @@
     <string name="pref_play_mode_entry_repeat_folder">Повтор папки</string>
     <string name="pref_play_mode_entry_repeat_single">Повтор одного файла</string>
     <string name="pref_play_mode_entry_binge">Непрерывный просмотр</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Aудио</string>
     <string name="pref_audio_filt_title">Усиление аудио</string>
     <string name="pref_audio_filt_night_mode">Ночной режим</string>
@@ -377,12 +378,6 @@
     <string name="toast_subloader_login_failed">Неверные учетные данные Opensubtitles или служба недоступна</string>
     <string name="toast_subloader_quota_exceeded">Превышена квота загрузок OpenSubtitles</string>
     <string name="opensubtitles_quota_reset_time_remaining">Квота сбросится через %s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">«образец»</string>
-    <string name="subtitle_size_text">Размер:</string>
-    <string name="subtitle_style_text">Стиль:</string>
-    <string name="subtitle_vert_text">Положение по вертикали:</string>
-    <string name="subtitle_outline">Обводка субтитров</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Настройка скорости</string>
     <string name="subtitle_delay_radio_none">нет</string>
@@ -876,4 +871,15 @@
     <string name="ui_choice_tablet">Планшетный интерфейс</string>
     <string name="ui_choice_help">Вы можете изменить свой выбор в настройках приложения позже</string>
     <string name="workgroup">Рабочая группа</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">«образец»</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

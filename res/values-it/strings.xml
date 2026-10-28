@@ -249,6 +249,7 @@ Copertina (rotolo di copertina)</string>
     <string name="pref_play_mode_entry_folder">Cartella</string>
     <string name="pref_play_mode_entry_repeat_folder">Ripeti cartella</string>
     <string name="pref_play_mode_entry_repeat_single">Ripeti singolo</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Suono</string>
     <string name="pref_audio_filt_title">Boost Audio</string>
     <string name="pref_audio_filt_night_mode">Modalità Notturna</string>
@@ -338,12 +339,6 @@ Copertina (rotolo di copertina)</string>
     <string name="dialog_subloader_credentials_empty">Devi specificare un nome utente e una password validi!</string>
     <string name="toast_subloader_credentials_empty">Fornisci le tue credenziali opensubtitles nelle impostazioni per poter scaricare i sottotitoli</string>
     <string name="toast_subloader_login_failed">Credenziali opensubtitles errate o servizio non disponibile</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"sample\"</string>
-    <string name="subtitle_size_text">Dimensione:</string>
-    <string name="subtitle_style_text">Stile:</string>
-    <string name="subtitle_vert_text">Posizione verticale:</string>
-    <string name="subtitle_outline">Contorno dei sottotitoli</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Aggiusta la velocità</string>
     <string name="subtitle_delay_radio_none">Nessuno</string>
@@ -748,4 +743,15 @@ Copertina (rotolo di copertina)</string>
     <string name="sponsor">Supporta Nova</string>
     <string name="enable_sponsor_title">Abilita il sponsor link di Nova</string>
     <string name="enable_sponsor_summary">Abilita il sponsor link per le donazioni: ogni contributo aiuta.</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"sample\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

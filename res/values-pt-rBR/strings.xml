@@ -278,6 +278,11 @@
     <string name="introdb_segment_credits">Créditos</string>
     <string name="introdb_segment_preview">Prévia</string>
     <string name="introdb_segment_end">fim</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
+    <string name="skip_intro_button">Pular Introdução</string>
+    <string name="skip_recap_button">Pular resumo</string>
+    <string name="skip_credits_button">Pular Créditos</string>
+    <string name="skip_preview_button">Pular Pré-visualização</string>
     <string name="pref_audio_parameters_title">Som</string>
     <string name="pref_audio_filt_title">Audio Boost</string>
     <string name="pref_audio_filt_night_mode">Modo Noturno</string>
@@ -386,14 +391,6 @@
     <string name="opensubtitles_summary_service_unavailable">Serviço indisponível</string>
     <string name="opensubtitles_summary_quota_exhausted">Cota esgotada</string>
     <string name="opensubtitles_summary_status">%1$s · %2$s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"exemplo\"</string>
-    <string name="subtitle_size_text">Tamanho:</string>
-    <string name="subtitle_style_text">Estilo:</string>
-    <string name="subtitle_vert_text">Posição Vertical:</string>
-    <string name="subtitle_outline">Contorno da legenda</string>
-    <string name="subtitle_background_text">Plano de fundo da legenda</string>
-    <string name="subtitle_bg_opacity_text">Opacidade do plano de fundo</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Ajuste de velocidade</string>
     <string name="subtitle_delay_radio_none">nenhum</string>
@@ -516,6 +513,11 @@
     <string name="category_languages">Legendas</string>
     <string name="subtitles_hide_default">Ocultar legendas por padrão</string>
     <string name="subtitles_hide_default_summary">Oculte legendas normais por padrão; legendas forçadas correspondentes ainda podem ser mostradas.</string>
+    <string name="subtitle_use_margins_title">Renderizar legendas nas barras pretas</string>
+    <string name="subtitle_use_margins_summary">Mostrar legendas na área da caixa de letras abaixo da imagem ao invés de sobrepor o vídeo</string>
+    <string name="subtitle_fonts_folder_title">Pasta de fontes personalizadas</string>
+    <string name="subtitle_fonts_folder_summary">Escolha uma pasta de fontes .ttf/.otf/.ttc a ser usada para legendas, em vez das fontes incorporadas</string>
+    <string name="subtitle_default_font_title">Default subtitle font</string>
     <string name="subtitles_credentials_title">Credenciais do Opensubtitles</string>
     <string name="subtitles_credentials_summary">Forneça suas credenciais do OpenSubtitles para poder baixar legendas.</string>
     <string name="preferences_languages">Idiomas para baixar legendas</string>
@@ -930,6 +932,7 @@
     <string name="sponsor">Patrocinar Nova</string>
     <string name="enable_sponsor_title">Ativar link de patrocinador do Nova</string>
     <string name="enable_sponsor_summary">Ativar link de patrocinador para doações: cada contribuição ajuda.</string>
+    <string name="version_open_store_summary">Selecione para abrir a loja.</string>
     <string name="hdr_capability">Recursos HDR da tela:</string>
     <string name="hdmi_audio_capabilities">Recursos de áudio do receiver HDMI:</string>
     <string name="spdif_audio_capabilities">Recursos de áudio S/PDIF:</string>
@@ -956,4 +959,54 @@
     <string name="ui_choice_tablet">Interface para tablet</string>
     <string name="ui_choice_help">Você pode alterar sua escolha mais tarde nas configurações do aplicativo</string>
     <string name="workgroup">Grupo de trabalho</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"exemplo\"</string>
+    <!-- Titles -->
+    <string name="subtitle_panel_title">Configurações de legendas</string>
+    <string name="subtitle_panel_advanced">Aparência avançada</string>
+    <!-- Style mode (pills) and what each one means -->
+    <string name="subtitle_panel_style">Estilo</string>
+    <string name="subtitle_panel_mode_file">Estilo do arquivo</string>
+    <string name="subtitle_panel_mode_custom">Personalizado</string>
+    <string name="subtitle_panel_mode_scale">Apenas escala</string>
+    <string name="subtitle_panel_caption_file">Usa o próprio estilo do arquivo da legenda. Nada para ajustar.</string>
+    <string name="subtitle_panel_caption_custom">Sua fonte, cores e posição substituem o arquivo.</string>
+    <string name="subtitle_panel_caption_scale">Mantém o estilo do arquivo e dimensiona apenas seu tamanho de texto.</string>
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <string name="subtitle_panel_note_plain_text">Legendas de texto simples sempre usam seu estilo.</string>
+    <string name="subtitle_panel_note_graphic">As configurações não estão disponíveis para legendas de imagem.</string>
+    <string name="subtitle_panel_note_unsupported">Este formato de legenda não pode ser estilizado.</string>
+    <string name="subtitle_panel_note_none">Nenhuma legenda selecionada.</string>
+    <!-- Basic rows -->
+    <string name="subtitle_panel_font_size">Tamanho</string>
+    <string name="subtitle_panel_bold">(UTC+13:00) Nuku\'alofa</string>
+    <string name="subtitle_panel_background">Fundo</string>
+    <string name="subtitle_panel_bg_off">Desativado</string>
+    <string name="subtitle_panel_bg_line">Linha</string>
+    <string name="subtitle_panel_bg_box">Caixa</string>
+    <string name="subtitle_panel_vertical_position">Posição vertical</string>
+    <string name="subtitle_panel_scale">Escala</string>
+    <string name="subtitle_panel_reset">Redefinir aparência</string>
+    <string name="subtitle_panel_reset_confirm_touch">Toque novamente para redefinir</string>
+    <string name="subtitle_panel_reset_confirm_tv">Pressione OK novamente para redefinir</string>
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <string name="subtitle_panel_section_text">Texto</string>
+    <string name="subtitle_panel_text_color">Cor do texto</string>
+    <string name="subtitle_panel_outline_width">Largura do contorno</string>
+    <string name="subtitle_panel_outline_color">Cor do contorno</string>
+    <string name="subtitle_panel_shadow_width">Largura da sombra</string>
+    <string name="subtitle_panel_shadow_color">Cor da sombra</string>
+    <string name="subtitle_panel_background_color">Cor de fundo</string>
+    <string name="subtitle_panel_background_opacity">Opacidade do plano de fundo</string>
+    <string name="subtitle_panel_padding">Padding</string>
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <string name="subtitle_panel_preview_own_style">O próprio estilo do arquivo é usado</string>
+    <!-- Color screen -->
+    <string name="subtitle_panel_red">Vermelho</string>
+    <string name="subtitle_panel_green">Verde</string>
+    <string name="subtitle_panel_blue">Azul</string>
+    <!-- Value formats -->
+    <!-- Accessibility -->
+    <string name="subtitle_panel_decrease">Diminuir</string>
+    <string name="subtitle_panel_increase">Aumentar</string>
 </resources>

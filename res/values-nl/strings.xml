@@ -248,6 +248,7 @@
     <string name="pref_play_mode_entry_folder">Map</string>
     <string name="pref_play_mode_entry_repeat_folder">Map herhalen</string>
     <string name="pref_play_mode_entry_repeat_single">Eén herhalen</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Geluid</string>
     <string name="pref_audio_filt_title">Audio versterken</string>
     <string name="pref_audio_filt_night_mode">Nachtmodus</string>
@@ -323,12 +324,6 @@
     <string name="dialog_subloader_nonetwork_title">Geen internetverbinding</string>
     <string name="dialog_subloader_nonetwork_message">Een internetverbinding is vereist om ondertitels te downloaden</string>
     <string name="dialog_subloader_connecting">Verbinding maken met www.openondertitels.org…</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"voorbeeld\"</string>
-    <string name="subtitle_size_text">Grootte:</string>
-    <string name="subtitle_style_text">Stijl:</string>
-    <string name="subtitle_vert_text">Verticale positie:</string>
-    <string name="subtitle_outline">Ondertitels uitlijnen</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Snelheidsaanpassing</string>
     <string name="subtitle_delay_radio_none">geen</string>
@@ -524,4 +519,15 @@
     <string name="leanback_hint_long_press_on_back">HINT: lang drukken op BACK-toets sluit de bestandsbrowser</string>
     <string name="leanback_archos_video_webview">Nova Video WebView</string>
     <string name="file_access_error">Kon het bestand niet openen</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"voorbeeld\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

@@ -269,6 +269,7 @@
     <string name="pref_play_mode_entry_repeat_folder">חזרה על תיקייה</string>
     <string name="pref_play_mode_entry_repeat_single">חזרת בודד</string>
     <string name="pref_play_mode_entry_binge">צפיית בינג\'</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">צליל</string>
     <string name="pref_audio_filt_title">הגברת אודיו</string>
     <string name="pref_audio_filt_night_mode">מצב לילה</string>
@@ -368,12 +369,6 @@
     <string name="toast_subloader_login_failed">פרטי משתמש opensubtitles לא נכונים, או שהשרות לא זמין</string>
     <string name="toast_subloader_quota_exceeded">חריגה ממכסת ההורדה של OpenSubtitles</string>
     <string name="opensubtitles_quota_reset_time_remaining">מכסה מתאפסת תוך %s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"דוגמא\"</string>
-    <string name="subtitle_size_text">גודל:</string>
-    <string name="subtitle_style_text">סגנון:‏</string>
-    <string name="subtitle_vert_text">מיקום אנכי:</string>
-    <string name="subtitle_outline">כתוביות עם קו מתאר</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">כוונון מהירות</string>
     <string name="subtitle_delay_radio_none">ללא</string>
@@ -800,4 +795,15 @@
     <string name="upgrade_info">מידע שדרוג</string>
     <string name="v5_v6_upgrade_info">אזהרה: עדכון משמעותי זה דורש סריקה מחדש של כל אוסף הוידאו על מנת לאסוף את פרטי המדיה.
         מאד מומלץ להתחיל מחדש עם התקנה נקייה כדי למנוע בעיות. לפרטים ראה שאלות נפוצות.</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"דוגמא\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

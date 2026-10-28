@@ -201,6 +201,7 @@
     <string name="floating_player_play" tools:ignore="UnusedResources">ᱪᱟᱹᱞᱩᱭ ᱢᱮ</string>
     <string name="floating_player_pause" tools:ignore="UnusedResources">ᱛᱚᱝᱜᱮ</string>
     <string name="player_pref_audio_delay_title">ᱥᱟᱲᱮ ᱜᱷᱟᱹᱬᱤᱡ</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <!-- Subtitles/Audio languages -->
     <!-- Subtitles in filename HI = Hearing Impaired -->
     <!-- Subtitles in filename SDH = Subtitles for the Deaf and Hard of Hearing -->
@@ -250,7 +251,6 @@
     <string name="subtitles_wizard_add_files">ᱱᱚᱣᱟ ᱵᱷᱤᱰᱤᱭᱳ ᱥᱟᱶ ᱡᱚᱲᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱟᱢ ᱱᱚᱣᱟ ᱯᱷᱚᱞᱰᱟᱨ ᱨᱮ ᱟᱨᱦᱚᱸ ᱥᱟᱵᱽᱴᱟᱭᱤᱴᱟᱞ ᱨᱮᱫ ᱠᱚ ᱠᱚᱯᱤ ᱫᱟᱲᱮᱭᱟᱜᱼᱟᱢ᱾</string>
     <string name="subtitles_wizard_help">ᱵᱷᱤᱰᱤᱭᱚ %s ᱥᱟᱶ ᱡᱚᱲᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱢᱮᱱᱟᱜ ᱥᱟᱵᱽᱴᱟᱭᱤᱴᱟᱞ ᱨᱮᱫ ᱠᱚ ᱢᱩᱫᱽ ᱨᱮ ᱡᱟᱦᱟᱸ ᱜᱮ ᱵᱟᱪᱷᱟᱣ ᱢᱮ᱾  ᱵᱷᱤᱰᱤᱭᱳ ᱨᱮᱭᱟᱜ ᱧᱩᱛᱩᱢ ᱢᱤᱞᱟᱹᱣ ᱞᱟᱹᱜᱤᱫ ᱨᱮᱫ ᱨᱮᱭᱟᱜ ᱧᱩᱛᱩᱢ ᱵᱚᱫᱚᱞᱚᱜᱼᱟ᱾</string>
     <!-- Subloader -->
-    <!-- Subtitle Settings Dialog -->
     <!-- Subtitle Delay Dialog -->
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
@@ -287,4 +287,14 @@
     <!-- Brightness -->
     <!--  Nfo File parsing -->
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

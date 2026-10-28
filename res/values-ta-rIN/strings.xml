@@ -131,6 +131,7 @@
     <string name="switch_to_grid">கட்டம்</string>
     <!-- VideoPlayer -->
     <string name="player_audio_track_toast">ஆடியோ டிராக்:</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">ஒலி</string>
     <string name="ui_mode_auto">தானியங்கு</string>
     <string name="ui_mode_tv">தொலைக்காட்சி</string>
@@ -145,7 +146,6 @@
     <!-- Player plug-in -->
     <!-- Subtitles wizard -->
     <!-- Subloader -->
-    <!-- Subtitle Settings Dialog -->
     <!-- Subtitle Delay Dialog -->
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
@@ -161,4 +161,14 @@
     <!-- Brightness -->
     <!--  Nfo File parsing -->
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

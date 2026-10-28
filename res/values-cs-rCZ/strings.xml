@@ -253,6 +253,7 @@
     <string name="pref_play_mode_entry_repeat_folder">Opakovat vše ve složce</string>
     <string name="pref_play_mode_entry_repeat_single">Opakovat jednu položku</string>
     <string name="pref_play_mode_entry_binge">Nepřetržité sledování (binge)</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Zvuk</string>
     <string name="pref_audio_filt_title">Audio Boost</string>
     <string name="pref_audio_filt_night_mode">Noční režim</string>
@@ -350,12 +351,6 @@
     <string name="toast_subloader_login_failed">Nesprávné uživatelské jméno a heslo k OpenSubtitles nebo služba není dostupná</string>
     <string name="toast_subloader_quota_exceeded">Kvóta stahování na OpenSubtitles překročena</string>
     <string name="opensubtitles_quota_reset_time_remaining">Kvóta se resetuje za %s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"příklad\"</string>
-    <string name="subtitle_size_text">Velikost:</string>
-    <string name="subtitle_style_text">Styl:</string>
-    <string name="subtitle_vert_text">Svislá pozice:</string>
-    <string name="subtitle_outline">Obrys titulků</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Úprava rychlosti</string>
     <string name="subtitle_delay_radio_none">žádné</string>
@@ -777,4 +772,15 @@
     <string name="upgrade_info">Informace o aktualizaci</string>
     <string name="v5_v6_upgrade_info">VAROVÁNÍ: tato významná aktualizace aplikace vyžaduje opětovné naskenování všech videí pro opětovné získání popisných informací.         Pro vyvarování se problémů doporučujeme začít znovu s čistou instalací. Prosím přečtěte si časté otázky (FAQ) pro další detaily.</string>
     <string name="stop">Zastavit</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"příklad\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

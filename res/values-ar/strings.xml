@@ -191,6 +191,7 @@
     <string name="pref_play_mode_entry_folder">حافظة</string>
     <string name="pref_play_mode_entry_repeat_folder">تكرار الحافظة</string>
     <string name="pref_play_mode_entry_repeat_single">تكرار فردى</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">صوت</string>
     <string name="pref_audio_filt_title">تقوية الصوت</string>
     <string name="pref_audio_filt_night_mode">وضع ليلي</string>
@@ -266,12 +267,6 @@
     <string name="dialog_subloader_nonetwork_title">لا يوجد اتصال بالإنترنت</string>
     <string name="dialog_subloader_nonetwork_message">مطلوب اتصال بالإنترنت لتحميل الترجمة</string>
     <string name="dialog_subloader_connecting">الاتصال بموقع.opensubtitles…</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"نموذج\"</string>
-    <string name="subtitle_size_text">حجم:</string>
-    <string name="subtitle_style_text">النمط</string>
-    <string name="subtitle_vert_text">وضع رأسي:</string>
-    <string name="subtitle_outline">شكل الترجمة</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">ضبط السرعة</string>
     <string name="subtitle_delay_radio_none">لا شئ</string>
@@ -342,4 +337,15 @@
     <!-- Brightness -->
     <!--  Nfo File parsing -->
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"نموذج\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

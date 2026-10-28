@@ -116,6 +116,7 @@
     <!-- Media Center -->
     <!-- VideoPlayer -->
     <string name="pref_play_mode_entry_folder">ଫୋଲ୍ଡର୍</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="ui_mode_auto">ସ୍ୱତଃ</string>
     <string name="ui_mode_tv">ଦୂରଦର୍ଶନ</string>
     <string name="pref_s3d_mode_entry_off">ବନ୍ଦ</string>
@@ -133,9 +134,6 @@
     <!-- Player plug-in -->
     <!-- Subtitles wizard -->
     <!-- Subloader -->
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_size_text">ଆକାର:</string>
-    <string name="subtitle_style_text">ଶୈଳୀ:</string>
     <!-- Subtitle Delay Dialog -->
     <!-- Browser.CommonDetailsView -->
     <!-- Add a space after the right quote
@@ -216,4 +214,14 @@
     <string name="scheduled_rescan_period_every_two_hours">ପ୍ରତି ୨ ଘଣ୍ଟାରେ</string>
     <string name="scheduled_rescan_period_every_hour">ପ୍ରତି ଘଣ୍ଟାରେ</string>
     <string name="view_more">ଆହୁରି ଦେଖନ୍ତୁ</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>

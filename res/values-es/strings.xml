@@ -278,6 +278,11 @@
     <string name="introdb_segment_credits">Créditos</string>
     <string name="introdb_segment_preview">Avance</string>
     <string name="introdb_segment_end">fin</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
+    <string name="skip_intro_button">Saltar Introducción</string>
+    <string name="skip_recap_button">Saltar Resumen</string>
+    <string name="skip_credits_button">Saltar Créditos</string>
+    <string name="skip_preview_button">Saltar Resumen</string>
     <string name="pref_audio_parameters_title">Audio</string>
     <string name="pref_audio_filt_title">Potenciador de audio</string>
     <string name="pref_audio_filt_night_mode">Modo noche</string>
@@ -386,14 +391,6 @@
     <string name="opensubtitles_summary_service_unavailable">Servicio no disponible</string>
     <string name="opensubtitles_summary_quota_exhausted">Cuota agotada</string>
     <string name="opensubtitles_summary_status">%1$s · %2$s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"muestra\"</string>
-    <string name="subtitle_size_text">Tamaño:</string>
-    <string name="subtitle_style_text">Estilo:</string>
-    <string name="subtitle_vert_text">Posición vertical:</string>
-    <string name="subtitle_outline">Contorno de subtítulos</string>
-    <string name="subtitle_background_text">Fondo de subtítulos</string>
-    <string name="subtitle_bg_opacity_text">Opacidad del fondo</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Ajuste de velocidad</string>
     <string name="subtitle_delay_radio_none">ninguno</string>
@@ -516,6 +513,11 @@
     <string name="category_languages">Subtítulos</string>
     <string name="subtitles_hide_default">Ocultar subtítulos por defecto</string>
     <string name="subtitles_hide_default_summary">Ocultar subtítulos regulares de forma predeterminada; los subtítulos forzados que coincidan pueden ser mostrados</string>
+    <string name="subtitle_use_margins_title">Mostrar subtítulos en barras negras</string>
+    <string name="subtitle_use_margins_summary">Muestra los subtítulos debajo de la imagen en lugar de superponerlos al vídeo</string>
+    <string name="subtitle_fonts_folder_title">Carpeta de fuentes personalizadas</string>
+    <string name="subtitle_fonts_folder_summary">Elija una carpeta de fuentes .ttf/.otf/.ttc para usar en subtítulos, en lugar de las fuentes incluidas</string>
+    <string name="subtitle_default_font_title">Fuente de subtítulos por defecto</string>
     <string name="subtitles_credentials_title">Credenciales de Opensubtitles</string>
     <string name="subtitles_credentials_summary">Proporcione sus credenciales de opensubtitles para poder descargar subtítulos</string>
     <string name="preferences_languages">Idiomas de descarga de subtítulos</string>
@@ -930,6 +932,7 @@
     <string name="sponsor">Patrocinar Nova</string>
     <string name="enable_sponsor_title">Habilitar el enlace de patrocinador de Nova</string>
     <string name="enable_sponsor_summary">Activar enlace de patrocinador para donaciones: cada contribución ayuda.</string>
+    <string name="version_open_store_summary">Seleccione para abrir la tienda</string>
     <string name="hdr_capability">Capacidades de la pantalla HDR:</string>
     <string name="hdmi_audio_capabilities">Capacidades del receptor de audio HDMI:</string>
     <string name="spdif_audio_capabilities">Capacidades de audio S/PDIF:</string>
@@ -956,4 +959,54 @@
     <string name="ui_choice_tablet">Interfaz de tablet</string>
     <string name="ui_choice_help">Puedes cambiar tu elección después desde los ajustes de la aplicación</string>
     <string name="workgroup">Grupo de trabajo</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"muestra\"</string>
+    <!-- Titles -->
+    <string name="subtitle_panel_title">Ajustes de subtítulos</string>
+    <string name="subtitle_panel_advanced">Apariencia avanzada</string>
+    <!-- Style mode (pills) and what each one means -->
+    <string name="subtitle_panel_style">Estilo</string>
+    <string name="subtitle_panel_mode_file">Estilo del archivo</string>
+    <string name="subtitle_panel_mode_custom">Personalizar</string>
+    <string name="subtitle_panel_mode_scale">Sólo escalar</string>
+    <string name="subtitle_panel_caption_file">Utiliza el propio estilo del archivo de subtítulos. Nada que ajustar.</string>
+    <string name="subtitle_panel_caption_custom">Tu fuente, colores y posición reemplazan los del archivo.</string>
+    <string name="subtitle_panel_caption_scale">Mantiene el estilo del archivo y sólo escala su tamaño de texto.</string>
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <string name="subtitle_panel_note_plain_text">Los subtítulos de texto plano siempre usan tu estilo.</string>
+    <string name="subtitle_panel_note_graphic">Los ajustes no están disponibles para subtítulos de imágenes.</string>
+    <string name="subtitle_panel_note_unsupported">Este formato de subtítulos no soporta estilos.</string>
+    <string name="subtitle_panel_note_none">Ningún subtítulo seleccionado.</string>
+    <!-- Basic rows -->
+    <string name="subtitle_panel_font_size">Tamaño</string>
+    <string name="subtitle_panel_bold">Negrita</string>
+    <string name="subtitle_panel_background">Fondo</string>
+    <string name="subtitle_panel_bg_off">Apagado</string>
+    <string name="subtitle_panel_bg_line">Línea</string>
+    <string name="subtitle_panel_bg_box">Caja</string>
+    <string name="subtitle_panel_vertical_position">Posición vertical</string>
+    <string name="subtitle_panel_scale">Escala</string>
+    <string name="subtitle_panel_reset">Reiniciar apariencia</string>
+    <string name="subtitle_panel_reset_confirm_touch">Toque de nuevo para restablecer</string>
+    <string name="subtitle_panel_reset_confirm_tv">Pulse OK de nuevo para restablecer</string>
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <string name="subtitle_panel_section_text">Texto</string>
+    <string name="subtitle_panel_text_color">Color del texto</string>
+    <string name="subtitle_panel_outline_width">Ancho del contorno</string>
+    <string name="subtitle_panel_outline_color">Color del contorno</string>
+    <string name="subtitle_panel_shadow_width">Ancho de la sombra</string>
+    <string name="subtitle_panel_shadow_color">Color de la sombra</string>
+    <string name="subtitle_panel_background_color">Color de fondo</string>
+    <string name="subtitle_panel_background_opacity">Opacidad del fondo</string>
+    <string name="subtitle_panel_padding">Relleno</string>
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <string name="subtitle_panel_preview_own_style">Se utiliza el estilo propio del archivo</string>
+    <!-- Color screen -->
+    <string name="subtitle_panel_red">Rojo</string>
+    <string name="subtitle_panel_green">Verde</string>
+    <string name="subtitle_panel_blue">Azul</string>
+    <!-- Value formats -->
+    <!-- Accessibility -->
+    <string name="subtitle_panel_decrease">Reducir</string>
+    <string name="subtitle_panel_increase">Aumentar</string>
 </resources>

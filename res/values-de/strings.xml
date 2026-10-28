@@ -278,6 +278,7 @@
     <string name="introdb_segment_credits">Mitwirkende</string>
     <string name="introdb_segment_preview">Vorschau</string>
     <string name="introdb_segment_end">Ende</string>
+    <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="pref_audio_parameters_title">Sound</string>
     <string name="pref_audio_filt_title">Lautstärke erhöhen</string>
     <string name="pref_audio_filt_night_mode">Nachtmodus</string>
@@ -386,14 +387,6 @@
     <string name="opensubtitles_summary_service_unavailable">Dienst nicht verfügbar</string>
     <string name="opensubtitles_summary_quota_exhausted">Kontingent erschöpft</string>
     <string name="opensubtitles_summary_status">%1$s · %2$s</string>
-    <!-- Subtitle Settings Dialog -->
-    <string name="subtitle_sample_text">\"Beispiel\"</string>
-    <string name="subtitle_size_text">Größe:</string>
-    <string name="subtitle_style_text">Style:</string>
-    <string name="subtitle_vert_text">Vertikale Position:</string>
-    <string name="subtitle_outline">Untertitel gliedern</string>
-    <string name="subtitle_background_text">Untertitel-Hintergrund</string>
-    <string name="subtitle_bg_opacity_text">Hintergrunddeckkraft</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Geschwindigkeitsanpassung</string>
     <string name="subtitle_delay_radio_none">Keine</string>
@@ -930,6 +923,7 @@
     <string name="sponsor">Sponsor Nova</string>
     <string name="enable_sponsor_title">Nova Sponsor-Link aktivieren</string>
     <string name="enable_sponsor_summary">Sponsor-Link für Spenden aktivieren: Jeder Beitrag hilft.</string>
+    <string name="version_open_store_summary">Auswählen, um den Store zu öffnen</string>
     <string name="hdr_capability">HDR-Bildschirmfunktionen:</string>
     <string name="hdmi_audio_capabilities">HDMI-Receiver Audio-Fähigkeiten:</string>
     <string name="spdif_audio_capabilities">S/PDIF Audio-Funktionen:</string>
@@ -956,4 +950,15 @@
     <string name="ui_choice_tablet">Tablet-Benutzeroberfläche</string>
     <string name="ui_choice_help">Sie können Ihre Auswahl später in den Anwendungseinstellungen ändern</string>
     <string name="workgroup">Arbeitsgruppe</string>
+    <!-- ===== Subtitle settings panel ===== -->
+    <string name="subtitle_sample_text">\"Beispiel\"</string>
+    <!-- Titles -->
+    <!-- Style mode (pills) and what each one means -->
+    <!-- Notes shown instead of rows when settings cannot apply -->
+    <!-- Basic rows -->
+    <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <!-- Color screen -->
+    <!-- Value formats -->
+    <!-- Accessibility -->
 </resources>
