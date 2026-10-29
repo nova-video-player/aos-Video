@@ -1491,11 +1491,15 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     /*
         IntroDB skip intro/outro (GET only, proof of concept)
      */
-    // auto-skip toggle, shared with the in-player play-mode tile/menu (TV + phone/tablet).
+    // skip prompt feature toggle, shared with the in-player play-mode tile/menu (TV + phone/tablet).
     // Recap has no separate toggle: it is skipped automatically when this toggle is on AND we
     // are genuinely binge-watching (PLAYMODE_BINGE on an auto-advanced episode), see autoSkipIfNeeded.
     public static final String KEY_INTRODB_ENABLED = "introdb_enabled";
     public static final boolean DEFAULT_INTRODB_ENABLED = false;
+    // When on (and KEY_INTRODB_ENABLED is also on), seek past intro/outro segments automatically
+    // instead of showing the interactive skip prompt. Off by default to preserve the prompt UX.
+    public static final String KEY_INTRODB_AUTO_SKIP = "introdb_auto_skip";
+    public static final boolean DEFAULT_INTRODB_AUTO_SKIP = false;
     // how often the auto-skip task checks the playback position against the fetched segments
     private static final long AUTO_SKIP_INTERVAL = 1000;
     // Safety buffer (ms) subtracted from segment end (0ms so skip lands at segment end)
@@ -1863,6 +1867,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             return;
         }
         if (position < 0) return;
+        boolean autoSkipEnabled = mPreferences.getBoolean(KEY_INTRODB_AUTO_SKIP, DEFAULT_INTRODB_AUTO_SKIP);
+        if (autoSkipEnabled && mIsSkipPromptShowing) {
+            mIsSkipPromptShowing = false;
+            if (mPlayerFrontend != null) mPlayerFrontend.onHideSkipPrompt();
+        }
         int duration = Player.sPlayer.getDuration();
         boolean recapEnabled = mPlayMode == PLAYMODE_BINGE && mArrivedViaBingeTransition;
         IntroSegments.Skip skip = segments.findSkip(position, duration, introEnabled, recapEnabled);
@@ -1871,6 +1880,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if (skip.endMs == mLastAutoSkippedEndMs) return;
             long targetMs = Math.max(0, skip.endMs - AUTO_SKIP_BUFFER_MS);
             if (targetMs > position) {
+                if (autoSkipEnabled) {
+                    if (log.isDebugEnabled()) log.debug("autoSkipIfNeeded: auto-skipping {} to {}", skip.type, targetMs);
+                    executeSkip(skip.type, targetMs, true);
+                    return;
+                }
                 if (skip.endMs != mLastPromptedEndMs) {
                     mLastPromptedEndMs = skip.endMs;
                     mIsSkipPromptShowing = true;
@@ -1895,20 +1909,32 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     public void executeSkip(final IntroSegments.Type type, final long targetMs) {
+        executeSkip(type, targetMs, false);
+    }
+
+    private void executeSkip(final IntroSegments.Type type, final long targetMs, final boolean automatic) {
         mIsSkipPromptShowing = false;
         if (mPlayerFrontend != null) {
             mPlayerFrontend.onHideSkipPrompt();
         }
         if (mPlayer == null || Player.sPlayer == null) return;
         int duration = Player.sPlayer.getDuration();
-        mLastAutoSkippedEndMs = mLastPromptedEndMs > 0 ? mLastPromptedEndMs : targetMs;
+        mLastAutoSkippedEndMs = automatic ? targetMs : (mLastPromptedEndMs > 0 ? mLastPromptedEndMs : targetMs);
         if (duration > 0 && targetMs >= duration - AUTO_SKIP_END_MARGIN_MS) {
             if (log.isDebugEnabled()) log.debug("executeSkip: skipping {} to end ({}), completing", type, duration);
+            if (automatic) showAutoSkipToast(type);
             onCompletion();
             return;
         }
         if (log.isDebugEnabled()) log.debug("executeSkip: skipping {} to {}", type, targetMs);
         Player.sPlayer.seekTo((int) targetMs);
+        if (automatic) showAutoSkipToast(type);
+    }
+
+    // Feedback for an automatic skip; manual prompt skips rely on the button disappearing.
+    private void showAutoSkipToast(final IntroSegments.Type type) {
+        final String message = getString(R.string.introdb_skipped_format, introLabels(getApplicationContext()).get(type));
+        mHandler.post(() -> Toast.makeText(getUiContext(), message, Toast.LENGTH_SHORT).show());
     }
 
     // Translatable display labels for each segment type, resolved from string resources.

@@ -308,6 +308,7 @@
     <string name="pref_play_mode_entry_binge">Binge watching</string>
     <string name="pref_introdb_autoskip_title">Skip intro/outro</string>
     <string name="introdb_autoskip">Auto-skip</string>
+    <string name="introdb_skipped_format">Skipped: %1$s</string>
     <string name="introdb_segment_intro">Intro</string>
     <string name="introdb_segment_recap">Recap</string>
     <string name="introdb_segment_outro">Outro</string>

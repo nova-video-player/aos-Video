@@ -452,6 +452,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     private TVMenu mAudioTracksTVMenu;
     private TVMenu mPlayModeTVMenu;
     private TVMenuItem mPlayModeAutoSkipMenuItem;
+    private TVMenuItem mPlayModeAutoSkipAlwaysMenuItem;
     private TVMenuItem mIntroSummaryMenuItem;
     private View mIntroSummarySeparator;
     private TextView mPhonePlayModeIntroFooter;
@@ -2163,6 +2164,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
         if (mPlayModeAutoSkipMenuItem != null) {
             mPlayModeAutoSkipMenuItem.setChecked(enabled);
         }
+        if (mPlayModeAutoSkipAlwaysMenuItem != null) {
+            mPlayModeAutoSkipAlwaysMenuItem.setChecked(
+                    mPreferences.getBoolean(PlayerService.KEY_INTRODB_AUTO_SKIP, PlayerService.DEFAULT_INTRODB_AUTO_SKIP));
+        }
         if (!enabled) {
             if (mIntroSummaryMenuItem != null) mIntroSummaryMenuItem.setVisibility(View.GONE);
             if (mIntroSummarySeparator != null) mIntroSummarySeparator.setVisibility(View.GONE);
@@ -2675,11 +2680,28 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                 }
             });
 
+            final TVMenuItem tvmAutoSkipAlways = tvmPlayMode.createAndAddTVSwitchableMenuItem(
+                    getResources().getString(R.string.introdb_autoskip),
+                    mPreferences.getBoolean(PlayerService.KEY_INTRODB_AUTO_SKIP, PlayerService.DEFAULT_INTRODB_AUTO_SKIP));
+            tvmAutoSkipAlways.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean enabled = !mPreferences.getBoolean(PlayerService.KEY_INTRODB_AUTO_SKIP, PlayerService.DEFAULT_INTRODB_AUTO_SKIP);
+                    mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_AUTO_SKIP, enabled).apply();
+                    tvmAutoSkipAlways.setChecked(enabled);
+                    if (enabled && PlayerService.sPlayerService != null) {
+                        PlayerService.sPlayerService.fetchIntroDbIfNeeded();
+                    }
+                    refreshPlayModeIntroSummary();
+                }
+            });
+
             mPlayModeTVMenu = tvmPlayMode;
             mPlayModeTVCardView = tcv;
             mIntroSummaryMenuItem = null;
             mIntroSummarySeparator = null;
             mPlayModeAutoSkipMenuItem = tvmAutoSkip;
+            mPlayModeAutoSkipAlwaysMenuItem = tvmAutoSkipAlways;
             tcv.addOtherView(tvmPlayMode);
             refreshPlayModeIntroSummary();
             //[/playmode]
@@ -3018,7 +3040,22 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         refreshPhonePlayModeIntroSummary();
                     }
                 });
+
+                SwitchCompat tbAuto = new SwitchCompat(mContext);
+                tbAuto.setText(R.string.introdb_autoskip);
+                tbAuto.setPadding(pad, pad, pad, pad);
+                tbAuto.setChecked(mPreferences.getBoolean(PlayerService.KEY_INTRODB_AUTO_SKIP, PlayerService.DEFAULT_INTRODB_AUTO_SKIP));
+                tbAuto.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mPreferences.edit().putBoolean(PlayerService.KEY_INTRODB_AUTO_SKIP, isChecked).apply();
+                        if (isChecked && PlayerService.sPlayerService != null) {
+                            PlayerService.sPlayerService.fetchIntroDbIfNeeded();
+                        }
+                    }
+                });
                 content.addView(tb);
+                content.addView(tbAuto);
                 content.addView(footer);
 
                 ScrollView scroll = new ScrollView(mContext);
