@@ -2,9 +2,9 @@
 
 ## Overview
 
-The Video module consumes the fused, provider-agnostic `IntroSegments` model produced by MediaLib. When enabled, Nova displays an interactive, **Netflix-style "Skip <Type>" button** during intro, outro, credits, preview, or binge-watched recap segments. 
+The Video module consumes the fused, provider-agnostic `IntroSegments` model produced by MediaLib. When enabled, Nova either displays an interactive, **Netflix-style "Skip <Type>" button** or, when the separate automatic toggle is on, seeks past the segment automatically during intro, outro, credits, preview, or binge-watched recap segments.
 
-Pressing the button (or pressing OK/Center on Android TV D-pad) seeks directly to the end of the segment. The feature is supported in **Fullscreen**, **Floating Window Player**, and **Picture-in-Picture (PiP)** mode.
+With the interactive mode, pressing the button (or pressing OK/Center on Android TV D-pad) seeks directly to the end of the segment; automatic mode performs the same seek without user input and shows a confirmation toast. The feature is supported in **Fullscreen**, **Floating Window Player**, and **Picture-in-Picture (PiP)** mode.
 
 This document describes the player skipping architecture in the `Video` module. Querying and metadata fusion from providers is documented in `MediaLib/doc/IN-OUTRO.md`.
 
@@ -12,13 +12,14 @@ This document describes the player skipping architecture in the `Video` module. 
 
 ## User-Facing Controls
 
-A single toggle, **off by default**, exposed in the in-player **Play mode** UI (TV tile and phone/tablet dialog), persisted in shared preferences:
+Two toggles, **off by default**, exposed in the in-player **Play mode** UI (TV tile and phone/tablet dialog), persisted in shared preferences:
 
 | Preference Key | Default | Label | Effect |
 |---|---|---|---|
-| `introdb_enabled` (`KEY_INTRODB_ENABLED`) | `false` (OFF) | "Skip intro/outro" | Enables the interactive Skip button for detected Intro, Outro, Credits, and Preview segments, plus Recap while binge-watching. |
+| `introdb_enabled` (`KEY_INTRODB_ENABLED`) | `false` (OFF) | "Skip intro/outro" | Enables intro/outro handling for detected Intro, Outro, Credits, and Preview segments, plus Recap while binge-watching. |
+| `introdb_auto_skip` (`KEY_INTRODB_AUTO_SKIP`) | `false` (OFF) | "Auto-skip" | When also enabled via `introdb_enabled`, seeks past eligible segments automatically instead of showing the interactive Skip button, and shows a short confirmation toast. When off, the interactive prompt is used. |
 
-There is no separate recap toggle; recap skipping is derived from this toggle combined with the binge-watching condition. The Play mode UI also displays fetched segment timestamps (via `IntroSegments.toSummaryString`) so users can inspect detected chapter marks.
+There is no separate recap toggle; recap skipping is derived from these toggles combined with the binge-watching condition. The Play mode UI also displays fetched segment timestamps (via `IntroSegments.toSummaryString`) so users can inspect detected chapter marks.
 
 ---
 
@@ -35,6 +36,7 @@ When `introdb_enabled` is active, skip prompts are supported for:
 
 ### 2. Segment Detection & Overlap Merging
 - Every second (`AUTO_SKIP_INTERVAL` = 1000 ms), the player checks if the current playback position falls within an eligible segment.
+- If `introdb_auto_skip` is on, the segment is skipped automatically; otherwise the interactive prompt is shown.
 - If overlapping segments exist (e.g. `OUTRO` overlapping with `CREDITS`), they are automatically merged into a single contiguous segment ending at the latest timestamp.
 
 ### 3. Seek Target (`AUTO_SKIP_BUFFER_MS = 0`)
@@ -46,7 +48,7 @@ When `introdb_enabled` is active, skip prompts are supported for:
 - The player intercepts this and triggers clean video completion (`onCompletion()`), naturally advancing to the next episode in binge mode or finishing cleanly.
 
 ### 5. Prompt Lifecycle & Seek Guards
-- **Prompt Appearance**: When playback enters an eligible segment, the button fades in with the appropriate label (`"Skip Intro"`, `"Skip Recap"`, `"Skip Preview"`, or `"Skip Credits"`).
+- **Prompt Appearance**: When playback enters an eligible segment and automatic skipping is off, the button fades in with the appropriate label (`"Skip Intro"`, `"Skip Recap"`, `"Skip Preview"`, or `"Skip Credits"`).
 - **Auto-Dismissal**: When playback exits the segment naturally, the button fades out and is hidden.
 - **Invalid markers**: A segment that spans the whole media (`0 -> end`) is dropped during MediaLib parsing, so malformed credits cannot show the prompt for the entire episode (issue #2008).
 - **Countdown**: An accent line just inside the lower edge of the pill fills from left to right between prompt appearance and the segment end. It follows the playback position, so it stays in sync when the playback speed is not 1.0x and freezes while paused; seeking updates it. It is inset from the pill's rounded corners and sits inside its contour so it never draws outside the pill.
@@ -56,7 +58,8 @@ When `introdb_enabled` is active, skip prompts are supported for:
   - After a skip action, `mLastAutoSkippedEndMs` prevents duplicate actions on the same boundary.
 
 ### 6. User Feedback
-- The button disappearing and the seek are the confirmation; the redundant skip toast was removed.
+- In interactive mode, the button disappearing and the seek are the confirmation; no toast is shown.
+- In automatic mode, a short `Skipped: <Type>` toast confirms the seek, and any visible prompt is hidden.
 
 ---
 
@@ -93,10 +96,10 @@ When `introdb_enabled` is active, skip prompts are supported for:
 - Fetches metadata via `IntroDbManager` on playback start if `introdb_enabled` is true.
 - Tracks binge-transition lifecycle (`mArrivedViaBingeTransition = true` upon auto-advancing in `onCompletion`, `false` on manual start in `onStart`).
 - Runs periodic tick task (`mAutoSkipTask`, 1000 ms) calling `autoSkipIfNeeded()`.
-- Emits events via `PlayerFrontend`:
+- When `introdb_auto_skip` is on, calls `executeSkip(type, targetMs, true)` and shows the confirmation toast; otherwise emits prompt events via `PlayerFrontend`:
   - `onShowSkipPrompt(IntroSegments.Type type, long targetMs)`
   - `onHideSkipPrompt()`
-- Executes seek and end-of-media handling in `executeSkip(type, targetMs)`.
+- Executes seek and end-of-media handling in `executeSkip(type, targetMs)`, with an automatic-skip overload that adds the toast.
 
 ### `PlayerActivity` & `FloatingPlayerService`
 - Implement `onShowSkipPrompt` and `onHideSkipPrompt`.
