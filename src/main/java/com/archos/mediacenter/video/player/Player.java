@@ -56,6 +56,7 @@ import com.archos.mediacenter.video.utils.SubtitleFontsFolderSync;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoPreferencesCommon;
 import com.archos.medialib.IMediaPlayer;
+import com.archos.medialib.LibAvos;
 import com.archos.medialib.MediaFactory;
 import com.archos.medialib.MediaMetadata;
 import com.archos.mediaprovider.ArchosMediaCommon;
@@ -425,7 +426,10 @@ public class Player implements IPlayerControl,
         mWindow = window;
         mAudioManager = (AudioManager) mContext.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         mEffectRenderer = new VideoEffectRenderer(mContext, VideoEffect.getDefaultType());
-        mSubtitleEngine = new SubtitleEngine(); // NEW: Create the JNI wrapper
+        // nativeCreate() lives in libavos, loaded asynchronously by CustomApplication: wait for it,
+        // otherwise a cold start straight into PlayerActivity throws UnsatisfiedLinkError
+        LibAvos.init(mContext);
+        if (LibAvos.isAvailable()) mSubtitleEngine = new SubtitleEngine(); // NEW: Create the JNI wrapper
         setSurfaceController(surfaceController);
     }
     public void setWindow(Window window){
