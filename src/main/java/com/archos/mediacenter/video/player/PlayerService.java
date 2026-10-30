@@ -1492,10 +1492,11 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         IntroDB skip intro/outro (GET only, proof of concept)
      */
     // skip prompt feature toggle, shared with the in-player play-mode tile/menu (TV + phone/tablet).
+    // Enabled by default; automatic skipping remains a separate opt-in toggle.
     // Recap has no separate toggle: it is skipped automatically when this toggle is on AND we
     // are genuinely binge-watching (PLAYMODE_BINGE on an auto-advanced episode), see autoSkipIfNeeded.
     public static final String KEY_INTRODB_ENABLED = "introdb_enabled";
-    public static final boolean DEFAULT_INTRODB_ENABLED = false;
+    public static final boolean DEFAULT_INTRODB_ENABLED = true;
     // When on (and KEY_INTRODB_ENABLED is also on), seek past intro/outro segments automatically
     // instead of showing the interactive skip prompt. Off by default to preserve the prompt UX.
     public static final String KEY_INTRODB_AUTO_SKIP = "introdb_auto_skip";

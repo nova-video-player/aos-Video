@@ -68,6 +68,7 @@ import com.archos.mediacenter.video.picasso.SmbRequestHandler;
 import com.archos.mediacenter.video.picasso.ThumbnailRequestHandler;
 import com.archos.mediacenter.video.player.PrivateMode;
 import com.archos.mediacenter.video.player.PlayerActivity;
+import com.archos.mediacenter.video.player.PlayerService;
 import com.archos.mediacenter.video.utils.CodecDiscovery;
 import com.archos.mediacenter.video.utils.LocaleConfigParser;
 import com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper;
@@ -1496,6 +1497,18 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
 
     private void upgradeActions(Context context) {
         log.info("upgradeActions: check for upgrade actions from version: {}.{}.{} to {}.{}.{}", novaPreviousVersionArray[0], novaPreviousVersionArray[1], novaPreviousVersionArray[2], novaVersionArray[0], novaVersionArray[1], novaVersionArray[2]);
+
+        // Starting with 6.6, intro/outro skip handling is enabled by default while automatic
+        // skipping remains opt-in. Upgrade installs from earlier versions get the new default
+        // once; an explicit user choice is never overwritten.
+        if (novaPreviousVersionArray[0] > 0 &&
+                ((novaPreviousVersionArray[0] < 6) ||
+                 (novaPreviousVersionArray[0] == 6 && novaPreviousVersionArray[1] < 6))) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            if (!preferences.contains(PlayerService.KEY_INTRODB_ENABLED)) {
+                preferences.edit().putBoolean(PlayerService.KEY_INTRODB_ENABLED, PlayerService.DEFAULT_INTRODB_ENABLED).apply();
+            }
+        }
 
         // if nova is upgraded from 6.4.22 and below disable force_passthrough and android frame timing
         if ((novaPreviousVersionArray[0] < 6) ||
