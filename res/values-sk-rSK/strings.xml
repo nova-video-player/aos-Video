@@ -287,6 +287,10 @@
     <string name="introdb_segment_preview">Náhľad</string>
     <string name="introdb_segment_end">Koniec</string>
     <!-- Skip prompt button labels, shown over the video; keep them short. -->
+    <string name="skip_intro_button">Preskočiť úvod</string>
+    <string name="skip_recap_button">Preskočiť rekapituláciu</string>
+    <string name="skip_credits_button">Preskočiť záverečné titulky</string>
+    <string name="skip_preview_button">Preskočiť ukážku</string>
     <string name="pref_audio_parameters_title">Zvuk</string>
     <string name="pref_audio_filt_title">Zosilnenie zvuku</string>
     <string name="pref_audio_filt_night_mode">Nočný režim</string>
@@ -517,6 +521,11 @@
     <string name="category_languages">Titulky</string>
     <string name="subtitles_hide_default">V predvolenom nastavení skryť titulky</string>
     <string name="subtitles_hide_default_summary">V predvolenom nastavení skryť titulky; môžu sa naďalej zobrazovať \"forced\" titulky</string>
+    <string name="subtitle_use_margins_title">Zobraziť titulky v čiernych pásoch</string>
+    <string name="subtitle_use_margins_summary">Zobraziť titulky v čiernej oblasti pod obrazom namiesto prekrytia videa</string>
+    <string name="subtitle_fonts_folder_title">Priečinok s vlastnými písmom</string>
+    <string name="subtitle_fonts_folder_summary">Vybrať priečinok s písmami .ttf/.otf/.ttc na použitie pre titulky namiesto vstavaných písem</string>
+    <string name="subtitle_default_font_title">Predvolené písmo titulkov</string>
     <string name="subtitles_credentials_title">Prihlasovacie údaje k službe OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Zadajte svoje prihlasovacie údaje na OpenSubtitles, aby ste si mohli stiahnuť titulky</string>
     <string name="preferences_languages">Jazyky titulkov na stiahnutie</string>
@@ -961,12 +970,51 @@
     <!-- ===== Subtitle settings panel ===== -->
     <string name="subtitle_sample_text">\"príklad\"</string>
     <!-- Titles -->
+    <string name="subtitle_panel_title">Nastavenia titulkov</string>
+    <string name="subtitle_panel_advanced">Rozšírené nastavenia vzhľadu</string>
     <!-- Style mode (pills) and what each one means -->
+    <string name="subtitle_panel_style">Štýl</string>
+    <string name="subtitle_panel_mode_file">Štýl zo súboru</string>
+    <string name="subtitle_panel_mode_custom">Vlastný</string>
+    <string name="subtitle_panel_mode_scale">Zmeniť iba veľkosť</string>
+    <string name="subtitle_panel_caption_file">Použije sa štýl definovaný v súbore s titulkami. Nie je potrebné nič upravovať.</string>
+    <string name="subtitle_panel_caption_custom">Písmo, farby a pozícia, ktoré nastavíte, nahradia štýl definovaný v súbore.</string>
+    <string name="subtitle_panel_caption_scale">Zachová štýl zo súboru a upraví iba veľkosť textu.</string>
     <!-- Notes shown instead of rows when settings cannot apply -->
+    <string name="subtitle_panel_note_plain_text">Titulky vo formáte čistého textu vždy používajú štýl, ktorý nastavíte.</string>
+    <string name="subtitle_panel_note_graphic">Nastavenia nie sú dostupné pre obrazové titulky.</string>
+    <string name="subtitle_panel_note_unsupported">Tento formát titulkov sa nedá upraviť štýlom.</string>
+    <string name="subtitle_panel_note_none">Nie sú vybraté žiadne titulky.</string>
     <!-- Basic rows -->
+    <string name="subtitle_panel_font_size">Veľkosť</string>
+    <string name="subtitle_panel_bold">Tučné písmo</string>
+    <string name="subtitle_panel_background">Pozadie</string>
+    <string name="subtitle_panel_bg_off">Vypnuté</string>
+    <string name="subtitle_panel_bg_line">Obrys</string>
+    <string name="subtitle_panel_bg_box">Rámček</string>
+    <string name="subtitle_panel_vertical_position">Vertikálna pozícia </string>
+    <string name="subtitle_panel_scale">Veľkosť </string>
+    <string name="subtitle_panel_reset">Obnoviť predvolený vzhľad</string>
+    <string name="subtitle_panel_reset_confirm_touch">Klepnite znova pre obnovenie</string>
+    <string name="subtitle_panel_reset_confirm_tv">Press OK again to reset</string>
     <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <string name="subtitle_panel_section_text">Text</string>
+    <string name="subtitle_panel_text_color">Farba textu</string>
+    <string name="subtitle_panel_outline_width">Šírka obrysu</string>
+    <string name="subtitle_panel_outline_color">Farba obrysu</string>
+    <string name="subtitle_panel_shadow_width">Šírka tieňa</string>
+    <string name="subtitle_panel_shadow_color">Farba tieňa</string>
+    <string name="subtitle_panel_background_color">Farba pozadia</string>
+    <string name="subtitle_panel_background_opacity">Priehľadnosť pozadia</string>
+    <string name="subtitle_panel_padding">Vnútorné odsadenie </string>
     <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <string name="subtitle_panel_preview_own_style">Používa sa vlastný štýl zo súboru</string>
     <!-- Color screen -->
+    <string name="subtitle_panel_red">Červený</string>
+    <string name="subtitle_panel_green">Zelený</string>
+    <string name="subtitle_panel_blue">Modrý</string>
     <!-- Value formats -->
     <!-- Accessibility -->
+    <string name="subtitle_panel_decrease">Zmenšiť </string>
+    <string name="subtitle_panel_increase">Zväčšiť </string>
 </resources>

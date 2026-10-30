@@ -223,7 +223,7 @@
     <string name="use_remote_resume">Używać wznawiania z sieci?</string>
     <!-- VIDEO COVER ROLL -->
     <string name="you_have_no_recently_added_video">Nie znaleziono ostatnio dodanych filmów</string>
-    <string name="you_have_no_recently_played_video">Nie znaleziono ostatnio odtwarzanych filmów</string>
+    <string name="you_have_no_recently_played_video">Brak ostatnio odtwarzanych filmów</string>
     <string name="you_have_no_video">Brak filmów</string>
     <string name="you_have_no_video_yet">Wyszukiwanie plików wideo&#8230;</string>
     <string name="you_have_no_movies">Brak filmów</string>
@@ -278,15 +278,19 @@
     <string name="pref_play_mode_entry_repeat_folder">Powtórz folder</string>
     <string name="pref_play_mode_entry_repeat_single">Potwórz pojedynczy</string>
     <string name="pref_play_mode_entry_binge">Odcinek po odcinku</string>
-    <string name="pref_introdb_autoskip_title">Pomiń in/out</string>
+    <string name="pref_introdb_autoskip_title">Pomiń segmenty</string>
     <string name="introdb_autoskip">Autopomijanie</string>
     <string name="introdb_segment_intro">Wstęp</string>
     <string name="introdb_segment_recap">Podsumowanie</string>
     <string name="introdb_segment_outro">Zakończenie</string>
-    <string name="introdb_segment_credits">Twórcy</string>
+    <string name="introdb_segment_credits">Napisy końcowe</string>
     <string name="introdb_segment_preview">Zapowiedź</string>
     <string name="introdb_segment_end">koniec</string>
     <!-- Skip prompt button labels, shown over the video; keep them short. -->
+    <string name="skip_intro_button">Pomiń wstęp</string>
+    <string name="skip_recap_button">Pomiń podsumowanie</string>
+    <string name="skip_credits_button">Pomiń napisy końcowe</string>
+    <string name="skip_preview_button">Pomiń zapowiedź</string>
     <string name="pref_audio_parameters_title">Dźwięk</string>
     <string name="pref_audio_filt_title">Wzmocnienie</string>
     <string name="pref_audio_filt_night_mode">Tryb nocny</string>
@@ -356,7 +360,7 @@
     <string name="player_plugin_video_msg">Ten plik zawiera format wideo <xliff:g id="video">%1$s</xliff:g>.</string>
     <string name="player_plugin_audio_msg">Ten plik zawiera format audio <xliff:g id="audio">%1$s</xliff:g>.</string>
     <string name="player_plugin_video_audio_msg">Ten plik zawiera format wideo <xliff:g id="video">%1$s</xliff:g> i format audio <xliff:g id="audio">%2$s</xliff:g>.</string>
-    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Idź do Sklepu</string>
+    <string name="player_plugin_purchase" tools:ignore="UnusedResources">Idź do sklepu</string>
     <string name="player_plugin_purchase_google_play_button">Przejdź do sklepu Play</string>
     <string name="plugin_update_required_title">Wymagana aktualizacja kodeka</string>
     <string name="plugin_update_required_message">Wygląda na to, że masz już zainstalowane dodatkowe kodeki dla programu Nova Video Player.\n\nTa nowa wersja programu Nova Video Player wymaga aktualizacji tych kodeków.\n\nPrzejdź do sklepu Google Play, aby zaktualizować i ponownie zainstalować kodeki.</string>
@@ -517,6 +521,11 @@
     <string name="category_languages">Napisy</string>
     <string name="subtitles_hide_default">Domyślnie ukryj napisy</string>
     <string name="subtitles_hide_default_summary">Domyślnie ukryj napisy (wymuszone napisy mogą być nadal wyświetlane)</string>
+    <string name="subtitle_use_margins_title">Wyświetlaj napisy w czarnych ramkach</string>
+    <string name="subtitle_use_margins_summary">Wyświetlaj napisy w obszarze typu „letterbox” poniżej obrazu, zamiast nakładać je na wideo</string>
+    <string name="subtitle_fonts_folder_title">Folder własnych czcionek</string>
+    <string name="subtitle_fonts_folder_summary">Wybierz folder z czcionkami w formatach .ttf/.otf/.ttc, które mają być używane do napisów, zamiast czcionek wbudowanych</string>
+    <string name="subtitle_default_font_title">Domyślna czcionka napisów</string>
     <string name="subtitles_credentials_title">Dane logowania OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Podaj dane logowania do OpenSubtitles, aby pobierać napisy</string>
     <string name="preferences_languages">Język pobieranych napisów</string>
@@ -961,12 +970,51 @@
     <!-- ===== Subtitle settings panel ===== -->
     <string name="subtitle_sample_text">\"próbka\"</string>
     <!-- Titles -->
+    <string name="subtitle_panel_title">Ustawienia napisów</string>
+    <string name="subtitle_panel_advanced">Ustawienia zaawansowane</string>
     <!-- Style mode (pills) and what each one means -->
+    <string name="subtitle_panel_style">Wygląd</string>
+    <string name="subtitle_panel_mode_file">Styl pliku</string>
+    <string name="subtitle_panel_mode_custom">Własne</string>
+    <string name="subtitle_panel_mode_scale">Tylko skalowanie</string>
+    <string name="subtitle_panel_caption_file">Wykorzystuje styl zawarty w pliku z napisami. Nie wymaga żadnych ustawień.</string>
+    <string name="subtitle_panel_caption_custom">Twoja czcionka, kolory i położenie zastępują te z pliku.</string>
+    <string name="subtitle_panel_caption_scale">Zachowuje styl pliku, zmieniając jedynie rozmiar tekstu.</string>
     <!-- Notes shown instead of rows when settings cannot apply -->
+    <string name="subtitle_panel_note_plain_text">Napisy w formacie zwykłego tekstu zawsze wykorzystują twój styl.</string>
+    <string name="subtitle_panel_note_graphic">Ustawienia nie są dostępne dla tego typu napisów.</string>
+    <string name="subtitle_panel_note_unsupported">Tego formatu napisów nie można stylizować.</string>
+    <string name="subtitle_panel_note_none">Nie wybrano napisów.</string>
     <!-- Basic rows -->
+    <string name="subtitle_panel_font_size">Rozmiar</string>
+    <string name="subtitle_panel_bold">Pogrubienie</string>
+    <string name="subtitle_panel_background">Tło</string>
+    <string name="subtitle_panel_bg_off">Wyłączony</string>
+    <string name="subtitle_panel_bg_line">Wiersz</string>
+    <string name="subtitle_panel_bg_box">Wypełnienie</string>
+    <string name="subtitle_panel_vertical_position">Pozycja w pionie</string>
+    <string name="subtitle_panel_scale">Skalowanie</string>
+    <string name="subtitle_panel_reset">Zresetuj wygląd</string>
+    <string name="subtitle_panel_reset_confirm_touch">Naciśnij ponownie, aby zresetować</string>
+    <string name="subtitle_panel_reset_confirm_tv">Naciśnij ponownie OK, aby zresetować</string>
     <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <string name="subtitle_panel_section_text">Tekst</string>
+    <string name="subtitle_panel_text_color">Kolor tekstu</string>
+    <string name="subtitle_panel_outline_width">Grubość obrysu</string>
+    <string name="subtitle_panel_outline_color">Kolor obrysu</string>
+    <string name="subtitle_panel_shadow_width">Szerokość cienia</string>
+    <string name="subtitle_panel_shadow_color">Kolor cienia</string>
+    <string name="subtitle_panel_background_color">Kolor tła</string>
+    <string name="subtitle_panel_background_opacity">Przezroczystość tła</string>
+    <string name="subtitle_panel_padding">Wypełnienie</string>
     <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <string name="subtitle_panel_preview_own_style">Używany jest styl pliku napisów</string>
     <!-- Color screen -->
+    <string name="subtitle_panel_red">Czerwony</string>
+    <string name="subtitle_panel_green">Zielony</string>
+    <string name="subtitle_panel_blue">Niebieski</string>
     <!-- Value formats -->
     <!-- Accessibility -->
+    <string name="subtitle_panel_decrease">Zmniejsz</string>
+    <string name="subtitle_panel_increase">Zwiększ</string>
 </resources>

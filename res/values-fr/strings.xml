@@ -272,10 +272,11 @@
     <string name="pref_play_mode_entry_binge">Rafale (binge)</string>
     <string name="pref_introdb_autoskip_title">Passer l\'intro/l\'outro</string>
     <string name="introdb_autoskip">Saut automatique</string>
-    <string name="introdb_segment_intro">Intro</string>
-    <string name="introdb_segment_recap">Récap</string>
+    <string name="introdb_skipped_format">Passé : %1$s</string>
+    <string name="introdb_segment_intro">Générique</string>
+    <string name="introdb_segment_recap">Résumé</string>
     <string name="introdb_segment_outro">Outro</string>
-    <string name="introdb_segment_credits">Générique</string>
+    <string name="introdb_segment_credits">Crédits</string>
     <string name="introdb_segment_preview">Aperçu</string>
     <string name="introdb_segment_end">fin</string>
     <!-- Skip prompt button labels, shown over the video; keep them short. -->

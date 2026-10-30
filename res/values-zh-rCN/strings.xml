@@ -275,6 +275,10 @@
     <string name="introdb_segment_preview">预告</string>
     <string name="introdb_segment_end">结束</string>
     <!-- Skip prompt button labels, shown over the video; keep them short. -->
+    <string name="skip_intro_button">跳过开头</string>
+    <string name="skip_recap_button">跳过回顾</string>
+    <string name="skip_credits_button">跳过片尾</string>
+    <string name="skip_preview_button">跳过预告</string>
     <string name="pref_audio_parameters_title">声音</string>
     <string name="pref_audio_filt_title">音频增强</string>
     <string name="pref_audio_filt_night_mode">夜间模式</string>
@@ -505,6 +509,11 @@
     <string name="category_languages">字幕</string>
     <string name="subtitles_hide_default">默认隐藏字幕</string>
     <string name="subtitles_hide_default_summary">默认隐藏常规字幕；匹配的强制字幕仍可能显示</string>
+    <string name="subtitle_use_margins_title">在黑条区域渲染字幕</string>
+    <string name="subtitle_use_margins_summary">在画面下方的黑边区域显示字幕，不叠加在视频画面上</string>
+    <string name="subtitle_fonts_folder_title">自定义字体文件夹</string>
+    <string name="subtitle_fonts_folder_summary">选择一个包含.ttf/.otf/.ttc字体的文件夹用于字幕，替代内置字体</string>
+    <string name="subtitle_default_font_title">默认字幕字体</string>
     <string name="subtitles_credentials_title">OpenSubtitles 用户凭据</string>
     <string name="subtitles_credentials_summary">提供你的 opensubtitles 用户凭据以下载字幕</string>
     <string name="preferences_languages">字幕下载语言</string>
@@ -949,12 +958,51 @@
     <!-- ===== Subtitle settings panel ===== -->
     <string name="subtitle_sample_text">“示例”</string>
     <!-- Titles -->
+    <string name="subtitle_panel_title">字幕设置</string>
+    <string name="subtitle_panel_advanced">高级外观</string>
     <!-- Style mode (pills) and what each one means -->
+    <string name="subtitle_panel_style">样式</string>
+    <string name="subtitle_panel_mode_file">文件样式</string>
+    <string name="subtitle_panel_mode_custom">自定义</string>
+    <string name="subtitle_panel_mode_scale">仅缩放</string>
+    <string name="subtitle_panel_caption_file">使用字幕文件自己的样式。无需调整。</string>
+    <string name="subtitle_panel_caption_custom">你的字体、颜色和位置设置会覆盖文件原有样式。</string>
+    <string name="subtitle_panel_caption_scale">保留文件原有样式，仅缩放文字大小。</string>
     <!-- Notes shown instead of rows when settings cannot apply -->
+    <string name="subtitle_panel_note_plain_text">纯文本字幕将始终使用你的样式。</string>
+    <string name="subtitle_panel_note_graphic">图像字幕无法应用设置项。</string>
+    <string name="subtitle_panel_note_unsupported">该字幕格式不支持样式设置。</string>
+    <string name="subtitle_panel_note_none">未选择字幕。</string>
     <!-- Basic rows -->
+    <string name="subtitle_panel_font_size">大小</string>
+    <string name="subtitle_panel_bold">加粗</string>
+    <string name="subtitle_panel_background">背景</string>
+    <string name="subtitle_panel_bg_off">关闭</string>
+    <string name="subtitle_panel_bg_line">线条</string>
+    <string name="subtitle_panel_bg_box">文本框</string>
+    <string name="subtitle_panel_vertical_position">垂直位置</string>
+    <string name="subtitle_panel_scale">缩放</string>
+    <string name="subtitle_panel_reset">重置外观</string>
+    <string name="subtitle_panel_reset_confirm_touch">再次点击以重置</string>
+    <string name="subtitle_panel_reset_confirm_tv">再次按 OK 以重置</string>
     <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <string name="subtitle_panel_section_text">文本</string>
+    <string name="subtitle_panel_text_color">文本颜色</string>
+    <string name="subtitle_panel_outline_width">轮廓宽度</string>
+    <string name="subtitle_panel_outline_color">轮廓颜色</string>
+    <string name="subtitle_panel_shadow_width">阴影宽度</string>
+    <string name="subtitle_panel_shadow_color">阴影颜色</string>
+    <string name="subtitle_panel_background_color">背景颜色</string>
+    <string name="subtitle_panel_background_opacity">背景不透明度</string>
+    <string name="subtitle_panel_padding">填充</string>
     <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <string name="subtitle_panel_preview_own_style">使用文件自身样式</string>
     <!-- Color screen -->
+    <string name="subtitle_panel_red">红色</string>
+    <string name="subtitle_panel_green">绿色</string>
+    <string name="subtitle_panel_blue">蓝色</string>
     <!-- Value formats -->
     <!-- Accessibility -->
+    <string name="subtitle_panel_decrease">减少</string>
+    <string name="subtitle_panel_increase">增加</string>
 </resources>
