@@ -12,8 +12,8 @@
     <!-- background opacity, 0-255 -->
     <integer name="subtitle_default_bg_opacity">128</integer>
     <!-- outline / shadow widths -->
-    <integer name="subtitle_default_outline_width">2</integer>
-    <integer name="subtitle_default_shadow_width">2</integer>
+    <integer name="subtitle_default_outline_width">0</integer>
+    <integer name="subtitle_default_shadow_width">0</integer>
     <bool name="subtitle_default_bold">false</bool>
 
     <!-- colors are #AARRGGBB -->
