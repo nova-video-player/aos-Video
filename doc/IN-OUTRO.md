@@ -12,11 +12,11 @@ This document describes the player skipping architecture in the `Video` module. 
 
 ## User-Facing Controls
 
-Two toggles, **off by default**, exposed in the in-player **Play mode** UI (TV tile and phone/tablet dialog), persisted in shared preferences:
+Two toggles, exposed in the in-player **Play mode** UI (TV tile and phone/tablet dialog), persisted in shared preferences. Intro/outro handling is **enabled by default**; automatic skipping is **opt-in**:
 
 | Preference Key | Default | Label | Effect |
 |---|---|---|---|
-| `introdb_enabled` (`KEY_INTRODB_ENABLED`) | `false` (OFF) | "Skip intro/outro" | Enables intro/outro handling for detected Intro, Outro, Credits, and Preview segments, plus Recap while binge-watching. |
+| `introdb_enabled` (`KEY_INTRODB_ENABLED`) | `true` (ON) | "Skip intro/outro" | Enables intro/outro handling for detected Intro, Outro, Credits, and Preview segments, plus Recap while binge-watching. Existing installs upgrading from before 6.6 receive this default once, while an explicit user choice is preserved. |
 | `introdb_auto_skip` (`KEY_INTRODB_AUTO_SKIP`) | `false` (OFF) | "Auto-skip" | When also enabled via `introdb_enabled`, seeks past eligible segments automatically instead of showing the interactive Skip button, and shows a short confirmation toast. When off, the interactive prompt is used. |
 
 There is no separate recap toggle; recap skipping is derived from these toggles combined with the binge-watching condition. The Play mode UI also displays fetched segment timestamps (via `IntroSegments.toSummaryString`) so users can inspect detected chapter marks.
