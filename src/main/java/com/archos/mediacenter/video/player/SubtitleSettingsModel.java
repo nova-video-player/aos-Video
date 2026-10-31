@@ -193,7 +193,7 @@ public class SubtitleSettingsModel {
                 () -> Math.round(m.getOutlineWidth()), m::setOutlineWidth);
         mShadowW = new Setting(SubtitleManager.KEY_SHADOW_WIDTH, P_FLOAT, 0, 50, 1,
                 () -> Math.round(m.getShadowWidth()), m::setShadowWidth);
-        mPadding = new Setting(SubtitleManager.KEY_PADDING, P_FLOAT, 0, 50, 1,
+        mPadding = new Setting(SubtitleManager.KEY_PADDING, P_FLOAT, 1, 50, 1,
                 () -> Math.round(m.getPadding()), m::setPadding);
         mOpacity = new Setting(SubtitleManager.KEY_BG_OPACITY, P_INT, 0, 255, 13,
                 m::getBackgroundOpacity, m::setBackgroundOpacity);
