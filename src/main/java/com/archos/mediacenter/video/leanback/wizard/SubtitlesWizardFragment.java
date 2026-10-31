@@ -109,9 +109,9 @@ public class SubtitlesWizardFragment extends GuidedStepSupportFragment {
                     }
                 }
                 else {
-                    boolean fileRenamed = mWizardCommon.renameFile(fileData.path, fileData.index);
+                    boolean fileAssociated = mWizardCommon.associateFile(fileData.path, fileData.index);
 
-                    if (fileRenamed) {
+                    if (fileAssociated) {
                         setActions(createActions());
                         getActivity().setResult(Activity.RESULT_OK);
 

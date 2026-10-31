@@ -263,7 +263,12 @@ public class SubtitlesWizardCommon {
         // Rename the file
         try {
             fileRenamed = oldFile.rename(newName);
-            if (log.isDebugEnabled()) log.debug("onItemClick : selected file renamed as {}", newFilePath);
+            if (fileRenamed) {
+                if (log.isDebugEnabled()) log.debug("onItemClick : selected file renamed as {}", newFilePath);
+            }
+            else if (log.isDebugEnabled()) {
+                log.debug("renameFile : can not rename file as {}", newFilePath);
+            }
         }
         catch (Exception e) {
             if (log.isDebugEnabled()) log.debug("renameFile : can not rename file as {}", newFilePath);
@@ -313,6 +318,62 @@ public class SubtitlesWizardCommon {
         }
 
         return fileRenamed;
+    }
+
+    /**
+     * Associate the provided subtitles file with the video.
+     *
+     * The preferred (durable) way is to rename the file next to the video. When this is not
+     * possible (read-only source, scoped storage or name collision) the file is copied into
+     * the application subtitle cache directory, which the player also scans.
+     */
+    @SuppressWarnings("deprecation") // ACTION_MEDIA_SCANNER_SCAN_FILE used as internal IPC (setPackage targets Nova's own receiver only)
+    public boolean associateFile(String path, int index) {
+        if (renameFile(path, index)) {
+            return true;
+        }
+
+        // Fallback: copy the file in the subtitle cache directory under the video name
+        Uri oldUri = Uri.parse(path);
+        String extension = FileUtils.getExtension(path);
+        String videoName = FileUtils.getFileNameWithoutExtension(mVideoUri);
+        if (extension == null || videoName == null) {
+            if (log.isDebugEnabled()) log.debug("associateFile : can not associate {}", path);
+            return false;
+        }
+
+        Uri newUri = Uri.fromFile(new File(MediaUtils.getSubsDir(getActivity()), videoName + "." + extension));
+        boolean fileAssociated = false;
+        try {
+            FileEditor oldFile = FileEditorFactory.getFileEditorForUrl(oldUri, getActivity());
+            fileAssociated = oldFile.copyFileTo(newUri, getActivity());
+            if (fileAssociated) {
+                if (log.isDebugEnabled()) log.debug("associateFile : copied {} to {}", oldUri, newUri);
+            }
+            else if (log.isDebugEnabled()) {
+                log.debug("associateFile : can not copy {} to {}", oldUri, newUri);
+            }
+        }
+        catch (Exception e) {
+            if (log.isDebugEnabled()) log.debug("associateFile : can not copy {} to {}", oldUri, newUri);
+        }
+
+        if (fileAssociated) {
+            // the cached subtitle lives in the app storage: only refresh the video entry
+            if (FileUtils.isLocal(mVideoUri)) {
+                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, mVideoUri);
+                intent.setPackage(ArchosUtils.getGlobalContext().getPackageName());
+                sendBroadcast(intent);
+            }
+            // Update the local data : add the file to current subtitles list
+            // and remove it from the available subtitles list
+            mCurrentFiles.add(newUri.toString());
+            mCurrentFilesCount++;
+            mAvailableFiles.remove(index);
+            mAvailableFilesCount--;
+        }
+
+        return fileAssociated;
     }
 
     @SuppressWarnings("deprecation") // ACTION_MEDIA_SCANNER_SCAN_FILE used as internal IPC (setPackage targets Nova's own receiver only)
