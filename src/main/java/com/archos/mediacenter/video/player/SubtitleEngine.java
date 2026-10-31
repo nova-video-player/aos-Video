@@ -502,6 +502,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
     public void setOutlineColor(int color) { if (mNativeEngineHandle != 0) { nativeSetOutlineColor(mNativeEngineHandle, color); redraw3DIfNeeded(); } }
     public void setOutlineWidth(float px) { if (mNativeEngineHandle != 0) { nativeSetOutlineWidth(mNativeEngineHandle, px); redraw3DIfNeeded(); } }
     public void setShadowWidth(float px) { if (mNativeEngineHandle != 0) { nativeSetShadowWidth(mNativeEngineHandle, px); redraw3DIfNeeded(); } }
+    public void setPadding(float px) { if (mNativeEngineHandle != 0) { nativeSetPadding(mNativeEngineHandle, px); redraw3DIfNeeded(); } }
     public void setShadowColor(int color) { if (mNativeEngineHandle != 0) { nativeSetShadowColor(mNativeEngineHandle, color); redraw3DIfNeeded(); } }
     public void setBackgroundMode(int mode) { if (mNativeEngineHandle != 0) { nativeSetBackgroundMode(mNativeEngineHandle, mode); redraw3DIfNeeded(); } }
     public void setBackgroundColor(int color) { if (mNativeEngineHandle != 0) { nativeSetBackgroundColor(mNativeEngineHandle, color); redraw3DIfNeeded(); } }
@@ -565,6 +566,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
     private native void nativeSetOutlineColor(long handle, int color);
     private native void nativeSetOutlineWidth(long handle, float px);
     private native void nativeSetShadowWidth(long handle, float px);
+    private native void nativeSetPadding(long handle, float px);
     private native void nativeSetShadowColor(long handle, int color);
     private native void nativeSetBackgroundMode(long handle, int mode);
     private native void nativeSetBackgroundColor(long handle, int color);

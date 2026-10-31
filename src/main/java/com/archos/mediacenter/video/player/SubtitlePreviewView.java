@@ -128,18 +128,19 @@ public class SubtitlePreviewView extends View {
         final int textColor = mManager.getColor();
         final float outline = mManager.getOutlineWidth() * k;
         final float shadow = mManager.getShadowWidth() * k;
+        final float padding = mManager.getPadding() * k;
 
         switch (mManager.getBgMode()) {
             case SubtitleManager.BG_MODE_BOXED_LINE: {
-                // BorderStyle 3: a box per line, padding = outline width, no outline, no shadow
-                drawBox(canvas, x, baseline, tw, fm, outline);
+                // BorderStyle 3: a box per line, padding = padding, no outline, no shadow
+                drawBox(canvas, x, baseline, tw, fm, padding);
                 mFill.setColor(textColor);
                 canvas.drawText(text, x, baseline, mFill);
                 break;
             }
             case SubtitleManager.BG_MODE_BOXED_BLOCK: {
-                // BorderStyle 4: one box for the block, padding = shadow width, outline on the glyphs
-                drawBox(canvas, x, baseline, tw, fm, shadow);
+                // BorderStyle 4: one box for the block, padding = padding, outline on the glyphs
+                drawBox(canvas, x, baseline, tw, fm, padding);
                 drawOutlined(canvas, text, x, baseline, outline, mManager.getOutlineColor(), textColor);
                 break;
             }

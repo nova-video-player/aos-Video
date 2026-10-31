@@ -14,6 +14,8 @@
     <!-- outline / shadow widths -->
     <integer name="subtitle_default_outline_width">0</integer>
     <integer name="subtitle_default_shadow_width">0</integer>
+    <!-- box padding, used by the Boxed Line / Boxed Block backgrounds (separate from outline and shadow) -->
+    <integer name="subtitle_default_padding">2</integer>
     <bool name="subtitle_default_bold">false</bool>
 
     <!-- colors are #AARRGGBB -->
