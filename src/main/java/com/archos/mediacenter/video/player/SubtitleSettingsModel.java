@@ -142,7 +142,7 @@ public class SubtitleSettingsModel {
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private Listener mListener;
 
-    private final Setting mSize, mScale, mBold, mBg, mMode, mVpos, mOutlineW, mShadowW, mOpacity;
+    private final Setting mSize, mScale, mBold, mBg, mMode, mVpos, mOutlineW, mShadowW, mPadding, mOpacity;
     private final Setting mAdvancedSetting;
     private final ColorTarget mTextColor, mOutlineColor, mShadowColor, mBackgroundColor;
 
@@ -193,6 +193,8 @@ public class SubtitleSettingsModel {
                 () -> Math.round(m.getOutlineWidth()), m::setOutlineWidth);
         mShadowW = new Setting(SubtitleManager.KEY_SHADOW_WIDTH, P_FLOAT, 0, 50, 1,
                 () -> Math.round(m.getShadowWidth()), m::setShadowWidth);
+        mPadding = new Setting(SubtitleManager.KEY_PADDING, P_FLOAT, 1, 50, 1,
+                () -> Math.round(m.getPadding()), m::setPadding);
         mOpacity = new Setting(SubtitleManager.KEY_BG_OPACITY, P_INT, 0, 255, 13,
                 m::getBackgroundOpacity, m::setBackgroundOpacity);
         mAdvancedSetting = new Setting(null, P_NONE, 0, 1, 1,
@@ -335,22 +337,22 @@ public class SubtitleSettingsModel {
         final int bg = mManager.getBgMode();
         // The same stored widths mean different things per mode (see sync_styles() in sub_format_ssa.c):
         //   Off : outline_width = outline, shadow_width = shadow
-        //   Line: outline_width = box padding
-        //   Box : outline_width = outline around the glyphs, shadow_width = box padding
+        //   Line: padding = box padding (outline / shadow unused)
+        //   Box : outline_width = outline around the glyphs, padding = box padding
         rows.add(section("sec_text", R.string.subtitle_panel_section_text));
         rows.add(color("text_c", mTextColor));
         if (bg == SubtitleManager.BG_MODE_BOXED_LINE) {
             rows.add(section("sec_background", R.string.subtitle_panel_background));
             rows.add(color("bg_c", mBackgroundColor));
             rows.add(stepper("opacity", R.string.subtitle_panel_background_opacity, mOpacity, percent));
-            rows.add(stepper("outline_w", R.string.subtitle_panel_padding, mOutlineW, plain));
+            rows.add(stepper("padding", R.string.subtitle_panel_padding, mPadding, plain));
         } else if (bg == SubtitleManager.BG_MODE_BOXED_BLOCK) {
             rows.add(stepper("outline_w", R.string.subtitle_panel_outline_width, mOutlineW, plain));
             rows.add(color("outline_c", mOutlineColor));
             rows.add(section("sec_background", R.string.subtitle_panel_background));
             rows.add(color("bg_c", mBackgroundColor));
             rows.add(stepper("opacity", R.string.subtitle_panel_background_opacity, mOpacity, percent));
-            rows.add(stepper("shadow_w", R.string.subtitle_panel_padding, mShadowW, plain));
+            rows.add(stepper("padding", R.string.subtitle_panel_padding, mPadding, plain));
         } else {
             rows.add(stepper("outline_w", R.string.subtitle_panel_outline_width, mOutlineW, plain));
             rows.add(color("outline_c", mOutlineColor));

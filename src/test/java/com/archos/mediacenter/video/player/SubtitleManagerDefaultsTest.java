@@ -55,6 +55,7 @@ public class SubtitleManagerDefaultsTest {
         assertEquals(d.bgOpacity, mManager.getBackgroundOpacity());
         assertEquals(d.outlineWidth, mManager.getOutlineWidth(), 0.001f);
         assertEquals(d.shadowWidth, mManager.getShadowWidth(), 0.001f);
+        assertEquals(d.padding, mManager.getPadding(), 0.001f);
     }
 
     @Test
@@ -115,14 +116,14 @@ public class SubtitleManagerDefaultsTest {
 
     @Test
     public void styleKeysCoverEveryStylePreference() {
-        assertEquals(13, SubtitleManager.STYLE_KEYS.size());
+        assertEquals(14, SubtitleManager.STYLE_KEYS.size());
         for (String key : new String[] {SubtitleManager.KEY_VPOS, SubtitleManager.KEY_COLOR,
                 SubtitleManager.KEY_BG_OPACITY, SubtitleManager.KEY_BG_MODE,
                 SubtitleManager.KEY_OVERRIDE_MODE, SubtitleManager.KEY_BOLD,
                 SubtitleManager.KEY_OUTLINE_COLOR, SubtitleManager.KEY_SHADOW_COLOR,
                 SubtitleManager.KEY_BACKGROUND_COLOR, SubtitleManager.KEY_OUTLINE_WIDTH,
-                SubtitleManager.KEY_SHADOW_WIDTH, SubtitleManager.KEY_FONT_SIZE_PT,
-                SubtitleManager.KEY_FONT_SCALE}) {
+                SubtitleManager.KEY_SHADOW_WIDTH, SubtitleManager.KEY_PADDING,
+                SubtitleManager.KEY_FONT_SIZE_PT, SubtitleManager.KEY_FONT_SCALE}) {
             assertTrue(key, SubtitleManager.STYLE_KEYS.contains(key));
         }
     }
@@ -141,6 +142,7 @@ public class SubtitleManagerDefaultsTest {
         assertEquals("pref_play_subtitle_background_color_key", SubtitleManager.KEY_BACKGROUND_COLOR);
         assertEquals("pref_play_subtitle_outline_width_key", SubtitleManager.KEY_OUTLINE_WIDTH);
         assertEquals("pref_play_subtitle_shadow_width_key", SubtitleManager.KEY_SHADOW_WIDTH);
+        assertEquals("pref_play_subtitle_padding_key", SubtitleManager.KEY_PADDING);
         assertEquals("pref_play_subtitle_font_size_pt_key", SubtitleManager.KEY_FONT_SIZE_PT);
         assertEquals("pref_play_subtitle_font_scale_key", SubtitleManager.KEY_FONT_SCALE);
 

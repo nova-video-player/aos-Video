@@ -165,6 +165,7 @@ public class SubtitleManager {
     public static final String KEY_BACKGROUND_COLOR = "pref_play_subtitle_background_color_key";
     public static final String KEY_OUTLINE_WIDTH    = "pref_play_subtitle_outline_width_key";
     public static final String KEY_SHADOW_WIDTH     = "pref_play_subtitle_shadow_width_key";
+    public static final String KEY_PADDING          = "pref_play_subtitle_padding_key";
     public static final String KEY_FONT_SIZE_PT     = "pref_play_subtitle_font_size_pt_key";
     public static final String KEY_FONT_SCALE       = "pref_play_subtitle_font_scale_key";
 
@@ -176,7 +177,7 @@ public class SubtitleManager {
     public static final java.util.List<String> STYLE_KEYS = java.util.Collections.unmodifiableList(
             java.util.Arrays.asList(KEY_VPOS, KEY_COLOR, KEY_BG_OPACITY, KEY_BG_MODE, KEY_OVERRIDE_MODE,
                     KEY_BOLD, KEY_OUTLINE_COLOR, KEY_SHADOW_COLOR, KEY_BACKGROUND_COLOR,
-                    KEY_OUTLINE_WIDTH, KEY_SHADOW_WIDTH, KEY_FONT_SIZE_PT, KEY_FONT_SCALE));
+                    KEY_OUTLINE_WIDTH, KEY_SHADOW_WIDTH, KEY_PADDING, KEY_FONT_SIZE_PT, KEY_FONT_SCALE));
 
     /**
      * The style a user gets until they change something. Values come from res/values/config.xml
@@ -187,7 +188,7 @@ public class SubtitleManager {
     public static final class Defaults {
         public final int vpos, color, bgOpacity, fontSizePt, overrideMode, bgMode;
         public final int outlineColor, shadowColor, backgroundColor;
-        public final float fontScale, outlineWidth, shadowWidth;
+        public final float fontScale, outlineWidth, shadowWidth, padding;
         public final boolean bold;
 
         public Defaults(Context context) {
@@ -203,6 +204,7 @@ public class SubtitleManager {
             backgroundColor = ContextCompat.getColor(context, R.color.subtitle_default_background_color);
             outlineWidth = res.getInteger(R.integer.subtitle_default_outline_width);
             shadowWidth = res.getInteger(R.integer.subtitle_default_shadow_width);
+            padding = res.getInteger(R.integer.subtitle_default_padding);
             overrideMode = OVERRIDE_CUSTOM;
             bgMode = BG_MODE_FLOATING;
         }
@@ -240,6 +242,7 @@ public class SubtitleManager {
         setBackgroundOpacity(prefs.getInt(KEY_BG_OPACITY, d.bgOpacity));
         setOutlineWidth(prefs.getFloat(KEY_OUTLINE_WIDTH, d.outlineWidth));
         setShadowWidth(prefs.getFloat(KEY_SHADOW_WIDTH, d.shadowWidth));
+        setPadding(prefs.getFloat(KEY_PADDING, d.padding));
     }
 
     private boolean mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
@@ -260,6 +263,7 @@ public class SubtitleManager {
     private int mBackgroundColor;
     private float mOutlineWidth;
     private float mShadowWidth;
+    private float mPadding;
 
     public static final int BG_MODE_FLOATING    = 0;
     public static final int BG_MODE_BOXED_LINE  = 1;
@@ -380,7 +384,7 @@ public class SubtitleManager {
 
     public float getOutlineWidth() { return mOutlineWidth; }
 
-    /** In Boxed Block mode (bg_mode 2) this is the outline drawn inside the box. */
+    /** The outline around the glyphs (Floating and Boxed Block modes; unused by Boxed Line). */
     public void setOutlineWidth(float px) {
         mOutlineWidth = px;
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
@@ -390,11 +394,21 @@ public class SubtitleManager {
 
     public float getShadowWidth() { return mShadowWidth; }
 
-    /** In Boxed Block mode (bg_mode 2) this value is hijacked by libass as box padding. */
+    /** The drop-shadow offset (Floating background mode only; box padding is {@link #setPadding}). */
     public void setShadowWidth(float px) {
         mShadowWidth = px;
         if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
             Player.sPlayer.getSubtitleEngine().setShadowWidth(px);
+        }
+    }
+
+    public float getPadding() { return mPadding; }
+
+    /** Box padding for the Boxed Line (1) and Boxed Block (2) backgrounds. */
+    public void setPadding(float px) {
+        mPadding = px;
+        if (Player.sPlayer != null && Player.sPlayer.getSubtitleEngine() != null) {
+            Player.sPlayer.getSubtitleEngine().setPadding(px);
         }
     }
 
