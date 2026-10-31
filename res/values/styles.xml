@@ -358,12 +358,17 @@
 
     <style name="SubtitlePanel.PillGroup">
         <item name="android:orientation">horizontal</item>
+        <!-- no baseline alignment: a segment whose text wrapped differently during a measure pass
+             (dialog growing when rows are added) must not be shifted down against its siblings -->
+        <item name="android:baselineAligned">false</item>
+        <item name="android:minHeight">?attr/subtitlePillMinHeight</item>
         <item name="android:background">@drawable/subtitle_pill_bg</item>
     </style>
 
     <style name="SubtitlePanel.PillSegment">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
+        <!-- fill the group: every segment (and its selection fill) gets the same top and height -->
+        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:minHeight">?attr/subtitlePillMinHeight</item>
         <item name="android:gravity">center</item>
