@@ -18,8 +18,6 @@ import com.archos.mediacenter.video.R;
 
 import com.archos.medialib.IMediaPlayer;
 
-import android.os.Build;
-import android.view.SurfaceControl;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
@@ -719,32 +717,4 @@ public class SurfaceController {
      * mView and mSubtitleView always share the same left margin and width.
      */
     public int getVideoBoxTop() { return mVideoBoxTop; }
-
-    /**
-     * Sets the dataspace on the SurfaceView's SurfaceControl layer so SurfaceFlinger can set up
-     * its HDR composition pipeline from the start, before MediaCodec produces any frames.
-     * Without this, the surface starts as SDR (dataspace 259) and some HWC2 implementations
-     * (e.g. Google TV Streamer) don't dynamically switch to HDR tone-mapping when the dataspace
-     * changes later via the producer (MediaCodec).
-     * @param dataSpace HAL dataspace constant (e.g. 0x10C00000 for BT2020_PQ, 0 to reset)
-     */
-    public void setSurfaceDataSpace(int dataSpace) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            if (log.isDebugEnabled()) log.debug("setSurfaceDataSpace: skipped, API {} < 33", Build.VERSION.SDK_INT);
-            return;
-        }
-        if (mSurfaceView == null) {
-            if (log.isDebugEnabled()) log.debug("setSurfaceDataSpace: skipped, mSurfaceView is null");
-            return;
-        }
-        SurfaceControl sc = mSurfaceView.getSurfaceControl();
-        if (sc == null || !sc.isValid()) {
-            if (log.isDebugEnabled()) log.debug("setSurfaceDataSpace: skipped, SurfaceControl null or invalid");
-            return;
-        }
-        new SurfaceControl.Transaction()
-                .setDataSpace(sc, dataSpace)
-                .apply();
-        if (log.isDebugEnabled()) log.debug("setSurfaceDataSpace: applied dataSpace=0x{}", Integer.toHexString(dataSpace));
-    }
 }

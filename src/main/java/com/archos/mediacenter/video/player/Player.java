@@ -1630,25 +1630,6 @@ public class Player implements IPlayerControl,
                 mWindow.setColorMode(ActivityInfo.COLOR_MODE_HDR);
                 if (log.isDebugEnabled()) log.debug("CONFIG setColorMode COLOR_MODE_HDR requested");
             }
-            // Explicitly set the SurfaceView layer dataspace so SurfaceFlinger engages its HDR
-            // tone-mapping pipeline from the start. On some devices (e.g. Google TV Streamer),
-            // the surface starts as SDR (dataspace 259 set by MediaCodec at configure time) and
-            // the HWC2 does not dynamically switch to HDR composition when the dataspace later
-            // changes via the producer. Setting it here (consumer side) ensures correct setup.
-            if (mSurfaceController != null) {
-                VideoMetadata.VideoTrack videoTrack = mVideoMetadata != null ? mVideoMetadata.getVideoTrack() : null;
-                int colorTrc = videoTrack != null ? videoTrack.colorTrc : 0;
-                int dataSpace = 0; // default: reset to unknown
-                if (colorTrc == 16) {       // AVCOL_TRC_SMPTE2084 (PQ/HDR10)
-                    dataSpace = 0x10C00000; // HAL_DATASPACE_BT2020_PQ
-                } else if (colorTrc == 18) { // AVCOL_TRC_ARIB_STD_B67 (HLG)
-                    dataSpace = 0x12060000; // HAL_DATASPACE_BT2020_HLG
-                }
-                if (log.isDebugEnabled()) log.debug("CONFIG setSurfaceDataSpace: colorTrc={} dataSpace=0x{}", colorTrc, Integer.toHexString(dataSpace));
-                mSurfaceController.setSurfaceDataSpace(dataSpace);
-            } else {
-                if (log.isDebugEnabled()) log.debug("CONFIG setSurfaceDataSpace: skipped, mSurfaceController is null");
-            }
         } else {
             displaySupportsDoVi(false);
             displaySupportsHdr10(false);
