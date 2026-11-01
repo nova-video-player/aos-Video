@@ -277,7 +277,13 @@
     <string name="pref_play_mode_entry_repeat_folder">Повтор папки</string>
     <string name="pref_play_mode_entry_repeat_single">Повтор одного файла</string>
     <string name="pref_play_mode_entry_binge">Непрерывный просмотр</string>
+    <string name="pref_introdb_autoskip_title">Пропустить вступление/окончание</string>
+    <string name="introdb_autoskip">Автопропуск</string>
+    <string name="introdb_segment_intro">Вступление</string>
+    <string name="introdb_segment_outro">Окончание</string>
+    <string name="introdb_segment_credits">Титры</string>
     <!-- Skip prompt button labels, shown over the video; keep them short. -->
+    <string name="skip_intro_button">Пропустить вступление</string>
     <string name="pref_audio_parameters_title">Aудио</string>
     <string name="pref_audio_filt_title">Усиление аудио</string>
     <string name="pref_audio_filt_night_mode">Ночной режим</string>
@@ -378,6 +384,11 @@
     <string name="toast_subloader_login_failed">Неверные учетные данные Opensubtitles или служба недоступна</string>
     <string name="toast_subloader_quota_exceeded">Превышена квота загрузок OpenSubtitles</string>
     <string name="opensubtitles_quota_reset_time_remaining">Квота сбросится через %s</string>
+    <string name="opensubtitles_summary_anonymous">Анонимно</string>
+    <string name="opensubtitles_summary_user_account">Профиль пользователя</string>
+    <string name="opensubtitles_summary_not_checked">Проверка ещё не выполнялась</string>
+    <string name="opensubtitles_summary_login_failed">Ошибка входа</string>
+    <string name="opensubtitles_summary_service_unavailable">Сервис недоступен</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Настройка скорости</string>
     <string name="subtitle_delay_radio_none">нет</string>
@@ -499,6 +510,8 @@
     <string name="preference_enable_cutout_both_sidesx_summary">Отрезать дисплей поровну с обеих сторон, делая экран симметричным.</string>
     <string name="category_languages">Субтитры</string>
     <string name="subtitles_hide_default">Скрыть субтитры по умолчанию</string>
+    <string name="subtitle_use_margins_title">Отображение субтитров в черных полосах</string>
+    <string name="subtitle_use_margins_summary">Показывать субтитры под видео (вместо субтитров поверх видео)</string>
     <string name="subtitles_credentials_title">Учётные данные Opensubtitles</string>
     <string name="subtitles_credentials_summary">Предоставьте учетные данные Opensubtitles в настройках, чтобы иметь возможность загружать субтитры</string>
     <string name="preferences_languages">Язык загружаемых субтитров</string>
@@ -509,6 +522,8 @@
     <string name="subtitles_show_full_for_local_audio_summary">Отключено по умолчанию, поэтому только принудительные субтитры автоматически выбираются, когда аудио соответствует вашему языку субтитров; включите чтобы также авто-выбирать полные субтитры</string>
     <string name="favAudioLang_title">Предпочитаемый язык</string>
     <string name="favAudioLang_summary">Выберите предпочитаемый язык звуковой дорожки</string>
+    <string name="prefer_original_audio_track_title">Предпочитать оригинальную звуковую дорожку</string>
+    <string name="prefer_original_audio_track_summary">Используйте дорожку, соответствующую языку оригинала фильма или сериала, если такая дорожка есть в вариантах озвучки</string>
     <string name="ui_language_title">Выберите язык интерфейса</string>
     <string name="UiLang_title">Язык интерфейса</string>
     <string name="UiLang_summary">Установите язык интерфейса, или выберите использование по умолчанию для системы</string>
@@ -517,7 +532,7 @@
     <string name="theme_selection_title">Цветовая схема</string>
     <string name="theme_selection_summary">Выберите предпочитаемую цветовую тему</string>
     <string name="theme_blue">Синяя</string>
-    <string name="theme_black">Чёрная</string>
+    <string name="theme_black">Темная</string>
     <string name="preferences_video_about">О программе</string>
     <string name="preferences_video_os_text">Субтитры предоставлены</string>
     <string name="preferences_video_tmdb_text">Информация о фильмах/сериалах предоставлена</string>
@@ -643,6 +658,8 @@
     <string name="audio_decoder_choice_title">Выберите аудио декодер</string>
     <string name="audio_decoder_choice_summary">Определяет предпочтительнее ли декодирования аудио FFmpeg или MediaCodec.</string>
     <string name="audio_decoder_auto">Автоматически</string>
+    <string name="audio_decoder_prefer_ffmpeg">Предпочитать FFmpeg (по умолчанию)</string>
+    <string name="audio_decoder_prefer_mediacodec">Предпочитать MediaCodec (экспериментальный)</string>
     <string name="audio_interface_opensles">Принудительный OpenSL ES</string>
     <string name="audio_interface_audiotrack">Принудительная аудиодорожка</string>
     <string name="audio_interface_any">По умолчанию</string>
@@ -756,6 +773,16 @@
     <string name="trakt_force_pull_summary">Одноразовый импорт списка просмотренных и места для возобновления в Trakt</string>
     <string name="trakt_sync_collection_summary" tools:ignore="UnusedResources">Автоматически добавлять все видео из Вашей библиотеки Nova в вашу коллекцию Trakt</string>
     <string name="trakt_toast_syncing">Синхронизация с Trakt&#8230;</string>
+    <string name="trakt_device_auth_step1">1. На вашем телефоне или компьютере перейдите по:</string>
+    <string name="trakt_device_auth_step2">2. Введите этот код:</string>
+    <string name="trakt_device_auth_waiting">Ожидание авторизации…</string>
+    <string name="trakt_device_auth_success">Соединение успешно!</string>
+    <string name="trakt_device_auth_error">Аутентификация не пройдена. Пожалуйста, попробуйте снова.</string>
+    <string name="trakt_device_auth_timeout">Срок действия кода истёк. Повторите попытку.</string>
+    <string name="trakt_account_locked">Учетная запись Trakt заблокирована. Разблокируйте на trakt.tv или повторите попытку позже.</string>
+    <string name="trakt_social_signin_unsupported">Вход через Google/Facebook/Apple не поддерживается. Пожалуйста, войдите в систему с помощью логина и пароля Trakt.</string>
+    <string name="trakt_sync_status_error_network">Последняя синхронизация не удалась: ошибка сети</string>
+    <string name="trakt_sync_status_error_auth">Ошибка аутентификации — пожалуйста, войдите заново</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
     <string name="show_all">Все видео</string>
     <string name="hide_seen">Не просмотрено</string>
@@ -787,13 +814,14 @@
     <string name="leanback_action_more_details">Подробнее</string>
     <string name="leanback_scrap">Получить информацию</string>
     <string name="leanback_scrap_choose_the_description">Выбрать информацию</string>
-    <string name="leanback_scrap_choose_the_description_for">"Выберите инфорамцию для \"%s\""</string>
+    <string name="leanback_scrap_choose_the_description_for">"Выберите описание для \"%s\""</string>
     <string name="leanback_scrap_searching_tvshow_hint">Название сериала</string>
     <string name="leanback_unscrap">@string/scrap_remove</string>
     <string name="leanback_legacy_ui">Устаревший интерфейс</string>
     <string name="leanback_hint_long_press_on_back">ПОДСКАЗКА: долгое нажатие на кнопку НАЗАД закрывает файловый браузер</string>
     <string name="leanback_archos_video_webview">Nova Video WebView</string>
     <string name="file_access_error">Не удалось получить доступ к файлу</string>
+    <string name="always_leanback_on_tv">Всегда запускать с интерфейсом для ТВ</string>
     <string name="interface_size">Размер интерфейса</string>
     <string name="interface_size_summary">Измените, если интерфейс пользователя слишком мал или велик</string>
     <string name="interface_size_very_small">Очень маленький (mdpi)</string>
@@ -840,6 +868,9 @@
     <string name="db_export_manual_title">Экспорт базы данных медиа</string>
     <string name="db_export_manual_summary">Экспортировать файл media.db в /sdcard для отладки</string>
     <string name="db_export_in_progress">Выполняется экспорт базы данных</string>
+    <string name="media_library_import_title">Импорт медиа библиотеки + учетных данных + ярлыков</string>
+    <string name="media_library_import_error">Ошибка импорта медиа библиотеки</string>
+    <string name="media_library_import_dialog_title">Импорт медиа библиотеки + учетных данных + ярлыков</string>
     <string name="system">Система</string>
     <string name="keep_setting">Глобальная настройка</string>
     <string name="select_sub_file"><![CDATA[Для файла <font color=#29b6f6><i>%s</i></font><br /> не найдено точного соответствия субтитров. Попробуйте следующие варианты:]]></string>

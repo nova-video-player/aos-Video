@@ -280,6 +280,7 @@
     <string name="pref_play_mode_entry_binge">Odcinek po odcinku</string>
     <string name="pref_introdb_autoskip_title">Pomiń segmenty</string>
     <string name="introdb_autoskip">Autopomijanie</string>
+    <string name="introdb_skipped_format">Pominięto: %1$s</string>
     <string name="introdb_segment_intro">Wstęp</string>
     <string name="introdb_segment_recap">Podsumowanie</string>
     <string name="introdb_segment_outro">Zakończenie</string>

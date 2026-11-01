@@ -272,6 +272,7 @@
     <string name="pref_play_mode_entry_binge">Maratón de series</string>
     <string name="pref_introdb_autoskip_title">Saltar cabecera/cierre</string>
     <string name="introdb_autoskip">Autosalto</string>
+    <string name="introdb_skipped_format">Saltado: %1$s</string>
     <string name="introdb_segment_intro">Cabecera</string>
     <string name="introdb_segment_recap">Resumen</string>
     <string name="introdb_segment_outro">Cierre</string>

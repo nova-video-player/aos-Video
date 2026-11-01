@@ -272,6 +272,7 @@
     <string name="pref_play_mode_entry_binge">Visualização contínua</string>
     <string name="pref_introdb_autoskip_title">Pular abertura/encerramento</string>
     <string name="introdb_autoskip">Pulo automático</string>
+    <string name="introdb_skipped_format">Ignorado: %1$s</string>
     <string name="introdb_segment_intro">Abertura</string>
     <string name="introdb_segment_recap">Recapitulação</string>
     <string name="introdb_segment_outro">Encerramento</string>

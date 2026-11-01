@@ -280,6 +280,7 @@
     <string name="pref_play_mode_entry_binge">Nepretržité sledovanie</string>
     <string name="pref_introdb_autoskip_title">Preskočiť úvod/záver</string>
     <string name="introdb_autoskip">Automatické preskočenie</string>
+    <string name="introdb_skipped_format">Preskočené: %1$s</string>
     <string name="introdb_segment_intro">Úvod</string>
     <string name="introdb_segment_recap">Zhrnutie</string>
     <string name="introdb_segment_outro">Záver</string>

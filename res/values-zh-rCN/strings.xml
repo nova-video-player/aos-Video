@@ -268,6 +268,7 @@
     <string name="pref_play_mode_entry_binge">连续播放</string>
     <string name="pref_introdb_autoskip_title">跳过片头/片尾</string>
     <string name="introdb_autoskip">自动跳过</string>
+    <string name="introdb_skipped_format">跳过： %1$s</string>
     <string name="introdb_segment_intro">片头</string>
     <string name="introdb_segment_recap">前情提要</string>
     <string name="introdb_segment_outro">片尾</string>
