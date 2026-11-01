@@ -689,6 +689,8 @@ public class Player implements IPlayerControl,
             doViMode = isDoViDisabled ? CodecDiscovery.DOVI_MODE_OFF : CodecDiscovery.DOVI_MODE_AUTO;
         }
         CodecDiscovery.setDoViMode(doViMode);
+        View playbackView = mWindow != null ? mWindow.getDecorView() : null;
+        CodecDiscovery.setPlaybackDisplay(playbackView != null ? playbackView.getDisplay() : null);
 
         // we shouldn't clear the target state, because somebody might have
         // called start() previously

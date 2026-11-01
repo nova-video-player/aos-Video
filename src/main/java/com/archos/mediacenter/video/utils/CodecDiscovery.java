@@ -22,6 +22,10 @@ import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.Spatializer;
 import android.os.Build;
+import android.view.Display;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -265,41 +269,102 @@ public class CodecDiscovery {
 		return false;
 	}
 
-	private static String getCodecForProfile(String mimeType, int profile) {
-		if (log.isDebugEnabled()) log.debug("getCodecForProfile: mimeType={} profile={}", mimeType, profile);
-		if (Build.VERSION.SDK_INT < 27) return null;
-		MediaCodecList codecList = new MediaCodecList(MediaCodecList.ALL_CODECS);
-		MediaCodecInfo[] codecInfos = codecList.getCodecInfos();
-		String firstSupportedCodec = null;
-		for (MediaCodecInfo codecInfo : codecInfos) {
-			// Ignore encoders
-			if (codecInfo.isEncoder()) {
-				continue;
-			}
+    // Set by the playback window before prepare; read capabilities afresh on
+    // each native query rather than using the UI's post-prepare summary.
+    private static volatile Display playbackDisplay;
 
-			if (isCodecInfoSupported(codecInfo, mimeType, false)) {
-				if (firstSupportedCodec == null) {
-					firstSupportedCodec = codecInfo.getName();
-				}
-				MediaCodecInfo.CodecCapabilities capabilities = codecInfo.getCapabilitiesForType(mimeType);
-				if (capabilities != null) {
-					if (capabilities.profileLevels != null) {
-						for (MediaCodecInfo.CodecProfileLevel level : capabilities.profileLevels) {
-							if (log.isDebugEnabled()) log.debug("getCodecForProfile: profile={}, level={}", level.profile, level.level);
-							if (level.profile == profile) {
-								return codecInfo.getName();
-							}
-						}
-					}
-				}
-			}
-		}
-		if (doViMode == DOVI_MODE_FORCE && "video/dolby-vision".equalsIgnoreCase(mimeType) && firstSupportedCodec != null) {
-			if (log.isDebugEnabled()) log.debug("getCodecForProfile: forcing first Dolby Vision codec {}", firstSupportedCodec);
-			return firstSupportedCodec;
-		}
-		return null;
-	}
+    public static void setPlaybackDisplay(Display display) {
+        playbackDisplay = display;
+    }
+
+    private static int getPlaybackHdrCapabilities() {
+        Display display = playbackDisplay;
+        if (Build.VERSION.SDK_INT < 24 || display == null || !display.isValid()) return -1;
+        try {
+            Display.HdrCapabilities caps = display.getHdrCapabilities();
+            if (caps == null) return -1;
+            int mask = 0;
+            for (int type : caps.getSupportedHdrTypes()) {
+                if (type == Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION) mask |= 8;
+                if (type == Display.HdrCapabilities.HDR_TYPE_HDR10) mask |= 1;
+                if (type == Display.HdrCapabilities.HDR_TYPE_HLG) mask |= 2;
+                if (type == Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS) mask |= 4;
+            }
+            return mask;
+        } catch (RuntimeException e) {
+            log.warn("Cannot query playback display HDR capabilities", e);
+            return -1;
+        }
+    }
+
+    private static String getCodecForProfile(String mimeType, int profile) {
+        return getVideoCodecForFormat(mimeType, profile, 0, 0, 0, 0);
+    }
+
+    private static final class VideoCandidate {
+        final String name;
+        final int rank;
+        VideoCandidate(String name, int rank) { this.name = name; this.rank = rank; }
+    }
+
+    // Native code requests successive candidates only after initialization fails.
+    // Keep vendor enumeration order within each rank; do not blacklist names.
+    private static String getVideoCodecForFormat(String mimeType, int profile,
+            int width, int height, double frameRate, int index) {
+        if (log.isDebugEnabled()) log.debug("getVideoCodecForFormat: mimeType={} profile={} candidate={}", mimeType, profile, index);
+        if (Build.VERSION.SDK_INT < 27 || index < 0 || index >= 16) return null;
+        boolean dovi = "video/dolby-vision".equalsIgnoreCase(mimeType);
+        boolean force = dovi && doViMode == DOVI_MODE_FORCE;
+        List<VideoCandidate> candidates = new ArrayList<>();
+        try {
+            for (MediaCodecInfo info : new MediaCodecList(MediaCodecList.ALL_CODECS).getCodecInfos()) {
+                try {
+                    if (!isCodecInfoSupported(info, mimeType, false)) continue;
+                    if (Build.VERSION.SDK_INT >= 29 && info.isAlias()) continue;
+                    MediaCodecInfo.CodecCapabilities caps = info.getCapabilitiesForType(mimeType);
+                    if (caps.isFeatureRequired(MediaCodecInfo.CodecCapabilities.FEATURE_SecurePlayback)
+                            || caps.isFeatureRequired(MediaCodecInfo.CodecCapabilities.FEATURE_TunneledPlayback)) continue;
+                    boolean advertised = caps.profileLevels != null && caps.profileLevels.length > 0;
+                    boolean match = profile == 0;
+                    if (advertised) {
+                        for (MediaCodecInfo.CodecProfileLevel level : caps.profileLevels) {
+                            if (log.isDebugEnabled()) log.debug("getVideoCodecForFormat: codec={} profile={} level={}", info.getName(), level.profile, level.level);
+                            if (level.profile == profile) match = true;
+                        }
+                    }
+                    int sizeSupport = 0; // unknown
+                    MediaCodecInfo.VideoCapabilities video = caps.getVideoCapabilities();
+                    if (video != null && width > 0 && height > 0) {
+                        try {
+                            // Android recommends flooring fractional frame rates for this query.
+                            boolean fits = frameRate >= 1 && Double.isFinite(frameRate)
+                                    ? video.areSizeAndRateSupported(width, height, Math.floor(frameRate))
+                                    : video.isSizeSupported(width, height);
+                            sizeSupport = fits ? 1 : -1;
+                        } catch (IllegalArgumentException e) {
+                            log.debug("Incomplete video capabilities for {}", info.getName());
+                        }
+                    }
+                    int rank = VideoCodecSelection.rank(dovi, force, advertised, match, sizeSupport);
+                    if (rank >= 0) candidates.add(new VideoCandidate(info.getName(), rank));
+                } catch (RuntimeException e) {
+                    log.warn("Cannot inspect video codec {}", info.getName(), e);
+                }
+            }
+        } catch (RuntimeException e) {
+            log.warn("Cannot enumerate video codecs", e);
+            return null;
+        }
+        candidates.sort(Comparator.comparingInt(candidate -> candidate.rank));
+        if (index >= candidates.size()) return null;
+        VideoCandidate chosen = candidates.get(index);
+        if (force && chosen.rank >= 3 && log.isDebugEnabled()) {
+            log.debug("getVideoCodecForFormat: forcing Dolby Vision codec {} without an advertised profile match", chosen.name);
+        }
+        log.debug("Video decoder candidate {}: {} profile={} size={}x{} rate={} rank={}",
+                index, chosen.name, profile, width, height, frameRate, chosen.rank);
+        return chosen.name;
+    }
 
 	public static boolean isSwCodec(MediaCodecInfo codecInfo) {
 		if (Build.VERSION.SDK_INT >= 29) {
