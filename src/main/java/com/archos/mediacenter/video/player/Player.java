@@ -694,7 +694,9 @@ public class Player implements IPlayerControl,
 
         // we shouldn't clear the target state, because somebody might have
         // called start() previously
-        log.info("openVideo: " + mUri);
+        final boolean debugTiming = log.isDebugEnabled();
+        final long openStart = debugTiming ? System.nanoTime() : 0;
+        if (log.isDebugEnabled()) log.debug("openVideo: {}", mUri);
         closeCurrentPlayer();
         if (mStopPosition != -1) {
             mResumeCtx.setSeek(mStopPosition);
@@ -705,6 +707,10 @@ public class Player implements IPlayerControl,
         final IMediaPlayer player;
         try { player = MediaFactory.createPlayer(mContext, mForceSoftwareDecoding); }
         catch (RuntimeException ex) { onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, ex.getMessage()); return; }
+        if (debugTiming && log.isDebugEnabled()) {
+            log.debug("openVideo: generation {} player created after {} ms", generation,
+                    (System.nanoTime() - openStart) / 1000000);
+        }
         mMediaPlayer = player;
         mCurrentState = STATE_PREPARING;
         player.setOnPreparedListener(this);
@@ -722,8 +728,16 @@ public class Player implements IPlayerControl,
                 NetworkInitialization.awaitReadyForSmb(uri, mContext);
                 // Back/Stop or opening another video invalidates this request, not shared startup.
                 if (generation != mOpenGeneration) return;
+                if (debugTiming && log.isDebugEnabled()) {
+                    log.debug("openVideo: generation {} setting data source after {} ms", generation,
+                            (System.nanoTime() - openStart) / 1000000);
+                }
                 if (headers != null) player.setDataSource(mContext, uri, headers);
                 else player.setDataSource(mContext, uri);
+                if (debugTiming && log.isDebugEnabled()) {
+                    log.debug("openVideo: generation {} data source ready after {} ms, posting prepare", generation,
+                            (System.nanoTime() - openStart) / 1000000);
+                }
                 mHandler.post(() -> {
                     if (generation != mOpenGeneration || player != mMediaPlayer) return;
                     try {
@@ -740,12 +754,21 @@ public class Player implements IPlayerControl,
                         player.setScreenOnWhilePlaying(true);
                         if (mResumeCtx.getSeek() != -1 && !mSurfaceController.supportOpenGLVideoEffect()
                                 && player.setStartTime(mResumeCtx.getSeek())) mResumeCtx.setSeek(-1);
+                        if (debugTiming && log.isDebugEnabled()) {
+                            log.debug("openVideo: generation {} calling prepareAsync after {} ms", generation,
+                                    (System.nanoTime() - openStart) / 1000000);
+                        }
                         player.prepareAsync();
+                        if (debugTiming && log.isDebugEnabled()) {
+                            log.debug("openVideo: generation {} prepareAsync returned after {} ms", generation,
+                                    (System.nanoTime() - openStart) / 1000000);
+                        }
                     } catch (IllegalArgumentException | IllegalStateException ex) {
                         onError(player, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, ex.getMessage());
                     }
                 });
             } catch (IOException | RuntimeException ex) {
+                if (log.isDebugEnabled()) log.debug("openVideo: generation {} source setup failed", generation, ex);
                 mHandler.post(() -> {
                     if (generation == mOpenGeneration && player == mMediaPlayer)
                         onError(player, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, ex.getMessage());
@@ -1251,6 +1274,7 @@ public class Player implements IPlayerControl,
     /* IMediaPlayer.Listener */
     public void onPrepared(IMediaPlayer mp) {
         if (mPlaybackEnding || mp != mMediaPlayer) return;
+        if (log.isDebugEnabled()) log.debug("openVideo: generation {} received onPrepared", mOpenGeneration);
         mCurrentState = STATE_PREPARED;
         if (mSurfaceController != null)
             mSurfaceController.setMediaPlayer(mMediaPlayer);
