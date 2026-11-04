@@ -140,6 +140,7 @@ public class SurfaceController {
     private int mMarginTop = 0;
     // Cached from updateSurface()'s last run -- see getVideoBoxTop() below.
     private int mVideoBoxTop = 0;
+    private int mVideoBoxLeft = 0;
     private boolean mCutoutBugToasted = false;
     public boolean mFullScreenWithCutout = false;
     public boolean mCutBothSidesX = false;
@@ -168,7 +169,7 @@ public class SurfaceController {
         // onVideoBoxChanged() below, so it's a reliable "is there anything real to replay yet"
         // check.
         if (listener != null && mSurfaceWidth > 0) {
-            listener.onVideoBoxChanged(0, getVideoBoxTop(), mSurfaceWidth, mSurfaceHeight);
+            listener.onVideoBoxChanged(getVideoBoxLeft(), getVideoBoxTop(), mSurfaceWidth, mSurfaceHeight);
         }
     }
 
@@ -443,6 +444,10 @@ public class SurfaceController {
         // real (see that comment for why -- item #9). Needs the same HDMI remap dch/dh get
         // below so the later comparison stays in one consistent coordinate space.
         int dchMax = dch;
+        // Same, for the width: what dcw would be if this format did not scale past the screen
+        // horizontally (portrait Fit / Auto crop scale the video to the full height, so it is wider
+        // than the screen and cropped left and right).
+        int dcwMax = dcw;
 
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: v=({},{})", vw, vh);
 
@@ -571,6 +576,7 @@ public class SurfaceController {
                 // same treatment so the willStretchY recompute below stays in this same space.
                 dh = mapDimension(dh, mHdmiHeight, mLcdHeight);
                 dchMax = mapDimension(dchMax, mHdmiHeight, mLcdHeight);
+                dcwMax = mapDimension(dcwMax, mHdmiWidth, mLcdWidth);
                 if (log.isDebugEnabled()) {
                     log.debug("CONFIG updateSurface: HDMI layout map external=({},{}) viewport=({},{}) -> local=({},{}) viewport=({},{})",
                             hdmiLayoutWidth, hdmiLayoutHeight, mHdmiWidth, mHdmiHeight,
@@ -663,19 +669,58 @@ public class SurfaceController {
         // offset and the same margin -- the two cancel out exactly, offset 0.
         mVideoBoxTop = extendVertically ? ((dh - dch) / 2 + mMarginTop) : 0;
 
+        // Opposite case of the letterbox extension above: the video view is TALLER than the
+        // screen (e.g. "Fit width" on a 3840x2160 file with baked-in black bars, shown on a
+        // 2.2:1 phone: video is scaled to the full width, so its height overflows the screen
+        // and is clipped equally at the top and bottom). mView is centered by the parent
+        // FrameLayout, and so was mSubtitleView because it was sized identically, so the
+        // subtitle canvas overflowed the screen by the same amount: bottom-aligned subtitles,
+        // which live in the baked-in bar at the bottom of the video, were laid out below the
+        // visible area.
+        //
+        // Clip the subtitle canvas to the visible area instead (dchMax, same centering and
+        // margins as mView) and report the video box as a rectangle that is centered in that
+        // canvas and larger than it, i.e. with a negative y. The native side accepts exactly
+        // this shape (see ssa_geom_compute() in aos-avos: full-width box covering the canvas)
+        // and maps it to negative libass margins, so for text subtitles (SRT/ASS):
+        //   - \pos / \move events (signs, typesetting) keep their mapping to the VIDEO and stay
+        //     aligned with the picture, and
+        //   - ordinary bottom/top-aligned dialogue is laid out against the visible canvas, so it
+        //     stays on screen.
+        // GFX (PGS/VobSub) bitmaps are placed relative to the same box, so they keep their exact
+        // position on the video (and therefore stay where the video puts them, even if that is in
+        // the cropped part). 3D (TB/SBS) modes have their own overlay path and are left untouched.
+        boolean clipVertically = !extendVertically && dch > dchMax && dchMax > 0
+                && (mEffectMode & (VideoEffect.TB_MODE | VideoEffect.SBS_MODE)) == 0;
+        if (clipVertically) mVideoBoxTop = (dchMax - dch) / 2;
+
+        // Same thing on the horizontal axis: portrait Fit / Auto scale the video to the full
+        // screen height, so it is wider than the screen and cropped left and right. The subtitle
+        // canvas is clipped to the visible width and the box is reported centered in it with a
+        // negative x (mView and mSubtitleView share the same centering and left margin, so the
+        // box's offset inside the canvas is exactly (dcwMax - dcw) / 2). Text subtitles then wrap
+        // and center on the visible screen instead of on a canvas wider than it; \pos events and
+        // GFX bitmaps stay tied to the video. Can combine with extendVertically (Auto leaves
+        // bars on top and bottom as well as cropping the sides).
+        boolean clipHorizontally = dcw > dcwMax && dcwMax > 0
+                && (mEffectMode & (VideoEffect.TB_MODE | VideoEffect.SBS_MODE)) == 0;
+        mVideoBoxLeft = clipHorizontally ? (dcwMax - dcw) / 2 : 0;
+        final int subWidth = clipHorizontally ? dcwMax : dcw;
+
         if (subLp instanceof ViewGroup.MarginLayoutParams subMarginParams) {
-            subMarginParams.width = dcw;
+            subMarginParams.width = subWidth;
             if (extendVertically) {
                 subMarginParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
                 subMarginParams.setMargins(mMarginLeft, 0, 0, 0);
             } else {
-                subMarginParams.height = dch;
+                subMarginParams.height = clipVertically ? dchMax : dch;
                 subMarginParams.setMargins(mMarginLeft, mMarginTop, 0, 0);
             }
             mSubtitleView.setLayoutParams(subMarginParams);
         } else if (subLp != null) {
-            subLp.width = dcw;
-            subLp.height = extendVertically ? ViewGroup.LayoutParams.MATCH_PARENT : dch;
+            subLp.width = subWidth;
+            subLp.height = extendVertically ? ViewGroup.LayoutParams.MATCH_PARENT
+                                            : (clipVertically ? dchMax : dch);
             mSubtitleView.setLayoutParams(subLp);
         }
 
@@ -688,10 +733,10 @@ public class SurfaceController {
         // Tell the subtitle engine where the video's own on-screen box sits within the
         // canvas we just laid out above -- needed for GFX (PGS/VobSub) bitmap positioning,
         // which is otherwise decoded in the video's own pixel space and has no way to know
-        // this on its own. x is always 0 and w/h always dcw/dch: mView and mSubtitleView
-        // share the same left margin and width in every branch above; only the y offset
-        // depends on whether the canvas was extended to absorb letterbox bars.
-        if (mVideoBoxListener != null) mVideoBoxListener.onVideoBoxChanged(0, getVideoBoxTop(), dcw, dch);
+        // this on its own. w/h are always dcw/dch. x is 0 unless the canvas was clipped to the visible width
+        // (negative then, see getVideoBoxLeft()); y depends on whether the canvas was extended to
+        // absorb letterbox bars or clipped to the visible height.
+        if (mVideoBoxListener != null) mVideoBoxListener.onVideoBoxChanged(getVideoBoxLeft(), getVideoBoxTop(), dcw, dch);
 
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: ({},{})->({},{}) / formatCrop: ({},{}) / mEffectMode: {}", vw, vh, dcw, dch, cropW, cropH, mEffectMode);
     }
@@ -713,8 +758,14 @@ public class SurfaceController {
      * (dh - dch) / 2 + mMarginTop when the canvas has been extended to absorb letterbox
      * bars (its own top moved to 0 while the video's top -- centered within the taller
      * parent, then shifted by mMarginTop -- didn't). See the mSubtitleView sizing block
-     * above, where this is actually computed/cached. Horizontal offset is always 0 --
-     * mView and mSubtitleView always share the same left margin and width.
+     * above, where this is actually computed/cached. Horizontal offset: see getVideoBoxLeft().
      */
     public int getVideoBoxTop() { return mVideoBoxTop; }
+
+    /**
+     * Horizontal counterpart of getVideoBoxTop(): 0 normally, negative ((dcwMax - dcw) / 2) when
+     * the video is wider than the screen and the subtitle canvas has been clipped to the visible
+     * width (portrait Fit / Auto).
+     */
+    public int getVideoBoxLeft() { return mVideoBoxLeft; }
 }
