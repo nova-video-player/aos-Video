@@ -1081,16 +1081,25 @@ which `SubtitleEngine` implements:
   FrameLayout's own centering of the video within the taller parent, applied
   before `mMarginTop`; dropping it (an earlier bug) pushed PGS/VobSub bitmaps
   up by half the bar height whenever margins were in use.
-- When the video view is **taller than the screen** (Fit width / Auto on a
-  wide screen: the video is scaled to the full width and cropped top and
-  bottom), the subtitle canvas is clipped to the visible height and the box is
-  reported centered in it with a **negative** `y` (`(dchMax - dch) / 2`).
-  Native accepts only this narrow shape (full canvas width, covering the canvas
-  vertically, at most 2x its height) and maps it to negative libass margins:
-  `\pos`/`\move` events stay aligned with the video, ordinary dialogue is
-  laid out against the visible canvas (libass's fit height, exposed as
-  `layout_h` in `ssa_geometry.h`, drives font size and `MarginV`). PGS/VobSub
-  keep their video-relative position. 3D modes are excluded.
+- When the video view is **larger than the screen** the subtitle canvas is clipped
+  to the visible area and the box is reported centered in it with a **negative**
+  `x` and/or `y`:
+  - vertical: Fit width / Auto on a wide screen (video scaled to the full width,
+    cropped top and bottom): `y = (dchMax - dch) / 2`, canvas height `dchMax`;
+  - horizontal: portrait Fit / Auto (video scaled to the full height, cropped
+    left and right): `x = (dcwMax - dcw) / 2`, canvas width `dcwMax`. Can combine
+    with the bar extension above (Auto leaves bars as well as cropping the sides);
+  - 3D (TB/SBS) modes are excluded.
+
+  For text (SRT/ASS), `ssa_geom_compute()` accepts a box that covers the canvas
+  on an axis only when it is centered on it and at most 8x its length (a stale
+  box from before a rotation is rejected and falls back to "video fills
+  canvas"), and maps it to negative libass margins. `\pos`/`\move` events stay
+  aligned with the video; ordinary dialogue is laid out against the visible
+  canvas. libass scales ordinary dialogue by its *fit* size, exposed as
+  `layout_h` in `ssa_geometry.h` and used for forced font size and `MarginV`
+  (`content_h` in `sub_format_ssa.c`), so text keeps the same on-screen size in
+  every mode. PGS/VobSub keep their video-relative position.
 - `setVideoBoxListener()` **replays** the last computed box immediately if
   `updateSurface()` has already run, so a late-registered listener doesn't leave
   the native box at its invalidated fallback until some unrelated layout
