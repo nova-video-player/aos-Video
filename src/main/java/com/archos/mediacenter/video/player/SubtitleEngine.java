@@ -202,10 +202,11 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
 
     /**
      * Reports where the video's own on-screen box sits within the subtitle canvas --
-     * needed so PGS/VobSub bitmaps (decoded in the video's own pixel space) land correctly
-     * whenever the canvas's aspect ratio or size diverges from the video's (letterbox,
-     * pillarbox, zoom/crop, stretch). x/y/w/h are in canvas pixels, relative to the
-     * canvas's own top-left.
+     * needed so positioned ASS/SSA (\\pos, \\move) stays aligned with the picture whenever the
+     * canvas's aspect ratio or size diverges from the video's (letterbox, pillarbox,
+     * zoom/crop, stretch). PGS/VobSub bitmaps do NOT use it: they are fitted to the canvas
+     * itself so a zoomed or cropped picture can't enlarge them or push them off screen.
+     * x/y/w/h are in canvas pixels, relative to the canvas's own top-left.
      */
     public void setVideoBox(int x, int y, int w, int h) {
         synchronized (mBoxLock) {
@@ -228,9 +229,9 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
      * canvas: the native canvas is the effect overlay bitmap, sized to VideoEffectRenderer's
      * view, which IS the video's own view (dcw x dch, never bar-extended, and sized by
      * SurfaceController to the per-eye aspect). The video therefore fills that canvas
-     * exactly, and passing the 2D y through pushes the box below the canvas: GFX (PGS/VobSub)
-     * bitmaps get shifted down by the bar height and clipped, and libass only avoids the same
-     * fate through its "box doesn't fit -> fill canvas" fallback.
+     * exactly, and passing the 2D y through pushes the box below the canvas: positioned ASS
+     * would be shifted down by the bar height and clipped, and libass only avoids that fate
+     * through its "box doesn't fit -> fill canvas" fallback.
      *
      * So in 3D we send an all-zero box, native's existing "video fills canvas" contract,
      * which sub_engine_poll_frame() resolves against the canvas size current at apply time.
@@ -507,6 +508,14 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
     public void setBackgroundMode(int mode) { if (mNativeEngineHandle != 0) { nativeSetBackgroundMode(mNativeEngineHandle, mode); redraw3DIfNeeded(); } }
     public void setBackgroundColor(int color) { if (mNativeEngineHandle != 0) { nativeSetBackgroundColor(mNativeEngineHandle, color); redraw3DIfNeeded(); } }
     public void setBackgroundOpacity(float opacity) { if (mNativeEngineHandle != 0) { nativeSetBackgroundOpacity(mNativeEngineHandle, opacity); redraw3DIfNeeded(); } }
+    /**
+     * Pixels at the bottom of the subtitle canvas that bitmap subtitles (PGS/VobSub) must stay
+     * clear of: the playback controls while they are shown, or the system bottom area. 0 when
+     * nothing is reserved. Native keeps the cue inside the rest of the canvas, moving it up and,
+     * only if it cannot fit, shrinking it uniformly. Text subtitles are lifted through their own
+     * margin (setVerticalOffset()), so this is a no-op for them.
+     */
+    public void setBottomInset(int pixels) { if (mNativeEngineHandle != 0) { nativeSetBottomInset(mNativeEngineHandle, Math.max(pixels, 0)); redraw3DIfNeeded(); } }
     public void setVerticalOffset(float pixels) { if (mNativeEngineHandle != 0) { nativeSetVerticalOffset(mNativeEngineHandle, pixels); redraw3DIfNeeded(); } }
     public void setOverrideMode(int mode) { if (mNativeEngineHandle != 0) { nativeSetOverrideMode(mNativeEngineHandle, mode); redraw3DIfNeeded(); } }
 
@@ -574,6 +583,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
 
     /* ── Positioning & Overrides ── */
     private native void nativeSetVerticalOffset(long handle, float pixels);
+    private native void nativeSetBottomInset(long handle, int pixels);
     private native void nativeSetOverrideMode(long handle, int mode);
 
     /* ── Custom Fonts Folder (third-party fonts dir, MX Player / mpv-android style) ── */

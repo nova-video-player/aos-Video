@@ -556,8 +556,7 @@ therefore never observes a canvas change paired with a box computed for the old
 canvas, and rapid calls coalesce into one apply. `resize()` (the expensive
 direction — libass re-wraps every line) runs only when the canvas bit is set;
 `set_video_box()` is cheap and runs on any dirty bit. A zero box is resolved to
-"fills canvas" at apply time, so the backend never receives a raw zero box
-(which would collapse every PGS bitmap to zero size).
+"fills canvas" at apply time, so the backend never receives a raw zero box.
 
 Surface attach and detach **invalidate** both the cached canvas and box (a
 box measured against a vanished surface can't be trusted) and mark the box
@@ -797,7 +796,7 @@ cue timing and compositing entirely inside the native engine. Its role is:
   `getControlBarCurrentHeight()` reports 0 on TV and before first layout) or
   the system bottom area (navigation bar / gesture area / bottom cutout),
   whichever reaches higher, measured against the subtitle canvas view itself
-  (right in every sizing mode). It is 0 for graphic subtitles. It is transient:
+  (right in every sizing mode). For text it lifts the subtitle through its margin; for graphic subtitles it is sent as the reserved bottom space instead (see "Subtitle coordinate frame and scaling"). It is transient:
   never stored in the saved position or SharedPreferences, so text returns to
   the user's position when the controls hide. The call is deliberately
   unconditional — an unchanged value is a native no-op (the style serial only
@@ -879,8 +878,9 @@ Bitmap subtitles (PGS/VobSub) go through `Source/sub_format_gfx.c`, the
   own, while PGS (unbounded) shows until the next clear/cue. `gfx_get_schedule()`
   wakes the engine at the cue's start and finite end.
 - **Geometry changes** (canvas resize, new video box — rotation, floating
-  window, margins toggle) are handled copy-on-write: if the cached frame's
-  baked-in canvas/box no longer match the backend's, `gfx_clone_with_geometry()`
+  window, margins toggle — or a change of the reserved bottom space) are handled
+  copy-on-write: if the cached frame's baked-in canvas/box/inset no longer match
+  the backend's, `gfx_clone_with_geometry()`
   builds a new frame stamped with the current geometry, sharing the same pixel
   block (two small allocations and an atomic increment, even for a full-screen
   bitmap, because it runs under `eng->lock`). The old frame is never mutated;
@@ -900,30 +900,48 @@ the idx `size:` line (e.g. 720x480). `codec_ffsub.c` passes that frame to
 tracks, which `gfx_open()` stores as `gfx_stream_w/h` (a subtitle size despite
 the parameter name — see the caveat in `sub_format.h`).
 
-`gfx_map_to_canvas()` in `sub_render_gl.c` is the single placement rule, shared
-by the GL path and the CPU blender used for 3D so they cannot drift apart:
+`gfx_map_to_canvas()` in `Include/gfx_layout.h` is the single placement rule,
+shared by the GL path and the CPU blender used for 3D so they cannot drift
+apart. A cue is fitted to the **subtitle viewport** (the canvas) and to nothing
+else — the video's own box (zoom, crop, Fit / Auto, forced aspect ratio) plays no
+part, so a zoomed or stretched picture can neither enlarge a bitmap subtitle nor
+push it off screen. Readability takes priority over exact alignment of the
+authored position with the video (positioned ASS/SSA is a different backend and
+does follow the video).
 
-- The subtitle frame is scaled **uniformly** (aspect ratio preserved, never
-  stretched) to fit inside a target area, then centered on the video box.
-  Whatever it doesn't fill is margin: left/right for a frame narrower than the
-  area (a 3:2 DVD frame on a 16:9 picture), top/bottom for a wider one.
-- The target area depends on whether the canvas is using the letterbox bars:
-  - **Bars in use** (canvas taller than the video box — *use margins* on and
-    bars exist): the full canvas. A 1920x1080 PGS frame on a 1920x1080 screen
-    with a 1920x800 picture scales at 1.0 and the bottom band lands in the
-    black bar. In portrait the scale is set by the screen width and the frame
-    is centered on the picture, so the part extending past the picture renders
-    just beyond it. The frame is clamped to stay on the canvas.
-  - **Otherwise** (option off, or no bars): just the video box. A 1920x1080
-    frame in a 1920x800 box scales to about 0.74 — smaller, but not stretched.
-- Left/right bars are never used; the canvas is always exactly as wide as the
-  box.
-- Consequence for anamorphic DVD VobSub: it is not stretched with the
-  picture's pixel aspect, so on a 16:9 picture it is about 16% narrower than
-  picture-relative size, centered with side margins.
-- The frame is assumed centered on the picture (a symmetric crop). Neither the
-  container nor the decoder gives a crop offset, so an asymmetric crop would
-  shift subtitles by half the difference.
+1. **Nominal placement.** The subtitle frame is scaled **uniformly** (aspect
+   ratio preserved, never stretched) to fit inside the canvas and centered in
+   it. The cue keeps its authored place in that frame and its authored size,
+   scaled by that single factor.
+2. **Fit.** The cue must lie inside the available area: the canvas minus a 1%
+   margin on every side, and minus the **reserved bottom space** (playback
+   controls / system bars) at the bottom. A cue that does not fit is first
+   *moved* (up above the controls, in from the edges); only a cue larger than
+   the area itself is *shrunk*, uniformly, about its bottom centre so it stays
+   low. A cue that already fits stays exactly where it was authored, and returns
+   there when the controls hide. The reserved space is capped at half the canvas
+   height.
+
+`codec_ffsub.c` blends every rectangle of a cue into one bounding-box bitmap, so
+a cue is a single event and its rectangles share one scale and one translation
+by construction; the code still works on the union of a frame's bitmap events so
+a multi-event frame would move and scale as one unit.
+
+What the canvas is, per mode, is decided by `SurfaceController` (see "Geometry:
+canvas and video box"): the video box when subtitles may not use the bars, the
+whole subtitle area when they may, and the visible screen when the video is
+larger than it. Nothing in the placement depends on which mode produced it.
+
+**Reserved bottom space.** `SubtitleManager.applyNativeVerticalOffset()` measures
+the obstruction (playback controls, navigation bar, gesture area, bottom cutout)
+against the canvas view itself and, for bitmap tracks, sends it through
+`SubtitleEngine.setBottomInset()` → `nativeSetBottomInset()` →
+`sub_engine_set_bottom_inset()`. Like the canvas size and the video box it is
+cached on the engine and applied by `sub_engine_poll_frame()` through the
+optional `SUB_FORMAT_BACKEND::set_bottom_inset` (GFX only). Unlike them it is not
+invalidated on surface attach/detach, since it describes the UI, not a surface.
+It is transient and never persisted. The user's vertical position setting still
+does not apply to bitmap subtitles.
 
 The CPU blender (`blend_frame()`) uses the same mapping with nearest-neighbor
 sampling and alpha blending, for the 3D path.
@@ -1071,16 +1089,19 @@ applies uniformly:
 `SurfaceController` reports where the video sits inside the subtitle canvas
 whenever `updateSurface()` recomputes it (rotation, margins toggle, a new
 video's aspect ratio) through `VideoBoxListener.onVideoBoxChanged(x, y, w, h)`,
-which `SubtitleEngine` implements:
+which `SubtitleEngine` implements. The box is consumed by libass, to keep
+positioned ASS/SSA (`\pos`, `\move`) aligned with the picture. PGS/VobSub no
+longer use it (see "Subtitle coordinate frame and scaling"):
 
-- `x` is always 0 and `w`/`h` are `dcw`/`dch` — the video and subtitle views
-  share the same left margin and width in every branch.
+- `w`/`h` are always `dcw`/`dch`; `x` is `getVideoBoxLeft()`: 0 normally,
+  negative when the canvas is clipped to the visible width (below).
 - `y` is `getVideoBoxTop()`: **0** when the canvas is tethered (both views get
   the same centering offset and margin, which cancel), or
   `(dh - dch) / 2 + mMarginTop` when extended. The `(dh - dch) / 2` term is the
   FrameLayout's own centering of the video within the taller parent, applied
-  before `mMarginTop`; dropping it (an earlier bug) pushed PGS/VobSub bitmaps
-  up by half the bar height whenever margins were in use.
+  before `mMarginTop`; dropping it (an earlier bug, from when bitmap subtitles
+  were still placed relative to the box) pushed PGS/VobSub bitmaps up by half
+  the bar height whenever margins were in use.
 - When the video view is **larger than the screen** the subtitle canvas is clipped
   to the visible area and the box is reported centered in it with a **negative**
   `x` and/or `y`:
@@ -1099,7 +1120,7 @@ which `SubtitleEngine` implements:
   canvas. libass scales ordinary dialogue by its *fit* size, exposed as
   `layout_h` in `ssa_geometry.h` and used for forced font size and `MarginV`
   (`content_h` in `sub_format_ssa.c`), so text keeps the same on-screen size in
-  every mode. PGS/VobSub keep their video-relative position.
+  every mode. PGS/VobSub ignore the box: they are fitted to the visible canvas, see "Subtitle coordinate frame and scaling".
 - `setVideoBoxListener()` **replays** the last computed box immediately if
   `updateSurface()` has already run, so a late-registered listener doesn't leave
   the native box at its invalidated fallback until some unrelated layout
@@ -1116,7 +1137,7 @@ inset handling to `MiscUtils.adjustViewLayoutForInsets()`. That pass now only
 positions the layout and the position-hint spacer; text subtitles are drawn
 natively on the subtitle canvas, so the obstruction that lifts them is computed
 separately and fed to the renderer (see "Vertical position and obstruction"
-above). Graphic subtitles are never margin-shifted or lifted.
+above). Graphic subtitles are not lifted by the position setting; they are only kept clear of the controls / system bars through the reserved bottom space.
 
 The user's vertical text subtitle position is implemented with
 `SubtitleSpacerView` as a UI hint only:

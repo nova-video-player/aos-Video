@@ -687,9 +687,10 @@ public class SurfaceController {
         //     aligned with the picture, and
         //   - ordinary bottom/top-aligned dialogue is laid out against the visible canvas, so it
         //     stays on screen.
-        // GFX (PGS/VobSub) bitmaps are placed relative to the same box, so they keep their exact
-        // position on the video (and therefore stay where the video puts them, even if that is in
-        // the cropped part). 3D (TB/SBS) modes have their own overlay path and are left untouched.
+        // GFX (PGS/VobSub) bitmaps do not use the box at all: native fits each cue to this visible
+        // canvas (uniform scale, kept clear of the controls), so zooming or cropping the picture
+        // can neither enlarge them nor push them off screen. 3D (TB/SBS) modes have their own
+        // overlay path and are left untouched.
         boolean clipVertically = !extendVertically && dch > dchMax && dchMax > 0
                 && (mEffectMode & (VideoEffect.TB_MODE | VideoEffect.SBS_MODE)) == 0;
         if (clipVertically) mVideoBoxTop = (dchMax - dch) / 2;
@@ -699,8 +700,8 @@ public class SurfaceController {
         // canvas is clipped to the visible width and the box is reported centered in it with a
         // negative x (mView and mSubtitleView share the same centering and left margin, so the
         // box's offset inside the canvas is exactly (dcwMax - dcw) / 2). Text subtitles then wrap
-        // and center on the visible screen instead of on a canvas wider than it; \pos events and
-        // GFX bitmaps stay tied to the video. Can combine with extendVertically (Auto leaves
+        // and center on the visible screen instead of on a canvas wider than it; \pos events
+        // stay tied to the video (GFX bitmaps are fitted to the canvas, see above). Can combine with extendVertically (Auto leaves
         // bars on top and bottom as well as cropping the sides).
         boolean clipHorizontally = dcw > dcwMax && dcwMax > 0
                 && (mEffectMode & (VideoEffect.TB_MODE | VideoEffect.SBS_MODE)) == 0;
@@ -731,11 +732,11 @@ public class SurfaceController {
         mSurfaceHeight = dch;
 
         // Tell the subtitle engine where the video's own on-screen box sits within the
-        // canvas we just laid out above -- needed for GFX (PGS/VobSub) bitmap positioning,
-        // which is otherwise decoded in the video's own pixel space and has no way to know
-        // this on its own. w/h are always dcw/dch. x is 0 unless the canvas was clipped to the visible width
-        // (negative then, see getVideoBoxLeft()); y depends on whether the canvas was extended to
-        // absorb letterbox bars or clipped to the visible height.
+        // canvas we just laid out above -- needed by libass to keep positioned ASS/SSA
+        // (\pos, \move) aligned with the picture. PGS/VobSub ignore it. w/h are always dcw/dch.
+        // x is 0 unless the canvas was clipped to the visible width (negative then, see
+        // getVideoBoxLeft()); y depends on whether the canvas was extended to absorb letterbox
+        // bars or clipped to the visible height.
         if (mVideoBoxListener != null) mVideoBoxListener.onVideoBoxChanged(getVideoBoxLeft(), getVideoBoxTop(), dcw, dch);
 
         if (log.isDebugEnabled()) log.debug("CONFIG updateSurface: ({},{})->({},{}) / formatCrop: ({},{}) / mEffectMode: {}", vw, vh, dcw, dch, cropW, cropH, mEffectMode);

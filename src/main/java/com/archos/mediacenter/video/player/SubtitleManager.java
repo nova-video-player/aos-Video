@@ -753,9 +753,10 @@ public class SubtitleManager {
     }
 
     /**
-     * Pixels above the canvas bottom that ordinary text subtitles must stay clear of: the
-     * playback controls (seek bar included) or the system bottom area, whichever reaches
-     * higher. 0 for bitmap subtitles (PGS/VobSub), which keep their own positioning.
+     * Pixels above the canvas bottom that subtitles must stay clear of: the playback controls
+     * (seek bar included) or the system bottom area, whichever reaches higher. Text subtitles
+     * are lifted by it through their margin, bitmap subtitles (PGS/VobSub) are kept above it
+     * by the renderer (see applyNativeVerticalOffset()).
      *
      * The control bar is measured from its real on-screen position rather than from
      * PlayerController.getControlBarCurrentHeight(), which reports 0 unless the navigation bar
@@ -763,7 +764,7 @@ public class SubtitleManager {
      * the first show.
      */
     private int computeBottomObstruction() {
-        if (isGraphic() || mPlayerView == null) return 0;
+        if (mPlayerView == null) return 0;
         View canvas = getSubtitleCanvas();
         if (canvas == null || ! canvas.isLaidOut() || canvas.getHeight() <= 0) return 0;
         return Math.max(PlayerController.getControlBarClearanceAbove(canvas),
@@ -787,11 +788,17 @@ public class SubtitleManager {
     private void applyNativeVerticalOffset() {
         if (Player.sPlayer == null || Player.sPlayer.getSubtitleEngine() == null) return;
         int obstruction = computeBottomObstruction();
-        int offset = Math.max(mSubtitleEvadedVPos, obstruction);
+        // Text is lifted through its margin, and keeps exactly the behaviour it had. A bitmap
+        // cue is not lifted by the position setting: native fits it to the canvas, keeping it
+        // clear of the controls / system bars when they are there (and only then).
+        boolean graphic = isGraphic();
+        int offset = Math.max(mSubtitleEvadedVPos, graphic ? 0 : obstruction);
+        int bottomInset = graphic ? obstruction : 0;
         if (log.isDebugEnabled())
-            log.debug("applyNativeVerticalOffset: evaded={} obstruction={} -> {}",
-                    mSubtitleEvadedVPos, obstruction, offset);
+            log.debug("applyNativeVerticalOffset: evaded={} obstruction={} graphic={} -> offset={} inset={}",
+                    mSubtitleEvadedVPos, obstruction, graphic, offset, bottomInset);
         Player.sPlayer.getSubtitleEngine().setVerticalOffset(offset);
+        Player.sPlayer.getSubtitleEngine().setBottomInset(bottomInset);
     }
 
 }
