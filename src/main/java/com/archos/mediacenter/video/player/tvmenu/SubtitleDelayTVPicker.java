@@ -53,6 +53,16 @@ public class SubtitleDelayTVPicker extends SubtitleDelayPickerAbstract implement
     private Context mContext;
     private int textSize=-1;
     private final static int INCREASE_STEPS = 0;
+
+    // Opt-in behaviour for a signed position slider (see SubtitleSettingsModel.Row.signed). The
+    // subtitle delay picker this class was written for reverses the sign on OK and speeds up
+    // after 2 s, 4 s, 7 s and 13 s of holding (up to x100): fine for a delay, wrong for a
+    // -100..100 position, where OK must not flip up into down and x100 would cross the whole range
+    // in one key repeat.
+    private boolean mOkReversesSign = true;
+    private boolean mHoldRamp = false;
+    private static final long RAMP_X2_AFTER_MS = 1000;   // held for 1 s: two steps per key repeat
+    private static final long RAMP_X5_AFTER_MS = 3000;   // held for 3 s: five steps, and no faster
     /**
      * The callback used to indicate the user changes the date.
      */
@@ -144,6 +154,33 @@ public class SubtitleDelayTVPicker extends SubtitleDelayPickerAbstract implement
         hasMax=true;
         mMax= (int) (max-Math.IEEEremainder(max, mStep));
     }
+    /** false: OK does nothing instead of reversing the sign of the value (default true). */
+    public void setOkReversesSign(boolean reverses) {
+        mOkReversesSign = reverses;
+    }
+
+    /**
+     * true: Left / Right change the value by one step, two after the key has been held for 1 s,
+     * five after 3 s (default false: the delay picker's slower ramp, which ends at x100). Timed
+     * from the key event itself, so it does not depend on the remote's key repeat rate.
+     */
+    public void setHoldRamp(boolean ramp) {
+        mHoldRamp = ramp;
+    }
+
+    private boolean stepWithRamp(int direction, KeyEvent event) {
+        final long held = Math.max(0, event.getEventTime() - event.getDownTime());
+        final int multiplier = held < RAMP_X2_AFTER_MS ? 1 : held < RAMP_X5_AFTER_MS ? 2 : 5;
+        int delay = getDelay() + direction * mOriginalStep * multiplier;
+        if (hasMax && delay > mMax) delay = mMax;
+        if (hasMin && delay < mMin) delay = mMin;
+        updateNextDrawable(hasMax && delay >= mMax ? -1 : (direction > 0 ? R.drawable.arrow_right_pressed : R.drawable.arrow_right));
+        updatePreviousDrawable(hasMin && delay <= mMin ? -1 : (direction < 0 ? R.drawable.arrow_left_pressed : R.drawable.arrow_left));
+        updateDelay(delay);
+        if (mOnDelayChangedListener != null)
+            mOnDelayChangedListener.onDelayChanged(this, getDelay());
+        return true;
+    }
     public void setHasMax(boolean max){
         hasMax=max;
     }
@@ -159,6 +196,7 @@ public class SubtitleDelayTVPicker extends SubtitleDelayPickerAbstract implement
     public boolean   onKeyDown(int keyCode,  KeyEvent event){
         switch(keyCode){
             case KeyEvent.KEYCODE_DPAD_RIGHT:
+                if (mHoldRamp) return stepWithRamp(1, event);
                 int delay = (int) (getDelay()+mStep-(getDelay()+mStep)%mStep);
                 updateNextDrawable(hasMax && delay >= mMax ? -1 : R.drawable.arrow_right_pressed);
                 updatePreviousDrawable(hasMin&&delay<mMin?-1:R.drawable.arrow_left);
@@ -172,6 +210,7 @@ public class SubtitleDelayTVPicker extends SubtitleDelayPickerAbstract implement
                     mOnDelayChangedListener.onDelayChanged(this, getDelay());
                 return true;
             case KeyEvent.KEYCODE_DPAD_LEFT:
+                if (mHoldRamp) return stepWithRamp(-1, event);
                 delay = (int) (getDelay()-mStep-(getDelay()-mStep)%mStep);
 
                 updatePreviousDrawable(hasMin && delay <= mMin ? -1 : R.drawable.arrow_left_pressed);
@@ -193,6 +232,7 @@ public class SubtitleDelayTVPicker extends SubtitleDelayPickerAbstract implement
                
         }
         if(TVUtils.isOKKey(keyCode)){
+            if (!mOkReversesSign) return true;   // consumed, nothing changes
             if(!(hasMax&& -getDelay()>mMax||hasMin&& -getDelay()<mMin)){
                 updateDelay(-getDelay());
                 if(mOnDelayChangedListener!=null)

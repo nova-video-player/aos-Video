@@ -516,6 +516,22 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
      * margin (setVerticalOffset()), so this is a no-op for them.
      */
     public void setBottomInset(int pixels) { if (mNativeEngineHandle != 0) { nativeSetBottomInset(mNativeEngineHandle, Math.max(pixels, 0)); redraw3DIfNeeded(); } }
+    /**
+     * The user's vertical position for bitmap subtitles (PGS/VobSub): {@code value} in
+     * [-100, 100] (clamped), 0 = the placement native computes, positive moves the cue up,
+     * negative down. Always relative to that placement: +100 takes the whole cue up to the top
+     * margin of the canvas and -100 down to its bottom margin, in between is that fraction of
+     * the distance available, so the same step can move a cue by different amounts up and down
+     * and a cue already at a margin has nowhere to go. The space reserved by setBottomInset()
+     * is cleared afterwards and does not change what a value means. Text subtitles use
+     * setVerticalOffset(), so this is a no-op for them.
+     */
+    public void setGfxPosition(int value) {
+        if (mNativeEngineHandle != 0) {
+            nativeSetGfxPosition(mNativeEngineHandle, Math.max(-100, Math.min(100, value)));
+            redraw3DIfNeeded();
+        }
+    }
     public void setVerticalOffset(float pixels) { if (mNativeEngineHandle != 0) { nativeSetVerticalOffset(mNativeEngineHandle, pixels); redraw3DIfNeeded(); } }
     public void setOverrideMode(int mode) { if (mNativeEngineHandle != 0) { nativeSetOverrideMode(mNativeEngineHandle, mode); redraw3DIfNeeded(); } }
 
@@ -584,6 +600,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
     /* ── Positioning & Overrides ── */
     private native void nativeSetVerticalOffset(long handle, float pixels);
     private native void nativeSetBottomInset(long handle, int pixels);
+    private native void nativeSetGfxPosition(long handle, int value);
     private native void nativeSetOverrideMode(long handle, int mode);
 
     /* ── Custom Fonts Folder (third-party fonts dir, MX Player / mpv-android style) ── */
