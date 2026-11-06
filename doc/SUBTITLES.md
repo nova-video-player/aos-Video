@@ -878,7 +878,8 @@ Bitmap subtitles (PGS/VobSub) go through `Source/sub_format_gfx.c`, the
   own, while PGS (unbounded) shows until the next clear/cue. `gfx_get_schedule()`
   wakes the engine at the cue's start and finite end.
 - **Geometry changes** (canvas resize, new video box — rotation, floating
-  window, margins toggle — or a change of the reserved bottom space) are handled
+  window, margins toggle — or a change of the reserved bottom space or the user's
+  position) are handled
   copy-on-write: if the cached frame's baked-in canvas/box/inset no longer match
   the backend's, `gfx_clone_with_geometry()`
   builds a new frame stamped with the current geometry, sharing the same pixel
@@ -913,6 +914,9 @@ does follow the video).
    ratio preserved, never stretched) to fit inside the canvas and centered in
    it. The cue keeps its authored place in that frame and its authored size,
    scaled by that single factor.
+   **User position.** Between the two steps the user's vertical position shifts
+   the whole cue (see "Vertical position of bitmap subtitles" below); 0 changes
+   nothing.
 2. **Fit.** The cue must lie inside the available area: the canvas minus a 1%
    margin on every side, and minus the **reserved bottom space** (playback
    controls / system bars) at the bottom. A cue that does not fit is first
@@ -940,8 +944,48 @@ against the canvas view itself and, for bitmap tracks, sends it through
 cached on the engine and applied by `sub_engine_poll_frame()` through the
 optional `SUB_FORMAT_BACKEND::set_bottom_inset` (GFX only). Unlike them it is not
 invalidated on surface attach/detach, since it describes the UI, not a surface.
-It is transient and never persisted. The user's vertical position setting still
-does not apply to bitmap subtitles.
+It is transient and never persisted. The text vertical position (`KEY_VPOS`) does
+not apply to bitmap subtitles: they have their own, below.
+
+### Vertical position of bitmap subtitles
+
+`KEY_GFX_VPOS` (`pref_play_subtitle_gfx_vpos_key`) is a separate, signed setting,
+**-100..100**, default `getDefaults().vpos` (0). It is kept apart from the text
+position because the two mean different things: text is an absolute gap above the
+bottom (0..255, up to a third of the screen), whereas a bitmap cue has an authored
+place, so the setting is a shift from where the renderer puts it.
+
+- **0** is the placement of steps 1 and 2 above. **Positive moves the cue up,
+  negative down, always relative to that placement**, so a positive value never
+  lowers a cue and a negative one never raises it, whatever the cue's starting
+  place. Every cue is shifted by the same amount, so authored relative positions
+  (a top cue and a bottom cue) are preserved.
+- **+100** moves it up by a third of the screen height (`SubtitleManager` passes
+  `mScreenHeight / 3`, the reach of the text position's maximum), as a distance, not
+  an absolute cap: a cue that sits above a third of the screen in portrait (the
+  centred 16:9 area) still moves up from there.
+- **-100** moves it down until a *typical* bottom-placed cue (`GFX_TYPICAL_BOTTOM_MARGIN`,
+  6% of the frame height above the frame's bottom edge) reaches the bottom limit of
+  the canvas. The room below the cue differs a lot between orientations (about 38%
+  of the height in portrait on a 16:9 stream, about 5% in landscape), so a fixed
+  fraction would leave most of the negative range dead on one of them. The reference
+  ignores the reserved bottom space: the controls clear the cue in step 2, they do
+  not rescale the slider. The 6% is a tunable assumption, not a measured value.
+- The cue never leaves the screen: step 2 still applies after the shift, so the top
+  edge and the bottom edge keep their margins, and with the controls shown the cue is
+  temporarily lifted clear of them without changing the saved value.
+- Plumbing: `SubtitleManager.setGfxVerticalPosition()` →
+  `SubtitleEngine.setGfxPosition(value, rangePx)` → `nativeSetGfxPosition()` →
+  `sub_engine_set_gfx_position()`, cached on the engine and applied by
+  `sub_engine_poll_frame()` through the optional `SUB_FORMAT_BACKEND::set_gfx_position`
+  (GFX only), like the reserved bottom space. It is sent whatever the current track
+  is, so a bitmap track opened later starts with it.
+- Settings: the panel for a bitmap track shows a "Vertical position" slider and the
+  Reset row. Reset there resets only this position, the text style is left alone (and
+  the text reset leaves this alone: the key is not in `STYLE_KEYS`). On TV the row
+  uses the delay picker with OK not reversing the sign and a hold ramp of one step, two
+  after 1 s and five after 3 s. The position hint line is not shown: it marks the text
+  position's height.
 
 The CPU blender (`blend_frame()`) uses the same mapping with nearest-neighbor
 sampling and alpha blending, for the 3D path.

@@ -516,6 +516,19 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
      * margin (setVerticalOffset()), so this is a no-op for them.
      */
     public void setBottomInset(int pixels) { if (mNativeEngineHandle != 0) { nativeSetBottomInset(mNativeEngineHandle, Math.max(pixels, 0)); redraw3DIfNeeded(); } }
+    /**
+     * The user's vertical position for bitmap subtitles (PGS/VobSub): {@code value} in
+     * [-100, 100] (clamped), 0 = the placement native computes, positive moves the cue up,
+     * negative down; {@code rangePx} is the distance +100 stands for. Always relative to that
+     * placement, and still bounded by the canvas and the space reserved by setBottomInset().
+     * Text subtitles use setVerticalOffset(), so this is a no-op for them.
+     */
+    public void setGfxPosition(int value, int rangePx) {
+        if (mNativeEngineHandle != 0) {
+            nativeSetGfxPosition(mNativeEngineHandle, Math.max(-100, Math.min(100, value)), Math.max(rangePx, 0));
+            redraw3DIfNeeded();
+        }
+    }
     public void setVerticalOffset(float pixels) { if (mNativeEngineHandle != 0) { nativeSetVerticalOffset(mNativeEngineHandle, pixels); redraw3DIfNeeded(); } }
     public void setOverrideMode(int mode) { if (mNativeEngineHandle != 0) { nativeSetOverrideMode(mNativeEngineHandle, mode); redraw3DIfNeeded(); } }
 
@@ -584,6 +597,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
     /* ── Positioning & Overrides ── */
     private native void nativeSetVerticalOffset(long handle, float pixels);
     private native void nativeSetBottomInset(long handle, int pixels);
+    private native void nativeSetGfxPosition(long handle, int value, int rangePx);
     private native void nativeSetOverrideMode(long handle, int mode);
 
     /* ── Custom Fonts Folder (third-party fonts dir, MX Player / mpv-android style) ── */

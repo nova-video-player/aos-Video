@@ -316,6 +316,10 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
         picker.setStep(slider ? SLIDER_TV_STEP : s.step); // the picker works in hundredths
         picker.setMin(s.min * 100);
         picker.setMax(s.max * 100);
+        if (row.signed) {            // a position around 0: OK must not flip the sign, and holding must not jump x100
+            picker.setOkReversesSign(false);
+            picker.setHoldRamp(true);
+        }
         mMenu.addTVMenuItem(picker);
         picker.setTextViewWidth(mPickerWidth);
         picker.setUpdateText(false);
