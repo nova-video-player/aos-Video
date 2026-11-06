@@ -251,7 +251,7 @@ final class SubtitleSettingsPhoneRows {
                 final SeekBar bar = v.findViewById(R.id.sp_slider);
                 bar.setMax(r.setting.max - r.setting.min);
                 bar.setProgress(r.setting.get() - r.setting.min);
-                ((TextView) v.findViewById(R.id.sp_value)).setText(String.valueOf(r.setting.get()));
+                ((TextView) v.findViewById(R.id.sp_value)).setText(r.fmt != null ? r.fmt.format(r.setting.get()) : String.valueOf(r.setting.get()));
                 break;
             }
             case COLOR: {
