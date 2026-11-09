@@ -254,6 +254,36 @@ public class CodecDiscovery {
 		return doViMode;
 	}
 
+	// Called from native code: true when a hardware decoder explicitly advertises the
+	// profile, unlike the Force mode ranking which accepts decoders without a match.
+	public static boolean isProfileAdvertised(String mimeType, int profile) {
+		if (Build.VERSION.SDK_INT < 27) return false;
+		try {
+			for (MediaCodecInfo info : new MediaCodecList(MediaCodecList.ALL_CODECS).getCodecInfos()) {
+				try {
+					if (!isCodecInfoSupported(info, mimeType, false)) continue;
+					if (Build.VERSION.SDK_INT >= 29 && info.isAlias()) continue;
+					MediaCodecInfo.CodecCapabilities caps = info.getCapabilitiesForType(mimeType);
+					if (caps.isFeatureRequired(MediaCodecInfo.CodecCapabilities.FEATURE_SecurePlayback)
+							|| caps.isFeatureRequired(MediaCodecInfo.CodecCapabilities.FEATURE_TunneledPlayback)
+							|| caps.profileLevels == null) continue;
+					for (MediaCodecInfo.CodecProfileLevel level : caps.profileLevels) {
+						if (level.profile == profile) {
+							log.debug("isProfileAdvertised: {} profile={} by {}", mimeType, profile, info.getName());
+							return true;
+						}
+					}
+				} catch (RuntimeException e) {
+					log.warn("Cannot inspect video codec {}", info.getName(), e);
+				}
+			}
+		} catch (RuntimeException e) {
+			log.warn("Cannot enumerate video codecs", e);
+		}
+		log.debug("isProfileAdvertised: {} profile={} not advertised", mimeType, profile);
+		return false;
+	}
+
 	private static boolean isCodecTypeSupported(String codecType, boolean allowSwCodec, int kind) {
 		MediaCodecList codecList = new MediaCodecList(kind);
 		MediaCodecInfo[] codecInfos = codecList.getCodecInfos();
