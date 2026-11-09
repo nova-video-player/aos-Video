@@ -24,6 +24,10 @@ final class VideoCodecSelection {
         // can be attempted, but never prefer a known incompatible bit depth.
         if (!profileMatches && !force && (dovi || advertised)) return -1;
         int profileRank = profileMatches ? 0 : 3;
+        // Keep platform order within each DV profile group: reported size/rate
+        // support does not establish correct Dolby Vision rendering. The caller's
+        // stable sort preserves that order while Force still prefers matches.
+        if (dovi) return profileRank;
         // Reported size/rate limits are imperfect on some TV firmware. Rank
         // those candidates last instead of removing previously working devices.
         int sizeRank = sizeSupport > 0 ? 0 : sizeSupport == 0 ? 1 : 2;

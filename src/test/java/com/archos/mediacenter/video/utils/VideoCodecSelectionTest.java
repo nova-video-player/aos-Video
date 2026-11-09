@@ -27,6 +27,19 @@ public class VideoCodecSelectionTest {
         assertTrue(VideoCodecSelection.rank(true, true, true, true, -1)
                 < VideoCodecSelection.rank(true, true, true, false, 1));
     }
+    @Test public void dvSizeReportsDoNotReorderMatchingCandidates() {
+        for (boolean force : new boolean[] { false, true }) {
+            int fits = VideoCodecSelection.rank(true, force, true, true, 1);
+            assertEquals(fits, VideoCodecSelection.rank(true, force, true, true, 0));
+            assertEquals(fits, VideoCodecSelection.rank(true, force, true, true, -1));
+        }
+    }
+    @Test public void forcedDvPreservesOrderAmongUnmatchedCandidates() {
+        int fits = VideoCodecSelection.rank(true, true, true, false, 1);
+        assertTrue(fits >= 0);
+        assertEquals(fits, VideoCodecSelection.rank(true, true, true, false, 0));
+        assertEquals(fits, VideoCodecSelection.rank(true, true, true, false, -1));
+    }
     @Test public void preferSupportedSizesWithoutBlacklistingVendorQuirks() {
         int fits = VideoCodecSelection.rank(false, false, true, true, 1);
         int unknown = VideoCodecSelection.rank(false, false, true, true, 0);
