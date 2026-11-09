@@ -254,6 +254,8 @@ public class Player implements IPlayerControl,
     };
 
     private boolean mForceSoftwareDecoding;
+    private boolean mHardwareVideoDecoderSeen;
+    private boolean mSoftwareFallbackNotified;
     private int mLastExistState = -1;
     private boolean mIsReleased = false;
 
@@ -601,6 +603,7 @@ public class Player implements IPlayerControl,
         mMetadataReady = false;
         mIsBusy = false;
         mUpdateMetadata = false;
+        mHardwareVideoDecoderSeen = false;
         if (mSurfaceController != null) mSurfaceController.setMediaPlayer(null);
         if (mEffectRenderer != null) mEffectRenderer.pause();
         if (old != null) old.release(); // interrupts prepare/seek and joins rendering
@@ -624,6 +627,7 @@ public class Player implements IPlayerControl,
         }
         closeCurrentPlayer();
         mUri = null;
+        mSoftwareFallbackNotified = false;
         mTargetState = STATE_IDLE;
         mSessionPrepared = mRestoringSession = false;
         mResumeAfterFocusLoss = mFocusSuspended = false;
@@ -1247,6 +1251,28 @@ public class Player implements IPlayerControl,
             }
             if (enabledUpdate && mPlayerListener != null) {
                 mPlayerListener.onOSDUpdate();
+            }
+            // Decoder changes are reported by native recovery through metadata. Require
+            // observed hardware decoding; software-only playback is not a failure.
+            int decoderKey = IMediaPlayer.METADATA_KEY_VIDEO_TRACK
+                    + IMediaPlayer.METADATA_KEY_VIDEO_TRACK_DECODER;
+            if (data.has(decoderKey)) {
+                switch (data.getInt(decoderKey)) {
+                case LibAvos.MP_DECODER_HW_OMX:
+                case LibAvos.MP_DECODER_HW_OMXCODEC:
+                case LibAvos.MP_DECODER_HW_MEDIACODEC:
+                case LibAvos.MP_DECODER_HW_OMXPLUS:
+                    mHardwareVideoDecoderSeen = true;
+                    break;
+                case LibAvos.MP_DECODER_SW:
+                    if (mHardwareVideoDecoderSeen && !mForceSoftwareDecoding
+                            && !mSoftwareFallbackNotified && !mPlaybackEnding) {
+                        mSoftwareFallbackNotified = true;
+                        Toast.makeText(mContext, R.string.video_software_fallback,
+                                Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                }
             }
             mVideoMetadata.setData(data);
 

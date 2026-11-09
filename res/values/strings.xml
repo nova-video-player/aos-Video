@@ -1020,6 +1020,7 @@
     <string name="not_available_during_media_scanning">Not available during media scanning.</string>
     <string name="remove_from_list">Remove from list</string>
     <string name="warning_swdec">Warning: hardware decoding disabled!</string>
+    <string name="video_software_fallback">Hardware decoding failed. Using software decoding; playback may stutter.</string>
 
     <string name="list_title">List title</string>
 
