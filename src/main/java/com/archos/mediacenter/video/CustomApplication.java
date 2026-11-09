@@ -94,9 +94,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.List;
@@ -571,7 +573,18 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     @SuppressLint("StaticFieldLeak")
-    private static SambaDiscovery mSambaDiscovery = null;
+    private static volatile SambaDiscovery mSambaDiscovery = null;
+
+    private volatile Boolean mIsMainProcess = null;
+
+    // Set when the app goes to background so the next foreground transition refreshes
+    // discovery even if the previous scan is still running.
+    private volatile boolean mWasBackgrounded = false;
+
+    // Set once a discovery has actually been started in this process. The initial
+    // foreground transition can arrive after discovery already finished; isRunning()
+    // alone would then allow a second full scan.
+    private volatile boolean mDiscoveryLaunchedOnce = false;
 
     private PropertyChangeListener propertyChangeListener = null;
 
@@ -879,7 +892,8 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             propertyChangeListener = evt -> {
                 if (evt.getOldValue() != evt.getNewValue()) {
                     if (log.isTraceEnabled()) log.trace("NetworkState for {} changed:{} -> {}", evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
-                    launchSambaDiscovery();
+                    // Network changed: restart the discovery even if one is still running
+                    launchSambaDiscovery(true);
                 }
             };
 
@@ -1031,26 +1045,102 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     private void launchSambaDiscovery() {
-        if (networkState.hasLocalConnection()) {
-            if (log.isDebugEnabled()) log.debug("launchSambaDiscovery: local connection, launching samba discovery");
-            // samba discovery should not be running at this stage, but better safe than sorry
-            if (mSambaDiscovery != null) {
-                mSambaDiscovery.abort();
-            }
-            try {
-                SambaDiscovery.flushShareNameResolver();
-                mSambaDiscovery = new SambaDiscovery(mContext);
-                mSambaDiscovery.setMinimumUpdatePeriodInMs(0);
-                mSambaDiscovery.start();
-            } catch (UnsatisfiedLinkError e) {
-                log.warn("launchSambaDiscovery: Failed to initialize SambaDiscovery due to missing or corrupted native library", e);
-                mSambaDiscovery = null;
-            } catch (Exception e) {
-                log.error("launchSambaDiscovery: Unexpected error during SambaDiscovery initialization", e);
-                mSambaDiscovery = null;
-            }
-        } else
+        launchSambaDiscovery(false);
+    }
+
+    /**
+     * @param forceRestart true when the network changed and an in-flight discovery must be
+     *                     restarted from scratch; false for regular triggers (deferred init,
+     *                     foreground transition) where a discovery already running provides
+     *                     fresh results and must not be duplicated.
+     */
+    private synchronized void launchSambaDiscovery(boolean forceRestart) {
+        if (!isMainProcess()) {
+            if (log.isDebugEnabled()) log.debug("launchSambaDiscovery: not the main process, doing nothing");
+            return;
+        }
+        if (!networkState.hasLocalConnection()) {
             if (log.isDebugEnabled()) log.debug("launchSambaDiscovery: no local connection, doing nothing");
+            return;
+        }
+        // On cold start this is called twice in a row (deferred init then first foreground
+        // transition). Keep the running discovery instead of aborting and rescanning, and
+        // also skip the second trigger if the first discovery already completed.
+        if (!forceRestart) {
+            if (mDiscoveryLaunchedOnce) {
+                if (log.isDebugEnabled()) log.debug("launchSambaDiscovery: discovery already launched once, skipping duplicate launch");
+                return;
+            }
+            if (mSambaDiscovery != null && mSambaDiscovery.isRunning()) {
+                if (log.isDebugEnabled()) log.debug("launchSambaDiscovery: discovery already running, skipping duplicate launch");
+                return;
+            }
+        }
+        if (log.isDebugEnabled()) log.debug("launchSambaDiscovery: local connection, launching samba discovery");
+        // samba discovery should not be running at this stage, but better safe than sorry
+        if (mSambaDiscovery != null) {
+            mSambaDiscovery.abort();
+        }
+        try {
+            SambaDiscovery.flushShareNameResolver();
+            SambaDiscovery discovery = new SambaDiscovery(mContext);
+            discovery.setMinimumUpdatePeriodInMs(0);
+            if (discovery.start()) {
+                mSambaDiscovery = discovery;
+                mDiscoveryLaunchedOnce = true;
+            } else {
+                // Connectivity disappeared or no usable local IP was available yet. Leave the
+                // flag clear so the next initial trigger can retry once an address shows up.
+                mSambaDiscovery = null;
+            }
+        } catch (UnsatisfiedLinkError e) {
+            log.warn("launchSambaDiscovery: Failed to initialize SambaDiscovery due to missing or corrupted native library", e);
+            mSambaDiscovery = null;
+        } catch (Exception e) {
+            log.error("launchSambaDiscovery: Unexpected error during SambaDiscovery initialization", e);
+            mSambaDiscovery = null;
+        }
+    }
+
+    /**
+     * Samba discovery only makes sense in the UI process. Secondary processes (e.g. the
+     * ":scanner" media process) instantiate the same Application and would otherwise run a
+     * full network scan for nothing.
+     */
+    private boolean isMainProcess() {
+        Boolean cached = mIsMainProcess;
+        if (cached != null) {
+            return cached;
+        }
+        String processName = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            processName = Application.getProcessName();
+        }
+        if (processName == null) {
+            processName = readProcessNameFromProc();
+        }
+        // If the process name cannot be determined, assume the main process: better to run a
+        // redundant scan than to disable discovery entirely.
+        boolean mainProcess = processName == null || processName.equals(getPackageName());
+        mIsMainProcess = mainProcess;
+        return mainProcess;
+    }
+
+    private static String readProcessNameFromProc() {
+        try (FileInputStream in = new FileInputStream("/proc/self/cmdline")) {
+            byte[] buffer = new byte[256];
+            int length = in.read(buffer);
+            if (length <= 0) {
+                return null;
+            }
+            int end = 0;
+            while (end < length && buffer[end] != 0) {
+                end++;
+            }
+            return new String(buffer, 0, end, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public static SambaDiscovery getSambaDiscovery() {
@@ -1083,13 +1173,18 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 isNetworkStateRegistered = true;
             }
             addNetworkListener();
-            launchSambaDiscovery();
+            // On a real resume (app was backgrounded), force a fresh scan even if the previous
+            // one is still running; on the initial cold-start foreground, deduplicate against
+            // the discovery already launched by deferred init.
+            launchSambaDiscovery(mWasBackgrounded);
+            mWasBackgrounded = false;
             // Trigger an incremental Trakt sync when returning to foreground if signed in and not in private mode
             if (Trakt.isTraktV2Enabled(this, PreferenceManager.getDefaultSharedPreferences(this))) {
                 TraktService.sync(this, TraktService.FLAG_SYNC_AUTO);
             }
         } else {
             // Keep audio observers active for picture-in-picture/background playback.
+            mWasBackgrounded = true;
             if (isVideStoreImportReceiverRegistered) {
                 if (log.isDebugEnabled()) log.debug("handleForeGround: app now in BackGround unregisterReceiver for videoStoreImportReceiver");
                 ArchosUtils.addBreadcrumb(SentryLevel.INFO, "CustomApplication.handleForeGround", "app now in Background unregister videoStoreImportReceiver");
