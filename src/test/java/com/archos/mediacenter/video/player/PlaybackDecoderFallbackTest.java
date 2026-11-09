@@ -46,9 +46,12 @@ public class PlaybackDecoderFallbackTest {
     private IMediaPlayer media;
     private MediaMetadata metadata;
     private Toast toast;
+    private Toast colorToast;
     private MockedStatic<Toast> toasts;
     private static final int DECODER_KEY = IMediaPlayer.METADATA_KEY_VIDEO_TRACK
             + IMediaPlayer.METADATA_KEY_VIDEO_TRACK_DECODER;
+    private static final int COLOR_KEY = IMediaPlayer.METADATA_KEY_VIDEO_TRACK
+            + IMediaPlayer.METADATA_KEY_VIDEO_TRACK_DOVI_COLOR_UNSUPPORTED;
 
     @Before
     public void setUp() throws Exception {
@@ -68,6 +71,9 @@ public class PlaybackDecoderFallbackTest {
         toasts = mockStatic(Toast.class);
         toasts.when(() -> Toast.makeText(context, R.string.video_software_fallback,
                 Toast.LENGTH_LONG)).thenReturn(toast);
+        colorToast = mock(Toast.class);
+        toasts.when(() -> Toast.makeText(context, R.string.video_dovi_color_fallback,
+                Toast.LENGTH_LONG)).thenReturn(colorToast);
     }
 
     @After
@@ -125,6 +131,52 @@ public class PlaybackDecoderFallbackTest {
         Method method = Player.class.getDeclaredMethod("closeCurrentPlayer");
         method.setAccessible(true);
         method.invoke(player);
+    }
+
+    @Test
+    public void colorFallbackWarnsAtStartupAndOnlyOnceAcrossReopens() throws Exception {
+        when(metadata.has(COLOR_KEY)).thenReturn(true);
+        when(metadata.getBoolean(COLOR_KEY)).thenReturn(true);
+        update(LibAvos.MP_DECODER_HW_MEDIACODEC);
+        update(LibAvos.MP_DECODER_HW_MEDIACODEC);
+        closeCurrentPlayer();
+        set("mMediaPlayer", media);
+        update(LibAvos.MP_DECODER_HW_MEDIACODEC);
+        verify(colorToast).show();
+        verifyNoInteractions(toast);
+        // A new playback resets the notification, unlike surface recovery.
+        java.lang.reflect.Constructor<?> resumeConstructor = Class.forName(
+                Player.class.getName() + "$ResumeCtx").getDeclaredConstructor(Player.class);
+        resumeConstructor.setAccessible(true);
+        set("mResumeCtx", resumeConstructor.newInstance(player));
+        player.stopPlayback();
+        set("mMediaPlayer", media);
+        update(LibAvos.MP_DECODER_HW_MEDIACODEC);
+        verify(colorToast, times(2)).show();
+    }
+
+    @Test
+    public void supportedColorsAndOldNativeMetadataDoNotWarn() {
+        update(LibAvos.MP_DECODER_HW_MEDIACODEC);
+        when(metadata.has(COLOR_KEY)).thenReturn(true);
+        when(metadata.getBoolean(COLOR_KEY)).thenReturn(false);
+        update(LibAvos.MP_DECODER_SW);
+        verifyNoInteractions(colorToast);
+    }
+
+    @Test
+    public void colorWarningIgnoresStaleEventsExitAndFatalErrors() throws Exception {
+        when(metadata.has(COLOR_KEY)).thenReturn(true);
+        when(metadata.getBoolean(COLOR_KEY)).thenReturn(true);
+        player.onInfo(mock(IMediaPlayer.class), IMediaPlayer.MEDIA_INFO_METADATA_UPDATE, 0);
+        set("mPlaybackEnding", true);
+        update(LibAvos.MP_DECODER_SW);
+        set("mPlaybackEnding", false);
+        Field errorState = Player.class.getDeclaredField("STATE_ERROR");
+        errorState.setAccessible(true);
+        set("mCurrentState", errorState.getInt(null));
+        update(LibAvos.MP_DECODER_SW);
+        verifyNoInteractions(colorToast);
     }
 
     private void update(int decoder) {

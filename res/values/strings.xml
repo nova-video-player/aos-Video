@@ -1021,6 +1021,7 @@
     <string name="remove_from_list">Remove from list</string>
     <string name="warning_swdec">Warning: hardware decoding disabled!</string>
     <string name="video_software_fallback">Hardware decoding failed. Using software decoding; playback may stutter.</string>
+    <string name="video_dovi_color_fallback">Dolby Vision color profile is not supported. Playing anyway; colors may be incorrect.</string>
 
     <string name="list_title">List title</string>
 

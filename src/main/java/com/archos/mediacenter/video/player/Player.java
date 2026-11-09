@@ -256,6 +256,7 @@ public class Player implements IPlayerControl,
     private boolean mForceSoftwareDecoding;
     private boolean mHardwareVideoDecoderSeen;
     private boolean mSoftwareFallbackNotified;
+    private boolean mDoviColorFallbackNotified;
     private int mLastExistState = -1;
     private boolean mIsReleased = false;
 
@@ -628,6 +629,7 @@ public class Player implements IPlayerControl,
         closeCurrentPlayer();
         mUri = null;
         mSoftwareFallbackNotified = false;
+        mDoviColorFallbackNotified = false;
         mTargetState = STATE_IDLE;
         mSessionPrepared = mRestoringSession = false;
         mResumeAfterFocusLoss = mFocusSuspended = false;
@@ -1273,6 +1275,14 @@ public class Player implements IPlayerControl,
                     }
                     break;
                 }
+            }
+            int doviColorKey = IMediaPlayer.METADATA_KEY_VIDEO_TRACK
+                    + IMediaPlayer.METADATA_KEY_VIDEO_TRACK_DOVI_COLOR_UNSUPPORTED;
+            if (!mDoviColorFallbackNotified && !mPlaybackEnding && mCurrentState != STATE_ERROR
+                    && data.has(doviColorKey) && data.getBoolean(doviColorKey)) {
+                mDoviColorFallbackNotified = true;
+                Toast.makeText(mContext, R.string.video_dovi_color_fallback,
+                        Toast.LENGTH_LONG).show();
             }
             mVideoMetadata.setData(data);
 
