@@ -59,7 +59,7 @@ public class ManualVideoScrappingSearchFragment extends ManualScrappingSearchFra
         mVideo = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
                 ? getActivity().getIntent().getSerializableExtra(ManualVideoScrappingActivity.EXTRA_VIDEO, Video.class)
                 : (Video) getActivity().getIntent().getSerializableExtra(ManualVideoScrappingActivity.EXTRA_VIDEO);
-        mSearchInfo = SearchPreprocessor.instance().parseFileBased(mVideo.getUri(), mVideo.getName()!=null&&!mVideo.getName().isEmpty()? Uri.parse("/"+mVideo.getName()):mVideo.getUri());
+        mSearchInfo = SearchPreprocessor.instance().parseFileBasedWithTitleFallback(mVideo.getUri(), mVideo.getName());
 
         // Start a search using the search suggestion. It makes it easy for the user to edit it for typo if needed
         // Allow often the second or third suggestion is the right one

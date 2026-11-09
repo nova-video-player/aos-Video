@@ -313,7 +313,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
         {
             if (log.isDebugEnabled()) log.debug("setupIfReady: READY!");
 
-            mSearchInfo = SearchPreprocessor.instance().parseFileBased(mUri, mTitle!=null&&!mTitle.isEmpty()?Uri.parse("/"+mTitle):mUri);
+            mSearchInfo = SearchPreprocessor.instance().parseFileBasedWithTitleFallback(mUri, mTitle);
             String searchText = mSearchInfo.getSearchSuggestion();
             mCustomSearchEditText.setText(searchText);
             mCustomSearchEditText.setSelection(searchText.length());
@@ -475,7 +475,7 @@ public class VideoInfoScraperSearchFragment extends Fragment implements  Handler
                 String search = mCustomSearchEditText.getText().toString();
                 SearchInfo searchInfo = mSearchInfo;
                 if (searchInfo == null) {
-                    searchInfo = SearchPreprocessor.instance().parseFileBased(mUri, mTitle!=null&&!mTitle.isEmpty()?Uri.parse("/"+mTitle):mUri);
+                    searchInfo = SearchPreprocessor.instance().parseFileBasedWithTitleFallback(mUri, mTitle);
                 }
                 searchInfo.setUserInput(search);
 
