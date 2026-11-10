@@ -316,6 +316,10 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
         picker.setStep(slider ? SLIDER_TV_STEP : s.step); // the picker works in hundredths
         picker.setMin(s.min * 100);
         picker.setMax(s.max * 100);
+        if (row.signed) {            // a position around 0: OK must not flip the sign, and holding must not jump x100
+            picker.setOkReversesSign(false);
+            picker.setHoldRamp(true);
+        }
         mMenu.addTVMenuItem(picker);
         picker.setTextViewWidth(mPickerWidth);
         picker.setUpdateText(false);
@@ -428,6 +432,10 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
             mManager = manager;
             setFocusable(false);
             setBackgroundResource(R.drawable.subtitle_preview_bg);
+            // The sample shows the text style: nothing to preview when there is no track, or the track
+            // is an image or unsupported format (the 3D copy is built from the same manager, so it is
+            // hidden too)
+            if (!SubtitleManager.supportsUserStyle(manager.getSubtitleKind())) setVisibility(GONE);
             mView = new SubtitlePreviewView(context);
             mView.bind(manager, manager::getScreenShortSide);
             final int minHeight = context.getResources()

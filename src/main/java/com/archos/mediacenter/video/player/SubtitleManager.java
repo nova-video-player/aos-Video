@@ -57,6 +57,7 @@ public class SubtitleManager {
     private int                 mScreenWidth;
     private int                 mScreenHeight;
     private int                 mSubtitleVPos = 10;
+    private int                 mGfxVPos = 0;       // -100..100, see KEY_GFX_VPOS
     private int                 mSubtitleEvadedVPos;
     private boolean mGLEngineActive = false;
     // ------------------------------------------------------------------------------------
@@ -170,9 +171,21 @@ public class SubtitleManager {
     public static final String KEY_FONT_SCALE       = "pref_play_subtitle_font_scale_key";
 
     /**
+     * The vertical position of image subtitles (PGS/VobSub), kept apart from the text one
+     * (KEY_VPOS) because they mean different things: text is an absolute gap above the bottom
+     * (0..255, up to a third of the screen), image subtitles a signed shift from where they are
+     * placed (-100..100, 0 = placed, positive up). Deliberately NOT in STYLE_KEYS: resetting the
+     * text style must not move image subtitles, and resetting those leaves the text style alone.
+     */
+    public static final String KEY_GFX_VPOS         = "pref_play_subtitle_gfx_vpos_key";
+    public static final int    GFX_VPOS_MIN         = -100;
+    public static final int    GFX_VPOS_MAX         = 100;
+
+    /**
      * Every preference that makes up the user's style. To reset to the defaults, remove these
      * from the preferences and call restoreStyle() (then apply the vertical position the same
      * way startup does): every key is gone, so everything falls back to its default.
+     * (The image-subtitle position, KEY_GFX_VPOS, is reset on its own: see resetGfxVerticalPosition().)
      */
     public static final java.util.List<String> STYLE_KEYS = java.util.Collections.unmodifiableList(
             java.util.Arrays.asList(KEY_VPOS, KEY_COLOR, KEY_BG_OPACITY, KEY_BG_MODE, KEY_OVERRIDE_MODE,
@@ -223,8 +236,10 @@ public class SubtitleManager {
     /**
      * Applies the saved style, falling back to the default for anything never saved. This is
      * also how a reset works: remove STYLE_KEYS from the preferences first.
-     * Does not touch the vertical position: callers apply it themselves because it is track-kind
-     * aware (and scaled in multi-window); read it with KEY_VPOS and getDefaults().vpos.
+     * Does not touch the TEXT vertical position: callers apply it themselves because it is
+     * track-kind aware (and scaled in multi-window); read it with KEY_VPOS and getDefaults().vpos.
+     * The image-subtitle position (KEY_GFX_VPOS) has neither of those complications, so it is
+     * restored here; it is not part of STYLE_KEYS, so a text-style reset leaves it as it was.
      * The order is the one the engine has always been fed.
      */
     public void restoreStyle(SharedPreferences prefs) {
@@ -243,6 +258,7 @@ public class SubtitleManager {
         setOutlineWidth(prefs.getFloat(KEY_OUTLINE_WIDTH, d.outlineWidth));
         setShadowWidth(prefs.getFloat(KEY_SHADOW_WIDTH, d.shadowWidth));
         setPadding(prefs.getFloat(KEY_PADDING, d.padding));
+        restoreGfxVerticalPosition(prefs);
     }
 
     private boolean mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
@@ -653,13 +669,57 @@ public class SubtitleManager {
         return mSubtitleVPos;
     }
 
+    private static int clampGfxVPos(int pos) {
+        return Math.max(GFX_VPOS_MIN, Math.min(GFX_VPOS_MAX, pos));
+    }
+
+    /** The user's image-subtitle position, -100..100 (0 = where it is placed, positive = up). */
+    public int getGfxVerticalPosition() {
+        return mGfxVPos;
+    }
+
+    /**
+     * What an image-subtitle position that was never saved falls back to. Shares the text
+     * position's default (res/values/config.xml), which is 0: not moved.
+     */
+    public int getGfxVerticalPositionDefault() {
+        return clampGfxVPos(mDefaults.vpos);
+    }
+
+    /**
+     * Sets the image-subtitle (PGS/VobSub) position: -100..100, 0 = the placement the renderer
+     * computes, positive moves the cue up, negative down. Relative to that placement, so it
+     * never depends on where the cue starts: +100 takes it to the top margin of the subtitle
+     * canvas and -100 to the bottom margin, in between is that fraction of the distance
+     * available in that direction (so a cue already at a margin cannot move towards it).
+     * The playback controls are cleared afterwards and do not change what a value means.
+     * Takes effect on image subtitles only.
+     */
+    public void setGfxVerticalPosition(int pos) {
+        mGfxVPos = clampGfxVPos(pos);
+        applyNativeVerticalOffset();
+    }
+
+    /** Applies the saved image-subtitle position (the default if never saved). */
+    public void restoreGfxVerticalPosition(SharedPreferences prefs) {
+        setGfxVerticalPosition(prefs.getInt(KEY_GFX_VPOS, getGfxVerticalPositionDefault()));
+    }
+
+    /** Forgets the saved image-subtitle position and applies the default. Text style is untouched. */
+    public void resetGfxVerticalPosition(SharedPreferences prefs) {
+        prefs.edit().remove(KEY_GFX_VPOS).apply();
+        restoreGfxVerticalPosition(prefs);
+    }
+
     /**
      * Animates the Alpha
      * @param fadeIn true to fade in, false to fade out
      */
     public void fadeSubtitlePositionHint (boolean fadeIn) {
         if (log.isDebugEnabled()) log.debug("fadeSubtitlePositionHint: {}", fadeIn);
-        if (mSubtitleSpacer == null)
+        // The hint is a line at the TEXT position's height, which means nothing for image
+        // subtitles (a different, relative setting): never show it for them.
+        if (mSubtitleSpacer == null || isGraphic())
             return;
         if (fadeIn) {
             mSubtitleSpacer.animate().alpha(1).setDuration(100);
@@ -799,6 +859,11 @@ public class SubtitleManager {
                     mSubtitleEvadedVPos, obstruction, graphic, offset, bottomInset);
         Player.sPlayer.getSubtitleEngine().setVerticalOffset(offset);
         Player.sPlayer.getSubtitleEngine().setBottomInset(bottomInset);
+        // The user's image-subtitle position is a unitless value relative to the placement native
+        // computes (+100 = top margin, -100 = bottom margin of the subtitle canvas); native works
+        // out the distance itself. Sent whatever the current track is, so a bitmap track opened
+        // later starts with it; text backends ignore it.
+        Player.sPlayer.getSubtitleEngine().setGfxPosition(mGfxVPos);
     }
 
 }

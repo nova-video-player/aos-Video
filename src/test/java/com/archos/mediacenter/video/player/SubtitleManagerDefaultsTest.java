@@ -128,9 +128,71 @@ public class SubtitleManagerDefaultsTest {
         }
     }
 
+    // ---- the image-subtitle (PGS/VobSub) position: -100..100, its own preference ----------------
+
+    @Test
+    public void gfxPositionNeverSavedIsTheSharedDefault() {
+        mManager.setGfxVerticalPosition(55); // something else first, so the restore really has to write
+        mManager.restoreStyle(mPrefs);
+        assertEquals(mManager.getGfxVerticalPositionDefault(), mManager.getGfxVerticalPosition());
+        assertEquals(0, mManager.getGfxVerticalPosition()); // config.xml: the text default is 0 too
+    }
+
+    @Test
+    public void gfxPositionSavedWinsAndIsClamped() {
+        mPrefs.edit().putInt(SubtitleManager.KEY_GFX_VPOS, -30).commit();
+        mManager.restoreStyle(mPrefs);
+        assertEquals(-30, mManager.getGfxVerticalPosition());
+
+        mPrefs.edit().putInt(SubtitleManager.KEY_GFX_VPOS, 5000).commit();
+        mManager.restoreStyle(mPrefs);
+        assertEquals(SubtitleManager.GFX_VPOS_MAX, mManager.getGfxVerticalPosition());
+
+        mManager.setGfxVerticalPosition(-5000);
+        assertEquals(SubtitleManager.GFX_VPOS_MIN, mManager.getGfxVerticalPosition());
+    }
+
+    @Test
+    public void gfxPositionIsNotPartOfTheTextStyleReset() {
+        assertTrue(!SubtitleManager.STYLE_KEYS.contains(SubtitleManager.KEY_GFX_VPOS));
+        mPrefs.edit()
+                .putInt(SubtitleManager.KEY_FONT_SIZE_PT, 99)
+                .putInt(SubtitleManager.KEY_GFX_VPOS, -30)
+                .commit();
+        mManager.restoreStyle(mPrefs);
+
+        SharedPreferences.Editor e = mPrefs.edit();
+        for (String key : SubtitleManager.STYLE_KEYS) e.remove(key);
+        e.commit();
+        mManager.restoreStyle(mPrefs);
+
+        assertStyleIsDefaults();                                   // the text style is reset...
+        assertEquals(-30, mManager.getGfxVerticalPosition());       // ...the image-subtitle position is not
+        assertEquals(-30, mPrefs.getInt(SubtitleManager.KEY_GFX_VPOS, 0));
+    }
+
+    @Test
+    public void resettingTheGfxPositionLeavesTheTextStyleAlone() {
+        mPrefs.edit()
+                .putInt(SubtitleManager.KEY_FONT_SIZE_PT, 99)
+                .putBoolean(SubtitleManager.KEY_BOLD, true)
+                .putInt(SubtitleManager.KEY_GFX_VPOS, 40)
+                .commit();
+        mManager.restoreStyle(mPrefs);
+        assertEquals(40, mManager.getGfxVerticalPosition());
+
+        mManager.resetGfxVerticalPosition(mPrefs);
+
+        assertEquals(mManager.getGfxVerticalPositionDefault(), mManager.getGfxVerticalPosition());
+        assertTrue(!mPrefs.contains(SubtitleManager.KEY_GFX_VPOS));  // durable: nothing saved is left
+        assertEquals(99, mManager.getFontSizePt());                  // the text style is untouched
+        assertEquals(true, mManager.getBold());
+    }
+
     @Test
     public void preferenceKeysNeverChangeAndPlayerActivityAliasesThem() {
         // These strings are what is stored on users' devices.
+        assertEquals("pref_play_subtitle_gfx_vpos_key", SubtitleManager.KEY_GFX_VPOS);
         assertEquals("pref_play_subtitle_vpos_key", SubtitleManager.KEY_VPOS);
         assertEquals("pref_play_subtitle_color_key", SubtitleManager.KEY_COLOR);
         assertEquals("subtitle_bg_opacity", SubtitleManager.KEY_BG_OPACITY);
