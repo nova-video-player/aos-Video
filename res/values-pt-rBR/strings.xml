@@ -526,7 +526,7 @@
     <string name="favSubLang_title">Idioma de leitura das legendas</string>
     <string name="favSubLang_summary">Escolha seu idioma preferido para a leitura de legendas.</string>
     <string name="subtitles_show_full_for_local_audio_title">Mostrar legendas para áudio de idioma local</string>
-    <string name="subtitles_show_full_for_local_audio_summary">Desligado por padrão, então apenas a seleção automática de legendas forçadas quando o áudio corresponder ao idioma da legenda; habilite também para selecionar automaticamente legendas completas</string>
+    <string name="subtitles_show_full_for_local_audio_summary">Desativado por padrão, portanto apenas legendas forçadas são selecionadas automaticamente quando o áudio corresponde ao idioma da legenda; ative para selecionar automaticamente também legendas completas.</string>
     <string name="favAudioLang_title">Idioma de áudio preferido</string>
     <string name="favAudioLang_summary">Escolha seu idioma preferido para a faixa de áudio.</string>
     <string name="prefer_original_audio_track_title">Preferir faixa de áudio original</string>
@@ -927,6 +927,8 @@
     <string name="not_available_during_media_scanning">Indisponível durante a verificação de mídia.</string>
     <string name="remove_from_list">Remover da lista</string>
     <string name="warning_swdec">Aviso: decodificação por hardware desativada!</string>
+    <string name="video_software_fallback">Falha na decodificação de hardware. Usando o decodificador de software; a reprodução pode travar.</string>
+    <string name="video_dovi_color_fallback">O perfil de cor Dolby Vision não é suportado. Reproduzindo de qualquer maneira; as cores podem estar incorretas.</string>
     <string name="list_title">Título da lista</string>
     <string name="loading">Carregando…</string>
     <string name="refreshrate_failed">Falha ao definir a taxa de atualização desejada</string>
@@ -975,7 +977,7 @@
     <string name="subtitle_panel_caption_scale">Mantém o estilo do arquivo e dimensiona apenas seu tamanho de texto.</string>
     <!-- Notes shown instead of rows when settings cannot apply -->
     <string name="subtitle_panel_note_plain_text">Legendas de texto simples sempre usam seu estilo.</string>
-    <string name="subtitle_panel_note_graphic">As configurações não estão disponíveis para legendas de imagem.</string>
+    <string name="subtitle_panel_note_graphic">A estilização de texto não está disponível para legendas de imagem. Você ainda pode movê-las para cima ou para baixo; elas param nas bordas da tela e ficam acima dos controles de reprodução, assim o controle deslizante pode deixar de ter efeito antes do fim.</string>
     <string name="subtitle_panel_note_unsupported">Este formato de legenda não pode ser estilizado.</string>
     <string name="subtitle_panel_note_none">Nenhuma legenda selecionada.</string>
     <!-- Basic rows -->

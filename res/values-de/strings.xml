@@ -272,6 +272,7 @@
     <string name="pref_play_mode_entry_binge">Binge Watching</string>
     <string name="pref_introdb_autoskip_title">Intro/Outro überspringen</string>
     <string name="introdb_autoskip">Automatisch überspringen</string>
+    <string name="introdb_skipped_format">übersprungen: %1$s</string>
     <string name="introdb_segment_intro">Intro</string>
     <string name="introdb_segment_recap">Zusammenfassung</string>
     <string name="introdb_segment_outro">Outro</string>
@@ -279,6 +280,10 @@
     <string name="introdb_segment_preview">Vorschau</string>
     <string name="introdb_segment_end">Ende</string>
     <!-- Skip prompt button labels, shown over the video; keep them short. -->
+    <string name="skip_intro_button">Intro überspringen</string>
+    <string name="skip_recap_button">Zusammenfassung überspringen</string>
+    <string name="skip_credits_button">Abspann überspringen</string>
+    <string name="skip_preview_button">Vorschau überspringen</string>
     <string name="pref_audio_parameters_title">Sound</string>
     <string name="pref_audio_filt_title">Lautstärke erhöhen</string>
     <string name="pref_audio_filt_night_mode">Nachtmodus</string>
@@ -441,7 +446,7 @@
     <string name="rescan_indexed_folders">Alle indexierten Ordner erneut scannen</string>
     <string name="last_rescan_never">Niemals</string>
     <string name="upnp_indexing_warning_title">UPnP-Indexierung</string>
-    <string name="upnp_indexing_warning_message">UPnP-Indexierung ermöglicht nicht so viele Features wie SMB-Indexierung.\nEs wird empfohlen stattdessen SMB-Ordner zu indexieren, wenn der Server oder PC dies unterstützen.\n</string>
+    <string name="upnp_indexing_warning_message">Die UPnP-Indizierung bietet weniger Funktionen als die SMB-Indizierung.\nEs wird empfohlen, stattdessen einen SMB-Ordner zu indizieren, sofern Ihr Server oder PC dies unterstützt.\n</string>
     <string name="ssh_remote_address">Remote-Adresse</string>
     <string name="ssh_port">Port</string>
     <string name="ssh_password">Passwort</string>
@@ -509,6 +514,11 @@
     <string name="category_languages">Untertitel</string>
     <string name="subtitles_hide_default">Untertitel standardmäßig ausblenden</string>
     <string name="subtitles_hide_default_summary">Standardmäßig normale Untertitel ausblenden, passende erzwungene Untertitel werden möglicherweise weiterhin angezeigt</string>
+    <string name="subtitle_use_margins_title">Untertitel in schwarzen Balken darstellen</string>
+    <string name="subtitle_use_margins_summary">Untertitel im Letterbox-Bereich unterhalb des Bildes anzeigen, anstatt sie über das Video zu legen</string>
+    <string name="subtitle_fonts_folder_title">Ordner für benutzerdefinierte Schriftarten</string>
+    <string name="subtitle_fonts_folder_summary">Wähle einen Ordner mit .ttf/.otf/.ttc-Schriftarten aus, die für Untertitel verwendet werden sollen anstelle der integrierten Schriftarten</string>
+    <string name="subtitle_default_font_title">Standardschriftart für Untertitel</string>
     <string name="subtitles_credentials_title">OpenSubtitles-Anmeldedaten</string>
     <string name="subtitles_credentials_summary">Geben Sie Ihre Zugangsdaten für opensubtitles.com in den Einstellungen an, um Untertitel herunterladen zu können</string>
     <string name="preferences_languages">Download-Sprachen für Untertitel</string>
@@ -589,20 +599,20 @@
     <string name="network_thumbnails">Remote-Thumbnails erstellen</string>
     <string name="network_thumbnails_summary">Erstellen Sie Thumbnails von Remote-Videos, wenn kein Poster zur Verfügung steht</string>
     <string name="network_bookmarks_summary">Wenn möglich, Fortsetzungspunkte und Lesezeichen auf Netzwerkfreigaben speichern</string>
-    <string name="share_folders_smbj">alternative SMB-Implementierung (SMB2+) nutzen</string>
-    <string name="share_folders_smbj_summary">Aktiviert alternative SMB-Implementierung, beschränkt Unterstützung auf Protokolle ab Version 2. Warnung: Kann auf einigen Geräten langsamer sein.</string>
+    <string name="share_folders_smbj">Alternative SMB-Implementierung verwenden (SMB2+)</string>
+    <string name="share_folders_smbj_summary">Aktivierung einer alternativen SMB-Implementierung, die die Unterstützung auf Protokollversionen ab 2 beschränkt. Warnung: Kann auf manchen Geräten zu einer geringeren Geschwindigkeit führen.</string>
     <string name="share_folders_sshj">Neuere SFTP-Implementierung verwenden</string>
     <string name="share_folders_sshj_summary">Neue SFTP-Implementierung für SFTP-Links aktivieren</string>
-    <string name="share_folders_smbv2">SMBv2 Unterstützung aktivieren</string>
-    <string name="share_folders_smbv2_summary">Unterstützung des SMB-Protokolls Version 2 für Netzwerkfreigaben aktivieren</string>
-    <string name="share_folders_smb_resolv">Reihenfolge SMB Namensauflösung</string>
-    <string name="share_folders_smb_resolv_summary">Aktivieren Sie BCAST, DNS (Standard: DNS, BCAST). Ändern Sie dies, wenn Ihr Server nicht auflöst oder Sie langsames SMB erleben.</string>
+    <string name="share_folders_smbv2">SMBv2-Unterstützung aktivieren</string>
+    <string name="share_folders_smbv2_summary">Unterstützung für das SMB-Version-2-Protokoll bei Netzwerkfreigaben aktivieren</string>
+    <string name="share_folders_smb_resolv">Reihenfolge der SMB-Resolver</string>
+    <string name="share_folders_smb_resolv_summary">Aktivieren Sie BCAST, DNS (Standard: DNS, BCAST). Ändern Sie diese Einstellung, falls Ihr Server keine Namen auflösen kann oder die SMB-Verbindung langsam ist.</string>
     <string name="share_folders_smb_disable_tcp_discovery">SMB TCP-Erkennung deaktivieren</string>
-    <string name="share_folders_smb_disable_tcp_discovery_summary">TCP-Erkennung deaktivieren, wenn instabiles Wi-Fi auf einigen Geräten besteht.</string>
+    <string name="share_folders_smb_disable_tcp_discovery_summary">Deaktivieren Sie die TCP-Erkennung, falls bei einigen Geräten eine instabile WLAN-Verbindung auftritt.</string>
     <string name="share_folders_smb_disable_udp_discovery">SMB UDP-Erkennung deaktivieren</string>
-    <string name="share_folders_smb_disable_udp_discovery_summary">UDP-Erkennung deaktivieren, wenn instabiles Wi-Fi auf einigen Geräten (z.B. Fire 10 HD) besteht.</string>
+    <string name="share_folders_smb_disable_udp_discovery_summary">Deaktiviere die UDP-Erkennung, falls bei einigen Geräten (z. B. Fire 10 HD) eine instabile WLAN-Verbindung auftritt.</string>
     <string name="share_folders_smb_disable_mdns_discovery">SMB mDNS-Erkennung deaktivieren</string>
-    <string name="share_folders_smb_disable_mdns_discovery_summary">mDNS-Erkennung deaktivieren, wenn instabiles Wi-Fi auf einigen Geräten besteht.</string>
+    <string name="share_folders_smb_disable_mdns_discovery_summary">Deaktivieren Sie die mDNS-Erkennung, falls bei einigen Geräten eine instabile WLAN-Verbindung auftritt.</string>
     <string name="connection_abnormally_long">Die Verbindung dauert ungewöhnlich lange. Möchtest Du sie zurücksetzen?</string>
     <string name="connection_reset">Zurücksetzen</string>
     <!-- Info dialog, not indexed file -->
@@ -882,7 +892,7 @@
     <string name="db_export_manual_summary">media.db-Datei zu /sdcard für Debug-Zwecke exportieren</string>
     <string name="db_export_in_progress">Datenbankexport im Gange</string>
     <string name="media_library_export_title">Exportiere Medienbibliothek + Zugangsdaten + Verknüpfungen</string>
-    <string name="media_library_export_summary">Exportiere media.db, Netzwerk-Anmeldeinformationen (SMB/FTP/SFTP), Netzwerk-Verknüpfungen und alle zwischengespeicherten Bilder als Zip-Datei</string>
+    <string name="media_library_export_summary">Exportiere media.db, Netzwerkzugangsdaten (SMB/FTP/SFTP), Netzwerkverknüpfungen sowie alle zwischengespeicherten Bilder als ZIP-Datei</string>
     <string name="media_library_import_title">Importiere Medienbibliothek + Zugangsdaten + Verknüpfungen</string>
     <string name="media_library_import_summary">Importiere media.db, Netzwerk-Anmeldeinformationen, Netzwerk-Verknüpfungen und Bilder aus einer zuvor exportierten Zip-Datei im Cache</string>
     <string name="media_library_export_in_progress">Exportiere Medienbibliothek + Zugangsdaten + Verknüpfungen</string>
@@ -953,12 +963,50 @@
     <!-- ===== Subtitle settings panel ===== -->
     <string name="subtitle_sample_text">\"Beispiel\"</string>
     <!-- Titles -->
+    <string name="subtitle_panel_title">Untertiteleinstellungen</string>
+    <string name="subtitle_panel_advanced">Erweiterte Darstellung</string>
     <!-- Style mode (pills) and what each one means -->
+    <string name="subtitle_panel_style">Stil</string>
+    <string name="subtitle_panel_mode_file">Stil der Datei</string>
+    <string name="subtitle_panel_mode_custom">Benutzerdefiniert</string>
+    <string name="subtitle_panel_mode_scale">Nur Skala</string>
+    <string name="subtitle_panel_caption_file">Verwendet den Stil der Untertiteldatei selbst. Es muss nichts angepasst werden.</string>
+    <string name="subtitle_panel_caption_custom">Ihre Schriftart, Farben und Position ersetzen die der Datei.</string>
+    <string name="subtitle_panel_caption_scale">Behält den Stil der Datei bei und skaliert lediglich die Textgröße.</string>
     <!-- Notes shown instead of rows when settings cannot apply -->
+    <string name="subtitle_panel_note_plain_text">Unformatierte Untertitel verwenden stets deinen Stil.</string>
+    <string name="subtitle_panel_note_unsupported">Dieses Untertitelformat lässt sich nicht gestalten.</string>
+    <string name="subtitle_panel_note_none">Kein Untertitel ausgewählt.</string>
     <!-- Basic rows -->
+    <string name="subtitle_panel_font_size">Größe</string>
+    <string name="subtitle_panel_bold">Fett</string>
+    <string name="subtitle_panel_background">Hintergrund</string>
+    <string name="subtitle_panel_bg_off">Aus</string>
+    <string name="subtitle_panel_bg_line">Linie</string>
+    <string name="subtitle_panel_bg_box">Kasten</string>
+    <string name="subtitle_panel_vertical_position">Vertikale Position</string>
+    <string name="subtitle_panel_scale">Skala</string>
+    <string name="subtitle_panel_reset">Erscheinungsbild zurücksetzen</string>
+    <string name="subtitle_panel_reset_confirm_touch">Erneut tippen, um zurückzusetzen</string>
+    <string name="subtitle_panel_reset_confirm_tv">Erneut OK drücken, um zurückzusetzen</string>
     <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <string name="subtitle_panel_section_text">Text</string>
+    <string name="subtitle_panel_text_color">Textfarbe</string>
+    <string name="subtitle_panel_outline_width">Konturstärke</string>
+    <string name="subtitle_panel_outline_color">Konturfarbe</string>
+    <string name="subtitle_panel_shadow_width">Schattenbreite</string>
+    <string name="subtitle_panel_shadow_color">Schattenfarbe</string>
+    <string name="subtitle_panel_background_color">Hintergrundfarbe</string>
+    <string name="subtitle_panel_background_opacity">Hintergrund-Deckkraft</string>
+    <string name="subtitle_panel_padding">Innenabstand</string>
     <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <string name="subtitle_panel_preview_own_style">Der dateieigene Stil wird verwendet</string>
     <!-- Color screen -->
+    <string name="subtitle_panel_red">Rot</string>
+    <string name="subtitle_panel_green">Grün</string>
+    <string name="subtitle_panel_blue">Blau</string>
     <!-- Value formats -->
     <!-- Accessibility -->
+    <string name="subtitle_panel_decrease">Verringern</string>
+    <string name="subtitle_panel_increase">Erhöhen</string>
 </resources>

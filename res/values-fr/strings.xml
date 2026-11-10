@@ -927,6 +927,8 @@
     <string name="not_available_during_media_scanning">Indisponible pendant le scan des médias.</string>
     <string name="remove_from_list">Retirer de la liste</string>
     <string name="warning_swdec">Attention: décodage matériel désactivé!</string>
+    <string name="video_software_fallback">Échec du décodage matériel. Utilisation du décodage logiciel; la lecture peut être saccadée.</string>
+    <string name="video_dovi_color_fallback">Le profil colorimétrique Dolby Vision n’est pas pris en charge. La lecture se poursuit, mais les couleurs peuvent être incorrectes.</string>
     <string name="list_title">Liste de titres</string>
     <string name="loading">Chargement en cours…</string>
     <string name="refreshrate_failed">Impossible de définir le taux de rafraîchissement désiré</string>
@@ -974,7 +976,7 @@
     <string name="subtitle_panel_caption_scale">Conserve le style du fichier et n\'adapte que la taille du texte.</string>
     <!-- Notes shown instead of rows when settings cannot apply -->
     <string name="subtitle_panel_note_plain_text">Les sous-titres en texte brut utilisent toujours votre style.</string>
-    <string name="subtitle_panel_note_graphic">Les réglages ne sont pas disponibles pour les sous-titres image.</string>
+    <string name="subtitle_panel_note_graphic">Le style du texte n\'est pas disponible pour les sous-titres image. Vous pouvez toujours les déplacer vers le haut ou le bas ; ils s\'arrêtent aux bords de l\'écran et restent au-dessus des commandes de lecture, donc le curseur peut cesser d\'avoir un effet avant la fin de sa course.</string>
     <string name="subtitle_panel_note_unsupported">Ce format de sous-titres ne peut pas être personnalisé.</string>
     <string name="subtitle_panel_note_none">Aucun sous-titre sélectionné.</string>
     <!-- Basic rows -->

@@ -843,6 +843,8 @@
     <string name="no_list_detected">Jelenleg nem található lista. A lista létrehozható új elemek hozzáadásával közvetlenül a videó információiból, vagy szinkronizálható trakt-fiókoddal.</string>
     <string name="remove_from_list">Eltávolítás a listából</string>
     <string name="warning_swdec">Figyelem: hardveres dekódolás kikapcsolva!</string>
+    <string name="video_software_fallback">A hardveres dekódolás sikertelen. Átváltva szoftveres dekódolásra; a lejátszás akadozhat.</string>
+    <string name="video_dovi_color_fallback">A Dolby Vision színprofil nem támogatott. Lejátszás folytatása; a színek eltérhetnek az eredetitől.</string>
     <string name="list_title">Lista címe</string>
     <string name="loading">Betöltés…</string>
     <string name="refreshrate_failed">Hiba a kívánt frissítési érték beállítása közben</string>
@@ -869,6 +871,7 @@
     <!-- Titles -->
     <!-- Style mode (pills) and what each one means -->
     <!-- Notes shown instead of rows when settings cannot apply -->
+    <string name="subtitle_panel_note_graphic">A képfeliratok stílusa nem módosítható. Feljebb vagy lejjebb mozgathatók, de a képernyő szélénél megállnak és a lejátszásvezérlők fölött maradnak, tehát a csúszka a végállás előtt hatástalanná válhat.</string>
     <!-- Basic rows -->
     <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
     <!-- Preview strip when the file's own style is in force (it cannot be known here) -->

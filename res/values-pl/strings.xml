@@ -185,7 +185,7 @@
     <string name="scrap_enable_network_first">"Aby uruchomić tę aplikację, najpierw połącz się z siecią."</string>
     <string name="scrap_failed">Nie znaleziono filmu w bazie danych.</string>
     <string name="start_auto_scraper_activity">Wyszukaj informacje w internecie</string>
-    <string name="scraper_settigns">Plakat &amp; opis</string>
+    <string name="scraper_settigns">Plakaty i opisy</string>
     <string name="scrap_status_initial">W kolejce</string>
     <string name="scrap_status_busy">Wyszukiwanie…</string>
     <string name="scrap_status_success">Zaktualizowano</string>
@@ -278,8 +278,8 @@
     <string name="pref_play_mode_entry_repeat_folder">Powtórz folder</string>
     <string name="pref_play_mode_entry_repeat_single">Potwórz pojedynczy</string>
     <string name="pref_play_mode_entry_binge">Odcinek po odcinku</string>
-    <string name="pref_introdb_autoskip_title">Pomiń segmenty</string>
-    <string name="introdb_autoskip">Autopomijanie</string>
+    <string name="pref_introdb_autoskip_title">Przycisk pomijania</string>
+    <string name="introdb_autoskip">Pomiń automatycznie</string>
     <string name="introdb_skipped_format">Pominięto: %1$s</string>
     <string name="introdb_segment_intro">Wstęp</string>
     <string name="introdb_segment_recap">Podsumowanie</string>
@@ -582,7 +582,7 @@
     <string name="notifications_all">Wszystkie powiadomienia</string>
     <string name="notifications_alerts">Tylko powiadomienia</string>
     <string name="notifications_none">Brak powiadomień</string>
-    <string name="pref_format_mode_title">Format</string>
+    <string name="pref_format_mode_title">Proporcje ekranu</string>
     <string name="format_fullscreen">Pełny ekran</string>
     <string name="format_optimized">Zoptymalizowany</string>
     <string name="format_original">Oryginalny</string>
@@ -941,7 +941,7 @@
     <string name="sponsor">Wesprzyj Nova</string>
     <string name="enable_sponsor_title">Włącz link sponsora Nova</string>
     <string name="enable_sponsor_summary">Włącz link sponsora dla darowizn: każda pomoc jest ważna.</string>
-    <string name="version_open_store_summary">Wybierz, aby otworzyć sklep</string>
+    <string name="version_open_store_summary">Wybierz, aby przejść do sklepu</string>
     <string name="hdr_capability">Funkcje ekranu HDR:</string>
     <string name="hdmi_audio_capabilities">Funkcje audio odbiornika HDMI:</string>
     <string name="spdif_audio_capabilities">Możliwości audio S/PDIF:</string>
@@ -983,7 +983,7 @@
     <string name="subtitle_panel_caption_scale">Zachowuje styl pliku, zmieniając jedynie rozmiar tekstu.</string>
     <!-- Notes shown instead of rows when settings cannot apply -->
     <string name="subtitle_panel_note_plain_text">Napisy w formacie zwykłego tekstu zawsze wykorzystują twój styl.</string>
-    <string name="subtitle_panel_note_graphic">Ustawienia nie są dostępne dla tego typu napisów.</string>
+    <string name="subtitle_panel_note_graphic">Stylizacja tekstu nie jest dostępna dla napisów obrazkowych. Nadal możesz przesuwać je w górę lub w dół; zatrzymują się przy krawędziach ekranu i pozostają nad elementami sterowania odtwarzaniem, więc suwak może przestać działać przed osiągnięciem końca zakresu.</string>
     <string name="subtitle_panel_note_unsupported">Tego formatu napisów nie można stylizować.</string>
     <string name="subtitle_panel_note_none">Nie wybrano napisów.</string>
     <!-- Basic rows -->

@@ -935,6 +935,8 @@
     <string name="not_available_during_media_scanning">Túto funkciu nie je možné používať počas skenovania médií.</string>
     <string name="remove_from_list">Odstrániť zo zoznamu</string>
     <string name="warning_swdec">Varovanie: hardvérové dekódovanie je vypnuté!</string>
+    <string name="video_software_fallback">Hardvérové dekódovanie zlyhalo. Používa sa softvérové dekódovanie; prehrávanie môže byť prerušované.</string>
+    <string name="video_dovi_color_fallback">Farebný profil Dolby Vision nie je podporovaný. Prehrávanie sa aj tak spustí; farby môžu byť nesprávne.</string>
     <string name="list_title">Názov zoznamu</string>
     <string name="loading">Načítava sa…</string>
     <string name="refreshrate_failed">Nepodarilo sa nastaviť požadovanú obnovovaciu frekvenciu</string>
@@ -983,7 +985,7 @@
     <string name="subtitle_panel_caption_scale">Zachová štýl zo súboru a upraví iba veľkosť textu.</string>
     <!-- Notes shown instead of rows when settings cannot apply -->
     <string name="subtitle_panel_note_plain_text">Titulky vo formáte čistého textu vždy používajú štýl, ktorý nastavíte.</string>
-    <string name="subtitle_panel_note_graphic">Nastavenia nie sú dostupné pre obrazové titulky.</string>
+    <string name="subtitle_panel_note_graphic">Štýl textu nie je dostupný pre obrazové titulky. Stále ich môžete posúvať nahor alebo nadol; zastavia sa na okrajoch obrazovky a zostanú nad ovládacími prvkami prehrávania, takže posúvač môže prestať mať účinok skôr, než dosiahne koniec.</string>
     <string name="subtitle_panel_note_unsupported">Tento formát titulkov sa nedá upraviť štýlom.</string>
     <string name="subtitle_panel_note_none">Nie sú vybraté žiadne titulky.</string>
     <!-- Basic rows -->

@@ -971,7 +971,7 @@
     <string name="subtitle_panel_caption_scale">保留文件原有样式，仅缩放文字大小。</string>
     <!-- Notes shown instead of rows when settings cannot apply -->
     <string name="subtitle_panel_note_plain_text">纯文本字幕将始终使用你的样式。</string>
-    <string name="subtitle_panel_note_graphic">图像字幕无法应用设置项。</string>
+    <string name="subtitle_panel_note_graphic">图像字幕无法设置文字样式，但仍可上下移动位置；字幕会停在屏幕边缘，并保持在播放控件上方，因此滑块可能在到达末端之前就不再起作用。</string>
     <string name="subtitle_panel_note_unsupported">该字幕格式不支持样式设置。</string>
     <string name="subtitle_panel_note_none">未选择字幕。</string>
     <!-- Basic rows -->

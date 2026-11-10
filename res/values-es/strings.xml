@@ -927,6 +927,8 @@
     <string name="not_available_during_media_scanning">No disponible durante la exploración de medios.</string>
     <string name="remove_from_list">Eliminar de la lista</string>
     <string name="warning_swdec">Advertencia: ¡La descodificación por hardware está desactivada!</string>
+    <string name="video_software_fallback">La decodificación por hardware falló. Usando decodificación por software; la reproducción puede tironear.</string>
+    <string name="video_dovi_color_fallback">El perfil de color de Dolby Vision no es compatible. Reproduciendo de todos modos; los colores pueden ser incorrectos.</string>
     <string name="list_title">Título de la lista</string>
     <string name="loading">Cargando…</string>
     <string name="refreshrate_failed">Error al establecer la tasa de refresco deseada</string>
@@ -975,7 +977,7 @@
     <string name="subtitle_panel_caption_scale">Mantiene el estilo del archivo y sólo escala su tamaño de texto.</string>
     <!-- Notes shown instead of rows when settings cannot apply -->
     <string name="subtitle_panel_note_plain_text">Los subtítulos de texto plano siempre usan tu estilo.</string>
-    <string name="subtitle_panel_note_graphic">Los ajustes no están disponibles para subtítulos de imágenes.</string>
+    <string name="subtitle_panel_note_graphic">El estilo de texto no está disponible para subtítulos de imágenes. Aún puedes moverlos hacia arriba o abajo; se detienen en los bordes de la pantalla y se mantienen por encima de los controles de reproducción, por lo que el deslizador puede dejar de tener efecto antes de que termine.</string>
     <string name="subtitle_panel_note_unsupported">Este formato de subtítulos no soporta estilos.</string>
     <string name="subtitle_panel_note_none">Ningún subtítulo seleccionado.</string>
     <!-- Basic rows -->
