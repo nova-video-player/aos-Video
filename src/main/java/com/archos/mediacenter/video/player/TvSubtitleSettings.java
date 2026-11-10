@@ -432,9 +432,10 @@ public class TvSubtitleSettings implements SubtitleSettingsModel.Listener {
             mManager = manager;
             setFocusable(false);
             setBackgroundResource(R.drawable.subtitle_preview_bg);
-            // The sample shows the text style, which image subtitles don't have: nothing to preview
-            // (the 3D copy is built from the same manager, so it is hidden too)
-            if (manager.getSubtitleKind() == SubtitleManager.KIND_GRAPHIC) setVisibility(GONE);
+            // The sample shows the text style: nothing to preview when there is no track, or the track
+            // is an image or unsupported format (the 3D copy is built from the same manager, so it is
+            // hidden too)
+            if (!SubtitleManager.supportsUserStyle(manager.getSubtitleKind())) setVisibility(GONE);
             mView = new SubtitlePreviewView(context);
             mView.bind(manager, manager::getScreenShortSide);
             final int minHeight = context.getResources()

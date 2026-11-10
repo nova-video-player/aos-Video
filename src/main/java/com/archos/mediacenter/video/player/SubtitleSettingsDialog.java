@@ -85,8 +85,9 @@ public class SubtitleSettingsDialog extends AlertDialog
         final View view = LayoutInflater.from(themed).inflate(R.layout.subtitle_settings_dialog, null);
         mPreview = view.findViewById(R.id.sp_preview);
         mPreview.bind(mSubtitleManager, mSubtitleManager::getScreenShortSide);
-        // The sample shows the text style, which image subtitles don't have: nothing to preview
-        if (mSubtitleManager.getSubtitleKind() == SubtitleManager.KIND_GRAPHIC) mPreview.setVisibility(View.GONE);
+        // The sample shows the text style: nothing to preview when there is no track, or the track is
+        // an image or unsupported format (the panel then only shows a note, or just the position)
+        if (!SubtitleManager.supportsUserStyle(mSubtitleManager.getSubtitleKind())) mPreview.setVisibility(View.GONE);
         mScroll = view.findViewById(R.id.sp_scroll);
         mBack = view.findViewById(R.id.sp_back);
         mBack.setText(context.getString(R.string.back_to_title, context.getString(mModel.getTitleRes(null))));
