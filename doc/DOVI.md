@@ -11,13 +11,14 @@ the bitstream, and why. Native code lives in `native/avos`
 - Hardware decoding only. No CPU color conversion, no CPU frame copies.
 - Correct DV colors need either a DV decoder (the device does the Dolby
   processing) or a base layer the display understands (HDR10, HLG, SDR).
-- NOVA only edits metadata in the compressed stream; it never processes pixels.
+- NOVA edits metadata in the compressed stream; it processes pixels only for
+  Profile 5 without a DV decoder, on the GPU (see below).
 
 ## Profiles
 
 | Profile | Layers | Base layer | Without a DV decoder |
 | --- | --- | --- | --- |
-| 5 | single, IPTPQc2 | none usable | wrong colors (warning toast) |
+| 5 | single, IPTPQc2 | none usable | GPU reshaping (below) |
 | 7 MEL / FEL | base + enhancement + RPU | HDR10 (CCID 6) | HDR10 |
 | 8.1 / 8.2 / 8.4 | single + RPU | HDR10 / SDR / HLG | base format |
 | 9 (AVC), 10 (AV1) | single + RPU | per CCID | base format if compatible |
@@ -74,6 +75,21 @@ prefix or Annex B). Any parse or write failure keeps the original packet.
   some displays from entering DV (#1980, #1503). Restored when playback falls
   back to the base codec so HDR10 output keeps HDR10+.
 
+## Profile 5 without a DV decoder: GPU reshaping
+
+- **When:** HEVC Profile 5 and no DV decoder is selected (none on the device,
+  or mode Off), Android 8.0+, with libdovi.
+- **What:** the hardware HEVC decoder renders into an image reader; a GL thread
+  applies each frame's RPU (luma/chroma curves, MMR, IPT to RGB) and presents
+  BT.2020 PQ with the mastering metadata, or tone maps to SDR BT.709 when the
+  display has no HDR or no PQ surface. Zero copy; frames are presented at the
+  codec's time. Engine details: `native/avos/doc/dovi.md`.
+- **Thumbnails:** reshaped on the CPU from FFmpeg's decode, SDR.
+- **Fallback:** direct rendering with the color warning when the GPU path
+  cannot start (no EGL support, or a decoder that rejects the image reader,
+  e.g. MediaTek OMX on Fire TV with DV Off). On Fire TV keep Auto: its DV
+  decoder handles Profile 5.
+
 ## Fallbacks
 
 - DV decoder fails to open, errors, or never produces a first frame: retry the
@@ -83,9 +99,7 @@ prefix or Annex B). Any parse or write failure keeps the original packet.
 
 ## Not supported
 
-- Profile 5 on devices without a DV decoder (Pixel): correct colors need per
-  pixel Dolby reshaping on the GPU (`dovi_color_profile_plan.md`), not a
-  bitstream rewrite.
+- Profile 10.0 (AV1 without base layer) without a DV decoder.
 - FEL reconstruction when converting Profile 7.
 
 ## Diagnostics
@@ -96,10 +110,13 @@ DEBUG logs from avos:
 - `Dolby Vision RPU: guessed_profile=… el=none|MEL|FEL`: first parsed RPU.
 - `Dolby Vision rewrite selection` / `rewrite`: chosen rewrites, then counts on
   the first rewritten packet; RPU failures are logged once.
+- `Dolby Vision GPU reshaping: active … output=PQ|SDR`, then `sfdec_dovi_gl:`
+  renderer lines (`ready`, `HDR metadata`, periodic `frames=… stale=…
+  unmatched=… dropped=… late=…`, `closed after …`).
 
 ## Build
 
 libdovi 3.4.0 (MIT) is built by `native/libdovi-android-builder` into
 `native/prebuilt/libdovi`. When the prebuilt is missing, avos builds without it:
-the Profile 7 conversion and the RPU probe are disabled, HDR10+ removal still
-works.
+the Profile 7 conversion, the RPU probe and Profile 5 GPU reshaping are
+disabled, HDR10+ removal still works.
