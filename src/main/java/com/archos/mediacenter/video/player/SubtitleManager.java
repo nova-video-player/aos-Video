@@ -58,6 +58,7 @@ public class SubtitleManager {
     private int                 mScreenHeight;
     private int                 mSubtitleVPos = 10;
     private int                 mGfxVPos = 0;       // -100..100, see KEY_GFX_VPOS
+    private float               mGfxScale = 1.0f;   // 0.5..3.0 times the fitted size, see KEY_GFX_SCALE
     private int                 mSubtitleEvadedVPos;
     private boolean mGLEngineActive = false;
     // ------------------------------------------------------------------------------------
@@ -182,10 +183,25 @@ public class SubtitleManager {
     public static final int    GFX_VPOS_MAX         = 100;
 
     /**
+     * The size of image subtitles (PGS/VobSub), as a multiplier of the size the renderer fits
+     * the cue to (0.5..3.0, 1.0 = as fitted: a cue that had to be shrunk to the screen's side
+     * margins is 1.0 at that shrunk size, not at its authored one). Stored like the text scale
+     * (a float multiplier, the panel shows it as 50%..300%) but under its own key
+     * (KEY_FONT_SCALE is the font size multiplier, this one resizes a picture), and changing
+     * one must not touch the other. Like KEY_GFX_VPOS it is deliberately NOT in
+     * STYLE_KEYS: resetting the text style must not resize image subtitles. The panel's Reset
+     * for image subtitles resets this and the position together, see resetGfxSettings().
+     */
+    public static final String KEY_GFX_SCALE        = "pref_play_subtitle_gfx_scale_key";
+    public static final float  GFX_SCALE_MIN        = 0.5f;
+    public static final float  GFX_SCALE_MAX        = 3.0f;
+
+    /**
      * Every preference that makes up the user's style. To reset to the defaults, remove these
      * from the preferences and call restoreStyle() (then apply the vertical position the same
      * way startup does): every key is gone, so everything falls back to its default.
-     * (The image-subtitle position, KEY_GFX_VPOS, is reset on its own: see resetGfxVerticalPosition().)
+     * (The image-subtitle position and scale, KEY_GFX_VPOS and KEY_GFX_SCALE, are reset on their
+     * own: see resetGfxSettings().)
      */
     public static final java.util.List<String> STYLE_KEYS = java.util.Collections.unmodifiableList(
             java.util.Arrays.asList(KEY_VPOS, KEY_COLOR, KEY_BG_OPACITY, KEY_BG_MODE, KEY_OVERRIDE_MODE,
@@ -259,6 +275,7 @@ public class SubtitleManager {
         setShadowWidth(prefs.getFloat(KEY_SHADOW_WIDTH, d.shadowWidth));
         setPadding(prefs.getFloat(KEY_PADDING, d.padding));
         restoreGfxVerticalPosition(prefs);
+        restoreGfxScale(prefs);
     }
 
     private boolean mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
@@ -705,10 +722,58 @@ public class SubtitleManager {
         setGfxVerticalPosition(prefs.getInt(KEY_GFX_VPOS, getGfxVerticalPositionDefault()));
     }
 
-    /** Forgets the saved image-subtitle position and applies the default. Text style is untouched. */
+    /**
+     * Forgets the saved image-subtitle position and applies the default. Text style and the
+     * image-subtitle scale are untouched (the panel's Reset uses resetGfxSettings() for both).
+     */
     public void resetGfxVerticalPosition(SharedPreferences prefs) {
         prefs.edit().remove(KEY_GFX_VPOS).apply();
         restoreGfxVerticalPosition(prefs);
+    }
+
+    private static float clampGfxScale(float scale) {
+        return Math.max(GFX_SCALE_MIN, Math.min(GFX_SCALE_MAX, scale));
+    }
+
+    /** The user's image-subtitle size, 0.5..3.0 times the fitted size (1.0 = as fitted). */
+    public float getGfxScale() {
+        return mGfxScale;
+    }
+
+    /**
+     * What an image-subtitle scale that was never saved falls back to: the text scale's default
+     * (res/values/config.xml, subtitle_default_font_scale_percent), which is 1.0 = as fitted.
+     */
+    public float getGfxScaleDefault() {
+        return clampGfxScale(mDefaults.fontScale);
+    }
+
+    /**
+     * Sets the image-subtitle (PGS/VobSub) size: 0.5..3.0 times the cue as the renderer fits it
+     * into the subtitle area (so the reference is the FITTED cue, not the authored one).
+     * The cue is resized about its bottom centre and kept inside the screen margins, so a size
+     * that does not fit stops growing at the screen edge; the vertical position and the space
+     * reserved for the playback controls are applied on the resized cue. Independent of the text
+     * scale. Takes effect on image subtitles only.
+     */
+    public void setGfxScale(float scale) {
+        mGfxScale = clampGfxScale(scale);
+        applyNativeVerticalOffset();
+    }
+
+    /** Applies the saved image-subtitle scale (the default if never saved). */
+    public void restoreGfxScale(SharedPreferences prefs) {
+        setGfxScale(prefs.getFloat(KEY_GFX_SCALE, getGfxScaleDefault()));
+    }
+
+    /**
+     * Forgets the saved image-subtitle position AND scale and applies the defaults: what the
+     * panel's Reset does for an image subtitle track. Text style is untouched.
+     */
+    public void resetGfxSettings(SharedPreferences prefs) {
+        prefs.edit().remove(KEY_GFX_VPOS).remove(KEY_GFX_SCALE).apply();
+        restoreGfxVerticalPosition(prefs);
+        restoreGfxScale(prefs);
     }
 
     /**
@@ -864,6 +929,10 @@ public class SubtitleManager {
         // out the distance itself. Sent whatever the current track is, so a bitmap track opened
         // later starts with it; text backends ignore it.
         Player.sPlayer.getSubtitleEngine().setGfxPosition(mGfxVPos);
+        // The user's image-subtitle size, a multiple of the cue's fitted size; native takes a
+        // whole percent. Sent with the position for the same reasons (a bitmap track opened
+        // later starts with it, text backends ignore it).
+        Player.sPlayer.getSubtitleEngine().setGfxScale(Math.round(mGfxScale * 100f));
     }
 
 }

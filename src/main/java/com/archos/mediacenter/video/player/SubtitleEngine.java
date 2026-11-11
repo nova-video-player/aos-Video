@@ -532,6 +532,20 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
             redraw3DIfNeeded();
         }
     }
+    /**
+     * The user's size for bitmap subtitles (PGS/VobSub): {@code percent} in [50, 300] (clamped)
+     * of the cue's FITTED size, 100 = as native fits it into the subtitle area. The cue is
+     * resized about its bottom centre and kept inside the screen margins, so a size that does
+     * not fit stops growing at the edge; the position and the space reserved by
+     * setBottomInset() are applied on the resized cue. Text subtitles use their own font scale,
+     * so this is a no-op for them.
+     */
+    public void setGfxScale(int percent) {
+        if (mNativeEngineHandle != 0) {
+            nativeSetGfxScale(mNativeEngineHandle, Math.max(50, Math.min(300, percent)));
+            redraw3DIfNeeded();
+        }
+    }
     public void setVerticalOffset(float pixels) { if (mNativeEngineHandle != 0) { nativeSetVerticalOffset(mNativeEngineHandle, pixels); redraw3DIfNeeded(); } }
     public void setOverrideMode(int mode) { if (mNativeEngineHandle != 0) { nativeSetOverrideMode(mNativeEngineHandle, mode); redraw3DIfNeeded(); } }
 
@@ -601,6 +615,7 @@ public class SubtitleEngine implements TextureView.SurfaceTextureListener, Surfa
     private native void nativeSetVerticalOffset(long handle, float pixels);
     private native void nativeSetBottomInset(long handle, int pixels);
     private native void nativeSetGfxPosition(long handle, int value);
+    private native void nativeSetGfxScale(long handle, int percent);
     private native void nativeSetOverrideMode(long handle, int mode);
 
     /* ── Custom Fonts Folder (third-party fonts dir, MX Player / mpv-android style) ── */
