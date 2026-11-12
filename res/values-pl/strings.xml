@@ -935,6 +935,8 @@
     <string name="not_available_during_media_scanning">Niedostępne podczas skanowania.</string>
     <string name="remove_from_list">Usuń z listy</string>
     <string name="warning_swdec">Ostrzeżenie: dekodowanie sprzętowe wyłączone!</string>
+    <string name="video_software_fallback">Dekodowanie sprzętowe niedostępne. Używam dekodowania programowego; możliwe zakłócenia odtwarzania.</string>
+    <string name="video_dovi_color_fallback">Dolby Vision nie jest obsługiwany. Kolory mogą być nieprawidłowe.</string>
     <string name="list_title">Tytuł listy</string>
     <string name="loading">Wczytywanie…</string>
     <string name="refreshrate_failed">Nie udało się ustawić wybranej częstotliwości odświeżania</string>

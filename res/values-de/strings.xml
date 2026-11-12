@@ -927,6 +927,8 @@
     <string name="not_available_during_media_scanning">Nicht verfügbar während des Medien-Scans.</string>
     <string name="remove_from_list">Aus Liste entfernen</string>
     <string name="warning_swdec">Warnung: Hardware-Decodierung deaktiviert!</string>
+    <string name="video_software_fallback">Hardware-Dekodierung fehlgeschlagen. Es wird die Software-Dekodierung verwendet; die Wiedergabe könnte ruckeln.</string>
+    <string name="video_dovi_color_fallback">Das Dolby-Vision-Farbprofil wird nicht unterstützt. Die Wiedergabe erfolgt dennoch; die Farben sind möglicherweise nicht korrekt.</string>
     <string name="list_title">Listenname</string>
     <string name="loading">Laden …</string>
     <string name="refreshrate_failed">Gewünschte Aktualisierungsrate konnte nicht festgelegt werden</string>
@@ -975,6 +977,7 @@
     <string name="subtitle_panel_caption_scale">Behält den Stil der Datei bei und skaliert lediglich die Textgröße.</string>
     <!-- Notes shown instead of rows when settings cannot apply -->
     <string name="subtitle_panel_note_plain_text">Unformatierte Untertitel verwenden stets deinen Stil.</string>
+    <string name="subtitle_panel_note_graphic">Für Bildunterschriften ist keine Textformatierung verfügbar. Sie lassen sich jedoch nach oben oder unten verschieben; dabei stoppen sie an den Bildschirmrändern und bleiben oberhalb der Wiedergabesteuerung, weshalb der Schieberegler unter Umständen schon vor Erreichen seines Endpunkts keine weitere Wirkung mehr zeigt.</string>
     <string name="subtitle_panel_note_unsupported">Dieses Untertitelformat lässt sich nicht gestalten.</string>
     <string name="subtitle_panel_note_none">Kein Untertitel ausgewählt.</string>
     <!-- Basic rows -->
