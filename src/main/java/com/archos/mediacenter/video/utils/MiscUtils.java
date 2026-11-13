@@ -25,7 +25,9 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Insets;
+import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.Region;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +45,7 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import android.view.WindowMetrics;
@@ -80,6 +83,8 @@ public class MiscUtils {
     private static Runnable relayoutRunnable;
 
     private static int mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom;
+    private static int mCutoutPathLeft = -1, mCutoutPathRight = -1;
+    private static int mCutoutPathCacheWidth = -1, mCutoutPathCacheHeight = -1, mCutoutPathCacheRotation = -1;
     private static int mVideoWidth, mVideoHeight, mVideoAspect;
 
     public static Handler getHandler() {
@@ -665,6 +670,14 @@ public class MiscUtils {
         int right = Math.max(mCutoutRight, systemBarRight);
         int bottom = getPlayerBarBottomInset(context, rootView, navigationBarShowing, controlBarShowing,
                 isNavBarOnBottom, isGestureAreaShowing);
+        int volumeBarLeft = left;
+        if (mCutoutPathLeft >= 0 && mCutoutPathLeft < left) {
+            volumeBarLeft = Math.max(mCutoutPathLeft, systemBarLeft);
+        }
+        int controlBarRight = right;
+        if (mCutoutPathRight >= 0 && mCutoutPathRight < right) {
+            controlBarRight = Math.max(mCutoutPathRight, systemBarRight);
+        }
         contentInsets.set(left, top, right, bottom);
 
         ViewGroup.LayoutParams controllerParams = controllerView.getLayoutParams();
@@ -676,12 +689,12 @@ public class MiscUtils {
                 controllerView.setLayoutParams(margins);
             }
         }
-        applyPlayerBarInsets(controllerView, controlBar, volumeBar, left, top, right, bottom);
+        applyPlayerBarInsets(controllerView, controlBar, volumeBar, left, volumeBarLeft, top, controlBarRight, bottom);
         return contentInsets;
     }
 
     private static void applyPlayerBarInsets(View controllerView, View controlBar, View volumeBar,
-                                             int left, int top, int right, int bottom) {
+                                             int left, int volumeBarLeft, int top, int controlBarRight, int bottom) {
         int width = controllerView.getWidth();
         int height = controllerView.getHeight();
         if (width <= 0 || height <= 0) return;
@@ -692,7 +705,7 @@ public class MiscUtils {
             if (landscape) {
                 boolean volumeBarGone = volumeBar == null || volumeBar.getVisibility() == View.GONE;
                 params.leftMargin = volumeBarGone ? left : 0;
-                params.rightMargin = right;
+                params.rightMargin = controlBarRight;
             } else {
                 params.leftMargin = 0;
                 params.rightMargin = 0;
@@ -704,7 +717,7 @@ public class MiscUtils {
         if (volumeBar != null && volumeBar.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) volumeBar.getLayoutParams();
             if (landscape) {
-                params.leftMargin = left;
+                params.leftMargin = volumeBarLeft;
                 params.topMargin = top;
                 params.bottomMargin = 0;
                 params.height = Math.max(height - top - bottom, 0);
@@ -734,15 +747,75 @@ public class MiscUtils {
             mCutoutTop = cutout.getSafeInsetTop();
             mCutoutRight = cutout.getSafeInsetRight();
             mCutoutBottom = cutout.getSafeInsetBottom();
+            setCutoutPathInsets(cutout, rootView);
             if (setter != null) {
                 setter.setCutoutMetrics(mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom);
             }
         } else {
             mCutoutLeft = mCutoutTop = mCutoutRight = mCutoutBottom = 0;
+            mCutoutPathLeft = mCutoutPathRight = -1;
             if (setter != null) {
                 setter.setCutoutMetrics(0, 0, 0, 0);
             }
         }
+    }
+
+    private static void setCutoutPathInsets(DisplayCutout cutout, View rootView) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || rootView == null) {
+            mCutoutPathLeft = mCutoutPathRight = -1;
+            return;
+        }
+        int width = rootView.getWidth();
+        int height = rootView.getHeight();
+        Display display = rootView.getDisplay();
+        int rotation = display != null ? display.getRotation() : -1;
+        if (mCutoutPathCacheWidth == width && mCutoutPathCacheHeight == height
+                && mCutoutPathCacheRotation == rotation) {
+            return;
+        }
+        mCutoutPathCacheWidth = width;
+        mCutoutPathCacheHeight = height;
+        mCutoutPathCacheRotation = rotation;
+        mCutoutPathLeft = computeCutoutPathLeft(cutout, rootView);
+        mCutoutPathRight = computeCutoutPathRight(cutout, rootView);
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private static int computeCutoutPathLeft(DisplayCutout cutout, View rootView) {
+        Path cutoutPath = cutout.getCutoutPath();
+        Rect leftRect = cutout.getBoundingRectLeft();
+        if (cutoutPath == null || leftRect.isEmpty()) return -1;
+        Region region = new Region();
+        if (!region.setPath(cutoutPath, new Region(leftRect))) return -1;
+        Rect pathBounds = region.getBounds();
+        if (pathBounds.isEmpty()) return -1;
+        int[] rootLocation = new int[2];
+        rootView.getLocationOnScreen(rootLocation);
+        int pathLeft = Math.max(pathBounds.right - rootLocation[0], 0);
+        if (log.isDebugEnabled()) {
+            log.debug("computeCutoutPathLeft: leftRect={} pathBounds={} rootX={} pathLeft={}",
+                    leftRect, pathBounds, rootLocation[0], pathLeft);
+        }
+        return pathLeft;
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private static int computeCutoutPathRight(DisplayCutout cutout, View rootView) {
+        Path cutoutPath = cutout.getCutoutPath();
+        Rect rightRect = cutout.getBoundingRectRight();
+        if (cutoutPath == null || rightRect.isEmpty()) return -1;
+        Region region = new Region();
+        if (!region.setPath(cutoutPath, new Region(rightRect))) return -1;
+        Rect pathBounds = region.getBounds();
+        if (pathBounds.isEmpty()) return -1;
+        int[] rootLocation = new int[2];
+        rootView.getLocationOnScreen(rootLocation);
+        int pathRight = Math.max(rootView.getWidth() - (pathBounds.left - rootLocation[0]), 0);
+        if (log.isDebugEnabled()) {
+            log.debug("computeCutoutPathRight: rightRect={} pathBounds={} rootX={} pathRight={}",
+                    rightRect, pathBounds, rootLocation[0], pathRight);
+        }
+        return pathRight;
     }
 
     public interface OnSystemInsetsListener {
