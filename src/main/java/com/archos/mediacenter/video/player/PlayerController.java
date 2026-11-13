@@ -2190,12 +2190,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             float viewWidth = (float) mControllerView.getWidth();
             float viewHeight = (float) mControllerView.getHeight();
             
-            // Determine if we're in top 75% (seek) or bottom 25% (audio speed) zone
-            boolean isTopZone = y < (viewHeight * 0.75f);
+            // Determine if we're in top two thirds (seek) or bottom third (audio speed) zone
+            boolean isTopZone = y < (viewHeight * 2.0f / 3.0f);
             
             if (x < viewWidth / 3) { // left region
                 if (isTopZone) {
-                    // Top 75% left: fast rewind
+                    // Top two thirds left: fast rewind
                     if (Player.sPlayer.canSeekBackward() && mSeekKeyDirection != -1) {
                         if (mOsdLeftTextView != null) {
                             mOsdLeftTextView.setText("");
@@ -2208,7 +2208,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         Player.sPlayer.seekTo(Player.sPlayer.getCurrentPosition() - 10000);
                     }
                 } else {
-                    // Bottom 25% left: decrease audio speed
+                    // Bottom third left: decrease audio speed
                     if (VideoPreferencesCommon.isAudioSpeedEnabled(mContext)) {
                         PlayerService.sPlayerService.decrementAudioSpeed();
                         showAudioSpeedOSD(PlayerService.sPlayerService.getAudioSpeed());
@@ -2216,7 +2216,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 }
             } else if (x > viewWidth / 1.5) {  // right region
                 if (isTopZone) {
-                    // Top 75% right: fast forward
+                    // Top two thirds right: fast forward
                     if (Player.sPlayer.canSeekBackward() && mSeekKeyDirection != 1) {
                         if (mOsdRightTextView != null) {
                             mOsdRightTextView.setText("");
@@ -2229,7 +2229,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                         Player.sPlayer.seekTo(Player.sPlayer.getCurrentPosition() + 10000);
                     }
                 } else {
-                    // Bottom 25% right: increase audio speed
+                    // Bottom third right: increase audio speed
                     if (VideoPreferencesCommon.isAudioSpeedEnabled(mContext)) {
                         PlayerService.sPlayerService.incrementAudioSpeed();
                         showAudioSpeedOSD(PlayerService.sPlayerService.getAudioSpeed());
