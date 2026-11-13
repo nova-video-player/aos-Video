@@ -25,6 +25,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Insets;
+import android.graphics.Rect;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -633,6 +635,87 @@ public class MiscUtils {
             if (log.isDebugEnabled()) log.debug("adjustViewLayoutForInsets: Immediate relayout applied");
         }
         if (log.isDebugEnabled()) log.debug("adjustViewLayoutForInsets: {} finalLayoutMargins=({},{},{},{}), wh=({},{})", viewName, layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin, layoutParams.width, layoutParams.height);
+    }
+
+    public static Rect adjustPlayerBarsForInsets(Context context, View rootView, View controllerView,
+                                                 View controlBar, View volumeBar,
+                                                 boolean navigationBarShowing, boolean controlBarShowing,
+                                                 boolean isNavBarOnBottom, boolean isGestureAreaShowing) {
+        Rect contentInsets = new Rect();
+        if (rootView == null || controllerView == null) return contentInsets;
+        WindowInsets insets = rootView.getRootWindowInsets();
+        if (insets == null) return contentInsets;
+        setCutoutMetrics(insets, rootView, null);
+        int systemBarLeft, systemBarTop, systemBarRight;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Insets systemBarsNoCaptionInsets = insets.getInsets(
+                    WindowInsets.Type.systemBars() & ~WindowInsets.Type.captionBar());
+            systemBarLeft = systemBarsNoCaptionInsets.left;
+            systemBarTop = systemBarsNoCaptionInsets.top;
+            systemBarRight = systemBarsNoCaptionInsets.right;
+        } else {
+            WindowInsetsCompat insetsCompat = WindowInsetsCompat.toWindowInsetsCompat(insets);
+            androidx.core.graphics.Insets systemBarsInsets = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars());
+            systemBarLeft = systemBarsInsets.left;
+            systemBarTop = systemBarsInsets.top;
+            systemBarRight = systemBarsInsets.right;
+        }
+        int left = Math.max(mCutoutLeft, systemBarLeft);
+        int top = Math.max(mCutoutTop, systemBarTop);
+        int right = Math.max(mCutoutRight, systemBarRight);
+        int bottom = getPlayerBarBottomInset(context, rootView, navigationBarShowing, controlBarShowing,
+                isNavBarOnBottom, isGestureAreaShowing);
+        contentInsets.set(left, top, right, bottom);
+
+        ViewGroup.LayoutParams controllerParams = controllerView.getLayoutParams();
+        if (controllerParams instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams margins = (ViewGroup.MarginLayoutParams) controllerParams;
+            if (margins.leftMargin != 0 || margins.topMargin != 0
+                    || margins.rightMargin != 0 || margins.bottomMargin != 0) {
+                margins.setMargins(0, 0, 0, 0);
+                controllerView.setLayoutParams(margins);
+            }
+        }
+        applyPlayerBarInsets(controllerView, controlBar, volumeBar, left, top, right, bottom);
+        return contentInsets;
+    }
+
+    private static void applyPlayerBarInsets(View controllerView, View controlBar, View volumeBar,
+                                             int left, int top, int right, int bottom) {
+        int width = controllerView.getWidth();
+        int height = controllerView.getHeight();
+        if (width <= 0 || height <= 0) return;
+        boolean landscape = width > height;
+
+        if (controlBar != null && controlBar.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) controlBar.getLayoutParams();
+            if (landscape) {
+                boolean volumeBarGone = volumeBar == null || volumeBar.getVisibility() == View.GONE;
+                params.leftMargin = volumeBarGone ? left : 0;
+                params.rightMargin = right;
+            } else {
+                params.leftMargin = 0;
+                params.rightMargin = 0;
+            }
+            params.bottomMargin = bottom;
+            controlBar.setLayoutParams(params);
+        }
+
+        if (volumeBar != null && volumeBar.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) volumeBar.getLayoutParams();
+            if (landscape) {
+                params.leftMargin = left;
+                params.topMargin = top;
+                params.bottomMargin = 0;
+                params.height = Math.max(height - top - bottom, 0);
+            } else {
+                params.leftMargin = 0;
+                params.topMargin = 0;
+                params.bottomMargin = 0;
+                params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            }
+            volumeBar.setLayoutParams(params);
+        }
     }
 
     public interface CutoutMetricsSetter {

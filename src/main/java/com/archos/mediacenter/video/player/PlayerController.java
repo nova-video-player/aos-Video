@@ -224,6 +224,8 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     private static boolean      mControlBarShowing, mSystemBarShowing, mSystemBarGone, mActionBarShowing, mVolumeBarShowing, mNavigationBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing;
     private static int          mGestureAreaHeight, mControlBarHeight;
+    private int                 mControlBarBaseContentHeight = -1;
+    private int                 mContentInsetLeft, mContentInsetTop, mContentInsetRight, mContentInsetBottom;
     // Static handle to the live control bar view, so SubtitleManager can resolve its parent
     // for getControlBarClearanceAbove(). Cleared in detachWindow() to avoid leaking the view.
     @SuppressLint("StaticFieldLeak")
@@ -583,6 +585,11 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             this.mPlayPauseTouchZone = playPauseTouchZone;
             this.mCentralPlayIcon = centralPlayIcon;
             this.mControlBar=mControlBar;
+            if (mControlBar != null) {
+                ViewGroup.LayoutParams controlBarParams = mControlBar.getLayoutParams();
+                mControlBarBaseContentHeight = controlBarParams != null && controlBarParams.height > 0
+                        ? controlBarParams.height : -1;
+            }
             sControlBarView = mControlBar;
             if (mControlBar != null) {
                 // control_bar is GONE until first shown, so its geometry is stale when
@@ -768,7 +775,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 mIsGestureAreaShowing = MiscUtils.isGestureAreaDisplayed(mContext);
                 mGestureAreaHeight = MiscUtils.getGestureAreaHeight(mContext);
                 // assume that controlBar (seek bar + controls) is visible if mNavigationBarShowing || mIsGestureAreaShowing
-                mControlBarHeight = (mNavigationBarShowing || mIsGestureAreaShowing ? mControlBar.getHeight() : 0);
+                mControlBarHeight = (mNavigationBarShowing || mIsGestureAreaShowing ? getControlBarContentHeight() : 0);
                 if (log.isDebugEnabled()) log.debug("attachWindow, setOnSystemUiVisibilityChangeListener: mNavigationBarShowing={}, mSystemBarShowing={}, mActionBarShowing={}, mControlBarShowing={}, mIsNavBarOnBottom={}, mIsGestureAreaShowing={}",
                         mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mControlBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing);
                 adjustView();
@@ -801,23 +808,20 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
     }
 
     private void adjustView() {
-        if (mControlBar != null) {
-            mControlBarHeight = (mNavigationBarShowing || mIsGestureAreaShowing ? mControlBar.getHeight() : 0);
-        }
-        MiscUtils.adjustViewLayoutForInsets(mContext, mRootView, mControllerView,"mControllerView",
-                mNavigationBarShowing, mSystemBarShowing, mActionBarShowing, mControlBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing,
-                0, 0,
-                true, true, true, true,
-                true, true, true, true, false, false);
-        if (mControllerView != null && mControllerView.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            int bottom = MiscUtils.getPlayerBarBottomInset(mContext, mRootView,
-                    mNavigationBarShowing, mControlBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing);
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mControllerView.getLayoutParams();
-            if (params.bottomMargin != bottom) {
-                params.bottomMargin = bottom;
-                mControllerView.setLayoutParams(params);
-            }
-        }
+        Rect contentInsets = MiscUtils.adjustPlayerBarsForInsets(mContext, mRootView, mControllerView,
+                mControlBar, mVolumeBar,
+                mNavigationBarShowing, mControlBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing);
+        mContentInsetLeft = contentInsets.left;
+        mContentInsetTop = contentInsets.top;
+        mContentInsetRight = contentInsets.right;
+        mContentInsetBottom = contentInsets.bottom;
+        mControlBarHeight = (mNavigationBarShowing || mIsGestureAreaShowing ? getControlBarContentHeight() : 0);
+    }
+
+    private int getControlBarContentHeight() {
+        if (mControlBar == null) return 0;
+        if (mControlBarBaseContentHeight > 0) return mControlBarBaseContentHeight;
+        return Math.max(mControlBar.getHeight(), 0);
     }
 
     public static int getControlBarCurrentHeight() {
@@ -1028,6 +1032,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 if (log.isDebugEnabled()) log.debug("showVolumeBar, showing volume bar2");
             }
             mVolumeBarShowing = show;
+            adjustView();
         }
     }
 
@@ -2193,11 +2198,13 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
         if (e.getAction() == MotionEvent.ACTION_UP) {
             if (log.isDebugEnabled()) log.debug("onDoubleTapEvent");
-            float x = e.getX();
-            float y = e.getY();
             if (mControllerView == null) return false;
-            float viewWidth = (float) mControllerView.getWidth();
-            float viewHeight = (float) mControllerView.getHeight();
+            float x = e.getX() - mContentInsetLeft;
+            float y = e.getY() - mContentInsetTop;
+            float viewWidth = Math.max((float) mControllerView.getWidth()
+                    - mContentInsetLeft - mContentInsetRight, 1f);
+            float viewHeight = Math.max((float) mControllerView.getHeight()
+                    - mContentInsetTop - mContentInsetBottom, 1f);
             
             // Determine if we're in top two thirds (seek) or bottom third (audio speed) zone
             boolean isTopZone = y < (viewHeight * 2.0f / 3.0f);
