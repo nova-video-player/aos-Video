@@ -204,6 +204,34 @@ public class MiscUtils {
         return 0;
     }
 
+    public static int getPlayerBarBottomInset(Context context, View rootView,
+                                              boolean navigationBarShowing, boolean controlBarShowing,
+                                              boolean isNavBarOnBottom, boolean isGestureAreaShowing) {
+        int systemBarBottom = 0;
+        if (rootView != null) {
+            WindowInsets insets = rootView.getRootWindowInsets();
+            if (insets != null) {
+                setCutoutMetrics(insets, rootView, null);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    systemBarBottom = insets.getInsets(
+                            WindowInsets.Type.systemBars() & ~WindowInsets.Type.captionBar()).bottom;
+                } else {
+                    WindowInsetsCompat insetsCompat = WindowInsetsCompat.toWindowInsetsCompat(insets);
+                    systemBarBottom = insetsCompat.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
+                }
+            }
+        }
+        int bottom = Math.max(mCutoutBottom, systemBarBottom);
+        if (isGestureAreaShowing && controlBarShowing) {
+            if (systemBarBottom == 0) {
+                bottom = Math.max(bottom, getGestureAreaHeight(context));
+            }
+        } else if (isNavBarOnBottom && navigationBarShowing) {
+            bottom = Math.max(bottom, getNavigationBarHeight(context));
+        }
+        return bottom;
+    }
+
     @SuppressLint({"InternalInsetResource", "DiscouragedApi"})
     public static int getStatusBarHeight(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

@@ -809,6 +809,15 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 0, 0,
                 true, true, true, true,
                 true, true, true, true, false, false);
+        if (mControllerView != null && mControllerView.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            int bottom = MiscUtils.getPlayerBarBottomInset(mContext, mRootView,
+                    mNavigationBarShowing, mControlBarShowing, mIsNavBarOnBottom, mIsGestureAreaShowing);
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mControllerView.getLayoutParams();
+            if (params.bottomMargin != bottom) {
+                params.bottomMargin = bottom;
+                mControllerView.setLayoutParams(params);
+            }
+        }
     }
 
     public static int getControlBarCurrentHeight() {
