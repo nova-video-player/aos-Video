@@ -16,6 +16,7 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="player2014_bar_width">53dip</dimen>
+    <dimen name="player_central_tap_zone">200dip</dimen>
     
     <!-- ============ COVER ROLL ============ -->
     <dimen name="cover_description_floating_large" tools:ignore="PxUsage">23px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->

@@ -2011,7 +2011,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             return false;
         }
 
-        // Check if touch is in central screen zone (middle third both horizontally and vertically)
+        // Check if touch is in the central play zone.
         if (isTouchInCentralZone(event)) {
             if (log.isDebugEnabled()) log.debug("onSingleTapConfirmed: central zone touch");
             handleCentralZoneTouch();
@@ -2039,16 +2039,31 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
         int viewWidth = mControllerView.getWidth();
         int viewHeight = mControllerView.getHeight();
 
-        // Define central zone as middle third horizontally and Vertically.
-        float centralZoneLeft = viewWidth / 3.0f;
-        float centralZoneRight = viewWidth * 2.0f / 3.0f;
-        float centralZoneTop = viewHeight / 4.0f;
-        float centralZoneBottom = viewHeight * 3.0f / 4.0f;
-        
-        float touchX = event.getX();
-        float touchY = event.getY();
-        
-        return (touchX >= centralZoneLeft && touchX <= centralZoneRight) && (touchY >= centralZoneTop && touchY <= centralZoneBottom) ;
+        int zoneSize = mContext.getResources().getDimensionPixelSize(R.dimen.player_central_tap_zone);
+        zoneSize = Math.min(zoneSize, Math.min(viewWidth, viewHeight) / 2);
+        if (zoneSize <= 0) return false;
+
+        float radius = zoneSize / 2.0f;
+
+        View anchor = null;
+        if (mCentralPlayIcon != null && mCentralPlayIcon.getParent() instanceof View) {
+            anchor = (View) mCentralPlayIcon.getParent();
+        }
+        if (anchor == null || !anchor.isLaidOut() || anchor.getWidth() <= 0 || anchor.getHeight() <= 0) {
+            anchor = mControllerViewLeft;
+        }
+        if (anchor == null || !anchor.isLaidOut() || anchor.getWidth() <= 0 || anchor.getHeight() <= 0) {
+            anchor = mControllerView;
+        }
+
+        int[] anchorLocation = new int[2];
+        anchor.getLocationOnScreen(anchorLocation);
+        float centerX = anchorLocation[0] + anchor.getWidth() / 2.0f;
+        float centerY = anchorLocation[1] + anchor.getHeight() / 2.0f;
+
+        float dx = event.getRawX() - centerX;
+        float dy = event.getRawY() - centerY;
+        return dx * dx + dy * dy <= radius * radius;
     }
 
     private void handleCentralZoneTouch() {

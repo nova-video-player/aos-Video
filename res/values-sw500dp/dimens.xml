@@ -15,6 +15,8 @@
 -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="player_central_tap_zone">200dip</dimen>
+
     <!-- ============ COVER ROLL ============ -->
     <dimen name="cover_description_floating_large" tools:ignore="PxUsage">23px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
     <dimen name="cover_description_floating_small" tools:ignore="PxUsage">17px</dimen> <!-- no dip, because not used in framework but in texture bitmaps -->
