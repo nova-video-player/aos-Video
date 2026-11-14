@@ -760,6 +760,12 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
                 return insets;
             });
 
+            mControllerView.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or_, ob) -> {
+                if ((r - l) != (or_ - ol) || (b - t) != (ob - ot)) {
+                    v.post(this::adjustView);
+                }
+            });
+
             // ui visibility listener is needed for UI mode changes
             // No WindowInsetsControllerCompat equivalent for transient bar visibility tracking;
             // setOnSystemUiVisibilityChangeListener remains the only reliable option here.
@@ -805,6 +811,7 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
             }
         }
         showControlBar(mControlBarShowing);
+        showVolumeBar(mVolumeBarShowing);
     }
 
     private void adjustView() {
@@ -1024,7 +1031,10 @@ public class PlayerController implements View.OnTouchListener, OnGenericMotionLi
 
     private void showVolumeBar(boolean show) {
         if (log.isDebugEnabled()) log.debug("showVolumeBar {}", show);
-        if (mVolumeBarEnabled && mVolumeBarShowing != show) {
+        int targetVisibility = show ? View.VISIBLE : View.GONE;
+        boolean visibilityMismatch = mVolumeBar != null && mVolumeBar.getVisibility() != targetVisibility;
+        boolean visibilityMismatch2 = splitView && mVolumeBar2 != null && mVolumeBar2.getVisibility() != targetVisibility;
+        if (mVolumeBarEnabled && (mVolumeBarShowing != show || visibilityMismatch || visibilityMismatch2)) {
             if (log.isDebugEnabled()) log.debug("showVolumeBar, volume2");
             setVisibility(mVolumeBar, show, true);
             if(mVolumeBar2!=null&&splitView){
