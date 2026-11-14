@@ -119,6 +119,7 @@
     <string name="date_view_year">Год</string>
     <string name="all_movies_and_tv_shows">Фильмы и сериалы</string>
     <string name="non_scraped_videos">Нераспознанные видео</string>
+    <string name="non_scraped_videos_format">Видео, полученные не методом парсинга -  %d</string>
     <string name="cannot_open_video">Невозможно открыть это видео</string>
     <string name="confirm_delete">Вы действительно хотите удалить?</string>
     <string name="deleting">Подождите, идет удаление…</string>
@@ -279,11 +280,18 @@
     <string name="pref_play_mode_entry_binge">Непрерывный просмотр</string>
     <string name="pref_introdb_autoskip_title">Пропустить вступление/окончание</string>
     <string name="introdb_autoskip">Автопропуск</string>
+    <string name="introdb_skipped_format">Пропущено: %1$s</string>
     <string name="introdb_segment_intro">Вступление</string>
+    <string name="introdb_segment_recap">Краткий обзор</string>
     <string name="introdb_segment_outro">Окончание</string>
     <string name="introdb_segment_credits">Титры</string>
+    <string name="introdb_segment_preview">Предварительный просмотр</string>
+    <string name="introdb_segment_end">конец</string>
     <!-- Skip prompt button labels, shown over the video; keep them short. -->
     <string name="skip_intro_button">Пропустить вступление</string>
+    <string name="skip_recap_button">Пропустить Краткий обзор</string>
+    <string name="skip_credits_button">Пропустить титры</string>
+    <string name="skip_preview_button">Пропустить Предварительный просмотр</string>
     <string name="pref_audio_parameters_title">Aудио</string>
     <string name="pref_audio_filt_title">Усиление аудио</string>
     <string name="pref_audio_filt_night_mode">Ночной режим</string>
@@ -387,8 +395,11 @@
     <string name="opensubtitles_summary_anonymous">Анонимно</string>
     <string name="opensubtitles_summary_user_account">Профиль пользователя</string>
     <string name="opensubtitles_summary_not_checked">Проверка ещё не выполнялась</string>
+    <string name="opensubtitles_summary_credentials_verified">Учетные данные проверены</string>
     <string name="opensubtitles_summary_login_failed">Ошибка входа</string>
     <string name="opensubtitles_summary_service_unavailable">Сервис недоступен</string>
+    <string name="opensubtitles_summary_quota_exhausted">Квота исчерпана</string>
+    <string name="opensubtitles_summary_status">%1$s · %2$s</string>
     <!-- Subtitle Delay Dialog -->
     <string name="subtitle_delay_speed">Настройка скорости</string>
     <string name="subtitle_delay_radio_none">нет</string>
@@ -510,8 +521,12 @@
     <string name="preference_enable_cutout_both_sidesx_summary">Отрезать дисплей поровну с обеих сторон, делая экран симметричным.</string>
     <string name="category_languages">Субтитры</string>
     <string name="subtitles_hide_default">Скрыть субтитры по умолчанию</string>
+    <string name="subtitles_hide_default_summary">По умолчанию скрывать субтитры по умолчанию; соответствующие им принудительно выбранные субтитры могут по-прежнему отображаться</string>
     <string name="subtitle_use_margins_title">Отображение субтитров в черных полосах</string>
     <string name="subtitle_use_margins_summary">Показывать субтитры под видео (вместо субтитров поверх видео)</string>
+    <string name="subtitle_fonts_folder_title">Папка пользовательских шрифтов</string>
+    <string name="subtitle_fonts_folder_summary">Выберите папку со шрифтами формата .ttf, .otf или .ttc, которые будут использоваться для отображения субтитров вместо встроенных шрифтов</string>
+    <string name="subtitle_default_font_title">Шрифт для субтитров по умолчанию</string>
     <string name="subtitles_credentials_title">Учётные данные Opensubtitles</string>
     <string name="subtitles_credentials_summary">Предоставьте учетные данные Opensubtitles в настройках, чтобы иметь возможность загружать субтитры</string>
     <string name="preferences_languages">Язык загружаемых субтитров</string>
@@ -674,6 +689,8 @@
     <string name="status_disabled">отключено</string>
     <string name="status_multichannel">многоканальный</string>
     <string name="preferences_user_interface">Пользовательский интерфейс</string>
+    <string name="preferences_sort_ignore_articles_title">При сортировке игнорировать начальные артикли</string>
+    <string name="preferences_sort_ignore_articles_summary">При сортировке названий в алфавитном порядке игнорировать начальные артикли, такие как «The», «A», «Le», «Das»</string>
     <string name="preferences_display_resume_box_summary">Показать/скрыть кнопку возобновления просмотра последнего видео на главном экране</string>
     <string name="preferences_display_resume_box">Отображать окно \"Возобновить\"</string>
     <string name="reset_brightness_on_start">Запомнить яркость видео.</string>
@@ -778,12 +795,21 @@
     <string name="trakt_device_auth_waiting">Ожидание авторизации…</string>
     <string name="trakt_device_auth_success">Соединение успешно!</string>
     <string name="trakt_device_auth_error">Аутентификация не пройдена. Пожалуйста, попробуйте снова.</string>
+    <string name="trakt_device_auth_invalid_code">Не удалось получить корректный код устройства от Trakt. Пожалуйста, попробуйте ещё раз.</string>
     <string name="trakt_device_auth_timeout">Срок действия кода истёк. Повторите попытку.</string>
     <string name="trakt_account_locked">Учетная запись Trakt заблокирована. Разблокируйте на trakt.tv или повторите попытку позже.</string>
     <string name="trakt_social_signin_unsupported">Вход через Google/Facebook/Apple не поддерживается. Пожалуйста, войдите в систему с помощью логина и пароля Trakt.</string>
+    <string name="connect_trakt">Синхронизировать с Trakt</string>
+    <string name="trakt_sync_status_never">Ещё не синхронизировано</string>
+    <string name="trakt_sync_status_ok">Последняя синхронизация: %1$s назад</string>
+    <string name="trakt_sync_status_ok_skipped" tools:ignore="PluralsCandidate">Последняя синхронизация: %1$s назад · ожидается обработка %2$d видео (длительность неизвестна)</string>
+    <string name="trakt_sync_status_ok_meta_skipped" tools:ignore="PluralsCandidate">Последняя синхронизация: %1$s назад · пропущено скробблов: %2$d (отсутствуют метаданные)</string>
+    <string name="trakt_sync_status_ok_both_skipped" tools:ignore="PluralsCandidate">Последняя синхронизация: %1$s назад · %2$d в очереди (длительность неизвестна), %3$d скроббл(ов) пропущено (отсутствуют метаданные)</string>
     <string name="trakt_sync_status_error_network">Последняя синхронизация не удалась: ошибка сети</string>
     <string name="trakt_sync_status_error_auth">Ошибка аутентификации — пожалуйста, войдите заново</string>
+    <string name="trakt_sync_status_error_locked">Учётная запись заблокирована — разблокируйте её на trakt.tv</string>
     <!-- Combined sign-in summary: "Signed in · <sync status>" -->
+    <string name="trakt_signin_summary_logged_sync">Войти · %1$s</string>
     <string name="show_all">Все видео</string>
     <string name="hide_seen">Не просмотрено</string>
     <string name="search_results">Результаты поиска</string>
@@ -822,6 +848,7 @@
     <string name="leanback_archos_video_webview">Nova Video WebView</string>
     <string name="file_access_error">Не удалось получить доступ к файлу</string>
     <string name="always_leanback_on_tv">Всегда запускать с интерфейсом для ТВ</string>
+    <string name="always_leanback_on_tv_summary">Всегда запускайте приложение в пользовательском интерфейсе для ТВ; если же вы хотите использовать классический интерфейс на своем телевизоре, отключите эту настройку.</string>
     <string name="interface_size">Размер интерфейса</string>
     <string name="interface_size_summary">Измените, если интерфейс пользователя слишком мал или велик</string>
     <string name="interface_size_very_small">Очень маленький (mdpi)</string>
@@ -863,14 +890,32 @@
     <string name="rescrap_all_title">Распознать всё</string>
     <string name="rescrap_all_movies_title">Распознать все фильмы</string>
     <string name="rescrap_all_collections_title">Распознать все коллекции</string>
+    <string name="recreate_sort_titles_title">Создать заново заголовки для сортировки</string>
+    <string name="recreate_sort_titles_summary">Пересчитать заголовки для сортировки фильмов, телешоу и коллекций</string>
+    <string name="recreate_sort_titles_in_progress">Выполняется пересоздание заголовков сортировки</string>
+    <string name="recreate_sort_titles_done">Сортировка заголовков воссоздана</string>
     <string name="nfo_export_manual_title">Экспорт распознанных видео</string>
     <string name="nfo_export_manual_summary">Экспортировать .nfo файлы для всех распознанных видео</string>
     <string name="db_export_manual_title">Экспорт базы данных медиа</string>
     <string name="db_export_manual_summary">Экспортировать файл media.db в /sdcard для отладки</string>
     <string name="db_export_in_progress">Выполняется экспорт базы данных</string>
+    <string name="media_library_export_title">Импорт медиа библиотеки + учетных данных + ярлыков</string>
+    <string name="media_library_export_summary">Экспортировать media.db, сетевые учетные данные (SMB/FTP/SFTP), сетевые ярлыки и все кэшированные изображения в виде zip файла</string>
     <string name="media_library_import_title">Импорт медиа библиотеки + учетных данных + ярлыков</string>
+    <string name="media_library_import_summary">Импорт media.db, сетевых учетных данных, сетевых ярлыков и кэшированных изображений из ранее экспортированного zip файла</string>
+    <string name="media_library_export_in_progress">Экспорт медиа библиотеки, учетных данных и ярлыков</string>
+    <string name="media_library_import_in_progress">Импорт медиа библиотеки, учетных данных и ярлыков</string>
+    <string name="media_library_export_success">Медиа библиотека, учетные данные и ярлыки успешно экспортированы в: \n%s</string>
+    <string name="media_library_import_success">Библиотека мультимедиа, учетные данные и ярлыки импортированы успешно. Перезапуск приложения&#8230;</string>
     <string name="media_library_import_error">Ошибка импорта медиа библиотеки</string>
+    <string name="media_library_export_error">Ошибка при экспорте медиа библиотеки</string>
+    <string name="media_library_export_dir_not_found">Директория экспорта не найдена</string>
+    <string name="media_library_no_backup_found">Файл резервной копии не найден. Пожалуйста, экспортируйте сначала.</string>
+    <string name="media_library_backup_info">Найден файл резервной копии: backup.zip\nРазмер: %d МБ\n\n⚠️ Содержит: метаданные, учетные данные, ярлыки, изображения\n\nПриступить к импорту?</string>
     <string name="media_library_import_dialog_title">Импорт медиа библиотеки + учетных данных + ярлыков</string>
+    <string name="media_library_import_confirm_title">⚠️ ПОДТВЕРДИТЕ ПОЛНУЮ ЗАМЕНУ</string>
+    <string name="media_library_import_warning">⚠️ ВНИМАНИЕ: ПОЛНАЯ ЗАМЕНА ⚠️\n\nЭто действие ПОЛНОСТЬЮ УДАЛИТ вашу текущую медиатеку и заменит её данными из резервной копии.\n\nВсе текущие данные будут БЕЗВОЗВРАТНО УТЕРЯНЫ:\n• Все загруженные метаданные о фильмах и сериалах\n• Все сохранённые в кэше постеры и фоновые изображения\n• Вся история просмотров и информация о прогрессе просмотра\n• Все сетевые учётные данные (SMB/FTP/SFTP/WebDAV)\n• Все сетевые ярлыки и закладки\n• Все пользовательские правки и настройки\n\nЭто действие НЕЛЬЗЯ отменить!\n\nПосле завершения импорта приложение автоматически перезапустится.\n\nВы абсолютно уверены, что хотите продолжить?</string>
+    <string name="media_library_import_button_confirm">ДА, УДАЛИТЬ И ЗАМЕНИТЬ</string>
     <string name="system">Система</string>
     <string name="keep_setting">Глобальная настройка</string>
     <string name="select_sub_file"><![CDATA[Для файла <font color=#29b6f6><i>%s</i></font><br /> не найдено точного соответствия субтитров. Попробуйте следующие варианты:]]></string>
@@ -887,16 +932,38 @@
     <string name="add_to_list">Добавить в список</string>
     <string name="no_resume_available">Возобновление просмотра недоступно</string>
     <string name="no_list_detected">Списков не обнаружено. Список может быть создан путем добавления из информации о видео или синхронизирован с Вашей учетной записью trakt.</string>
+    <string name="not_available_during_media_scanning">Недоступно во время сканирования.</string>
     <string name="remove_from_list">Удалить из списка</string>
     <string name="warning_swdec">Аппаратное декодирование отключено</string>
+    <string name="video_software_fallback">Аппаратное декодирование не удалось. Используется программное декодирование; возможно прерывистое воспроизведение.</string>
+    <string name="video_dovi_color_fallback">Цветовой профиль Dolby Vision не поддерживается. Воспроизведение будет продолжено; цвета могут отображаться некорректно.</string>
     <string name="list_title">Заголовок списка</string>
     <string name="loading">Загрузка…</string>
     <string name="refreshrate_failed">Не удалось задать желаемую частоту обновления</string>
     <string name="sponsor">Поддержать Nova</string>
     <string name="enable_sponsor_title">Ссылка для поддержки Nova</string>
     <string name="enable_sponsor_summary">Перейти по ссылке для пожертвований: важна любая помощь проекту.</string>
+    <string name="version_open_store_summary">Нажмите, чтобы открыть магазин</string>
+    <string name="hdr_capability">Возможности HDR экрана:</string>
+    <string name="hdmi_audio_capabilities">Возможности аудио приемника HDMI:</string>
+    <string name="spdif_audio_capabilities">S/PDIF аудио возможности:</string>
+    <string name="max_audio_channels">Максимальное количество аудио каналов:</string>
+    <string name="supported_refresh_rates">Поддерживаемые частоты обновления:</string>
     <string name="upgrade_info">Информация об обновлении</string>
     <string name="v5_v6_upgrade_info">ВНИМАНИЕ: Это обновление Nova потребует пересканировать всю библиотеку мультимедиа. Чтобы избежать проблем, настоятельно рекомендуется полностью переустановить программу. Пожалуйста, ознакомьтесь с FAQ для подробностей.</string>
+    <string name="external_player_service_title">Воспроизведение внешним плеером</string>
+    <string name="external_player_service_description">Nova Video Player предоставляет контент для внешнего проигрывателя</string>
+    <string name="stop">Стоп</string>
+    <string name="s_visual_impaired">слабовидящие</string>
+    <string name="s_audio_description">аудиодескрипция</string>
+    <string name="s_descriptions">описания</string>
+    <string name="s_forced">принудительно</string>
+    <string name="s_original">оригинал</string>
+    <string name="s_translated">переведено</string>
+    <string name="s_dubbed">дублирован</string>
+    <string name="s_commentary">комментарий</string>
+    <string name="s_lyrics">текст песни</string>
+    <string name="s_karaoke">караоке</string>
     <string name="ui_choice_title">Кажется, вы используете Nova Video Player на телевизоре.\nЕсли это так, мы рекомендуем использовать наш новый ТВ-интерфейс</string>
     <string name="ui_choice_tv">ТВ-интерфейс</string>
     <string name="ui_choice_tablet">Планшетный интерфейс</string>
@@ -905,12 +972,51 @@
     <!-- ===== Subtitle settings panel ===== -->
     <string name="subtitle_sample_text">«образец»</string>
     <!-- Titles -->
+    <string name="subtitle_panel_title">Настройка субтитров</string>
+    <string name="subtitle_panel_advanced">Расширенные настройки внешнего вида</string>
     <!-- Style mode (pills) and what each one means -->
+    <string name="subtitle_panel_style">Стиль</string>
+    <string name="subtitle_panel_mode_file">Стиль файла</string>
+    <string name="subtitle_panel_mode_custom">Пользовательский</string>
+    <string name="subtitle_panel_mode_scale">Только масштабирование</string>
+    <string name="subtitle_panel_caption_file">Используется стиль, заданный в самом файле субтитров. Настраивать ничего не нужно.</string>
+    <string name="subtitle_panel_caption_custom">Ваши шрифт, цвета и расположение заменяют те, что были в файле.</string>
+    <string name="subtitle_panel_caption_scale">Сохраняет стиль файла и изменяет только размер текста.</string>
     <!-- Notes shown instead of rows when settings cannot apply -->
+    <string name="subtitle_panel_note_plain_text">Субтитры в формате простого текста всегда используют ваш стиль.</string>
+    <string name="subtitle_panel_note_graphic">Для субтитров к изображениям оформление текста недоступно. При этом их можно перемещать вверх или вниз; они останавливаются у границ экрана и остаются над элементами управления воспроизведением, поэтому ползунок может перестать влиять на положение субтитров еще до того, как дойдет до конца.</string>
+    <string name="subtitle_panel_note_unsupported">Этот формат субтитров не поддерживает оформление.</string>
+    <string name="subtitle_panel_note_none">Субтитры не выбраны.</string>
     <!-- Basic rows -->
+    <string name="subtitle_panel_font_size">Размер</string>
+    <string name="subtitle_panel_bold">Жирный</string>
+    <string name="subtitle_panel_background">Фон</string>
+    <string name="subtitle_panel_bg_off">Выключить</string>
+    <string name="subtitle_panel_bg_line">Линия</string>
+    <string name="subtitle_panel_bg_box">Блок</string>
+    <string name="subtitle_panel_vertical_position">Вертикальное положение</string>
+    <string name="subtitle_panel_scale">Масштаб</string>
+    <string name="subtitle_panel_reset">Сбросить внешний вид</string>
+    <string name="subtitle_panel_reset_confirm_touch">Нажмите снова, чтобы сбросить</string>
+    <string name="subtitle_panel_reset_confirm_tv">Нажмите ОК еще раз для сброса</string>
     <!-- Advanced sections and rows (the same stored value is "Padding" in Line and Box mode) -->
+    <string name="subtitle_panel_section_text">Текст</string>
+    <string name="subtitle_panel_text_color">Цвет текста</string>
+    <string name="subtitle_panel_outline_width">Ширина контура</string>
+    <string name="subtitle_panel_outline_color">Цвет контура</string>
+    <string name="subtitle_panel_shadow_width">Ширина тени</string>
+    <string name="subtitle_panel_shadow_color">Цвет тени</string>
+    <string name="subtitle_panel_background_color">Цвет фона</string>
+    <string name="subtitle_panel_background_opacity">Прозрачность фона</string>
+    <string name="subtitle_panel_padding">Отступ</string>
     <!-- Preview strip when the file's own style is in force (it cannot be known here) -->
+    <string name="subtitle_panel_preview_own_style">Используется собственный стиль файла</string>
     <!-- Color screen -->
+    <string name="subtitle_panel_red">Красный</string>
+    <string name="subtitle_panel_green">Зеленый</string>
+    <string name="subtitle_panel_blue">Синий</string>
     <!-- Value formats -->
     <!-- Accessibility -->
+    <string name="subtitle_panel_decrease">Уменьшить</string>
+    <string name="subtitle_panel_increase">Увеличить</string>
 </resources>

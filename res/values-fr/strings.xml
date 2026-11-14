@@ -518,6 +518,8 @@
     <string name="subtitle_use_margins_summary">Afficher les sous-titres dans les bandes noires sous l\'image plutôt que par-dessus la vidéo</string>
     <string name="subtitle_fonts_folder_title">Dossier des polices personnalisées</string>
     <string name="subtitle_fonts_folder_summary">Choisissez un dossier de polices .ttf/.otf/.ttc à utiliser pour les sous-titres, au lieu des polices intégrées</string>
+    <string name="subtitle_fonts_folder_summary_no_picker">Désactivé : aucune application sur cet appareil ne permet de choisir un dossier. Installez un gestionnaire de fichiers compatible avec la sélection de dossiers pour activer cette option</string>
+    <string name="no_folder_picker_available">Aucune application de sélection de dossier n\'est installée. Installez un gestionnaire de fichiers compatible avec la sélection de dossiers pour utiliser cette fonctionnalité</string>
     <string name="subtitle_default_font_title">Police de sous-titres par défaut</string>
     <string name="subtitles_credentials_title">Identifiants opensubtitles</string>
     <string name="subtitles_credentials_summary">Entrez vos identifiants opensubtitles afin de télécharger des sous-titres</string>
