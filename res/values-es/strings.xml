@@ -792,6 +792,26 @@
     <string name="trakt_account_locked">Cuenta de Trakt bloqueada. Desbloquea en trakt.tv o inténtalo más tarde.</string>
     <string name="trakt_social_signin_unsupported">Iniciar sesión con Google/Facebook/Apple no es posible aquí. Por favor, inicia sesión con tu nombre de usuario y contraseña de Trakt.</string>
     <string name="connect_trakt">Conectar a Trakt</string>
+
+    <!-- SIMKL -->
+    <string name="category_simkl">SIMKL</string>
+    <string name="connect_simkl">Conectar a SIMKL</string>
+    <string name="simkl_device_auth_step1">1. En tu teléfono o PC, entra en:</string>
+    <string name="simkl_device_auth_step2">2. Introduce este código:</string>
+    <string name="simkl_device_auth_waiting">Esperando autorización…</string>
+    <string name="simkl_device_auth_success">¡Conectado con éxito a SIMKL!</string>
+    <string name="simkl_device_auth_timeout">El código ha caducado. Inténtalo de nuevo.</string>
+    <string name="simkl_device_auth_denied">Se ha denegado la autorización en SIMKL.</string>
+    <string name="simkl_signin">Iniciar sesión en SIMKL</string>
+    <string name="simkl_signout">Cerrar sesión de SIMKL</string>
+    <string name="simkl_connected">Conectado a SIMKL</string>
+    <string name="simkl_not_connected">No conectado a SIMKL</string>
+    <string name="simkl_signin_title">Iniciar sesión</string>
+    <string name="simkl_signin_summary">No has iniciado sesión</string>
+    <string name="simkl_signin_summary_logged">Sesión iniciada como %s</string>
+    <string name="simkl_wipe_title">Cerrar sesión de SIMKL</string>
+    <string name="simkl_live_scrobbling_title">Scrobbler en tiempo real</string>
+    <string name="simkl_live_scrobbling_summary">Compartir vídeos que se están viendo en SIMKL</string>
     <string name="trakt_sync_status_never">Aún no sincronizado</string>
     <string name="trakt_sync_status_ok">Última sincronización: hace %1$s</string>
     <string name="trakt_sync_status_ok_skipped" tools:ignore="PluralsCandidate">Última sincronización: hace %1$s · %2$d video(s) pendientes (duración desconocida)</string>

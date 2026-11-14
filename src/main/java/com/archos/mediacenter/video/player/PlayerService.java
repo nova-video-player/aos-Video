@@ -60,6 +60,7 @@ import com.archos.mediacenter.utils.ISO639codes;
 import com.archos.mediacenter.utils.introdb.IntroDbManager;
 import com.archos.mediacenter.utils.introdb.IntroDbQueryParams;
 import com.archos.mediacenter.utils.introdb.IntroSegments;
+import com.archos.mediacenter.utils.simkl.Simkl;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
@@ -1259,6 +1260,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
             if ((mPlayerState != PlayerState.INIT && mPlayerState != PlayerState.PREPARING)) {
                 if (log.isDebugEnabled()) log.debug("stopAndSaveVideoState: stopTrakt");
                 stopTrakt();
+                stopSimkl();
             }
             saveVideoStateIfReady();
             if (mUpdateNextTask != null) {
@@ -1482,6 +1484,50 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     };
 
     /*
+        SIMKL
+     */
+    private void startSimkl() {
+        log.info("startSimkl: checking enabled");
+        if (!PrivateMode.isActive() && Simkl.isLiveScrobblingEnabled(mPreferences)) {
+            if (mVideoInfo == null) {
+                log.info("startSimkl: mVideoInfo is null, cannot start SIMKL yet!");
+                return;
+            }
+            int progress = getPlayerProgress();
+            log.info("startSimkl: dispatching start, progress={}", progress);
+            Simkl.scrobbleStart(mVideoInfo, progress, mPreferences);
+        } else {
+            log.info("startSimkl: not active (privateMode={} or enabled={})", PrivateMode.isActive(), Simkl.isLiveScrobblingEnabled(mPreferences));
+        }
+    }
+
+    private void stopSimkl() {
+        log.info("stopSimkl: checking enabled");
+        if (!PrivateMode.isActive() && Simkl.isLiveScrobblingEnabled(mPreferences)) {
+            if (mVideoInfo == null) {
+                log.warn("stopSimkl: mVideoInfo is null");
+                return;
+            }
+            int progress = getPlayerProgress();
+            log.info("stopSimkl: dispatching stop, progress={}", progress);
+            Simkl.scrobbleStop(mVideoInfo, progress, mPreferences);
+        }
+    }
+
+    private void pauseSimkl() {
+        log.info("pauseSimkl: checking enabled");
+        if (!PrivateMode.isActive() && Simkl.isLiveScrobblingEnabled(mPreferences)) {
+            if (mVideoInfo == null) {
+                log.warn("pauseSimkl: mVideoInfo is null");
+                return;
+            }
+            int progress = getPlayerProgress();
+            log.info("pauseSimkl: dispatching pause, progress={}", progress);
+            Simkl.scrobblePause(mVideoInfo, progress, mPreferences);
+        }
+    }
+
+    /*
         Indexing
      */
     private VideoObserver mVideoObserver;
@@ -1638,6 +1684,9 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         mIntent.setData(mUri);
         if (!PrivateMode.isActive()) {
             updateNowPlayingMetadata();
+        }
+        if (mPlayerState == PlayerState.PLAYING) {
+            startSimkl();
         }
         if(mCallOnDataUriOKWhenVideoInfoIsSet)
             onDataUriOK();
@@ -2081,6 +2130,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (state == PlayerController.STATE_NORMAL) {
             if (log.isDebugEnabled()) log.debug("onPlay: PlayerController.STATE_NORMAL -> startTrakt()");
             startTrakt();
+            startSimkl();
         } else {
             if (log.isDebugEnabled()) log.debug("onPlay: !PlayerController.STATE_NORMAL -> not startTrakt()!");
         }
@@ -2102,6 +2152,7 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
         if (state == PlayerController.STATE_NORMAL) {
             if (log.isDebugEnabled()) log.debug("onPause: normal state thus pauseTrakt()!");
             pauseTrakt();
+            pauseSimkl();
         } else {
             if (log.isDebugEnabled()) log.debug("onPause: other/seek state thus not doing pauseTrakt()!");
         }

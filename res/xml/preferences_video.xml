@@ -517,6 +517,28 @@
             android:title="@string/trakt_wipe_title"
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
+    <PreferenceCategory
+        android:key="simkl_category"
+        android:title="@string/category_simkl"
+        app:iconSpaceReserved="false" >
+
+        <com.archos.mediacenter.video.utils.SimklSigninDialogPreference
+            android:key="simkl_signin"
+            android:title="@string/simkl_signin_title"
+            app:iconSpaceReserved="false"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="simkl_live_scrobbling"
+            android:summary="@string/simkl_live_scrobbling_summary"
+            android:title="@string/simkl_live_scrobbling_title"
+            app:iconSpaceReserved="false"/>
+
+        <com.archos.mediacenter.video.utils.SimklWipeDialogPreference
+            android:key="simkl_wipe"
+            android:title="@string/simkl_wipe_title"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/network_shared_folders"
         android:key="netshare_category"
         app:iconSpaceReserved="false" >

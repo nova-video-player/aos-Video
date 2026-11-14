@@ -61,6 +61,7 @@ import com.archos.filecorelibrary.samba.SambaDiscovery;
 import com.archos.filecorelibrary.smbj.SmbjUtils;
 import com.archos.filecorelibrary.sshj.SshjUtils;
 import com.archos.filecorelibrary.webdav.WebdavUtils;
+import com.archos.mediacenter.utils.simkl.Simkl;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
@@ -924,6 +925,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         new Thread("nova-deferred-init") {
             public void run() {
                 Trakt.initApiKeys(appContext);
+                Simkl.initApiKeys(appContext);
                 launchSambaDiscovery();
                 if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
                 upgradeActions(appContext);
