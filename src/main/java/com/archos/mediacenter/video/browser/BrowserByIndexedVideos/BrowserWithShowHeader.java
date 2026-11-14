@@ -24,6 +24,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -41,6 +42,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.core.view.MenuProvider;
 import android.view.ViewGroup;
@@ -57,6 +59,7 @@ import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.HeaderGridView;
 import com.archos.mediacenter.video.browser.MainActivity;
 import com.archos.mediacenter.video.browser.adapters.mappers.TvshowCursorMapper;
+import com.archos.mediacenter.video.utils.SystemBarUtils;
 import com.archos.mediacenter.video.utils.ThemeManager;
 import com.archos.mediacenter.video.browser.adapters.object.Tvshow;
 import com.archos.mediacenter.video.browser.loader.SeasonsLoader;
@@ -84,6 +87,8 @@ import java.util.Date;
 public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
     private static final Logger log = LoggerFactory.getLogger(BrowserWithShowHeader.class);
+
+    private int mLastSystemBarColor = Color.TRANSPARENT;
 
     static final private String BROWSER_SHOW = BrowserListOfEpisodes.class.getName();
     public static final String EXTRA_SHOW_ITEM = "show_item";
@@ -464,31 +469,44 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     protected abstract void setColor(int color);
 
     @SuppressWarnings("deprecation")
-    protected void setStatusBarBackgroundColor(int color) {
+    protected void setSystemBarBackgroundColor(int color) {
+        mLastSystemBarColor = color;
         Activity activity = getActivity();
         if (activity == null) return;
         Window window = activity.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.setStatusBarContrastEnforced(false);
+            window.setNavigationBarContrastEnforced(false);
         }
         if (Build.VERSION.SDK_INT < 35) {
             window.setStatusBarColor(color);
+            window.setNavigationBarColor(color);
         }
-        View statusBarBackground = window.getDecorView().findViewById(android.R.id.statusBarBackground);
-        if (statusBarBackground != null) {
-            statusBarBackground.setBackgroundColor(color);
-            statusBarBackground.setForeground(new ColorDrawable(color));
-            statusBarBackground.setAlpha(1f);
-        }
+        View decorView = window.getDecorView();
+        setBarForeground(decorView.findViewById(android.R.id.statusBarBackground), color);
+        SystemBarUtils.setNavigationBarOverlay(activity, color, this);
     }
 
-    protected void clearStatusBarBackgroundColor() {
+    private void setBarForeground(View barBackground, int color) {
+        if (barBackground == null) return;
+        barBackground.setBackgroundColor(color);
+        barBackground.setForeground(new ColorDrawable(color));
+        barBackground.setAlpha(1f);
+    }
+
+    protected void clearSystemBarBackgroundColor() {
+        mLastSystemBarColor = Color.TRANSPARENT;
         Activity activity = getActivity();
         if (activity == null) return;
-        View statusBarBackground = activity.getWindow().getDecorView()
-                .findViewById(android.R.id.statusBarBackground);
-        if (statusBarBackground != null) {
-            statusBarBackground.setForeground(null);
+        View decorView = activity.getWindow().getDecorView();
+        clearBarForeground(decorView.findViewById(android.R.id.statusBarBackground));
+        SystemBarUtils.clearNavigationBarOverlay(activity, this);
+    }
+
+    private void clearBarForeground(View barBackground) {
+        if (barBackground != null) {
+            barBackground.setForeground(null);
         }
     }
 
@@ -496,6 +514,9 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
     public void onResume(){
         super.onResume();
+        if (mLastSystemBarColor != Color.TRANSPARENT) {
+            setSystemBarBackgroundColor(mLastSystemBarColor);
+        }
     }
 
     @Override

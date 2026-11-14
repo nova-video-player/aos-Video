@@ -38,6 +38,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.utils.MiscUtils;
+import com.archos.mediacenter.video.utils.SystemBarUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -121,6 +122,7 @@ public class VideoInfoActivity extends AppCompatActivity {
     protected void onDestroy() {
         if (DBG) Log.d(TAG, "onDestroy");
         super.onDestroy();
+        SystemBarUtils.clearNavigationBarOverlay(this);
         // This is the critical fix: remove the backdrop from the window's DecorView.
         if (mGlobalBackdrop != null) {
             ViewGroup globalLayout = (ViewGroup) getWindow().getDecorView();
@@ -148,6 +150,7 @@ public class VideoInfoActivity extends AppCompatActivity {
             getWindow().setNavigationBarColor(color);
             getWindow().setStatusBarColor(color);
         }
+        SystemBarUtils.setNavigationBarOverlay(this, color, this);
     }
 
     @Override

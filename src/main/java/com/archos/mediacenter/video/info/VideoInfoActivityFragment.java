@@ -106,6 +106,7 @@ import com.archos.mediacenter.video.utils.ExternalPlayerResultListener;
 import com.archos.mediacenter.video.utils.ThemeManager;
 import com.archos.mediacenter.video.utils.ExternalPlayerWithResultStarter;
 import com.archos.mediacenter.video.utils.PlayUtils;
+import com.archos.mediacenter.video.utils.SystemBarUtils;
 import com.archos.mediacenter.video.utils.StoreRatingDialogBuilder;
 import com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2;
 import com.archos.mediacenter.video.utils.TrailerServiceIconFactory;
@@ -812,14 +813,24 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             mNavActionButtonsContainer.setCardBackgroundColor(mColor);
         if(mSecondaryTitleBar!=null)
             mTitleBarContent.setBackgroundColor(mColor);
+        int detailsBackgroundColor = VideoInfoCommonClass.getDarkerColor(mColor);
         if(!mIsLaunchFromPlayer)
-            mRoot.setBackgroundColor(VideoInfoCommonClass.getDarkerColor(mColor));
+            mRoot.setBackgroundColor(detailsBackgroundColor);
         else
-            mRoot.setBackgroundColor(VideoInfoCommonClass.getAlphaColor(VideoInfoCommonClass.getDarkerColor(mColor),160));
+            mRoot.setBackgroundColor(VideoInfoCommonClass.getAlphaColor(detailsBackgroundColor,160));
+        updateNavigationBarOverlay(detailsBackgroundColor);
         if(mGenericPlayButton!=null)
             mGenericPlayButton.setBackgroundTintList(new ColorStateList(new int[][]{new int[]{0}}, new int[]{VideoInfoCommonClass.getClearerColor(mColor)}));
     }
 
+
+    private void updateNavigationBarOverlay(int color) {
+        if (!isResumed()) return;
+        Activity activity = getActivity();
+        if (activity != null) {
+            SystemBarUtils.setNavigationBarOverlay(activity, color, this);
+        }
+    }
 
     private void setCurrentVideo(Video video){
         updateWatchedStatus(); //independant of current video
@@ -2234,6 +2245,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mIsLeavingPlayerActivity = false;
         addNetworkListener();
         updateUI(); // be sure to be on right state
+        updateNavigationBarOverlay(VideoInfoCommonClass.getDarkerColor(mColor));
         if (mCurrentVideo != null) {
             if (log.isDebugEnabled()) log.debug("onResume: mCurrentVideo.getName()={}", mCurrentVideo.getName());
         } else {
@@ -2288,6 +2300,10 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             SubtitleManager.invalidateCache(mCurrentVideo.getFileUri());
         }
 
+        Activity activity = getActivity();
+        if (activity != null) {
+            SystemBarUtils.clearNavigationBarOverlay(activity, this);
+        }
         super.onDestroy(); // This must be called last.
     }
 
