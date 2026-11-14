@@ -83,6 +83,7 @@ public class MiscUtils {
     private static Runnable relayoutRunnable;
 
     private static int mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom;
+    private static int mCutoutRightBottom = -1;
     private static int mCutoutPathLeft = -1, mCutoutPathRight = -1;
     private static int mCutoutPathCacheWidth = -1, mCutoutPathCacheHeight = -1, mCutoutPathCacheRotation = -1;
     private static int mVideoWidth, mVideoHeight, mVideoAspect;
@@ -678,6 +679,10 @@ public class MiscUtils {
         if (mCutoutPathRight >= 0 && mCutoutPathRight < right) {
             controlBarRight = Math.max(mCutoutPathRight, systemBarRight);
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && mCutoutRightBottom >= 0
+                && !cutoutOverlapsBottomBand(rootView, controlBar, bottom, mCutoutRightBottom)) {
+            controlBarRight = Math.max(systemBarRight, 0);
+        }
         contentInsets.set(left, top, right, bottom);
 
         ViewGroup.LayoutParams controllerParams = controllerView.getLayoutParams();
@@ -691,6 +696,14 @@ public class MiscUtils {
         }
         applyPlayerBarInsets(controllerView, controlBar, volumeBar, left, volumeBarLeft, top, controlBarRight, bottom);
         return contentInsets;
+    }
+
+    private static boolean cutoutOverlapsBottomBand(View rootView, View controlBar,
+                                                     int bottomInset, int cutoutBottom) {
+        int barHeight = controlBar != null ? controlBar.getHeight() : 0;
+        if (rootView == null || barHeight <= 0) return true;
+        int barTop = rootView.getHeight() - bottomInset - barHeight;
+        return cutoutBottom > barTop;
     }
 
     private static void applyPlayerBarInsets(View controllerView, View controlBar, View volumeBar,
@@ -748,15 +761,32 @@ public class MiscUtils {
             mCutoutRight = cutout.getSafeInsetRight();
             mCutoutBottom = cutout.getSafeInsetBottom();
             setCutoutPathInsets(cutout, rootView);
+            setCutoutRightBottomEdge(cutout, rootView);
             if (setter != null) {
                 setter.setCutoutMetrics(mCutoutLeft, mCutoutTop, mCutoutRight, mCutoutBottom);
             }
         } else {
             mCutoutLeft = mCutoutTop = mCutoutRight = mCutoutBottom = 0;
+            mCutoutRightBottom = -1;
             mCutoutPathLeft = mCutoutPathRight = -1;
             if (setter != null) {
                 setter.setCutoutMetrics(0, 0, 0, 0);
             }
+        }
+    }
+
+    private static void setCutoutRightBottomEdge(DisplayCutout cutout, View rootView) {
+        mCutoutRightBottom = -1;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || rootView == null) return;
+        int width = rootView.getWidth();
+        if (width <= 0) return;
+        int[] rootLocation = new int[2];
+        rootView.getLocationOnScreen(rootLocation);
+        int centerX = rootLocation[0] + width / 2;
+        for (Rect rect : cutout.getBoundingRects()) {
+            if (rect.isEmpty() || rect.centerX() < centerX) continue;
+            int bottom = rect.bottom - rootLocation[1];
+            mCutoutRightBottom = Math.max(mCutoutRightBottom, bottom);
         }
     }
 
