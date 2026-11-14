@@ -25,10 +25,10 @@ layout bug.
 
 The design rule is therefore: **the video/scrim may bleed; touchable OSD content
 may not**. The control bar background also stops at the safe rectangle. The
-volume bar's decorative background may extend through the top system strip, but
-its buttons, slider, and touch targets stay inside the safe rectangle. The
-control bar sits directly above the bottom system area with no gap and no
-underlap.
+volume bar's decorative background may extend through the top system strip and
+leftward under a left-side display cutout, but its buttons, slider, and touch
+targets stay inside the safe rectangle. The control bar sits directly above the
+bottom system area with no gap and no underlap.
 
 ## 2. Official names
 
@@ -125,40 +125,46 @@ navigation bar is always on the bottom.
 
 ### R1 - Bar backgrounds and content follow their safe bands
 
-The control bar background and all touchable OSD content (control buttons,
-seekbar, volume buttons, slider, thumb) stop at the safe rectangle: no display
-cutout, no bottom system area. A right-side cutout that ends above the control
-bar does not constrain that bar, so the bar may use the full right edge there.
+All touchable OSD content (control buttons, seekbar, volume buttons, slider,
+thumb) stops at the safe rectangle: no display cutout, no bottom system area.
+The control bar background also stops at the safe rectangle. A right-side cutout
+that ends above the control bar does not constrain that bar, so the bar may use
+the full right edge there.
 
-The volume bar is the one exception at the top: its decorative background may
-start at the physical top (`y = 0`) while its buttons and slider are inset by the
-top system bar. Its background still stops at the bottom safe edge. The
-background must not enter the left/right cutout area; only video/scrim may be
-full-bleed around the cutout.
+The volume bar is the exception: its decorative background may start at the
+physical top (`y = 0`) and extend to the physical left edge (`x = 0`) while its
+buttons and slider are inset by the top system bar and the left cutout. Its
+background still stops at the bottom safe edge. The background may enter the
+left display-cutout area; touchable content may not. Only video/scrim and the
+volume bar background may be full-bleed around the cutout.
 
 The control bar reserves end padding for the bottom-right rounded corner as
 described in R6. Other rounded-corner overlaps may still clip OSD content; do
 not add global radius-based margins, height changes, or a controller shift.
 
-### R2 - Volume bar must not overlap the display cutout
+### R2 - Volume bar content must not overlap the display cutout
 
 ```text
-volume.left  = volumeBarLeft
-volume.right = volume.left + Vw
+volume.backgroundLeft = 0
+volume.contentLeft    = volumeBarLeft
+volume.contentRight   = volumeBarLeft + Vw
+volume.backgroundRight = volume.contentRight
 
 volumeBarLeft = max(cL, sL)
 if (API 31+ && cutoutPathLeft >= 0 && cutoutPathLeft < max(cL, sL)):
     volumeBarLeft = max(cutoutPathLeft, sL)
 ```
 
-On a landscape phone with a left display cutout, the volume bar cannot be flush
-with `x = 0`. The strip between the physical edge and the volume bar is the
-cutout safe area; fill it with video/scrim, not with a control background.
+On a landscape phone with a left display cutout, the volume bar content cannot
+be flush with `x = 0`. Its decorative background may be: the background extends
+left under the cutout while a left padding of `volumeBarLeft` keeps the controls
+at the safe edge. The strip between the physical edge and the controls is filled
+by the volume bar background, video, or scrim as appropriate.
 
 The cutout bounding rect and, on API 31+, the cutout path must be respected. The
-path may let the volume bar sit closer to the camera cutout than the rectangular
-safe inset, but no part of the volume bar or its touch target may intersect the
-cutout.
+path may let the volume bar content sit closer to the camera cutout than the
+rectangular safe inset, but no button, slider, thumb, or touch target may
+intersect the cutout.
 
 ### R3 - No artificial gap between volume bar and control bar
 
@@ -266,7 +272,7 @@ is larger than the screen. Position OSD per bar and per content rectangle.
 The implementation zeroes the controller container's margins, keeps the
 controller full-screen, and applies margins/height to the individual bars. If a
 future controller is inset, keep OSD chrome at the controller's safe bounds;
-only the video/scrim and the volume bar's top background extension may fill
+only the video/scrim and the volume bar's top/left background extension may fill
 outside them. Do not move the whole OSD into the safe rectangle and leave a dark
 band around it.
 
@@ -331,17 +337,17 @@ a smaller value and lets the background pass through the faded gesture area.
 For portrait it restores `MATCH_PARENT` height, clears the vertical margins, and
 clears the vertical padding.
 
-Do not trim the volume bar by the rounded-corner radius. Its horizontal position
-already avoids the left rounded corners.
+Do not trim the volume bar by the rounded-corner radius. Its background reaches
+the physical left edge; only its content stays at the cutout-safe left edge.
 
 ### R12 - Variants
 
 - Phone portrait: no volume bar; `control_bar` is a vertical `wrap_content` bar.
   Place it above the bottom system area; do not assume `Vw` is its height. The
   implementation applies only the bottom margin and clears left/right margins.
-- Phone landscape: volume bar on the left, background from the physical top to
-  the bottom safe edge; control bar `Vw` thick on the bottom. The control bar
-  gets the right margin
+- Phone landscape: volume bar on the left, background from the physical top and
+  left edge to the bottom safe edge; control bar `Vw` thick on the bottom. The
+  control bar gets the right margin
   `controlBarRight`; its left edge comes from `layout_toEndOf` when the volume
   bar is visible.
 - `sw500dp-notouch` / `sw600dp` / TV: bar thickness and volume-bar placement
@@ -389,7 +395,8 @@ size.
 playerControllersContainer (FrameLayout, match_parent)
 └── playerControllers (PlayerControlsRelativeLayout, match_parent)
     ├── tv_menu_container / my_recycler_view
-    ├── volume_bar (land/tablet only; Vw wide; left/top aligned)
+    ├── volume_bar (land/tablet only; background from x=0; content Vw wide
+    │                starting at volumeBarLeft; left/top aligned)
     │   ├── volume_up
     │   ├── volume_level
     │   └── volume_down
@@ -413,6 +420,7 @@ Measured reference device (Pixel 11 Pro XL, landscape, 390 dpi):
 | Screen | `2404 x 1080` |
 | Display cutout safe left `cL` | `161` |
 | Display cutout rect | `[0,496] .. [161,583]` |
+| Volume content left `volumeBarLeft` | `119` |
 | Status bar top `sT` | `59` |
 | Bottom gesture area `gB` | `78` |
 | Rounded corner radius `r` | `123` |
@@ -420,8 +428,9 @@ Measured reference device (Pixel 11 Pro XL, landscape, 390 dpi):
 | `player2014_bar_width` | `45dp`, about `110px` |
 | Action bar container | `[0,0] .. [2404,176]` |
 
-The volume bar must not intersect the cutout rect. The seekbar must end at or
-above `y = 1002`.
+The volume bar content must not intersect the cutout rect; its background may
+extend under it to the physical left edge. The seekbar must end at or above
+`y = 1002`.
 
 ## 7. Previous design rules
 
@@ -462,7 +471,8 @@ This geometry is safe:
 The visible dark bands in that design came from the video/scrim not filling the
 safe strips, not from the safe rectangle being wrong. Extend video/scrim to the
 physical edges, but keep the control bar background and all interactive content
-at the safe rectangle. The volume bar background may also fill the top strip.
+at the safe rectangle. The volume bar background may also fill the top strip and
+extend left under the cutout.
 
 The old generic solver also defined the subtitle behavior:
 
@@ -478,12 +488,13 @@ The old generic solver also defined the subtitle behavior:
 The controller remains edge-to-edge and its geometry is applied per bar:
 
 - controller margins are zero, so the controller is `[0,0] .. [2404,1080]`;
-- `volume_bar` uses `volumeBarLeft` for its left edge and extends from `y = 0`
-  to `H - bottom`. Its controls are padded down by `top`, so the content begins
-  at `y = top`. On the reference geometry that is background
-  `[117,0] .. [227,1080]` and content `[117,59] .. [227,970]`; on API 31+ a
-  left cutout path may place the left edge closer to the camera cutout while
-  keeping the same width;
+- `volume_bar` spans from `x = 0` to `volumeBarLeft + Vw` and from `y = 0` to
+  `H - bottom`. Its width is `volumeBarLeft + Vw`, with left padding
+  `volumeBarLeft`; its controls are padded down by `top`, so the content begins
+  at `(volumeBarLeft, top)`. On the 3-button reference geometry that is
+  background `[0,0] .. [229,1080]` and content `[119,59] .. [229,970]`; with
+  gesture navigation it is background `[0,0] .. [229,1021]` and content
+  `[119,59] .. [229,911]`;
 - `control_bar` is `[227,970] .. [2404,1080]` on the reference device, flush
   against the volume bar and the bottom system area. Its right margin is
   `controlBarRight`, so a right-side cutout that clears the bottom band leaves
@@ -500,9 +511,11 @@ The controller remains edge-to-edge and its geometry is applied per bar:
 - `showVolumeBar(mVolumeBarShowing)` restores the volume bar after rotation and
   relayout.
 
-Earlier `uiautomator` verification on the reference device confirmed no
-volume/cutout overlap, no control/gesture overlap, and no gap between the volume
-bar, control bar, and bottom system area.
+Earlier `uiautomator` verification on the reference device confirmed no volume
+content/cutout overlap, no control/gesture overlap, and no gap between the volume
+bar, control bar, and bottom system area. The volume bar background intentionally
+extends left under the cutout to `x = 0`; the controls remain at
+`volumeBarLeft`.
 
 ## 9. Implementation mapping
 
@@ -523,11 +536,13 @@ bar, control bar, and bottom system area.
   landscape it sets the control bar's right/bottom margins and, when the volume
   bar is gone, its left margin; it sets the control bar's end padding for the
   rounded corner while preserving its start/top/bottom padding; it sets the
-  volume bar's left margin and height to `controller.height - bottom`, with
-  `topMargin = 0` and `paddingTop = top`, so the background reaches the physical
-  top while the controls stay below the status bar. In portrait it clears
-  horizontal and volume-bar margins/padding and the control bar's end padding
-  and applies only the control bar's bottom margin.
+  volume bar's left margin to `0`, expands its width by `volumeBarLeft`, adds
+  `paddingLeft = volumeBarLeft`, and sets its height to
+  `controller.height - bottom`, with `topMargin = 0` and `paddingTop = top`, so
+  the background reaches the physical left and top edges while the controls stay
+  below the status bar and right of the cutout. In portrait it restores the
+  original width, clears horizontal and volume-bar margins/padding, and clears
+  the control bar's end padding; it applies only the control bar's bottom margin.
 - `MiscUtils.getPlayerBarBottomInset(...)`: uses the visible bottom system bar
   inset, falling back to the gesture area when the control bar is visible and the
   system reports no visible bottom bar; falls back to the navigation bar height
@@ -572,10 +587,11 @@ bar, control bar, and bottom system area.
 
 For landscape on the reference device:
 
-- `volume_bar.left == volumeBarLeft`; on the reference device that is `161`.
-  No part of the volume bar intersects `[0,496]..[161,583]`. On API 31+ the
-  cutout path may place the left edge closer to the cutout without intersecting
-  it.
+- `volume_bar.left == 0`, while its content starts at `volumeBarLeft`; on the
+  reference device that is `119`. No button, slider, thumb, or touch target
+  intersects `[0,496]..[161,583]`. On API 31+ the cutout path may place the
+  content edge closer to the cutout without intersecting it; the background
+  still reaches `x = 0`.
 - `volume_bar.top == 0`, while `volume_up.top == top`; the slider and
   volume-down button stay above the bottom safe edge.
 - `control_bar.bottom == 1002`; `seek_progress.bottom <= 1002`.
@@ -586,8 +602,8 @@ For landscape on the reference device:
 - While the control bar is visible, no clickable OSD region and no OSD bar
   background enters the bottom system area. No clickable OSD region intersects
   the display cutout.
-- Only video/scrim and the volume bar's decorative top background may reach the
-  physical screen edges; interactive OSD content stays inside the safe
+- Only video/scrim and the volume bar's decorative top/left background may
+  reach the physical screen edges; interactive OSD content stays inside the safe
   rectangle.
 - No global controller shift; no gap between the control bar and the bottom
   system area.
@@ -632,14 +648,11 @@ and must not be filled by the control bar background.
 
 ## 12. Open decisions
 
-1. Should the left cutout strip be filled with video, a scrim, or remain black?
-   It must not be filled by a control background that looks like a thicker
-   volume bar.
-2. Left/right back gestures: avoid them by insetting controls, or keep controls
+1. Left/right back gestures: avoid them by insetting controls, or keep controls
    at the edge with system gesture exclusion rects?
-3. Action bar: should the volume bar start below the action bar, or should the
+2. Action bar: should the volume bar start below the action bar, or should the
    action bar be hidden/transparent during OSD? The current `play_touch_zone`
    offset alone does not protect the volume button.
-4. When the control bar is hidden, should the volume bar background also stop
+3. When the control bar is hidden, should the volume bar background also stop
    above the gesture area? `getPlayerBarBottomInset()` currently adds the gesture
    fallback only while the control bar is visible.

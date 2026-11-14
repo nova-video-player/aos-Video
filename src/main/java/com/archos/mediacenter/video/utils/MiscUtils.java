@@ -773,24 +773,31 @@ public class MiscUtils {
 
         if (volumeBar != null && volumeBar.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) volumeBar.getLayoutParams();
+            int volumeBarWidth = params.width > 0 ? params.width : volumeBar.getWidth();
+            volumeBarWidth = Math.max(volumeBarWidth - volumeBar.getPaddingLeft(), 0);
             int volumePaddingTop = 0;
             int volumePaddingBottom = 0;
+            int volumePaddingLeft = 0;
             if (landscape) {
-                params.leftMargin = volumeBarLeft;
+                params.leftMargin = 0;
                 params.topMargin = 0;
                 params.bottomMargin = 0;
+                params.width = volumeBarWidth + volumeBarLeft;
                 params.height = Math.max(height - bottom, 0);
                 volumePaddingTop = top;
+                volumePaddingLeft = volumeBarLeft;
             } else {
                 params.leftMargin = 0;
                 params.topMargin = 0;
                 params.bottomMargin = 0;
+                params.width = volumeBarWidth;
                 params.height = ViewGroup.LayoutParams.MATCH_PARENT;
             }
             volumeBar.setLayoutParams(params);
-            if (volumeBar.getPaddingTop() != volumePaddingTop
+            if (volumeBar.getPaddingLeft() != volumePaddingLeft
+                    || volumeBar.getPaddingTop() != volumePaddingTop
                     || volumeBar.getPaddingBottom() != volumePaddingBottom) {
-                volumeBar.setPadding(volumeBar.getPaddingLeft(), volumePaddingTop,
+                volumeBar.setPadding(volumePaddingLeft, volumePaddingTop,
                         volumeBar.getPaddingRight(), volumePaddingBottom);
             }
         }
