@@ -228,6 +228,9 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
     @Override
     public void onResume(){
         super.onResume();
+        if (getActivity() != null && ((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
+            ((MainActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(null);
+        }
         if(mArchosGridView!=null)
             mArchosGridView.clearChoices();
     }
