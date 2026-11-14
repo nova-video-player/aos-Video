@@ -506,6 +506,7 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
 
     private void clearBarForeground(View barBackground) {
         if (barBackground != null) {
+            barBackground.setBackgroundColor(Color.TRANSPARENT);
             barBackground.setForeground(null);
         }
     }

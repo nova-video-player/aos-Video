@@ -290,6 +290,7 @@ public class ThemeManager {
             android.graphics.drawable.GradientDrawable.Orientation.BOTTOM_TOP,
             new int[] { getGradientStartColor(), getGradientEndColor() }
         );
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         activity.getWindow().setBackgroundDrawable(gradient);
     }
     
@@ -359,6 +360,10 @@ public class ThemeManager {
         }
 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.setStatusBarContrastEnforced(false);
+            window.setNavigationBarContrastEnforced(false);
+        }
 
         // setStatusBarColor/setNavigationBarColor are deprecated and ignored on Android 15+
         // (edge-to-edge is enforced and bars are transparent by default there): the window/

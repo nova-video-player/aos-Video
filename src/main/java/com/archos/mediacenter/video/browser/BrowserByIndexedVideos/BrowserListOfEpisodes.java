@@ -119,7 +119,6 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
                 new ColorDrawable(ThemeManager.getInstance(getContext()).getToolbarBackgroundColor())
             );
             WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             // setStatusBarColor is deprecated and ignored on Android 15+ (edge-to-edge enforced,
             // bar is already transparent there)
             if (Build.VERSION.SDK_INT < 35) {
