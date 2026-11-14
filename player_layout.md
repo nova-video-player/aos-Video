@@ -11,8 +11,9 @@ The player is made of separate layers:
 2. **Scrim layer** - may be full-bleed; it prevents visible black bands. It is
    not the control bar background.
 3. **Interactive OSD layer** - must stay inside the safe rectangle: no display
-   cutout, status bar, navigation bar, or mandatory system gesture area. For
-   now, rounded corners may overlap this layer; see R6.
+   cutout, status bar, navigation bar, or mandatory system gesture area. The
+   control bar also reserves an end inset for the bottom-right rounded corner;
+   see R6. Other rounded-corner overlaps may still clip OSD content.
 4. **System UI layer** - status bar, navigation bar, gesture handle. Always
    above the app; controls must not be underneath it.
 5. **App action bar layer** - app chrome, not a system inset. It may overlay
@@ -135,8 +136,9 @@ top system bar. Its background still stops at the bottom safe edge. The
 background must not enter the left/right cutout area; only video/scrim may be
 full-bleed around the cutout.
 
-For now, rounded corners are allowed to overlap and clip OSD controls. Do not
-add radius-based margins, padding, height changes, or a global shift for them.
+The control bar reserves end padding for the bottom-right rounded corner as
+described in R6. Other rounded-corner overlaps may still clip OSD content; do
+not add global radius-based margins, height changes, or a controller shift.
 
 ### R2 - Volume bar must not overlap the display cutout
 
@@ -176,8 +178,8 @@ control.left = left = max(cL, sL)
 ```
 
 There must be no arbitrary margin between them. The only allowed separation is
-a real inset. Rounded corners may clip, but do not create a layout gap under the
-current policy.
+a real inset. The control bar's rounded-corner end padding is inside its content
+area and does not create a gap between the volume and control bars.
 
 ### R4 - Seekbar and control bar sit directly above the bottom system area
 
@@ -203,6 +205,7 @@ control.contentTop       = control.contentBottom - Vw   // landscape
 control.left             = volume.right                 // volume visible
 control.left             = left                         // volume gone
 control.right            = W - controlBarRight
+control.contentRight     = control.right - controlEndPadding
 ```
 
 `bottom` is the value from section 4. The bar-specific right edge is
@@ -211,42 +214,49 @@ when that path is tighter, and it becomes `sR` when a right-side cutout ends
 above the control bar.
 
 In landscape the control bar stays `Vw` thick. Do not make it taller to absorb
-an inset. Absorb the inset with padding/positioning, not by growing the bar.
-Under the current temporary policy, no end padding is added for the
-bottom-right rounded corner.
+an inset. Absorb the inset with padding/positioning, not by growing the bar. The
+bar background remains at `control.right`; only its content is inset by
+`controlEndPadding`.
 
-### R6 - Rounded corners may fully clip controls for now
+### R6 - Control bar end content clears the bottom-right rounded corner
 
-Temporary policy: allow full clipping by rounded corners. Do not compensate at
-all. Keep the safe rectangle from the display cutout and system areas, and let
-the display shape clip any OSD background or control that enters a corner.
-
-Do not use the corner radius for margins, padding, height, per-corner safe
-edges, or a global shift. Do not shorten the volume bar by `2r`. Do not add end
-padding for the control bar. Any control may be clipped, not just the bottom-right
-corner.
-
-The former `PLAYER_BAR_ROUND_CORNER_SHIFT_FACTOR` experiment has been removed.
-Player-bar layout no longer has a configurable corner shift or radius trim; only
-the subtitle solver still uses the rounded-corner radius.
-
-Example only; other corners may clip too:
+Keep the control bar background at the bar's right edge and move only its
+content. Use the bottom-right `RoundedCorner` only; do not use the maximum
+radius of all corners and do not shorten the volume bar.
 
 ```text
-        x=2281      2395 2404
-y=957   +-------------+----+
-        |             |   /
-        |             |  /
-y=1002  |-------------+ /      <- control bar bottom
-        |              /
-y=1080  +-------------+
+c        = insets.getRoundedCorner(POSITION_BOTTOM_RIGHT)
+r        = c.radius
+cx, cy   = c.center relative to the root view
+barBottom = H - bottom
+barRight  = W - controlBarRight
+dy        = barBottom - cy
+
+if (0 < dy <= r):
+    arcInset = max(0, barRight - (cx + sqrt(r² - dy²)))
+    d45      = round(r * (1 - 1/√2))
+    controlEndPadding = min(arcInset, d45)
+else:
+    controlEndPadding = 0
 ```
 
-At `y=1002`, the safe right edge would be about `2395`; the control bar reaches
-`2404`. Roughly `9px` is clipped here, and that is accepted for now.
+`d45` is the horizontal distance from the physical right edge to the 45° point
+of the quarter circle. It is the maximum end padding: the trailing icon does not
+fill the button's transparent lower-right corner, so aligning the content end
+with the 45° point avoids the full-radius gap while keeping the visible icon
+clear. The bar background may still be clipped by the display shape.
 
-Later, if we choose to avoid the corners, compute per-corner safe edges or add
-end padding to content. Do not apply one global radius inset to every side.
+On the reference device, `r = 123` and `d45 = 36`. With 3-button navigation at
+the bottom, the arc would require `123px` to clear the button bounds, but the
+policy caps the padding at `36px`. In the tested gesture-navigation layout,
+`barBottom = 1021` and the uncapped `arcInset` is `18px`, so the padding is
+`18px`.
+
+Apply the padding to the control bar's end only, using
+`setPaddingRelative(start, top, controlEndPadding, bottom)` and preserving its
+other padding. Reset it to zero in portrait, when `controlBarRight` already
+clears the corner, and when the control bar is in a scaled split-view pane that
+does not reach the window's right edge.
 
 ### R7 - Do not globally shift the controller to dodge insets
 
@@ -406,6 +416,7 @@ Measured reference device (Pixel 11 Pro XL, landscape, 390 dpi):
 | Status bar top `sT` | `59` |
 | Bottom gesture area `gB` | `78` |
 | Rounded corner radius `r` | `123` |
+| Control-bar end-padding cap `r(1 - 1/√2)` | `36` |
 | `player2014_bar_width` | `45dp`, about `110px` |
 | Action bar container | `[0,0] .. [2404,176]` |
 
@@ -470,17 +481,22 @@ The controller remains edge-to-edge and its geometry is applied per bar:
 - `volume_bar` uses `volumeBarLeft` for its left edge and extends from `y = 0`
   to `H - bottom`. Its controls are padded down by `top`, so the content begins
   at `y = top`. On the reference geometry that is background
-  `[161,0] .. [271,1002]` and content `[161,59] .. [271,1002]`; on API 31+ a
+  `[117,0] .. [227,1080]` and content `[117,59] .. [227,970]`; on API 31+ a
   left cutout path may place the left edge closer to the camera cutout while
   keeping the same width;
-- `control_bar` is `[271,892] .. [2404,1002]` on the reference device, flush
+- `control_bar` is `[227,970] .. [2404,1080]` on the reference device, flush
   against the volume bar and the bottom system area. Its right margin is
   `controlBarRight`, so a right-side cutout that clears the bottom band leaves
   the bar at the full window edge;
-- portrait clears the control bar's left/right margins and applies only its
-  bottom margin; the control bar keeps its `wrap_content` height;
-- `seek_progress` stays inside the control bar at `[521,904] .. [2029,990]`;
-- no rounded-corner shift is applied, so the display shape may clip the bars;
+- the control bar's content end is inset by `controlEndPadding` (`36px` on the
+  reference device). The trailing `format` button becomes
+  `[2248,970] .. [2368,1080]` and `fullscreen_cutouts` becomes
+  `[2123,970] .. [2243,1080]`; the bar background remains
+  `[227,970] .. [2404,1080]`;
+- portrait clears the control bar's left/right margins and end padding and
+  applies only its bottom margin; the control bar keeps its `wrap_content`
+  height;
+- `seek_progress` stays inside the control bar at `[477,982] .. [1993,1068]`;
 - `showVolumeBar(mVolumeBarShowing)` restores the volume bar after rotation and
   relayout.
 
@@ -499,13 +515,19 @@ bar, control bar, and bottom system area.
   derives `volumeBarLeft` / `controlBarRight` from the cutout path and
   right-cutout bottom edge, zeroes the controller margins, applies the per-bar
   insets, and returns the content rectangle.
+- `MiscUtils.getControlBarEndPadding(...)`: computes the capped bottom-right
+  rounded-corner end padding from `RoundedCorner`, `controlBarRight`, and
+  `bottom`; returns zero below API 31, when the corner is absent, or when the
+  control bar's parent is scaled for split view.
 - `MiscUtils.applyPlayerBarInsets(...)`: applies the computed edges. In
   landscape it sets the control bar's right/bottom margins and, when the volume
-  bar is gone, its left margin; it sets the volume bar's left margin and height
-  to `controller.height - bottom`, with `topMargin = 0` and `paddingTop = top`,
-  so the background reaches the physical top while the controls stay below the
-  status bar. In portrait it clears horizontal and volume-bar margins and
-  padding and applies only the control bar's bottom margin.
+  bar is gone, its left margin; it sets the control bar's end padding for the
+  rounded corner while preserving its start/top/bottom padding; it sets the
+  volume bar's left margin and height to `controller.height - bottom`, with
+  `topMargin = 0` and `paddingTop = top`, so the background reaches the physical
+  top while the controls stay below the status bar. In portrait it clears
+  horizontal and volume-bar margins/padding and the control bar's end padding
+  and applies only the control bar's bottom margin.
 - `MiscUtils.getPlayerBarBottomInset(...)`: uses the visible bottom system bar
   inset, falling back to the gesture area when the control bar is visible and the
   system reports no visible bottom bar; falls back to the navigation bar height
@@ -571,8 +593,10 @@ For landscape on the reference device:
   system area.
 - The control bar uses the visible navigation bar inset, with the gesture area as
   a fallback only when no visible bottom system bar is reported.
-- Rounded corners may fully clip any OSD control for now; no radius-based trim,
-  padding, safe-edge calculation, or shift is applied.
+- The control bar background may be clipped by the bottom-right rounded corner,
+  but its trailing visible control is clear of the corner. End padding is capped
+  at `round(r * (1 - 1/√2))`; no global radius trim or controller shift is
+  applied.
 - Portrait places the wrap-content control bar above the bottom system area and
   clears its left/right margins.
 - 3-button navigation places the seekbar above the navigation bar.

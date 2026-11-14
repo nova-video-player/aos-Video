@@ -684,6 +684,8 @@ public class MiscUtils {
             controlBarRight = Math.max(systemBarRight, 0);
         }
         contentInsets.set(left, top, right, bottom);
+        int controlBarEndPadding = getControlBarEndPadding(insets, rootView, controlBar,
+                controlBarRight, bottom);
 
         ViewGroup.LayoutParams controllerParams = controllerView.getLayoutParams();
         if (controllerParams instanceof ViewGroup.MarginLayoutParams) {
@@ -694,8 +696,44 @@ public class MiscUtils {
                 controllerView.setLayoutParams(margins);
             }
         }
-        applyPlayerBarInsets(controllerView, controlBar, volumeBar, left, volumeBarLeft, top, controlBarRight, bottom);
+        applyPlayerBarInsets(controllerView, controlBar, volumeBar, left, volumeBarLeft, top,
+                controlBarRight, bottom, controlBarEndPadding);
         return contentInsets;
+    }
+
+    private static int getControlBarEndPadding(WindowInsets insets, View rootView, View controlBar,
+                                               int controlBarRight, int bottom) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || insets == null
+                || rootView == null || controlBar == null) {
+            return 0;
+        }
+        if (controlBar.getParent() instanceof View) {
+            View parent = (View) controlBar.getParent();
+            if (parent.getScaleX() != 1f || parent.getScaleY() != 1f) {
+                return 0;
+            }
+        }
+        RoundedCorner corner = insets.getRoundedCorner(POSITION_BOTTOM_RIGHT);
+        if (corner == null) return 0;
+        int radius = corner.getRadius();
+        if (radius <= 0) return 0;
+        int[] rootLocation = new int[2];
+        rootView.getLocationOnScreen(rootLocation);
+        int centerX = corner.getCenter().x - rootLocation[0];
+        int centerY = corner.getCenter().y - rootLocation[1];
+        int barRight = rootView.getWidth() - controlBarRight;
+        int barBottom = rootView.getHeight() - bottom;
+        int dy = barBottom - centerY;
+        if (dy <= 0 || dy > radius) return 0;
+        int dx = (int) Math.sqrt((double) radius * radius - (double) dy * dy);
+        int endPadding = Math.max(0, barRight - (centerX + dx));
+        int diagonalPadding = (int) Math.round(radius * (1.0 - 1.0 / Math.sqrt(2.0)));
+        endPadding = Math.min(endPadding, diagonalPadding);
+        if (log.isDebugEnabled()) {
+            log.debug("getControlBarEndPadding: radius={}, center=({},{}), barBottom={}, barRight={}, endPadding={}",
+                    radius, centerX, centerY, barBottom, barRight, endPadding);
+        }
+        return endPadding;
     }
 
     private static boolean cutoutOverlapsBottomBand(View rootView, View controlBar,
@@ -707,7 +745,8 @@ public class MiscUtils {
     }
 
     private static void applyPlayerBarInsets(View controllerView, View controlBar, View volumeBar,
-                                             int left, int volumeBarLeft, int top, int controlBarRight, int bottom) {
+                                             int left, int volumeBarLeft, int top, int controlBarRight,
+                                             int bottom, int controlBarEndPadding) {
         int width = controllerView.getWidth();
         int height = controllerView.getHeight();
         if (width <= 0 || height <= 0) return;
@@ -725,6 +764,11 @@ public class MiscUtils {
             }
             params.bottomMargin = bottom;
             controlBar.setLayoutParams(params);
+            int endPadding = landscape ? controlBarEndPadding : 0;
+            if (controlBar.getPaddingEnd() != endPadding) {
+                controlBar.setPaddingRelative(controlBar.getPaddingStart(),
+                        controlBar.getPaddingTop(), endPadding, controlBar.getPaddingBottom());
+            }
         }
 
         if (volumeBar != null && volumeBar.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
