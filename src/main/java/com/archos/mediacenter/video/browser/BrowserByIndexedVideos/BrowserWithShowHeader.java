@@ -24,6 +24,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 
 import androidx.core.view.MenuProvider;
 import android.view.ViewGroup;
@@ -460,6 +462,35 @@ public abstract class BrowserWithShowHeader extends CursorBrowserByVideo  {
     protected abstract void setSeason(TextView seasonView);
 
     protected abstract void setColor(int color);
+
+    @SuppressWarnings("deprecation")
+    protected void setStatusBarBackgroundColor(int color) {
+        Activity activity = getActivity();
+        if (activity == null) return;
+        Window window = activity.getWindow();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.setStatusBarContrastEnforced(false);
+        }
+        if (Build.VERSION.SDK_INT < 35) {
+            window.setStatusBarColor(color);
+        }
+        View statusBarBackground = window.getDecorView().findViewById(android.R.id.statusBarBackground);
+        if (statusBarBackground != null) {
+            statusBarBackground.setBackgroundColor(color);
+            statusBarBackground.setForeground(new ColorDrawable(color));
+            statusBarBackground.setAlpha(1f);
+        }
+    }
+
+    protected void clearStatusBarBackgroundColor() {
+        Activity activity = getActivity();
+        if (activity == null) return;
+        View statusBarBackground = activity.getWindow().getDecorView()
+                .findViewById(android.R.id.statusBarBackground);
+        if (statusBarBackground != null) {
+            statusBarBackground.setForeground(null);
+        }
+    }
 
     protected abstract void onPosterClick();
 

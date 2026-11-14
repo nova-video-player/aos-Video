@@ -113,6 +113,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
             ((ListView)mArchosGridView).setDividerHeight(0);
         }
         mApplicationFrameLayout.setBackground(null);
+        clearStatusBarBackgroundColor();
         if (getActivity() != null && ((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
             ((MainActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(ThemeManager.getInstance(getContext()).getToolbarBackgroundColor())
@@ -280,6 +281,7 @@ public class BrowserListOfEpisodes extends BrowserWithShowHeader {
         mLastColor = darkColor;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
+            setStatusBarBackgroundColor(darkColor);
             WindowInsetsControllerCompat insetsController = new WindowInsetsControllerCompat(getActivity().getWindow(), getActivity().getWindow().getDecorView());
             insetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
             MiscUtils.applyStatusBarIconContrast(insetsController, darkColor);
