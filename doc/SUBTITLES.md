@@ -914,9 +914,11 @@ does follow the video).
    ratio preserved, never stretched) to fit inside the canvas and centered in
    it. The cue keeps its authored place in that frame and its authored size,
    scaled by that single factor.
+   **User scale.** The user's scale then resizes the whole cue, from its **fitted**
+   size (see "Scale of bitmap subtitles" below); 100 changes nothing.
    **User position.** The user's vertical position then shifts the whole cue, from
-   its fitted place with the controls hidden (see "Vertical position of bitmap
-   subtitles" below); 0 changes nothing.
+   its fitted (and scaled) place with the controls hidden (see "Vertical position
+   of bitmap subtitles" below); 0 changes nothing.
 2. **Fit.** The cue must lie inside the available area: the canvas minus a 1%
    margin on every side, and minus the **reserved bottom space** (playback
    controls / system bars) at the bottom. A cue that does not fit is first
@@ -989,14 +991,60 @@ place, so the setting is a shift from where the renderer puts it.
   `sub_engine_poll_frame()` through the optional `SUB_FORMAT_BACKEND::set_gfx_position`
   (GFX only), like the reserved bottom space. It is sent whatever the current track
   is, so a bitmap track opened later starts with it.
-- Settings: the panel for a bitmap track shows a "Vertical position" slider and the
-  Reset row, and no style sample (there is no text style to show). The note under the
-  title explains that the slider can stop having an effect before its end. Reset
-  there resets only this position, the text style is left alone (and
-  the text reset leaves this alone: the key is not in `STYLE_KEYS`). On TV the row
+- Settings: the panel for a bitmap track shows a "Scale" stepper (see "Scale of bitmap
+  subtitles" below), a "Vertical position" slider and the Reset row, and no style
+  sample (there is no text style to show). The note under the title explains that the
+  position slider (and a large size) can stop having an effect before its end. Reset
+  there resets this position and the scale together, the text style is left alone (and
+  the text reset leaves both alone: neither key is in `STYLE_KEYS`). On TV the row
   uses the delay picker with OK not reversing the sign and a hold ramp of one step, two
   after 1 s and five after 3 s. The position hint line is not shown: it marks the text
   position's height.
+
+### Scale of bitmap subtitles
+
+`KEY_GFX_SCALE` (`pref_play_subtitle_gfx_scale_key`) is the size of a bitmap cue,
+a multiplier of **0.5..3.0** (shown as 50..300 %), default the text scale's default
+(`subtitle_default_font_scale_percent`, 1.0 = 100 %). Like the text scale it is stored as
+a float multiplier, but under its own key, apart from `KEY_FONT_SCALE` (a font-size
+multiplier): moving one never moves the other, and like `KEY_GFX_VPOS` it is not in
+`STYLE_KEYS`, so the text reset leaves it alone. Only the call into native converts it to
+the whole percent `sub_engine_set_gfx_scale()` takes.
+
+- **100% is the cue's fitted size, not its authored one.** `gfx_map_to_canvas()` first
+  fits the nominal cue into the viewport minus the margins with the controls hidden
+  (step 2 above), and the scale is relative to that result: a wide cue that had to be
+  shrunk to the side margins is 100% at that shrunk size, 50% is exactly half of it,
+  and 150% one and a half times it. Measuring from the authored size would make 100%
+  jump the moment a cue needed shrinking.
+- The fitted cue is resized uniformly **about its own bottom centre** (so it stays low,
+  like the shrink in step 2, and does not slide sideways when the value leaves 100),
+  then fitted again into the margins. A size that does not fit therefore **stops
+  growing at the screen edge** instead of leaving the screen: a cue that already spans
+  the width cannot grow at all, only shrink. That is expected, and the panel's note says
+  so.
+- The vertical position is measured on the **scaled** fitted cue, so +100 / -100 still
+  reach the top and bottom margins at any scale, and the controls are cleared last, by
+  the same fit as before, on the cue as the user sees it with the controls hidden.
+- A group of bitmaps (signs plus dialogue) is scaled as one unit about the bottom
+  centre of its union: every rectangle by the same factor, layout between them
+  scaled with them.
+- Exactly **100, or a frame nobody stamped (0), changes nothing**: the placement is
+  bit for bit the one without a scale. Out-of-range values are clamped to 50..300
+  (engine and backend); on a live backend 0 is out of range and clamps to 50, while in
+  the `open()` params 0 means "unset" and opens at 100.
+- Plumbing: `SubtitleManager.setGfxScale()` → `SubtitleEngine.setGfxScale(percent)` →
+  `nativeSetGfxScale()` → `sub_engine_set_gfx_scale()`, cached on the engine (default
+  100, not the calloc'd 0) and applied by `sub_engine_poll_frame()` through the optional
+  `SUB_FORMAT_BACKEND::set_gfx_scale` (GFX only), which stamps it on the frames
+  (`SUB_FRAME.gfx_scale`) like the position. It is sent whatever the current track is,
+  so a bitmap track opened later starts with it.
+- Settings: in the panel for a bitmap track it is the **same stepper as the text
+  scale** ("Scale", 10 % steps, value shown as a percentage), placed above the
+  "Vertical position" slider. On TV it is the same delay picker as every other stepper.
+- **Reset** in that panel resets **both** bitmap settings, the scale and the position
+  (`SubtitleManager.resetGfxSettings()`: both keys are removed and the defaults
+  applied), and nothing of the text style; the text reset in turn leaves both alone.
 
 The CPU blender (`blend_frame()`) uses the same mapping with nearest-neighbor
 sampling and alpha blending, for the 3D path.

@@ -189,10 +189,107 @@ public class SubtitleManagerDefaultsTest {
         assertEquals(true, mManager.getBold());
     }
 
+    // ---- the image-subtitle (PGS/VobSub) scale: 0.5..3.0 x, its own preference ---------------------
+
+    @Test
+    public void gfxScaleNeverSavedIsTheTextScaleDefault() {
+        mManager.setGfxScale(2.5f); // something else first, so the restore really has to write
+        mManager.restoreStyle(mPrefs);
+        assertEquals(mManager.getDefaults().fontScale, mManager.getGfxScaleDefault(), 0.0001f);
+        assertEquals(mManager.getGfxScaleDefault(), mManager.getGfxScale(), 0.0001f);
+        assertEquals(1.0f, mManager.getGfxScale(), 0.0001f); // config.xml: subtitle_default_font_scale_percent
+    }
+
+    @Test
+    public void gfxScaleSavedWinsAndIsClamped() {
+        mPrefs.edit().putFloat(SubtitleManager.KEY_GFX_SCALE, 1.5f).commit();
+        mManager.restoreStyle(mPrefs);
+        assertEquals(1.5f, mManager.getGfxScale(), 0.0001f);
+
+        mPrefs.edit().putFloat(SubtitleManager.KEY_GFX_SCALE, 50f).commit();
+        mManager.restoreStyle(mPrefs);
+        assertEquals(SubtitleManager.GFX_SCALE_MAX, mManager.getGfxScale(), 0.0001f);
+
+        mManager.setGfxScale(0.01f);
+        assertEquals(SubtitleManager.GFX_SCALE_MIN, mManager.getGfxScale(), 0.0001f);
+        mManager.setGfxScale(-2f);
+        assertEquals(0.5f, mManager.getGfxScale(), 0.0001f);
+        assertEquals(3.0f, SubtitleManager.GFX_SCALE_MAX, 0.0001f);
+    }
+
+    @Test
+    public void gfxScaleAndTheTextScaleAreIndependent() {
+        mManager.setFontScale(2.0f);
+        mManager.setGfxScale(0.7f);
+        assertEquals(2.0f, mManager.getFontScale(), 0.0001f);   // the text scale is not the image scale...
+        assertEquals(0.7f, mManager.getGfxScale(), 0.0001f);
+
+        mManager.setFontScale(1.5f);
+        assertEquals(0.7f, mManager.getGfxScale(), 0.0001f);    // ...and moving it does not move this one
+
+        mManager.setGfxScale(2.2f);
+        assertEquals(1.5f, mManager.getFontScale(), 0.0001f);   // nor the other way round
+        assertTrue(!SubtitleManager.KEY_GFX_SCALE.equals(SubtitleManager.KEY_FONT_SCALE));
+    }
+
+    @Test
+    public void gfxScaleIsNotPartOfTheTextStyleReset() {
+        assertTrue(!SubtitleManager.STYLE_KEYS.contains(SubtitleManager.KEY_GFX_SCALE));
+        mPrefs.edit()
+                .putInt(SubtitleManager.KEY_FONT_SIZE_PT, 99)
+                .putFloat(SubtitleManager.KEY_GFX_SCALE, 1.8f)
+                .commit();
+        mManager.restoreStyle(mPrefs);
+
+        SharedPreferences.Editor e = mPrefs.edit();
+        for (String key : SubtitleManager.STYLE_KEYS) e.remove(key);
+        e.commit();
+        mManager.restoreStyle(mPrefs);
+
+        assertStyleIsDefaults();                                   // the text style is reset...
+        assertEquals(1.8f, mManager.getGfxScale(), 0.0001f);        // ...the image-subtitle scale is not
+        assertEquals(1.8f, mPrefs.getFloat(SubtitleManager.KEY_GFX_SCALE, 0f), 0.0001f);
+    }
+
+    @Test
+    public void resettingTheGfxSettingsResetsPositionAndScaleAndLeavesTheTextStyleAlone() {
+        mPrefs.edit()
+                .putInt(SubtitleManager.KEY_FONT_SIZE_PT, 99)
+                .putBoolean(SubtitleManager.KEY_BOLD, true)
+                .putFloat(SubtitleManager.KEY_FONT_SCALE, 2.0f)
+                .putInt(SubtitleManager.KEY_GFX_VPOS, 40)
+                .putFloat(SubtitleManager.KEY_GFX_SCALE, 1.6f)
+                .commit();
+        mManager.restoreStyle(mPrefs);
+        assertEquals(40, mManager.getGfxVerticalPosition());
+        assertEquals(1.6f, mManager.getGfxScale(), 0.0001f);
+
+        mManager.resetGfxSettings(mPrefs);
+
+        assertEquals(mManager.getGfxVerticalPositionDefault(), mManager.getGfxVerticalPosition());
+        assertEquals(mManager.getGfxScaleDefault(), mManager.getGfxScale(), 0.0001f);
+        assertTrue(!mPrefs.contains(SubtitleManager.KEY_GFX_VPOS));   // durable: nothing saved is left
+        assertTrue(!mPrefs.contains(SubtitleManager.KEY_GFX_SCALE));
+        assertEquals(99, mManager.getFontSizePt());                    // the text style is untouched
+        assertEquals(true, mManager.getBold());
+        assertEquals(2.0f, mManager.getFontScale(), 0.0001f);
+    }
+
+    @Test
+    public void resettingOnlyTheGfxPositionKeepsTheGfxScale() {
+        mPrefs.edit().putInt(SubtitleManager.KEY_GFX_VPOS, 40).putFloat(SubtitleManager.KEY_GFX_SCALE, 1.6f).commit();
+        mManager.restoreStyle(mPrefs);
+        mManager.resetGfxVerticalPosition(mPrefs);
+        assertEquals(mManager.getGfxVerticalPositionDefault(), mManager.getGfxVerticalPosition());
+        assertEquals(1.6f, mManager.getGfxScale(), 0.0001f);
+        assertEquals(1.6f, mPrefs.getFloat(SubtitleManager.KEY_GFX_SCALE, 0f), 0.0001f);
+    }
+
     @Test
     public void preferenceKeysNeverChangeAndPlayerActivityAliasesThem() {
         // These strings are what is stored on users' devices.
         assertEquals("pref_play_subtitle_gfx_vpos_key", SubtitleManager.KEY_GFX_VPOS);
+        assertEquals("pref_play_subtitle_gfx_scale_key", SubtitleManager.KEY_GFX_SCALE);
         assertEquals("pref_play_subtitle_vpos_key", SubtitleManager.KEY_VPOS);
         assertEquals("pref_play_subtitle_color_key", SubtitleManager.KEY_COLOR);
         assertEquals("subtitle_bg_opacity", SubtitleManager.KEY_BG_OPACITY);

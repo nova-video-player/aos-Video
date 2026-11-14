@@ -1081,7 +1081,7 @@
 
     <!-- Notes shown instead of rows when settings cannot apply -->
     <string name="subtitle_panel_note_plain_text">Plain-text subtitles always use your style.</string>
-    <string name="subtitle_panel_note_graphic">Text styling isn\'t available for image subtitles. You can still move them up or down; they stop at the screen edges and stay above the playback controls, so the slider may stop having an effect before its end.</string>
+    <string name="subtitle_panel_note_graphic">Text styling isn\'t available for image subtitles. You can still resize them and move them up or down; they stay inside the screen edges and above the playback controls, so the position slider (and a large size) may stop having an effect before its end.</string>
     <string name="subtitle_panel_note_unsupported">This subtitle format can\'t be styled.</string>
     <string name="subtitle_panel_note_none">No subtitle selected.</string>
 
