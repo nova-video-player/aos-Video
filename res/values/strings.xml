@@ -875,6 +875,26 @@
     <string name="trakt_account_locked">Trakt account locked. Unlock on trakt.tv or try later.</string>
     <string name="trakt_social_signin_unsupported">Sign in with Google/Facebook/Apple is not supported here. Please sign in with your Trakt username and password instead.</string>
     <string name="connect_trakt">Connect to Trakt</string>
+
+    <!-- SIMKL -->
+    <string name="category_simkl">SIMKL</string>
+    <string name="connect_simkl">Connect to SIMKL</string>
+    <string name="simkl_device_auth_step1">1. On your phone or computer, go to:</string>
+    <string name="simkl_device_auth_step2">2. Enter this code:</string>
+    <string name="simkl_device_auth_waiting">Waiting for authorization…</string>
+    <string name="simkl_device_auth_success">Connected to SIMKL successfully!</string>
+    <string name="simkl_device_auth_timeout">Code expired. Please try again.</string>
+    <string name="simkl_device_auth_denied">Authorization was denied on SIMKL.</string>
+    <string name="simkl_signin">Sign in to SIMKL</string>
+    <string name="simkl_signout">Sign out from SIMKL</string>
+    <string name="simkl_connected">Connected to SIMKL</string>
+    <string name="simkl_not_connected">Not connected to SIMKL</string>
+    <string name="simkl_signin_title">Sign In</string>
+    <string name="simkl_signin_summary">Not signed in</string>
+    <string name="simkl_signin_summary_logged">Signed in as %s</string>
+    <string name="simkl_wipe_title">Sign out of SIMKL</string>
+    <string name="simkl_live_scrobbling_title">Live scrobbler</string>
+    <string name="simkl_live_scrobbling_summary">Share videos being watched on SIMKL</string>
     <string name="trakt_sync_status_never">Not yet synced</string>
     <string name="trakt_sync_status_ok">Last sync: %1$s ago</string>
     <string name="trakt_sync_status_ok_skipped" tools:ignore="PluralsCandidate">Last sync: %1$s ago · %2$d video(s) pending (unknown duration)</string>

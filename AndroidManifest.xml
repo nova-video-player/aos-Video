@@ -1135,6 +1135,12 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".utils.SimklDeviceAuthActivity"
+            android:label="@string/connect_simkl"
+            android:theme="@style/ArchosThemeBlue"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".utils.VideoPreferencesLicencesActivity"
             android:configChanges="orientation|screenLayout"
             android:excludeFromRecents="true"

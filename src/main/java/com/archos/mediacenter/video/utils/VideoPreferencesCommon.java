@@ -59,6 +59,7 @@ import com.archos.environment.ArchosUtils;
 import com.archos.filecorelibrary.ExtStorageManager;
 import com.archos.filecorelibrary.jcifs.JcifsUtils;
 import com.archos.filecorelibrary.samba.SambaDiscovery;
+import com.archos.mediacenter.utils.simkl.Simkl;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.BuildConfig;
@@ -217,6 +218,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     public static final String KEY_TRAKT_WIPE = "trakt_wipe";
     public static final String KEY_TRAKT_LIVE_SCROBBLING = "trakt_live_scrobbling";
     public static final String KEY_TRAKT_SYNC_COLLECTION = "trakt_sync_collection";
+    public static final String KEY_SIMKL_CATEGORY = "simkl_category";
+    public static final String KEY_SIMKL_SIGNIN = "simkl_signin";
+    public static final String KEY_SIMKL_WIPE = "simkl_wipe";
+    public static final String KEY_SIMKL_LIVE_SCROBBLING = "simkl_live_scrobbling";
     public static final String KEY_HIDE_WATCHED = "hide_watched";
     public static final String KEY_SORT_IGNORE_ARTICLES = "sort_ignore_articles";
     public static final String KEY_CREATE_REMOTE_THUMBS = VideoProvider.PREFERENCE_CREATE_REMOTE_THUMBS;
@@ -296,6 +301,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private TraktSigninDialogPreference mTraktSigninPreference = null;
     private Preference mTraktWipePreference = null;
     private CheckBoxPreference mTraktLiveScrobblingPreference = null;
+    private SimklSigninDialogPreference mSimklSigninPreference = null;
+    private Preference mSimklWipePreference = null;
+    private CheckBoxPreference mSimklLiveScrobblingPreference = null;
     private CheckBoxPreference mTraktSyncCollectionPreference = null;
     private CheckBoxPreference mTraktSyncProgressPreference = null;
     private Preference mTraktForcePushPreference = null;
@@ -345,6 +353,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private final ActivityResultLauncher<Intent> mFolderPickerLauncher;
     private final ActivityResultLauncher<Intent> mFontsFolderTreeLauncher;
     private final ActivityResultLauncher<Intent> mTraktAuthLauncher;
+    private final ActivityResultLauncher<Intent> mSimklAuthLauncher;
 
     public VideoPreferencesCommon(PreferenceFragmentCompat preferencesFragment) {
         mPreferencesFragment = preferencesFragment;
@@ -357,6 +366,9 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mTraktAuthLauncher = preferencesFragment.registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 this::onTraktAuthResult);
+        mSimklAuthLauncher = preferencesFragment.registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::onSimklAuthResult);
     }
 
     private void onFolderPickerResult(ActivityResult result) {
@@ -565,6 +577,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private void onTraktAuthResult(ActivityResult result) {
         if (mTraktSigninPreference != null)
             mTraktSigninPreference.onAuthCompleted(result.getResultCode() == Activity.RESULT_OK);
+    }
+
+    private void onSimklAuthResult(ActivityResult result) {
+        if (mSimklSigninPreference != null)
+            mSimklSigninPreference.onAuthCompleted(result.getResultCode() == Activity.RESULT_OK);
     }
 
     private Activity getActivity() {
@@ -1414,6 +1431,11 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         if (mTraktSigninPreference != null) mTraktSigninPreference.setLauncher(mTraktAuthLauncher);
         mTraktWipePreference = findPreference(KEY_TRAKT_WIPE);
         mTraktLiveScrobblingPreference = (CheckBoxPreference) findPreference(KEY_TRAKT_LIVE_SCROBBLING);
+
+        mSimklSigninPreference = (SimklSigninDialogPreference) findPreference(KEY_SIMKL_SIGNIN);
+        if (mSimklSigninPreference != null) mSimklSigninPreference.setLauncher(mSimklAuthLauncher);
+        mSimklWipePreference = findPreference(KEY_SIMKL_WIPE);
+        mSimklLiveScrobblingPreference = (CheckBoxPreference) findPreference(KEY_SIMKL_LIVE_SCROBBLING);
         //trakt resume must be disabled when no scrobbling
         mTraktSyncProgressPreference.setEnabled(mTraktLiveScrobblingPreference.isChecked() && mTraktLiveScrobblingPreference.isEnabled());
         mTraktSyncProgressPreference.setSelectable(mTraktLiveScrobblingPreference.isChecked() && mTraktLiveScrobblingPreference.isEnabled());
@@ -1689,6 +1711,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 }
             });
         }
+        onSimklUserChange();
     }
 
     @SuppressLint("DiscouragedApi")
@@ -2030,6 +2053,41 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         return traktUser != null;
     }
 
+    private void setSimklPreferencesEnabled(boolean enabled) {
+        if (mSimklWipePreference != null) {
+            mSimklWipePreference.setEnabled(enabled);
+            mSimklWipePreference.setSelectable(enabled);
+        }
+        if (mSimklLiveScrobblingPreference != null) {
+            mSimklLiveScrobblingPreference.setEnabled(enabled);
+            mSimklLiveScrobblingPreference.setSelectable(enabled);
+        }
+        if (mSimklSigninPreference != null) {
+            mSimklSigninPreference.setEnabled(!enabled);
+            mSimklSigninPreference.setSelectable(!enabled);
+        }
+    }
+
+    private boolean onSimklUserChange() {
+        if (mSimklSigninPreference == null) return false;
+        final String accessToken = Simkl.getAccessToken(mSharedPreferences);
+        final boolean isLoggedIn = accessToken != null && !accessToken.trim().isEmpty();
+
+        if (isLoggedIn) {
+            setSimklPreferencesEnabled(true);
+            String user = Simkl.getUser(mSharedPreferences);
+            if (user != null && !user.isEmpty()) {
+                mSimklSigninPreference.setSummary(getResources().getString(R.string.simkl_signin_summary_logged, user));
+            } else {
+                mSimklSigninPreference.setSummary(R.string.simkl_connected);
+            }
+        } else {
+            setSimklPreferencesEnabled(false);
+            mSimklSigninPreference.setSummary(R.string.simkl_signin_summary);
+        }
+        return isLoggedIn;
+    }
+
 
     private void showImportDialog() {
         File exportDir = getContext().getExternalFilesDir(null);
@@ -2080,6 +2138,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             // preference just changed, assume it's valid
             mTraktStatus = Trakt.Status.SUCCESS;
             onTraktUserChange();
+        } else if (key.equals(Simkl.KEY_SIMKL_USER) || key.equals(Simkl.KEY_SIMKL_ACCESS_TOKEN)) {
+            onSimklUserChange();
         } else if (key.equals(TraktService.PREFERENCE_TRAKT_LAST_SYNC_STATUS)
                 || key.equals(TraktService.PREFERENCE_TRAKT_SKIPPED_NO_DURATION)
                 || key.equals(TraktService.PREFERENCE_TRAKT_SKIPPED_NO_METADATA)
