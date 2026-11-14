@@ -859,6 +859,26 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         }
     }
 
+    /**
+     * Enables or disables the custom fonts folder row according to whether a real
+     * ACTION_OPEN_DOCUMENT_TREE handler is currently installed. Called both when the
+     * preferences are created and on resume, so installing/removing a picker while
+     * Settings stays in the background updates the row in either direction.
+     */
+    private void refreshFontsFolderPickerAvailability() {
+        FontsFolderSafPreference fontsFolderPref =
+                (FontsFolderSafPreference) findPreference(KEY_SUBTITLE_FONTS_FOLDER_URI);
+        if (fontsFolderPref == null) return;
+        Context context = getActivity();
+        if (context == null) return;
+        boolean available = FontsFolderSafPreference.isFolderPickerAvailable(context);
+        if (fontsFolderPref.isEnabled() != available) {
+            fontsFolderPref.setEnabled(available);
+            if (log.isDebugEnabled()) log.debug("refreshFontsFolderPickerAvailability: {} custom fonts folder (picker {})",
+                    available ? "enabling" : "disabling", available ? "available" : "missing");
+        }
+    }
+
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         CustomApplication.loadLocale(getResources());
         mSharedPreferences = getPreferenceManager().getSharedPreferences();
@@ -875,10 +895,16 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 (FontsFolderSafPreference) findPreference(KEY_SUBTITLE_FONTS_FOLDER_URI);
         if (fontsFolderPref != null) {
             fontsFolderPref.setTreePickerLauncher(mFontsFolderTreeLauncher);
+            Context context = getActivity();
+            // Some Android TV / Google TV builds expose no real ACTION_OPEN_DOCUMENT_TREE
+            // handler (only the FrameworkPackageStubs placeholder), so tapping the option
+            // only produced "You don't have an app that can do this". Gray it out with an
+            // explanatory summary instead of letting the launch fail. Re-checked on resume
+            // so that installing a picker while Settings stays in the background re-enables it.
+            refreshFontsFolderPickerAvailability();
             String savedUriString = mSharedPreferences.getString(KEY_SUBTITLE_FONTS_FOLDER_URI, null);
             if (savedUriString != null) {
                 Uri savedTreeUri = Uri.parse(savedUriString);
-                Context context = getActivity();
                 // Re-sync opportunistically when the Settings screen is reopened: SAF trees
                 // can change (fonts added/removed via a file manager) without this app ever
                 // being told, unlike a live filesystem watch. The whole check-and-maybe-sync
@@ -1991,6 +2017,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public void onResume() {
         updateOsStatus();
+        refreshFontsFolderPickerAvailability();
     }
 
     public void onSaveInstanceState(Bundle outState) {

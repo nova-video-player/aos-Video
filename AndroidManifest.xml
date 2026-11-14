@@ -96,6 +96,12 @@
         <intent>
             <action android:name="org.courville.supernova.AdditionalService" />
         </intent>
+
+        <!-- Needed so resolveActivity(ACTION_OPEN_DOCUMENT_TREE) can see third-party
+             folder pickers under Android 11+ package visibility filtering. -->
+        <intent>
+            <action android:name="android.intent.action.OPEN_DOCUMENT_TREE" />
+        </intent>
 	<package android:name="org.courville.supernova" />
     </queries>
 

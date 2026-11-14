@@ -570,6 +570,8 @@
     <string name="subtitle_use_margins_summary">Show subtitles in the letterbox area below the picture instead of overlapping the video</string>
     <string name="subtitle_fonts_folder_title">Custom fonts folder</string>
     <string name="subtitle_fonts_folder_summary">Pick a folder of .ttf/.otf/.ttc fonts to use for subtitles, instead of the built-in fonts</string>
+    <string name="subtitle_fonts_folder_summary_no_picker">Disabled: no app on this device can pick a folder. Install a file manager that provides folder selection (for example a Files app) to enable this option</string>
+    <string name="no_folder_picker_available">No folder picker app is installed. Install a file manager that provides folder selection to use this feature</string>
     <string name="subtitle_default_font_title">Default subtitle font</string>
     <string name="subtitles_credentials_title">OpenSubtitles credentials</string>
     <string name="subtitles_credentials_summary">Provide your opensubtitles credentials to be able to download subtitles</string>

@@ -132,6 +132,12 @@ public class VideoSettingsFragment extends LeanbackSettingsFragmentCompat {
         }
 
         @Override
+        public void onResume() {
+            super.onResume();
+            mPreferencesCommon.onResume();
+        }
+
+        @Override
         public void onDestroy() {
             mPreferencesCommon.onDestroy();
             super.onDestroy();
