@@ -29,6 +29,13 @@ public class ISO639codes {
 
     private static final Logger log = LoggerFactory.getLogger(ISO639codes.class);
 
+    public static String generateSubtitleTrackName(Context context,
+            com.archos.mediacenter.video.utils.VideoMetadata.SubtitleTrack track, String format) {
+        return com.archos.medialib.SubtitleLanguage.annotate(
+                generateTrackName(context, track.name, track.language, format, track.disposition, false),
+                track.languageSource, track.languageConfidence);
+    }
+
     static public String generateTrackName(Context context, String string, String lang, String format, int disposition, boolean titleFirst) {
         String dispLabel = VideoUtils.getTrackDispositionLabel(context, disposition, titleFirst);
         String unknownTrackName = context.getText(R.string.unknown_track_name).toString();

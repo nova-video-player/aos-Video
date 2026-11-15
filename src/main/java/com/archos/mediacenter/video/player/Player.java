@@ -187,6 +187,8 @@ public class Player implements IPlayerControl,
     private int         mStopPosition;
     private int         mSaveStopPosition;
     private boolean     mUpdateMetadata;
+    private boolean     mUpdateSubtitleLanguagesOnly;
+    private android.os.CancellationSignal mSubtitlePreparation;
 
     private Handler     mHandler = new Handler(Looper.getMainLooper());
     private Runnable mPreparedAsync = new Runnable() {
@@ -406,6 +408,7 @@ public class Player implements IPlayerControl,
         mBufferPosition = -1;
         mStopPosition = -1;
         mUpdateMetadata = false;
+        mUpdateSubtitleLanguagesOnly = false;
         mCurrentState = STATE_IDLE;
         mTargetState  = STATE_IDLE;
         mIsBusy = false;
@@ -589,6 +592,7 @@ public class Player implements IPlayerControl,
     public void beginPlaybackExit() {
         if (mPlaybackEnding) return;
         mPlaybackEnding = true;
+        if (mSubtitlePreparation != null) mSubtitlePreparation.cancel();
         ++mOpenGeneration; // reject source setup already in flight
         mHandler.removeCallbacks(mPreparedAsync);
         mHandler.removeCallbacks(mRefreshRateCheckerAsync);
@@ -596,6 +600,8 @@ public class Player implements IPlayerControl,
 
     private void closeCurrentPlayer() {
         ++mOpenGeneration;
+        if (mSubtitlePreparation != null) mSubtitlePreparation.cancel();
+        mSubtitlePreparation = null;
         mHandler.removeCallbacks(mPreparedAsync);
         mHandler.removeCallbacks(mRefreshRateCheckerAsync);
         IMediaPlayer old = mMediaPlayer;
@@ -604,6 +610,7 @@ public class Player implements IPlayerControl,
         mMetadataReady = false;
         mIsBusy = false;
         mUpdateMetadata = false;
+        mUpdateSubtitleLanguagesOnly = false;
         mHardwareVideoDecoderSeen = false;
         if (mSurfaceController != null) mSurfaceController.setMediaPlayer(null);
         if (mEffectRenderer != null) mEffectRenderer.pause();
@@ -710,6 +717,8 @@ public class Player implements IPlayerControl,
         final int generation = mOpenGeneration;
         final Uri uri = mUri;
         final Map<String, String> headers = mExtraMap == null ? null : new HashMap<>(mExtraMap);
+        final android.os.CancellationSignal subtitlePreparation = new android.os.CancellationSignal();
+        mSubtitlePreparation = subtitlePreparation;
         final IMediaPlayer player;
         try { player = MediaFactory.createPlayer(mContext, mForceSoftwareDecoding); }
         catch (RuntimeException ex) { onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, ex.getMessage()); return; }
@@ -734,6 +743,8 @@ public class Player implements IPlayerControl,
                 NetworkInitialization.awaitReadyForSmb(uri, mContext);
                 // Back/Stop or opening another video invalidates this request, not shared startup.
                 if (generation != mOpenGeneration) return;
+                com.archos.medialib.SubtitleLanguagePreparation.prepare(mContext, uri, headers, subtitlePreparation);
+                if (subtitlePreparation.isCanceled() || generation != mOpenGeneration) return;
                 if (debugTiming && log.isDebugEnabled()) {
                     log.debug("openVideo: generation {} setting data source after {} ms", generation,
                             (System.nanoTime() - openStart) / 1000000);
@@ -1226,6 +1237,10 @@ public class Player implements IPlayerControl,
     }
 
     private void handleMetadata(IMediaPlayer mp) {
+        handleMetadata(mp, false);
+    }
+
+    private void handleMetadata(IMediaPlayer mp, boolean subtitleLanguagesOnly) {
         if (log.isDebugEnabled()) log.debug("handleMetadata");
         MediaMetadata data = mp.getMediaMetadata(IMediaPlayer.METADATA_ALL,
                                        IMediaPlayer.BYPASS_METADATA_FILTER);
@@ -1285,6 +1300,12 @@ public class Player implements IPlayerControl,
                         Toast.LENGTH_LONG).show();
             }
             mVideoMetadata.setData(data);
+            if (subtitleLanguagesOnly && mPlayerListener != null) {
+                int currentSubtitle = data.has(IMediaPlayer.METADATA_KEY_CURRENT_SUBTITLE_TRACK)
+                        ? data.getInt(IMediaPlayer.METADATA_KEY_CURRENT_SUBTITLE_TRACK) : -1;
+                mPlayerListener.onSubtitleLanguagesUpdated(mVideoMetadata, currentSubtitle);
+                return;
+            }
 
             if (mPlayerListener != null) {
                 if (data.has(IMediaPlayer.METADATA_KEY_NB_VIDEO_TRACK))
@@ -1488,8 +1509,9 @@ public class Player implements IPlayerControl,
         mIsBusy = false;
         if (mUpdateMetadata) {
             if (log.isDebugEnabled()) log.debug("onAllSeekComplete: mUpdateMetadata = true -> handleMetadata");
-            handleMetadata(mp);
+            handleMetadata(mp, mUpdateSubtitleLanguagesOnly);
             mUpdateMetadata = false;
+            mUpdateSubtitleLanguagesOnly = false;
         } else {
             if (log.isDebugEnabled()) log.debug("onAllSeekComplete: mUpdateMetadata = false");
         }
@@ -1510,10 +1532,13 @@ public class Player implements IPlayerControl,
         case IMediaPlayer.MEDIA_INFO_METADATA_UPDATE:
             if (mIsBusy) {
                 if (log.isDebugEnabled()) log.debug("onInfo: mIsBusy set mUpdateMetadata = true");
+                boolean languagesOnly = extra == IMediaPlayer.METADATA_UPDATE_SUBTITLE_LANGUAGES;
+                mUpdateSubtitleLanguagesOnly = !mUpdateMetadata ? languagesOnly
+                        : mUpdateSubtitleLanguagesOnly && languagesOnly;
                 mUpdateMetadata = true;
             } else {
                 if (log.isDebugEnabled()) log.debug("onInfo: handleMetadata");
-                handleMetadata(mp);
+                handleMetadata(mp, extra == IMediaPlayer.METADATA_UPDATE_SUBTITLE_LANGUAGES);
             }
             return true;
         case IMediaPlayer.MEDIA_INFO_AUDIO_SPEED_APPLIED:
@@ -1588,6 +1613,7 @@ public class Player implements IPlayerControl,
         void onVideoMetadataUpdated(VideoMetadata vMetadata);
         void onAudioMetadataUpdated(VideoMetadata vMetadata, int currentAudio);
         void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int currentSubtitle);
+        default void onSubtitleLanguagesUpdated(VideoMetadata vMetadata, int currentSubtitle) { }
         void onBufferingUpdate(int percent);
         default void onAudioSpeedApplied(float speed) {}
         default void onAudioTrackSelectionCompleted(int track, boolean success) {}

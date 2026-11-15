@@ -162,6 +162,7 @@ public class VideoMetadata implements Serializable {
         private static final long serialVersionUID = 1L;
 
         SubtitleTrack(MediaMetadata data, int idx) {
+            index = idx;
             int gapKey = IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_MAX * idx;
             name = getMetadataString(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_NAME);
             path = getMetadataString(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_PATH);
@@ -170,9 +171,12 @@ public class VideoMetadata implements Serializable {
             format = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_FORMAT);
             language = getMetadataString(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_LANGUAGE);
             disposition = getMetadataInt(data, gapKey + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_DISPOSITION);
+            languageSource = getMetadataInt(data, IMediaPlayer.METADATA_KEY_SUBTITLE_LANGUAGE_SOURCE + idx);
+            languageConfidence = getMetadataInt(data, IMediaPlayer.METADATA_KEY_SUBTITLE_LANGUAGE_CONFIDENCE + idx);
         }
         
         SubtitleTrack(IMediaMetadataRetriever retriever, int idx) {
+            index = idx;
             // note no bool method here
             int gapKey = IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_MAX * idx;
             name = getMetadataRetrieverString(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_NAME);
@@ -182,6 +186,8 @@ public class VideoMetadata implements Serializable {
             format = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_FORMAT);
             language = getMetadataRetrieverString(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_LANGUAGE);
             disposition = getMetadataRetrieverInt(retriever, gapKey + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_DISPOSITION);
+            languageSource = getMetadataRetrieverInt(retriever, IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_LANGUAGE_SOURCE + idx);
+            languageConfidence = getMetadataRetrieverInt(retriever, IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_LANGUAGE_CONFIDENCE + idx);
         }
 
         public final String name;
@@ -195,6 +201,9 @@ public class VideoMetadata implements Serializable {
         public final int format;
         public final String language;
         public final int disposition;
+        public final int languageSource;
+        public final int languageConfidence;
+        public final int index;
     }
 
     public VideoMetadata() {
@@ -273,6 +282,23 @@ public class VideoMetadata implements Serializable {
     }
 
     public void fillFromRetriever(Context ctx, Map<String, String> headers) {
+        fillFromRetriever(ctx, headers, false, null);
+    }
+
+    public boolean hasUnknownSubtitleLanguages() {
+        if (mSubtitleTrackList == null) return false;
+        for (SubtitleTrack track : mSubtitleTrackList) {
+            if (!track.isExternal && track.languageSource == com.archos.medialib.SubtitleLanguage.UNKNOWN
+                    && (track.language == null || track.language.isEmpty() || "und".equals(track.language))
+                    && (track.kind == com.archos.mediacenter.video.player.SubtitleManager.KIND_PLAIN_TEXT
+                    || track.kind == com.archos.mediacenter.video.player.SubtitleManager.KIND_SSA)) return true;
+        }
+        return false;
+    }
+
+    /** Run on a metadata worker, never the UI thread. Cancellation does not wait for I/O. */
+    public void fillFromRetriever(Context ctx, Map<String, String> headers, boolean analyzeLanguages,
+            android.os.CancellationSignal cancellation) {
         if (mFile == null && mRemotePath == null)
             return;
         reset();
@@ -281,9 +307,15 @@ public class VideoMetadata implements Serializable {
         IMediaMetadataRetriever retriever = MediaFactory.createMetadataRetriever(ctx);
 
         try {
+            if (cancellation != null) {
+                cancellation.setOnCancelListener(retriever::cancel);
+                cancellation.throwIfCanceled();
+            }
             if (mFile != null) {
                 if (log.isDebugEnabled()) log.debug("fillFromRetriever: local file={}", mFile.getPath());
                 retriever.setDataSource(mFile.getPath());
+            } else if (UriUtils.isContentUri(Uri.parse(mRemotePath))) {
+                retriever.setDataSource(ctx, Uri.parse(mRemotePath));
             } else {
                 if (headers != null && !headers.isEmpty()) {
                     if (log.isDebugEnabled()) log.debug("fillFromRetriever: remote url={} with {} headers: {}", mRemotePath, headers.size(), headers.keySet());
@@ -293,6 +325,8 @@ public class VideoMetadata implements Serializable {
                     retriever.setDataSource(mRemotePath);
                 }
             }
+            if (analyzeLanguages) retriever.guessSubtitleLanguages();
+            if (cancellation != null) cancellation.throwIfCanceled();
             mFileSize = getMetadataRetrieverLong(retriever, IMediaMetadataRetriever.METADATA_KEY_FILE_SIZE);
             nbTrack = getMetadataRetrieverInt(retriever, IMediaMetadataRetriever.METADATA_KEY_NB_VIDEO_TRACK);
             if (log.isDebugEnabled()) log.debug("fillFromRetriever: fileSize={} nbVideoTrack={}", mFileSize, nbTrack);
@@ -315,11 +349,10 @@ public class VideoMetadata implements Serializable {
             mDuration = getMetadataRetrieverInt(retriever, IMediaMetadataRetriever.METADATA_KEY_DURATION);
         } catch (Exception ex) {
             log.error("fillFromRetriever: failed for url={}, ex={}", mRemotePath != null ? mRemotePath : (mFile != null ? mFile.getPath() : "null"), ex.getMessage());
-        }
-        try {
-            retriever.release();
-        } catch (IOException e) {
-            log.error("fillFromRetriever: release failed", e);
+        } finally {
+            if (cancellation != null) cancellation.setOnCancelListener(null);
+            try { retriever.release(); }
+            catch (IOException e) { log.error("fillFromRetriever: release failed", e); }
         }
     }
 

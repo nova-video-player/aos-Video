@@ -2268,6 +2268,19 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
     }
 
     @Override
+    public void onSubtitleLanguagesUpdated(VideoMetadata metadata, int currentSubtitle) {
+        if (mVideoInfo == null) return;
+        VideoMetadata.SubtitleTrack selected = metadata.getSubtitleTrack(mVideoInfo.subtitleTrack);
+        if (selected != null && selected.languageSource == com.archos.medialib.SubtitleLanguage.FASTTEXT) {
+            mVideoInfo.subtitleLanguage = selected.language;
+        }
+        if (mPlayerFrontend != null) {
+            mPlayerFrontend.onSubtitleMetadataUpdated(metadata, currentSubtitle);
+        }
+        SubtitleManager.cacheProcessedMetadata(mUri, metadata);
+    }
+
+    @Override
     public void onSubtitleMetadataUpdated(VideoMetadata vMetadata, int newSubtitleTrack) {
         // note: if mIsPreparingSubs = true, onSubtitleMetadataUpdated can be called even if in not final state
         // subs could be still being copied in cache directory
@@ -2301,7 +2314,8 @@ public class PlayerService extends Service implements Player.Listener, IndexHelp
                     }
                     String currentLang2Letter = extractLanguageCode(currentLanguage).toLowerCase(Locale.ROOT);
                     String savedLang2Letter = mVideoInfo.subtitleLanguage.toLowerCase(Locale.ROOT);
-                    if (!savedLang2Letter.equals(currentLang2Letter)) {
+                    if (trackAtIndex.languageSource != com.archos.medialib.SubtitleLanguage.FASTTEXT
+                            && !savedLang2Letter.equals(currentLang2Letter)) {
                         if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: subtitle language mismatch at index {}: saved={}, current={}", mVideoInfo.subtitleTrack, savedLang2Letter, currentLang2Letter);
                         mVideoInfo.subtitleTrack = -1;
                         mVideoInfo.subtitleLanguage = null;

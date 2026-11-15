@@ -42,7 +42,8 @@ import java.util.Locale;
  * defined in Video/doc/SUBTITLES.md.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 33)
+// Policy tests do not need CustomApplication's asynchronous native/HDMI startup.
+@Config(sdk = 33, application = android.app.Application.class)
 public class SubtitleTrackSelectionPolicyTest {
 
     private Locale mOriginalLocale;
@@ -419,6 +420,37 @@ public class SubtitleTrackSelectionPolicyTest {
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------
+
+    @Test
+    public void inferredLanguageRefreshPreservesManualTrackAndUpdatesSavedLanguage() throws Exception {
+        VideoMetadata metadata = createMetadata(new AudioFixture("English", "eng", 1, true),
+                new SubFixture("TEXT", "fr", "", 0, false, 0));
+        setFinalField(metadata.getSubtitleTrack(0), "languageSource", com.archos.medialib.SubtitleLanguage.FASTTEXT);
+        VideoDbInfo info = new VideoDbInfo();
+        info.subtitleTrack = 0;
+        info.subtitleLanguage = "und";
+        setPrivateField(mService, "mVideoInfo", info);
+
+        mService.onSubtitleLanguagesUpdated(metadata, 0);
+
+        assertEquals(0, info.subtitleTrack);
+        assertEquals("fr", info.subtitleLanguage);
+        Mockito.verify(mMockPlayer, Mockito.never()).setSubtitleTrack(Mockito.anyInt());
+    }
+
+    @Test
+    public void inferredLanguageRefreshPreservesNoneSelection() throws Exception {
+        VideoMetadata metadata = createMetadata(new AudioFixture("English", "eng", 1, true),
+                new SubFixture("TEXT", "fr", "", 0, false, 0));
+        VideoDbInfo info = new VideoDbInfo();
+        info.subtitleTrack = metadata.getSubtitleTrackNb(); // UI's None sentinel
+        setPrivateField(mService, "mVideoInfo", info);
+
+        mService.onSubtitleLanguagesUpdated(metadata, -1);
+
+        assertEquals(metadata.getSubtitleTrackNb(), info.subtitleTrack);
+        Mockito.verify(mMockPlayer, Mockito.never()).setSubtitleTrack(Mockito.anyInt());
+    }
 
     private int runSubtitleSelection(VideoMetadata vMetadata, int activeAudioTrack,
                                      String uiLocale, String favSubLang, boolean hideSubtitles) throws Exception {

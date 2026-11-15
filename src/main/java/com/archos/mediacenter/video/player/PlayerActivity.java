@@ -4724,7 +4724,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                         // internal subtitle get name from name
                         if (log.isDebugEnabled()) log.debug("onSubtitleMetadataUpdated: intsub add track name with name={} replacing language code in {}, disposition={}", track.name, track.language, track.disposition);
                         String format = VideoUtils.getSubtitleFormatLabel(mContext, track.format);
-                        mSubtitleInfoController.addTrack(generateTrackName(mContext, track.name, track.language, format, track.disposition, false), false);
+                        mSubtitleInfoController.addTrack(com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateSubtitleTrackName(mContext, track, format), false);
                     }
                 }
                 mSubtitleInfoController.addSeparator();
