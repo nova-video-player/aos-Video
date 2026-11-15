@@ -214,6 +214,186 @@ infers a kind from a format label, file extension, or gfx flag.
   stored mode, mirroring native (`force_all = is_plain_text || mode == CUSTOM`);
   the stored mode is left alone for styled files.
 
+## Unlabelled embedded tracks: language identification investigation
+
+The current player reads subtitle language and title metadata; it does not
+identify the language of subtitle text. `Source/stream_parser_ffmpeg.c` copies
+FFmpeg's `language`, `title`, and disposition into `SUB_PROPERTIES`. With no
+usable language, title, or descriptive disposition, the naming rules in
+[TRACK_NAMING.md](TRACK_NAMING.md) fall back to the format, such as `TEXT`.
+
+### Ride.or.Die sample (2026-11-15)
+
+Inspected local file:
+`Ride.or.Die.2026.S01E01.1080p.HEVC.x265-MeGusta[EZTVx.to].mkv`
+(758,423,090 bytes; 54:11.776). It contains one HEVC video stream, one E-AC-3
+audio stream, and **38 SubRip subtitle streams**. This is below AVOS's current
+`SUB_TRACK_MAX` of 128.
+
+Both `mkvinfo` and a separate EBML walk found:
+
+- All 40 tracks explicitly contain `Language=und`. FFmpeg omits this undefined
+  language from its stream metadata, explaining the empty `ffprobe` result.
+- No track `Name` or `LanguageIETF` elements. The only SimpleTag names are
+  `ENCODER` and `DURATION`; TrackUIDs provide identity, not language.
+- Every subtitle codec is `S_TEXT/UTF8`. Encoding detection therefore cannot
+  separate these languages. Unicode script can narrow candidates, but Latin
+  script alone cannot distinguish French, English, Spanish, etc.
+- The complete Segment walk found one Tracks element, one Tags element, 935
+  Clusters, and one Cues element, plus SeekHead, Info, and Void. There was no
+  second metadata block after the clusters and no attachment or chapter source
+  of language labels.
+- The first subtitle has the forced flag and only three cues. The second has
+  1,041 cues, including sound descriptions and lyrics. It looks like English
+  SDH from its content, but it has no hearing-impaired disposition.
+
+There is no hidden language metadata to recover in this sample. Matroska does
+support a separate BCP-47 `LanguageIETF` field, which takes precedence over
+legacy `Language` when present; support for that field matters for other files.
+See the [Matroska element specification](https://www.matroska.org/technical/elements.html).
+
+### Detection experiment and track map
+
+Extracted subtitle packets locally using `ffprobe -select_streams s
+-show_packets -show_data`, decoded their hex payloads as UTF-8, removed HTML/ASS
+markup, collapsed whitespace, and concatenated cues separately for each stream.
+No subtitle text was sent to a remote service. Tested fastText v0.9.2 with both
+official `lid.176.ftz` and `lid.176.bin` models, using `predict-prob MODEL INPUT
+2`. Each INPUT line contained one track sample. Samples included the first cue,
+the first 5/10/20 cues, the first five minutes, and the first 1,000/4,096/8,192
+characters. The input case was preserved for the results below.
+
+The compact model proposed a language with a score of at least 0.85 for 31/38
+tracks from the first five minutes, and 33/38 with up to 4,096 characters. These
+are model scores, not measured accuracy or calibrated probabilities. A few
+scores slightly exceed 1 because of the model implementation's numerics.
+
+Track numbers below count **subtitles only, starting at 1**, excluding any UI
+"None" row. For this file, FFmpeg's zero-based stream index is that number + 1;
+Matroska's TrackNumber is that number + 2. This mapping combines text inspection
+and model output; regional variants are deliberately not assigned.
+
+| Subtitle number | Language / content |
+| --- | --- |
+| 1 | English, forced; only three cues |
+| 2 | English, with sound descriptions and lyrics |
+| 3 | Arabic |
+| 4 | Catalan |
+| 5 | Czech |
+| 6 | Danish |
+| 7 | German |
+| 8 | Greek |
+| 9, 10 | Spanish, two translations |
+| 11 | Basque |
+| 12 | Finnish |
+| 13, 14 | French, two translations (FFmpeg streams 14 and 15) |
+| 15 | Galician; weak model confidence |
+| 16 | Hebrew |
+| 17 | Hindi |
+| 18 | Hungarian |
+| 19 | Indonesian; confusable with Malay |
+| 20 | Italian |
+| 21 | Japanese |
+| 22 | Kannada |
+| 23 | Korean |
+| 24 | Malayalam |
+| 25 | Malay by text inspection; confusable with Indonesian |
+| 26 | Norwegian by text inspection; models incorrectly prefer Danish |
+| 27 | Dutch |
+| 28 | Polish |
+| 29, 30 | Portuguese, two translations |
+| 31 | Romanian |
+| 32 | Swedish |
+| 33 | Tamil |
+| 34 | Telugu |
+| 35 | Thai |
+| 36 | Turkish |
+| 37 | Chinese, traditional characters |
+| 38 | Chinese, simplified characters |
+
+The French tracks begin with `AUTRICHE`, which the compact model incorrectly
+classifies as Basque. With 20 cues (384/423 characters, available around 04:10),
+it identifies French with scores of 0.932/0.935. At 4,096 characters, those scores
+reach 0.982/0.985. Even a high score on one cue is insufficient: the Hungarian
+opening `AUSZTRIA` is incorrectly classified as Japanese with a score of 0.999.
+
+More text does not fix every ambiguity. With 4,096 characters, the compact model
+prefers Indonesian over Malay on subtitle 25 (0.447), and Danish over Norwegian
+on subtitle 26 (0.645). The larger model still prefers Danish on 26 (0.642),
+and only narrowly prefers Malay on 25 (0.470 versus Indonesian 0.440). The
+compact model's Galician score is 0.550. These need an unknown/uncertain result,
+not automatic acceptance. Both Chinese tracks get `zh`; script distinction
+requires a separate step. Neither model recovers reliable country variants for
+the French, Spanish, or Portuguese pairs.
+
+### Other checked-out players
+
+Source inspection found metadata-based naming in the relevant paths, with no
+subtitle-content language detector. This is a source comparison, not a playback
+test of all applications:
+
+| Checkout revision | Relevant path and behavior |
+| --- | --- |
+| FFmpeg `3d16b774d7` | `libavformat/matroskadec.c`: legacy track language/title; suppresses `und` when exporting stream metadata |
+| mpv `bb4823e5f0` | `demux/demux_mkv.c`: prefers BCP-47 over legacy language; `demux/demux_lavf.c`: reads FFmpeg language/title |
+| mpv-android `ebf1b3f` | `MPVView.kt:loadTracks()`: reads mpv `track-list/*/lang` and `title`, otherwise displays a numbered track |
+| VLC `5ff4fb8562` | `modules/demux/mkv/matroska_segment_parse.cpp`: reads track name, legacy language, and IETF language |
+| Kodi `f8815ee40f` | `DVDDemuxFFmpeg.cpp`: reads FFmpeg stream language/title metadata |
+| Just Player `6df39ae` | `CustomDefaultTrackNameProvider.java`: delegates to Media3 naming, adds codec and `Format.label` |
+
+### Nova fastText fallback
+
+The implementation and its resource/acceptance limits are specified in
+[SUBTITLE_GUESS_LANGUAGE.md](SUBTITLE_GUESS_LANGUAGE.md). AVOS now samples
+unlabelled embedded text tracks after trying metadata and deterministic title
+resolution. Accepted results update language fields and UI labels with an AI
+score, without reselecting the current track. Video information and direct
+playback preparation now run a bounded independent scan and share a persistent
+native cache. Cached languages are applied before initial playback selection;
+labels retain their existing format with an AI confidence suffix. Cold network scans can
+take the full eight-second native budget; cached opens avoid repeating that
+scan. See the specification for limits and measured host results.
+
+The official
+[fastText language models](https://fasttext.cc/docs/en/language-identification.html)
+cover 176 languages; the compact model is about 917 KiB versus 126 MB for the
+larger one. The model has a CC BY-SA 3.0 license, separate from the classifier
+code. The integration supports both standalone and Android builds.
+[ML Kit language identification](https://developers.google.com/ml-kit/language/identification/android)
+is another candidate: its bundled Android model adds about 900 KB and supports
+API 23+. It was not evaluated here. Its Java interface would require a bounded
+subtitle-sample bridge, which the current rendering path does not provide.
+
+The original design considerations were:
+
+1. Keep valid language metadata authoritative, and infer only for missing or
+   undefined languages. Preserve inferred status and confidence separately.
+2. Collect bounded text samples for all unknown text tracks during normal
+   demuxing. AVOS already routes packets for all internal subtitle tracks through
+   `_cache_subtitle_packet()` in `stream_parser_ffmpeg.c`, before filtering for
+   the selected track. The renderer sees only the selected track and is the
+   wrong place to collect samples. Decode format-specific wrappers before
+   classification; bitmap subtitles would require a separate OCR feature.
+3. Run classification off the parser/render threads, with limits on sample
+   bytes, cue count, queue size, and retries. Require enough varied text and
+   agreement across samples; do not use a first-word dictionary or script alone.
+   Tune score and runner-up margins on a broader subtitle corpus.
+4. Publish accepted results through synchronized track metadata updates
+   (`STREAM_SUB_LANGUAGE_CHANGED` reaches `send_metadata()`), and refresh menu
+   labels without overriding the user's current track choice. Audit automatic
+   selection separately because it currently consumes these language fields.
+5. Cache by media identity and stable track identity, invalidate on file change,
+   and retain the existing fallback label for undecided tracks. Do not add
+   track-number prefixes to detected language labels.
+
+Sampling during playback avoids a second file scan but does not guarantee labels
+at startup. In this sample, collecting 4,096 characters takes roughly 9-14
+minutes of media time for most full tracks, and longer for Japanese/Chinese.
+Forced subtitles may never contain enough text. An optional bounded background
+probe could give earlier results on seekable files, but its network I/O and
+playback interaction must be evaluated. Never block playback waiting for a
+classifier or scan the entire remote file merely to populate a menu.
+
 ## Automatic subtitle-track selection
 
 This section describes Nova's current automatic-selection policy and the
