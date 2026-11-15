@@ -1641,7 +1641,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
     private class VideoInfoTask {
         private final ExecutorService executor = Executors.newSingleThreadExecutor();
         private final Handler handler = new Handler(Looper.getMainLooper());
-        private volatile boolean isCancelled = false;
+        private final android.os.CancellationSignal cancellation = new android.os.CancellationSignal();
+        private volatile boolean isCancelled;
         // Accessed only on the main thread, including the completion callback.
         private String startingPath;
         private boolean isFinished;
@@ -1658,70 +1659,68 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                 return;
             }
             final Context context = activity.getApplicationContext();
-            // Keep fragment cache access on the main thread.
+            // Keep fragment cache and intent access on the main thread.
             final VideoMetadata cachedMetadata = mVideoMetadateCache.get(startingPath);
-            final VideoMetadata playerMetadata = mLaunchedFromPlayer ? mVideoMetadataFromPlayer : null;
+            final boolean fromPlayer = mLaunchedFromPlayer;
+            final VideoMetadata playerMetadata = fromPlayer ? mVideoMetadataFromPlayer : null;
+            final java.util.Map<String, String> headers = new java.util.HashMap<>();
             final android.os.Bundle headersBundle = activity.getIntent().getBundleExtra("headers");
+            if (headersBundle != null) {
+                for (String key : headersBundle.keySet()) {
+                    String value = headersBundle.getString(key);
+                    if (value != null) headers.put(key, value);
+                }
+            }
             executor.execute(() -> {
                 VideoMetadata result = null;
                 try {
-                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
-                    if(playerMetadata != null && playerMetadata.getVideoTrack() != null)
+                    if (isCancelled) return;
+                    if (playerMetadata != null && playerMetadata.getVideoTrack() != null) {
                         result = playerMetadata;
-                    else if(cachedMetadata != null){
-                        if (log.isDebugEnabled()) log.debug("metadata retrieved from cache {}", startingPath);
+                    } else if (cachedMetadata != null) {
                         result = cachedMetadata;
-                    }
-                    else {
-                        // Pick up any HTTP headers forwarded from the external player intent (e.g. Stremio/debrid)
-                        java.util.Map<String, String> headers = null;
-                        if (headersBundle != null && !headersBundle.isEmpty()) {
-                            headers = new java.util.HashMap<>();
-                            for (String key : headersBundle.keySet()) {
-                                String val = headersBundle.getString(key);
-                                if (val != null) headers.put(key, val);
-                            }
-                            if (log.isDebugEnabled()) log.debug("VideoInfoTask: using {} HTTP headers from intent", headers.size());
-                        } else {
-                            if (log.isDebugEnabled()) log.debug("VideoInfoTask: no HTTP headers in activity intent");
-                        }
+                    } else {
                         NetworkInitialization.awaitReadyForSmb(video.getFileUri(), context);
-                        if (isCancelled || Thread.currentThread().isInterrupted()) return;
-                        VideoMetadata videoMetaData = VideoInfoCommonClass.retrieveMetadata(video, context, headers);
-                        // Cancellation may have happened during SMB I/O. Discard its result
-                        // before writing metadata back to the database or the fragment cache.
-                        if (isCancelled || Thread.currentThread().isInterrupted()) return;
-                        if(videoMetaData != null && video.isIndexed())
-                            videoMetaData.save(context, startingPath);
-                        result = videoMetaData;
+                        if (isCancelled) return;
+                        result = VideoInfoCommonClass.retrieveMetadata(video, context, headers, cancellation);
                     }
-                } catch (Exception e) {
-                    log.error("VideoInfoTask failed", e);
+                    if (isCancelled) return;
+                    // Publish ordinary TEXT rows before the independent scan starts.
+                    publish(result, false);
+                    if (!fromPlayer && result != null && result.hasUnknownSubtitleLanguages()) {
+                        VideoMetadata enriched = new VideoMetadata(result);
+                        enriched.fillFromRetriever(context, headers, true, cancellation);
+                        // Failed analysis must not erase already displayed metadata.
+                        if (enriched.getSubtitleTrackNb() == result.getSubtitleTrackNb()
+                                && enriched.getVideoTrack() != null) result = enriched;
+                    }
+                    if (!isCancelled && result != null && video.isIndexed()) result.save(context, startingPath);
+                } catch (Exception error) {
+                    if (!isCancelled) log.error("VideoInfoTask failed", error);
                 } finally {
+                    if (!isCancelled) publish(result, true);
                     executor.shutdown();
                 }
-                if (isCancelled) return;
-                final VideoMetadata finalResult = result;
-                handler.post(() -> {
-                    isFinished = true;
-                    if (isCancelled || mVideoInfoTask != this || mVideo == null
-                            || !Objects.equals(startingPath, mVideo.getFilePath())) return;
-                    if (finalResult != null) mVideoMetadateCache.put(startingPath, finalResult);
-                    // Update the video object with the computed metadata
-                    // An initialization failure is retryable: show the existing file error,
-                    // but do not cache or persist empty metadata as a successful result.
-                    mVideo.setMetadata(finalResult != null ? finalResult : new VideoMetadata());
+            });
+        }
 
-                    // Integrated subtitle list is in the metadata
-                    updateSubtitleRowWhenReady();
-                    updateMetadataWhenReady();
-                });
+        private void publish(VideoMetadata result, boolean finished) {
+            handler.post(() -> {
+                if (finished) isFinished = true;
+                if (isCancelled || mVideoInfoTask != this || !isAdded() || mVideo == null
+                        || !Objects.equals(startingPath, mVideo.getFilePath())) return;
+                if (result != null) mVideoMetadateCache.put(startingPath, result);
+                // An initialization failure remains retryable and must not cache empty metadata.
+                mVideo.setMetadata(result != null ? result : new VideoMetadata());
+                updateSubtitleRowWhenReady();
+                updateMetadataWhenReady();
             });
         }
 
         void cancel() {
             isCancelled = true;
-            // SMB transports are shared. Let in-flight I/O finish and discard its result.
+            cancellation.cancel();
+            // Cancel this retriever, without interrupting shared SMB transports.
             executor.shutdown();
         }
     }
@@ -1989,25 +1988,16 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
         }
     }
 
-    /**
-     * Update subtitles details when both metadata (for integrated subs) and external sub checking is done
-     */
+    /** Refresh either source as soon as it arrives; external discovery must not hide internal tracks. */
     private void updateSubtitleRowWhenReady() {
-        if (log.isDebugEnabled()) log.debug("updateSubtitleRowWhenReady: called");
-        if (log.isDebugEnabled()) log.debug("updateSubtitleRowWhenReady: metadata={}", (mVideo.getMetadata() != null));
-        if (log.isDebugEnabled()) log.debug("updateSubtitleRowWhenReady: cache entry={}", (mSubtitleListCache.get(mVideo.getFileUri()) != null));
-
-        if ((mVideo.getMetadata()!=null) && (mSubtitleListCache.get(mVideo.getFileUri())!=null)) {
-            if (log.isDebugEnabled()) log.debug("updateSubtitleRowWhenReady: updating row");
-            try {
-                mSubtitlesDetailsRow = new SubtitlesDetailsRow(getActivity(), mVideo, mSubtitleListCache.get(mVideo.getFileUri()));
-                mAdapter.replace(INDEX_SUBTITLES, mSubtitlesDetailsRow);
-                if (log.isDebugEnabled()) log.debug("updateSubtitleRowWhenReady: row updated successfully");
-            } catch (Exception e) {
-                log.error("updateSubtitleRowWhenReady: error updating row", e);
-            }
-        } else {
-            if (log.isDebugEnabled()) log.debug("updateSubtitleRowWhenReady: not ready - metadata={}, cache={}", (mVideo.getMetadata() != null), (mSubtitleListCache.get(mVideo.getFileUri()) != null));
+        if (mVideo == null) return;
+        List<SubtitleManager.SubtitleFile> externalSubs = mSubtitleListCache.get(mVideo.getFileUri());
+        if (mVideo.getMetadata() == null && externalSubs == null) return;
+        try {
+            mSubtitlesDetailsRow = new SubtitlesDetailsRow(getActivity(), mVideo, externalSubs);
+            mAdapter.replace(INDEX_SUBTITLES, mSubtitlesDetailsRow);
+        } catch (Exception e) {
+            log.error("updateSubtitleRowWhenReady: error updating row", e);
         }
     }
 

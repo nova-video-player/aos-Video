@@ -225,7 +225,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
             VideoMetadata.SubtitleTrack track = list.get(index);
             String format = VideoUtils.getSubtitleFormatLabel(c, track.format);
             sb.append(Integer.toString(index + 1)).append(".").append(SEP)
-              .append(generateTrackName(c, track.name, track.language, format, track.disposition, false)).append(SEP);
+              .append(com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateSubtitleTrackName(c, track, format)).append(SEP);
         }
 
         return HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY);

@@ -298,7 +298,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
             String format = VideoUtils.getSubtitleFormatLabel(context, videoMetadata.getSubtitleTrack(index).format);
             VideoMetadata.SubtitleTrack track = videoMetadata.getSubtitleTrack(index);
             sb.append(Integer.toString(index + 1)).append(".").append(separator)
-                    .append(StringUtils.removeHtmlTags(generateTrackName(context, track.name, track.language, format, track.disposition, false)) + separator);
+                    .append(StringUtils.removeHtmlTags(com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateSubtitleTrackName(context, track, format)) + separator);
         }
         return StringUtils.removeHtmlTags(sb.toString());
     }
