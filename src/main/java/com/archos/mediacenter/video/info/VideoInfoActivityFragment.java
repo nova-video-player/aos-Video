@@ -1130,6 +1130,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private void setFileInfo(VideoMetadata videoMetadata){
         if (log.isDebugEnabled()) log.debug("setFileInfo");
+        // Internal tracks must not wait for external subtitle discovery. Refresh
+        // both the ordinary metadata and subsequent language-analysis result.
+        if (mCurrentVideo != null) {
+            updateSubtitleInfo(videoMetadata, mSubtitleListCache.get(mCurrentVideo.getFilePath()));
+        }
         // Special error case (99.9% of the time it happens when the specified file is not reachable)
         if (videoMetadata == null) {
             setVisibilityFileError();
@@ -1175,7 +1180,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (!videoMetadata.getSubtitleTrack(i).isExternal) { //manage external subs with sub manager
                         if (log.isDebugEnabled()) log.debug("updateSubtitleInfo: int subtitleTrack {} {} {} {}", i, subTrack.name, subTrack.language, subTrack.format);
                         String format = VideoUtils.getSubtitleFormatLabel(getContext(), subTrack.format);
-                        lines.add(dirMarker + (totSubs + 1) + ": " + StringUtils.removeHtmlTags(generateTrackName(getContext(), subTrack.name, subTrack.language, format, subTrack.disposition, false)));
+                        lines.add(dirMarker + (totSubs + 1) + ": " + StringUtils.removeHtmlTags(com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateSubtitleTrackName(getContext(), subTrack, format)));
                         totSubs++;
                     }
                 }
@@ -1560,78 +1565,71 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         playLauncher.launch(intent);
     }
 
-    //retrieve info on file such as codecs, etc
+    // Metadata appears first; the independent language scan then updates the same view.
     private class VideoInfoTask {
         private final ExecutorService executor = Executors.newSingleThreadExecutor();
         private final Handler handler = new Handler(Looper.getMainLooper());
-        private volatile boolean isCancelled = false;
+        private final android.os.CancellationSignal cancellation = new android.os.CancellationSignal();
+        private volatile boolean isCancelled;
 
+        @SuppressWarnings("deprecation")
         void execute(Video video) {
+            if (getActivity() == null) return;
+            final Context context = getActivity().getApplicationContext();
+            final String path = video.getFilePath();
+            final VideoMetadata cached = mIsLaunchFromPlayer && mVideoMetadataFromPlayer != null
+                    ? mVideoMetadataFromPlayer : mVideoMetadateCache.get(path);
+            final boolean fromPlayer = mIsLaunchFromPlayer;
+            final java.util.Map<String, String> headers = new java.util.HashMap<>();
+            android.os.Bundle bundle = getActivity().getIntent().getBundleExtra("headers");
+            if (bundle != null) {
+                for (String key : bundle.keySet()) {
+                    Object value = bundle.get(key);
+                    if (value instanceof String) headers.put(key, (String) value);
+                }
+            }
             mFileInfoAudioVideoContainer.setVisibility(View.GONE);
             mFileError.setVisibility(View.GONE);
             mFileInfoContainerLoading.setVisibility(View.VISIBLE);
-
             executor.execute(() -> {
-                VideoMetadata result = null;
                 try {
-                    if (isCancelled || Thread.currentThread().isInterrupted()) return;
-                    result = doWork(video);
-                } catch (Exception e) {
-                    log.error("VideoInfoTask failed", e);
+                    if (isCancelled) return;
+                    VideoMetadata result = cached != null ? cached
+                            : VideoInfoCommonClass.retrieveMetadata(video, context, headers, cancellation);
+                    boolean analyze = !fromPlayer && result != null && result.hasUnknownSubtitleLanguages();
+                    publish(video, path, result);
+                    if (analyze && !isCancelled) {
+                        VideoMetadata enriched = new VideoMetadata(result);
+                        enriched.fillFromRetriever(context, headers, true, cancellation);
+                        // A failed/cancelled probe must not erase already displayed file metadata.
+                        if (enriched.getSubtitleTrackNb() == result.getSubtitleTrackNb()
+                                && enriched.getVideoTrack() != null) result = enriched;
+                        publish(video, path, result);
+                    }
+                    if (!isCancelled && result != null && video.isIndexed()) result.save(context, path);
+                } catch (Exception error) {
+                    if (!isCancelled) {
+                        log.error("VideoInfoTask failed", error);
+                        publish(video, path, cached);
+                    }
                 } finally {
                     executor.shutdown();
                 }
-                if (isCancelled) return;
-                final VideoMetadata finalResult = result;
-                handler.post(() -> {
-                    if (isCancelled) return;
-                    if (log.isDebugEnabled()) log.debug("VideoInfoTask onPostExecute");
-                    if (mCurrentVideo != null)
-                        mCurrentVideo.setMetadata(finalResult);
-                    setFileInfo(finalResult);
-                });
             });
         }
 
-        @SuppressWarnings("deprecation") // Bundle.get(key): headersBundle is an untyped String passthrough from external app intent — instanceof guard used
-        private VideoMetadata doWork(Video video) {
-            if (mIsLaunchFromPlayer && mVideoMetadataFromPlayer != null && mVideoMetadataFromPlayer.getVideoTrack() != null)
-                return mVideoMetadataFromPlayer;
-            String startingPath = video.getFilePath();
-            if (log.isDebugEnabled()) log.debug("VideoInfoTask doInBackground for {}", startingPath);
-            if (mVideoMetadateCache.containsKey(startingPath)) {
-                if (log.isDebugEnabled()) log.debug("VideoInfoTask doInBackground, metadata retrieved from cache {}", startingPath);
-                return mVideoMetadateCache.get(startingPath);
-            } else {
-                // Pick up any HTTP headers forwarded from the external player intent (e.g. Stremio/debrid)
-                android.os.Bundle headersBundle = getActivity() != null
-                        ? getActivity().getIntent().getBundleExtra("headers") : null;
-                java.util.Map<String, String> headers = null;
-                if (headersBundle != null && !headersBundle.isEmpty()) {
-                    headers = new java.util.HashMap<>();
-                    for (String key : headersBundle.keySet()) {
-                        Object val = headersBundle.get(key);
-                        if (val instanceof String) headers.put(key, (String) val);
-                    }
-                    if (log.isDebugEnabled()) log.debug("VideoInfoTask: using {} HTTP headers from intent", headers.size());
-                } else {
-                    if (log.isDebugEnabled()) log.debug("VideoInfoTask: no HTTP headers in activity intent");
-                }
-                VideoMetadata videoMetaData = VideoInfoCommonClass.retrieveMetadata(video, getActivity(), headers);
-                if (video != null && video.isIndexed()) {
-                    if (log.isDebugEnabled()) log.debug("VideoInfoTask doInBackground, saving {}", startingPath);
-                    videoMetaData.save(getActivity(), startingPath);
-                    if (log.isDebugEnabled()) log.debug("VideoInfoTask doInBackground, saved {}", startingPath);
-                }
-                mVideoMetadateCache.put(startingPath, videoMetaData);
-                if (log.isDebugEnabled()) log.debug("VideoInfoTask doInBackground, set MetaData {}", startingPath);
-                video.setMetadata(videoMetaData);
-                return videoMetaData;
-            }
+        private void publish(Video video, String path, VideoMetadata metadata) {
+            handler.post(() -> {
+                if (isCancelled || mCurrentVideo != video || !isAdded()) return;
+                if (metadata != null) mVideoMetadateCache.put(path, metadata);
+                video.setMetadata(metadata);
+                setFileInfo(metadata);
+            });
         }
 
         void cancel() {
             isCancelled = true;
+            cancellation.cancel();
             executor.shutdownNow();
         }
     }
@@ -1647,17 +1645,17 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         }
 
         void execute(Video video) {
+            final List<SubtitleManager.SubtitleFile> cached = mSubtitleListCache.get(video.getFilePath());
             executor.execute(() -> {
                 List<SubtitleManager.SubtitleFile> result = null;
                 try {
                     if (isCancelled || Thread.currentThread().isInterrupted()) return;
-                    if (mSubtitleListCache.containsKey(video.getFilePath())) {
-                        result = mSubtitleListCache.get(video.getFilePath());
+                    if (cached != null) {
+                        result = cached;
                     } else {
                         SubtitleManager lister = new SubtitleManager(mActivity, null);
                         if (log.isDebugEnabled()) log.debug("SubtitleFilesListerTask:doInBackground listLocalAndRemotesSubtitles");
                         result = lister.listLocalAndRemotesSubtitles(video.getFileUri(), true);
-                        mSubtitleListCache.put(video.getFilePath(), result);
                     }
                 } catch (Exception e) {
                     log.error("SubtitleFilesListerTask failed", e);
@@ -1667,7 +1665,8 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                 if (isCancelled || result == null) return;
                 final List<SubtitleManager.SubtitleFile> finalResult = result;
                 handler.post(() -> {
-                    if (isCancelled) return;
+                    if (isCancelled || mCurrentVideo != video || !isAdded()) return;
+                    mSubtitleListCache.put(video.getFilePath(), finalResult);
                     // Cache the subtitle files for this video to avoid re-enumeration on playback
                     // Only cache for local files - remote files (SMB, FTP, etc.) require local copying during playback
                     // Cache is invalidated when exiting this fragment

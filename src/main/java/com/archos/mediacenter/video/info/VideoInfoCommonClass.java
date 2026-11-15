@@ -90,6 +90,11 @@ public class VideoInfoCommonClass {
     }
 
     public static VideoMetadata retrieveMetadata(Video video, Context context, Map<String, String> headers){
+        return retrieveMetadata(video, context, headers, null);
+    }
+
+    public static VideoMetadata retrieveMetadata(Video video, Context context, Map<String, String> headers,
+            android.os.CancellationSignal cancellation) {
         String startingPath= video.getFilePath();
         String streamingPath = startingPath;
         if (streamingPath == null) return null;
@@ -127,7 +132,7 @@ public class VideoInfoCommonClass {
         }
         // Get metadata from file
         VideoMetadata videoMetaData = new VideoMetadata(streamingPath);
-        videoMetaData.fillFromRetriever(context, headers);
+        videoMetaData.fillFromRetriever(context, headers, false, cancellation);
         return videoMetaData;
 
     }
