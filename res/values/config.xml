@@ -9,6 +9,8 @@
     <integer name="player_pref_subtitle_vpos_default">0</integer>
     <!-- font scale in percent (Scale only mode), 100 = unscaled -->
     <integer name="subtitle_default_font_scale_percent">100</integer>
+    <!-- image subtitle (PGS/VobSub) scale in percent, 100 = as fitted by the renderer. -->
+    <integer name="subtitle_default_gfx_scale_percent">100</integer>
     <!-- background opacity, 0-255 -->
     <integer name="subtitle_default_bg_opacity">128</integer>
     <!-- outline / shadow widths -->

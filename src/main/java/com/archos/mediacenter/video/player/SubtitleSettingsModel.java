@@ -144,7 +144,7 @@ public class SubtitleSettingsModel {
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private Listener mListener;
 
-    private final Setting mSize, mScale, mBold, mBg, mMode, mVpos, mGfxVpos, mOutlineW, mShadowW, mPadding, mOpacity;
+    private final Setting mSize, mScale, mBold, mBg, mMode, mVpos, mGfxVpos, mGfxScale, mOutlineW, mShadowW, mPadding, mOpacity;
     private final Setting mAdvancedSetting;
     private final ColorTarget mTextColor, mOutlineColor, mShadowColor, mBackgroundColor;
 
@@ -195,6 +195,10 @@ public class SubtitleSettingsModel {
         // from the text position. No position hint: it is a line at the text position's height.
         mGfxVpos = new Setting(SubtitleManager.KEY_GFX_VPOS, P_INT, SubtitleManager.GFX_VPOS_MIN, SubtitleManager.GFX_VPOS_MAX, 1,
                 m::getGfxVerticalPosition, m::setGfxVerticalPosition);
+        // Image subtitles: their size, a multiple of the fitted cue. Stored apart from the text
+        // scale above (its own key), but like it a float shown as a percentage, stepped the same.
+        mGfxScale = new Setting(SubtitleManager.KEY_GFX_SCALE, P_FLOAT_PERCENT, 50, 300, 10,
+                () -> Math.round(m.getGfxScale() * 100f), v -> m.setGfxScale(v / 100f));
         mOutlineW = new Setting(SubtitleManager.KEY_OUTLINE_WIDTH, P_FLOAT, 0, 50, 1,
                 () -> Math.round(m.getOutlineWidth()), m::setOutlineWidth);
         mShadowW = new Setting(SubtitleManager.KEY_SHADOW_WIDTH, P_FLOAT, 0, 50, 1,
@@ -258,8 +262,8 @@ public class SubtitleSettingsModel {
 
     /**
      * First press arms (a label asks for confirmation), second press within 3 s resets: the whole
-     * text style, or, while an image subtitle track is active, only the image-subtitle position
-     * (they have no text style, and the text style is left alone).
+     * text style, or, while an image subtitle track is active, only the image-subtitle settings:
+     * position and scale (they have no text style, and the text style is left alone).
      */
     public void onResetPressed() {
         if (!mResetArmed) {
@@ -271,7 +275,7 @@ public class SubtitleSettingsModel {
         mHandler.removeCallbacks(mDisarmReset);
         mResetArmed = false;
         if (mManager.getSubtitleKind() == SubtitleManager.KIND_GRAPHIC) {
-            mManager.resetGfxVerticalPosition(mPrefs);
+            mManager.resetGfxSettings(mPrefs);                  // the position and the scale, not the text style
             return;
         }
         // A reset is "forget the saved style, then restore": every key is gone, so the defaults apply.
@@ -309,8 +313,11 @@ public class SubtitleSettingsModel {
     private void mainRows(List<Row> rows) {
         final int kind = mManager.getSubtitleKind();
         if (kind == SubtitleManager.KIND_GRAPHIC) {
-            // Image subtitles have no text style (so no sample either), but their position can be moved.
+            // Image subtitles have no text style (so no sample either), but they can be resized
+            // (the same stepper as the text scale) and moved.
             rows.add(note("note_unavailable", R.string.subtitle_panel_note_graphic));
+            rows.add(stepper("gfx_scale", R.string.subtitle_panel_scale, mGfxScale,
+                    v -> mContext.getString(R.string.subtitle_panel_value_percent, v)));
             final Row pos = slider("gfx_vpos", R.string.subtitle_panel_vertical_position, mGfxVpos);
             pos.signed = true;
             pos.fmt = v -> v > 0 ? "+" + v : Integer.toString(v);
