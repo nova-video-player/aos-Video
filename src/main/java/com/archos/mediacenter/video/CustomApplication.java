@@ -136,6 +136,12 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     private static long maxAudioChannelCount = 0;
     private static boolean hasHdmi = false;
     private static boolean hasSpdif = false;
+    private static long probedAudioEncodingFlag;
+    private boolean audioOutputCapabilitiesInitialized;
+    private boolean passthroughProbeDeferred;
+    private final PassthroughProbe passthroughProbe = new PassthroughProbe();
+    private final ExecutorService passthroughProbeExecutor = Executors.newSingleThreadExecutor();
+    private final java.util.Set<Runnable> audioOutputListeners = new java.util.concurrent.CopyOnWriteArraySet<>();
     private static String supportedRefreshRates = "";
     private static AudioManager mAudioManager;
     private static AudioDeviceCallback mAudioDeviceCallback;
@@ -145,9 +151,39 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     private String pendingAudioOutputSignature;
     private final android.os.Handler audioRouteHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private final Runnable notifyAudioRoute = () -> {
+        for (Runnable listener : audioOutputListeners) listener.run();
         com.archos.mediacenter.video.player.Player player = com.archos.mediacenter.video.player.Player.sPlayer;
         if (player != null) player.onAudioOutputChanged();
     };
+
+    public void addAudioOutputListener(Runnable listener) {
+        audioOutputListeners.add(listener);
+    }
+
+    public void removeAudioOutputListener(Runnable listener) {
+        audioOutputListeners.remove(listener);
+    }
+
+    public static boolean isPassthroughProbePending() {
+        return Build.VERSION.SDK_INT == Build.VERSION_CODES.M && sInstance != null
+                && (!sInstance.audioOutputCapabilitiesInitialized || sInstance.passthroughProbeDeferred
+                || sInstance.passthroughProbe.isPending());
+    }
+
+    public void refreshLegacyPassthroughCapabilities() {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) refreshAudioOutputCapabilities("settings");
+    }
+
+    public static boolean isUsingProbedPassthrough() {
+        return Build.VERSION.SDK_INT == Build.VERSION_CODES.M
+                && !hasHdmi && !hasSpdif && probedAudioEncodingFlag != 0;
+    }
+
+    public static boolean isPassthroughModeSupported(int mode) {
+        if (mode == 0) return true;
+        return isUsingProbedPassthrough() ? PassthroughProbe.supportsMode(probedAudioEncodingFlag, mode)
+                : isPassthroughSupported();
+    }
 
     private void publishAudioRouteChange() {
         String signature = getAudioOutputSignature();
@@ -218,7 +254,19 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         // AudioTrack follows routing itself. HDMI reconnects can replace its device ID or
         // temporarily leave it unresolved without changing the native output configuration.
         // Rebuild only for capability/backend changes, including forced-passthrough eligibility.
-        return isPassthroughSupported() + ":" + getNativeAudioCodecsFlag() + ":" + maxAudioChannelCount
+        boolean supported = isPassthroughSupported();
+        long codecs = getNativeAudioCodecsFlag();
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && !hasHdmi && !hasSpdif && mContext != null) {
+            int mode = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext)
+                    .getString("force_audio_passthrough_multiple", "0"));
+            if (mode == 0 || !PassthroughProbe.supportsMode(probedAudioEncodingFlag, mode)) {
+                // Discovery must not reopen PCM playback or activate an unprobed saved mode.
+                // Preserve the pre-probe signature, including the existing Android TV fallback.
+                supported = !audioRouteResolved && ArchosFeatures.isAndroidTV(mContext);
+                codecs = 0;
+            }
+        }
+        return supported + ":" + codecs + ":" + maxAudioChannelCount
                 + ":" + Arrays.toString(hdmiChannelMasks) + ":" + isIecEncapsulationCapable
                 + ":" + isDirectPcmMultichannelCapable + ":" + getSpatializerCapabilities();
     }
@@ -229,9 +277,13 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         if (!LibAvos.isAvailable()) return;
         android.content.SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int mode = isPassthroughSupported() ? Integer.parseInt(prefs.getString("force_audio_passthrough_multiple", "0")) : 0;
+        if (!isPassthroughModeSupported(mode)) mode = 0;
         long codecs = getNativeAudioCodecsFlag();
         if (mode != 0 && prefs.getBoolean(VideoPreferencesCommon.KEY_FORCE_AUDIO_PASSTHROUGH, false)) {
-            codecs = allHdmiAudioCodecs;
+            // A probe only establishes support for the codecs it actually opened.
+            // Keep the existing force behavior for explicitly advertised digital outputs.
+            codecs = isUsingProbedPassthrough()
+                    ? probedAudioEncodingFlag : allHdmiAudioCodecs;
             if (!isIecEncapsulationCapable) codecs &= ~(1L << 13);
         }
         LibAvos.setMaxPcmChannels(getEffectiveMaxPcmChannels());
@@ -498,19 +550,40 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             hdmiChannelMasks = bestHdmiChannelMasks;
         }
 
+        // Some legacy set-top boxes expose optical audio only as an untyped
+        // speaker with empty capability arrays (issue #2037). Probe the firmware
+        // without inventing a connected SPDIF device or assuming receiver support.
+        String probeRoute = Build.VERSION.SDK_INT != Build.VERSION_CODES.M || foundHdmi || foundSpdif
+                ? null : PassthroughProbe.routeKey(devices, selected,
+                        getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY));
+        if (mAudioManager.getMode() != AudioManager.MODE_NORMAL) probeRoute = null;
+        // A new probe can allocate a direct output. Defer it while any media is playing
+        // or Nova still owns a playback session; cached results require no new AudioTrack.
+        passthroughProbeDeferred = probeRoute != null && !passthroughProbe.hasResult(probeRoute)
+                && (mAudioManager.isMusicActive()
+                    || com.archos.mediacenter.video.player.Player.sPlayer != null);
+        if (passthroughProbeDeferred) probeRoute = null;
+        probedAudioEncodingFlag = passthroughProbe.update(probeRoute, passthroughProbeExecutor,
+                command -> audioRouteHandler.post(command), () -> {
+                    refreshAudioOutputCapabilities("passthroughProbe");
+                    // Also notify settings when a failed probe completes (same codec signature).
+                    for (Runnable listener : audioOutputListeners) listener.run();
+                });
+
+        audioOutputCapabilitiesInitialized = true;
         updateIecEncapsulationCapability();
         updateDirectPcmMultichannelCapability();
         refreshSpatializerCapabilities(reason);
         publishAudioRouteChange();
 
         if (log != null) {
-            log.info("refreshAudioOutputCapabilities({}): deviceId={} resolved={} hasHdmi={} (type={}) hasSpdif={} maxAudioChannelCount={} hdmiCaps={} spdifCaps={}",
-                    reason, selectedAudioDeviceId, audioRouteResolved, hasHdmi, bestHdmiType, hasSpdif, maxAudioChannelCount, getSupportedAudioCodecs(hdmiAudioEncodingFlag), getSupportedAudioCodecs(spdifAudioEncodingFlag));
+            log.info("refreshAudioOutputCapabilities({}): deviceId={} resolved={} hasHdmi={} (type={}) hasSpdif={} maxAudioChannelCount={} hdmiCaps={} spdifCaps={} probedCaps={}",
+                    reason, selectedAudioDeviceId, audioRouteResolved, hasHdmi, bestHdmiType, hasSpdif, maxAudioChannelCount, getSupportedAudioCodecs(hdmiAudioEncodingFlag), getSupportedAudioCodecs(spdifAudioEncodingFlag), getSupportedAudioCodecs(probedAudioEncodingFlag));
         }
     }
 
     public static long getHdmiAudioCodecsFlag() {
-        return hdmiAudioEncodingFlag | spdifAudioEncodingFlag;
+        return hdmiAudioEncodingFlag | spdifAudioEncodingFlag | probedAudioEncodingFlag;
     }
 
     /**
@@ -522,7 +595,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         if (hasHdmi) {
             return hdmiAudioEncodingFlag;
         }
-        return spdifAudioEncodingFlag;
+        return hasSpdif ? spdifAudioEncodingFlag : probedAudioEncodingFlag;
     }
 
     private static synchronized void refreshMediaCodecAudioCapabilities(String reason) {
@@ -1298,7 +1371,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     public static boolean isPassthroughSupported () {
-        return hasHdmi || hasSpdif || (!audioRouteResolved && ArchosFeatures.isAndroidTV(mContext));
+        return hasHdmi || hasSpdif || probedAudioEncodingFlag != 0 || (!audioRouteResolved && ArchosFeatures.isAndroidTV(mContext));
     }
 
     public static String[] audioEncodings = new String[] {"INVALID", "DEFAULT", "PCM_16BIT", "PCM_8BIT", "PCM_FLOAT",
@@ -1322,7 +1395,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                 log.warn("getEncodingFlags: audio encoding {} not identified!!!", encoding);
             }
         }
-        if (log.isDebugEnabled()) log.debug("getEncodingFlags: encodings={}, encodingFlags={}, allHdmiAudioCodecs={}", allHdmiAudioCodecs, Arrays.toString(encodings), encodingFlags);
+        if (log.isDebugEnabled()) log.debug("getEncodingFlags: encodings={}, encodingFlags={}, allHdmiAudioCodecs={}", Arrays.toString(encodings), encodingFlags, allHdmiAudioCodecs);
         return encodingFlags;
     }
 

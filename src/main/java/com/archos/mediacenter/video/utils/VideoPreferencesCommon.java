@@ -806,56 +806,54 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     }
 
     /**
-     * Remove Mode 1 (IEC61937) from the passthrough mode preference list
-     * Used when device doesn't support ENCODING_IEC61937
-     * Preserves Mode 2 as "2" and Mode 3 as "3"
+     * Remove an unsupported mode while retaining the original values of other modes.
      */
-    private void removeMode1FromPassthroughOptions(ListPreference preference) {
+    private void removePassthroughModeFromOptions(ListPreference preference, String mode, boolean resetUnsupportedMode) {
         CharSequence[] entries = preference.getEntries();
         CharSequence[] values = preference.getEntryValues();
         if (entries == null || values == null) {
             return;
         }
 
-        // Find and remove Mode 1 entry
-        int mode1Index = -1;
+        // Find and remove the unsupported mode entry
+        int modeIndex = -1;
         for (int i = 0; i < values.length; i++) {
-            if ("1".equals(values[i].toString())) {
-                mode1Index = i;
+            if (mode.equals(values[i].toString())) {
+                modeIndex = i;
                 break;
             }
         }
 
-        if (mode1Index < 0) {
-            return;  // Mode 1 not found
+        if (modeIndex < 0) {
+            return;  // the unsupported mode not found
         }
 
-        // Create new arrays without Mode 1
+        // Create new arrays without the unsupported mode
         CharSequence[] newEntries = new CharSequence[entries.length - 1];
         CharSequence[] newValues = new CharSequence[values.length - 1];
 
         int newIndex = 0;
         for (int i = 0; i < entries.length; i++) {
-            if (i != mode1Index) {
+            if (i != modeIndex) {
                 newEntries[newIndex] = entries[i];
                 newValues[newIndex] = values[i];
                 newIndex++;
             }
         }
 
-        // Update the preference with the modified entries (Mode 2 and 3 keep their values)
+        // Retain the original values of the remaining modes.
         preference.setEntries(newEntries);
         preference.setEntryValues(newValues);
 
-        // If Mode 1 is currently selected, reset to Mode 0
+        // If the unsupported mode is currently selected, reset to Mode 0
         String currentValue = preference.getValue();
-        if ("1".equals(currentValue)) {
+        if (resetUnsupportedMode && mode.equals(currentValue)) {
             preference.setValue("0");
             preference.setSummary(preference.getEntry());  // Update summary to reflect new selection
             mSharedPreferences.edit().putString("force_audio_passthrough_multiple", "0").apply();
-            log.info("removeMode1FromPassthroughOptions: Mode 1 was selected but not supported, resetting to mode 0");
+            log.info("Passthrough mode {} unsupported, resetting to mode 0", mode);
         } else {
-            if (log.isDebugEnabled()) log.debug("removeMode1FromPassthroughOptions: Mode 1 removed from options (mode 2 and 3 preserved with original values)");
+            if (log.isDebugEnabled()) log.debug("Removed unsupported passthrough mode {}", mode);
         }
     }
 
@@ -956,73 +954,12 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mEnableSpatialization = (CheckBoxPreference) findPreference("player_spatialization_enabled");
         mDisableDownmix = (CheckBoxPreference) findPreference("disable_downmix");
         mEnableDownmixATV = (CheckBoxPreference) findPreference("enable_downmix_androidtv");
-        final ListPreference mForceAudioPassthroughMultiple = (ListPreference) findPreference("force_audio_passthrough_multiple");
-        boolean isPassthroughSupported = CustomApplication.isPassthroughSupported();
-        boolean isIecEncapsulationCapable = CustomApplication.isIecEncapsulationCapable();
-        mForceAudioPassthrough.setEnabled(isPassthroughSupported);
-        mForceAudioPassthroughMultiple.setEnabled(isPassthroughSupported);
-        mForceAudioPassthrough.setSelectable(isPassthroughSupported);
-        mForceAudioPassthroughMultiple.setSelectable(isPassthroughSupported);
-
-        // Remove Mode 1 (IEC61937 manual wrapping) from options if not supported by device.
-        if (!isIecEncapsulationCapable
-                && mForceAudioPassthroughMultiple != null) {
-            removeMode1FromPassthroughOptions(mForceAudioPassthroughMultiple);
+        CustomApplication application = CustomApplication.getApplication();
+        if (application != null && Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+            application.refreshLegacyPassthroughCapabilities();
+            application.addAudioOutputListener(mAudioOutputListener);
         }
-
-        // Mirrors PlayerActivity.isSpatializationSupportedByPlatform(): device/platform must
-        // support the Spatializer and be able to spatialize 5.1 or 7.1 content.
-        int spatializerCapabilities = CustomApplication.getSpatializerCapabilities();
-        final boolean isSpatializationSupportedByPlatform = Build.VERSION.SDK_INT >= 32
-                && (spatializerCapabilities & CodecDiscovery.SPATIALIZER_CAP_SUPPORTED) != 0
-                && (spatializerCapabilities & CodecDiscovery.SPATIALIZER_CAP_AVAILABLE) != 0
-                && (spatializerCapabilities & (CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_5_1
-                        | CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_7_1)) != 0;
-        mEnableSpatialization.setOnPreferenceChangeListener((preference, newValue) -> {
-            updateDownmixPreferencesState(isSpatializationSupportedByPlatform && (Boolean) newValue);
-            return true;
-        });
-
-        // Get initial frame timing state
-        boolean frameTimingEnabled = mSharedPreferences.getBoolean("enable_android_frame_timing", false);
-
-        boolean spatializationOverridesDownmix = isSpatializationSupportedByPlatform
-                && mEnableSpatialization.isChecked();
-        if (isPassthroughSupported) {
-            String passthroughMode = mSharedPreferences.getString("force_audio_passthrough_multiple", "0");
-            boolean passthroughEnabled = !"0".equals(passthroughMode);
-            mForceAudioPassthrough.setEnabled(passthroughEnabled);
-            mForceAudioPassthrough.setSelectable(passthroughEnabled);
-            updateAudioSpeedState(passthroughEnabled);
-            updateAudioDecoderChoiceState(passthroughEnabled);
-            updateSpatializationPreferenceState(isSpatializationSupportedByPlatform, passthroughEnabled);
-            updateDownmixPreferencesState(passthroughEnabled || spatializationOverridesDownmix);
-            // Dynamic audio delay depends on both passthrough and frame timing
-            updateDynamicAudioDelayState(passthroughEnabled, frameTimingEnabled);
-            mForceAudioPassthroughMultiple.setOnPreferenceChangeListener((preference, newValue) -> {
-                boolean newPassthroughEnabled = !"0".equals(newValue.toString());
-                mForceAudioPassthrough.setEnabled(newPassthroughEnabled);
-                mForceAudioPassthrough.setSelectable(newPassthroughEnabled);
-                updateAudioSpeedState(newPassthroughEnabled);
-                updateAudioDecoderChoiceState(newPassthroughEnabled);
-                updateSpatializationPreferenceState(isSpatializationSupportedByPlatform, newPassthroughEnabled);
-                updateDownmixPreferencesState(newPassthroughEnabled
-                        || (isSpatializationSupportedByPlatform && mEnableSpatialization.isChecked()));
-                return true;
-            });
-        } else {
-            // Ensure stored value reflects the fact passthrough is unsupported so that
-            // audio-speed UI downstream does not treat it as active.
-            if (!"0".equals(mSharedPreferences.getString("force_audio_passthrough_multiple", "0"))) {
-                mSharedPreferences.edit().putString("force_audio_passthrough_multiple", "0").apply();
-            }
-            updateAudioSpeedState(false);
-            updateAudioDecoderChoiceState(false);
-            updateSpatializationPreferenceState(isSpatializationSupportedByPlatform, false);
-            updateDownmixPreferencesState(spatializationOverridesDownmix);
-            // Frame timing can still affect dynamic audio delay even without passthrough
-            updateDynamicAudioDelayState(false, frameTimingEnabled);
-        }
+        updateAudioOutputPreferences(true);
 
         if (mAudioDecoderChoicePreferences != null) {
             mAudioDecoderChoicePreferences.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -1874,6 +1811,8 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     }
 
     public void onDestroy() {
+        CustomApplication application = CustomApplication.getApplication();
+        if (application != null) application.removeAudioOutputListener(mAudioOutputListener);
         if (mSharedPreferences != null)
             mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
         if (mOsPreferences != null && mOsPrefsListener != null)
@@ -2015,7 +1954,94 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         mSubtitlesCredentialsPreference.setSummary(summary);
     }
 
+    private final Runnable mAudioOutputListener = () -> updateAudioOutputPreferences(false);
+
+    private void updateAudioOutputPreferences(boolean resetUnsupportedMode) {
+        final ListPreference mForceAudioPassthroughMultiple = (ListPreference) findPreference("force_audio_passthrough_multiple");
+        if (mForceAudioPassthroughMultiple == null || mForceAudioPassthrough == null) return;
+        mForceAudioPassthroughMultiple.setEntries(R.array.pref_passthrough_mode_entries);
+        mForceAudioPassthroughMultiple.setEntryValues(R.array.pref_passthrough_mode_values);
+        boolean isPassthroughSupported = CustomApplication.isPassthroughSupported();
+        boolean isIecEncapsulationCapable = CustomApplication.isIecEncapsulationCapable();
+        mForceAudioPassthrough.setEnabled(isPassthroughSupported);
+        mForceAudioPassthroughMultiple.setEnabled(isPassthroughSupported);
+        mForceAudioPassthrough.setSelectable(isPassthroughSupported);
+        mForceAudioPassthroughMultiple.setSelectable(isPassthroughSupported);
+
+        // Remove Mode 1 (IEC61937 manual wrapping) from options if not supported by device.
+        if (!isIecEncapsulationCapable
+                && mForceAudioPassthroughMultiple != null) {
+            removePassthroughModeFromOptions(mForceAudioPassthroughMultiple, "1",
+                    resetUnsupportedMode && !CustomApplication.isPassthroughProbePending());
+        }
+        if (CustomApplication.isUsingProbedPassthrough() && !CustomApplication.isPassthroughModeSupported(3)) {
+            removePassthroughModeFromOptions(mForceAudioPassthroughMultiple, "3", resetUnsupportedMode);
+        }
+
+        // Mirrors PlayerActivity.isSpatializationSupportedByPlatform(): device/platform must
+        // support the Spatializer and be able to spatialize 5.1 or 7.1 content.
+        int spatializerCapabilities = CustomApplication.getSpatializerCapabilities();
+        final boolean isSpatializationSupportedByPlatform = Build.VERSION.SDK_INT >= 32
+                && (spatializerCapabilities & CodecDiscovery.SPATIALIZER_CAP_SUPPORTED) != 0
+                && (spatializerCapabilities & CodecDiscovery.SPATIALIZER_CAP_AVAILABLE) != 0
+                && (spatializerCapabilities & (CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_5_1
+                        | CodecDiscovery.SPATIALIZER_CAP_CAN_SPATIALIZE_7_1)) != 0;
+        mEnableSpatialization.setOnPreferenceChangeListener((preference, newValue) -> {
+            updateDownmixPreferencesState(isSpatializationSupportedByPlatform && (Boolean) newValue);
+            return true;
+        });
+
+        // Get initial frame timing state
+        boolean frameTimingEnabled = mSharedPreferences.getBoolean("enable_android_frame_timing", false);
+
+        boolean spatializationOverridesDownmix = isSpatializationSupportedByPlatform
+                && mEnableSpatialization.isChecked();
+        if (isPassthroughSupported) {
+            String passthroughMode = mSharedPreferences.getString("force_audio_passthrough_multiple", "0");
+            boolean passthroughEnabled = !"0".equals(passthroughMode)
+                    && CustomApplication.isPassthroughModeSupported(Integer.parseInt(passthroughMode));
+            mForceAudioPassthrough.setEnabled(passthroughEnabled);
+            mForceAudioPassthrough.setSelectable(passthroughEnabled);
+            updateAudioSpeedState(passthroughEnabled);
+            updateAudioDecoderChoiceState(passthroughEnabled);
+            updateSpatializationPreferenceState(isSpatializationSupportedByPlatform, passthroughEnabled);
+            updateDownmixPreferencesState(passthroughEnabled || spatializationOverridesDownmix);
+            // Dynamic audio delay depends on both passthrough and frame timing
+            updateDynamicAudioDelayState(passthroughEnabled, frameTimingEnabled);
+            mForceAudioPassthroughMultiple.setOnPreferenceChangeListener((preference, newValue) -> {
+                if (!CustomApplication.isPassthroughModeSupported(Integer.parseInt(newValue.toString()))) return false;
+                boolean newPassthroughEnabled = !"0".equals(newValue.toString());
+                mForceAudioPassthrough.setEnabled(newPassthroughEnabled);
+                mForceAudioPassthrough.setSelectable(newPassthroughEnabled);
+                updateAudioSpeedState(newPassthroughEnabled);
+                updateAudioDecoderChoiceState(newPassthroughEnabled);
+                updateSpatializationPreferenceState(isSpatializationSupportedByPlatform, newPassthroughEnabled);
+                updateDownmixPreferencesState(newPassthroughEnabled
+                        || (isSpatializationSupportedByPlatform && mEnableSpatialization.isChecked()));
+                return true;
+            });
+        } else {
+            // Ensure stored value reflects the fact passthrough is unsupported so that
+            // audio-speed UI downstream does not treat it as active.
+            if (resetUnsupportedMode && !CustomApplication.isPassthroughProbePending()
+                    && !"0".equals(mSharedPreferences.getString("force_audio_passthrough_multiple", "0"))) {
+                mSharedPreferences.edit().putString("force_audio_passthrough_multiple", "0").apply();
+            }
+            updateAudioSpeedState(false);
+            updateAudioDecoderChoiceState(false);
+            updateSpatializationPreferenceState(isSpatializationSupportedByPlatform, false);
+            updateDownmixPreferencesState(spatializationOverridesDownmix);
+            // Frame timing can still affect dynamic audio delay even without passthrough
+            updateDynamicAudioDelayState(false, frameTimingEnabled);
+        }
+    }
+
     public void onResume() {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+            CustomApplication application = CustomApplication.getApplication();
+            if (application != null) application.refreshLegacyPassthroughCapabilities();
+            updateAudioOutputPreferences(false);
+        }
         updateOsStatus();
         refreshFontsFolderPickerAvailability();
     }
