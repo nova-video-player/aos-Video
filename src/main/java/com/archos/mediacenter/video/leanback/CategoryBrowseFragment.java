@@ -32,7 +32,7 @@ public abstract class CategoryBrowseFragment extends BrowseSupportFragment {
             @Override
             public void handleOnBackPressed() {
                 if (isInHeadersTransition()) return;
-                if (!isShowingHeaders()) {
+                if (!isShowingHeaders() && hasRows()) {
                     startHeadersTransition(true);
                     return;
                 }
@@ -44,5 +44,9 @@ public abstract class CategoryBrowseFragment extends BrowseSupportFragment {
                 }
             }
         });
+    }
+
+    private boolean hasRows() {
+        return getAdapter() != null && getAdapter().size() > 0;
     }
 }

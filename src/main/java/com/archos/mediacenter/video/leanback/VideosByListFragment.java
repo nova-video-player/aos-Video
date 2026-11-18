@@ -44,11 +44,13 @@ public class VideosByListFragment extends VideosByFragment {
     }
 
     @Override
+    protected int getEmptyMessage() {
+        return R.string.no_list_detected;
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(mEmptyView!=null)
-            mEmptyView.setText(R.string.no_list_detected);
-
         setTitle(getString(R.string.video_lists));
         SearchOrbView searchOrbView = (SearchOrbView) view.findViewById(R.id.title_orb);
         searchOrbView.setOrbIcon(ContextCompat.getDrawable(getActivity(), R.drawable.orb_minus));

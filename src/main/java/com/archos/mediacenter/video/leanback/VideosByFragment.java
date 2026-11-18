@@ -110,6 +110,10 @@ public abstract class VideosByFragment extends CategoryBrowseFragment implements
     abstract protected int sortOrder2Item(String sortOrder);
     abstract protected String getSortOrderParamKey();
 
+    protected int getEmptyMessage() {
+        return R.string.you_have_no_movies;
+    }
+
     protected boolean shouldDeferRowLoadersDuringBackgroundWork() {
         return false;
     }
@@ -151,7 +155,7 @@ public abstract class VideosByFragment extends CategoryBrowseFragment implements
         if (container != null) {
             LayoutInflater.from(getActivity()).inflate(R.layout.leanback_empty_view, container, true);
             mEmptyView = (TextView) container.findViewById(R.id.empty_view);
-            mEmptyView.setText(R.string.you_have_no_movies);
+            mEmptyView.setText(getEmptyMessage());
         } else {
             throw new IllegalArgumentException("Did not find R.id.browse_frame in BrowseFragment! Need to update the emptyview hack!");
         }
@@ -297,7 +301,7 @@ public abstract class VideosByFragment extends CategoryBrowseFragment implements
                 deferCategoriesRows(c);
                 return;
             }
-            mEmptyView.setText(R.string.you_have_no_movies);
+            mEmptyView.setText(getEmptyMessage());
             mEmptyView.setVisibility(c.getCount() > 0 ? View.GONE : View.VISIBLE);
             if (mCurrentCategoriesCursor != null) {
                 if (!mRowsLoadDeferred && mRowsAdapter.size() == c.getCount()
