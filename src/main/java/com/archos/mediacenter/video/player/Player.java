@@ -29,12 +29,14 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.media.AudioAttributes;
+import android.media.AudioDeviceInfo;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import androidx.preference.PreferenceManager;
 
 import android.view.Display;
@@ -163,6 +165,11 @@ public class Player implements IPlayerControl,
     private boolean     mWaitForNewRate;
     private final int   NUMBER_RETRIES = 5;
     private int         numberRetries = NUMBER_RETRIES;
+    // A mode request can finish after the startup wait and briefly remove HDMI audio.
+    private static final long HDMI_SWITCH_WINDOW_MS = 5000;
+    private static final long HDMI_AUDIO_SETTLE_MS = 2000;
+    private long mHdmiSwitchDeadline;
+    private Runnable mDeferredNoisyCheck;
     private static final float REFRESH_RATE_EPSILON = 0.01f;
     private static final float EPSILON = 0.00001f;
     private float       mRefreshRate;
@@ -207,51 +214,51 @@ public class Player implements IPlayerControl,
         }
     };
 
-    private Runnable mRefreshRateCheckerAsync = new Runnable() {
-        public void run() {
-            if (mPlaybackEnding) return;
-            if (log.isDebugEnabled()) log.debug("mRefreshRateCheckerAsync");
-            if (mCurrentState == STATE_PREPARED) {
-                if (mWaitForNewRate && mWindow != null) {
-                    View v = mWindow.getDecorView();
-                    Display d = v != null ? v.getDisplay() : null;
-                    if (d == null) return;
-                    Display.Mode currentMode = d.getMode();
-                    if (currentMode == null) return;
-                    int currentModeId = currentMode.getModeId();
-                    if (numberRetries > 0) { // only try NUMBER_RETRIES
-                        if (currentModeId != wantedModeId) {
-                            if (log.isDebugEnabled()) log.debug("CONFIG current modeId rate is {} trying to switch to {}, number of retries={}", currentModeId, wantedModeId, numberRetries);
-                            numberRetries--;
-                            mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
-                            return;
-                        }
-                        if (log.isDebugEnabled()) log.debug("CONFIG modeId before video start is {}", currentModeId);
-                        mCurrentRefreshRate = d.getRefreshRate();
-                    } else {
-                        log.warn("CONFIG failed to set modeId to {} it is still {}", wantedModeId, currentModeId);
-                        Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
-                    }
-                }
+    private Runnable mRefreshRateCheckerAsync = this::checkRefreshRate;
 
-                mCurrentState = STATE_REFRESH_PREPARED;
-
-                if (mVideoWidth != 0 && mVideoHeight != 0) {
-                    mSurfaceController.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
-                    if (mEffectRenderer != null)
-                        mEffectRenderer.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
-                    mHandler.removeCallbacks(mPreparedAsync);
-                    mHandler.post(mPreparedAsync);
-
+    void checkRefreshRate() {
+        if (mPlaybackEnding) return;
+        if (log.isDebugEnabled()) log.debug("mRefreshRateCheckerAsync");
+        if (mCurrentState == STATE_PREPARED) {
+            if (mWaitForNewRate && mWindow != null) {
+                View v = mWindow.getDecorView();
+                Display d = v != null ? v.getDisplay() : null;
+                if (d == null) return;
+                Display.Mode currentMode = d.getMode();
+                if (currentMode == null) return;
+                int currentModeId = currentMode.getModeId();
+                if (currentModeId == wantedModeId) {
+                    if (log.isDebugEnabled()) log.debug("CONFIG modeId before video start is {}", currentModeId);
+                    mCurrentRefreshRate = d.getRefreshRate();
                 } else {
-                    // We don't know the video size yet, but should start anyway.
-                    // The video size might be reported to us later, or not at all.
-                    // Wait 1 second, and play a video with no surface (sound only).
-                    mHandler.postDelayed(mPreparedAsync, 1000);
+                    if (numberRetries > 0) {
+                        if (log.isDebugEnabled()) log.debug("CONFIG current modeId rate is {} trying to switch to {}, number of retries={}", currentModeId, wantedModeId, numberRetries);
+                        numberRetries--;
+                        mHandler.postDelayed(mRefreshRateCheckerAsync, 200);
+                        return;
+                    }
+                    log.warn("CONFIG failed to set modeId to {} it is still {}", wantedModeId, currentModeId);
+                    Toast.makeText(mContext, R.string.refreshrate_failed, Toast.LENGTH_SHORT).show();
                 }
             }
+
+            mCurrentState = STATE_REFRESH_PREPARED;
+
+            if (mVideoWidth != 0 && mVideoHeight != 0) {
+                mSurfaceController.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
+                if (mEffectRenderer != null)
+                    mEffectRenderer.setVideoSize(mVideoWidth, mVideoHeight, mVideoAspect);
+                mHandler.removeCallbacks(mPreparedAsync);
+                mHandler.post(mPreparedAsync);
+
+            } else {
+                // We don't know the video size yet, but should start anyway.
+                // The video size might be reported to us later, or not at all.
+                // Wait 1 second, and play a video with no surface (sound only).
+                mHandler.postDelayed(mPreparedAsync, 1000);
+            }
         }
-    };
+    }
 
     private boolean mForceSoftwareDecoding;
     private boolean mHardwareVideoDecoderSeen;
@@ -589,6 +596,7 @@ public class Player implements IPlayerControl,
     public void beginPlaybackExit() {
         if (mPlaybackEnding) return;
         mPlaybackEnding = true;
+        clearHdmiSwitch();
         ++mOpenGeneration; // reject source setup already in flight
         mHandler.removeCallbacks(mPreparedAsync);
         mHandler.removeCallbacks(mRefreshRateCheckerAsync);
@@ -622,6 +630,7 @@ public class Player implements IPlayerControl,
     }
 
     public void stopPlayback() {
+        clearHdmiSwitch();
         if (isInPlaybackState()) {
             mStopPosition = getCurrentPosition();
             mDuration = getDuration();
@@ -666,8 +675,60 @@ public class Player implements IPlayerControl,
     }
 
     public void onAudioBecomingNoisy() {
-        if (!mPlaybackEnding && (!mMetadataReady || mHasAudio) && mTargetState == STATE_PLAYING)
+        if (mPlaybackEnding || (mMetadataReady && !mHasAudio) || mTargetState != STATE_PLAYING)
+            return;
+        long remaining = mHdmiSwitchDeadline - SystemClock.uptimeMillis();
+        if (remaining > 0) {
+            // Do not turn a disconnect caused by our display request into a user pause.
+            // Recheck the physical outputs: a real unplug must still pause within a bound.
+            if (mDeferredNoisyCheck == null) mDeferredNoisyCheck = this::checkHdmiAudioAfterSwitch;
+            mHandler.removeCallbacks(mDeferredNoisyCheck);
+            mHandler.postDelayed(mDeferredNoisyCheck, Math.min(HDMI_AUDIO_SETTLE_MS, remaining));
+            log.debug("Deferring noisy audio event during refresh-rate switch");
+            return;
+        }
+        pause(PlayerController.STATE_NORMAL);
+    }
+
+    void beginHdmiSwitch() {
+        // A route reopen may repeat the request; it must not extend the recovery window.
+        if (mHdmiSwitchDeadline > SystemClock.uptimeMillis() || !hasHdmiAudioWithoutPrivateOutput())
+            return;
+        mHdmiSwitchDeadline = SystemClock.uptimeMillis() + HDMI_SWITCH_WINDOW_MS;
+    }
+
+    private boolean hasHdmiAudioWithoutPrivateOutput() {
+        if (mAudioManager == null) return false;
+        boolean hdmi = false;
+        for (AudioDeviceInfo device : mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS)) {
+            int type = device.getType();
+            if (type == AudioDeviceInfo.TYPE_HDMI || type == AudioDeviceInfo.TYPE_HDMI_ARC
+                    || (Build.VERSION.SDK_INT >= 31 && type == AudioDeviceInfo.TYPE_HDMI_EARC)) {
+                hdmi = true;
+            } else if (type != AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
+                    && type != AudioDeviceInfo.TYPE_BUILTIN_EARPIECE
+                    && type != AudioDeviceInfo.TYPE_BUS && type != AudioDeviceInfo.TYPE_LINE_DIGITAL) {
+                // Headphones, Bluetooth, USB and unknown routes retain ordinary unplug handling.
+                return false;
+            }
+        }
+        return hdmi;
+    }
+
+    private void checkHdmiAudioAfterSwitch() {
+        if (mPlaybackEnding || mTargetState != STATE_PLAYING || (mMetadataReady && !mHasAudio))
+            return;
+        if (hasHdmiAudioWithoutPrivateOutput()) {
+            log.debug("HDMI audio returned after refresh-rate switch; preserving playback");
+        } else {
+            log.debug("HDMI audio absent after refresh-rate switch; pausing playback");
             pause(PlayerController.STATE_NORMAL);
+        }
+    }
+
+    private void clearHdmiSwitch() {
+        mHdmiSwitchDeadline = 0;
+        if (mDeferredNoisyCheck != null) mHandler.removeCallbacks(mDeferredNoisyCheck);
     }
 
     public void openVideo() {
@@ -972,6 +1033,7 @@ public class Player implements IPlayerControl,
     }
 
     public void pause(int state) {
+        clearHdmiSwitch();
         mResumeAfterFocusLoss = false;
         mTargetState = STATE_PAUSED;
         pausePlayback(state);
@@ -1354,6 +1416,7 @@ public class Player implements IPlayerControl,
                             if (log.isDebugEnabled()) log.debug("CONFIG setting frame rate to {} fps through setFrameRate Android 12+ API", wantedFps);
                             Surface videoSurface = mSurfaceHolder.getSurface();
                             // Surface.CHANGE_FRAME_RATE_ALWAYS is needed to get the refresh rate switch
+                            beginHdmiSwitch();
                             videoSurface.setFrameRate(wantedFps, Surface.FRAME_RATE_COMPATIBILITY_FIXED_SOURCE, Surface.CHANGE_FRAME_RATE_ALWAYS);
                         } else {
                             // select display mode of highest refresh rate matching 0 modulo fps
@@ -1426,6 +1489,7 @@ public class Player implements IPlayerControl,
                                 // apply new display mode
                                 mWaitForNewRate = true;
                                 numberRetries = NUMBER_RETRIES;
+                                beginHdmiSwitch();
                                 lp.preferredDisplayModeId = wantedModeId;
                                 mWindow.setAttributes(lp);
                             }
