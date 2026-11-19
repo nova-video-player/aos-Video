@@ -339,6 +339,11 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         if (log.isDebugEnabled()) log.debug("onResume");
         super.onResume();
         mOverlay.resume();
+        // restore the pending selection once the fragment is visible again (back from
+        // details, a sub-directory, or an activity recreation while details was open)
+        if (mSelectedItemUri != null) {
+            restoreSelectedItem(mSelectedItemUri);
+        }
         if (mRefreshOnNextResume) {
             startListing(mUri);
             mRefreshOnNextResume = false;
@@ -573,6 +578,14 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
         if (log.isDebugEnabled()) log.debug("updateAdapterIfReady: mFileListReady={}, mDbQueryReady={}", mFileListReady, mDbQueryReady);
         if (mFileListReady && mDbQueryReady) {
             Uri selectedItemUri = mSelectedItemUri;
+            if (selectedItemUri == null) {
+                // keep the item the user is currently on when a background refresh rebuilds
+                // the adapter; otherwise leanback falls back to position 0
+                int selectedPosition = getSelectedPosition();
+                if (selectedPosition >= 0 && selectedPosition < mFilesAdapter.size()) {
+                    selectedItemUri = getItemUri(mFilesAdapter.get(selectedPosition));
+                }
+            }
             VideoCursorMapper cursorMapper = new VideoCursorMapper();
             cursorMapper.publicBindColumns(mCursor);
 
@@ -677,9 +690,11 @@ public abstract class ListingFragment extends MyVerticalGridFragment implements 
                     if (log.isDebugEnabled()) log.debug("restoreSelectedItem: restoring {} at position {}", selectedItemUri, position);
                     setSelectedPosition(position);
                 }
-                // one-shot: consume it so later spurious adapter refreshes (e.g. background
-                // AutoScrapeService DB notifications) don't keep forcing focus back here
-                mSelectedItemUri = null;
+                // Only consume the pending selection once the fragment is visible again so
+                // background DB refreshes while details is open cannot steal it.
+                if (isResumed()) {
+                    mSelectedItemUri = null;
+                }
                 return;
             }
         }
