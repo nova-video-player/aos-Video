@@ -25,6 +25,7 @@ import androidx.leanback.widget.RowPresenter;
 import androidx.core.text.HtmlCompat;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -62,6 +63,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
         final TextView mExternalSubsCol1Tv, mExternalSubsCol2Tv;
         final Button mDownloadSubsButton;
         final Button mChooseSubsButton;
+        final DetailsScrollView mTracksScrollView;
 
         public SubtitlesDetailsViewHolder(ViewHolder parentViewHolder, View contentView) {
             super(parentViewHolder.view);
@@ -77,6 +79,31 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
             mExternalSubsCol2Tv = (TextView)contentView.findViewById(R.id.external_subtitles_values_col2);
             mDownloadSubsButton = (Button)contentView.findViewById(R.id.action_get_online_subtitles);
             mChooseSubsButton = (Button)contentView.findViewById(R.id.action_choose_subtitles);
+            mTracksScrollView = contentView.findViewById(R.id.subtitle_tracks_scroll);
+            mTracksScrollView.setMaximumHeightFraction(0.4f);
+            mTracksScrollView.setFocusableOnlyWhenScrollable(true);
+            mTracksScrollView.setBoundaryHandler(direction -> direction > 0
+                    ? mDownloadSubsButton.requestFocus() : mTracksScrollView.moveToAdjacentRow(-1));
+            View.OnKeyListener actionKeys = (view, keyCode, event) -> {
+                if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
+                if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                    return mTracksScrollView.getVisibility() == View.VISIBLE && mTracksScrollView.isFocusable()
+                            ? mTracksScrollView.requestFocus() : mTracksScrollView.moveToAdjacentRow(-1);
+                }
+                if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN
+                        && contentView.findViewById(R.id.subtitle_languages).getVisibility() != View.VISIBLE) {
+                    return mTracksScrollView.moveToAdjacentRow(1);
+                }
+                return false;
+            };
+            mDownloadSubsButton.setOnKeyListener(actionKeys);
+            mChooseSubsButton.setOnKeyListener(actionKeys);
+            contentView.findViewById(R.id.subtitle_languages).setOnKeyListener((view, keyCode, event) -> {
+                if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
+                if (keyCode == KeyEvent.KEYCODE_DPAD_UP) return mDownloadSubsButton.requestFocus();
+                if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) return mTracksScrollView.moveToAdjacentRow(1);
+                return false;
+            });
         }
     }
 
@@ -205,13 +232,17 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
             vh.mExternalSubsLabel.setVisibility(View.VISIBLE);
         }
 
+        boolean hasTracks = !internalSubs.isEmpty() || (externalSubs != null && !externalSubs.isEmpty());
+        if (!hasTracks && vh.mTracksScrollView.hasFocus()) vh.mDownloadSubsButton.requestFocus();
+        vh.mTracksScrollView.setVisibility(hasTracks ? View.VISIBLE : View.GONE);
+        vh.mTracksScrollView.scrollTo(0, 0);
         mHolder = vh;
     }
 
     @Override
     protected void onRowViewSelected(RowPresenter.ViewHolder vh, boolean selected) {
         super.onRowViewSelected(vh, selected);
-        if (selected) {
+        if (selected && !vh.view.hasFocus()) {
             ((SubtitlesDetailsViewHolder)vh).mDownloadSubsButton.requestFocus();
         }
     }

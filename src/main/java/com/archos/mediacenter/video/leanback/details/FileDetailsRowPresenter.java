@@ -22,14 +22,9 @@ import androidx.leanback.widget.RowHeaderPresenter;
 import androidx.leanback.widget.RowPresenter;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
-import androidx.leanback.widget.VerticalGridView;
 
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
@@ -56,7 +51,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
     public class FileDetailsViewHolder extends RowPresenter.ViewHolder {
         /** the parent viewholder */
         final ViewHolder mFullWidthViewHolder;
-        final ScrollView mScrollView;
+        final DetailsScrollView mScrollView;
         final TextView mFileNameTv, mFilePathTv, mFileSizeAndDurationTv, mFileErrorTv;
         final TextView mVideoTrackTv, mVideoDecoderTv, mAudioTracksTv, mSubtitlesTracksCol1Tv, mSubtitlesTracksCol2Tv;
         final View mProgress, mVideoGroup, mAudioGroup, mSubtitlesGroup;
@@ -65,7 +60,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
             super(parentViewHolder.view);
 
             mFullWidthViewHolder = parentViewHolder;
-            mScrollView = (ScrollView) contentView.findViewById(R.id.file_details_scroll);
+            mScrollView = (DetailsScrollView) contentView.findViewById(R.id.file_details_scroll);
 
             mFileNameTv = (TextView)contentView.findViewById(R.id.file_name);
             mFilePathTv = (TextView)contentView.findViewById(R.id.file_path);
@@ -81,43 +76,6 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
             mSubtitlesGroup = contentView.findViewById(R.id.subtitles_row);
             mSubtitlesTracksCol1Tv = (TextView)mSubtitlesGroup.findViewById(R.id.subtitle_track_col1);
             mSubtitlesTracksCol2Tv = (TextView)mSubtitlesGroup.findViewById(R.id.subtitle_track_col2);
-
-            mScrollView.setOnKeyListener((view, keyCode, event) -> {
-                if (event.getAction() != KeyEvent.ACTION_DOWN) {
-                    return false;
-                }
-                int direction;
-                if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-                    direction = 1;
-                } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-                    direction = -1;
-                } else {
-                    return false;
-                }
-                View content = mScrollView.getChildAt(0);
-                int scrollRange = content != null
-                        ? Math.max(0, content.getHeight() - mScrollView.getHeight())
-                        : 0;
-                boolean canScroll = direction > 0
-                        ? mScrollView.getScrollY() < scrollRange
-                        : mScrollView.getScrollY() > 0;
-                if (log.isDebugEnabled()) {
-                    log.debug("File details DPAD {}: scrollY={}, scrollRange={}, viewportHeight={}, "
-                                    + "contentHeight={}, frameworkCanScroll={}, hasFocus={}",
-                            direction > 0 ? "DOWN" : "UP",
-                            mScrollView.getScrollY(),
-                            scrollRange,
-                            mScrollView.getHeight(),
-                            content != null ? content.getHeight() : -1,
-                            mScrollView.canScrollVertically(direction),
-                            mScrollView.hasFocus());
-                }
-                if (!canScroll) {
-                    return moveToAdjacentRow(mScrollView, direction);
-                }
-                mScrollView.smoothScrollBy(0, direction * mScrollView.getHeight() / 2);
-                return true;
-            });
         }
     }
 
@@ -156,7 +114,6 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
 
         return new FileDetailsViewHolder(fullWidthViewHolder, detailsView);
     }
-
 
     @Override
     protected void onBindRowViewHolder(RowPresenter.ViewHolder holder, Object item) {
@@ -217,7 +174,6 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
 
         // Audio track(s)
 
-
         CharSequence audioString = VideoInfoCommonClass.getAudioTrackString(videoMetadata, mR, c);
         if (audioString!=null) {
             vh.mAudioTracksTv.setText(audioString);
@@ -231,58 +187,7 @@ public class FileDetailsRowPresenter extends FullWidthRowPresenter implements Ba
         vh.mSubtitlesGroup.setVisibility(View.GONE);
 
         vh.mScrollView.scrollTo(0, 0);
-        vh.mScrollView.post(() -> limitScrollViewHeight(vh.mScrollView));
         mHolder = vh;
-    }
-
-    private boolean moveToAdjacentRow(ScrollView scrollView, int direction) {
-        ViewParent parent = scrollView.getParent();
-        while (parent != null && !(parent instanceof VerticalGridView)) {
-            parent = parent.getParent();
-        }
-        if (!(parent instanceof VerticalGridView)) {
-            log.warn("Could not find the details VerticalGridView");
-            return false;
-        }
-
-        VerticalGridView gridView = (VerticalGridView) parent;
-        int currentPosition = gridView.getSelectedPosition();
-        int nextPosition = currentPosition + direction;
-        int itemCount = gridView.getAdapter() != null ? gridView.getAdapter().getItemCount() : 0;
-        if (nextPosition < 0 || nextPosition >= itemCount) {
-            if (log.isDebugEnabled()) {
-                log.debug("No adjacent details row from row {} in direction {} (row count {})",
-                        currentPosition, direction, itemCount);
-            }
-            return false;
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("Moving focus from file details row {} to row {}", currentPosition, nextPosition);
-        }
-        gridView.setSelectedPositionSmooth(nextPosition);
-        return true;
-    }
-
-    private void limitScrollViewHeight(ScrollView scrollView) {
-        View content = scrollView.getChildAt(0);
-        if (content == null) {
-            return;
-        }
-        int maximumHeight = Math.round(scrollView.getResources().getDisplayMetrics().heightPixels * 0.8f);
-        int contentHeight = content.getMeasuredHeight();
-        ViewGroup.LayoutParams layoutParams = scrollView.getLayoutParams();
-        if (contentHeight > maximumHeight) {
-            if (layoutParams.height != maximumHeight) {
-                layoutParams.height = maximumHeight;
-                scrollView.setLayoutParams(layoutParams);
-            }
-        } else {
-            if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
-                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                scrollView.setLayoutParams(layoutParams);
-            }
-        }
     }
 
     private String getSubtitleTrackList(Context context, int number, int offset, String separator, VideoMetadata videoMetadata) {
