@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="subtitle_languages_identify">Identify subtitle languages</string>
+    <string name="subtitle_languages_save">Save languages to MKV</string>
+    <string name="subtitle_languages_restore">Restore previous MKV languages</string>
+    <string name="subtitle_languages_analyzing">Analyzing subtitle text…</string>
+    <string name="subtitle_languages_loading">Reading subtitle information…</string>
+    <string name="subtitle_languages_writing">Saving and verifying language metadata…</string>
+    <string name="subtitle_languages_saved">Language metadata saved and verified.</string>
+    <string name="subtitle_languages_restored">Previous language metadata restored.</string>
+    <string name="subtitle_languages_ready">Identify unknown subtitle languages and save the results in Nova.</string>
+    <string name="subtitle_languages_save_hint">Saving to MKV updates the original file with confident results. You can restore the previous metadata afterward.</string>
+    <string name="subtitle_languages_reading_header">Reading MKV track information…</string>
+    <string name="subtitle_languages_preparing">Preparing language identification…</string>
+    <string name="subtitle_languages_persisting">Saving results in Nova…</string>
+    <string name="subtitle_languages_summary">Identified %1$d of %2$d subtitle languages.</string>
+    <string name="subtitle_languages_stop_playback">Stop playback before identifying subtitle languages.</string>
+    <string name="subtitle_languages_failed">Operation failed: %1$s</string>
+    <string name="subtitle_languages_cancel">Cancel analysis</string>
+    <string name="subtitle_languages_interrupted">The analysis process stopped. Previously saved results are retained.</string>
+    <string name="subtitle_languages_pending">An interrupted edit needs recovery. Restore the previous languages before saving again.</string>
+</resources>

@@ -45,6 +45,9 @@ public class VideoInfoSubtitleRefreshTest {
         View audioRow = new View(activity);
         audioRow.setId(R.id.audio_row);
         root.addView(audioRow);
+        View languageAction = new View(activity);
+        languageAction.setId(R.id.subtitle_languages);
+        root.addView(languageAction);
         field(fragment, "mRoot", root);
         TextView subtitles = new TextView(activity);
         subtitles.setVisibility(View.GONE);

@@ -72,17 +72,6 @@ public class SubtitleLanguageMetadataTest {
         assertEquals(12, track.index);
     }
 
-    @Test public void leavingPlaybackCancelsPreparation() throws Exception {
-        Player player = mock(Player.class, CALLS_REAL_METHODS);
-        android.os.CancellationSignal cancellation = new android.os.CancellationSignal();
-        field(player, "mSubtitlePreparation", cancellation);
-        field(player, "mHandler", new android.os.Handler(android.os.Looper.getMainLooper()));
-        field(player, "mPreparedAsync", (Runnable) () -> { });
-        field(player, "mRefreshRateCheckerAsync", (Runnable) () -> { });
-        player.beginPlaybackExit();
-        assertTrue(cancellation.isCanceled());
-    }
-
     @Test public void languageRefreshDuringSeekUsesLabelOnlyCallback() throws Exception {
         Player player = mock(Player.class, CALLS_REAL_METHODS);
         IMediaPlayer nativePlayer = mock(IMediaPlayer.class);

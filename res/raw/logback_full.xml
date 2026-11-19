@@ -113,6 +113,8 @@
 
     <logger name="com.archos.medialib.SmbProxy" level="INFO"/>
     <logger name="com.archos.filecorelibrary.StreamOverHttp" level="INFO"/>
+    <!-- Bounded transfer summaries; no paths, credentials or subtitle payloads. -->
+    <logger name="com.archos.filecorelibrary.StreamOverHttp.Transfer" level="DEBUG"/>
 
     <!-- Debug jcifs -->
     <logger name="jcifs" level="INFO"/>
@@ -175,6 +177,12 @@
     <logger name="com.archos.mediaprovider.video.VideoOpenHelper" level="INFO"/>
 
     <!-- Subtitles -->
+    <!-- Explicit analysis runs in :subtitle_languages. Capture every app PID.
+         Native diagnostics use the Android tag SubtitleLanguageNative directly;
+         Logback levels and its file appender do not control those messages. -->
+    <logger name="com.archos.medialib.SubtitleLanguageAnalysis" level="INFO"/>
+    <logger name="com.archos.medialib.SubtitleLanguageAnalysisService" level="INFO"/>
+    <logger name="com.archos.mediacenter.video.info.SubtitleLanguageActivity" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.ISO639codes" level="INFO"/>

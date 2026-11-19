@@ -187,6 +187,25 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             result -> ExternalPlayerResultListener.getInstance().onActivityResult(
                     PLAY_ACTIVITY_REQUEST_CODE, result.getResultCode(), result.getData()));
 
+    private final ActivityResultLauncher<Intent> languageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> refreshLanguageMetadata());
+
+    private void refreshLanguageMetadata() {
+                if (mCurrentVideo == null || !isAdded()) return;
+                mVideoMetadateCache.remove(mCurrentVideo.getFilePath());
+                if (mVideoInfoTask != null) mVideoInfoTask.cancel();
+                mVideoInfoTask = new VideoInfoTask();
+                mVideoInfoTask.execute(mCurrentVideo);
+    }
+
+    public void performSubtitleLanguageAnalysis() {
+        if (mCurrentVideo == null || mIsLaunchFromPlayer) return;
+        Intent intent = new Intent(getActivity(), com.archos.mediacenter.video.info.SubtitleLanguageActivity.class);
+        intent.setData(mCurrentVideo.getFileUri());
+        intent.putExtra("headers", getActivity().getIntent().getBundleExtra("headers"));
+        languageLauncher.launch(intent);
+    }
+
     private final ActivityResultLauncher<Intent> subtitleLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> { if (result.getResultCode() == Activity.RESULT_OK) onSubtitleResult(); });
@@ -475,6 +494,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mSubtitleContainer  =  (CardView)mRoot.findViewById(R.id.subtitles_container);
         mSubtitleDownloadButton = mSubtitleContent.findViewById(R.id.subtitles_online);
         mSubtitleDownloadButton.setOnClickListener(this);
+        mRoot.findViewById(R.id.subtitle_languages).setOnClickListener(v -> performSubtitleLanguageAnalysis());
         mResumeLocalButton = (Button) mRoot.findViewById(R.id.resume);
         mPlayButton = (Button) mRoot.findViewById(R.id.play);
         mNextEpisodeButton = (Button) mRoot.findViewById(R.id.next_episode);
@@ -1163,6 +1183,9 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private void updateSubtitleInfo(VideoMetadata videoMetadata, List<SubtitleManager.SubtitleFile> externalSubs){
         if (log.isDebugEnabled()) log.debug("updateSubtitleInfo: metadata={}, externalSubs={}", (videoMetadata != null), (externalSubs != null ? externalSubs.size() : "null"));
+        View languageAction = mRoot.findViewById(R.id.subtitle_languages);
+        languageAction.setVisibility(!mIsLaunchFromPlayer && videoMetadata != null
+                && (videoMetadata.hasUnknownSubtitleLanguages() || videoMetadata.hasInferredSubtitleLanguages() || videoMetadata.hasSubtitleLanguageEdit()) ? View.VISIBLE : View.GONE);
         // Subtitles tracks info
         int subtitleTrackNb = videoMetadata!=null?videoMetadata.getSubtitleTrackNb():0;
         if (log.isDebugEnabled()) log.debug("updateSubtitleInfo: subtitleTrackNb={}", subtitleTrackNb);
@@ -1565,7 +1588,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         playLauncher.launch(intent);
     }
 
-    // Metadata appears first; the independent language scan then updates the same view.
+    // Ordinary metadata only. Language analysis requires an explicit user action.
     private class VideoInfoTask {
         private final ExecutorService executor = Executors.newSingleThreadExecutor();
         private final Handler handler = new Handler(Looper.getMainLooper());
@@ -1596,16 +1619,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
                     if (isCancelled) return;
                     VideoMetadata result = cached != null ? cached
                             : VideoInfoCommonClass.retrieveMetadata(video, context, headers, cancellation);
-                    boolean analyze = !fromPlayer && result != null && result.hasUnknownSubtitleLanguages();
                     publish(video, path, result);
-                    if (analyze && !isCancelled) {
-                        VideoMetadata enriched = new VideoMetadata(result);
-                        enriched.fillFromRetriever(context, headers, true, cancellation);
-                        // A failed/cancelled probe must not erase already displayed file metadata.
-                        if (enriched.getSubtitleTrackNb() == result.getSubtitleTrackNb()
-                                && enriched.getVideoTrack() != null) result = enriched;
-                        publish(video, path, result);
-                    }
                     if (!isCancelled && result != null && video.isIndexed()) result.save(context, path);
                 } catch (Exception error) {
                     if (!isCancelled) {

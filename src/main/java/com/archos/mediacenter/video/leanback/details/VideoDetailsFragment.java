@@ -319,6 +319,27 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             result -> ExternalPlayerResultListener.getInstance().onActivityResult(
                     PLAY_ACTIVITY_REQUEST_CODE, result.getResultCode(), result.getData()));
 
+    private final ActivityResultLauncher<Intent> languageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> refreshLanguageMetadata());
+
+    private void refreshLanguageMetadata() {
+                if (mVideo == null || !isAdded()) return;
+                mVideoMetadateCache.remove(mVideo.getFilePath());
+                if (mVideoInfoTask != null) mVideoInfoTask.cancel();
+                mVideoInfoTask = new VideoInfoTask();
+                mVideoInfoTask.execute(mVideo);
+    }
+
+    @Override public boolean canIdentifySubtitleLanguages() { return !mLaunchedFromPlayer; }
+
+    public void performSubtitleLanguageAnalysis() {
+        if (mVideo == null || mLaunchedFromPlayer) return;
+        Intent intent = new Intent(getActivity(), com.archos.mediacenter.video.info.SubtitleLanguageActivity.class);
+        intent.setData(mVideo.getFileUri());
+        intent.putExtra("headers", getActivity().getIntent().getBundleExtra("headers"));
+        languageLauncher.launch(intent);
+    }
+
     private final ActivityResultLauncher<Intent> subtitleLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -1685,15 +1706,8 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
                         result = VideoInfoCommonClass.retrieveMetadata(video, context, headers, cancellation);
                     }
                     if (isCancelled) return;
-                    // Publish ordinary TEXT rows before the independent scan starts.
+                    // Display unresolved TEXT rows without starting language analysis.
                     publish(result, false);
-                    if (!fromPlayer && result != null && result.hasUnknownSubtitleLanguages()) {
-                        VideoMetadata enriched = new VideoMetadata(result);
-                        enriched.fillFromRetriever(context, headers, true, cancellation);
-                        // Failed analysis must not erase already displayed metadata.
-                        if (enriched.getSubtitleTrackNb() == result.getSubtitleTrackNb()
-                                && enriched.getVideoTrack() != null) result = enriched;
-                    }
                     if (!isCancelled && result != null && video.isIndexed()) result.save(context, startingPath);
                 } catch (Exception error) {
                     if (!isCancelled) log.error("VideoInfoTask failed", error);

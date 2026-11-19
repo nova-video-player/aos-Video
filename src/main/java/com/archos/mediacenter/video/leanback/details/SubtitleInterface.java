@@ -22,5 +22,7 @@ public interface SubtitleInterface {
 
     void performSubtitleDownload();
     void performSubtitleChoose();
+    default void performSubtitleLanguageAnalysis() { }
+    default boolean canIdentifySubtitleLanguages() { return true; }
 
 }

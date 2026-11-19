@@ -36,6 +36,15 @@
                 android:paddingStart="32dip"/>
 
             <Button
+                android:id="@+id/subtitle_languages"
+                style="?android:attr/borderlessButtonStyle"
+                android:textColor="@android:color/white"
+                android:background="@drawable/transparent_ripple"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/subtitle_languages_identify" />
+            <Button
                 android:id="@+id/subtitles_online"
                 style="?android:attr/borderlessButtonStyle"
                 android:textColor="@android:color/white"

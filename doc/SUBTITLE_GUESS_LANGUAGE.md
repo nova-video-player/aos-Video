@@ -1,3 +1,5 @@
+> Superseded on `dev/subtitle-language-editor` by [explicit analysis and MKV editing](SUBTITLE_LANGUAGE_EDITOR.md). This document describes the previous automatic design.
+
 # Subtitle language guessing
 
 ## Revision: identify tracks before playback

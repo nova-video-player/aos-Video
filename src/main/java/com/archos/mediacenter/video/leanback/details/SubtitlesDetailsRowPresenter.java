@@ -123,6 +123,11 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
         final List<SubtitleManager.SubtitleFile> externalSubs = ((SubtitlesDetailsRow) item).getExternalSubs();
         SubtitlesDetailsViewHolder vh = (SubtitlesDetailsViewHolder) holder;
         vh.mFullWidthViewHolder.getMainContainer().setBackgroundColor(mColor);
+        View languages = holder.view.findViewById(R.id.subtitle_languages);
+        languages.setVisibility(mSubtitleInterface.canIdentifySubtitleLanguages() && videoMetadata != null && (videoMetadata.hasUnknownSubtitleLanguages()
+                || videoMetadata.hasInferredSubtitleLanguages() || videoMetadata.hasSubtitleLanguageEdit()) ? View.VISIBLE : View.GONE);
+        languages.setOnClickListener(v -> mSubtitleInterface.performSubtitleLanguageAnalysis());
+
         vh.mDownloadSubsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

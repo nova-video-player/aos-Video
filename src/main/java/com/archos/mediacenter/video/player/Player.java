@@ -188,7 +188,6 @@ public class Player implements IPlayerControl,
     private int         mSaveStopPosition;
     private boolean     mUpdateMetadata;
     private boolean     mUpdateSubtitleLanguagesOnly;
-    private android.os.CancellationSignal mSubtitlePreparation;
 
     private Handler     mHandler = new Handler(Looper.getMainLooper());
     private Runnable mPreparedAsync = new Runnable() {
@@ -592,16 +591,14 @@ public class Player implements IPlayerControl,
     public void beginPlaybackExit() {
         if (mPlaybackEnding) return;
         mPlaybackEnding = true;
-        if (mSubtitlePreparation != null) mSubtitlePreparation.cancel();
         ++mOpenGeneration; // reject source setup already in flight
         mHandler.removeCallbacks(mPreparedAsync);
         mHandler.removeCallbacks(mRefreshRateCheckerAsync);
     }
 
     private void closeCurrentPlayer() {
+        com.archos.medialib.MatroskaLanguageWriter.setPlaybackActive(false);
         ++mOpenGeneration;
-        if (mSubtitlePreparation != null) mSubtitlePreparation.cancel();
-        mSubtitlePreparation = null;
         mHandler.removeCallbacks(mPreparedAsync);
         mHandler.removeCallbacks(mRefreshRateCheckerAsync);
         IMediaPlayer old = mMediaPlayer;
@@ -711,17 +708,19 @@ public class Player implements IPlayerControl,
         final long openStart = debugTiming ? System.nanoTime() : 0;
         if (log.isDebugEnabled()) log.debug("openVideo: {}", mUri);
         closeCurrentPlayer();
+        if (!com.archos.medialib.MatroskaLanguageWriter.setPlaybackActive(true)) {
+            onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, "Subtitle metadata is being saved");
+            return;
+        }
         if (mStopPosition != -1) {
             mResumeCtx.setSeek(mStopPosition);
         }
         final int generation = mOpenGeneration;
         final Uri uri = mUri;
         final Map<String, String> headers = mExtraMap == null ? null : new HashMap<>(mExtraMap);
-        final android.os.CancellationSignal subtitlePreparation = new android.os.CancellationSignal();
-        mSubtitlePreparation = subtitlePreparation;
         final IMediaPlayer player;
         try { player = MediaFactory.createPlayer(mContext, mForceSoftwareDecoding); }
-        catch (RuntimeException ex) { onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, ex.getMessage()); return; }
+        catch (RuntimeException ex) { com.archos.medialib.MatroskaLanguageWriter.setPlaybackActive(false); onError(mMediaPlayer, IMediaPlayer.MEDIA_ERROR_UNKNOWN, 0, ex.getMessage()); return; }
         if (debugTiming && log.isDebugEnabled()) {
             log.debug("openVideo: generation {} player created after {} ms", generation,
                     (System.nanoTime() - openStart) / 1000000);
@@ -743,8 +742,6 @@ public class Player implements IPlayerControl,
                 NetworkInitialization.awaitReadyForSmb(uri, mContext);
                 // Back/Stop or opening another video invalidates this request, not shared startup.
                 if (generation != mOpenGeneration) return;
-                com.archos.medialib.SubtitleLanguagePreparation.prepare(mContext, uri, headers, subtitlePreparation);
-                if (subtitlePreparation.isCanceled() || generation != mOpenGeneration) return;
                 if (debugTiming && log.isDebugEnabled()) {
                     log.debug("openVideo: generation {} setting data source after {} ms", generation,
                             (System.nanoTime() - openStart) / 1000000);
@@ -1300,6 +1297,7 @@ public class Player implements IPlayerControl,
                         Toast.LENGTH_LONG).show();
             }
             mVideoMetadata.setData(data);
+            if (mUri != null) mVideoMetadata.applyStoredSubtitleLanguages(mContext, mUri.toString());
             if (subtitleLanguagesOnly && mPlayerListener != null) {
                 int currentSubtitle = data.has(IMediaPlayer.METADATA_KEY_CURRENT_SUBTITLE_TRACK)
                         ? data.getInt(IMediaPlayer.METADATA_KEY_CURRENT_SUBTITLE_TRACK) : -1;

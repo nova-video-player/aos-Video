@@ -82,42 +82,20 @@ public class SubtitleDetailsPreparationTest {
         assertSame(external, row.getValue().getExternalSubs());
     }
 
-    @Test public void ordinaryMetadataIsPublishedBeforeInferenceAndEnrichedAfterwards() throws Exception {
+    @Test public void openingDetailsNeverStartsLanguageInference() throws Exception {
         VideoMetadata ordinary = mock(VideoMetadata.class);
         when(ordinary.hasUnknownSubtitleLanguages()).thenReturn(true);
-        when(ordinary.getSubtitleTrackNb()).thenReturn(1);
         metadataCache.put(uri.toString(), ordinary);
-        IMediaMetadataRetriever retriever = mock(IMediaMetadataRetriever.class);
-        when(retriever.extractMetadata(IMediaMetadataRetriever.METADATA_KEY_NB_VIDEO_TRACK)).thenReturn("1");
-        when(retriever.extractMetadata(IMediaMetadataRetriever.METADATA_KEY_NB_SUBTITLE_TRACK)).thenReturn("1");
-        when(retriever.extractMetadata(IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK
-                + IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_TRACK_LANGUAGE)).thenReturn("fr");
-        when(retriever.extractMetadata(IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_LANGUAGE_SOURCE)).thenReturn("3");
-        when(retriever.extractMetadata(IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_LANGUAGE_CONFIDENCE)).thenReturn("94");
-        when(retriever.guessSubtitleLanguages()).thenAnswer(call -> {
-            Shadows.shadowOf(Looper.getMainLooper()).idle();
-            assertSame("TEXT metadata must be visible before inference completes", ordinary, displayed.get());
-            verify(adapter).replace(eq(1), any(SubtitlesDetailsRow.class));
-            return true;
-        });
-        // The copy constructor reads the source fields, so provide an actual source path.
-        Field source = VideoMetadata.class.getDeclaredField("mRemotePath");
-        source.setAccessible(true);
-        source.set(ordinary, uri.toString());
         Object task = task();
-        // Execute deterministically on this test thread; production uses its own executor.
         ExecutorService direct = mock(ExecutorService.class);
         doAnswer(call -> { ((Runnable) call.getArgument(0)).run(); return null; }).when(direct).execute(any());
         set(task, "executor", direct);
         try (MockedStatic<MediaFactory> factory = mockStatic(MediaFactory.class)) {
-            factory.when(() -> MediaFactory.createMetadataRetriever(any(Context.class))).thenReturn(retriever);
             invoke(task, "execute", new Class<?>[]{Video.class}, video);
+            factory.verifyNoInteractions();
         }
         Shadows.shadowOf(Looper.getMainLooper()).idle();
-        assertEquals("fr", displayed.get().getSubtitleTrack(0).language);
-        assertEquals(94, displayed.get().getSubtitleTrack(0).languageConfidence);
-        assertSame(displayed.get(), metadataCache.get(uri.toString()));
-        verify(retriever).release();
+        assertSame(ordinary, displayed.get());
         assertFalse((Boolean) invoke(task, "isLoading", new Class<?>[]{Video.class}, video));
     }
 

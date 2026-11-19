@@ -1785,6 +1785,10 @@
             android:authorities="${applicationId}.SentryPerformanceProvider"
             tools:node="remove" />
 
+        <activity
+            android:name="com.archos.mediacenter.video.info.SubtitleLanguageActivity"
+            android:exported="false"
+            android:theme="@style/ArchosThemeBlueNoActionBar" />
     </application>
 
 </manifest>
