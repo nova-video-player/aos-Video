@@ -58,7 +58,7 @@ public final class SubtitleLanguageActivity extends AppCompatActivity {
         } else if (message.what == SubtitleLanguageAnalysisService.ERROR) {
             unbind();
             setBusy(false);
-            status.setText(getString(R.string.subtitle_languages_failed, message.getData().getString("result")));
+            status.setText(failureMessage(SubtitleLanguageException.fromWire(message.getData().getString("result"))));
         }
         return true;
     }));
@@ -246,12 +246,17 @@ public final class SubtitleLanguageActivity extends AppCompatActivity {
         if (cancel != null)
             cancel.setEnabled(true);
     }
+    private String failureMessage(SubtitleLanguageException.Code code) {
+        String detail = getString(code.messageResource);
+        return code == SubtitleLanguageException.Code.CANCELLED ? detail
+                : getString(R.string.subtitle_languages_failed, detail);
+    }
     private void edit(boolean undo) {
         if (busy || (!undo && result == null))
             return;
         writing = true;
         setBusy(true);
-        status.setText(R.string.subtitle_languages_writing);
+        status.setText(undo ? R.string.subtitle_languages_restoring : R.string.subtitle_languages_writing);
         JSONObject selected = result;
         worker.execute(() -> {
             String message;
@@ -262,7 +267,8 @@ public final class SubtitleLanguageActivity extends AppCompatActivity {
                     MatroskaLanguageWriter.save(getApplicationContext(), uri, selected);
                 message = getString(undo ? R.string.subtitle_languages_restored : R.string.subtitle_languages_saved);
             } catch (Exception | LinkageError e) {
-                message = getString(R.string.subtitle_languages_failed, e.getMessage());
+                log.error(undo ? "Subtitle metadata restore failed" : "Subtitle metadata save failed", e);
+                message = failureMessage(SubtitleLanguageException.codeOf(e));
             }
             String completed = message;
             main.post(() -> {

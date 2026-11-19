@@ -68,6 +68,53 @@ public class SubtitleLanguageActivityTest {
         }
     }
 
+    @Test
+    public void restoreUsesItsOwnProgressMessage() {
+        try (ActivityController<SubtitleLanguageActivity> controller = createWithoutIo()) {
+            SubtitleLanguageActivity activity = controller.get();
+            ReflectionHelpers.setField(activity, "busy", false);
+            ReflectionHelpers.callInstanceMethod(activity, "edit",
+                    ReflectionHelpers.ClassParameter.from(boolean.class, true));
+            android.widget.TextView status = activity.findViewById(R.id.subtitle_language_status);
+            assertEquals(activity.getString(R.string.subtitle_languages_restoring), status.getText().toString());
+        }
+    }
+
+    @Test
+    public void workerErrorsAreLocalizedAndRawDetailsNeverReachTheScreen() throws Exception {
+        try (ActivityController<SubtitleLanguageActivity> controller = createWithoutIo()) {
+            SubtitleLanguageActivity activity = controller.get();
+            android.os.Messenger receiver = ReflectionHelpers.getField(activity, "receiver");
+            android.widget.TextView status = activity.findViewById(R.id.subtitle_language_status);
+            for (String code : new String[]{"FILE_CHANGED", "private/path: technical exception", "CANCELLED"}) {
+                android.os.Message message = android.os.Message.obtain(null,
+                        com.archos.medialib.SubtitleLanguageAnalysisService.ERROR);
+                android.os.Bundle args = new android.os.Bundle();
+                args.putString("result", code);
+                message.setData(args);
+                receiver.send(message);
+                org.robolectric.shadows.ShadowLooper.idleMainLooper();
+                int expected = "FILE_CHANGED".equals(code)
+                        ? com.archos.medialib.R.string.subtitle_language_error_changed
+                        : "CANCELLED".equals(code) ? com.archos.medialib.R.string.subtitle_language_error_cancelled
+                        : com.archos.medialib.R.string.subtitle_language_error_failed;
+                String detail = activity.getString(expected);
+                assertEquals("CANCELLED".equals(code) ? detail
+                        : activity.getString(R.string.subtitle_languages_failed, detail), status.getText().toString());
+            }
+        }
+    }
+
+    private ActivityController<SubtitleLanguageActivity> createWithoutIo() {
+        Intent intent = new Intent(RuntimeEnvironment.getApplication(), SubtitleLanguageActivity.class)
+                .setData(Uri.parse("file:///subtitle-language-test.mkv"));
+        ActivityController<SubtitleLanguageActivity> controller =
+                Robolectric.buildActivity(SubtitleLanguageActivity.class, intent);
+        ReflectionHelpers.setField(controller.get(), "worker", mock(ExecutorService.class));
+        controller.create();
+        return controller;
+    }
+
     private void launchWithManifestTheme() {
         Intent intent = new Intent(RuntimeEnvironment.getApplication(), SubtitleLanguageActivity.class)
                 .setData(Uri.parse("file:///subtitle-language-test.mkv"));

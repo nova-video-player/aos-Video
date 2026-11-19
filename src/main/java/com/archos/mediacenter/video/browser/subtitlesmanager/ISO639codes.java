@@ -31,7 +31,7 @@ public class ISO639codes {
 
     public static String generateSubtitleTrackName(Context context,
             com.archos.mediacenter.video.utils.VideoMetadata.SubtitleTrack track, String format) {
-        return com.archos.medialib.SubtitleLanguage.annotate(
+        return com.archos.medialib.SubtitleLanguage.annotate(context,
                 generateTrackName(context, track.name, track.language, format, track.disposition, false),
                 track.languageSource, track.languageConfidence);
     }
