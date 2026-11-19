@@ -46,68 +46,83 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="7dip" />
 
-        <TextView
-            android:id="@+id/integrated_subtitles_label"
-            style="@style/TextAppearance.Leanback.DetailsActionButton"
+        <com.archos.mediacenter.video.leanback.details.DetailsScrollView
+            android:id="@+id/subtitle_tracks_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="@string/leanback_subtitles_integrated"/>
+            android:descendantFocusability="blocksDescendants"
+            android:fadeScrollbars="false"
+            android:focusable="true"
+            android:scrollbars="vertical">
 
-        <TableRow
-            android:id="@+id/integrated_subtitles_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dip"
-            android:layout_marginBottom="7dip">
-            <TextView
-                android:id="@+id/integrated_subtitles_values_col1"
-                style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
-                android:layout_width="0dip"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textDirection="locale"
-                />
-            <TextView
-                android:id="@+id/integrated_subtitles_values_col2"
-                style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textDirection="locale"
-                />
-        </TableRow>
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/integrated_subtitles_label"
+                    style="@style/TextAppearance.Leanback.DetailsActionButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="@string/leanback_subtitles_integrated"/>
 
-        <TextView
-            android:id="@+id/external_subtitles_label"
-            style="@style/TextAppearance.Leanback.DetailsActionButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/leanback_subtitles_external"/>
+                <TableRow
+                    android:id="@+id/integrated_subtitles_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dip"
+                    android:layout_marginBottom="7dip">
+                    <TextView
+                        android:id="@+id/integrated_subtitles_values_col1"
+                        style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textDirection="locale"
+                        />
+                    <TextView
+                        android:id="@+id/integrated_subtitles_values_col2"
+                        style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textDirection="locale"
+                        />
+                </TableRow>
 
-        <TableRow
-            android:id="@+id/external_subtitles_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dip"
-            android:layout_marginBottom="7dip">
-            <TextView
-                android:id="@+id/external_subtitles_values_col1"
-                style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textDirection="locale"
-                />
-            <TextView
-                android:id="@+id/external_subtitles_values_col2"
-                style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textDirection="locale"
-                />
-        </TableRow>
+                <TextView
+                    android:id="@+id/external_subtitles_label"
+                    style="@style/TextAppearance.Leanback.DetailsActionButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/leanback_subtitles_external"/>
+
+                <TableRow
+                    android:id="@+id/external_subtitles_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dip"
+                    android:layout_marginBottom="7dip">
+                    <TextView
+                        android:id="@+id/external_subtitles_values_col1"
+                        style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textDirection="locale"
+                        />
+                    <TextView
+                        android:id="@+id/external_subtitles_values_col2"
+                        style="@style/TextAppearance.Leanback.DetailsDescriptionBody"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textDirection="locale"
+                        />
+                </TableRow>
+            </LinearLayout>
+        </com.archos.mediacenter.video.leanback.details.DetailsScrollView>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -134,5 +149,6 @@
                 android:lines="1"
                 android:text="@string/get_subtitles_on_drive"/>
         </RelativeLayout>
+
     </LinearLayout>
 </FrameLayout>

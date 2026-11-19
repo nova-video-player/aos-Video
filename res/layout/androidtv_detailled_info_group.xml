@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.archos.mediacenter.video.leanback.details.DetailsScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/file_details_scroll"
     android:layout_width="match_parent"
@@ -202,4 +202,4 @@
     </TableRow>
 
 </LinearLayout>
-</ScrollView>
+</com.archos.mediacenter.video.leanback.details.DetailsScrollView>
