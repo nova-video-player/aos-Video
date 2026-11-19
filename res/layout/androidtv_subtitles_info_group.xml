@@ -117,12 +117,6 @@
             android:gravity="start" >
 
             <Button
-                android:id="@+id/subtitle_languages"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:text="@string/subtitle_languages_identify" />
-            <Button
                 android:id="@+id/action_get_online_subtitles"
                 style="?attr/detailsActionButtonStyle"
                 android:layout_width="wrap_content"
@@ -140,5 +134,16 @@
                 android:lines="1"
                 android:text="@string/get_subtitles_on_drive"/>
         </RelativeLayout>
+
+        <Button
+            android:id="@+id/subtitle_languages"
+            style="?attr/detailsActionButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/lb_action_1_line_height"
+            android:layout_marginTop="8dip"
+            android:maxLines="2"
+            android:visibility="gone"
+            android:text="@string/subtitle_languages_identify" />
     </LinearLayout>
 </FrameLayout>
