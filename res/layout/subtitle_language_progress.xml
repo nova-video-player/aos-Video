@@ -7,6 +7,7 @@
     android:layout_marginTop="8dp"
     android:indeterminate="true"
     android:indeterminateOnly="false"
+    android:indeterminateDrawable="@drawable/subtitle_language_progress_animated"
     android:focusable="false"
     android:importantForAccessibility="no"
     android:visibility="gone" />

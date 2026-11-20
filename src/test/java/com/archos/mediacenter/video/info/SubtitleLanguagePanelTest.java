@@ -8,6 +8,10 @@ import static org.mockito.Mockito.*;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +26,34 @@ import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.GraphicsMode;
 import org.robolectric.util.ReflectionHelpers;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = {23, 33}, application = Application.class)
 public class SubtitleLanguagePanelTest {
+    @Test
+    @Config(sdk = 33)
+    @GraphicsMode(GraphicsMode.Mode.NATIVE)
+    public void progressAnimationPaintsTheFullLineThickness() {
+        Context context = new ContextThemeWrapper(RuntimeEnvironment.getApplication(),
+                R.style.ArchosThemeBlueNoActionBar);
+        ProgressBar progress = (ProgressBar) LayoutInflater.from(context).inflate(
+                R.layout.subtitle_language_progress, new FrameLayout(context), false);
+        Drawable drawable = progress.getIndeterminateDrawable();
+        drawable.setTint(Color.CYAN);
+        drawable.setBounds(0, 0, 400, 12);
+        Bitmap bitmap = Bitmap.createBitmap(400, 12, Bitmap.Config.ARGB_8888);
+        drawable.draw(new Canvas(bitmap));
+        for (int y = 0; y < bitmap.getHeight(); y++) {
+            assertEquals("The moving segment must fill all 4dp, without vertical insets",
+                    Color.CYAN, bitmap.getPixel(50, y));
+            assertTrue("The faint track must span the whole width",
+                    Color.alpha(bitmap.getPixel(399, y)) > 0);
+            assertTrue(Color.alpha(bitmap.getPixel(399, y)) < 100);
+        }
+    }
+
     @Test public void phoneAndTvShowThemedNonFocusableProgressAndRecoverActionFocus() {
         for (boolean tv : new boolean[]{false, true}) for (boolean black : new boolean[]{false, true}) {
             ReflectionHelpers.setStaticField(ThemeManager.class, "sInstance", null);
