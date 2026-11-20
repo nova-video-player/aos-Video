@@ -13,7 +13,10 @@ The published `dev/fastText` branches remain the reference for the previous desi
    phone/tablet or Leanback subtitle section. A themed indeterminate horizontal
    line below the actions spans the full content width while processing. A short
    stage label appears above the tracks; neither takes focus. Feedback and actions
-   stay outside the bounded scrolling track list. TV actions share
+   stay outside the track list. On phone/tablet, all tracks are always shown and
+   scroll with the whole details page, without an inner scrolling area or an
+   expand/collapse button. TV keeps its bounded
+   scrolling track list. TV actions share
    two fixed-width columns; labels wrap without ellipsis and row heights follow
    the longest translation. Labels share a start edge and equal padding within
    each column, so short labels do not appear offset. A lone action stays in the start column, including

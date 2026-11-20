@@ -30,18 +30,12 @@
             android:weightSum="1">
             <include layout="@layout/subtitle_language_feedback" />
 
-            <com.archos.mediacenter.video.info.SubtitleTrackScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fadeScrollbars="false"
-                android:scrollbars="vertical">
-                <TextView
-                    android:id="@+id/subtitle_track"
-                    android:padding="@dimen/video_info_margin_half"
-                    android:textDirection="locale"
-                    style="@style/VideoInfoFileInfo"
-                    android:paddingStart="32dip"/>
-            </com.archos.mediacenter.video.info.SubtitleTrackScrollView>
+            <TextView
+                android:id="@+id/subtitle_track"
+                android:padding="@dimen/video_info_margin_half"
+                android:textDirection="locale"
+                style="@style/VideoInfoFileInfo"
+                android:paddingStart="32dip"/>
 
             <include layout="@layout/subtitle_language_actions" />
             <Button
