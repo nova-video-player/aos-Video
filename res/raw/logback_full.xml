@@ -182,7 +182,7 @@
          Logback levels and its file appender do not control those messages. -->
     <logger name="com.archos.medialib.SubtitleLanguageAnalysis" level="INFO"/>
     <logger name="com.archos.medialib.SubtitleLanguageAnalysisService" level="INFO"/>
-    <logger name="com.archos.mediacenter.video.info.SubtitleLanguageActivity" level="INFO"/>
+    <logger name="com.archos.mediacenter.video.info.SubtitleLanguageController" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.SubtitlesDownloaderActivity2" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.OpenSubtitlesApiHelper" level="INFO"/>
     <logger name="com.archos.mediacenter.video.utils.ISO639codes" level="INFO"/>

@@ -14,6 +14,8 @@
 
 package com.archos.mediacenter.video.leanback.details;
 
+import com.archos.mediacenter.video.info.SubtitleLanguageController;
+
 /**
  * A minimalist interface for SubtitlesDetailsRowPresenter to query a subtitle download
  * Created by vapillon on 19/05/15.
@@ -22,7 +24,7 @@ public interface SubtitleInterface {
 
     void performSubtitleDownload();
     void performSubtitleChoose();
-    default void performSubtitleLanguageAnalysis() { }
+    default SubtitleLanguageController getSubtitleLanguageController() { return null; }
     default boolean canIdentifySubtitleLanguages() { return true; }
 
 }

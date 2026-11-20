@@ -87,6 +87,7 @@ import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.utils.videodb.XmlDb;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.info.SubtitleLanguageController;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
 import com.archos.mediacenter.video.browser.BrowserByIndexedVideos.lists.ListDialog;
 import com.archos.mediacenter.video.browser.Delete;
@@ -319,25 +320,30 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
             result -> ExternalPlayerResultListener.getInstance().onActivityResult(
                     PLAY_ACTIVITY_REQUEST_CODE, result.getResultCode(), result.getData()));
 
-    private final ActivityResultLauncher<Intent> languageLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> refreshLanguageMetadata());
-
-    private void refreshLanguageMetadata() {
-                if (mVideo == null || !isAdded()) return;
-                mVideoMetadateCache.remove(mVideo.getFilePath());
-                if (mVideoInfoTask != null) mVideoInfoTask.cancel();
-                mVideoInfoTask = new VideoInfoTask();
-                mVideoInfoTask.execute(mVideo);
-    }
+    private SubtitleLanguageController mLanguageController;
 
     @Override public boolean canIdentifySubtitleLanguages() { return !mLaunchedFromPlayer; }
 
-    public void performSubtitleLanguageAnalysis() {
-        if (mVideo == null || mLaunchedFromPlayer) return;
-        Intent intent = new Intent(getActivity(), com.archos.mediacenter.video.info.SubtitleLanguageActivity.class);
-        intent.setData(mVideo.getFileUri());
-        intent.putExtra("headers", getActivity().getIntent().getBundleExtra("headers"));
-        languageLauncher.launch(intent);
+    @Override public SubtitleLanguageController getSubtitleLanguageController() {
+        if (mVideo == null || mVideo.getFileUri() == null || mLaunchedFromPlayer || !isAdded()) return null;
+        Uri uri = mVideo.getFileUri();
+        if (mLanguageController != null && !uri.equals(mLanguageController.getUri())) {
+            mLanguageController.close();
+            mLanguageController = null;
+        }
+        if (mLanguageController == null) {
+            mLanguageController = new SubtitleLanguageController(
+                    requireContext(), uri, requireActivity().getIntent().getBundleExtra("headers"), fresh -> {
+                if (!isAdded() || mVideo == null || !uri.equals(mVideo.getFileUri())) return;
+                if (mVideoInfoTask != null) mVideoInfoTask.cancel();
+                mVideoMetadateCache.put(mVideo.getFilePath(), fresh);
+                mVideo.setMetadata(fresh);
+                updateSubtitleRowWhenReady();
+                updateMetadataWhenReady();
+            });
+        }
+        mLanguageController.updateMetadata(mVideo.getMetadata());
+        return mLanguageController;
     }
 
     private final ActivityResultLauncher<Intent> subtitleLauncher = registerForActivityResult(
@@ -627,6 +633,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     @Override
     public void onDestroyView() {
+        if (mLanguageController != null) {
+            mLanguageController.close();
+            mLanguageController = null;
+        }
         mOverlay.destroy();
         delete = null;
         super.onDestroyView();
@@ -634,6 +644,7 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
 
     @Override
     public void onStop() {
+        if (mLanguageController != null) mLanguageController.cancel();
         // Cancel all the async tasks
         // please be aware that even after stopping, the async task continues until background task has finished
         if (mDetailRowBuilderTask != null) mDetailRowBuilderTask.cancel();
@@ -1405,6 +1416,10 @@ public class VideoDetailsFragment extends DetailsFragmentWithLessTopOffset imple
      *                              the bitmap on the UI thread.
      */
     private void fullyReloadVideo(Video video, Bitmap poster, boolean showFallbackPoster, boolean useDetailsPosterSize) {
+        if (mLanguageController != null && !mLanguageController.getUri().equals(video.getFileUri())) {
+            mLanguageController.close();
+            mLanguageController = null;
+        }
         traceDetails("details-row-build-start");
         if (log.isDebugEnabled()) log.debug("fullyReloadVideo: mShouldLoadBackdrop={}", mShouldLoadBackdrop);
         if(mShouldLoadBackdrop)

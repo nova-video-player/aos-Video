@@ -9,9 +9,20 @@ The published `dev/fastText` branches remain the reference for the previous desi
 1. Ordinary metadata and existing subtitle labels appear immediately. Opening
    details or playback never starts language inference. A bounded 64 KiB content
    fingerprint is still obtained with metadata for validating stored results.
-2. **Identify subtitle languages** opens the shared phone/TV screen. Analysis
-   starts only after pressing its Identify button. The screen remains responsive
-   with an indeterminate progress indicator and a cancellation action.
+2. **Identify subtitle languages** starts analysis directly in the existing
+   phone/tablet or Leanback subtitle section. A themed indeterminate horizontal
+   line below the actions spans the full content width while processing. A short
+   stage label appears above the tracks; neither takes focus. Feedback and actions
+   stay outside the bounded scrolling track list. TV actions share
+   two fixed-width columns; labels wrap without ellipsis and row heights follow
+   the longest translation. Labels share a start edge and equal padding within
+   each column, so short labels do not appear offset. A lone action stays in the start column, including
+   RTL layouts. The track viewport shrinks to leave room for the actions. Cancel, Save and
+   Restore appear in the same section as applicable; no separate activity opens.
+   The shared controller reads local saved results during normal binding, but
+   never opens the media or starts inference until an explicit action. Leaving
+   details cancels analysis. A journalled save/restore already in progress is
+   allowed to finish safely, without updating a detached view or another video.
 3. The read-only analysis service runs in a separate app process. It obtains
    bounded MKV headers, samples embedded subtitle text with FFmpeg, and uses the
    compact fastText model. It releases its retriever and inference model afterward.
@@ -298,7 +309,7 @@ both app processes while reproducing, rather than filtering to the UI PID:
 
 ```sh
 adb logcat -b main -b crash -v threadtime 'SubtitleLanguageNative:I' \
-  'com.archos.mediacenter.video.info.SubtitleLanguageActivity:I' \
+  'com.archos.mediacenter.video.info.SubtitleLanguageController:I' \
   'com.archos.medialib.SubtitleLanguageAnalysis:I' \
   'com.archos.medialib.SubtitleLanguageAnalysisService:I' \
   'com.archos.medialib.SmbProxy:I' 'com.archos.filecorelibrary.StreamOverHttp:I' \

@@ -14,7 +14,6 @@
 
 package com.archos.mediacenter.video.leanback.details;
 
-import static com.archos.mediacenter.video.browser.subtitlesmanager.ISO639codes.generateTrackName;
 import static com.archos.mediascraper.StringUtils.capitalizeFirstLetter;
 
 import android.content.Context;
@@ -23,20 +22,20 @@ import androidx.leanback.widget.RowHeaderPresenter;
 import androidx.leanback.widget.RowPresenter;
 
 import androidx.core.text.HtmlCompat;
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.KeyEvent;
+import android.view.FocusFinder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.archos.mediacenter.video.R;
+import com.archos.mediacenter.video.info.SubtitleLanguagePanel;
 import com.archos.mediacenter.video.browser.subtitlesmanager.SubtitleManager;
 import com.archos.mediacenter.video.browser.adapters.object.Video;
 import com.archos.mediacenter.video.utils.VideoMetadata;
 import com.archos.mediacenter.video.utils.VideoUtils;
-import com.archos.mediascraper.StringUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,8 +44,6 @@ import java.util.List;
  * Created by vapillon on 16/04/15.
  */
 public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implements BackgroundColorPresenter {
-
-    private static final String TAG = "SubtitlesDetailsRowP";
 
     final SubtitleInterface mSubtitleInterface;
     private int mColor;
@@ -64,6 +61,7 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
         final Button mDownloadSubsButton;
         final Button mChooseSubsButton;
         final DetailsScrollView mTracksScrollView;
+        final SubtitleLanguagePanel mLanguagePanel;
 
         public SubtitlesDetailsViewHolder(ViewHolder parentViewHolder, View contentView) {
             super(parentViewHolder.view);
@@ -84,26 +82,24 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
             mTracksScrollView.setFocusableOnlyWhenScrollable(true);
             mTracksScrollView.setBoundaryHandler(direction -> direction > 0
                     ? mDownloadSubsButton.requestFocus() : mTracksScrollView.moveToAdjacentRow(-1));
-            View.OnKeyListener actionKeys = (view, keyCode, event) -> {
-                if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
-                if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-                    return mTracksScrollView.getVisibility() == View.VISIBLE && mTracksScrollView.isFocusable()
-                            ? mTracksScrollView.requestFocus() : mTracksScrollView.moveToAdjacentRow(-1);
-                }
-                if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN
-                        && contentView.findViewById(R.id.subtitle_languages).getVisibility() != View.VISIBLE) {
-                    return mTracksScrollView.moveToAdjacentRow(1);
-                }
-                return false;
-            };
-            mDownloadSubsButton.setOnKeyListener(actionKeys);
-            mChooseSubsButton.setOnKeyListener(actionKeys);
-            contentView.findViewById(R.id.subtitle_languages).setOnKeyListener((view, keyCode, event) -> {
-                if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
-                if (keyCode == KeyEvent.KEYCODE_DPAD_UP) return mDownloadSubsButton.requestFocus();
-                if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) return mTracksScrollView.moveToAdjacentRow(1);
-                return false;
+            mLanguagePanel = new SubtitleLanguagePanel(contentView, mDownloadSubsButton, () -> {
+                boolean expanded = contentView.findViewById(R.id.subtitle_language_feedback).getVisibility() == View.VISIBLE;
+                mTracksScrollView.setMaximumHeightFraction(expanded ? 0.3f : 0.4f);
             });
+            View.OnKeyListener actionKeys = (view, keyCode, event) -> {
+                if (event.getAction() != KeyEvent.ACTION_DOWN
+                        || (keyCode != KeyEvent.KEYCODE_DPAD_UP && keyCode != KeyEvent.KEYCODE_DPAD_DOWN)) return false;
+                int direction = keyCode == KeyEvent.KEYCODE_DPAD_UP ? View.FOCUS_UP : View.FOCUS_DOWN;
+                // Equal cell widths let geometric focus search retain the column, including RTL.
+                View next = FocusFinder.getInstance().findNextFocus((ViewGroup) contentView, view, direction);
+                if (next != null) return next.requestFocus();
+                return mTracksScrollView.moveToAdjacentRow(direction == View.FOCUS_UP ? -1 : 1);
+            };
+            for (int id : new int[]{R.id.action_get_online_subtitles, R.id.action_choose_subtitles,
+                    R.id.subtitle_languages, R.id.subtitle_language_cancel,
+                    R.id.subtitle_language_save, R.id.subtitle_language_restore}) {
+                contentView.findViewById(id).setOnKeyListener(actionKeys);
+            }
         }
     }
 
@@ -150,10 +146,8 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
         final List<SubtitleManager.SubtitleFile> externalSubs = ((SubtitlesDetailsRow) item).getExternalSubs();
         SubtitlesDetailsViewHolder vh = (SubtitlesDetailsViewHolder) holder;
         vh.mFullWidthViewHolder.getMainContainer().setBackgroundColor(mColor);
-        View languages = holder.view.findViewById(R.id.subtitle_languages);
-        languages.setVisibility(mSubtitleInterface.canIdentifySubtitleLanguages() && videoMetadata != null && (videoMetadata.hasUnknownSubtitleLanguages()
-                || videoMetadata.hasInferredSubtitleLanguages() || videoMetadata.hasSubtitleLanguageEdit()) ? View.VISIBLE : View.GONE);
-        languages.setOnClickListener(v -> mSubtitleInterface.performSubtitleLanguageAnalysis());
+        vh.mLanguagePanel.bind(mSubtitleInterface.canIdentifySubtitleLanguages()
+                ? mSubtitleInterface.getSubtitleLanguageController() : null);
 
         vh.mDownloadSubsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,6 +231,12 @@ public class SubtitlesDetailsRowPresenter extends FullWidthRowPresenter implemen
         vh.mTracksScrollView.setVisibility(hasTracks ? View.VISIBLE : View.GONE);
         vh.mTracksScrollView.scrollTo(0, 0);
         mHolder = vh;
+    }
+
+    @Override
+    protected void onUnbindRowViewHolder(RowPresenter.ViewHolder holder) {
+        ((SubtitlesDetailsViewHolder) holder).mLanguagePanel.detach();
+        super.onUnbindRowViewHolder(holder);
     }
 
     @Override

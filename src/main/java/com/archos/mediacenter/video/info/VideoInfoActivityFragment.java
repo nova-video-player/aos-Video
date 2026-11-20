@@ -187,23 +187,32 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
             result -> ExternalPlayerResultListener.getInstance().onActivityResult(
                     PLAY_ACTIVITY_REQUEST_CODE, result.getResultCode(), result.getData()));
 
-    private final ActivityResultLauncher<Intent> languageLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> refreshLanguageMetadata());
+    private SubtitleLanguageController mLanguageController;
+    private SubtitleLanguagePanel mLanguagePanel;
 
-    private void refreshLanguageMetadata() {
-                if (mCurrentVideo == null || !isAdded()) return;
-                mVideoMetadateCache.remove(mCurrentVideo.getFilePath());
+    private void bindSubtitleLanguagePanel(VideoMetadata metadata) {
+        if (mLanguagePanel == null) return;
+        if (mIsLaunchFromPlayer || mCurrentVideo == null || mCurrentVideo.getFileUri() == null) {
+            mLanguagePanel.bind(null);
+            return;
+        }
+        Uri uri = mCurrentVideo.getFileUri();
+        if (mLanguageController != null && !uri.equals(mLanguageController.getUri())) {
+            mLanguageController.close();
+            mLanguageController = null;
+        }
+        if (mLanguageController == null) {
+            mLanguageController = new SubtitleLanguageController(requireContext(), uri,
+                    requireActivity().getIntent().getBundleExtra("headers"), fresh -> {
+                if (!isAdded() || mRoot == null || mCurrentVideo == null || !uri.equals(mCurrentVideo.getFileUri())) return;
                 if (mVideoInfoTask != null) mVideoInfoTask.cancel();
-                mVideoInfoTask = new VideoInfoTask();
-                mVideoInfoTask.execute(mCurrentVideo);
-    }
-
-    public void performSubtitleLanguageAnalysis() {
-        if (mCurrentVideo == null || mIsLaunchFromPlayer) return;
-        Intent intent = new Intent(getActivity(), com.archos.mediacenter.video.info.SubtitleLanguageActivity.class);
-        intent.setData(mCurrentVideo.getFileUri());
-        intent.putExtra("headers", getActivity().getIntent().getBundleExtra("headers"));
-        languageLauncher.launch(intent);
+                mVideoMetadateCache.put(mCurrentVideo.getFilePath(), fresh);
+                mCurrentVideo.setMetadata(fresh);
+                setFileInfo(fresh);
+            });
+        }
+        mLanguageController.updateMetadata(metadata);
+        mLanguagePanel.bind(mLanguageController);
     }
 
     private final ActivityResultLauncher<Intent> subtitleLauncher = registerForActivityResult(
@@ -494,7 +503,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
         mSubtitleContainer  =  (CardView)mRoot.findViewById(R.id.subtitles_container);
         mSubtitleDownloadButton = mSubtitleContent.findViewById(R.id.subtitles_online);
         mSubtitleDownloadButton.setOnClickListener(this);
-        mRoot.findViewById(R.id.subtitle_languages).setOnClickListener(v -> performSubtitleLanguageAnalysis());
+        mLanguagePanel = new SubtitleLanguagePanel(mRoot, mSubtitleDownloadButton, null);
         mResumeLocalButton = (Button) mRoot.findViewById(R.id.resume);
         mPlayButton = (Button) mRoot.findViewById(R.id.play);
         mNextEpisodeButton = (Button) mRoot.findViewById(R.id.next_episode);
@@ -853,6 +862,11 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
     }
 
     private void setCurrentVideo(Video video){
+        if (mLanguageController != null && (video == null || !mLanguageController.getUri().equals(video.getFileUri()))) {
+            mLanguageController.close();
+            mLanguageController = null;
+            if (mLanguagePanel != null) mLanguagePanel.bind(null);
+        }
         updateWatchedStatus(); //independant of current video
         if (log.isDebugEnabled()) log.debug( "setCurrentVideo: mCurrentVideo.getFilePath()={}", ((mCurrentVideo!=null) ? mCurrentVideo.getFilePath() : "null"));
         if(shouldChangeVideo(mCurrentVideo, video)) {
@@ -1183,9 +1197,7 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     private void updateSubtitleInfo(VideoMetadata videoMetadata, List<SubtitleManager.SubtitleFile> externalSubs){
         if (log.isDebugEnabled()) log.debug("updateSubtitleInfo: metadata={}, externalSubs={}", (videoMetadata != null), (externalSubs != null ? externalSubs.size() : "null"));
-        View languageAction = mRoot.findViewById(R.id.subtitle_languages);
-        languageAction.setVisibility(!mIsLaunchFromPlayer && videoMetadata != null
-                && (videoMetadata.hasUnknownSubtitleLanguages() || videoMetadata.hasInferredSubtitleLanguages() || videoMetadata.hasSubtitleLanguageEdit()) ? View.VISIBLE : View.GONE);
+        bindSubtitleLanguagePanel(videoMetadata);
         // Subtitles tracks info
         int subtitleTrackNb = videoMetadata!=null?videoMetadata.getSubtitleTrackNb():0;
         if (log.isDebugEnabled()) log.debug("updateSubtitleInfo: subtitleTrackNb={}", subtitleTrackNb);
@@ -2293,9 +2305,19 @@ public class VideoInfoActivityFragment extends Fragment implements LoaderManager
 
     @Override
     public void onPause() {
+        if (mLanguageController != null) mLanguageController.cancel();
         if (log.isDebugEnabled()) log.debug("onPause");
         removeNetworkListener();
         super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (mLanguagePanel != null) mLanguagePanel.detach();
+        mLanguagePanel = null;
+        if (mLanguageController != null) mLanguageController.close();
+        mLanguageController = null;
+        super.onDestroyView();
     }
 
     @Override

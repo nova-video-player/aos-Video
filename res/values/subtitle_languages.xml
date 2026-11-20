@@ -8,8 +8,6 @@
     <string name="subtitle_languages_writing">Saving and verifying language metadata…</string>
     <string name="subtitle_languages_saved">Language metadata saved and verified.</string>
     <string name="subtitle_languages_restored">Previous language metadata restored.</string>
-    <string name="subtitle_languages_ready">Identify missing subtitle languages. Results are saved in Nova automatically.</string>
-    <string name="subtitle_languages_save_hint">Save high-confidence language results to the original MKV file. Subtitle text and track names stay unchanged.</string>
     <string name="subtitle_languages_reading_header">Reading MKV track information…</string>
     <string name="subtitle_languages_preparing">Preparing language identification…</string>
     <string name="subtitle_languages_persisting">Saving results in Nova…</string>

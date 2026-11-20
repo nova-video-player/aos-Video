@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.archos.mediacenter.video.leanback.details.SubtitleActionGrid xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/subtitle_language_actions"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone">
+    <Button
+        android:id="@+id/subtitle_languages"
+        style="?attr/detailsActionButtonStyle"
+        android:gravity="start|center_vertical"
+        android:textAlignment="viewStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/lb_action_1_line_height"
+        android:singleLine="false"
+        android:ellipsize="none"
+        android:visibility="gone"
+        android:text="@string/subtitle_languages_identify" />
+    <Button
+        android:id="@+id/subtitle_language_cancel"
+        style="?attr/detailsActionButtonStyle"
+        android:gravity="start|center_vertical"
+        android:textAlignment="viewStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/lb_action_1_line_height"
+        android:singleLine="false"
+        android:ellipsize="none"
+        android:visibility="gone"
+        android:text="@string/subtitle_languages_cancel" />
+    <Button
+        android:id="@+id/subtitle_language_save"
+        style="?attr/detailsActionButtonStyle"
+        android:gravity="start|center_vertical"
+        android:textAlignment="viewStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/lb_action_1_line_height"
+        android:singleLine="false"
+        android:ellipsize="none"
+        android:visibility="gone"
+        android:text="@string/subtitle_languages_save" />
+    <Button
+        android:id="@+id/subtitle_language_restore"
+        style="?attr/detailsActionButtonStyle"
+        android:gravity="start|center_vertical"
+        android:textAlignment="viewStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/lb_action_1_line_height"
+        android:singleLine="false"
+        android:ellipsize="none"
+        android:visibility="gone"
+        android:text="@string/subtitle_languages_restore" />
+</com.archos.mediacenter.video.leanback.details.SubtitleActionGrid>

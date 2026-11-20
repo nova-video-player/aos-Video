@@ -19,7 +19,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <com.archos.mediacenter.video.leanback.details.SubtitleDetailsLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dip"
@@ -45,6 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="7dip" />
+
+        <include layout="@layout/subtitle_language_feedback" />
 
         <com.archos.mediacenter.video.leanback.details.DetailsScrollView
             android:id="@+id/subtitle_tracks_scroll"
@@ -124,41 +126,39 @@
             </LinearLayout>
         </com.archos.mediacenter.video.leanback.details.DetailsScrollView>
 
-        <RelativeLayout
+        <com.archos.mediacenter.video.leanback.details.SubtitleActionGrid
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dip"
-            android:layout_marginBottom="2dip"
-            android:gravity="start" >
+            android:layout_marginBottom="4dip"
+            >
 
             <Button
                 android:id="@+id/action_get_online_subtitles"
                 style="?attr/detailsActionButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/lb_action_1_line_height"
-                android:lines="1"
+                android:gravity="start|center_vertical"
+                android:textAlignment="viewStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/lb_action_1_line_height"
+                android:singleLine="false"
+                android:ellipsize="none"
                 android:text="@string/get_subtitles_online"/>
 
             <Button
                 android:id="@+id/action_choose_subtitles"
                 style="?attr/detailsActionButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/lb_action_1_line_height"
-                android:layout_marginStart="16dip"
-                android:layout_toEndOf="@id/action_get_online_subtitles"
-                android:lines="1"
+                android:gravity="start|center_vertical"
+                android:textAlignment="viewStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/lb_action_1_line_height"
+                android:singleLine="false"
+                android:ellipsize="none"
                 android:text="@string/get_subtitles_on_drive"/>
-        </RelativeLayout>
+        </com.archos.mediacenter.video.leanback.details.SubtitleActionGrid>
 
-        <Button
-            android:id="@+id/subtitle_languages"
-            style="?attr/detailsActionButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="@dimen/lb_action_1_line_height"
-            android:layout_marginTop="8dip"
-            android:maxLines="2"
-            android:visibility="gone"
-            android:text="@string/subtitle_languages_identify" />
-    </LinearLayout>
+        <include layout="@layout/androidtv_subtitle_language_actions" />
+        <include layout="@layout/subtitle_language_progress" />
+    </com.archos.mediacenter.video.leanback.details.SubtitleDetailsLayout>
 </FrameLayout>

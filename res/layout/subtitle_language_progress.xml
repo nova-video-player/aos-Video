@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/subtitle_language_progress"
+    style="?android:attr/progressBarStyleHorizontal"
+    android:layout_width="match_parent"
+    android:layout_height="4dp"
+    android:layout_marginTop="8dp"
+    android:indeterminate="true"
+    android:indeterminateOnly="false"
+    android:focusable="false"
+    android:importantForAccessibility="no"
+    android:visibility="gone" />

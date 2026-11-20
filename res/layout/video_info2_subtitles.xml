@@ -28,22 +28,22 @@
             android:paddingTop="@dimen/video_info_margin_quarter"
             android:paddingBottom="@dimen/video_info_margin_quarter"
             android:weightSum="1">
-            <TextView
-                android:id="@+id/subtitle_track"
-                android:padding="@dimen/video_info_margin_half"
-                android:textDirection="locale"
-                style="@style/VideoInfoFileInfo"
-                android:paddingStart="32dip"/>
+            <include layout="@layout/subtitle_language_feedback" />
 
-            <Button
-                android:id="@+id/subtitle_languages"
-                style="?android:attr/borderlessButtonStyle"
-                android:textColor="@android:color/white"
-                android:background="@drawable/transparent_ripple"
+            <com.archos.mediacenter.video.info.SubtitleTrackScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:text="@string/subtitle_languages_identify" />
+                android:fadeScrollbars="false"
+                android:scrollbars="vertical">
+                <TextView
+                    android:id="@+id/subtitle_track"
+                    android:padding="@dimen/video_info_margin_half"
+                    android:textDirection="locale"
+                    style="@style/VideoInfoFileInfo"
+                    android:paddingStart="32dip"/>
+            </com.archos.mediacenter.video.info.SubtitleTrackScrollView>
+
+            <include layout="@layout/subtitle_language_actions" />
             <Button
                 android:id="@+id/subtitles_online"
                 style="?android:attr/borderlessButtonStyle"
@@ -53,6 +53,7 @@
                 android:text="@string/get_subtitles_online"
                 android:layout_height="wrap_content" />
 
+            <include layout="@layout/subtitle_language_progress" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
