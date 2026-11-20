@@ -1,6 +1,6 @@
 # Explicit subtitle language analysis and MKV editing
 
-The `dev/subtitle-language-editor` branches replace automatic fastText scanning
+The `dev/subtitleIdentification` branches replace automatic fastText scanning
 with a user action in phone/tablet Video Info and the TV subtitle details row.
 The published `dev/fastText` branches remain the reference for the previous design.
 
@@ -209,15 +209,12 @@ use a disposable copy.
   Real phone/TV interaction, interruption recovery on Android, and real SMB/SFTP
   server editing therefore remain unverified.
 
-Changes are uncommitted on `dev/subtitle-language-editor` in AVP, Video, MediaLib,
-FileCoreLibrary and native/avos. Existing benchmark work and unrelated local
-changes are excluded from this implementation. Suggested focused commit subjects:
-
-- AVP: `Wire Matroska inspector builds and subtitle editor branches`
-- MediaLib: `Persist explicit subtitle analysis and journal in-place MKV edits`
-- FileCoreLibrary: `Add non-truncating random access for metadata edits`
-- Video: `Expose explicit subtitle language analysis and save actions on phone and TV`
-- avos: `Remove automatic subtitle inference and retain explicit analysis`
+The implementation is committed on `dev/subtitleIdentification` in AVP, Video,
+MediaLib, FileCoreLibrary and native/avos, with the fastText prebuilt on the same
+branch. AVP's default and v6.6 manifests select these branches; the shared native
+builders and other prebuilts keep their existing published revisions. The earlier
+`dev/subtitle-language-editor` branches remain available. Benchmark work and
+unrelated local changes are excluded.
 
 ### UI and network analysis follow-up
 

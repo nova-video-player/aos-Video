@@ -1,4 +1,4 @@
-> Superseded on `dev/subtitle-language-editor` by [explicit analysis and MKV editing](SUBTITLE_LANGUAGE_EDITOR.md). This document describes the previous automatic design.
+> Superseded on `dev/subtitleIdentification` by [explicit analysis and MKV editing](SUBTITLE_LANGUAGE_EDITOR.md). This document describes the previous automatic design.
 
 # Subtitle language guessing
 
