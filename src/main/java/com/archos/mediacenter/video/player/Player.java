@@ -655,8 +655,7 @@ public class Player implements IPlayerControl,
             boolean resume = mResumeAfterFocusLoss && mTargetState == STATE_PLAYING;
             mResumeAfterFocusLoss = false;
             if (resume) start(PlayerController.STATE_OTHER);
-        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
-                   focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
             mFocusGranted = false;
             mFocusSuspended = true;
             mResumeAfterFocusLoss = mTargetState == STATE_PLAYING;
@@ -999,7 +998,6 @@ public class Player implements IPlayerControl,
                                 .setUsage(AudioAttributes.USAGE_MEDIA)
                                 .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE).build())
                         .setAcceptsDelayedFocusGain(false)
-                        .setWillPauseWhenDucked(true)
                         .setOnAudioFocusChangeListener(mFocusListener, mHandler).build();
             }
             result = mAudioManager.requestAudioFocus(mAudioFocusRequest);
