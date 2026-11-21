@@ -20,12 +20,14 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.preference.PreferenceManager;
 
 import com.archos.environment.ArchosUtils;
+import com.archos.mediacenter.utils.simkl.Simkl;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.utils.videodb.IndexHelper;
@@ -172,8 +174,14 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
                 }
                 TorrentObserverService.staticExitProcess();
                 TorrentObserverService.killProcess();
-                if (isFinished) stopTrakt(100);
-                else stopTrakt(getPercentProgress(position));
+                if (isFinished) {
+                    stopTrakt(100);
+                    stopSimkl(100);
+                } else {
+                    int progress = getPercentProgress(position);
+                    stopTrakt(progress);
+                    stopSimkl(progress);
+                }
             } else { // case already treated by return
                 // data = null, could be vlc (not following its spec) or hitting back before selecting external player
                 if (log.isDebugEnabled()) log.debug("onActivityResult: data is null!");
@@ -206,6 +214,15 @@ public class ExternalPlayerResultListener implements ExternalPlayerWithResultSta
                 String where = VideoStore.Video.VideoColumns._ID + " = ?";
                 String[] whereArgs = new String[] {Long.toString(mVideoDbInfo.id)};
                 mContext.getContentResolver().update(VideoStore.Video.Media.EXTERNAL_CONTENT_URI, cv, where, whereArgs);
+            }
+        }
+    }
+
+    private void stopSimkl(int percentProgress) {
+        if (!PrivateMode.isActive() && mVideoDbInfo != null) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            if (Simkl.isLiveScrobblingEnabled(prefs)) {
+                Simkl.scrobbleStop(mVideoDbInfo, percentProgress, prefs);
             }
         }
     }
