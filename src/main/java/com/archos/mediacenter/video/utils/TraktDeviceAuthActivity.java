@@ -204,15 +204,7 @@ public class TraktDeviceAuthActivity extends AppCompatActivity {
         if (log.isDebugEnabled()) log.debug("onAuthenticationSuccess");
         stopPolling();
 
-        // Store tokens
-        Trakt.setAccessToken(PreferenceManager.getDefaultSharedPreferences(this), token.access_token);
-        Trakt.setRefreshToken(PreferenceManager.getDefaultSharedPreferences(this), token.refresh_token);
-        Trakt.setAccountLocked(PreferenceManager.getDefaultSharedPreferences(this), false);
-        // Disable collection sync to avoid hitting Trakt library limits
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .edit()
-                .putBoolean(VideoPreferencesCommon.KEY_TRAKT_SYNC_COLLECTION, false)
-                .apply();
+        Trakt.completeSignIn(this, token);
 
         if (!mIsTv) {
             if (!mPhoneAuthWaiting && mPhoneAuthCallbackState != null) {

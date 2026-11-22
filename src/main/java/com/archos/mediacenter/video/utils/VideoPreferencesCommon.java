@@ -291,7 +291,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     private CheckBoxPreference mAdultScrape = null;
     private EditTextPreference mStreamBufferSize = null;
     private EditTextPreference mStreamMaxIFrameSize = null;
-    private String mLastTraktUser = null;
+    private boolean mTraktSignedIn;
     private Trakt.Status mTraktStatus = Trakt.Status.SUCCESS;
     private TraktSigninDialogPreference mTraktSigninPreference = null;
     private Preference mTraktWipePreference = null;
@@ -1635,8 +1635,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
         findPreference(KEY_TORRENT_BLOCKLIST).setOnPreferenceClickListener(null);
         findPreference(KEY_TORRENT_PATH).setOnPreferenceClickListener(null);
 
-        mLastTraktUser = Trakt.getUserFromPreferences(mSharedPreferences);
-        if (onTraktUserChange()) {
+        if (updateTraktSignInState()) {
             Trakt trakt = new Trakt(getActivity());
             trakt.setListener(new Trakt.Listener() {
                 @Override
@@ -1646,7 +1645,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                         @Override
                         public void run() {
                             if (isVisible())
-                                onTraktUserChange();
+                                updateTraktSignInState();
                         }
                     });
                 }
@@ -2048,15 +2047,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
 
     public void onSaveInstanceState(Bundle outState) {
     }
-    private boolean onTraktUserChange() {
-        final String traktUser = Trakt.getAccessTokenFromPreferences(mSharedPreferences);
-
-        if (traktUser != null) {
-            if (mLastTraktUser != null && !traktUser.equals(mLastTraktUser)) {
-                Trakt.wipePreferences(mSharedPreferences, true);
-                new TraktService.Client(getActivity(), null, false).wipe();
-            }
-
+    private boolean updateTraktSignInState() {
+        boolean wasSignedIn = mTraktSignedIn;
+        mTraktSignedIn = Trakt.isTraktV2Enabled(getActivity(), mSharedPreferences);
+        if (mTraktSignedIn) {
             setTraktPreferencesEnabled(true);
             if (mTraktStatus == Trakt.Status.ERROR_AUTH) {
                 mTraktSigninPreference.setSummary(getResources().getString(R.string.trakt_signin_summary_logged_error));
@@ -2065,8 +2059,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
                 updateTraktSyncStatus();
             }
         } else {
-            if (mLastTraktUser != null ) {
-                Trakt.wipePreferences(PreferenceManager.getDefaultSharedPreferences(getActivity()), false);
+            if (wasSignedIn) {
                 new TraktService.Client(getActivity(), null, false).wipe();
             }
             mTraktSigninPreference.setSummary(R.string.trakt_signin_summary);
@@ -2078,9 +2071,7 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
             }
             setTraktPreferencesEnabled(false);
         }
-        mLastTraktUser = traktUser;
-
-        return traktUser != null;
+        return mTraktSignedIn;
     }
 
 
@@ -2129,10 +2120,10 @@ public class VideoPreferencesCommon implements OnSharedPreferenceChangeListener 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
-        if (key.equals(Trakt.KEY_TRAKT_USER) ||key.equals(Trakt.KEY_TRAKT_ACCESS_TOKEN)|| key.equals(Trakt.KEY_TRAKT_SHA1)) {
-            // preference just changed, assume it's valid
+        if (Trakt.KEY_TRAKT_ACCESS_TOKEN.equals(key)) {
+            if (mTraktSignedIn == Trakt.isTraktV2Enabled(getActivity(), sharedPreferences)) return;
             mTraktStatus = Trakt.Status.SUCCESS;
-            onTraktUserChange();
+            updateTraktSignInState();
         } else if (key.equals(TraktService.PREFERENCE_TRAKT_LAST_SYNC_STATUS)
                 || key.equals(TraktService.PREFERENCE_TRAKT_SKIPPED_NO_DURATION)
                 || key.equals(TraktService.PREFERENCE_TRAKT_SKIPPED_NO_METADATA)

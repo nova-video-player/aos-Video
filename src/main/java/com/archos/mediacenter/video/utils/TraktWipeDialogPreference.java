@@ -32,8 +32,7 @@ public class TraktWipeDialogPreference extends Preference {
         super(context, attrs, defStyle);
     }
     protected void onClick() {
-        Trakt.setLoginPreferences(PreferenceManager.getDefaultSharedPreferences(getContext()), null, null);
-        Trakt.setAccessToken(PreferenceManager.getDefaultSharedPreferences(getContext()), null);
+        Trakt.wipePreferences(PreferenceManager.getDefaultSharedPreferences(getContext()), false);
         notifyChanged();
     }
 

@@ -103,6 +103,10 @@ Verifies dynamic sort clause rewriting across all scopes (`MOVIE`, `SHOW`, `COLL
 
 ---
 
+### Trakt sign-in state in Settings
+
+`TraktSettingsTest.rotatingTokensWithSettingsOpenPreservesSyncState` opens the phone Settings activity with an existing login. It verifies that rotating the token pair preserves the last progress sync timestamp and queues no further service work. Run it with `./gradlew --offline testNoamazonDebugUnitTest --tests '*TraktSettingsTest'`.
+
 ## CLI Track Selection Extraction Tool
 
 A standalone CLI script is provided to inspect video files using `ffprobe` and `jq`, evaluate Nova's selection rules, and optionally append the generated test case to `track_selection_tests.csv`.
