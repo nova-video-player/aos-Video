@@ -189,16 +189,9 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             result -> { // result can be RESULT_OK, RESULT_CANCELED
                 Context context = getActivity();
                 if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: result {}", result.toString());
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: OK, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
-                    if (mDelete != null && deleteUrisList != null && deleteUrisList.size() >= 1) {
-                        if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: calling delete.deleteOK on {}", deleteUrisList.get(0));
-                        mDelete.deleteOK(deleteUrisList.get(0));
-                    }
-                } else {
-                    if (log.isDebugEnabled()) log.debug("ActivityResultLauncher deleteLauncher: NO, deleteUris {}", ((deleteUrisList != null) ? Arrays.toString(deleteUrisList.toArray()) : null));
-                    if (mDelete != null && deleteUrisList != null && deleteUrisList.size() > 1)
-                        mDelete.deleteNOK(deleteUrisList.get(0));
+                if (mDelete != null && deleteUrisList != null && !deleteUrisList.isEmpty()) {
+                    mDelete.completeSystemDelete(deleteUrisList, result.getResultCode() == Activity.RESULT_OK,
+                            deleteUrisList.size() > 1 ? Delete.OP_MULTIPLE_FILES : Delete.OP_SINGLE_FILE);
                 }
             });
 

@@ -70,6 +70,8 @@ import java.util.List;
 public class Delete {
 
     private static final Logger log = LoggerFactory.getLogger(Delete.class);
+    private static final java.util.concurrent.ExecutorService subtitleCleanup =
+            java.util.concurrent.Executors.newSingleThreadExecutor();
 
     public static final int OP_SINGLE_FILE = 1;
     public static final int OP_MULTIPLE_FILES = 2;
@@ -85,6 +87,23 @@ public class Delete {
 
     private MetaFile2 currentVideoFileToDelete;
     private long currentVideoFileToDeleteSize;
+    private Uri pendingFolderDelete;
+
+    private void cleanupSubtitleLanguages(List<Uri> uris, boolean folder) {
+        if (mContext == null) return;
+        List<Uri> deleted = new ArrayList<>(uris);
+        subtitleCleanup.execute(() -> {
+            for (Uri uri : deleted) {
+                try {
+                    // Permission callbacks can grant access without deleting the local file.
+                    if (isLocal(uri) && new File(uri.getPath()).exists()) continue;
+                    com.archos.medialib.SubtitleLanguageStore.removeDeleted(mContext, uri, folder);
+                } catch (Exception e) {
+                    log.warn("Cannot clean subtitle language data after file deletion", e);
+                }
+            }
+        });
+    }
 
     private Integer counter = 0; // only for video files not for associated files
 
@@ -117,10 +136,11 @@ public class Delete {
             return;
         }
 
-        if (operationKind == OP_FOLDER) {
+        if (operationKind == OP_FOLDER || uris.get(0).equals(pendingFolderDelete)) {
             deleteFolderOK(uris.get(0));
             return;
         }
+        cleanupSubtitleLanguages(uris, false);
 
         if (operationKind == OP_MULTIPLE_FILES || uris.size() > 1) {
             if (mListener != null) {
@@ -176,6 +196,7 @@ public class Delete {
     }
 
     public void deleteOK(Uri fileUri) {
+        cleanupSubtitleLanguages(java.util.Collections.singletonList(fileUri), false);
         counter--;
         if (log.isDebugEnabled()) log.debug("deleteOK: {} counter {}", fileUri, counter);
         if (counter <= 0) {
@@ -239,6 +260,8 @@ public class Delete {
     }
 
     public void deleteFolderOK(Uri folderUri) {
+        pendingFolderDelete = null;
+        cleanupSubtitleLanguages(java.util.Collections.singletonList(folderUri), true);
         if (log.isDebugEnabled()) log.debug("deleteFolderOK: {} counter {}", folderUri, counter);
         if (mListener != null)
             mHandler.post(() -> {
@@ -379,7 +402,13 @@ public class Delete {
                                     isDeleteOK = true; // smb and other editors are returning null otherwise throws exception
                             }
                             // ok only on main video file and if we have feedback already
-                            if (isDeleteOK != null && uri == fileUri) deleteOK(fileUri);
+                            if (uri.equals(fileUri)) {
+                                if (Boolean.TRUE.equals(isDeleteOK)) deleteOK(fileUri);
+                                else if (Boolean.FALSE.equals(isDeleteOK)) {
+                                    deleteNOK(fileUri);
+                                    return;
+                                }
+                            }
                             if (log.isDebugEnabled()) log.debug("deleteFileAndAssociatedFiles: delete achieved {}, counter {}", uri, counter);
                         } catch (Exception e) {
                             log.error("deleteFileAndAssociatedFiles: failed to delete file {}, counter {}", uri, counter, e);
@@ -429,6 +458,7 @@ public class Delete {
                 }
 
                 List<Uri> contentUrisToDelete = new ArrayList<>();
+                List<Uri> originalUrisToDelete = new ArrayList<>();
                 Uri contentUri;
                 for (Uri uri : fileUris) { // handle the video files separately
                     // start with deleting all the files from dataBase
@@ -436,9 +466,13 @@ public class Delete {
                     editor.deleteFromDatabase(uri);
                     contentUri = FileUtilsQ.getContentUri(uri);
                     if (log.isDebugEnabled()) log.debug("deleteLocalFilesAndAssociatedFiles: video to be batch processed: {} -> contentUri {}", uri, contentUri);
-                    // if contentUri is null file has already been deleted before...
-                    if (contentUri != null) contentUrisToDelete.add(contentUri);
-                    else deleteOK(uri);
+                    // An unindexed local file can also have no MediaStore URI.
+                    if (contentUri != null) {
+                        contentUrisToDelete.add(contentUri);
+                        originalUrisToDelete.add(uri);
+                    } else if (!new File(uri.getPath()).exists() || Boolean.TRUE.equals(editor.deleteSingleFileOldStyle(uri))) {
+                        deleteOK(uri);
+                    } else deleteNOK(uri);
                     // delete subs too
                     if (!FileUtils.isSlowRemote(uri)) {
                         SubtitleManager.deleteAssociatedSubs(uri, context);
@@ -451,12 +485,12 @@ public class Delete {
                         if (log.isDebugEnabled()) log.debug("deleteFile: delete failed -> going the Q way");
                         // isDeleteOK can be null since UI involved in Android Q+
                         isDeleteOK = FileUtilsQ.deleteAll(FileUtilsQ.getDeleteLauncher(), contentUrisToDelete);
-                        if (isDeleteOK != null && !isDeleteOK)
-                            deleteNOK(contentUrisToDelete);
-                        else deleteOK(contentUrisToDelete);
+                        if (Boolean.FALSE.equals(isDeleteOK)) deleteNOK(originalUrisToDelete);
+                        else if (Boolean.TRUE.equals(isDeleteOK)) deleteOK(originalUrisToDelete);
+                        // null means Android is still asking the user; wait for its callback.
                     } else {
                         if (log.isDebugEnabled()) log.debug("deleteFile: delete failed -> going the traditional way");
-                        for (Uri uri : fileUris) { // handle the video files separately
+                        for (Uri uri : originalUrisToDelete) {
                             File fileToDelete = new File(uri.getPath());
                             ExternalSDFileWriter external = new ExternalSDFileWriter(mContext.getContentResolver(), fileToDelete);
                             try {
@@ -474,12 +508,19 @@ public class Delete {
 
     public void deleteFolder(final Uri uri){
         if (log.isDebugEnabled()) log.debug("deleteFolder: {}", uri);
+        pendingFolderDelete = uri;
         new Thread(){
             public void run() {
                 try {
-                    FileEditorFactory.getFileEditorForUrl(uri, mContext).delete();
-                } catch (Exception e) { }
-                deleteFolderOK(uri);
+                    FileEditor editor = FileEditorFactory.getFileEditorForUrl(uri, mContext);
+                    Boolean success = editor.delete();
+                    if (success == null && !(editor instanceof LocalStorageFileEditor)) success = true;
+                    if (Boolean.TRUE.equals(success)) deleteFolderOK(uri);
+                    else if (Boolean.FALSE.equals(success)) deleteNOK(uri);
+                } catch (Exception e) {
+                    log.warn("Folder deletion failed", e);
+                    deleteNOK(uri);
+                }
             }
         }.start();
     }

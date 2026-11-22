@@ -7,8 +7,8 @@ The published `dev/fastText` branches remain the reference for the previous desi
 ## User flow
 
 1. Ordinary metadata and existing subtitle labels appear immediately. Opening
-   details or playback never starts language inference. A bounded 64 KiB content
-   fingerprint is still obtained with metadata for validating stored results.
+   details or playback never starts language inference. Saved AI results are
+   looked up by source URI and applied in embedded subtitle track order.
 2. **Identify subtitle languages** starts analysis directly in the existing
    phone/tablet or Leanback subtitle section. A themed indeterminate horizontal
    line below the actions spans the full content width while processing. A short
@@ -26,8 +26,8 @@ The published `dev/fastText` branches remain the reference for the previous desi
    never opens the media or starts inference until an explicit action. Leaving
    details cancels analysis. A journalled save/restore already in progress is
    allowed to finish safely, without updating a detached view or another video.
-3. The read-only analysis service runs in a separate app process. It obtains
-   bounded MKV headers, samples embedded subtitle text with FFmpeg, and uses the
+3. The read-only analysis service runs in a separate app process. It samples
+   embedded subtitle text with FFmpeg and uses the
    compact fastText model. It releases its retriever and inference model afterward.
    This provides native-crash containment; it is not Android's permission-free
    `isolatedProcess` security sandbox. Network access uses the app's credentials.
@@ -40,8 +40,8 @@ The published `dev/fastText` branches remain the reference for the previous desi
    File metadata and deterministic title resolution remain authoritative. AI
    labels retain their confidence suffix. Results do not expire on a timer.
 6. **Save languages to MKV** is a separate user action. It patches only confident,
-   compatible fields, verifies the result, and refreshes persistence under the
-   new fingerprint. **Restore previous MKV languages** restores the last before-image
+   compatible fields after reading the current MKV header, then verifies the result.
+   **Restore previous MKV languages** restores the last before-image
    or recovers an interrupted write. Playback and writing are mutually excluded
    within Nova; opening a video while a write is active is refused.
 
@@ -56,7 +56,7 @@ There is no OCR, automatic whole-library analysis or full subtitle dumping.
 ### Network read-ahead for explicit analysis
 
 Explicit analysis opens its retriever with a per-source `SUBTITLE_ANALYSIS`
-read mode. Ordinary metadata, fingerprint refreshes and direct MKV header reads
+read mode. Ordinary metadata and direct MKV header reads
 keep their existing conservative policy. Reusing a retriever for ordinary
 metadata resets the policy and closes the previous analysis proxy.
 
@@ -105,17 +105,60 @@ of every subtitle would require scanning much more of the file.
 ## Persistence
 
 Database version 63 adds `subtitle_language_analysis` to the existing MediaLib
-video database. One document per source URI holds the file fingerprint, model
-checksum/version, timestamp, cancellation status and per-track results: index,
-Matroska TrackUID (stored as a string to preserve unsigned 64-bit values),
-language, source, score and outcome. The document also holds the bounded original
-header and its parsed edit locations. Non-indexed videos are supported.
+video database. Its unreleased schema now has exactly three columns:
 
-The fingerprint hashes the first 64 KiB, file size, duration and track descriptors.
-It is not a whole-file checksum. Same-size replacements preserving all fingerprinted
-information are not detected. URI changes currently require reanalysis. The mapping
-between FFmpeg subtitles and Matroska entries is required to have the same count
-and follows container order; rewriting validates the original header byte-for-byte.
+```sql
+CREATE TABLE subtitle_language_analysis (
+    uri TEXT PRIMARY KEY,
+    languages TEXT NOT NULL,
+    confidences TEXT NOT NULL
+);
+```
+
+One row per source URI stores parallel comma-separated lists, such as
+`en,und,fra` and `97,0,99`. Entries follow embedded subtitle track order, excluding
+external subtitle files. Only fastText guesses are stored; known metadata,
+description-derived languages and unidentified tracks use `und,0` placeholders.
+AI provenance is implicit. Two- and three-letter lowercase codes and integer
+confidence scores from 0 to 100 are accepted; malformed or mismatched lists are
+ignored. A reanalysis replaces the URI's row. Non-indexed videos are supported.
+Thirty-eight three-letter codes and two-digit scores occupy 264 bytes, excluding
+the URI and SQLite overhead. No JSON, header snapshot, model identifier, timestamp,
+fingerprint or TrackUID is stored in the table.
+
+Cached results apply only when the current embedded track count matches, and
+never override metadata or deterministic language identification. File contents
+are not fingerprinted for cache validation: replacing a file at the same URI with
+the same track count can leave stale results until the user identifies again.
+Changing the URI requires reanalysis.
+
+Save reads and inspects the current MKV header, checks the current track count
+and language fields, and compares the fresh header byte-for-byte immediately
+before writing. It cannot verify that those tracks are the ones originally
+analysed. The separate recovery journal holds only the before/after header bytes,
+file URI, size, compact language/confidence lists and edit state. TrackUIDs read by the
+inspector are not persisted. Save eligibility in the UI uses the confidence
+threshold; actual field-size/write compatibility is checked after pressing Save.
+
+Confirmed physical deletion through Nova removes the cached row and recovery
+journal, including unindexed files and descendants of deleted folders. Failed or
+cancelled deletion preserves them. Library removal/unindexing alone does not
+clear them: database row deletion can precede physical deletion or simply mean a
+share was unindexed, so a database delete trigger would be insufficient.
+
+After a verified MKV save, only the guesses actually written are cleared to
+`und`/`0`; lower-confidence or incompatible fields retain their guesses at the
+same track positions. The row is removed when no identified guesses remain.
+The recovery journal remains available, and Restore reinstates its original
+language/confidence lists. Files deleted outside Nova are not automatically
+observed by this cleanup.
+
+There is deliberately no migration from the earlier experimental JSON table and
+no additional database version bump. Existing development installations must
+recreate only this table using the definition above and remove old-format edit
+journals before testing; resolve any pending edit first. No reset of the media
+library itself is required. Fresh installs and the normal upgrade from version
+62 create the compact table directly.
 
 The previous native `.lid` cache, seven-day expiry, ten-minute cooldown, automatic
 Video Info/pre-playback scans, and playback packet-fed classification are removed.
@@ -155,7 +198,7 @@ unchanged. Network analysis can transfer much more data than the write itself.
 - Other protocols are not supported for editing.
 
 Before the first write, an AtomicFile recovery journal stores the original and
-proposed header, file length and prior analysis in app-private no-backup storage,
+proposed header, file length and compact AI results in app-private no-backup storage,
 with an explicit file-descriptor sync. Only differing byte ranges are written.
 The implementation rereads the header and reparses it before marking the journal
 applied. On failure it leaves a pending journal. Restore accepts only original,
@@ -175,10 +218,28 @@ The four Android ABI libraries use API 23 and 16 KiB ELF alignment. Verified
 prebuilts skip rebuilding; builder or dependency changes invalidate their stamps.
 The host inspector build is `python3 native/libmatroska-android-builder/build.py --host`.
 Focused tests cover fixed-size patches, language-code mapping, confidence gates,
-track-identity mismatch and interrupted writes. Device and real SMB/SFTP server
+track-count mismatch and interrupted writes. Device and real SMB/SFTP server
 checks are separate from host tests; see the implementation report for actual
 validation results. The user's source MKV must never be edited during testing:
 use a disposable copy.
+
+### Compact persistence and lifecycle validation (2026-11-22)
+
+The schema and result handling now use URI-keyed language/confidence CSV lists.
+The debug APK and lint tasks passed. Focused persistence, save/restore, read-mode,
+controller, panel, deletion and playback-metadata checks passed: 49 tests, with one optional
+real-MKV fixture test skipped. Database migration/helper/provider checks also
+passed. The required full MediaLib suite ran 262 tests with 12 failures and three
+skips; failures were in TrackNaming, import reconciliation, ShowTags persistence,
+MovieScraperFile and TmdbTitleLanguage tests outside the modified paths. Complete
+output is retained in `/private/tmp/nova-subtitle-lifecycle-suite.log` for this checkout.
+No device was connected, so real-device analysis and network editing were not
+retested. Fresh-header save, partial-write recovery and concurrent header-change
+refusal were exercised with simulated file access on API 23 and 33. Lifecycle
+checks cover failed/cancelled deletion, Android permission callbacks with an
+existing file, batch deletion, literal folder boundaries, orphan recovery journals,
+partial-save pruning and Restore repopulation. Actual network deletion and Android
+permission dialogs still require device validation.
 
 ### Validation performed (2026-11-16)
 

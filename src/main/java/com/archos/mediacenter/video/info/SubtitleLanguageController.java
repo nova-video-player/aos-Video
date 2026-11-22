@@ -22,8 +22,9 @@ import com.archos.medialib.MatroskaLanguageWriter;
 import com.archos.medialib.SubtitleLanguageAnalysisService;
 import com.archos.medialib.SubtitleLanguageException;
 import com.archos.medialib.SubtitleLanguageStore;
+import com.archos.medialib.SubtitleLanguageResult;
+import com.archos.medialib.SubtitleLanguage;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public final class SubtitleLanguageController {
     private final Set<Runnable> listeners = new LinkedHashSet<>();
     private MetadataListener metadataListener;
     private VideoMetadata metadata;
-    private JSONObject result;
+    private SubtitleLanguageResult result;
     private boolean busy, writing, bound, closed, cancelRequested, pending, restorable;
     private int generation;
     private long started;
@@ -123,7 +124,7 @@ public final class SubtitleLanguageController {
     public String getStatus() { return status; }
     public boolean canAnalyze() { return metadata != null && metadata.hasUnknownSubtitleLanguages() && !pending; }
     public boolean canSave() { return !pending && metadata != null && metadata.hasInferredSubtitleLanguages()
-            && result != null && MatroskaLanguageWriter.canSave(result); }
+            && result != null && result.size() == metadata.getSubtitleTrackNb() && MatroskaLanguageWriter.canSave(result); }
     public boolean canRestore() { return restorable; }
     public boolean canCancel() { return bound && !writing; }
     public boolean isCancelRequested() { return cancelRequested; }
@@ -138,7 +139,7 @@ public final class SubtitleLanguageController {
         publish();
         if (value == null) return;
         worker.execute(() -> {
-            JSONObject saved = SubtitleLanguageStore.load(context, uri.toString(), value.getSubtitleFingerprint());
+            SubtitleLanguageResult saved = SubtitleLanguageStore.load(context, uri.toString());
             JSONObject journal = readJournal();
             main.post(() -> {
                 if (closed || ticket != generation) return;
@@ -193,7 +194,7 @@ public final class SubtitleLanguageController {
         started = SystemClock.elapsedRealtime();
         status = context.getString(undo ? R.string.subtitle_languages_restoring : R.string.subtitle_languages_writing);
         publish();
-        JSONObject selected = result;
+        SubtitleLanguageResult selected = result;
         worker.execute(() -> {
             String message;
             try {
@@ -218,7 +219,7 @@ public final class SubtitleLanguageController {
         catch (Exception e) { log.warn("Cannot read subtitle recovery journal", e); return null; }
     }
 
-    private void applyStoredState(JSONObject saved, JSONObject journal) {
+    private void applyStoredState(SubtitleLanguageResult saved, JSONObject journal) {
         result = saved;
         restorable = journal != null && !"UNDONE".equals(journal.optString("state"));
         pending = journal != null && "PENDING".equals(journal.optString("state"));
@@ -235,7 +236,7 @@ public final class SubtitleLanguageController {
                 HashMap<String, String> requestHeaders = new HashMap<>();
                 if (headers != null) for (String key : headers.keySet()) requestHeaders.put(key, headers.getString(key));
                 fresh.fillFromRetriever(context, requestHeaders);
-                JSONObject saved = SubtitleLanguageStore.load(context, uri.toString(), fresh.getSubtitleFingerprint());
+                SubtitleLanguageResult saved = SubtitleLanguageStore.load(context, uri.toString());
                 JSONObject journal = readJournal();
                 main.post(() -> {
                     if (closed) return;
@@ -243,10 +244,8 @@ public final class SubtitleLanguageController {
                     busy = false;
                     cancelRequested = false;
                     int identified = 0;
-                    JSONArray items = saved == null ? null : saved.optJSONArray("tracks");
-                    if (items != null) for (int i = 0; i < items.length(); i++) {
-                        JSONObject item = items.optJSONObject(i);
-                        if (item != null && "identified".equals(item.optString("status"))) identified++;
+                    for (int i = 0; i < fresh.getSubtitleTrackNb(); i++) {
+                        if (fresh.getSubtitleTrack(i).languageSource != SubtitleLanguage.UNKNOWN) identified++;
                     }
                     status = message != null ? message : context.getString(R.string.subtitle_languages_summary,
                             identified, fresh.getSubtitleTrackNb());

@@ -18,6 +18,41 @@ import java.lang.reflect.Field;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 33, application = android.app.Application.class)
 public class SubtitleLanguageMetadataTest {
+    @Test public void compactResultsApplyByInternalTrackOrderWithoutOverridingMetadata() {
+        MediaMetadata data = mock(MediaMetadata.class);
+        when(data.has(IMediaPlayer.METADATA_KEY_NB_SUBTITLE_TRACK)).thenReturn(true);
+        when(data.getInt(IMediaPlayer.METADATA_KEY_NB_SUBTITLE_TRACK)).thenReturn(3);
+        int language = IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_LANGUAGE;
+        when(data.has(language)).thenReturn(true);
+        when(data.getString(language)).thenReturn("en");
+        when(data.has(IMediaPlayer.METADATA_KEY_SUBTITLE_LANGUAGE_SOURCE)).thenReturn(true);
+        when(data.getInt(IMediaPlayer.METADATA_KEY_SUBTITLE_LANGUAGE_SOURCE)).thenReturn(SubtitleLanguage.METADATA);
+        int external = IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_MAX
+                + IMediaPlayer.METADATA_KEY_SUBTITLE_TRACK_PATH;
+        when(data.has(external)).thenReturn(true);
+        when(data.getString(external)).thenReturn("/external.srt");
+        VideoMetadata video = new VideoMetadata("/dummy.mkv");
+        video.setData(data);
+        android.content.Context context = org.robolectric.RuntimeEnvironment.getApplication();
+        try (org.mockito.MockedStatic<com.archos.medialib.SubtitleLanguageStore> store = mockStatic(com.archos.medialib.SubtitleLanguageStore.class)) {
+            store.when(() -> com.archos.medialib.SubtitleLanguageStore.load(context, "file:///dummy.mkv"))
+                    .thenReturn(com.archos.medialib.SubtitleLanguageResult.fromCsv("de,fra", "98,99"));
+            video.applyStoredSubtitleLanguages(context, "/dummy.mkv");
+            assertEquals("en", video.getSubtitleTrack(0).language);
+            assertEquals(SubtitleLanguage.METADATA, video.getSubtitleTrack(0).languageSource);
+            assertTrue(video.getSubtitleTrack(1).isExternal);
+            assertEquals(SubtitleLanguage.UNKNOWN, video.getSubtitleTrack(1).languageSource);
+            assertEquals("fra", video.getSubtitleTrack(2).language);
+            assertEquals(99, video.getSubtitleTrack(2).languageConfidence);
+            assertEquals(SubtitleLanguage.FASTTEXT, video.getSubtitleTrack(2).languageSource);
+            video.setData(data);
+            store.when(() -> com.archos.medialib.SubtitleLanguageStore.load(context, "file:///dummy.mkv"))
+                    .thenReturn(com.archos.medialib.SubtitleLanguageResult.fromCsv("fr", "99"));
+            video.applyStoredSubtitleLanguages(context, "/dummy.mkv");
+            assertEquals(SubtitleLanguage.UNKNOWN, video.getSubtitleTrack(2).languageSource);
+        }
+    }
+
     private MediaMetadata metadata() {
         MediaMetadata data = mock(MediaMetadata.class);
         when(data.has(IMediaPlayer.METADATA_KEY_NB_SUBTITLE_TRACK)).thenReturn(true);

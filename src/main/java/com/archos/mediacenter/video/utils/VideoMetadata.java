@@ -46,7 +46,6 @@ public class VideoMetadata implements Serializable {
 
     private File mFile;
     private String mRemotePath;
-    private String mSubtitleFingerprint;
     private boolean mHasSubtitleLanguageEdit;
     private VideoTrack mVideoTrack;
     private AudioTrack[] mAudioTrackList;
@@ -233,7 +232,6 @@ public class VideoMetadata implements Serializable {
     public VideoMetadata(VideoMetadata other) {
         mFile = other.mFile;
         mRemotePath = other.mRemotePath;
-        mSubtitleFingerprint = other.mSubtitleFingerprint;
         mHasSubtitleLanguageEdit = other.mHasSubtitleLanguageEdit;
         mVideoTrack = other.mVideoTrack;
         mAudioTrackList = other.mAudioTrackList != null ? Arrays.copyOf(other.mAudioTrackList, other.mAudioTrackList.length) : null;
@@ -245,7 +243,6 @@ public class VideoMetadata implements Serializable {
     }
 
     private void reset() {
-        mSubtitleFingerprint = null;
         mHasSubtitleLanguageEdit = false;
         mVideoTrack = null;
         mAudioTrackList = null;
@@ -266,7 +263,6 @@ public class VideoMetadata implements Serializable {
 
     public void setData(MediaMetadata data) {
         reset();
-        mSubtitleFingerprint = getMetadataString(data, IMediaPlayer.METADATA_KEY_SUBTITLE_FINGERPRINT);
         int nbTrack;
         if (data.has(IMediaPlayer.METADATA_KEY_FILE_SIZE))
             mFileSize = data.getLong(IMediaPlayer.METADATA_KEY_FILE_SIZE);
@@ -339,7 +335,6 @@ public class VideoMetadata implements Serializable {
                 }
             }
             if (analyzeLanguages) throw new IllegalStateException("Use the explicit analysis service");
-            mSubtitleFingerprint = retriever.extractMetadata(IMediaMetadataRetriever.METADATA_KEY_SUBTITLE_FINGERPRINT);
             if (cancellation != null) cancellation.throwIfCanceled();
             mFileSize = getMetadataRetrieverLong(retriever, IMediaMetadataRetriever.METADATA_KEY_FILE_SIZE);
             nbTrack = getMetadataRetrieverInt(retriever, IMediaMetadataRetriever.METADATA_KEY_NB_VIDEO_TRACK);
@@ -379,8 +374,6 @@ public class VideoMetadata implements Serializable {
 
     public boolean hasSubtitleLanguageEdit() { return mHasSubtitleLanguageEdit; }
 
-    public String getSubtitleFingerprint() { return mSubtitleFingerprint; }
-
     public boolean hasInferredSubtitleLanguages() {
         if (mSubtitleTrackList != null) for (SubtitleTrack track : mSubtitleTrackList)
             if (track.languageSource == com.archos.medialib.SubtitleLanguage.FASTTEXT) return true;
@@ -391,20 +384,18 @@ public class VideoMetadata implements Serializable {
         if (path == null || mSubtitleTrackList == null) return;
         Uri uri = Uri.parse(path);
         if (uri.getScheme() == null) uri = Uri.fromFile(new File(path));
-        org.json.JSONObject saved = com.archos.medialib.SubtitleLanguageStore.load(context, uri.toString(), mSubtitleFingerprint);
-        if (saved == null) return;
-        try {
-            org.json.JSONArray tracks = saved.getJSONArray("tracks");
-            if (tracks.length() != mSubtitleTrackList.length) return;
-            for (int i=0; i<tracks.length(); i++) {
-                org.json.JSONObject result = tracks.getJSONObject(i);
-                SubtitleTrack original = mSubtitleTrackList[i];
-                if (!original.isExternal && original.languageSource == com.archos.medialib.SubtitleLanguage.UNKNOWN
-                        && result.optInt("source") == com.archos.medialib.SubtitleLanguage.FASTTEXT
-                        && result.optInt("score") >= 85 && result.optString("language").matches("[a-z]{2,3}"))
-                    mSubtitleTrackList[i] = new SubtitleTrack(original, result.getString("language"), result.getInt("score"));
-            }
-        } catch (org.json.JSONException ignored) { }
+        com.archos.medialib.SubtitleLanguageResult saved = com.archos.medialib.SubtitleLanguageStore.load(context, uri.toString());
+        int internalCount = 0;
+        for (SubtitleTrack track : mSubtitleTrackList) if (!track.isExternal) internalCount++;
+        if (saved == null || saved.size() != internalCount) return;
+        int index = 0;
+        for (int i = 0; i < mSubtitleTrackList.length; i++) {
+            SubtitleTrack original = mSubtitleTrackList[i];
+            if (original.isExternal) continue;
+            if (original.languageSource == com.archos.medialib.SubtitleLanguage.UNKNOWN && saved.isIdentified(index))
+                mSubtitleTrackList[i] = new SubtitleTrack(original, saved.language(index), saved.confidence(index));
+            index++;
+        }
     }
 
     public VideoTrack getVideoTrack() {
