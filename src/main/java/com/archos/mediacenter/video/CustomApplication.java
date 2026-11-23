@@ -130,6 +130,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     private static boolean isHDMIPlugReceiverRegistered = false;
     private static long hdmiAudioEncodingFlag = 0;
     private static long spdifAudioEncodingFlag = 0;
+    private static long tvSpeakerAudioEncodingFlag = 0;
     private static int[] hdmiAudioEncodingsFlags;
     private static int[] spdifAudioEncodingsFlags;
     private static int[] hdmiChannelMasks;
@@ -176,7 +177,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
 
     public static boolean isUsingProbedPassthrough() {
         return Build.VERSION.SDK_INT == Build.VERSION_CODES.M
-                && !hasHdmi && !hasSpdif && probedAudioEncodingFlag != 0;
+                && !hasHdmi && !hasSpdif && tvSpeakerAudioEncodingFlag == 0 && probedAudioEncodingFlag != 0;
     }
 
     public static boolean isPassthroughModeSupported(int mode) {
@@ -256,7 +257,8 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         // Rebuild only for capability/backend changes, including forced-passthrough eligibility.
         boolean supported = isPassthroughSupported();
         long codecs = getNativeAudioCodecsFlag();
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && !hasHdmi && !hasSpdif && mContext != null) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && !hasHdmi && !hasSpdif
+                && tvSpeakerAudioEncodingFlag == 0 && mContext != null) {
             int mode = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext)
                     .getString("force_audio_passthrough_multiple", "0"));
             if (mode == 0 || !PassthroughProbe.supportsMode(probedAudioEncodingFlag, mode)) {
@@ -279,7 +281,10 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         int mode = isPassthroughSupported() ? Integer.parseInt(prefs.getString("force_audio_passthrough_multiple", "0")) : 0;
         if (!isPassthroughModeSupported(mode)) mode = 0;
         long codecs = getNativeAudioCodecsFlag();
-        if (mode != 0 && prefs.getBoolean(VideoPreferencesCommon.KEY_FORCE_AUDIO_PASSTHROUGH, false)) {
+        // A TV's speaker-labelled endpoint may accept compressed audio without
+        // exposing a digital connector. Only trust its advertised formats.
+        if (mode != 0 && tvSpeakerAudioEncodingFlag == 0
+                && prefs.getBoolean(VideoPreferencesCommon.KEY_FORCE_AUDIO_PASSTHROUGH, false)) {
             // A probe only establishes support for the codecs it actually opened.
             // Keep the existing force behavior for explicitly advertised digital outputs.
             codecs = isUsingProbedPassthrough()
@@ -402,6 +407,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             switch (encoding) {
                 case AudioFormat.ENCODING_AC3:
                 case AudioFormat.ENCODING_E_AC3:
+                case AudioFormat.ENCODING_E_AC3_JOC:
                 case AudioFormat.ENCODING_DTS:
                 case AudioFormat.ENCODING_DTS_HD:
                 case AudioFormat.ENCODING_IEC61937:
@@ -462,6 +468,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
 
         long bestSpdifFlags = 0;
         int bestSpdifEncodingCount = 0;
+        long speakerFlags = 0;
 
         if (log != null && log.isDebugEnabled()) {
             log.debug("refreshAudioOutputCapabilities({}): {} output device(s)", reason, devices.length);
@@ -510,9 +517,18 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                     bestSpdifFlags = flags;
                     spdifAudioEncodingsFlags = encodings;
                 }
+            } else if (isAndroidTv && type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
+                    && hasCompressedAudioEncoding(encodings)) {
+                // Some TVs (e.g. TCL/Realtek) expose compressed formats only on
+                // Speaker. Preserve them before and after AudioTrack resolves
+                // to that endpoint, without inventing HDMI/SPDIF or PCM support.
+                speakerFlags |= flags;
             }
         }
 
+        // Separate digital outputs remain authoritative when present in this
+        // route's inventory. Private routes were already isolated above.
+        tvSpeakerAudioEncodingFlag = !foundHdmi && !foundSpdif ? speakerFlags : 0;
         hasHdmi = foundHdmi;
         hdmiAudioEncodingFlag = foundHdmi ? bestHdmiFlags : 0;
         if (!foundHdmi) {
@@ -554,6 +570,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         // speaker with empty capability arrays (issue #2037). Probe the firmware
         // without inventing a connected SPDIF device or assuming receiver support.
         String probeRoute = Build.VERSION.SDK_INT != Build.VERSION_CODES.M || foundHdmi || foundSpdif
+                || tvSpeakerAudioEncodingFlag != 0
                 ? null : PassthroughProbe.routeKey(devices, selected,
                         getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY));
         if (mAudioManager.getMode() != AudioManager.MODE_NORMAL) probeRoute = null;
@@ -577,13 +594,13 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         publishAudioRouteChange();
 
         if (log != null) {
-            log.info("refreshAudioOutputCapabilities({}): deviceId={} resolved={} hasHdmi={} (type={}) hasSpdif={} maxAudioChannelCount={} hdmiCaps={} spdifCaps={} probedCaps={}",
-                    reason, selectedAudioDeviceId, audioRouteResolved, hasHdmi, bestHdmiType, hasSpdif, maxAudioChannelCount, getSupportedAudioCodecs(hdmiAudioEncodingFlag), getSupportedAudioCodecs(spdifAudioEncodingFlag), getSupportedAudioCodecs(probedAudioEncodingFlag));
+            log.info("refreshAudioOutputCapabilities({}): deviceId={} resolved={} hasHdmi={} (type={}) hasSpdif={} maxAudioChannelCount={} hdmiCaps={} spdifCaps={} tvSpeakerCaps={} probedCaps={}",
+                    reason, selectedAudioDeviceId, audioRouteResolved, hasHdmi, bestHdmiType, hasSpdif, maxAudioChannelCount, getSupportedAudioCodecs(hdmiAudioEncodingFlag), getSupportedAudioCodecs(spdifAudioEncodingFlag), getSupportedAudioCodecs(tvSpeakerAudioEncodingFlag), getSupportedAudioCodecs(probedAudioEncodingFlag));
         }
     }
 
     public static long getHdmiAudioCodecsFlag() {
-        return hdmiAudioEncodingFlag | spdifAudioEncodingFlag | probedAudioEncodingFlag;
+        return hdmiAudioEncodingFlag | spdifAudioEncodingFlag | tvSpeakerAudioEncodingFlag | probedAudioEncodingFlag;
     }
 
     /**
@@ -595,7 +612,10 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         if (hasHdmi) {
             return hdmiAudioEncodingFlag;
         }
-        return hasSpdif ? spdifAudioEncodingFlag : probedAudioEncodingFlag;
+        if (hasSpdif) {
+            return spdifAudioEncodingFlag;
+        }
+        return tvSpeakerAudioEncodingFlag != 0 ? tvSpeakerAudioEncodingFlag : probedAudioEncodingFlag;
     }
 
     private static synchronized void refreshMediaCodecAudioCapabilities(String reason) {
@@ -748,11 +768,11 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         final int AVOS_ENCODING_IEC61937 = 13;
         // Route-aware IEC capability:
         // - HDMI/ARC/eARC active: trust HDMI capability only.
-        // - No HDMI route: use SPDIF capability (with legacy fallback for missing encodings).
+        // - Otherwise use SPDIF or advertised TV speaker capability.
         if (hasHdmi) {
             isIecEncapsulationCapable = (hdmiAudioEncodingFlag & (1L << AVOS_ENCODING_IEC61937)) != 0;
         } else {
-            isIecEncapsulationCapable = (spdifAudioEncodingFlag & (1L << AVOS_ENCODING_IEC61937)) != 0;
+            isIecEncapsulationCapable = (getNativeAudioCodecsFlag() & (1L << AVOS_ENCODING_IEC61937)) != 0;
             // If SPDIF is present but encodings are not reported, keep IEC mode available.
             if (!isIecEncapsulationCapable && hasSpdif
                     && (spdifAudioEncodingsFlags == null || spdifAudioEncodingsFlags.length == 0)) {
@@ -1371,7 +1391,8 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
     }
 
     public static boolean isPassthroughSupported () {
-        return hasHdmi || hasSpdif || probedAudioEncodingFlag != 0 || (!audioRouteResolved && ArchosFeatures.isAndroidTV(mContext));
+        return hasHdmi || hasSpdif || tvSpeakerAudioEncodingFlag != 0 || probedAudioEncodingFlag != 0
+                || (!audioRouteResolved && ArchosFeatures.isAndroidTV(mContext));
     }
 
     public static String[] audioEncodings = new String[] {"INVALID", "DEFAULT", "PCM_16BIT", "PCM_8BIT", "PCM_FLOAT",
