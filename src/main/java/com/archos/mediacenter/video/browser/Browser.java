@@ -78,6 +78,7 @@ import com.archos.mediacenter.utils.ActionBarSubmenu.ActionBarSubmenuListener;
 import com.archos.mediacenter.utils.ThumbnailEngine;
 import com.archos.mediacenter.utils.ThumbnailRequest;
 import com.archos.mediacenter.utils.ThumbnailRequester;
+import com.archos.mediacenter.utils.simkl.Simkl;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.R;
@@ -1044,6 +1045,10 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
 
     }
 
+    protected void syncSimkl(final int position, final boolean watched) {
+
+    }
+
     public void markAsRead(final int position, boolean updateDb, boolean updateRemoteXml) {
         final boolean dbUpdated = updateDbXml(position, UpdateDbXmlType.RESUME, PlayerActivity.LAST_POSITION_END);
         if (Trakt.isTraktV2Enabled(mContext, mPreferences)) {
@@ -1052,6 +1057,11 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             }
             Toast.makeText(mContext, R.string.trakt_toast_syncing, Toast.LENGTH_SHORT).show();
         }
+        if (Simkl.isSimklEnabled(mContext, mPreferences)) {
+            if (dbUpdated) {
+                syncSimkl(position, true);
+            }
+                    }
     }
 
     public void markAsNotRead(final int position, boolean updateDb, boolean updateRemoteXml) {
@@ -1063,6 +1073,7 @@ public abstract class Browser extends Fragment implements AbsListView.OnScrollLi
             }
             Toast.makeText(mContext, R.string.trakt_toast_syncing, Toast.LENGTH_SHORT).show();
         }
+        // SIMKL /sync/history/remove also removes items from the Watchlist; keep ordinary unmark local.
     }
     public void enableMultiple(int position, boolean toggle){
         if(mActionModeManager==null)

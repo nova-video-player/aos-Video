@@ -37,6 +37,7 @@ import com.archos.filecorelibrary.FileUtils;
 import com.archos.mediacenter.utils.MediaUtils;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
+import com.archos.mediacenter.video.utils.DbUtils;
 import com.archos.mediacenter.utils.videodb.VideoDbInfo;
 import com.archos.mediacenter.utils.videodb.XmlDb;
 import com.archos.mediacenter.video.CustomApplication;
@@ -345,6 +346,14 @@ public abstract class BrowserByVideoObjects extends Browser implements CommonPre
             flags |= TraktService.FLAG_SYNC_MOVIES;
 
         new TraktService.Client(mContext, null, false).sync(flags);
+    }
+
+    @Override
+    protected void syncSimkl(final int position, final boolean watched) {
+        Video video = mAdapterByVideoObjects.getVideoItem(position);
+        if (video != null) {
+            DbUtils.syncSimkl(mContext, video, watched);
+        }
     }
 
 

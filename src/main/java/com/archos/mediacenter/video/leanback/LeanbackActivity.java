@@ -29,19 +29,27 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.archos.mediacenter.utils.simkl.Simkl;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.R;
 import com.archos.mediacenter.video.leanback.search.VideoSearchActivity;
+import com.archos.mediacenter.video.utils.SimklSigninDialogPreference;
 import com.archos.mediacenter.video.utils.TraktSigninDialogPreference;
 
 public abstract class LeanbackActivity extends FragmentActivity {
 
     private BroadcastReceiver mTraktRelogBroadcastReceiver;
     private AlertDialog mTraktRelogAlertDialog;
+    private BroadcastReceiver mSimklRelogBroadcastReceiver;
+    private AlertDialog mSimklRelogAlertDialog;
 
     private final ActivityResultLauncher<Intent> traktRelogLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> { /* Trakt relog completed; token stored by TraktDeviceAuthActivity */ });
+
+    private final ActivityResultLauncher<Intent> simklRelogLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { /* Simkl relog completed; token stored by SimklDeviceAuthActivity */ });
 
     @Override
     protected void onCreate(Bundle saved){
@@ -70,16 +78,41 @@ public abstract class LeanbackActivity extends FragmentActivity {
                 }
             }
         };
+        mSimklRelogBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (System.currentTimeMillis() - Simkl.sLastSimklRefreshToken > Simkl.ASK_RELOG_FREQUENCY
+                        && (mSimklRelogAlertDialog == null || !mSimklRelogAlertDialog.isShowing())) {
+                    Simkl.sLastSimklRefreshToken = System.currentTimeMillis();
+                    AlertDialog.Builder alert = new AlertDialog.Builder(LeanbackActivity.this);
+                    alert.setTitle(R.string.simkl_signin_summary_logged_error)
+                            .setMessage(R.string.simkl_relog_description)
+                            .setPositiveButton(R.string.simkl_signin, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    SimklSigninDialogPreference dialog = new SimklSigninDialogPreference(LeanbackActivity.this, null);
+                                    dialog.setLauncher(simklRelogLauncher);
+                                    dialog.performDeviceAuth();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.cancel, null);
+                    mSimklRelogAlertDialog = alert.create();
+                    mSimklRelogAlertDialog.show();
+                }
+            }
+        };
     }
 
     public void onResume(){
         super.onResume();
         ContextCompat.registerReceiver(this, mTraktRelogBroadcastReceiver, new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN), ContextCompat.RECEIVER_NOT_EXPORTED);
+        ContextCompat.registerReceiver(this, mSimklRelogBroadcastReceiver, new IntentFilter(Simkl.SIMKL_ISSUE_REFRESH_TOKEN), ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     public void onPause(){
         super.onPause();
         unregisterReceiver(mTraktRelogBroadcastReceiver);
+        unregisterReceiver(mSimklRelogBroadcastReceiver);
     }
 
     /**

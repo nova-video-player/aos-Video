@@ -399,6 +399,7 @@ dependencies {
     testImplementation 'androidx.test:core:1.7.0'
     testImplementation 'org.slf4j:slf4j-api:2.0.20'
     testImplementation 'ch.qos.logback:logback-classic:1.6.6'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:5.5.1'
 }
 
 configurations { // try to exclude device specific libraries interfering

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="vertical"
+    android:background="@android:color/black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/connect_simkl"
+            android:textSize="28sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/instructions_step1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/simkl_device_auth_step1"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/verification_url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="#00b4dc"
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:nextFocusDown="@+id/user_code"
+            android:nextFocusUp="@+id/cancel_button" />
+
+        <TextView
+            android:id="@+id/instructions_step2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/simkl_device_auth_step2"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/user_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="36sp"
+            android:textColor="#00bcd4"
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold"
+            android:letterSpacing="0.2"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:nextFocusDown="@+id/cancel_button"
+            android:nextFocusUp="@+id/verification_url" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/status_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/simkl_device_auth_waiting"
+            android:textSize="16sp"
+            android:textColor="#aaaaaa"
+            android:layout_marginBottom="24dp" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@android:string/cancel"
+            android:textSize="16sp"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:nextFocusUp="@+id/user_code" />
+
+    </LinearLayout>
+</ScrollView>
