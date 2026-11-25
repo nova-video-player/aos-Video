@@ -857,8 +857,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
             if (mSubtitleManager != null) {
                 mSubtitleManager.onControlBarVisibilityChanged();
             }
-            if (!visible && isTVMode && mSkipButtonContainer != null && mSkipButtonContainer.getVisibility() == View.VISIBLE && !isMenuOrDialogDisplayed()) {
-                requestSkipButtonFocus();
+            if (!visible && isTVMode && mSkipButton != null && mSkipButtonContainer != null && mSkipButtonContainer.getVisibility() == View.VISIBLE) {
+                // The control bar is hidden before the action/volume bars, so isShowing() is still
+                // true here: defer until hide() has completed, requestSkipButtonFocus() re-checks.
+                mSkipButton.post(this::requestSkipButtonFocus);
             }
         });
         mSubtitleInfoController = new TrackInfoController(mContext, getLayoutInflater(), menuAnchor, actionBar);
@@ -1677,6 +1679,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                     return true;
                 }
+                // Seek bar shown on top of a visible skip prompt: UP goes back to the skip button
+                // (it sits above the control bar); a further UP from there opens the TV menu.
+                if (isTVMode && event.getRepeatCount() == 0 && mSkipButton != null
+                        && mPlayerControllerPlaceholder != null && mPlayerControllerPlaceholder.hasFocus()
+                        && mSkipButtonContainer != null && mSkipButtonContainer.getVisibility() == View.VISIBLE
+                        && mPlayerController != null && mPlayerController.isShowing()
+                        && !isMenuOrDialogOnlyDisplayed()) {
+                    if (mSkipButton.requestFocus()) {
+                        return true;
+                    }
+                }
                 if(mPlayerController!=null){
                     return mPlayerController.onKey(keyCode, event);
                 }
@@ -2285,6 +2298,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
                     }
                 } else if (event.getAction() == KeyEvent.ACTION_UP) {
                     switch (keyCode) {
+                        case KeyEvent.KEYCODE_DPAD_UP:
+                            // Release of the UP that moved focus here from the seek bar: swallow it,
+                            // otherwise Activity.onKeyUp forwards it to PlayerController which opens the TV menu.
+                            return true;
                         case KeyEvent.KEYCODE_DPAD_LEFT:
                         case KeyEvent.KEYCODE_DPAD_RIGHT:
                             if (mPlayerController != null) {
@@ -2299,7 +2316,15 @@ public class PlayerActivity extends AppCompatActivity implements PlayerControlle
     }
 
     private boolean isMenuOrDialogDisplayed() {
-        if (mPlayerController != null && (mPlayerController.isTVMenuDisplayed() || mPlayerController.isShowing())) {
+        if (mPlayerController != null && mPlayerController.isShowing()) {
+            return true;
+        }
+        return isMenuOrDialogOnlyDisplayed();
+    }
+
+    /** TV menu or dialog displayed, ignoring the OSD (control/action/volume bars). */
+    private boolean isMenuOrDialogOnlyDisplayed() {
+        if (mPlayerController != null && mPlayerController.isTVMenuDisplayed()) {
             return true;
         }
         if (mShowingDialogId != DIALOG_NO) {
