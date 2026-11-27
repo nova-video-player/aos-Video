@@ -82,6 +82,7 @@ import com.archos.mediaprovider.ImportState;
 import com.archos.mediaprovider.video.LoaderUtils;
 import com.archos.mediaprovider.video.NetworkScannerReceiver;
 import com.archos.mediacenter.utils.GlobalResumeView;
+import com.archos.mediacenter.utils.simkl.Simkl;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.video.CustomApplication;
 import com.archos.mediacenter.video.DensityTweak;
@@ -215,6 +216,11 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
     public static Boolean mStereoForced = false;
     private BroadcastReceiver mTraktRelogBroadcastReceiver;
     private AlertDialog mTraktRelogAlertDialog;
+    private BroadcastReceiver mSimklRelogBroadcastReceiver;
+    private AlertDialog mSimklRelogAlertDialog;
+    private final ActivityResultLauncher<Intent> simklRelogLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> { /* Simkl relog completed; token stored by SimklDeviceAuthActivity */ });
     private SharedPreferences.OnSharedPreferenceChangeListener mThemeChangeListener;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -452,6 +458,30 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
                 }
             }
         };
+        mSimklRelogBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (System.currentTimeMillis() - Simkl.sLastSimklRefreshToken > Simkl.ASK_RELOG_FREQUENCY
+                        && (mSimklRelogAlertDialog == null || !mSimklRelogAlertDialog.isShowing())) {
+                    Simkl.sLastSimklRefreshToken = System.currentTimeMillis();
+                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                    alert.setTitle(R.string.simkl_signin_summary_logged_error)
+                            .setMessage(R.string.simkl_relog_description)
+                            .setPositiveButton(R.string.simkl_signin, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    com.archos.mediacenter.video.utils.SimklSigninDialogPreference dialog =
+                                            new com.archos.mediacenter.video.utils.SimklSigninDialogPreference(MainActivity.this, null);
+                                    dialog.setLauncher(simklRelogLauncher);
+                                    dialog.performDeviceAuth();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.cancel, null);
+                    mSimklRelogAlertDialog = alert.create();
+                    mSimklRelogAlertDialog.show();
+                }
+            }
+        };
         CustomApplication.showChangelogDialog(CustomApplication.getChangelog(this.getApplicationContext()), this);
     }
 
@@ -605,6 +635,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         LoaderUtils.mSmartRecentlyRows = mPreferences.getBoolean("smart_recently_rows", false);
 
         ContextCompat.registerReceiver(this, mTraktRelogBroadcastReceiver, new IntentFilter(Trakt.TRAKT_ISSUE_REFRESH_TOKEN), ContextCompat.RECEIVER_NOT_EXPORTED);
+        ContextCompat.registerReceiver(this, mSimklRelogBroadcastReceiver, new IntentFilter(Simkl.SIMKL_ISSUE_REFRESH_TOKEN), ContextCompat.RECEIVER_NOT_EXPORTED);
         getContentResolver().registerContentObserver(VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
                 false, mGlobalResumeContentObserver);
         LoaderManager.getInstance(this).restartLoader(0, null, mNewVideosActionProvider);
@@ -617,6 +648,7 @@ public class MainActivity extends BrowserActivity implements ExternalPlayerWithR
         mKeepScreenOnHandler.removeCallbacks(mKeepScreenOnRunnable);
         ActiveOperationMonitor.clearKeepScreenOn(this);
         unregisterReceiver(mTraktRelogBroadcastReceiver);
+        unregisterReceiver(mSimklRelogBroadcastReceiver);
         if (mGlobalResumeContentObserver != null) {
             getContentResolver().unregisterContentObserver(mGlobalResumeContentObserver);
         }

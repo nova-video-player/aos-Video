@@ -61,6 +61,7 @@ import com.archos.filecorelibrary.samba.SambaDiscovery;
 import com.archos.filecorelibrary.smbj.SmbjUtils;
 import com.archos.filecorelibrary.sshj.SshjUtils;
 import com.archos.filecorelibrary.webdav.WebdavUtils;
+import com.archos.mediacenter.utils.simkl.Simkl;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.browser.BootupRecommandationService;
@@ -987,6 +988,12 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
                     if (log.isTraceEnabled()) log.trace("NetworkState for {} changed:{} -> {}", evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
                     // Network changed: restart the discovery even if one is still running
                     launchSambaDiscovery(true);
+                    if (networkState.isConnected()) {
+                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+                        if (Simkl.isSimklEnabled(mContext, sp)) {
+                            Simkl.flushPendingActions(mContext, sp);
+                        }
+                    }
                 }
             };
 
@@ -1017,6 +1024,7 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
         new Thread("nova-deferred-init") {
             public void run() {
                 Trakt.initApiKeys(appContext);
+                Simkl.initApiKeys(appContext);
                 launchSambaDiscovery();
                 if (openSubtitlesApiHelper == null) openSubtitlesApiHelper = OpenSubtitlesApiHelper.getInstance();
                 upgradeActions(appContext);
@@ -1272,8 +1280,12 @@ public class CustomApplication extends Application implements DefaultLifecycleOb
             launchSambaDiscovery(mWasBackgrounded);
             mWasBackgrounded = false;
             // Trigger an incremental Trakt sync when returning to foreground if signed in and not in private mode
-            if (Trakt.isTraktV2Enabled(this, PreferenceManager.getDefaultSharedPreferences(this))) {
+            SharedPreferences defaultPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+            if (Trakt.isTraktV2Enabled(this, defaultPrefs)) {
                 TraktService.sync(this, TraktService.FLAG_SYNC_AUTO);
+            }
+            if (Simkl.isSimklEnabled(this, defaultPrefs)) {
+                Simkl.flushPendingActions(this, defaultPrefs);
             }
         } else {
             // Keep audio observers active for picture-in-picture/background playback.

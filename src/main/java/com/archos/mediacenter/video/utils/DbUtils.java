@@ -24,6 +24,10 @@ import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import android.content.ContentUris;
+import com.archos.mediacenter.utils.simkl.Simkl;
+import com.archos.mediascraper.BaseTags;
+import java.util.List;
 import com.archos.mediacenter.utils.trakt.Trakt;
 import com.archos.mediacenter.utils.trakt.TraktService;
 import com.archos.mediacenter.video.R;
@@ -61,6 +65,7 @@ public class DbUtils {
         }
 
         final boolean traktSync = Trakt.isTraktV2Enabled(context, prefs);
+        final boolean simklSync = Simkl.isSimklEnabled(context, prefs);
 
         final ContentValues values = new ContentValues();
         values.put(VideoStore.Video.VideoColumns.BOOKMARK, PlayerActivity.LAST_POSITION_END);
@@ -77,6 +82,9 @@ public class DbUtils {
 
         if (traktSync) {
             syncTrakt(context, video);
+        }
+        if (simklSync) {
+            syncSimkl(context, video, true);
         }
     }
 
@@ -105,6 +113,7 @@ public class DbUtils {
         if (traktSync) {
             syncTrakt(context, video);
         }
+        // SIMKL /sync/history/remove also removes items from the Watchlist; keep ordinary unmark local.
     }
 
     static private void syncTrakt(Context context, Base object) {
@@ -120,6 +129,165 @@ public class DbUtils {
         new TraktService.Client(context, null, false).sync(flags);
         Toast.makeText(context, R.string.trakt_toast_syncing, Toast.LENGTH_SHORT).show();
     }
+
+    static public void syncSimkl(final Context context, final Base object, final boolean watched) {
+        if (!watched) {
+            // SIMKL /sync/history/remove also removes items from the Watchlist; ordinary unmark stays local.
+            return;
+        }
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (!Simkl.isSimklEnabled(context, prefs)) {
+            return;
+        }
+
+        if (object instanceof Movie) {
+            long tmdbId = ((Movie) object).getOnlineId();
+            if (tmdbId > 0) {
+                Simkl.markMovieAsWatched(tmdbId, watched, prefs);
+                            } else {
+                syncSimklForGenericVideo(context, ((Movie) object).getId(), watched, prefs);
+            }
+        } else if (object instanceof Episode) {
+            Episode ep = (Episode) object;
+            long showTmdbId = getShowOnlineIdForVideo(context, ep.getId());
+            if (showTmdbId > 0) {
+                Simkl.markEpisodeAsWatched(showTmdbId, ep.getSeasonNumber(), ep.getEpisodeNumber(), watched, prefs);
+                            }
+        } else if (object instanceof Season) {
+            Season season = (Season) object;
+            long showTmdbId = getShowOnlineId(context, season.getShowId());
+            if (showTmdbId > 0) {
+                List<Integer> indexedEpisodes = getIndexedEpisodesForSeason(context, season.getShowId(), season.getSeasonNumber());
+                if (!indexedEpisodes.isEmpty()) {
+                    Simkl.markSeasonEpisodesAsWatched(showTmdbId, season.getSeasonNumber(), indexedEpisodes, watched, prefs);
+                }
+            }
+        } else if (object instanceof Tvshow) {
+            Tvshow tvshow = (Tvshow) object;
+            long showTmdbId = getShowOnlineId(context, tvshow.getTvshowId());
+            if (showTmdbId > 0) {
+                Simkl.markShowAsWatched(showTmdbId, watched, prefs);
+                            }
+        } else if (object instanceof Collection) {
+            Collection coll = (Collection) object;
+            List<Long> movieTmdbIds = getMovieOnlineIdsForCollection(context, coll.getCollectionId());
+            if (!movieTmdbIds.isEmpty()) {
+                Simkl.markMoviesAsWatched(movieTmdbIds, watched, prefs);
+                            }
+        } else if (object instanceof Video) {
+            syncSimklForGenericVideo(context, ((Video) object).getId(), watched, prefs);
+        }
+    }
+
+    private static List<Integer> getIndexedEpisodesForSeason(Context context, long showId, int seasonNumber) {
+        List<Integer> list = new ArrayList<>();
+        final String where = "_id IN (SELECT video_id FROM episode e JOIN show s ON e.show_episode=s._id WHERE s._id=? AND e.season_episode=?)";
+        final String[] selectionArgs = new String[]{Long.toString(showId), Integer.toString(seasonNumber)};
+        try (Cursor c = context.getContentResolver().query(
+                VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
+                new String[]{ VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE },
+                where, selectionArgs, null)) {
+            if (c != null) {
+                while (c.moveToNext()) {
+                    int ep = c.getInt(0);
+                    if (ep >= 0 && !list.contains(ep)) {
+                        list.add(ep);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "getIndexedEpisodesForSeason error", e);
+        }
+        return list;
+    }
+
+    private static long getShowOnlineId(Context context, long showId) {
+        long onlineId = -1;
+        try (Cursor c = context.getContentResolver().query(
+                ContentUris.withAppendedId(ScraperStore.Show.URI.ID, showId),
+                new String[]{ ScraperStore.Show.ONLINE_ID }, null, null, null)) {
+            if (c != null && c.moveToFirst()) {
+                onlineId = c.getLong(0);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "getShowOnlineId error", e);
+        }
+        return onlineId;
+    }
+
+    private static long getShowOnlineIdForVideo(Context context, long videoId) {
+        long showOnlineId = -1;
+        try (Cursor c = context.getContentResolver().query(
+                VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
+                new String[]{ VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID },
+                VideoStore.Video.VideoColumns._ID + " = ?",
+                new String[]{ Long.toString(videoId) },
+                null)) {
+            if (c != null && c.moveToFirst()) {
+                showOnlineId = c.getLong(0);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "getShowOnlineIdForVideo error", e);
+        }
+        return showOnlineId;
+    }
+
+    private static List<Long> getMovieOnlineIdsForCollection(Context context, long collectionId) {
+        List<Long> list = new ArrayList<>();
+        try (Cursor c = context.getContentResolver().query(
+                VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
+                new String[]{ VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID },
+                "_id IN (SELECT video_id FROM movie m WHERE m.m_coll_id=?)",
+                new String[]{ Long.toString(collectionId) },
+                null)) {
+            if (c != null) {
+                while (c.moveToNext()) {
+                    long id = c.getLong(0);
+                    if (id > 0) {
+                        list.add(id);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "getMovieOnlineIdsForCollection error", e);
+        }
+        return list;
+    }
+
+    private static void syncSimklForGenericVideo(Context context, long videoId, boolean watched, SharedPreferences prefs) {
+        try (Cursor c = context.getContentResolver().query(
+                VideoStore.Video.Media.EXTERNAL_CONTENT_URI,
+                new String[]{
+                        VideoStore.Video.VideoColumns.ARCHOS_MEDIA_SCRAPER_TYPE,
+                        VideoStore.Video.VideoColumns.SCRAPER_ONLINE_ID,
+                        VideoStore.Video.VideoColumns.SCRAPER_S_ONLINE_ID,
+                        VideoStore.Video.VideoColumns.SCRAPER_E_SEASON,
+                        VideoStore.Video.VideoColumns.SCRAPER_E_EPISODE
+                },
+                VideoStore.Video.VideoColumns._ID + " = ?",
+                new String[]{ Long.toString(videoId) },
+                null)) {
+            if (c != null && c.moveToFirst()) {
+                int scraperType = c.getInt(0);
+                if (scraperType == BaseTags.MOVIE) {
+                    long tmdbId = c.getLong(1);
+                    if (tmdbId > 0) {
+                        Simkl.markMovieAsWatched(tmdbId, watched, prefs);
+                                            }
+                } else if (scraperType == BaseTags.TV_SHOW) {
+                    long showTmdbId = c.getLong(2);
+                    int season = c.getInt(3);
+                    int episode = c.getInt(4);
+                    if (showTmdbId > 0 && season >= 0 && episode >= 0) {
+                        Simkl.markEpisodeAsWatched(showTmdbId, season, episode, watched, prefs);
+                                            }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "syncSimklForGenericVideo error", e);
+        }
+    }
+
 
     public static void deleteScraperInfo(Context context,Video video) {
         // Reset the scraper fields for this item in the medialib
@@ -176,6 +344,7 @@ public class DbUtils {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         final boolean traktSync = Trakt.isTraktV2Enabled(context, prefs);
+        final boolean simklSync = Simkl.isSimklEnabled(context, prefs);
 
         final ContentValues values = new ContentValues();
         values.put(VideoStore.Video.VideoColumns.BOOKMARK, PlayerActivity.LAST_POSITION_END);
@@ -193,6 +362,9 @@ public class DbUtils {
 
         if (traktSync) {
             syncTrakt(context, season);
+        }
+        if (simklSync) {
+            syncSimkl(context, season, true);
         }
     }
 
@@ -222,6 +394,7 @@ public class DbUtils {
         if (traktSync) {
             syncTrakt(context, season);
         }
+        // SIMKL /sync/history/remove also removes items from the Watchlist; keep ordinary unmark local.
     }
 
     /**
@@ -235,6 +408,7 @@ public class DbUtils {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         final boolean traktSync = Trakt.isTraktV2Enabled(context, prefs);
+        final boolean simklSync = Simkl.isSimklEnabled(context, prefs);
 
         final ContentValues values = new ContentValues();
         values.put(VideoStore.Video.VideoColumns.BOOKMARK, PlayerActivity.LAST_POSITION_END);
@@ -252,6 +426,9 @@ public class DbUtils {
 
         if (traktSync) {
             syncTrakt(context, collection);
+        }
+        if (simklSync) {
+            syncSimkl(context, collection, true);
         }
     }
 
@@ -282,6 +459,7 @@ public class DbUtils {
         if (traktSync) {
             syncTrakt(context, collection);
         }
+        // SIMKL /sync/history/remove also removes items from the Watchlist; keep ordinary unmark local.
     }
     
     public static void markAsHiddenByUser(final Context context, final Season season) {
@@ -359,6 +537,7 @@ public class DbUtils {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         final boolean traktSync = Trakt.isTraktV2Enabled(context, prefs);
+        final boolean simklSync = Simkl.isSimklEnabled(context, prefs);
 
         final ContentValues values = new ContentValues();
         values.put(VideoStore.Video.VideoColumns.BOOKMARK, PlayerActivity.LAST_POSITION_UNKNOWN);
