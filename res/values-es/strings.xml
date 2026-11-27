@@ -518,6 +518,8 @@
     <string name="subtitle_use_margins_summary">Muestra los subtítulos debajo de la imagen en lugar de superponerlos al vídeo</string>
     <string name="subtitle_fonts_folder_title">Carpeta de fuentes personalizadas</string>
     <string name="subtitle_fonts_folder_summary">Elija una carpeta de fuentes .ttf/.otf/.ttc para usar en subtítulos, en lugar de las fuentes incluidas</string>
+    <string name="subtitle_fonts_folder_summary_no_picker">Deshabilitado: ninguna aplicación en este dispositivo puede elegir una carpeta. Instale una aplicación de gestor de archivos que proporcione selección de carpetas para activar esta opción</string>
+    <string name="no_folder_picker_available">No hay ninguna aplicación de selección de carpetas instalada. Instale un gestor de archivos que proporcione la selección de carpetas para utilizar esta característica</string>
     <string name="subtitle_default_font_title">Fuente de subtítulos por defecto</string>
     <string name="subtitles_credentials_title">Credenciales de Opensubtitles</string>
     <string name="subtitles_credentials_summary">Proporcione sus credenciales de opensubtitles para poder descargar subtítulos</string>

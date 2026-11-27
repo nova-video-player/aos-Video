@@ -526,6 +526,8 @@
     <string name="subtitle_use_margins_summary">Zobraziť titulky v čiernej oblasti pod obrazom namiesto prekrytia videa</string>
     <string name="subtitle_fonts_folder_title">Priečinok s vlastnými písmom</string>
     <string name="subtitle_fonts_folder_summary">Vybrať priečinok s písmami .ttf/.otf/.ttc na použitie pre titulky namiesto vstavaných písem</string>
+    <string name="subtitle_fonts_folder_summary_no_picker">Vypnuté: žiadna aplikácia na tomto zariadení neumožňuje výber priečinka. Ak chcete túto možnosť povoliť, nainštalujte si aplikáciu na správu súborov, ktorá umožňuje výber priečinkov</string>
+    <string name="no_folder_picker_available">Nie je nainštalovaná žiadna aplikácia na výber priečinkov. Ak chcete túto funkciu používať, nainštalujte si správcu súborov, ktorý umožňuje výber priečinkov</string>
     <string name="subtitle_default_font_title">Predvolené písmo titulkov</string>
     <string name="subtitles_credentials_title">Prihlasovacie údaje k službe OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Zadajte svoje prihlasovacie údaje na OpenSubtitles, aby ste si mohli stiahnuť titulky</string>

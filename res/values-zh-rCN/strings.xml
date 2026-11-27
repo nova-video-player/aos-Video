@@ -514,6 +514,8 @@
     <string name="subtitle_use_margins_summary">在画面下方的黑边区域显示字幕，不叠加在视频画面上</string>
     <string name="subtitle_fonts_folder_title">自定义字体文件夹</string>
     <string name="subtitle_fonts_folder_summary">选择一个包含.ttf/.otf/.ttc字体的文件夹用于字幕，替代内置字体</string>
+    <string name="subtitle_fonts_folder_summary_no_picker">已禁用：此设备上没有应用可以选择文件夹。请安装提供文件夹选择的文件管理器应用以启用此选项</string>
+    <string name="no_folder_picker_available">未安装文件夹选择器应用。请安装提供文件夹选择的文件管理器以使用此功能</string>
     <string name="subtitle_default_font_title">默认字幕字体</string>
     <string name="subtitles_credentials_title">OpenSubtitles 用户凭据</string>
     <string name="subtitles_credentials_summary">提供你的 opensubtitles 用户凭据以下载字幕</string>
@@ -923,6 +925,8 @@
     <string name="not_available_during_media_scanning">在媒体扫描期间不可用。</string>
     <string name="remove_from_list">从列表中删除</string>
     <string name="warning_swdec">警告：硬件解码已禁用！</string>
+    <string name="video_software_fallback">硬件解码失败。正在使用软件解码；播放可能会卡顿。</string>
+    <string name="video_dovi_color_fallback">不支持杜比视界颜色配置文件。仍将进行播放；颜色可能不准确。</string>
     <string name="list_title">列出标题</string>
     <string name="loading">正在加载……</string>
     <string name="refreshrate_failed">设置所需刷新率失败</string>

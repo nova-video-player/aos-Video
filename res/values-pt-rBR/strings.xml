@@ -518,6 +518,8 @@
     <string name="subtitle_use_margins_summary">Mostra as legendas na área de tarja preta abaixo da imagem em vez de sobrepor o vídeo.</string>
     <string name="subtitle_fonts_folder_title">Pasta de fontes personalizadas</string>
     <string name="subtitle_fonts_folder_summary">Escolha uma pasta de fontes .ttf/.otf/.ttc para usar nas legendas, em vez das fontes integradas.</string>
+    <string name="subtitle_fonts_folder_summary_no_picker">Desativado: nenhum aplicativo neste dispositivo pode escolher uma pasta. Instale um aplicativo de gerenciador de arquivos que forneça a seleção de pastas para habilitar esta opção</string>
+    <string name="no_folder_picker_available">Nenhum aplicativo de seletor de pastas está instalado. Instale um gerenciador de arquivos que forneça a seleção de pastas para usar este recurso</string>
     <string name="subtitle_default_font_title">Fonte padrão de legendas</string>
     <string name="subtitles_credentials_title">Credenciais do Opensubtitles</string>
     <string name="subtitles_credentials_summary">Forneça suas credenciais do OpenSubtitles para poder baixar legendas.</string>

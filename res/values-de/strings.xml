@@ -518,6 +518,8 @@
     <string name="subtitle_use_margins_summary">Untertitel im Letterbox-Bereich unterhalb des Bildes anzeigen, anstatt sie über das Video zu legen</string>
     <string name="subtitle_fonts_folder_title">Ordner für benutzerdefinierte Schriftarten</string>
     <string name="subtitle_fonts_folder_summary">Wähle einen Ordner mit .ttf/.otf/.ttc-Schriftarten aus, die für Untertitel verwendet werden sollen anstelle der integrierten Schriftarten</string>
+    <string name="subtitle_fonts_folder_summary_no_picker">Deaktiviert: Auf diesem Gerät kann keine App einen Ordner auswählen. Installieren Sie eine Dateimanager-App, die eine Ordnerauswahl ermöglicht, um diese Option nutzen zu können.</string>
+    <string name="no_folder_picker_available">Es ist keine App zur Ordnerauswahl installiert. Installieren Sie einen Dateimanager, der eine Ordnerauswahl ermöglicht, um diese Funktion nutzen zu können.</string>
     <string name="subtitle_default_font_title">Standardschriftart für Untertitel</string>
     <string name="subtitles_credentials_title">OpenSubtitles-Anmeldedaten</string>
     <string name="subtitles_credentials_summary">Geben Sie Ihre Zugangsdaten für opensubtitles.com in den Einstellungen an, um Untertitel herunterladen zu können</string>

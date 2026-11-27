@@ -526,6 +526,8 @@
     <string name="subtitle_use_margins_summary">Wyświetlaj napisy w obszarze typu „letterbox” poniżej obrazu, zamiast nakładać je na wideo</string>
     <string name="subtitle_fonts_folder_title">Folder własnych czcionek</string>
     <string name="subtitle_fonts_folder_summary">Wybierz folder z czcionkami w formatach .ttf/.otf/.ttc, które mają być używane do napisów, zamiast czcionek wbudowanych</string>
+    <string name="subtitle_fonts_folder_summary_no_picker">Wyłączone: żadna aplikacja na tym urządzeniu nie umożliwia wyboru folderu. Aby włączyć tę opcję, zainstaluj menedżera plików, obsługującego wybieranie folderów</string>
+    <string name="no_folder_picker_available">Nie zainstalowano aplikacji do wyboru folderów. Aby skorzystać z tej funkcji, zainstaluj menedżera plików, który umożliwia wybieranie folderów</string>
     <string name="subtitle_default_font_title">Domyślna czcionka napisów</string>
     <string name="subtitles_credentials_title">Dane logowania OpenSubtitles</string>
     <string name="subtitles_credentials_summary">Podaj dane logowania do OpenSubtitles, aby pobierać napisy</string>
